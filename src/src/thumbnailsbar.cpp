@@ -1,3 +1,33 @@
+/*
+ * (c) 2020, Uniontech Technology Co., Ltd. <support@deepin.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and
+ * NON-INFRINGEMENT.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * In addition, as a special exception, the copyright holders give
+ * permission to link the code of portions of this program with the
+ * OpenSSL library under certain conditions as described in each
+ * individual source file, and distribute linked combinations
+ * including the two.
+ * You must obey the GNU General Public License in all respects
+ * for all of the code used other than OpenSSL.  If you modify
+ * file(s) with this exception, you may extend this exception to your
+ * version of the file(s), but you are not obligated to do so.  If you
+ * do not wish to do so, delete this exception statement from your
+ * version.  If you delete this exception statement from all source
+ * files in the program, then also delete it here.
+ */
+
 #include "thumbnailsbar.h"
 #include <sys/time.h>
 #include <QCollator>
@@ -138,7 +168,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DWidget(parent)
 void ThumbnailsBar::load()
 {
     QString path;
-    for (int i = 0; i < m_infos.size(); i ++){
+    for (int i = 0; i < m_infos.size(); i ++) {
         path = m_infos[i].filePath;
         loadInterface(path);
     }
@@ -164,24 +194,21 @@ void ThumbnailsBar::loadInterface(QString path)
 }
 
 //待完善内容：1、先获取路径并排序再加载;2、视频获取第一帧作为缩略图，或者直接贴图。
-void ThumbnailsBar::onFileChanged(const QString & strDirectory)
+void ThumbnailsBar::onFileChanged(const QString &strDirectory)
 {
     int nWidth = this->width();
     //获取所选文件类型过滤器
     QStringList filters;
-    filters<<QString("*.jpg");
+    filters << QString("*.jpg");
     QDir dir(m_strPath);
-    if(!dir.exists())
-    {
+    if (!dir.exists()) {
         return;
     }
 
     QLayoutItem *child;
-    while ((child = m_hBOx->takeAt(0)) != 0)
-    {
+    while ((child = m_hBOx->takeAt(0)) != 0) {
         //setParent为NULL，防止删除之后界面不消失
-        if(child->widget())
-        {
+        if (child->widget()) {
             child->widget()->setParent(NULL);
         }
 
@@ -193,8 +220,7 @@ void ThumbnailsBar::onFileChanged(const QString & strDirectory)
                               filters,
                               QDir::Files | QDir::NoSymLinks,
                               QDirIterator::Subdirectories);
-    while(dir_iterator.hasNext())
-    {
+    while (dir_iterator.hasNext()) {
         QString strFile = dir_iterator.next();
         QPixmap *pix = new QPixmap(/*dir_iterator.next()*/strFile);
         DLabel *pLabel = new DLabel(this);
@@ -217,25 +243,25 @@ void ThumbnailsBar::onFileChanged(const QString & strDirectory)
         connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
             menu->exec(QCursor::pos());
         });
-        connect(actOpen, &QAction::triggered, this, [ = ]{
-            QString  cmd = QString("xdg-open ")+ strFile;//在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+        connect(actOpen, &QAction::triggered, this, [ = ] {
+            QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
             system(cmd.toStdString().c_str());
         });
-        connect(actSave, &QAction::triggered, this, [ = ]{
+        connect(actSave, &QAction::triggered, this, [ = ] {
             QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                       strFile,
-                                       tr("Images (*.jpg)"));
+                                                            strFile,
+                                                            tr("Images (*.jpg)"));
         });
-        connect(actMove, &QAction::triggered, this, [ = ]{
+        connect(actMove, &QAction::triggered, this, [ = ] {
             DDesktopServices::trash(strFile);
         });
-        connect(actDel, &QAction::triggered, this, [ = ]{
+        connect(actDel, &QAction::triggered, this, [ = ] {
             QFile filetmp(strFile);
             filetmp.remove();
         });
         pLabel->setPixmap(*pix);
         pLabel->setScaledContents(true);
-        pLabel->setFixedSize(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+        pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
         pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
         m_hBOx->addWidget(pLabel);
         m_hBOx->addSpacing(5);
@@ -244,13 +270,12 @@ void ThumbnailsBar::onFileChanged(const QString & strDirectory)
 
     QString strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Videos/摄像头";
     QStringList filters1;
-    filters1<<QString("*.webm") << QString("*.avi");
+    filters1 << QString("*.webm") << QString("*.avi");
     QDirIterator dir_iterator1(strPath,
-                              filters1,
-                              QDir::Files | QDir::NoSymLinks,
-                              QDirIterator::Subdirectories);
-    while(dir_iterator1.hasNext())
-    {
+                               filters1,
+                               QDir::Files | QDir::NoSymLinks,
+                               QDirIterator::Subdirectories);
+    while (dir_iterator1.hasNext()) {
         QString strFile = dir_iterator1.next();
         QImage *tmp = new QImage(":/images/123.jpg");
         QPixmap *pix = new QPixmap(/*dir_iterator1.next()*/strFile);
@@ -274,32 +299,32 @@ void ThumbnailsBar::onFileChanged(const QString & strDirectory)
         connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
             menu->exec(QCursor::pos());
         });
-        connect(actOpen, &QAction::triggered, this, [ = ]{
-            QString  cmd = QString("xdg-open ")+ strFile;//在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+        connect(actOpen, &QAction::triggered, this, [ = ] {
+            QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
             system(cmd.toStdString().c_str());
         });
-        connect(actSave, &QAction::triggered, this, [ = ]{
+        connect(actSave, &QAction::triggered, this, [ = ] {
             QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                       strFile,
-                                       tr("Videos (*.avi *.webm)"));
+                                                            strFile,
+                                                            tr("Videos (*.avi *.webm)"));
         });
-        connect(actMove, &QAction::triggered, this, [ = ]{
+        connect(actMove, &QAction::triggered, this, [ = ] {
             DDesktopServices::trash(strFile);
         });
-        connect(actDel, &QAction::triggered, this, [ = ]{
+        connect(actDel, &QAction::triggered, this, [ = ] {
             QFile filetmp(strFile);
             filetmp.remove();
         });
         pLabel->setPixmap(QPixmap::fromImage(*tmp));
         pLabel->setScaledContents(true);
-        pLabel->setFixedSize(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+        pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
         pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
         m_hBOx->addWidget(pLabel);
         m_hBOx->addSpacing(5);
         nCount ++;
     }
 
-    m_wgt->setFixedWidth(nCount*THUMBNAIL_WIDTH + nCount*5 );
+    m_wgt->setFixedWidth(nCount * THUMBNAIL_WIDTH + nCount * 5 );
 }
 
 

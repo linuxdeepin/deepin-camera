@@ -1,3 +1,33 @@
+/*
+ * (c) 2020, Uniontech Technology Co., Ltd. <support@deepin.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and
+ * NON-INFRINGEMENT.  See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
+ *
+ * In addition, as a special exception, the copyright holders give
+ * permission to link the code of portions of this program with the
+ * OpenSSL library under certain conditions as described in each
+ * individual source file, and distribute linked combinations
+ * including the two.
+ * You must obey the GNU General Public License in all respects
+ * for all of the code used other than OpenSSL.  If you modify
+ * file(s) with this exception, you may extend this exception to your
+ * version of the file(s), but you are not obligated to do so.  If you
+ * do not wish to do so, delete this exception statement from your
+ * version.  If you delete this exception statement from all source
+ * files in the program, then also delete it here.
+ */
+
 #include "majorimageprocessingthread.h"
 
 MajorImageProcessingThread::MajorImageProcessingThread()
@@ -22,23 +52,22 @@ void MajorImageProcessingThread::run()
     v4l2_dev_t *vd1 = get_v4l2_dev();
     v4l2_frame_buff_t *frame;
     unsigned char *rgb24;
-    render_init(RENDER_NONE, 640, 480, 2, 0, 0);
 
     v4l2core_start_stream(vd1);
-    QString *img_filename  = new QString();
+
     while (!stopped) {
         msleep(1000 / 20);
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
             continue;
         }
-        render_frame_fx(frame->yuv_frame, my_render_mask);
+
         int result = -1;
         if (frame != nullptr) {
             result = 0;
         }
 
-        printf("(raw)frame->timestamp:%llu\n", frame->timestamp);
+//        printf("(raw)frame->timestamp:%lu\n", static_cast<long unsigned int>(frame->timestamp));
 
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
@@ -52,16 +81,16 @@ void MajorImageProcessingThread::run()
                 switch (v4l2core_get_requested_frame_format(vd1)) {
                 case  V4L2_PIX_FMT_H264:
                     input_frame = frame->h264_frame;
-                    size = (int) frame->h264_frame_size;
+                    size = static_cast<int>(frame->h264_frame_size);
                     break;
                 default:
                     input_frame = frame->raw_frame;
-                    size = (int) frame->raw_frame_size;
+                    size = static_cast<int>(frame->raw_frame_size);
                     break;
                 }
             }
             /*add the frame to the encoder buffer*/
-            encoder_add_video_frame(input_frame, size, frame->timestamp, frame->isKeyframe);
+            encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
 
             //printf("(video)frame->timestamp:%llu\n", frame->timestamp);
 
@@ -73,58 +102,33 @@ void MajorImageProcessingThread::run()
             double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
             if (time_sched > 0) {
                 switch (v4l2core_get_requested_frame_format(vd1)) {
-                case  V4L2_PIX_FMT_H264: {
-                    uint32_t framerate = lround(time_sched * 1E6); /*nanosec*/
+                case V4L2_PIX_FMT_H264: {
+                    uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
                     v4l2core_set_h264_frame_rate_config(vd1, framerate);
                     break;
                 }
                 default: {
-                    struct timespec req = {
-                        .tv_sec = 0,
-                        .tv_nsec = (uint32_t) (time_sched * 1E6)
-                    };/*nanosec*/
-                    nanosleep(&req, NULL);
+                    struct timespec req = {0, static_cast<__syscall_slong_t>(time_sched * 1E6)}; /*nanosec*/
+                    nanosleep(&req, nullptr);
                     break;
                 }
                 }
             }
         }
-        rgb24 = (unsigned char *)malloc(frame->width * frame->height * 3 * sizeof(char));
-        //*img_filename = "/home/shicetu/Desktop/shicetu/image/" + QString::number(n) + ".jpg";
-        //img_filename.;
-        //v4l2core_save_image(frame, ( *img_filename).toLatin1().data(), IMG_FMT_JPG);
-        convert_yuv_to_rgb_buffer((unsigned char *)frame->raw_frame, rgb24, frame->width, frame->height);
+        rgb24 = static_cast<unsigned char *>(malloc(frame->width * frame->height * 3 * sizeof(char)));
+
+        convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
+
         QImage img;
         img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
-        //img.save(img_filename, "JPG");
         emit SendMajorImageProcessing(img, result);
-//        jpeg_encoder_ctx_t *jpeg_ctx = (jpeg_encoder_ctx_t *)calloc(1, sizeof(jpeg_encoder_ctx_t));
-//        if (jpeg_ctx != nullptr) {
-//            uint8_t *jpeg = (uint8_t *)calloc((frame->width * frame->height) >> 1, sizeof(uint8_t));
-//            if (jpeg != nullptr)
-//            }
-        render_frame_osd(frame->yuv_frame);
-        render_frame(frame->yuv_frame);
+
         v4l2core_release_frame(vd1, frame);
+        free(rgb24);
+        rgb24 = nullptr;
         msleep(1000 / 30);
     }
     v4l2core_stop_stream(vd1);
-    render_close();
+
 }
-//    if (majorindex != -1) {
-//        while (!stopped) {
-//            msleep(1000 / 30);
-
-//            QImage img;
-//            int ret = LPF_GetFrame();
-//            if (ret == 0) {
-//                int WV = LPF_GetCurResWidth();
-//                int HV = LPF_GetCurResHeight();
-//                img = QImage(rgb24, WV, HV, QImage::Format_RGB888);
-//            }
-
-//            emit SendMajorImageProcessing(img, ret);
-//        }
-//    }
-//}
 
