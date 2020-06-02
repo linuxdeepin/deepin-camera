@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream:src/src/videowidget.h
-#ifndef VIDEOWIDGET_H
-#define VIDEOWIDGET_H
-=======
 /*
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
@@ -23,9 +19,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef VIDEOPREVIEWWIDGET_H
-#define VIDEOPREVIEWWIDGET_H
->>>>>>> Stashed changes:src/src/videopreviewwidget.h
+#ifndef VIDEOWIDGET_H
+#define VIDEOWIDGET_H
 
 #include <DWidget>
 #include <QDateTime>

@@ -75,14 +75,20 @@ private:
     videoEffect     m_videoEffect;
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
+    Set_Widget      *m_setwidget;
 
 
     QFileSystemWatcher m_fileWatcher;
     DevNumMonitor *m_devnumMonitor;
 
-    QVector<videopreviewwidget *> m_VEffectPreview;
+    QVector<videowidget *> m_VEffectPreview;
     void initUI();
     void initConnection();
+    void setupTitlebar();
+    void resizeEvent(QResizeEvent *event);
+    void menuItemInvoked(QAction *action);
+    void settingsTriggered(bool bTrue);
+    void keyPressEvent(QKeyEvent *ev);
 
 private:
 
