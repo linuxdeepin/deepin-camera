@@ -1,35 +1,5 @@
-/*
- * (c) 2020, Uniontech Technology Co., Ltd. <support@deepin.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and
- * NON-INFRINGEMENT.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
- * In addition, as a special exception, the copyright holders give
- * permission to link the code of portions of this program with the
- * OpenSSL library under certain conditions as described in each
- * individual source file, and distribute linked combinations
- * including the two.
- * You must obey the GNU General Public License in all respects
- * for all of the code used other than OpenSSL.  If you modify
- * file(s) with this exception, you may extend this exception to your
- * version of the file(s), but you are not obligated to do so.  If you
- * do not wish to do so, delete this exception statement from your
- * version.  If you delete this exception statement from all source
- * files in the program, then also delete it here.
- */
-
-#ifndef VIDEOPREVIEWWIDGET_H
-#define VIDEOPREVIEWWIDGET_H
+#ifndef VIDEOWIDGET_H
+#define VIDEOWIDGET_H
 
 #include <DWidget>
 #include <QDateTime>
@@ -57,11 +27,11 @@ static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 static int EFFECT_INDEX = NO;
 static QImage *CURRENT_IMAGE = new QImage;
 
-class videopreviewwidget : public DWidget
+class videowidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit videopreviewwidget(DWidget *parent = nullptr);
+    explicit videowidget(DWidget *parent = nullptr);
     void showEvent(QShowEvent *event);
 
     QImage getCurrentImg();
@@ -121,6 +91,61 @@ private:
     void init();
     void showCountDownLabel();
 
+private:
+    QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_2;
+    QVBoxLayout *verticalLayout_3;
+    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *verticalLayout_5;
+    QVBoxLayout *verticalLayout_6;
+
+    QHBoxLayout *horizontalLayout;
+    QHBoxLayout *horizontalLayout_2;
+    QHBoxLayout *horizontalLayout_3;
+    QHBoxLayout *horizontalLayout_4;
+    QHBoxLayout *horizontalLayout_5;
+    QHBoxLayout *horizontalLayout_6;
+    QHBoxLayout *horizontalLayout_7;
+
+    QSpacerItem *horizontalSpacer;
+    QSpacerItem *horizontalSpacer_2;
+    QSpacerItem *horizontalSpacer_3;
+    QSpacerItem *horizontalSpacer_4;
+    QSpacerItem *horizontalSpacer_5;
+    QSpacerItem *horizontalSpacer_6;
+    QSpacerItem *horizontalSpacer_7;
+    QSpacerItem *horizontalSpacer_8;
+    QSpacerItem *horizontalSpacer_9;
+
+    QSpacerItem *verticalSpacer;
+    QSpacerItem *verticalSpacer_2;
+    QSpacerItem *verticalSpacer_3;
+    QSpacerItem *verticalSpacer_4;
+    QSpacerItem *verticalSpacer_5;
+    QSpacerItem *verticalSpacer_6;
+    QSpacerItem *verticalSpacer_7;
+    QSpacerItem *verticalSpacer_8;
+    QSpacerItem *verticalSpacer_9;
+
+    QFrame *p_verline;
+
+    DWidget *centralwidget;
+
+    DPushButton *p_takecambtn; //拍照
+
+    DPushButton *p_takevideobtn; //录像
+
+    DPushButton *p_selectbtn; //切换
+
+    QLabel *p_timelabl;
+
+    QFrame *p_horline;
+
+    QScrollArea *p_scrlarea;//缩略图
+
+    QWidget *scrollAreaWidgetContents;
+
+    void retranslateUi();
 signals:
     void finishTakedCamera();//结束拍照或三连拍
     void finishEffectChoose();//结束特效选择
