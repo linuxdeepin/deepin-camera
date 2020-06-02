@@ -32,6 +32,7 @@
 #include <DApplication>
 #include <DMainWindow>
 #include <DWidgetUtil>
+#include <QSharedMemory>
 
 DWIDGET_USE_NAMESPACE
 
@@ -40,7 +41,6 @@ int main(int argc, char *argv[])
     DApplication::loadDXcbPlugin();
     DApplication a(argc, argv);
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    a.setTheme("light");
     a.setOrganizationName("deepin");
     a.setApplicationName("dtk application");
     a.setApplicationVersion("1.0");
@@ -48,8 +48,20 @@ int main(int argc, char *argv[])
     a.setProductName("Dtk Application");
     a.setApplicationDescription("This is a dtk template application.");
 
+    //仅允许打开一个相机
+    QSharedMemory shared_memory("deepincamera");
+
+    if (shared_memory.attach()) {
+        shared_memory.detach();
+    }
+
+    if (!shared_memory.create(1)) {
+        qDebug() << "another deepin camera instance has started";
+        exit(0);
+    }
+
     CMainWindow w;
-    w.setMinimumSize(500, 500);
+    w.setMinimumSize(850, 600);
     w.show();
 
     Dtk::Widget::moveToCenter(&w);

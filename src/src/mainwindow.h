@@ -38,8 +38,9 @@
 #include "thumbnailsbar.h"
 #include "toolbar.h"
 #include "videoeffect.h"
-#include "videopreviewwidget.h"
+#include "videowidget.h"
 #include "widgetproxy.h"
+#include "set_widget.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -54,6 +55,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <DTitlebar>
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
 
@@ -64,12 +66,13 @@ class CMainWindow : public DMainWindow
     Q_OBJECT
 public:
     CMainWindow(DWidget *w = nullptr);
-
+    ~CMainWindow();
 
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
     void showPreviewByState(PRIVIEW_STATE state);
-
+protected:
+    void keyPressEvent(QKeyEvent *ev) override;
 
 private:
     ThumbnailsBar   m_thumbnail;
@@ -79,15 +82,22 @@ private:
     effectproxy     m_effProxy;
     ToolBar         m_toolBar;
     videoEffect     m_videoEffect;
-    videopreviewwidget  m_videoPre;
+    videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
 
     QFileSystemWatcher m_fileWatcher;
 
-    QVector<videopreviewwidget *> m_VEffectPreview;
+    QVector<videowidget *> m_VEffectPreview;
+
+    DTitlebar *dtitlebar;
+    Set_Widget *m_setwidget;
+ private:
     void initUI();
     void initConnection();
-
+    void setupTitlebar();
+    void menuItemInvoked(QAction *action);
+    void settingsTriggered(bool bTrue);
+    void resizeEvent(QResizeEvent *event);
 private:
 
 };

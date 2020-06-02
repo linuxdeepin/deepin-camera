@@ -5,6 +5,7 @@
 #include <DApplication>
 #include <DRadioButton>
 #include <QVBoxLayout>
+#include <QToolButton>
 
 DWIDGET_USE_NAMESPACE
 
@@ -308,4 +309,20 @@ void Set_Widget::write_save_file()
 {
 
 } // retranslateUi
+
+//void Set_Widget::keyReleaseEvent(QKeyEvent *ev)
+//{
+//    if(ev->key() == Qt::Key_Escape){
+//        this->hide();
+//    }
+//    QWidget::keyReleaseEvent(ev);
+//}
+
+//void Set_Widget::keyPressEvent(QKeyEvent *ev)
+//{
+//    if(ev->key() == Qt::Key_Escape){
+//        this->hide();
+//    }
+//    QWidget::keyReleaseEvent(ev);
+//}
 

@@ -91,61 +91,6 @@ private:
     void init();
     void showCountDownLabel();
 
-private:
-    QVBoxLayout *verticalLayout;
-    QVBoxLayout *verticalLayout_2;
-    QVBoxLayout *verticalLayout_3;
-    QVBoxLayout *verticalLayout_4;
-    QVBoxLayout *verticalLayout_5;
-    QVBoxLayout *verticalLayout_6;
-
-    QHBoxLayout *horizontalLayout;
-    QHBoxLayout *horizontalLayout_2;
-    QHBoxLayout *horizontalLayout_3;
-    QHBoxLayout *horizontalLayout_4;
-    QHBoxLayout *horizontalLayout_5;
-    QHBoxLayout *horizontalLayout_6;
-    QHBoxLayout *horizontalLayout_7;
-
-    QSpacerItem *horizontalSpacer;
-    QSpacerItem *horizontalSpacer_2;
-    QSpacerItem *horizontalSpacer_3;
-    QSpacerItem *horizontalSpacer_4;
-    QSpacerItem *horizontalSpacer_5;
-    QSpacerItem *horizontalSpacer_6;
-    QSpacerItem *horizontalSpacer_7;
-    QSpacerItem *horizontalSpacer_8;
-    QSpacerItem *horizontalSpacer_9;
-
-    QSpacerItem *verticalSpacer;
-    QSpacerItem *verticalSpacer_2;
-    QSpacerItem *verticalSpacer_3;
-    QSpacerItem *verticalSpacer_4;
-    QSpacerItem *verticalSpacer_5;
-    QSpacerItem *verticalSpacer_6;
-    QSpacerItem *verticalSpacer_7;
-    QSpacerItem *verticalSpacer_8;
-    QSpacerItem *verticalSpacer_9;
-
-    QFrame *p_verline;
-
-    DWidget *centralwidget;
-
-    DPushButton *p_takecambtn; //拍照
-
-    DPushButton *p_takevideobtn; //录像
-
-    DPushButton *p_selectbtn; //切换
-
-    QLabel *p_timelabl;
-
-    QFrame *p_horline;
-
-    QScrollArea *p_scrlarea;//缩略图
-
-    QWidget *scrollAreaWidgetContents;
-
-    void retranslateUi();
 signals:
     void finishTakedCamera();//结束拍照或三连拍
     void finishEffectChoose();//结束特效选择

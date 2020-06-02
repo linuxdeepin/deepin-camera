@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <DLabel>
 #include <QVBoxLayout>
+#include <QKeyEvent>
 
 DWIDGET_USE_NAMESPACE
 
@@ -57,6 +58,11 @@ private:
     QHBoxLayout *ViFormGBoxLayout;
     DRadioButton *VFmp4RBtn;
     QSpacerItem *VerSp;
+
+
+protected:
+//    void keyReleaseEvent(QKeyEvent *ev) override;
+//    void keyPressEvent(QKeyEvent *ev) override;
 
 };
 

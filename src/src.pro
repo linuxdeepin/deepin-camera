@@ -30,7 +30,9 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/myscene.cpp \
-    src/encode_voice.cpp
+    src/encode_voice.cpp \
+    src/set_widget.cpp \
+    src/preview_widget.cpp
 
 RESOURCES += \        
     resource/resources.qrc
@@ -44,13 +46,15 @@ HEADERS += \
     src/actiontoken.h \
     src/videoeffect.h \
     src/effectproxy.h \
-    src/videopreviewwidget.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
     src/myscene.h \
     src/encode_voice.h \
-    libcheese_v4l2core/gview_v4l2core\v4l2_core.h
+    libcheese_v4l2core/gview_v4l2core\v4l2_core.h \
+    src/videowidget.h \
+    src/set_widget.h \
+    src/preview_widget.h
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\

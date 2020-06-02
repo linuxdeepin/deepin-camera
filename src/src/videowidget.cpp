@@ -28,7 +28,7 @@
  * files in the program, then also delete it here.
  */
 
-#include "videopreviewwidget.h"
+#include "videowidget.h"
 #include "myscene.h"
 #include <QPixmap>
 #include <QTimer>
@@ -39,7 +39,7 @@
 #include <QThread>
 #include <QScrollBar>
 
-videopreviewwidget::videopreviewwidget(DWidget *parent) : DWidget(parent)
+videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
 
     char *tmp = new char[1024 * 720];
@@ -87,7 +87,7 @@ videopreviewwidget::videopreviewwidget(DWidget *parent) : DWidget(parent)
 
 }
 
-void videopreviewwidget::init()
+void videowidget::init()
 {
     err11 = err19 = 0;
     m_bTakePic = false;
@@ -127,7 +127,7 @@ void videopreviewwidget::init()
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 }
 
-void videopreviewwidget::ReceiveMajorImage(QImage image, int result)
+void videowidget::ReceiveMajorImage(QImage image, int result)
 {
     //超时后关闭视频
     //超时代表着VIDIOC_DQBUF会阻塞，直接关闭视频即可
@@ -190,7 +190,7 @@ void videopreviewwidget::ReceiveMajorImage(QImage image, int result)
     }
 }
 
-void videopreviewwidget::sceneAddItem()
+void videowidget::sceneAddItem()
 {
     if (m_VEffectScene.length() == 0 || m_VEffectPreview.length() == 0) {
         qDebug() << "view/scene/item vector length cannot =0";
@@ -211,7 +211,7 @@ void videopreviewwidget::sceneAddItem()
     }
 }
 
-void videopreviewwidget::updateEffectName()
+void videowidget::updateEffectName()
 {
     for (int i = 0 ; i < 9 && EFFECT_PAGE <= 3 && EFFECT_PAGE >= 0; ++i) {
         //读取配置
@@ -222,7 +222,7 @@ void videopreviewwidget::updateEffectName()
         }
     }
 }
-void videopreviewwidget::showPreviewByState(PRIVIEW_STATE state)
+void videowidget::showPreviewByState(PRIVIEW_STATE state)
 {
     switch (state) {
     case NODEVICE:
@@ -271,7 +271,7 @@ void videopreviewwidget::showPreviewByState(PRIVIEW_STATE state)
     }
 }
 
-void videopreviewwidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectIndex = 0)
+void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectIndex = 0)
 {
     if (img == nullptr || img->isNull()) {
         return;
@@ -312,7 +312,7 @@ void videopreviewwidget::changePicture(PRIVIEW_STATE state,  QImage *img, int ef
     resizeEvent(NULL);//消耗怎么样？？？？？
 }
 
-void videopreviewwidget::transformImage(QImage *img)
+void videowidget::transformImage(QImage *img)
 {
     if (img == NULL || img->isNull())
         return;
@@ -334,7 +334,7 @@ void videopreviewwidget::transformImage(QImage *img)
     resizeImage(img);
 }
 
-void videopreviewwidget::resizeImage(QImage *img)
+void videowidget::resizeImage(QImage *img)
 {
     float wImg = img->width();
     float hImg = img->height();
@@ -365,7 +365,7 @@ void videopreviewwidget::resizeImage(QImage *img)
     *img = img->transformed(martix);
 }
 
-void videopreviewwidget::showCountDownLabel(PRIVIEW_STATE state)
+void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
     qDebug() << "countDown" << countDown;
     QDateTime end_time;
@@ -405,7 +405,7 @@ void videopreviewwidget::showCountDownLabel(PRIVIEW_STATE state)
     resizeEvent(NULL);
 }
 
-void videopreviewwidget::setFont(QGraphicsTextItem *item, int size, QString str)
+void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
 {
     if (item == nullptr)
         return;
@@ -415,20 +415,20 @@ void videopreviewwidget::setFont(QGraphicsTextItem *item, int size, QString str)
     item->setPlainText(str);
 
 }
-void videopreviewwidget::hideCountDownLabel()
+void videowidget::hideCountDownLabel()
 {
     //关闭
     m_pCountItem->hide();
     //m_pNormalScene->removeItem(m_pCountItem);
 }
 
-void videopreviewwidget::hideTimeLabel()
+void videowidget::hideTimeLabel()
 {
     m_pTimeItem->hide();
     //m_pNormalScene->removeItem(m_pTimeItem);
 }
 
-void videopreviewwidget::newEffectPreview()
+void videowidget::newEffectPreview()
 {
     //创建九宫格布局
     for (int i = 0 ; i < 9; ++i) {
@@ -469,7 +469,7 @@ void videopreviewwidget::newEffectPreview()
     }
 }
 
-void videopreviewwidget::delEffectPreview()
+void videowidget::delEffectPreview()
 {
     //释放九宫格布局
     for (int s = 0 ; s < m_VEffectName.length(); ++s) {
@@ -501,12 +501,12 @@ void videopreviewwidget::delEffectPreview()
     m_VEffectPreview.clear();
 }
 
-QImage videopreviewwidget::getCurrentImg()
+QImage videowidget::getCurrentImg()
 {
     return *CURRENT_IMAGE;
 }
 
-void videopreviewwidget::showEvent(QShowEvent *event)
+void videowidget::showEvent(QShowEvent *event)
 {
     if (isFindedDevice)
         ableButtons();
@@ -515,7 +515,7 @@ void videopreviewwidget::showEvent(QShowEvent *event)
     }
 }
 
-void videopreviewwidget::resizePixMap()
+void videowidget::resizePixMap()
 {
     if (STATE != EFFECT) {
         //QRect rect = this->rect();
@@ -557,13 +557,13 @@ void videopreviewwidget::resizePixMap()
     }
 }
 
-void videopreviewwidget::resizeEvent(QResizeEvent *size)
+void videowidget::resizeEvent(QResizeEvent *size)
 {
     resizePixMap();
     return DWidget::resizeEvent(size);
 }
 
-void videopreviewwidget::onShowCountdown()
+void videowidget::onShowCountdown()
 {
     qDebug() << "onShowCountdown";
     VIDEO_STATE = NORMALVIDEO;
@@ -575,7 +575,7 @@ void videopreviewwidget::onShowCountdown()
     countTimer->start(1000);
 }
 
-void videopreviewwidget::showCountdown()
+void videowidget::showCountdown()
 {
     qDebug() << "showCountdown";
     //显示计时
@@ -607,14 +607,14 @@ void videopreviewwidget::showCountdown()
     }
 }
 
-void videopreviewwidget::flash()
+void videowidget::flash()
 {
     labTimer.showFullScreen();
     labTimer.setWindowFlag(Qt::WindowType::ToolTip);
     flashTimer->stop();
 }
 
-void videopreviewwidget::onShowThreeCountdown()
+void videowidget::onShowThreeCountdown()
 {
     qDebug() << "onShowThreeCountdown";
     if (countTimer->isActive()) {//连续点击拍照
@@ -631,7 +631,7 @@ void videopreviewwidget::onShowThreeCountdown()
     }
 }
 
-void videopreviewwidget::onTShowTime()
+void videowidget::onTShowTime()
 {
     qDebug() << "onTShowTime";
     if (countTimer->isActive()) {//连续点击拍照
@@ -646,7 +646,7 @@ void videopreviewwidget::onTShowTime()
     }
 }
 
-void videopreviewwidget::onCancelThreeShots()
+void videowidget::onCancelThreeShots()
 {
     qDebug() << "onCancelThreeShots";
     VIDEO_STATE = NORMALVIDEO;
@@ -657,7 +657,7 @@ void videopreviewwidget::onCancelThreeShots()
     }
 }
 
-void videopreviewwidget::onTakeVideoOver()
+void videowidget::onTakeVideoOver()
 {
     qDebug() << "onTakeVideoOver";
     VIDEO_STATE = NORMALVIDEO;
@@ -665,7 +665,7 @@ void videopreviewwidget::onTakeVideoOver()
     hideTimeLabel();
 }
 
-void videopreviewwidget::onChooseEffect()
+void videowidget::onChooseEffect()
 {
     qDebug() << "onChooseEffect";
     //by xxj
@@ -680,7 +680,7 @@ void videopreviewwidget::onChooseEffect()
     //end
 }
 
-void videopreviewwidget::onMoreEffectLeft()
+void videowidget::onMoreEffectLeft()
 {
     qDebug() << "onMoreEffectLeft";
     EFFECT_PAGE--;
@@ -691,7 +691,7 @@ void videopreviewwidget::onMoreEffectLeft()
     updateEffectName();
 }
 
-void videopreviewwidget::onMoreEffectRight()
+void videowidget::onMoreEffectRight()
 {
     qDebug() << "onMoreEffectRight";
     EFFECT_PAGE++;
@@ -700,7 +700,7 @@ void videopreviewwidget::onMoreEffectRight()
     updateEffectName();
 }
 
-void videopreviewwidget::effectChoose(QString name)
+void videowidget::effectChoose(QString name)
 {
     qDebug() << name;
     //根据名字得带index
@@ -713,20 +713,20 @@ void videopreviewwidget::effectChoose(QString name)
     //返回特效选择结束信号
     finishEffectChoose();
 }
-void videopreviewwidget::onBtnVideo()
+void videowidget::onBtnVideo()
 {
     hideCountDownLabel();
 }
-void videopreviewwidget::onBtnThreeShots()
+void videowidget::onBtnThreeShots()
 {
     hideTimeLabel();
 }
-void videopreviewwidget::onBtnPhoto()
+void videowidget::onBtnPhoto()
 {
     hideTimeLabel();
 }
 
-void videopreviewwidget::forbidScrollBar(QGraphicsView *view)
+void videowidget::forbidScrollBar(QGraphicsView *view)
 {
     view->horizontalScrollBar()->blockSignals(true);
     view->verticalScrollBar()->blockSignals(true);

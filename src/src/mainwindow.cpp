@@ -57,6 +57,11 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 //    connect(m_fileWatcher, SIGNAL(fileChanged(const QString&)), this, SLOT(onFileChanged(const QString&)));
 }
 
+CMainWindow::~CMainWindow()
+{
+
+}
+
 void CMainWindow::initUI()
 {
     DWidget *wget = new DWidget;
@@ -77,8 +82,10 @@ void CMainWindow::initUI()
 
     wget->setLayout(hboxlayout);
     setCentralWidget(wget);
+
+    setupTitlebar();
 //    this->setMinimumWidth(600);
-    this->resize(500, 500);
+    this->resize(850, 600);
 }
 
 void CMainWindow::initConnection()
@@ -145,5 +152,54 @@ void CMainWindow::initConnection()
 //    videopreviewwidget  m_videoPre;
 //    widgetProxy     m_wgtProxy;
 }
+
+void CMainWindow::setupTitlebar()
+{
+    DMenu *menu = new DMenu();
+    QAction *settingAction(new QAction(tr("Settings"), this));
+    menu->addAction(settingAction);
+    titlebar()->setMenu(menu);
+    connect(settingAction, &QAction::triggered, this, &CMainWindow::settingsTriggered);
+
+
+    m_setwidget = new Set_Widget(centralWidget());
+    m_setwidget->setBackgroundRole(QPalette::Background);
+    m_setwidget->setAutoFillBackground(true);
+    QPalette *plette = new QPalette();
+
+    plette->setBrush(QPalette::Background, QBrush(QColor(64, 64, 64, 180), Qt::SolidPattern));
+    plette->setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255, 255), Qt::SolidPattern));
+    m_setwidget->setPalette(*plette);
+
+    //m_setwidget->update();
+    //m_setwidget->setGeometry(0, 15 + m_setwidget->height(), this->width(), this->height() - m_setwidget->height());
+}
+
+void CMainWindow::resizeEvent(QResizeEvent *event)
+{
+    Q_UNUSED(event);
+    int width = this->width();
+    int height = this->height();
+    m_setwidget->resize(width, height);
+}
+
+void CMainWindow::menuItemInvoked(QAction *action)
+{
+
+}
+
+void CMainWindow::settingsTriggered(bool bTrue)
+{
+    m_setwidget->show();
+}
+
+void CMainWindow::keyPressEvent(QKeyEvent *ev)
+{
+    if(ev->key() == Qt::Key_Escape){
+        m_setwidget->hide();
+    }
+    QWidget::keyReleaseEvent(ev);
+}
+
 
 
