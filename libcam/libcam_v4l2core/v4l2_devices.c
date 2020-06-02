@@ -139,6 +139,7 @@ int enum_v4l2_devices()
     struct udev_enumerate *enumerate;
     struct udev_list_entry *devices;
     struct udev_list_entry *dev_list_entry;
+    struct v4l2_fmtdesc fmt;
 
     int num_dev = 0;
     struct v4l2_capability v4l2_cap;
@@ -195,6 +196,25 @@ int enum_v4l2_devices()
             v4l2_close(fd);
             continue; /*next dir entry*/
         }
+        if(v4l2_cap.capabilities&V4L2_CAP_VBI_CAPTURE && v4l2_cap.capabilities&V4L2_CAP_STREAMING)
+        {
+            fprintf(stderr, "V4L2_CORE: V4L2_CAP_VBI_CAPTURE or V4L2_CAP_STREAMING error: %s\n", strerror(errno));
+            fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
+            v4l2_close(fd);
+            continue; /*next dir entry*/
+        }
+
+        memset(&fmt, 0, sizeof(fmt));
+        fmt.index = 0;
+        fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+        if(xioctl(fd,VIDIOC_ENUM_FMT,&fmt) < 0)
+        {
+            fprintf(stderr, "V4L2_CORE: VIDIOC_ENUM_FMT error: %s\n", strerror(errno));
+            fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
+            v4l2_close(fd);
+            continue; /*next dir entry*/
+        }
+
         v4l2_close(fd);
 
         num_dev++;

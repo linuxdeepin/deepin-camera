@@ -1,32 +1,23 @@
 /*
- * (c) 2020, Uniontech Technology Co., Ltd. <support@deepin.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 3 of the
- * License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but
- * is provided AS IS, WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, and
- * NON-INFRINGEMENT.  See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see <http://www.gnu.org/licenses/>.
- *
- * In addition, as a special exception, the copyright holders give
- * permission to link the code of portions of this program with the
- * OpenSSL library under certain conditions as described in each
- * individual source file, and distribute linked combinations
- * including the two.
- * You must obey the GNU General Public License in all respects
- * for all of the code used other than OpenSSL.  If you modify
- * file(s) with this exception, you may extend this exception to your
- * version of the file(s), but you are not obligated to do so.  If you
- * do not wish to do so, delete this exception statement from your
- * version.  If you delete this exception statement from all source
- * files in the program, then also delete it here.
- */
+* Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
+*
+* Author:     shicetu <shicetu@uniontech.com>
+*
+* Maintainer: shicetu <shicetu@uniontech.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #ifdef __cplusplus
 extern "C" {
@@ -256,17 +247,39 @@ int LPF_StartRun()
     v4l2core_set_verbosity(debug_level);
 
     /*得到v4l2的句柄*/
+
     vd2 = create_v4l2_device_handler(my_options->device);
     if(vd2 == NULL){
-        char message[50];
-        snprintf(message, 49, "no video device (%s) found", my_options->device);
-        options_clean();
-        return -1;
+        unsigned int i;
+        v4l2_device_list_t* devlist = get_device_list();
+        if(devlist->list_devices > 0){
+            for(i = 0; i < devlist->list_devices; i++){
+                vd2 = create_v4l2_device_handler(devlist->list_devices[i].device);
+                if(vd2 != NULL){
+                    break;
+                }
+                continue;
+            }
+            if(vd2 == NULL){
+                char message[50];
+                snprintf(message, 49, "no video device (%s) found", my_options->device);
+                options_clean();
+                return -1;
+            }
+        }
+        else{
+            char message[50];
+            snprintf(message, 49, "no video device (%s) found", my_options->device);
+            options_clean();
+            return -1;
+        }
     }
     else{
         /*设置渲染方式*/
-        set_render_flag(render);
+//        set_render_flag(render);
     }
+
+
 
     if(my_options->disable_libv4l2){
         v4l2core_disable_libv4l2(vd2);
@@ -286,12 +299,12 @@ int LPF_StartRun()
     v4l2core_define_fps(vd2, my_config->fps_num, my_config->fps_denom);
 
     /*设置音视频特效*/
-    set_render_fx_mask(my_config->video_fx);
-    set_audio_fx_mask(my_config->audio_fx);
+    //set_render_fx_mask(my_config->video_fx);
+    //set_audio_fx_mask(my_config->audio_fx);
 
-    my_config->osd_mask &= ~REND_OSD_VUMETER_MONO;
-    my_config->osd_mask &= ~REND_OSD_VUMETER_STEREO;
-    render_set_osd_mask(my_config->osd_mask);
+//    my_config->osd_mask &= ~REND_OSD_VUMETER_MONO;
+//    my_config->osd_mask &= ~REND_OSD_VUMETER_STEREO;
+//    render_set_osd_mask(my_config->osd_mask);
 
 
     /*设置视频编码器*/
@@ -546,14 +559,14 @@ void *encoder_loop()
         v4l2core_h264_request_idr(vd2);
 
         if(debug_level > 0)
-            printf("GUVCVIEW: storing external pps and sps data in encoder context\n");
+            printf("Camera: storing external pps and sps data in encoder context\n");
         encoder_ctx->h264_pps_size = v4l2core_get_h264_pps_size(vd2);
         if(encoder_ctx->h264_pps_size > 0)
         {
             encoder_ctx->h264_pps = calloc(encoder_ctx->h264_pps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_pps == NULL)
             {
-                fprintf(stderr,"GUVCVIEW: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"Camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_pps, v4l2core_get_h264_pps(vd2), encoder_ctx->h264_pps_size);
@@ -565,7 +578,7 @@ void *encoder_loop()
             encoder_ctx->h264_sps = calloc(encoder_ctx->h264_sps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_sps == NULL)
             {
-                fprintf(stderr,"GUVCVIEW: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"Camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_sps, v4l2core_get_h264_sps(vd2), encoder_ctx->h264_sps_size);
@@ -593,14 +606,14 @@ void *encoder_loop()
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("GUVCVIEW: starting encoder audio thread\n");
+            printf("Camera: starting encoder audio thread\n");
 
         int ret = __THREAD_CREATE(&encoder_audio_thread, audio_processing_loop, (void *) encoder_ctx);
 
         if(ret)
-            fprintf(stderr, "GUVCVIEW: encoder audio thread creation failed (%i)\n", ret);
+            fprintf(stderr, "Camera: encoder audio thread creation failed (%i)\n", ret);
         else if(debug_level > 2)
-            printf("GUVCVIEW: created audio encoder thread with tid: %u\n",
+            printf("Camera: created audio encoder thread with tid: %u\n",
                 (unsigned int) encoder_audio_thread);
     }
 
@@ -632,7 +645,7 @@ void *encoder_loop()
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("GUVCVIEW: join encoder audio thread\n");
+            printf("Camera: join encoder audio thread\n");
         __THREAD_JOIN(encoder_audio_thread);
     }
 

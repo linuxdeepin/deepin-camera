@@ -33,6 +33,7 @@ SOURCES += \
     src/encode_voice.cpp \
     src/set_widget.cpp \
     src/preview_widget.cpp
+    src/devnummonitor.cpp
 
 RESOURCES += \        
     resource/resources.qrc
@@ -55,6 +56,7 @@ HEADERS += \
     src/videowidget.h \
     src/set_widget.h \
     src/preview_widget.h
+    src/devnummonitor.h
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\

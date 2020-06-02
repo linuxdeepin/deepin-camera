@@ -18,40 +18,48 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef DEVNUMMONITOR_H
+#define DEVNUMMONITOR_H
 
-#include "actiontoken.h"
-#include <QDebug>
+#include <QThread>
+#include<QTimer>
+#include <QMutex>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "LPF_V4L2.h"
+#include "v4l2_core.h"
+#include"v4l2_devices.h"
+#include "stdlib.h"
+#include "malloc.h"
+#include "stdio.h"
+#include "math.h"
 
-actionToken::actionToken(QObject *parent) : QObject(parent)
-{
-    is_active = 0;
-    encode_thread = new encode_voice_Thread();
+#ifdef __cplusplus
 }
+#endif
 
-void actionToken::onTakePic()
+class DevNumMonitor: public QThread
 {
-    qDebug() << "onTakePic";
-}
+    Q_OBJECT
+public:
+    DevNumMonitor();
+    void stop();
+    void init();
+protected:
+    void run();
 
-void actionToken::onThreeShots()
-{
-    qDebug() << "onThreeShots";
-}
+private slots:
+    void timeOutSlot();
 
-void actionToken::onTakeVideo()
-{
-    qDebug() << "onTakeVideo";
+public:
+    static QMap<QString, QString> devmap;
+private:
+    QTimer *m_pTimer;
+    v4l2_device_list_t *devlist;
+    QMutex mutex;
 
-    if (is_active) {
-        encode_thread->stop();
-        is_active = 0;
-        reset_video_timer();
-    } else {
-        encode_thread->start();
-        is_active = 1;
-    }
-}
+};
 
-
-
+#endif // DEVNUMMONITOR_H
