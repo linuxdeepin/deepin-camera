@@ -250,29 +250,29 @@ int LPF_StartRun()
 
     vd2 = create_v4l2_device_handler(my_options->device);
     if(vd2 == NULL){
-        unsigned int i;
-        v4l2_device_list_t* devlist = get_device_list();
-        if(devlist->list_devices > 0){
-            for(i = 0; i < devlist->list_devices; i++){
-                vd2 = create_v4l2_device_handler(devlist->list_devices[i].device);
-                if(vd2 != NULL){
-                    break;
-                }
-                continue;
-            }
-            if(vd2 == NULL){
-                char message[50];
-                snprintf(message, 49, "no video device (%s) found", my_options->device);
-                options_clean();
-                return -1;
-            }
-        }
-        else{
+//        unsigned int i;
+//        v4l2_device_list_t* devlist = get_device_list();
+//        if(devlist->list_devices > 0){
+//            for(i = 0; i < devlist->list_devices; i++){
+//                vd2 = create_v4l2_device_handler(devlist->list_devices[i].device);
+//                if(vd2 != NULL){
+//                    break;
+//                }
+//                continue;
+//            }
+//            if(vd2 == NULL){
+//                char message[50];
+//                snprintf(message, 49, "no video device (%s) found", my_options->device);
+//                options_clean();
+//                return -1;
+//            }
+//        }
+//        else{
             char message[50];
             snprintf(message, 49, "no video device (%s) found", my_options->device);
             options_clean();
             return -1;
-        }
+//        }
     }
     else{
         /*设置渲染方式*/
