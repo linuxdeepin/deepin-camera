@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * Maintainer: shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -35,6 +35,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_fileWatcher.addPath(m_strPath);
 
     initUI();
+    initTitleBar();
     initConnection();
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
@@ -69,18 +70,35 @@ void CMainWindow::initUI()
     m_videoPre.setPalette(*pal);
     hboxlayout->addWidget(&m_videoPre);
 
-    hboxlayout->addWidget(&m_toolBar);
-    hboxlayout->addWidget(&m_thumbnail);
-    hboxlayout->setStretch(0, 16);
-    hboxlayout->setStretch(1, 1);
-    hboxlayout->setStretch(2, 3);
+//    hboxlayout->addWidget(&m_toolBar);
+//    hboxlayout->addWidget(&m_thumbnail);
+//    hboxlayout->setStretch(0, 16);
+//    hboxlayout->setStretch(1, 1);
+//    hboxlayout->setStretch(2, 3);
 
     wget->setLayout(hboxlayout);
     setCentralWidget(wget);
 
     setupTitlebar();
-//    this->setMinimumWidth(600);
     this->resize(850, 600);
+}
+
+void CMainWindow::initTitleBar()
+{
+    DButtonBox *pDButtonBox = new DButtonBox();
+    pDButtonBox->setFixedWidth(200);
+    QList<DButtonBoxButton *> listButtonBox;
+    DButtonBoxButton *pDButtonBoxBtn1 = new DButtonBoxButton(QStringLiteral("拍照"));
+    DButtonBoxButton *pDButtonBoxBtn2 = new DButtonBoxButton(QStringLiteral("视频"));
+    listButtonBox.append(pDButtonBoxBtn1);
+    listButtonBox.append(pDButtonBoxBtn2);
+    pDButtonBox->setButtonList(listButtonBox, false);
+    titlebar()->addWidget(pDButtonBox);
+
+    DIconButton *pDIconBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    titlebar()->setIcon(QIcon::fromTheme("preferences-system"));// /usr/share/icons/bloom/apps/96
+    titlebar()->addWidget(pDIconBtn, Qt::AlignLeft);
+    connect(pDIconBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
 }
 
 void CMainWindow::initConnection()

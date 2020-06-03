@@ -68,16 +68,16 @@ public slots:
     void onTShowTime();
     void onCancelThreeShots();
     void onTakeVideoOver();
-    void onChooseEffect();
-    void onMoreEffectLeft();
-    void onMoreEffectRight();
+//    void onChooseEffect();
+//    void onMoreEffectLeft();
+//    void onMoreEffectRight();
     void onBtnPhoto();
     void onBtnThreeShots();
     void onBtnVideo();
 
     void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
     void showCountdown();
-    void effectChoose(QString name);
+//    void effectChoose(QString name);
     void changeDev();
 
 private slots:
@@ -138,31 +138,6 @@ private:
     int err11, err19;
     MajorImageProcessingThread *imageprocessthread;
     bool m_bTakePic;
-
-signals:
-//    void finishTakedCamera();//结束拍照或三连拍
-//    void finishEffectChoose();//结束特效选择
-//    void sigFlash();
-//    void disableButtons();
-//    void ableButtons();
-public slots:
-//    void onShowCountdown();
-//    void onShowThreeCountdown();
-//    void onTShowTime();
-//    void onCancelThreeShots();
-//    void onTakeVideoOver();
-//    void onChooseEffect();
-//    void onMoreEffectLeft();
-//    void onMoreEffectRight();
-//    void onBtnPhoto();
-//    void onBtnThreeShots();
-//    void onBtnVideo();
-
-//    void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
-//    void showCountdown();
-//    void effectChoose(QString name);
-
-
 };
 
 #endif // VIDEOWIDGET_H
