@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * Maintainer: shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -60,9 +60,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
-    m_pGridLayout->setHorizontalSpacing(10);
-    m_pGridLayout->setVerticalSpacing(10);
-    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
+//    m_pGridLayout->setHorizontalSpacing(10);
+//    m_pGridLayout->setVerticalSpacing(10);
+//    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
 
 
     m_pNormalScene->addItem(m_pNormalItem);
@@ -550,7 +550,7 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
-    resizePixMap();
+    //resizePixMap();
     return DWidget::resizeEvent(size);
 }
 
@@ -656,54 +656,54 @@ void videowidget::onTakeVideoOver()
     hideTimeLabel();
 }
 
-void videowidget::onChooseEffect()
-{
-    qDebug() << "onChooseEffect";
-    //by xxj
-    if (m_pGridLayout->count() == 1) {
-        STATE = EFFECT;
-        showPreviewByState(STATE);
-    } else {
-        STATE = NORMALVIDEO;
-        //delEffectPreview();
-        showPreviewByState(STATE);
-    }
-    //end
-}
+//void videowidget::onChooseEffect()
+//{
+//    qDebug() << "onChooseEffect";
+//    //by xxj
+//    if (m_pGridLayout->count() == 1) {
+//        STATE = EFFECT;
+//        showPreviewByState(STATE);
+//    } else {
+//        STATE = NORMALVIDEO;
+//        //delEffectPreview();
+//        showPreviewByState(STATE);
+//    }
+//    //end
+//}
 
-void videowidget::onMoreEffectLeft()
-{
-    qDebug() << "onMoreEffectLeft";
-    EFFECT_PAGE--;
+//void videowidget::onMoreEffectLeft()
+//{
+//    qDebug() << "onMoreEffectLeft";
+//    EFFECT_PAGE--;
 
-    if (EFFECT_PAGE < 0)
-        EFFECT_PAGE++;
+//    if (EFFECT_PAGE < 0)
+//        EFFECT_PAGE++;
 
-    updateEffectName();
-}
+//    updateEffectName();
+//}
 
-void videowidget::onMoreEffectRight()
-{
-    qDebug() << "onMoreEffectRight";
-    EFFECT_PAGE++;
-    if (EFFECT_PAGE > (EFFECTS_NUM ) / 9)
-        EFFECT_PAGE--;
-    updateEffectName();
-}
+//void videowidget::onMoreEffectRight()
+//{
+//    qDebug() << "onMoreEffectRight";
+//    EFFECT_PAGE++;
+//    if (EFFECT_PAGE > (EFFECTS_NUM ) / 9)
+//        EFFECT_PAGE--;
+//    updateEffectName();
+//}
 
-void videowidget::effectChoose(QString name)
-{
-    qDebug() << name;
-    //根据名字得带index
-    int index = eff->FindEffIndexByName(name);
-    EFFECT_INDEX = index;
-    //返回预览界面
-    STATE = NORMALVIDEO;
-    //delEffectPreview();
-    showPreviewByState(STATE);
-    //返回特效选择结束信号
-    finishEffectChoose();
-}
+//void videowidget::effectChoose(QString name)
+//{
+//    qDebug() << name;
+//    //根据名字得带index
+//    int index = eff->FindEffIndexByName(name);
+//    EFFECT_INDEX = index;
+//    //返回预览界面
+//    STATE = NORMALVIDEO;
+//    //delEffectPreview();
+//    showPreviewByState(STATE);
+//    //返回特效选择结束信号
+//    finishEffectChoose();
+//}
 void videowidget::onBtnVideo()
 {
     hideCountDownLabel();

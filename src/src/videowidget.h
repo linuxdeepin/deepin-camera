@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * Maintainer: shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -124,16 +124,16 @@ public slots:
     void onTShowTime();
     void onCancelThreeShots();
     void onTakeVideoOver();
-    void onChooseEffect();
-    void onMoreEffectLeft();
-    void onMoreEffectRight();
+//    void onChooseEffect();
+//    void onMoreEffectLeft();
+//    void onMoreEffectRight();
     void onBtnPhoto();
     void onBtnThreeShots();
     void onBtnVideo();
 
     void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
     void showCountdown();
-    void effectChoose(QString name);
+//    void effectChoose(QString name);
 
 private slots:
     void ReceiveMajorImage(QImage image, int result);
