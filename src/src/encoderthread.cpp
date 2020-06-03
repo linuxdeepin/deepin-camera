@@ -19,8 +19,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "encode_voice.h"
-#include "LPF_V4L2.h"
+#include "encoderthread.h"
+#include "../libcam/libcam/camview.h"
 
 encode_voice_Thread::encode_voice_Thread()
 {

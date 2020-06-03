@@ -52,10 +52,62 @@ class videowidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit videowidget(DWidget *parent = nullptr);
-    void showEvent(QShowEvent *event);
+    explicit     videowidget(DWidget *parent = nullptr);
+    void        showEvent(QShowEvent *event);
+    QImage     getCurrentImg();
 
-    QImage getCurrentImg();
+signals:
+    void finishTakedCamera();//结束拍照或三连拍
+    void finishEffectChoose();//结束特效选择
+    void sigFlash();
+    void disableButtons();
+    void ableButtons();
+public slots:
+    void onShowCountdown();
+    void onShowThreeCountdown();
+    void onTShowTime();
+    void onCancelThreeShots();
+    void onTakeVideoOver();
+    void onChooseEffect();
+    void onMoreEffectLeft();
+    void onMoreEffectRight();
+    void onBtnPhoto();
+    void onBtnThreeShots();
+    void onBtnVideo();
+
+    void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
+    void showCountdown();
+    void effectChoose(QString name);
+    void changeDev();
+
+private slots:
+    void ReceiveMajorImage(QImage image, int result);
+    void flash();
+
+private:
+    void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
+    void resizePixMap();
+
+    void transformImage(QImage *img);
+    void resizeImage(QImage *img);
+    void setFont(QGraphicsTextItem *item, int size, QString str); //自体
+
+    void showCountDownLabel(PRIVIEW_STATE state);
+    void hideCountDownLabel();
+    void hideTimeLabel();
+    void forbidScrollBar(QGraphicsView *view);
+
+    void newPreViewByState(PRIVIEW_STATE state);//新建view
+    void sceneAddItem();
+    void updateEffectName();
+    void newEffectPreview();//创建特效view
+    void delEffectPreview();//释放view
+    void showPreviewByState(PRIVIEW_STATE state);//展示view
+
+    void init();
+    void showCountDownLabel();
+
+
 private:
     bool isFindedDevice = false;
     videoEffect *eff;
@@ -76,68 +128,41 @@ private:
     int countDown;
     QTimer *countTimer;
     QTimer *flashTimer;
-    QDateTime begin_time ;
+    QDateTime begin_time;
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
     int EFFECT_PAGE = 0;
 
     int m_curTakePicTime;//当前连拍次数
     int m_countdownLen = 1;
-
-
-
-    void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-    void resizePixMap();
-
-    void transformImage(QImage *img);
-    void resizeImage(QImage *img);
-    void setFont(QGraphicsTextItem *item, int size, QString str); //自体
-
-    void showCountDownLabel(PRIVIEW_STATE state);
-    void hideCountDownLabel();
-    void hideTimeLabel();
-    void forbidScrollBar(QGraphicsView *view);
-
-    void newPreViewByState(PRIVIEW_STATE state);//新建view
-    void sceneAddItem();
-    void updateEffectName();
-    void newEffectPreview();//创建特效view
-    void delEffectPreview();//释放view
-    void showPreviewByState(PRIVIEW_STATE state);//展示view
-
     int err11, err19;
-
     MajorImageProcessingThread *imageprocessthread;
     bool m_bTakePic;
-    void init();
-    void showCountDownLabel();
 
 signals:
-    void finishTakedCamera();//结束拍照或三连拍
-    void finishEffectChoose();//结束特效选择
-    void sigFlash();
-    void disableButtons();
-    void ableButtons();
+//    void finishTakedCamera();//结束拍照或三连拍
+//    void finishEffectChoose();//结束特效选择
+//    void sigFlash();
+//    void disableButtons();
+//    void ableButtons();
 public slots:
-    void onShowCountdown();
-    void onShowThreeCountdown();
-    void onTShowTime();
-    void onCancelThreeShots();
-    void onTakeVideoOver();
+//    void onShowCountdown();
+//    void onShowThreeCountdown();
+//    void onTShowTime();
+//    void onCancelThreeShots();
+//    void onTakeVideoOver();
 //    void onChooseEffect();
 //    void onMoreEffectLeft();
 //    void onMoreEffectRight();
-    void onBtnPhoto();
-    void onBtnThreeShots();
-    void onBtnVideo();
+//    void onBtnPhoto();
+//    void onBtnThreeShots();
+//    void onBtnVideo();
 
-    void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
-    void showCountdown();
+//    void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
+//    void showCountdown();
 //    void effectChoose(QString name);
 
-private slots:
-    void ReceiveMajorImage(QImage image, int result);
-    void flash();
+
 };
 
 #endif // VIDEOWIDGET_H

@@ -47,6 +47,10 @@ public:
     DevNumMonitor();
     void stop();
     void init();
+
+signals:
+    void seltBtnStateEnable();
+    void seltBtnStateDisable();
 protected:
     void run();
 
@@ -54,7 +58,7 @@ private slots:
     void timeOutSlot();
 
 public:
-    static QMap<QString, QString> devmap;
+    //sstatic QMap<QString, QString> devmap;
 private:
     QTimer *m_pTimer;
     v4l2_device_list_t *devlist;

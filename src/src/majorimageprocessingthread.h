@@ -32,11 +32,11 @@
 extern "C" {
 #endif
 #include "LPF_V4L2.h"
+#include "camview.h"
 #include "stdlib.h"
 #include "malloc.h"
 #include "stdio.h"
 #include "math.h"
-
 #ifdef __cplusplus
 }
 #endif
@@ -56,6 +56,10 @@ protected:
 private:
     volatile int majorindex;
     volatile bool stopped;
+    v4l2_dev_t *vd1;
+    v4l2_frame_buff_t *frame;
+    unsigned char *rgb24;
+    int result;
 
 signals:
     void SendMajorImageProcessing(QImage image, int result);

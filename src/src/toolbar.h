@@ -50,6 +50,7 @@ signals:
     void sltVideo();
     void sltThreeShot();
     void sltEffect();
+    void sltCamera();
 
     void takepic();
     void threeShots();
@@ -60,6 +61,8 @@ signals:
 public slots:
     void set_btn_state_no_dev();
     void set_btn_state_wth_dev();
+    void set_btn_state_enable();
+    void set_btn_state_disable();
 
 
 private slots:

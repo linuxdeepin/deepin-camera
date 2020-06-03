@@ -21,7 +21,7 @@
 
 #include "actiontoken.h"
 #include <QDebug>
-#include "LPF_V4L2.h"
+#include "camview.h"
 
 actionToken::actionToken(QObject *parent) : QObject(parent)
 {

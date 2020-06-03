@@ -21,6 +21,7 @@
 
 #include "majorimageprocessingthread.h"
 
+
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
     stopped = false;
@@ -34,36 +35,27 @@ void MajorImageProcessingThread::stop()
 
 void MajorImageProcessingThread::init()
 {
-    //condition = new QWaitCondition();
+    vd1 = get_v4l2_device_handler();
 }
 
 void MajorImageProcessingThread::run()
 {
-
-    v4l2_dev_t *vd1 = get_v4l2_dev();
-    v4l2_frame_buff_t *frame;
-    unsigned char *rgb24;
-
     v4l2core_start_stream(vd1);
-
     while (!stopped) {
         msleep(1000 / 20);
+        result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
+            //result = 11;
             continue;
         }
-
-        int result = -1;
-        if (frame != nullptr) {
-            result = 0;
-        }
-
-//        printf("(raw)frame->timestamp:%lu\n", static_cast<long unsigned int>(frame->timestamp));
+        result = 0;
 
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
 
             uint8_t *input_frame = frame->yuv_frame;
+
             /*
              * TODO: check codec_id, format and frame flags
              * (we may want to store a compressed format
@@ -80,10 +72,8 @@ void MajorImageProcessingThread::run()
                     break;
                 }
             }
-            /*add the frame to the encoder buffer*/
+            /*把帧加入编码队列*/
             encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
-
-            //printf("(video)frame->timestamp:%llu\n", frame->timestamp);
 
             /*
              * exponencial scheduler

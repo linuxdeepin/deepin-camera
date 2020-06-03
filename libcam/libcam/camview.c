@@ -373,7 +373,7 @@ void request_format_update()
  *
  * returns: pointer to v4l2 device handler (or null on error)
  */
-v4l2_dev_t *create_v4l2_device_handler(const char *device)
+v4l2_dev_t *get_v4l2_dev(const char *device)
 {
     my_vd = v4l2core_init_dev(device);
 
@@ -785,6 +785,23 @@ static void *encoder_loop(void *data)
     my_encoder_status = 0;
 
     return ((void *) 0);
+}
+
+/*
+ * create a v4l2 device handler
+ * args:
+ *    device - device name
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to v4l2 device handler (or null on error)
+ */
+v4l2_dev_t *create_v4l2_device_handler(const char *device)
+{
+    my_vd = v4l2core_init_dev(device);
+
+    return my_vd;
 }
 
 /*

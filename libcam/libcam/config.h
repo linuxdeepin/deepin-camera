@@ -23,6 +23,7 @@
 #define CONFIG_H
 
 #include <stdint.h>
+#include <stdio.h>
 #include "options.h"
 
 #define PACKAGE_LOCALE_DIR "./"

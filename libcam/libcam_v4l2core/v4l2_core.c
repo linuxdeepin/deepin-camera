@@ -1744,7 +1744,7 @@ static void clean_v4l2_dev(v4l2_dev_t *vd)
 v4l2_dev_t* v4l2core_init_dev(const char *device)
 {
 	/*assertions*/
-	assert(device != NULL);
+    //assert(device != NULL);
 	
 	///*make sure to close and clean any existing device data*/
 	//if(vd != NULL)

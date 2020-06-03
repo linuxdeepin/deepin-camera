@@ -36,7 +36,6 @@
 #include "core_io.h"
 #include "gui.h"
 #include "config.h"
-#include "config.h"
 
 #define MAXLINE 100 /*100 char lines max*/
 

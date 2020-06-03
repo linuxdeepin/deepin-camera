@@ -114,6 +114,7 @@ void ToolBar::initConnection()
     connect(m_peffects, SIGNAL(clicked()), this, SLOT(set_effects()));
     connect(m_pleft_arrow, SIGNAL(clicked()), this, SLOT(set_effects_left()));
     connect(m_pright_arrow, SIGNAL(clicked()), this, SLOT(set_effects_right()));
+    connect(m_change_camera, SIGNAL(clicked()), this, SIGNAL(sltCamera()));
 }
 
 void ToolBar::set_btn_state_no_dev()
@@ -163,6 +164,16 @@ void ToolBar::set_btn_state_wth_dev()
 {
     set_tackpic();
     m_ptake_photo->setCheckable(false);
+}
+
+void ToolBar::set_btn_state_enable()
+{
+    this->m_change_camera->setEnabled(true);
+}
+
+void ToolBar::set_btn_state_disable()
+{
+    this->m_change_camera->setEnabled(false);
 }
 
 void ToolBar::set_photo()

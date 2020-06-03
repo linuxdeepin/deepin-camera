@@ -219,10 +219,10 @@ int load_control_profile(v4l2_dev_t *vd, const char *filename)
 							char str[max+1];
 							char fmt[48];
 							sprintf(fmt,"ID{0x%%*x};CHK{%%*i:%%*i:%%*i:0}==STR{\"%%%is\"}", max);
-							sscanf(line, fmt, str);
+                            sscanf(line, fmt, str);
 
 							/*we are only scannig for max chars so this should never happen*/
-							if(strlen(str) > max) /*FIXME: should also check (minimum +N*step)*/
+                            if(strlen(str) > max) /*FIXME: should also check (minimum +N*step)*/
 							{
                                 fprintf(stderr, "V4L2_CORE: (load_control_profile) string bigger than maximum buffer size (%i > %i)\n",
 									(int) strlen(str), max);

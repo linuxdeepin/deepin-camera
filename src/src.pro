@@ -30,12 +30,12 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/myscene.cpp \
-    src/encode_voice.cpp \
     src/set_widget.cpp \
-    src/preview_widget.cpp
-    src/devnummonitor.cpp
+    src/preview_widget.cpp \
+    src/devnummonitor.cpp \
+    src/encoderthread.cpp
 
-RESOURCES += \        
+RESOURCES += \
     resource/resources.qrc
 
 HEADERS += \
@@ -51,19 +51,19 @@ HEADERS += \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
     src/myscene.h \
-    src/encode_voice.h \
     libcheese_v4l2core/gview_v4l2core\v4l2_core.h \
     src/videowidget.h \
     src/set_widget.h \
-    src/preview_widget.h
-    src/devnummonitor.h
+    src/preview_widget.h \
+    src/devnummonitor.h \
+    src/encoderthread.h
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\
                 ../libcam/libcam_render\
                 ../libcam/libcam_encoder \
                 ../libcam/libcam_audio \
-                ../libcam\
+                ../libcam/libcam
                 /usr/include
 
 

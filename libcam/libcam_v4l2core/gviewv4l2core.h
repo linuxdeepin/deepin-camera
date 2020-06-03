@@ -32,6 +32,7 @@
 #include <inttypes.h>
 #include <sys/types.h>
 
+
 /*make sure we support c++*/
 __BEGIN_DECLS
 
@@ -39,39 +40,39 @@ __BEGIN_DECLS
  * LOGITECH Dynamic controls defs
  */
 
-#define V4L2_CID_BASE_EXTCTR					0x0A046D01
-#define V4L2_CID_BASE_LOGITECH					V4L2_CID_BASE_EXTCTR
-//#define V4L2_CID_PAN_RELATIVE_LOGITECH		V4L2_CID_BASE_LOGITECH
-//#define V4L2_CID_TILT_RELATIVE_LOGITECH		V4L2_CID_BASE_LOGITECH+1
-#define V4L2_CID_PANTILT_RESET_LOGITECH			V4L2_CID_BASE_LOGITECH+2
+#define V4L2_CID_BASE_EXTCTR                    0x0A046D01
+#define V4L2_CID_BASE_LOGITECH                  V4L2_CID_BASE_EXTCTR
+//#define V4L2_CID_PAN_RELATIVE_LOGITECH        V4L2_CID_BASE_LOGITECH
+//#define V4L2_CID_TILT_RELATIVE_LOGITECH       V4L2_CID_BASE_LOGITECH+1
+#define V4L2_CID_PANTILT_RESET_LOGITECH         V4L2_CID_BASE_LOGITECH+2
 
 /*this should realy be replaced by V4L2_CID_FOCUS_ABSOLUTE in libwebcam*/
-#define V4L2_CID_FOCUS_LOGITECH					V4L2_CID_BASE_LOGITECH+3
-#define V4L2_CID_LED1_MODE_LOGITECH				V4L2_CID_BASE_LOGITECH+4
-#define V4L2_CID_LED1_FREQUENCY_LOGITECH		V4L2_CID_BASE_LOGITECH+5
-#define V4L2_CID_DISABLE_PROCESSING_LOGITECH	V4L2_CID_BASE_LOGITECH+0x70
-#define V4L2_CID_RAW_BITS_PER_PIXEL_LOGITECH	V4L2_CID_BASE_LOGITECH+0x71
-#define V4L2_CID_LAST_EXTCTR					V4L2_CID_RAW_BITS_PER_PIXEL_LOGITECH
+#define V4L2_CID_FOCUS_LOGITECH                 V4L2_CID_BASE_LOGITECH+3
+#define V4L2_CID_LED1_MODE_LOGITECH             V4L2_CID_BASE_LOGITECH+4
+#define V4L2_CID_LED1_FREQUENCY_LOGITECH        V4L2_CID_BASE_LOGITECH+5
+#define V4L2_CID_DISABLE_PROCESSING_LOGITECH    V4L2_CID_BASE_LOGITECH+0x70
+#define V4L2_CID_RAW_BITS_PER_PIXEL_LOGITECH    V4L2_CID_BASE_LOGITECH+0x71
+#define V4L2_CID_LAST_EXTCTR                    V4L2_CID_RAW_BITS_PER_PIXEL_LOGITECH
 
 /*
  * Error Codes
  */
-#define E_OK					  (0)
-#define E_ALLOC_ERR				  (-1)
-#define E_QUERYCAP_ERR  		  (-2)
-#define E_READ_ERR     		 	  (-3)
-#define E_MMAP_ERR      		  (-4)
-#define E_QUERYBUF_ERR   		  (-5)
-#define E_QBUF_ERR       		  (-6)
-#define E_DQBUF_ERR				  (-7)
-#define E_STREAMON_ERR   		  (-8)
-#define E_STREAMOFF_ERR  		  (-9)
-#define E_FORMAT_ERR    		  (-10)
-#define E_REQBUFS_ERR    		  (-11)
-#define E_DEVICE_ERR     		  (-12)
-#define E_SELECT_ERR     		  (-13)
-#define E_SELECT_TIMEOUT_ERR	  (-14)
-#define E_FBALLOC_ERR			  (-15)
+#define E_OK                      (0)
+#define E_ALLOC_ERR               (-1)
+#define E_QUERYCAP_ERR            (-2)
+#define E_READ_ERR                (-3)
+#define E_MMAP_ERR                (-4)
+#define E_QUERYBUF_ERR            (-5)
+#define E_QBUF_ERR                (-6)
+#define E_DQBUF_ERR               (-7)
+#define E_STREAMON_ERR            (-8)
+#define E_STREAMOFF_ERR           (-9)
+#define E_FORMAT_ERR              (-10)
+#define E_REQBUFS_ERR             (-11)
+#define E_DEVICE_ERR              (-12)
+#define E_SELECT_ERR              (-13)
+#define E_SELECT_TIMEOUT_ERR      (-14)
+#define E_FBALLOC_ERR             (-15)
 #define E_NO_STREAM_ERR           (-16)
 #define E_NO_DATA                 (-17)
 #define E_NO_CODEC                (-18)
@@ -88,7 +89,7 @@ __BEGIN_DECLS
 #define E_WRONG_MARKER_ERR        (-29)
 #define E_NO_EOI_ERR              (-30)
 #define E_FILE_IO_ERR             (-31)
-#define E_UNKNOWN_ERR    		  (-40)
+#define E_UNKNOWN_ERR             (-40)
 
 /*
  * stream status codes
@@ -158,69 +159,65 @@ __BEGIN_DECLS
 /*
  * h264 probe commit struct (uvc 1.1)
  */
-typedef struct _uvcx_video_config_probe_commit_t
-{
-	uint32_t  dwFrameInterval;
-	uint32_t  dwBitRate;
-	uint16_t  bmHints;
-	uint16_t  wConfigurationIndex;
-	uint16_t  wWidth;
-	uint16_t  wHeight;
-	uint16_t  wSliceUnits;
-	uint16_t  wSliceMode;
-	uint16_t  wProfile;
-	uint16_t  wIFramePeriod;
-	uint16_t  wEstimatedVideoDelay;
-	uint16_t  wEstimatedMaxConfigDelay;
-	uint8_t   bUsageType;
-	uint8_t   bRateControlMode;
-	uint8_t   bTemporalScaleMode;
-	uint8_t   bSpatialScaleMode;
-	uint8_t   bSNRScaleMode;
-	uint8_t   bStreamMuxOption;
-	uint8_t   bStreamFormat;
-	uint8_t   bEntropyCABAC;
-	uint8_t   bTimestamp;
-	uint8_t   bNumOfReorderFrames;
-	uint8_t   bPreviewFlipped;
-	uint8_t   bView;
-	uint8_t   bReserved1;
-	uint8_t   bReserved2;
-	uint8_t   bStreamID;
-	uint8_t   bSpatialLayerRatio;
-	uint16_t  wLeakyBucketSize;
+typedef struct _uvcx_video_config_probe_commit_t {
+    uint32_t  dwFrameInterval;
+    uint32_t  dwBitRate;
+    uint16_t  bmHints;
+    uint16_t  wConfigurationIndex;
+    uint16_t  wWidth;
+    uint16_t  wHeight;
+    uint16_t  wSliceUnits;
+    uint16_t  wSliceMode;
+    uint16_t  wProfile;
+    uint16_t  wIFramePeriod;
+    uint16_t  wEstimatedVideoDelay;
+    uint16_t  wEstimatedMaxConfigDelay;
+    uint8_t   bUsageType;
+    uint8_t   bRateControlMode;
+    uint8_t   bTemporalScaleMode;
+    uint8_t   bSpatialScaleMode;
+    uint8_t   bSNRScaleMode;
+    uint8_t   bStreamMuxOption;
+    uint8_t   bStreamFormat;
+    uint8_t   bEntropyCABAC;
+    uint8_t   bTimestamp;
+    uint8_t   bNumOfReorderFrames;
+    uint8_t   bPreviewFlipped;
+    uint8_t   bView;
+    uint8_t   bReserved1;
+    uint8_t   bReserved2;
+    uint8_t   bStreamID;
+    uint8_t   bSpatialLayerRatio;
+    uint16_t  wLeakyBucketSize;
 } __attribute__((__packed__)) uvcx_video_config_probe_commit_t;
 
 /*
  * v4l2 stream capability data
  */
-typedef struct _v4l2_stream_cap_t
-{
-	int width;            //width
-	int height;           //height
-	int *framerate_num;   //list of numerator values - should be 1 in almost all cases
-	int *framerate_denom; //list of denominator values - gives fps
-	int numb_frates;      //number of frame rates (numerator and denominator lists size)
+typedef struct _v4l2_stream_cap_t {
+    int width;            //width
+    int height;           //height
+    int *framerate_num;   //list of numerator values - should be 1 in almost all cases
+    int *framerate_denom; //list of denominator values - gives fps
+    int numb_frates;      //number of frame rates (numerator and denominator lists size)
 } v4l2_stream_cap_t;
 
 /*
  * v4l2 stream format data
  */
-typedef struct _v4l2_stream_format_t
-{
-	uint8_t dec_support; //decoder support (1-supported; 0-not supported)
-	int format;          //v4l2 pixel format
-	char fourcc[5];      //corresponding fourcc (mode)
-	char description[32];//format description
-	int numb_res;        //available number of resolutions for format (v4l2_stream_cap_t list size)
-	v4l2_stream_cap_t *list_stream_cap;  //list of stream capabilities for format
+typedef struct _v4l2_stream_format_t {
+    uint8_t dec_support; //decoder support (1-supported; 0-not supported)
+    int format;          //v4l2 pixel format
+    char fourcc[5];      //corresponding fourcc (mode)
+    char description[32];//format description
+    int numb_res;        //available number of resolutions for format (v4l2_stream_cap_t list size)
+    v4l2_stream_cap_t *list_stream_cap;  //list of stream capabilities for format
 } v4l2_stream_formats_t;
 
 /*
  * v4l2 control data
  */
-typedef struct _v4l2_ctrl_t
-{
+typedef struct _v4l2_ctrl_t {
     struct v4l2_queryctrl control;
     struct v4l2_querymenu *menu;
     int32_t cclass; //don't use 'class' to avoid issues with c++
@@ -240,46 +237,44 @@ typedef struct _v4l2_ctrl_t
 /*
  * frame buffer struct
  */
-typedef struct _v4l2_frame_buff_t
-{
-	int index; //buffer index
-	int status; //frame status {FRAME_DECODING; FRAME_DONE; FRAME_READY}
-	
-	int width; //frame width (in pixels)
-	int height;//frame height (in pixels)
-	
-	int isKeyframe; // current buffer contains a keyframe (h264 IDR)
-	
-	size_t raw_frame_size; // raw frame size (bytes)
-	size_t raw_frame_max_size; //maximum size for raw frame (bytes)
-	size_t h264_frame_size; // h264 frame size (bytes)
-	size_t h264_frame_max_size; //size limit for h264 frame (bytes)
-	size_t tmp_buffer_max_size; //maximum size for temp buffer (bytes)
+typedef struct _v4l2_frame_buff_t {
+    int index; //buffer index
+    int status; //frame status {FRAME_DECODING; FRAME_DONE; FRAME_READY}
 
-	uint64_t timestamp; // captured frame timestamp
-	
-	uint8_t *raw_frame; // pointer to raw frame
-	uint8_t *yuv_frame; // pointer to decoded yuv frame
-	uint8_t *h264_frame; // pointer to regular or demultiplexed h264 frame
-	uint8_t *tmp_buffer; //temporary buffer used in decoding
+    int width; //frame width (in pixels)
+    int height;//frame height (in pixels)
+
+    int isKeyframe; // current buffer contains a keyframe (h264 IDR)
+
+    size_t raw_frame_size; // raw frame size (bytes)
+    size_t raw_frame_max_size; //maximum size for raw frame (bytes)
+    size_t h264_frame_size; // h264 frame size (bytes)
+    size_t h264_frame_max_size; //size limit for h264 frame (bytes)
+    size_t tmp_buffer_max_size; //maximum size for temp buffer (bytes)
+
+    uint64_t timestamp; // captured frame timestamp
+
+    uint8_t *raw_frame; // pointer to raw frame
+    uint8_t *yuv_frame; // pointer to decoded yuv frame
+    uint8_t *h264_frame; // pointer to regular or demultiplexed h264 frame
+    uint8_t *tmp_buffer; //temporary buffer used in decoding
 
 } v4l2_frame_buff_t;
 
 /*
  * v4l2 device system data
  */
-typedef struct _v4l2_dev_sys_data_t
-{
-	char *device;
-	char *name;
-	char *driver;
-	char *location;
-	uint32_t vendor;
-	uint32_t product;
-	int valid;
-	int current;
-	uint64_t busnum;
-	uint64_t devnum;
+typedef struct _v4l2_dev_sys_data_t {
+    char *device;
+    char *name;
+    char *driver;
+    char *location;
+    uint32_t vendor;
+    uint32_t product;
+    int valid;
+    int current;
+    uint64_t busnum;
+    uint64_t devnum;
 } v4l2_dev_sys_data_t;
 
 /* v4l2 device handler - opaque data structure*/
@@ -494,7 +489,7 @@ void v4l2core_set_capture_method(v4l2_dev_t *vd, int method);
  *
  * returns: pointer to v4l2 device handler (or NULL on error)
  */
-v4l2_dev_t* v4l2core_init_dev(const char *device);
+v4l2_dev_t *v4l2core_init_dev(const char *device);
 
 /*
  * get device control list
@@ -598,13 +593,13 @@ int v4l2core_get_num_devices();
  * get the device sys data for index
  * args:
  *   index - device index
- * 
+ *
  * asserts:
  *   none
- * 
+ *
  * returns: pointer to device sys data
  */
-v4l2_dev_sys_data_t* v4l2core_get_device_sys_data(int index);
+v4l2_dev_sys_data_t *v4l2core_get_device_sys_data(int index);
 
 /*
  * get the device index in device list
@@ -727,8 +722,8 @@ int v4l2core_get_frame_format_index(v4l2_dev_t *vd, int format);
  *
  * returns: resolution list index for format index or -1 if not available
  */
-int v4l2core_get_format_resolution_index(v4l2_dev_t *vd, 
-	int format, int width, int height);
+int v4l2core_get_format_resolution_index(v4l2_dev_t *vd,
+                                         int format, int width, int height);
 
 /*
  * prepare a valid format (first in the format list)
@@ -779,8 +774,8 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd);
  *
  * returns: none
  */
-void v4l2core_prepare_new_resolution(v4l2_dev_t *vd, 
-	int new_width, int new_height);
+void v4l2core_prepare_new_resolution(v4l2_dev_t *vd,
+                                     int new_width, int new_height);
 
 /*
  * update the current format (pixelformat, width and height)
@@ -932,13 +927,13 @@ int v4l2core_stop_stream(v4l2_dev_t *vd);
  *
  * returns: pointer to v4l2_control if succeded or null otherwise
  */
-v4l2_ctrl_t* v4l2core_get_control_by_id(v4l2_dev_t *vd, int id);
+v4l2_ctrl_t *v4l2core_get_control_by_id(v4l2_dev_t *vd, int id);
 
 /*
  * sets the value of control id in device
  * args:
  *   vd - pointer to v4l2 device handler
- *   id - control id 
+ *   id - control id
  *
  * asserts:
  *   vd is not null
@@ -1007,7 +1002,7 @@ int v4l2core_soft_autofocus_init (v4l2_dev_t *vd);
  *    vd is not null
  *
  * returns: 1 - running  0- focused
- * 	(only matters for non-continue focus)
+ *  (only matters for non-continue focus)
  */
 int v4l2core_soft_autofocus_run(v4l2_dev_t *vd, v4l2_frame_buff_t *frame);
 
@@ -1201,9 +1196,9 @@ int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
  * returns: error code ( 0 -OK)
  */
 int v4l2core_probe_h264_config_probe_req(
-			v4l2_dev_t *vd,
-			uint8_t query,
-			uvcx_video_config_probe_commit_t *config_probe_req);
+    v4l2_dev_t *vd,
+    uint8_t query,
+    uvcx_video_config_probe_commit_t *config_probe_req);
 
 
 /*
@@ -1337,8 +1332,8 @@ int v4l2core_set_h264_spatial_scale_mode(v4l2_dev_t *vd, uint8_t mode);
  *
  * returns: length of xu control
  */
-uint16_t v4l2core_get_length_xu_control(v4l2_dev_t *vd, 
-	uint8_t unit, uint8_t selector);
+uint16_t v4l2core_get_length_xu_control(v4l2_dev_t *vd,
+                                        uint8_t unit, uint8_t selector);
 
 /*
  * get uvc info for xu control defined by unit id and selector
@@ -1352,8 +1347,8 @@ uint16_t v4l2core_get_length_xu_control(v4l2_dev_t *vd,
  *
  * returns: info of xu control
  */
-uint8_t v4l2core_get_info_xu_control(v4l2_dev_t *vd, 
-	uint8_t unit, uint8_t selector);
+uint8_t v4l2core_get_info_xu_control(v4l2_dev_t *vd,
+                                     uint8_t unit, uint8_t selector);
 
 /*
  * runs a query on xu control defined by unit id and selector
@@ -1369,8 +1364,8 @@ uint8_t v4l2core_get_info_xu_control(v4l2_dev_t *vd,
  *
  * returns: 0 if query succeded or errno otherwise
  */
-int v4l2core_query_xu_control(v4l2_dev_t *vd, 
-	uint8_t unit, uint8_t selector, uint8_t query, void *data);
+int v4l2core_query_xu_control(v4l2_dev_t *vd,
+                              uint8_t unit, uint8_t selector, uint8_t query, void *data);
 
 /*
  *  ########### FILE IO ###############
@@ -1403,9 +1398,9 @@ int v4l2core_save_data_to_file(const char *filename, uint8_t *data, int size);
  * returns: error code
  */
 int v4l2core_save_image(
-	v4l2_frame_buff_t *frame,
-	const char *filename,
-	int format);
+    v4l2_frame_buff_t *frame,
+    const char *filename,
+    int format);
 
 /*
  * ############### TIME DATA ##############

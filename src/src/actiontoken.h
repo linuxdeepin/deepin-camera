@@ -23,7 +23,7 @@
 #define ACTIONTOKEN_H
 
 #include <QObject>
-#include "encode_voice.h"
+#include "encoderthread.h"
 
 //sct
 //拍照 录像 连拍 按钮联动 具体功能实现

@@ -587,7 +587,7 @@ void vyuy_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
 
 	int w = 0, h = 0;
 	int y_sizeline = width;
-	int c_sizeline = width/2;
+    int c_sizeline = width/2;
 	
 	uint8_t *in1 = in; //first line
 	uint8_t *in2 = in1 + (width * 2); //second line in yuyv buffer
@@ -640,7 +640,7 @@ void yuv422p_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
     memcpy(out, in, width*height);
 
 	int w = 0, h = 0;
-	int c_sizeline = width/2;
+    int c_sizeline = width/2;
 	
 	uint8_t *pu = out + (width * height);
     uint8_t *inu1 = in + (width * height);
@@ -687,7 +687,7 @@ void yyuv_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
 
 	int w = 0, h = 0;
 	int y_sizeline = width;
-	int c_sizeline = width/2;
+    int c_sizeline = width/2;
 	
 	uint8_t *in1 = in; //first line
 	uint8_t *in2 = in1 + (width * 2); //second line in yyuv buffer

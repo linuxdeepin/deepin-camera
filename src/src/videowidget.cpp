@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*             hujianbo <hujianbo@uniontech.com>
+*
 * Maintainer: shicetu <shicetu@uniontech.com>
-*             hujianbo <hujianbo@uniontech.com>
+*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +29,7 @@
 #include <QVBoxLayout>
 #include <QThread>
 #include <QScrollBar>
+#include "LPF_V4L2.h"
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
@@ -60,9 +61,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
-//    m_pGridLayout->setHorizontalSpacing(10);
-//    m_pGridLayout->setVerticalSpacing(10);
-//    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
+    m_pGridLayout->setHorizontalSpacing(10);
+    m_pGridLayout->setVerticalSpacing(10);
+    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
 
 
     m_pNormalScene->addItem(m_pNormalItem);
@@ -87,23 +88,19 @@ void videowidget::init()
     labTimer.setWindowFlag(Qt::WindowType::ToolTip);
     labTimer.hide();
 
-    //启动默认视频
-    if (LPF_StartRun() == E_OK) {
+    //启动视频
+    if (camInit("/dev/video0") == E_OK) {
         //imageprocessthread->init();(/*ui->camComboBox->currentIndex()*/0);
         //QWaitCondition *condition  = new QWaitCondition();
         //mutex->lock();
 
         isFindedDevice = true;
         m_pCountItem->hide();
+        imageprocessthread->init();
         imageprocessthread->start();
 
-        //condition->wait(mutex, 5);
-        //mutex->unlock();
-        //delete condition;
-        //condition = nullptr;
     } else {
         isFindedDevice = false;
-
         m_pCountItem->show();
         QString str = "no device found";
         m_countdownLen = str.length() * 20;
@@ -123,10 +120,8 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
     //超时后关闭视频
     //超时代表着VIDIOC_DQBUF会阻塞，直接关闭视频即可
     if (result == -1) {
-        imageprocessthread->stop();
         imageprocessthread->wait();
 
-        //myLabel->clear();
         QString str = "获取设备图像超时！";
         m_countdownLen = str.length() * 20;
         setFont(m_pCountItem, 20, str);
@@ -134,8 +129,6 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
     }
 
     if (!image.isNull()) {
-//        QString str111 = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Video/摄像头/1";
-//        myLabel->clear();
         switch (result) {
         case 0:     //Success
             err11 = err19 = 0;
@@ -145,32 +138,24 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                 setFont(m_pCountItem, 20, str);
                 m_pCountItem->setPlainText(str);
             }
-            //else
-//                bool bSaved = image.save(QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Video/摄像头/" + "1");
-//                if (!bSaved){
-//                    bSaved = true;
 
-//                }
             CURRENT_IMAGE = &image;
 
             changePicture(STATE, &image, EFFECT_INDEX);
 
             break;
-        case 11:    //Resource temporarily unavailable
+        case 11:
             err11++;
             if (err11 == 10) {
-                //myLabel->clear();
-                //myLabel->setText("设备已打开，但获取视频失败！\n请尝试切换USB端口后断开重试！");
                 QString str = "设备已打开，但获取视频失败！\n请尝试切换USB端口后断开重试！";
                 m_countdownLen = str.length() * 20;
                 setFont(m_pCountItem, 20, str);
                 m_pCountItem->setPlainText(str);
             }
             break;
-        case 19:    //No such device
+        case 19:
             err19++;
             if (err19 == 10) {
-                //myLabel->clear();
                 QString str = "设备丢失！";
                 m_countdownLen = str.length() * 20;
                 setFont(m_pCountItem, 20, str);
@@ -322,7 +307,7 @@ void videowidget::transformImage(QImage *img)
         martix.scale(1, wImg / hImg * 3 / 4);
     }
     *img = img->transformed(martix);
-    resizeImage(img);
+    //resizeImage(img);
 }
 
 void videowidget::resizeImage(QImage *img)
@@ -550,7 +535,7 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
-    //resizePixMap();
+    resizePixMap();
     return DWidget::resizeEvent(size);
 }
 
@@ -605,6 +590,35 @@ void videowidget::flash()
     flashTimer->stop();
 }
 
+void videowidget::changeDev()
+{
+    v4l2_dev_t *vd =  get_v4l2_device_handler();
+    imageprocessthread->stop();
+    QString str = QString(vd->videodevice);
+    if (vd != nullptr) {
+        close_v4l2_device_handler();
+    }
+    v4l2_device_list_t *devlist = get_device_list();
+    if (devlist->num_devices == 2) {
+        for (int i = 0 ; i < devlist->num_devices; i++) {
+            QString str1 = QString(devlist->list_devices[i].device);
+            if (QString::compare(str, str1) == false)
+                camInit(devlist->list_devices[i].device);
+        }
+    } else {
+
+        for (int i = 0 ; i < devlist->num_devices; i++) {
+            if (QString::compare(str, QString(devlist->list_devices[i].device)) == true) {
+                if (i == devlist->num_devices - 1) {
+                    camInit(devlist->list_devices[0].device);
+                } else {
+                    camInit(devlist->list_devices[i + 1].device);
+                }
+            }
+        }
+    }
+}
+
 void videowidget::onShowThreeCountdown()
 {
     qDebug() << "onShowThreeCountdown";
@@ -656,54 +670,54 @@ void videowidget::onTakeVideoOver()
     hideTimeLabel();
 }
 
-//void videowidget::onChooseEffect()
-//{
-//    qDebug() << "onChooseEffect";
-//    //by xxj
-//    if (m_pGridLayout->count() == 1) {
-//        STATE = EFFECT;
-//        showPreviewByState(STATE);
-//    } else {
-//        STATE = NORMALVIDEO;
-//        //delEffectPreview();
-//        showPreviewByState(STATE);
-//    }
-//    //end
-//}
+void videowidget::onChooseEffect()
+{
+    qDebug() << "onChooseEffect";
+    //by xxj
+    if (m_pGridLayout->count() == 1) {
+        STATE = EFFECT;
+        showPreviewByState(STATE);
+    } else {
+        STATE = NORMALVIDEO;
+        //delEffectPreview();
+        showPreviewByState(STATE);
+    }
+    //end
+}
 
-//void videowidget::onMoreEffectLeft()
-//{
-//    qDebug() << "onMoreEffectLeft";
-//    EFFECT_PAGE--;
+void videowidget::onMoreEffectLeft()
+{
+    qDebug() << "onMoreEffectLeft";
+    EFFECT_PAGE--;
 
-//    if (EFFECT_PAGE < 0)
-//        EFFECT_PAGE++;
+    if (EFFECT_PAGE < 0)
+        EFFECT_PAGE++;
 
-//    updateEffectName();
-//}
+    updateEffectName();
+}
 
-//void videowidget::onMoreEffectRight()
-//{
-//    qDebug() << "onMoreEffectRight";
-//    EFFECT_PAGE++;
-//    if (EFFECT_PAGE > (EFFECTS_NUM ) / 9)
-//        EFFECT_PAGE--;
-//    updateEffectName();
-//}
+void videowidget::onMoreEffectRight()
+{
+    qDebug() << "onMoreEffectRight";
+    EFFECT_PAGE++;
+    if (EFFECT_PAGE > (EFFECTS_NUM ) / 9)
+        EFFECT_PAGE--;
+    updateEffectName();
+}
 
-//void videowidget::effectChoose(QString name)
-//{
-//    qDebug() << name;
-//    //根据名字得带index
-//    int index = eff->FindEffIndexByName(name);
-//    EFFECT_INDEX = index;
-//    //返回预览界面
-//    STATE = NORMALVIDEO;
-//    //delEffectPreview();
-//    showPreviewByState(STATE);
-//    //返回特效选择结束信号
-//    finishEffectChoose();
-//}
+void videowidget::effectChoose(QString name)
+{
+    qDebug() << name;
+    //根据名字得带index
+    int index = eff->FindEffIndexByName(name);
+    EFFECT_INDEX = index;
+    //返回预览界面
+    STATE = NORMALVIDEO;
+    //delEffectPreview();
+    showPreviewByState(STATE);
+    //返回特效选择结束信号
+    finishEffectChoose();
+}
 void videowidget::onBtnVideo()
 {
     hideCountDownLabel();
