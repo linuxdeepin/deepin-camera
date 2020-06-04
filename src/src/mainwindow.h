@@ -32,6 +32,8 @@
 #include "widgetproxy.h"
 #include "set_widget.h"
 #include "devnummonitor.h"
+//#include "titlebar.h"
+//#include "animationlabel.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -50,7 +52,7 @@
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
 
-
+namespace dmr {
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
 {
@@ -73,10 +75,13 @@ private:
     effectproxy     m_effProxy;
     ToolBar         m_toolBar;
     videoEffect     m_videoEffect;
+
+    //PreviewWidget   m_preWgt;
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
     Set_Widget      *m_setwidget;
-
+//    Titlebar        *_titlebar {nullptr};
+//    AnimationLabel *_animationlable {nullptr};
 
     QFileSystemWatcher m_fileWatcher;
     DevNumMonitor *m_devnumMonitor;
@@ -93,7 +98,7 @@ private:
 
 private:
 
-
+};
 };
 
 #endif // MAINWINDOW_H

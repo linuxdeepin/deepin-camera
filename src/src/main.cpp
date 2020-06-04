@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    CMainWindow w;
+    dmr::CMainWindow w;
     w.setMinimumSize(850, 600);
     w.show();
 

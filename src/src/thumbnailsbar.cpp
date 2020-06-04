@@ -46,21 +46,20 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DWidget(parent)
     m_hBOx = new QHBoxLayout(m_wgt);
     horizontalLayout = new QHBoxLayout();
     horizontalLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
-    pushButton_8 = new DButtonBoxButton(QStyle::SP_ArrowLeft);
-    pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
-    pushButton_8->setFixedWidth(20);
-    horizontalLayout->addWidget(pushButton_8);
+//    pushButton_8 = new DButtonBoxButton(QStyle::SP_ArrowLeft);
+//    pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
+//    pushButton_8->setFixedWidth(20);
+//    horizontalLayout->addWidget(pushButton_8);
     //horizontalLayout->addSpacing(10);
 
     horizontalLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
     horizontalLayout->addWidget(m_wgt);
 
-    pushButton_9 = new DButtonBoxButton(QStyle::SP_ArrowRight);
-    pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
-    pushButton_9->setFixedWidth(20);
-    //horizontalLayout->addSpacing(10);
-    horizontalLayout->addWidget(pushButton_9);
+//    pushButton_9 = new DButtonBoxButton(QStyle::SP_ArrowRight);
+//    pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
+//    pushButton_9->setFixedWidth(20);
+//    horizontalLayout->addWidget(pushButton_9);
 
 
 //    horizontalLayout->setStretch(0, 1);

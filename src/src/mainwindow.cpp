@@ -25,6 +25,7 @@
 #include <DLabel>
 #include <QFileDialog>
 #include <QStandardPaths>
+using namespace dmr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
@@ -68,10 +69,20 @@ void CMainWindow::initUI()
     pal->setColor(QPalette::Background, Qt::black); //设置背景黑色
     m_videoPre.setAutoFillBackground(true);
     m_videoPre.setPalette(*pal);
+//    _animationlable = new AnimationLabel;
+//    _animationlable->setAttribute(Qt::WA_TranslucentBackground);
+//    _animationlable->setWindowFlags(Qt::FramelessWindowHint);
+//    _animationlable->setParent(this);
+//    _animationlable->setGeometry(width() / 2 - 100, height() / 2 - 100, 200, 200);
+
+    //m_preWgt = new PreviewWidget(centralWidget());
+    //hboxlayout->addWidget(&m_preWgt);
     hboxlayout->addWidget(&m_videoPre);
 
+
 //    hboxlayout->addWidget(&m_toolBar);
-//    hboxlayout->addWidget(&m_thumbnail);
+    hboxlayout->addWidget(&m_thumbnail,Qt::AlignBottom);
+    m_thumbnail.setFixedHeight(100);
 //    hboxlayout->setStretch(0, 16);
 //    hboxlayout->setStretch(1, 1);
 //    hboxlayout->setStretch(2, 3);
