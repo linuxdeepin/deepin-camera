@@ -29,6 +29,8 @@ using namespace dmr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
+    m_devnumMonitor = new DevNumMonitor();
+    m_devnumMonitor->start();
     QString m_strPath;
     m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
     m_fileWatcher.addPath(m_strPath);
@@ -38,12 +40,11 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     initUI();
     initTitleBar();
     initConnection();
-    m_devnumMonitor = new DevNumMonitor();
-    m_devnumMonitor->start();
 
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), &m_toolBar, SLOT(set_btn_state_enable()));
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), &m_toolBar, SLOT(set_btn_state_disable()));
-    connect(&m_toolBar, SIGNAL(sltCamera()), &m_videoPre, SLOT(changeDev()));
+
+//    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), &m_toolBar, SLOT(set_btn_state_enable()));
+//    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), &m_toolBar, SLOT(set_btn_state_disable()));
+//    connect(&m_toolBar, SIGNAL(sltCamera()), &m_videoPre, SLOT(changeDev()));
 //    horizontalLayout_5->addLayout(m_thumbnail.m_hBOx);
 
 //    QFileSystemWatcher *m_fileWatcher = new QFileSystemWatcher;
@@ -96,20 +97,20 @@ void CMainWindow::initUI()
 
 void CMainWindow::initTitleBar()
 {
-    DButtonBox *pDButtonBox = new DButtonBox();
+    pDButtonBox = new DButtonBox();
     pDButtonBox->setFixedWidth(200);
     QList<DButtonBoxButton *> listButtonBox;
-    DButtonBoxButton *pDButtonBoxBtn1 = new DButtonBoxButton(QStringLiteral("拍照"));
-    DButtonBoxButton *pDButtonBoxBtn2 = new DButtonBoxButton(QStringLiteral("视频"));
-    listButtonBox.append(pDButtonBoxBtn1);
-    listButtonBox.append(pDButtonBoxBtn2);
+    pTakPictureBtn = new DButtonBoxButton(QStringLiteral("拍照"));
+    pTakVideoBtn = new DButtonBoxButton(QStringLiteral("视频"));
+    listButtonBox.append(pTakPictureBtn);
+    listButtonBox.append(pTakVideoBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
 
-    DIconButton *pDIconBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+
     titlebar()->setIcon(QIcon::fromTheme("preferences-system"));// /usr/share/icons/bloom/apps/96
-    titlebar()->addWidget(pDIconBtn, Qt::AlignLeft);
-    connect(pDIconBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
+    titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
 }
 
 void CMainWindow::initConnection()
@@ -171,7 +172,22 @@ void CMainWindow::initConnection()
     connect(&m_videoPre, SIGNAL(finishTakedCamera()), &m_toolBar, SLOT(onFinishTakedCamera()));
     //结束特效选择信号
     connect(&m_videoPre, SIGNAL(finishEffectChoose()), &m_toolBar, SLOT(onFinishEffectChoose()));
+    //设备切换信号
+    connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
+    //单设备信号
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
+    //多设备信号
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
+}
+void CMainWindow::setSelBtnHide()
+{
+    pSelectBtn->hide();
+}
+
+void CMainWindow::setSelBtnShow()
+{
+    pSelectBtn->show();
 }
 
 void CMainWindow::setupTitlebar()

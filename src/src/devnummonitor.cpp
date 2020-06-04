@@ -26,6 +26,7 @@
 extern "C"
 {
 #include "v4l2_devices.h"
+#include "camview.h"
 }
 //QMap<QString, QString> DevNumMonitor::devmap;
 
@@ -64,12 +65,16 @@ void DevNumMonitor::run()
 void DevNumMonitor::timeOutSlot()
 {
     QMutexLocker locker(&mutex);
-    v4l2core_init_device_list();
+    //devlist = get_device_list();
+//    if (devlist != nullptr) {
+//        v4l2core_close_v4l2_device_list();
+//    }
+    check_device_list_events(get_v4l2_device_handler());
     devlist = get_device_list();
     if (devlist->num_devices > 1) {
         emit seltBtnStateEnable();
     } else {
         emit seltBtnStateDisable();
     }
-
+    //v4l2core_close_v4l2_device_list();
 }

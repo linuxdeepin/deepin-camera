@@ -65,7 +65,9 @@ public:
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
     void showPreviewByState(PRIVIEW_STATE state);
-
+private slots:
+    void setSelBtnHide();
+    void setSelBtnShow();
 private:
     //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   m_thumbnail;
@@ -87,6 +89,12 @@ private:
     DevNumMonitor *m_devnumMonitor;
 
     QVector<videowidget *> m_VEffectPreview;
+
+    DButtonBox *pDButtonBox;
+    DButtonBoxButton *pTakPictureBtn;
+    DButtonBoxButton *pTakVideoBtn;
+    DIconButton *pSelectBtn;
+
     void initUI();
     void initTitleBar();
     void initConnection();

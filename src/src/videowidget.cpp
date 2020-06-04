@@ -107,6 +107,7 @@ void videowidget::init()
         m_countdownLen = str.length() * 20;
         setFont(m_pCountItem, 20, str);
         m_pNormalScene->addItem(m_pCountItem);
+        qDebug() << "nodevice found" << endl;
     }
 
 
@@ -432,7 +433,7 @@ void videowidget::newEffectPreview()
 //        QRect rect = m_VEffectPreview[j]->rect();
 //        scene->setSceneRect(rect);
 // //end
-        connect(scene, SIGNAL(selectEff(QString)), this, SLOT(effectChoose(QString)));
+        //connect(scene, SIGNAL(selectEff(QString)), this, SLOT(effectChoose(QString)));
     }
 
     for (int k = 0; k < 9 ; ++k) {
@@ -594,10 +595,14 @@ void videowidget::flash()
 void videowidget::changeDev()
 {
     v4l2_dev_t *vd =  get_v4l2_device_handler();
-    imageprocessthread->stop();
+    if (imageprocessthread != nullptr) {
+        imageprocessthread->stop();
+    }
     while (imageprocessthread->isRunning());
-    QString str = QString(vd->videodevice);
+    QString str;
     if (vd != nullptr) {
+        str = QString(vd->videodevice);
+
         close_v4l2_device_handler();
     }
     v4l2_device_list_t *devlist = get_device_list();
@@ -605,6 +610,7 @@ void videowidget::changeDev()
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
+                m_pCountItem->hide();
                 camInit(devlist->list_devices[i].device);
                 imageprocessthread->init();
                 imageprocessthread->start();
@@ -612,19 +618,28 @@ void videowidget::changeDev()
             }
         }
     } else {
-
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
-                    camInit(devlist->list_devices[0].device);
-                    imageprocessthread->init();
-                    imageprocessthread->start();
-                } else {
+                    m_pCountItem->hide();
                     camInit(devlist->list_devices[i + 1].device);
                     imageprocessthread->init();
                     imageprocessthread->start();
+                    break;
+                } else {
+                    m_pCountItem->hide();
+                    camInit(devlist->list_devices[i + 1].device);
+                    imageprocessthread->init();
+                    imageprocessthread->start();
+                    break;
                 }
+            } else {
+                m_pCountItem->hide();
+                camInit(devlist->list_devices[i].device);
+                imageprocessthread->init();
+                imageprocessthread->start();
+                break;
             }
         }
     }

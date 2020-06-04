@@ -42,16 +42,24 @@ void MajorImageProcessingThread::run()
 {
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
+    int framedely = 0;
     while (!stopped) {
         msleep(1000 / 20);
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
-            //result = 11;
+            framedely++;
+            if (framedely == MAX_DELAYED_FRAMES) {
+                stopped = true;
+                //free(vd1);
+                //vd1 = nullptr;
+                close_v4l2_device_handler();
+                return ;
+            }
             continue;
         }
         result = 0;
-
+        framedely = 0;
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
 
@@ -112,6 +120,5 @@ void MajorImageProcessingThread::run()
         msleep(1000 / 30);
     }
     v4l2core_stop_stream(vd1);
-
 }
 
