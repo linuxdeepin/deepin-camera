@@ -97,7 +97,7 @@ void videowidget::init()
 
         isFindedDevice = true;
         m_pCountItem->hide();
-        imageprocessthread->init();
+        //imageprocessthread->init();
         imageprocessthread->start();
 
     } else {
@@ -595,6 +595,7 @@ void videowidget::changeDev()
 {
     v4l2_dev_t *vd =  get_v4l2_device_handler();
     imageprocessthread->stop();
+    while (imageprocessthread->isRunning());
     QString str = QString(vd->videodevice);
     if (vd != nullptr) {
         close_v4l2_device_handler();
@@ -603,17 +604,26 @@ void videowidget::changeDev()
     if (devlist->num_devices == 2) {
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
-            if (QString::compare(str, str1) == false)
+            if (str != str1) {
                 camInit(devlist->list_devices[i].device);
+                imageprocessthread->init();
+                imageprocessthread->start();
+                break;
+            }
         }
     } else {
 
         for (int i = 0 ; i < devlist->num_devices; i++) {
-            if (QString::compare(str, QString(devlist->list_devices[i].device)) == true) {
+            QString str1 = QString(devlist->list_devices[i].device);
+            if (str == str1) {
                 if (i == devlist->num_devices - 1) {
                     camInit(devlist->list_devices[0].device);
+                    imageprocessthread->init();
+                    imageprocessthread->start();
                 } else {
                     camInit(devlist->list_devices[i + 1].device);
+                    imageprocessthread->init();
+                    imageprocessthread->start();
                 }
             }
         }

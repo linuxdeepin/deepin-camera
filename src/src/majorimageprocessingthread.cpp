@@ -24,8 +24,7 @@
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
-    stopped = false;
-    majorindex = -1;
+    init();
 }
 
 void MajorImageProcessingThread::stop()
@@ -35,11 +34,13 @@ void MajorImageProcessingThread::stop()
 
 void MajorImageProcessingThread::init()
 {
-    vd1 = get_v4l2_device_handler();
+    stopped = false;
+    majorindex = -1;
 }
 
 void MajorImageProcessingThread::run()
 {
+    vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     while (!stopped) {
         msleep(1000 / 20);
@@ -96,14 +97,15 @@ void MajorImageProcessingThread::run()
                 }
             }
         }
-        rgb24 = static_cast<unsigned char *>(malloc(frame->width * frame->height * 3 * sizeof(char)));
+        if (!stopped) {
+            rgb24 = static_cast<unsigned char *>(malloc(frame->width * frame->height * 3 * sizeof(char)));
 
-        convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
+            convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
 
-        QImage img;
-        img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
-        emit SendMajorImageProcessing(img, result);
-
+            QImage img;
+            img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
+            emit SendMajorImageProcessing(img, result);
+        }
         v4l2core_release_frame(vd1, frame);
         free(rgb24);
         rgb24 = nullptr;
