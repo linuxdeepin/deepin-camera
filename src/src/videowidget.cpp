@@ -623,7 +623,7 @@ void videowidget::changeDev()
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
                     m_pCountItem->hide();
-                    camInit(devlist->list_devices[i + 1].device);
+                    camInit(devlist->list_devices[0].device);
                     imageprocessthread->init();
                     imageprocessthread->start();
                     break;
@@ -634,9 +634,10 @@ void videowidget::changeDev()
                     imageprocessthread->start();
                     break;
                 }
-            } else {
+            }
+            if (str.isEmpty() == true) {
                 m_pCountItem->hide();
-                camInit(devlist->list_devices[i].device);
+                camInit(devlist->list_devices[0].device);
                 imageprocessthread->init();
                 imageprocessthread->start();
                 break;
@@ -644,7 +645,6 @@ void videowidget::changeDev()
         }
     }
 }
-
 void videowidget::onShowThreeCountdown()
 {
     qDebug() << "onShowThreeCountdown";
