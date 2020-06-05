@@ -25,7 +25,15 @@
 #include <DLabel>
 #include <QFileDialog>
 #include <QStandardPaths>
-using namespace dmr;
+#include <DSettingsDialog>
+#include <DSettingsOption>
+#include <DSettings>
+#include <DLineEdit>
+#include <DFileDialog>
+#include <DDialog>
+#include <QTextLayout>
+#include <QStyleFactory>
+#include <dsettingswidgetfactory.h>
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
@@ -60,6 +68,233 @@ CMainWindow::~CMainWindow()
 {
 }
 
+QString CMainWindow::lastOpenedPath()
+{
+//    QString lastPath = DSettings::get().generalOption("last_open_path").toString();
+//    QDir lastDir(lastPath);
+//    if (lastPath.isEmpty() || !lastDir.exists()) {
+//        lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+//        QDir newLastDir(lastPath);
+//        if (!newLastDir.exists()) {
+//            lastPath = QDir::currentPath();
+//        }
+//    }
+
+//    return lastPath;
+}
+static QString ElideText(const QString &text, const QSize &size,
+                         QTextOption::WrapMode wordWrap, const QFont &font,
+                         Qt::TextElideMode mode, int lineHeight, int lastLineWidth)
+{
+    int height = 0;
+
+    QTextLayout textLayout(text);
+    QString str = nullptr;
+    QFontMetrics fontMetrics(font);
+
+    textLayout.setFont(font);
+    const_cast<QTextOption *>(&textLayout.textOption())->setWrapMode(wordWrap);
+
+    textLayout.beginLayout();
+
+    QTextLine line = textLayout.createLine();
+
+    while (line.isValid()) {
+        height += lineHeight;
+
+        if (height + lineHeight >= size.height()) {
+            str += fontMetrics.elidedText(text.mid(line.textStart() + line.textLength() + 1),
+                                          mode, lastLineWidth);
+
+            break;
+        }
+
+        line.setLineWidth(size.width());
+
+        const QString &tmp_str = text.mid(line.textStart(), line.textLength());
+
+        if (tmp_str.indexOf('\n'))
+            height += lineHeight;
+
+        str += tmp_str;
+
+        line = textLayout.createLine();
+
+        if (line.isValid())
+            str.append("\n");
+    }
+
+    textLayout.endLayout();
+
+    if (textLayout.lineCount() == 1) {
+        str = fontMetrics.elidedText(str, mode, lastLineWidth);
+    }
+
+    return str;
+}
+
+static void workaround_updateStyle(QWidget *parent, const QString &theme)
+{
+    parent->setStyle(QStyleFactory::create(theme));
+    for (auto obj : parent->children()) {
+        auto w = qobject_cast<QWidget *>(obj);
+        if (w) {
+            workaround_updateStyle(w, theme);
+        }
+    }
+}
+
+static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
+{
+    auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
+
+    auto le = new DLineEdit();
+    auto main = new DWidget;
+    auto layout = new QHBoxLayout;
+
+    static QString nameLast = nullptr;
+
+    main->setLayout(layout);
+    DPushButton *icon = new DPushButton;
+    icon->setAutoDefault(false);
+    le->setFixedHeight(30);
+    le->setObjectName("OptionSelectableLineEdit");
+    QString str = option->value().toString();
+    le->setText(option->value().toString());
+    auto fm = le->fontMetrics();
+    auto pe = ElideText(le->text(), {285, fm.height()}, QTextOption::WrapAnywhere,
+                        le->font(), Qt::ElideMiddle, fm.height(), 285);
+    option->connect(le, &DLineEdit::focusChanged, [ = ](bool on) {
+        if (on)
+            le->setText(option->value().toString());
+    });
+    le->setText(pe);
+    nameLast = pe;
+
+    icon->setIcon(QIcon(":resources/icons/select-normal.svg"));
+    icon->setFixedHeight(30);
+    layout->addWidget(le);
+    layout->addWidget(icon);
+
+    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+    workaround_updateStyle(optionWidget, "light");
+
+    DDialog *prompt = new DDialog(optionWidget);
+    prompt->setIcon(QIcon(":/resources/icons/warning.svg"));
+    prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
+    prompt->setWindowFlags(prompt->windowFlags() | Qt::WindowStaysOnTopHint);
+    prompt->addButton(QObject::tr("OK"), true, DDialog::ButtonRecommend);
+
+    auto validate = [ = ](QString name, bool alert = true) -> bool {
+        name = name.trimmed();
+        if (name.isEmpty()) return false;
+
+        if (name.size() && name[0] == '~')
+        {
+            name.replace(0, 1, QDir::homePath());
+        }
+
+        QFileInfo fi(name);
+        QDir dir(name);
+        if (fi.exists())
+        {
+            if (!fi.isDir()) {
+                if (alert) le->showAlertMessage(QObject::tr("Invalid folder"));
+                return false;
+            }
+
+            if (!fi.isReadable() || !fi.isWritable()) {
+                return false;
+            }
+        } else
+        {
+            if (dir.cdUp()) {
+                QFileInfo ch(dir.path());
+                if (!ch.isReadable() || !ch.isWritable())
+                    return false;
+            }
+        }
+
+        return true;
+    };
+
+    option->connect(icon, &DPushButton::clicked, [ = ]() {
+        QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
+                                                         CMainWindow::lastOpenedPath(),
+                                                         DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+        if (validate(name, false)) {
+            option->setValue(name);
+            nameLast = name;
+        }
+        QFileInfo fm(name);
+        if ((!fm.isReadable() || !fm.isWritable()) && !name.isEmpty()) {
+            prompt->show();
+        }
+    });
+
+
+
+    option->connect(le, &DLineEdit::editingFinished, option, [ = ]() {
+
+        QString name = le->text();
+        QDir dir(name);
+
+        auto pn = ElideText(name, {285, fm.height()}, QTextOption::WrapAnywhere,
+                            le->font(), Qt::ElideMiddle, fm.height(), 285);
+        auto nmls = ElideText(nameLast, {285, fm.height()}, QTextOption::WrapAnywhere,
+                              le->font(), Qt::ElideMiddle, fm.height(), 285);
+
+        if (!validate(le->text(), false)) {
+            QFileInfo fn(dir.path());
+            if ((!fn.isReadable() || !fn.isWritable()) && !name.isEmpty()) {
+                prompt->show();
+            }
+        }
+        if (!le->lineEdit()->hasFocus()) {
+            if (validate(le->text(), false)) {
+                option->setValue(le->text());
+                le->setText(pn);
+                nameLast = name;
+            } else if (pn == pe) {
+                le->setText(pe);
+            } else {
+                option->setValue(nameLast);
+                le->setText(nmls);
+            }
+        }
+    });
+
+    option->connect(le, &DLineEdit::textEdited, option, [ = ](const QString & newStr) {
+        validate(newStr);
+    });
+
+    option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, le,
+    [ = ](const QVariant & value) {
+        auto pi = ElideText(value.toString(), {285, fm.height()}, QTextOption::WrapAnywhere,
+                            le->font(), Qt::ElideMiddle, fm.height(), 285);
+        le->setText(pi);
+        le->update();
+    });
+
+    return  optionWidget;
+}
+
+void CMainWindow::slotPopupSettingsDialog()
+{
+    pDSettingDialog = new DSettingsDialog(this);
+    pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+    //创建设置存储后端
+    //QSettingBackend *pBackend = new QSettingBackend(m_srConfPath);
+
+    //通过json文件创建DSettings对象
+    DSettings *pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+    //设置DSettings存储后端
+    //pDSettings->setBackend(pBackend);
+
+    pDSettingDialog->updateSettings(pDSettings);
+    pDSettingDialog->exec();
+}
+
 void CMainWindow::initUI()
 {
     this->setWindowFlag(Qt::FramelessWindowHint);
@@ -86,6 +321,9 @@ void CMainWindow::initUI()
 //    hboxlayout->addWidget(&m_toolBar);
     //hboxlayout->addWidget(&m_thumbnail,Qt::AlignBottom);
 
+//    hboxlayout->addWidget(&m_thumbnail, Qt::AlignBottom);
+//    m_thumbnail.setFixedHeight(100);
+
 //    hboxlayout->setStretch(0, 16);
 //    hboxlayout->setStretch(1, 1);
 //    hboxlayout->setStretch(2, 3);
@@ -95,7 +333,7 @@ void CMainWindow::initUI()
 
     setupTitlebar();
     m_thumbnail = new ThumbnailsBar(this);
-    m_thumbnail->move(0,height() - 10);
+    m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(100);
 
     m_thumbnail->setVisible(true);
@@ -217,6 +455,8 @@ void CMainWindow::setupTitlebar()
     plette->setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255, 255), Qt::SolidPattern));
     m_setwidget->setPalette(*plette);
 
+    connect(settingAction, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
+
     //m_setwidget->update();
     //m_setwidget->setGeometry(0, 15 + m_setwidget->height(), this->width(), this->height() - m_setwidget->height());
 }
@@ -224,15 +464,15 @@ void CMainWindow::setupTitlebar()
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
     //Q_UNUSED(event);
-    if(QEvent::Resize == event->type()){
+    if (QEvent::Resize == event->type()) {
         int width = this->width();
         int height = this->height();
         //qDebug() << width << " " << height;
         m_videoPre.resize(width, height);
-        if(m_thumbnail){
-            m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/width,100);
+        if (m_thumbnail) {
+            m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/width, 100);
             m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
-                                  this->height() - m_thumbnail->height() - 5);
+                              this->height() - m_thumbnail->height() - 5);
         }
     }
 

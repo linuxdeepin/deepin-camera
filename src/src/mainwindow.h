@@ -49,23 +49,27 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <DTitlebar>
+#include <DSettingsDialog>
+
+DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
-namespace dmr {
+
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
 {
     Q_OBJECT
 public:
     CMainWindow(DWidget *w = nullptr);
-    ~CMainWindow();
-
-
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
     void showPreviewByState(PRIVIEW_STATE state);
+    static QString lastOpenedPath();
+    ~CMainWindow();
+private:
+    void slotPopupSettingsDialog();
 private slots:
     void setSelBtnHide();
     void setSelBtnShow();
@@ -95,6 +99,7 @@ private:
     DButtonBoxButton *pTakPictureBtn;
     DButtonBoxButton *pTakVideoBtn;
     DIconButton *pSelectBtn;
+    DSettingsDialog *pDSettingDialog;
 
     void initUI();
     void initTitleBar();
@@ -105,9 +110,8 @@ private:
     void settingsTriggered(bool bTrue);
     void keyPressEvent(QKeyEvent *ev);
 
-private:
 
-};
+
 };
 
 #endif // MAINWINDOW_H

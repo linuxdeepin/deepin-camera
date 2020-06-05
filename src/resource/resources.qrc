@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/logo.svg</file>
         <file>images/123.jpg</file>
+        <file>resource/settings.json</file>
     </qresource>
 </RCC>

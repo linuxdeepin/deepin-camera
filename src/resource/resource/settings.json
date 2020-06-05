@@ -1,0 +1,85 @@
+{
+    "groups": [
+        {
+            "key": "base",
+            "name": "Basic",
+            "groups": [
+                {
+                    "key": "save",
+                    "name": "Location",
+                    "options": [
+                        {
+                            "key": "datapath",
+                            "name": "Datapath",
+                            "type": "selectableEdit",
+                            "default": "~/Videos"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "photosetting",
+            "name": "PhotoSetting",
+            "groups": [
+                {
+                    "key": "photosnumber",
+                    "name": "Photosnumber",
+                    "options": [
+                        {
+                            "key": "takephotos",
+                            "name": " ",
+                            "type": "radiogroup",
+                            "items": [
+                                "Zero",
+                                "Four",
+                                "Ten"
+                            ],
+                            "default": 0
+                        }
+
+                    ]
+                },
+                {
+                    "key": "photosdelay",
+                    "name": "Photodelay",
+                    "options": [
+                        {
+                            "key": "photodelays",
+                            "name": " ",
+                            "type": "radiogroup",
+                            "items": [
+                                "Zero",
+                                "three",
+                                "six"
+                            ],
+                            "default": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "outsetting",
+            "name": "Outsetting",
+            "groups": [
+                {
+                    "key": "outformat",
+                    "name": "OutFormat",
+                    "options": [
+                        {
+                            "key": "picformat",
+                            "name": "picformat：PNG",
+                            "default": 0
+                        },
+                        {
+                            "key": "vidformat",
+                            "name": "vidformat：MP4",
+                            "default": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
