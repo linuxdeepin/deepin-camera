@@ -57,25 +57,26 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     forbidScrollBar(m_pNormalView);
 
     m_pNormalView->setScene(m_pNormalScene);
+    m_pNormalView->setStyleSheet("padding:0px;border:0px");
+    m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
+    //m_pNormalView->setWindowFlag(Qt::QGraphicsScene);
     m_pNormalItem = new QGraphicsPixmapItem;
     m_pCountItem = new QGraphicsTextItem;
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
-//    m_pGridLayout->setHorizontalSpacing(10);
-//    m_pGridLayout->setVerticalSpacing(10);
-//    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
+    m_pGridLayout->setHorizontalSpacing(10);
+    m_pGridLayout->setVerticalSpacing(10);
+    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
 
+    m_pGridLayout->addWidget(m_pNormalView);
+    m_pGridLayout->addWidget(m_pNormalView, 0, 0, 1, 1);
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCountItem);
     m_pNormalScene->addItem(m_pTimeItem);
 
     init();
-    // by xxj
-    newEffectPreview();
-    sceneAddItem();
-    //end
     showPreviewByState(NORMALVIDEO);
 
 }
@@ -170,35 +171,11 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
 
 void videowidget::sceneAddItem()
 {
-    if (m_VEffectScene.length() == 0 || m_VEffectPreview.length() == 0) {
-        qDebug() << "view/scene/item vector length cannot =0";
-        return;
-    }
-    //int x, y;
-    //加入图片,name
-    for (int i = 0; i < m_VEffectScene.length(); ++i) {
-        if (m_VPixmapItem.length() > i && m_VEffectName.length() > i) {
-            m_VEffectScene[i]->addItem(m_VPixmapItem[i]);
-            m_VEffectName[i]->setPlainText(NAME[i + EFFECT_PAGE * 9]);
-            m_VEffectName[i]->setTextWidth(50);
-            m_VEffectScene[i]->addItem(m_VEffectName[i]);
-
-        } else {
-            qDebug() << "this item is not correct init";
-        }
-    }
 }
 
 void videowidget::updateEffectName()
 {
-    for (int i = 0 ; i < 9 && EFFECT_PAGE <= 3 && EFFECT_PAGE >= 0; ++i) {
-        //读取配置
-        int index = i + EFFECT_PAGE * 9;
-        if (index < EFFECTS_NUM) {
-            m_VEffectName[i]->setPlainText(NAME[index]);
-            m_VEffectScene[i]->setSceneName(NAME[index]);
-        }
-    }
+
 }
 void videowidget::showPreviewByState(PRIVIEW_STATE state)
 {
@@ -208,13 +185,6 @@ void videowidget::showPreviewByState(PRIVIEW_STATE state)
     case  NORMALVIDEO:
     case AUDIO:
     case SHOOT:
-        //m_pGridLayout->addWidget(m_pNormalView, 0, Qt::AlignCenter);
-
-        //m_pNormalView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        for (int i = 0; i < m_VEffectPreview.length(); ++i) {
-            m_VEffectPreview[i]->hide();
-            m_pGridLayout->removeWidget(m_VEffectPreview[i]);
-        }
         m_pGridLayout->addWidget(m_pNormalView, 0, 0);
 
         m_pNormalView->show();
@@ -228,15 +198,6 @@ void videowidget::showPreviewByState(PRIVIEW_STATE state)
 
 
         m_pGridLayout->removeWidget(m_pNormalView); //需要remove？？
-        //by xxj
-        for (int i = 0; i < m_VEffectPreview.length(); ++i) {
-            m_VEffectPreview[i]->show();
-
-            m_pGridLayout->addWidget(m_VEffectPreview[i], i / 3, i % 3);
-            QRect rect = m_VEffectPreview[i]->childrenRect();
-            x = rect.width();
-            y = rect.height();
-        }
         //m_pGridLayout->setAlignment(m_VEffectPreview[1], Qt::AlignJustify | Qt::AlignBaseline);
         //m_pGridLayout->setVerticalSpacing(1);
 
@@ -257,13 +218,6 @@ void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectInd
     transformImage(img);
 
     if (state == EFFECT) {
-
-        for (int i = 0 ; i < m_VEffectScene.length(); ++i) {
-            QImage *image = new QImage(*img);
-            eff->chooseEffect(image, i + EFFECT_PAGE * 9);
-
-            m_VPixmapItem[i]->setPixmap(QPixmap::fromImage(*image));
-        }
     } else {
         eff->chooseEffect(img, effectIndex);
         //m_VPixmapItem[0]->setPixmap();
@@ -319,8 +273,6 @@ void videowidget::resizeImage(QImage *img)
     float  wLab = this->width();
     float hLab = this->height();
     if (STATE == EFFECT) {
-        wLab = m_VEffectPreview[0]->width();
-        hLab = m_VEffectPreview[0]->height();
     } else {
         wLab = this->width();
         hLab = this->height();
@@ -406,79 +358,6 @@ void videowidget::hideTimeLabel()
     //m_pNormalScene->removeItem(m_pTimeItem);
 }
 
-void videowidget::newEffectPreview()
-{
-    //创建九宫格布局
-    for (int i = 0 ; i < 9; ++i) {
-        QGraphicsView *view = new QGraphicsView();
-        forbidScrollBar(view);
-        m_VEffectPreview.push_back(view);
-    }
-    for (int j = 0 ; j < 9; ++j) {
-        MyScene *scene = new MyScene;
-        scene->setSceneName(NAME[j + EFFECT_PAGE * 9]);
-        m_VEffectScene.push_back(scene);
-
-// //by xxj
-//        //加入布局
-//        int x = j / 3;
-//        int y = j % 3;
-//        m_pGridLayout->addWidget(m_VEffectPreview[j], x, y);
-// end
-        //设置场景
-        m_VEffectPreview[j]->setScene(scene);
-
-        m_VEffectPreview[j]->setStyleSheet("background:rgb(255, 255, 255)");
-// //by xxj
-//        QRect rect = m_VEffectPreview[j]->rect();
-//        scene->setSceneRect(rect);
-// //end
-        //connect(scene, SIGNAL(selectEff(QString)), this, SLOT(effectChoose(QString)));
-    }
-
-    for (int k = 0; k < 9 ; ++k) {
-        QGraphicsPixmapItem *item = new QGraphicsPixmapItem;
-        m_VPixmapItem.push_back(item);
-    }
-    //加入名字
-    for (int s = 0; s < 9; ++s) {
-        QGraphicsTextItem *name = new QGraphicsTextItem();
-        m_VEffectName.push_back(name);
-    }
-}
-
-void videowidget::delEffectPreview()
-{
-    //释放九宫格布局
-    for (int s = 0 ; s < m_VEffectName.length(); ++s) {
-        delete m_VEffectName[s];
-        m_VEffectName[s] = NULL;
-        //m_VEffectName.pop_back();
-    }
-    for (int k = 0; k < m_VPixmapItem.length() ; ++k) {
-        delete m_VPixmapItem[k];
-        m_VPixmapItem[k] = NULL;
-        //m_VPixmapItem.pop_back();
-    }
-
-    for (int j = 0 ; j < m_VEffectScene.length(); ++j) {
-        delete m_VEffectScene[j];
-        m_VEffectScene[j] = NULL;
-        //m_VEffectScene.pop_back();
-    }
-
-    for (int i = 0 ; i < m_VEffectPreview.length(); ++i) {
-        m_pGridLayout->removeWidget(m_VEffectPreview[i]);
-        delete m_VEffectPreview[i];
-        m_VEffectPreview[i] = NULL;
-        //m_VEffectPreview.pop_back();
-    }
-    m_VEffectName.clear();
-    m_VPixmapItem.clear();
-    m_VEffectScene.clear();
-    m_VEffectPreview.clear();
-}
-
 QImage videowidget::getCurrentImg()
 {
     return *CURRENT_IMAGE;
@@ -496,13 +375,15 @@ void videowidget::showEvent(QShowEvent *event)
 void videowidget::resizePixMap()
 {
     if (STATE != EFFECT) {
-        //QRect rect = this->rect();
-        QRect rect = m_pNormalView->rect();
+        QRect rect = this->rect();
+        //QRect rect = m_pNormalView->rect();
 
         //m_pNormalView->setSceneRect(rect);
         m_pNormalScene->setSceneRect(rect);
-        int x = m_pNormalView->x();
-        int y = m_pNormalView->y();
+//        int x = m_pNormalView->x();
+//        int y = m_pNormalView->y();
+        int x = this->x();
+        int y = this->y();
         m_pNormalItem->setX( rect.width() / 2 - m_pNormalItem->pixmap().width() / 2 );
         m_pNormalItem->setY( rect.height() / 2 - m_pNormalItem->pixmap().height() / 2 );
 
@@ -514,24 +395,6 @@ void videowidget::resizePixMap()
         //int width = m_pNormalItem->pixmap().width();
         //int height = m_pNormalItem->pixmap().height();
     } else {
-        //by xxj
-        int x = m_VEffectPreview[0]->x();
-        int y = m_VEffectPreview[0]->y();
-        for (int i = 0 ; i < m_VEffectScene.length(); ++i) {
-//            QRect rect = m_VEffectPreview[i]->rect();
-            //m_VEffectPreview[i]->setSceneRect(m_VPixmapItem[i]->boundingRect());
-            //int sencewidth = m_VPixmapItem[i]->
-            //m_VEffectPreview[i]-
-
-            m_VEffectName[i]->setX(x + m_VPixmapItem[i]->pixmap().width() / 2 - m_VEffectName[i]->textWidth() / 2); //- m_VEffectName[i]->textWidth() / 2
-            m_VEffectName[i]->setY(y + m_VPixmapItem[i]->pixmap().height() - 40); //设置高度的一半
-
-            m_VEffectName[i]->setFont(QFont("华文琥珀", 10));
-            m_VEffectName[i]->setDefaultTextColor(QColor(255, 255, 255));
-
-            m_VEffectName[i]->show();
-        }
-        //end
     }
 }
 

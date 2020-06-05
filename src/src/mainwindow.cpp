@@ -62,14 +62,15 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::initUI()
 {
+    this->setWindowFlag(Qt::FramelessWindowHint);
     DWidget *wget = new DWidget;
     qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
 
-    QPalette *pal = new QPalette(m_videoPre.palette());
-    pal->setColor(QPalette::Background, Qt::black); //设置背景黑色
-    m_videoPre.setAutoFillBackground(true);
-    m_videoPre.setPalette(*pal);
+//    QPalette *pal = new QPalette(m_videoPre.palette());
+//    pal->setColor(QPalette::Background, Qt::black); //设置黑色边框
+//    m_videoPre.setAutoFillBackground(true);
+//    m_videoPre.setPalette(*pal);
 //    _animationlable = new AnimationLabel;
 //    _animationlable->setAttribute(Qt::WA_TranslucentBackground);
 //    _animationlable->setWindowFlags(Qt::FramelessWindowHint);
@@ -81,9 +82,10 @@ void CMainWindow::initUI()
     hboxlayout->addWidget(&m_videoPre);
 
 
+
 //    hboxlayout->addWidget(&m_toolBar);
-    hboxlayout->addWidget(&m_thumbnail,Qt::AlignBottom);
-    m_thumbnail.setFixedHeight(100);
+    //hboxlayout->addWidget(&m_thumbnail,Qt::AlignBottom);
+
 //    hboxlayout->setStretch(0, 16);
 //    hboxlayout->setStretch(1, 1);
 //    hboxlayout->setStretch(2, 3);
@@ -92,7 +94,14 @@ void CMainWindow::initUI()
     setCentralWidget(wget);
 
     setupTitlebar();
+    m_thumbnail = new ThumbnailsBar(this);
+    m_thumbnail->move(0,height() - 10);
+    m_thumbnail->setFixedHeight(100);
+
+    m_thumbnail->setVisible(true);
+    m_thumbnail->setMaximumWidth(1200);
     this->resize(850, 600);
+    //m_thumbnail->setFixedWidth(this->width());
 }
 
 void CMainWindow::initTitleBar()
@@ -116,9 +125,9 @@ void CMainWindow::initTitleBar()
 void CMainWindow::initConnection()
 {
     //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), &m_thumbnail, SLOT(onFileChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
     //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), &m_thumbnail, SLOT(onFileChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
 //    actionToken     m_actToken;
 
 //    avCodec         m_avCodec;
@@ -214,10 +223,19 @@ void CMainWindow::setupTitlebar()
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
-    Q_UNUSED(event);
-    int width = this->width();
-    int height = this->height();
-    m_setwidget->resize(width, height);
+    //Q_UNUSED(event);
+    if(QEvent::Resize == event->type()){
+        int width = this->width();
+        int height = this->height();
+        //qDebug() << width << " " << height;
+        m_videoPre.resize(width, height);
+        if(m_thumbnail){
+            m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/width,100);
+            m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
+                                  this->height() - m_thumbnail->height() - 5);
+        }
+    }
+
 }
 
 void CMainWindow::menuItemInvoked(QAction *action)

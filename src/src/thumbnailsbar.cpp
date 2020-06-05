@@ -39,22 +39,28 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
     return sortCollator.compare(str1.fileName, str2.fileName) < 0;
 }
 
-ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DWidget(parent)
+ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
 
-    m_wgt = new DWidget();
+    m_wgt = new DWidget(this);
     m_hBOx = new QHBoxLayout(m_wgt);
-    horizontalLayout = new QHBoxLayout();
-    horizontalLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
+    m_mainLayout = new QHBoxLayout();
+    m_mainLayout->setContentsMargins(0, 0, 0, 1);
+    m_mainLayout->setSpacing(0);
+    //setWidget(m_wgt);//放开后缩略图到左上角了
+
+    setBlurBackgroundEnabled(true);
+
+    m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
 //    pushButton_8 = new DButtonBoxButton(QStyle::SP_ArrowLeft);
 //    pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
 //    pushButton_8->setFixedWidth(20);
 //    horizontalLayout->addWidget(pushButton_8);
     //horizontalLayout->addSpacing(10);
 
-    horizontalLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
+    m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
-    horizontalLayout->addWidget(m_wgt);
+    m_mainLayout->addWidget(m_wgt);
 
 //    pushButton_9 = new DButtonBoxButton(QStyle::SP_ArrowRight);
 //    pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
@@ -67,7 +73,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DWidget(parent)
 //    horizontalLayout->setStretch(2, 1);
 
 
-    this->setLayout(horizontalLayout);
+    this->setLayout(m_mainLayout);
     m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
 
     onFileChanged("");

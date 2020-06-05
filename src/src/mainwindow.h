@@ -51,7 +51,8 @@
 #include <DTitlebar>
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
-
+const int TOP_TOOLBAR_HEIGHT = 50;
+const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
 namespace dmr {
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -70,7 +71,7 @@ private slots:
     void setSelBtnShow();
 private:
     //Titlebar *_titlebar {nullptr};
-    ThumbnailsBar   m_thumbnail;
+    ThumbnailsBar   *m_thumbnail;
     actionToken     m_actToken;
     avCodec         m_avCodec;
     CameraDetect    m_camDetect;

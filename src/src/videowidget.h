@@ -119,16 +119,13 @@ private:
     QGraphicsTextItem *m_pCountItem;
     QGraphicsTextItem *m_pTimeItem;
 
-    QVector<QGraphicsTextItem *> m_VEffectName;
-    QVector<QGraphicsPixmapItem *> m_VPixmapItem;
-    QVector<QGraphicsView *> m_VEffectPreview;
-    QVector<MyScene *> m_VEffectScene;
     QGridLayout *m_pGridLayout;
 
     int countDown;
     QTimer *countTimer;
     QTimer *flashTimer;
     QDateTime begin_time;
+
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
     int EFFECT_PAGE = 0;

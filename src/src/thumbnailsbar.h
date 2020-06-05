@@ -33,6 +33,7 @@
 #include <QFileSystemWatcher>
 #include <QPushButton>
 #include <DButtonBox>
+#include <DFloatingWidget>
 
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT    100
@@ -65,7 +66,7 @@ struct DBImgInfo {
     }
 };
 typedef QList<DBImgInfo> DBImgInfoList;
-class ThumbnailsBar : public DWidget
+class ThumbnailsBar : public DFloatingWidget
 {
     Q_OBJECT
 public:
@@ -74,7 +75,7 @@ public:
     void load();
     void loadInterface(QString strPath);
 
-    QHBoxLayout *horizontalLayout;
+    QHBoxLayout *m_mainLayout;
     DButtonBoxButton *pushButton_8;
     DButtonBoxButton *pushButton_9;
     DWidget *m_wgt;
