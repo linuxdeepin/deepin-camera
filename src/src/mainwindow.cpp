@@ -35,6 +35,8 @@
 #include <QStyleFactory>
 #include <dsettingswidgetfactory.h>
 
+DSettings *sDsetWgt;
+
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_devnumMonitor = new DevNumMonitor();
@@ -48,40 +50,43 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     initUI();
     initTitleBar();
     initConnection();
+}
 
-
-//    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), &m_toolBar, SLOT(set_btn_state_enable()));
-//    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), &m_toolBar, SLOT(set_btn_state_disable()));
-//    connect(&m_toolBar, SIGNAL(sltCamera()), &m_videoPre, SLOT(changeDev()));
-//    horizontalLayout_5->addLayout(m_thumbnail.m_hBOx);
-
-//    QFileSystemWatcher *m_fileWatcher = new QFileSystemWatcher;
-//    QString m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
-
-
-//    m_fileWatcher->addPath(m_strPath);
-//    connect(m_fileWatcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(onFileChanged(const QString&)));
-//    connect(m_fileWatcher, SIGNAL(fileChanged(const QString&)), this, SLOT(onFileChanged(const QString&)));
+DSettings *CMainWindow::getDsetMber()
+{
+    return pDSettings;
 }
 
 CMainWindow::~CMainWindow()
 {
 }
 
-QString CMainWindow::lastOpenedPath()
+static QString lastOpenedPath()
 {
-//    QString lastPath = DSettings::get().generalOption("last_open_path").toString();
-//    QDir lastDir(lastPath);
-//    if (lastPath.isEmpty() || !lastDir.exists()) {
-//        lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
-//        QDir newLastDir(lastPath);
-//        if (!newLastDir.exists()) {
-//            lastPath = QDir::currentPath();
-//        }
-//    }
 
-//    return lastPath;
+    if (!sDsetWgt) {
+        sDsetWgt = new DSettings;
+    }
+    QString lastPath = sDsetWgt->getOption("base.general.last_open_path").toString();
+    QDir lastDir(lastPath);
+    if (lastPath.isEmpty() || !lastDir.exists()) {
+        lastPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+        QDir newLastDir(lastPath);
+        if (!newLastDir.exists()) {
+            lastPath = QDir::currentPath();
+        }
+    }
+    return lastPath;
 }
+
+/*
+QTextOption::WrapMode:描述text以什么方式显示在文档中
+
+
+
+*/
+
+
 static QString ElideText(const QString &text, const QSize &size,
                          QTextOption::WrapMode wordWrap, const QFont &font,
                          Qt::TextElideMode mode, int lineHeight, int lastLineWidth)
@@ -159,7 +164,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     icon->setAutoDefault(false);
     le->setFixedHeight(30);
     le->setObjectName("OptionSelectableLineEdit");
-    QString str = option->value().toString();
+    //QString str = option->value().toString();
     le->setText(option->value().toString());
     auto fm = le->fontMetrics();
     auto pe = ElideText(le->text(), {285, fm.height()}, QTextOption::WrapAnywhere,
@@ -217,10 +222,10 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 
         return true;
     };
-
+    QString temstr = lastOpenedPath();
     option->connect(icon, &DPushButton::clicked, [ = ]() {
         QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
-                                                         CMainWindow::lastOpenedPath(),
+                                                         lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
             option->setValue(name);
@@ -282,12 +287,16 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 void CMainWindow::slotPopupSettingsDialog()
 {
     pDSettingDialog = new DSettingsDialog(this);
+    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+    sDsetWgt = getDsetMber();
+
     pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
     //创建设置存储后端
     //QSettingBackend *pBackend = new QSettingBackend(m_srConfPath);
 
     //通过json文件创建DSettings对象
-    DSettings *pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+//    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+//    sDsetWgt = getDsetMber();
     //设置DSettings存储后端
     //pDSettings->setBackend(pBackend);
 
@@ -315,6 +324,7 @@ void CMainWindow::initUI()
     //m_preWgt = new PreviewWidget(centralWidget());
     //hboxlayout->addWidget(&m_preWgt);
     hboxlayout->addWidget(&m_videoPre);
+    hboxlayout->setContentsMargins(0, 0, 0, 0);
 
 
 

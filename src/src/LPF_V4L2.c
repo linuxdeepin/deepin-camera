@@ -126,7 +126,7 @@ int camInit(const char* devicename)
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     char* txtdom = textdomain (GETTEXT_PACKAGE);
     options_t *my_options = options_get();
-    char* config_path = smart_cat(getenv("HOME"),'/',".config/cheese");
+    char* config_path = smart_cat(getenv("HOME"),'/',".config/deepin-camera");
     mkdir(config_path, 0777);
     char *device_name = get_file_basename(my_options->device);
     char *config_file = smart_cat(config_path, '/', device_name);
@@ -284,8 +284,8 @@ int camInit(const char* devicename)
         //v4l2core_prepare_new_format(my_vd, my_config->format);
         //v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
         //v4l2core_load_control_profile(my_vd,NULL);
-        v4l2core_prepare_new_format(my_vd, V4L2_PIX_FMT_YUYV);
-        v4l2core_prepare_new_resolution(my_vd, 640, 480);
+        v4l2core_prepare_new_format(my_vd, my_config->format);
+        v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
         int ret = v4l2core_update_current_format(my_vd);
 
         if (ret != E_OK) {

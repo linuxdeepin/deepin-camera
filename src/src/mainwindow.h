@@ -57,6 +57,7 @@ class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
 
+
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
 {
@@ -66,9 +67,20 @@ public:
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
     void showPreviewByState(PRIVIEW_STATE state);
-    static QString lastOpenedPath();
+    DSettings *getDsetMber();
+
     ~CMainWindow();
+
+
 private:
+    void initUI();
+    void initTitleBar();
+    void initConnection();
+    void setupTitlebar();
+    void resizeEvent(QResizeEvent *event);
+    void menuItemInvoked(QAction *action);
+    void settingsTriggered(bool bTrue);
+    void keyPressEvent(QKeyEvent *ev);
     void slotPopupSettingsDialog();
 private slots:
     void setSelBtnHide();
@@ -100,15 +112,9 @@ private:
     DButtonBoxButton *pTakVideoBtn;
     DIconButton *pSelectBtn;
     DSettingsDialog *pDSettingDialog;
+    DSettings *pDSettings;
 
-    void initUI();
-    void initTitleBar();
-    void initConnection();
-    void setupTitlebar();
-    void resizeEvent(QResizeEvent *event);
-    void menuItemInvoked(QAction *action);
-    void settingsTriggered(bool bTrue);
-    void keyPressEvent(QKeyEvent *ev);
+
 
 
 

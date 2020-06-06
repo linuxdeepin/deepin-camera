@@ -52,11 +52,15 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
 
     m_pNormalView = new QGraphicsView(this);
+
+
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
 
     m_pNormalView->setScene(m_pNormalScene);
+    m_pNormalScene->setSceneRect(0, 0, m_pNormalView->width(), m_pNormalView->height());
+
     m_pNormalView->setStyleSheet("padding:0px;border:0px");
     m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
     //m_pNormalView->setWindowFlag(Qt::QGraphicsScene);
@@ -65,17 +69,19 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
-    m_pGridLayout->setHorizontalSpacing(10);
-    m_pGridLayout->setVerticalSpacing(10);
-    m_pGridLayout->setContentsMargins(10, 10, 10, 10);
+//    m_pGridLayout->setHorizontalSpacing(0);
+//    m_pGridLayout->setVerticalSpacing(0);
+    m_pGridLayout->setContentsMargins(0, 0, 0, 0);
 
     m_pGridLayout->addWidget(m_pNormalView);
-    m_pGridLayout->addWidget(m_pNormalView, 0, 0, 1, 1);
+    //m_pGridLayout->addWidget(m_pNormalView, 0, 0, 1, 1);
 
     m_pNormalScene->addItem(m_pNormalItem);
-    m_pNormalScene->addItem(m_pCountItem);
-    m_pNormalScene->addItem(m_pTimeItem);
-
+    //m_pNormalScene->addItem(m_pCountItem);
+    //m_pNormalScene->addItem(m_pTimeItem);
+    qDebug() << "this widget--height:" << this->height() << "--width:" << this->width() << endl;
+    qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
+    qDebug() << "this widget--height:" << m_pNormalScene->height() << "--width:" << m_pNormalScene->width() << endl;
     init();
     showPreviewByState(NORMALVIDEO);
 
@@ -143,8 +149,8 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
             }
 
             CURRENT_IMAGE = &image;
-
-            changePicture(STATE, &image, EFFECT_INDEX);
+            m_pNormalItem->setPixmap(QPixmap::fromImage(image));
+            //changePicture(STATE, &image, EFFECT_INDEX);
 
             break;
         case 11:
@@ -263,7 +269,7 @@ void videowidget::transformImage(QImage *img)
         martix.scale(1, wImg / hImg * 3 / 4);
     }
     *img = img->transformed(martix);
-    //resizeImage(img);
+    resizeImage(img);
 }
 
 void videowidget::resizeImage(QImage *img)
@@ -272,13 +278,6 @@ void videowidget::resizeImage(QImage *img)
     float hImg = img->height();
     float  wLab = this->width();
     float hLab = this->height();
-    if (STATE == EFFECT) {
-    } else {
-        wLab = this->width();
-        hLab = this->height();
-    }
-
-
     if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
         return;
     }
@@ -332,7 +331,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pCountItem->hide();
         break;
     }
-    resizeEvent(NULL);
+    //resizeEvent(NULL);
 }
 
 void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
@@ -378,7 +377,6 @@ void videowidget::resizePixMap()
         QRect rect = this->rect();
         //QRect rect = m_pNormalView->rect();
 
-        //m_pNormalView->setSceneRect(rect);
         m_pNormalScene->setSceneRect(rect);
 //        int x = m_pNormalView->x();
 //        int y = m_pNormalView->y();
@@ -400,8 +398,9 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
+
     resizePixMap();
-    return DWidget::resizeEvent(size);
+    //return DWidget::resizeEvent(size);
 }
 
 void videowidget::onShowCountdown()
