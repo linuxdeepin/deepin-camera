@@ -34,10 +34,11 @@
 #include <QPushButton>
 #include <DButtonBox>
 #include <DFloatingWidget>
+#include <DIconButton>
 
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT    100
-#define THUMBNAIL_WIDTH         130
+#define THUMBNAIL_WIDTH         80
 #define THUMBNAIL_HEIGHT        100
 //缩略图
 //hjb
@@ -74,6 +75,7 @@ public:
     explicit ThumbnailsBar(DWidget *parent = nullptr);
     void load();
     void loadInterface(QString strPath);
+    int getItemCount(){return m_nItemCount;}
 
     QHBoxLayout *m_mainLayout;
     DButtonBoxButton *pushButton_8;
@@ -82,17 +84,21 @@ public:
     QHBoxLayout *m_hBOx;
     //QListWidget *imageList;
     QMap<QString, QPixmap> m_imagemap;
-
+    int m_nMaxItem;
 private:
+    int m_nItemCount;
     QString m_strPath;
     mutable QReadWriteLock m_readlock;
     mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
     int m_current = 0;
     DBImgInfoList m_infos;
-    void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-signals:
+    DIconButton *m_lastButton {nullptr};
 
+private:
+    //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
+signals:
+    void fitToolBar();//调整工具栏
 public slots:
     void onFileChanged(const QString &strDirectory);
 };

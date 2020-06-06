@@ -59,7 +59,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     forbidScrollBar(m_pNormalView);
 
     m_pNormalView->setScene(m_pNormalScene);
-    m_pNormalScene->setSceneRect(0, 0, m_pNormalView->width(), m_pNormalView->height());
+    //m_pNormalScene->setSceneRect(0, 0, m_pNormalView->width(), m_pNormalView->height());
 
     m_pNormalView->setStyleSheet("padding:0px;border:0px");
     m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
@@ -69,8 +69,10 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
+
 //    m_pGridLayout->setHorizontalSpacing(0);
 //    m_pGridLayout->setVerticalSpacing(0);
+
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
 
     m_pGridLayout->addWidget(m_pNormalView);
@@ -148,8 +150,9 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                 m_pCountItem->setPlainText(str);
             }
 
-            CURRENT_IMAGE = &image;
-            m_pNormalItem->setPixmap(QPixmap::fromImage(image));
+            m_pixmap = QPixmap::fromImage(imageprocessthread->m_img);
+            m_pNormalItem->setPixmap(m_pixmap);
+
             //changePicture(STATE, &image, EFFECT_INDEX);
 
             break;
@@ -221,7 +224,8 @@ void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectInd
     if (img == nullptr || img->isNull()) {
         return;
     }
-    transformImage(img);
+    //transformImage(img);
+    resizeImage(img);
 
     if (state == EFFECT) {
     } else {
@@ -236,7 +240,7 @@ void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectInd
         QDateTime end_time;
         end_time = QDateTime::currentDateTime();             //获取或设置时间
         QString strTime = end_time.toString("yyyy-MM-dd-HHMMss");
-        CURRENT_IMAGE->save((QString(getenv("HOME")) + "/Pictures/摄像头/" + strTime + ".jpg"), "jpg", 100);
+        //CURRENT_IMAGE->save((QString(getenv("HOME")) + "/Pictures/摄像头/" + strTime + ".jpg"), "jpg", 100);
         countDown = 3;
         //隐藏闪光窗口
         labTimer.hide();
@@ -247,7 +251,7 @@ void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectInd
             onShowCountdown();
         }
     }
-    resizeEvent(NULL);//消耗怎么样？？？？？
+    //resizeEvent(NULL);//消耗怎么样？？？？？
 }
 
 void videowidget::transformImage(QImage *img)
@@ -274,24 +278,32 @@ void videowidget::transformImage(QImage *img)
 
 void videowidget::resizeImage(QImage *img)
 {
-    float wImg = img->width();
-    float hImg = img->height();
-    float  wLab = this->width();
-    float hLab = this->height();
-    if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
-        return;
-    }
+    //*img = img->scaled(this->width(),this->height());
+//    float wImg = img->width();
+//    float hImg = img->height();
+//    float  wLab = this->width();
+//    float hLab = this->height();
+//    if (STATE == EFFECT) {
+//    } else {
+//        wLab = this->width();
+//        hLab = this->height();
+//    }
 
-    //声明一个QMatrix类的实例
-    QMatrix martix;
 
-    //取小边
-    bool    isW = wLab * 3 / 4 <= hLab;
-    float timeW = isW  ? wLab / img->width() : hLab / img->height();
+//    if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
+//        return;
+//    }
 
-    martix.scale(timeW, timeW);
+//    //声明一个QMatrix类的实例
+//    QMatrix martix;
 
-    *img = img->transformed(martix);
+//    //取小边
+//    bool    isW = wLab * 3 / 4 <= hLab;
+//    float timeW = isW  ? wLab / img->width() : hLab / img->height();
+
+//    martix.scale(timeW, timeW);
+
+//    *img = img->transformed(martix);
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
@@ -357,10 +369,10 @@ void videowidget::hideTimeLabel()
     //m_pNormalScene->removeItem(m_pTimeItem);
 }
 
-QImage videowidget::getCurrentImg()
-{
-    return *CURRENT_IMAGE;
-}
+//QImage videowidget::getCurrentImg()
+//{
+//    return *CURRENT_IMAGE;
+//}
 
 void videowidget::showEvent(QShowEvent *event)
 {
@@ -398,9 +410,9 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
+    //resizePixMap();
+    return DWidget::resizeEvent(size);
 
-    resizePixMap();
-    //return DWidget::resizeEvent(size);
 }
 
 void videowidget::onShowCountdown()

@@ -46,7 +46,7 @@ class QSpacerItem;
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, EFFECT, AUDIO, SHOOT};
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 static int EFFECT_INDEX = NO;
-static QImage *CURRENT_IMAGE = new QImage;
+//static QImage *CURRENT_IMAGE = new QImage;
 
 class videowidget : public DWidget
 {
@@ -54,7 +54,7 @@ class videowidget : public DWidget
 public:
     explicit     videowidget(DWidget *parent = nullptr);
     void        showEvent(QShowEvent *event);
-    QImage     getCurrentImg();
+    //QImage     getCurrentImg();
 
 signals:
     void finishTakedCamera();//结束拍照或三连拍
@@ -135,6 +135,8 @@ private:
     int err11, err19;
     MajorImageProcessingThread *imageprocessthread;
     bool m_bTakePic;
+    QImage m_img;
+    QPixmap m_pixmap;
 };
 
 #endif // VIDEOWIDGET_H

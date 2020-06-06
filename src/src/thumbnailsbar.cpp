@@ -41,11 +41,12 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
-
+    m_nItemCount = 0;
+    m_nMaxItem = 0;
     m_wgt = new DWidget(this);
     m_hBOx = new QHBoxLayout(m_wgt);
     m_mainLayout = new QHBoxLayout();
-    m_mainLayout->setContentsMargins(0, 0, 0, 1);
+    m_mainLayout->setContentsMargins(8, 8, 0, 8);
     m_mainLayout->setSpacing(0);
     //setWidget(m_wgt);//放开后缩略图到左上角了
 
@@ -72,15 +73,20 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //    horizontalLayout->setStretch(1, 12);
 //    horizontalLayout->setStretch(2, 1);
 
-
+    m_lastButton = new DIconButton(this);
+    m_lastButton->setFixedWidth(50);
+    m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
+    m_mainLayout->addSpacing(8);
     this->setLayout(m_mainLayout);
     m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
 
-    onFileChanged("");
+
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     m_hBOx->setMargin(5);
 
-    //this->setFixedWidth(600);
+    //layout()->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    //this->setFixedWidth(300);
+
 //    m_hBOx->setStretch()
 
 //    QDir dir(strPath);
@@ -170,13 +176,13 @@ void ThumbnailsBar::load()
     }
 }
 
-void ThumbnailsBar::resizeEvent(QResizeEvent *size)
-{
-    int nWidth = this->width();
+//void ThumbnailsBar::resizeEvent(QResizeEvent *size)
+//{
+//    int nWidth = this->width();
 
-//    printf("resize w %d, h %d\n", size.w);
+////    printf("resize w %d, h %d\n", size.w);
 
-}
+//}
 
 void ThumbnailsBar::loadInterface(QString path)
 {
@@ -192,7 +198,10 @@ void ThumbnailsBar::loadInterface(QString path)
 //待完善内容：1、先获取路径并排序再加载;2、视频获取第一帧作为缩略图，或者直接贴图。
 void ThumbnailsBar::onFileChanged(const QString &strDirectory)
 {
-    int nWidth = this->width();
+    m_nItemCount = 1;
+    qDebug() << m_nMaxItem;
+    int nLetAddCount = (m_nMaxItem - 58)/(THUMBNAIL_WIDTH+8);
+
     //获取所选文件类型过滤器
     QStringList filters;
     filters << QString("*.jpg");
@@ -210,13 +219,15 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
 
         delete child;
     }
-    int nCount = 0;
     //定义迭代器并设置过滤器
     QDirIterator dir_iterator(m_strPath,
                               filters,
                               QDir::Files | QDir::NoSymLinks,
                               QDirIterator::Subdirectories);
     while (dir_iterator.hasNext()) {
+        if(nLetAddCount == m_nItemCount){
+            break;
+        }
         QString strFile = dir_iterator.next();
         QPixmap *pix = new QPixmap(/*dir_iterator.next()*/strFile);
         DLabel *pLabel = new DLabel(this);
@@ -261,7 +272,7 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
         pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
         m_hBOx->addWidget(pLabel);
         m_hBOx->addSpacing(5);
-        nCount ++;
+        m_nItemCount ++;
     }
 
     QString strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Videos/摄像头";
@@ -272,6 +283,9 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
                                QDir::Files | QDir::NoSymLinks,
                                QDirIterator::Subdirectories);
     while (dir_iterator1.hasNext()) {
+        if(nLetAddCount == m_nItemCount){
+            break;
+        }
         QString strFile = dir_iterator1.next();
         QImage *tmp = new QImage(":/images/123.jpg");
         QPixmap *pix = new QPixmap(/*dir_iterator1.next()*/strFile);
@@ -317,10 +331,9 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
         pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
         m_hBOx->addWidget(pLabel);
         m_hBOx->addSpacing(5);
-        nCount ++;
+        m_nItemCount ++;
     }
-
-    m_wgt->setFixedWidth(nCount * THUMBNAIL_WIDTH + nCount * 5 );
+    emit fitToolBar();
 }
 
 

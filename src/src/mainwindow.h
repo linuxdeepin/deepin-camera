@@ -85,6 +85,7 @@ private:
 private slots:
     void setSelBtnHide();
     void setSelBtnShow();
+    void onFitToolBar();
 private:
     //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   *m_thumbnail;

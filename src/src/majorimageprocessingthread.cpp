@@ -110,9 +110,10 @@ void MajorImageProcessingThread::run()
 
             convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
 
-            QImage img;
-            img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
-            emit SendMajorImageProcessing(img, result);
+
+            m_img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
+
+            emit SendMajorImageProcessing(m_img, result);
         }
         v4l2core_release_frame(vd1, frame);
         free(rgb24);

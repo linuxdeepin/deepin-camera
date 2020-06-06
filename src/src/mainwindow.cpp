@@ -348,8 +348,10 @@ void CMainWindow::initUI()
 
     m_thumbnail->setVisible(true);
     m_thumbnail->setMaximumWidth(1200);
+    m_thumbnail->m_nMaxItem = 850;
+    m_thumbnail->onFileChanged("");
     this->resize(850, 600);
-    //m_thumbnail->setFixedWidth(this->width());
+
 }
 
 void CMainWindow::initTitleBar()
@@ -376,6 +378,8 @@ void CMainWindow::initConnection()
     connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
     //系统文件变化信号
     connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
+    //增删文件修改界面
+    connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
 //    actionToken     m_actToken;
 
 //    avCodec         m_avCodec;
@@ -391,7 +395,7 @@ void CMainWindow::initConnection()
     //录像按钮信号
     connect(&m_toolBar, SIGNAL(sltVideo()), &m_videoPre, SLOT(onBtnVideo()));
     //特效按钮信号
-    connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
+    //connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
 
 
     //拍照信号
@@ -416,11 +420,11 @@ void CMainWindow::initConnection()
     //录像结束信号
     //connect(&m_toolBar, SIGNAL(takeVideoOver()), &m_videoPre, SLOT(onTakeVideoOver()));
     //选择特效信号
-    connect(&m_toolBar, SIGNAL(chooseEffect()), &m_videoPre, SLOT(onChooseEffect()));
+    //connect(&m_toolBar, SIGNAL(chooseEffect()), &m_videoPre, SLOT(onChooseEffect()));
     //特效选择左边按钮
-    connect(&m_toolBar, SIGNAL(moreEffectLeft()), &m_videoPre, SLOT(onMoreEffectLeft()));
+    //connect(&m_toolBar, SIGNAL(moreEffectLeft()), &m_videoPre, SLOT(onMoreEffectLeft()));
     //特效选择右边按钮
-    connect(&m_toolBar, SIGNAL(moreEffectRight()), &m_videoPre, SLOT(onMoreEffectRight()));
+    //connect(&m_toolBar, SIGNAL(moreEffectRight()), &m_videoPre, SLOT(onMoreEffectRight()));
     //找不到设备信号
     connect(&m_videoPre, SIGNAL(disableButtons()), &m_toolBar, SLOT(set_btn_state_no_dev()));
     //正常按钮时能信号
@@ -473,19 +477,39 @@ void CMainWindow::setupTitlebar()
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
+    int width = this->width();
+    int height = this->height();
     //Q_UNUSED(event);
     if (QEvent::Resize == event->type()) {
-        int width = this->width();
-        int height = this->height();
+
         //qDebug() << width << " " << height;
         m_videoPre.resize(width, height);
-        if (m_thumbnail) {
-            m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/width, 100);
-            m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
-                              this->height() - m_thumbnail->height() - 5);
-        }
+
+//        v4l2_dev_t *myvd = get_v4l2_device_handler();
+//        myvd->format
+    }
+    if (m_thumbnail) {
+        int n = m_thumbnail->getItemCount();
+        int nWidth = n*THUMBNAIL_WIDTH + 8*n + 50 +8;
+        qDebug() << n << " " << nWidth;
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
+        m_thumbnail->move((width - m_thumbnail->width()) / 2,
+                          height- m_thumbnail->height() - 5);
+        m_thumbnail->m_nMaxItem = width;
     }
 
+}
+
+void CMainWindow::onFitToolBar()
+{
+    if (m_thumbnail) {
+        int n = m_thumbnail->getItemCount();
+        int nWidth = n*THUMBNAIL_WIDTH + 8*n + 50 +8;
+        qDebug() << n << " " << nWidth;
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
+        m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
+                          this->height()- m_thumbnail->height() - 5);
+    }
 }
 
 void CMainWindow::menuItemInvoked(QAction *action)

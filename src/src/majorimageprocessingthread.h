@@ -49,7 +49,7 @@ public:
     QImage majorImage;
     void stop();
     void init();
-
+    QImage m_img;
 protected:
     void run();
 
