@@ -149,6 +149,28 @@ static void workaround_updateStyle(QWidget *parent, const QString &theme)
     }
 }
 
+static QWidget *createFormatLabelOptionHandle(QObject *opt)
+{
+    auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
+
+    DLabel *lab = new DLabel();
+    DWidget *main = new DWidget;
+    QHBoxLayout *layout = new QHBoxLayout;
+
+    main->setLayout(layout);
+    layout->addWidget(lab);
+    layout->setAlignment(Qt::AlignVCenter);
+    lab->setObjectName("OptionFormatLabel");
+    lab->setFixedHeight(30);
+    QString str = option->value().toString();
+    lab->setText(option->value().toString());
+    lab->show();
+    //lab->setEnabled(false);
+    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+    workaround_updateStyle(optionWidget, "light");
+    return optionWidget;
+}
+
 static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 {
     auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
@@ -291,6 +313,7 @@ void CMainWindow::slotPopupSettingsDialog()
     sDsetWgt = getDsetMber();
 
     pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+    pDSettingDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     //创建设置存储后端
     //QSettingBackend *pBackend = new QSettingBackend(m_srConfPath);
 
@@ -457,17 +480,17 @@ void CMainWindow::setupTitlebar()
     QAction *settingAction(new QAction(tr("Settings"), this));
     menu->addAction(settingAction);
     titlebar()->setMenu(menu);
-    connect(settingAction, &QAction::triggered, this, &CMainWindow::settingsTriggered);
+    //connect(settingAction, &QAction::triggered, this, &CMainWindow::settingsTriggered);
 
 
-    m_setwidget = new Set_Widget(centralWidget());
-    m_setwidget->setBackgroundRole(QPalette::Background);
-    m_setwidget->setAutoFillBackground(true);
-    QPalette *plette = new QPalette();
+//    m_setwidget = new Set_Widget(centralWidget());
+//    m_setwidget->setBackgroundRole(QPalette::Background);
+//    m_setwidget->setAutoFillBackground(true);
+//    QPalette *plette = new QPalette();
 
-    plette->setBrush(QPalette::Background, QBrush(QColor(64, 64, 64, 180), Qt::SolidPattern));
-    plette->setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255, 255), Qt::SolidPattern));
-    m_setwidget->setPalette(*plette);
+//    plette->setBrush(QPalette::Background, QBrush(QColor(64, 64, 64, 180), Qt::SolidPattern));
+//    plette->setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255, 255), Qt::SolidPattern));
+//    m_setwidget->setPalette(*plette);
 
     connect(settingAction, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
 
@@ -490,11 +513,11 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     }
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n*THUMBNAIL_WIDTH + 8*n + 50 +8;
+        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8;
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
-                          height- m_thumbnail->height() - 5);
+                          height - m_thumbnail->height() - 5);
         m_thumbnail->m_nMaxItem = width;
     }
 
@@ -504,11 +527,11 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n*THUMBNAIL_WIDTH + 8*n + 50 +8;
+        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8;
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
-                          this->height()- m_thumbnail->height() - 5);
+                          this->height() - m_thumbnail->height() - 5);
     }
 }
 
@@ -517,18 +540,18 @@ void CMainWindow::menuItemInvoked(QAction *action)
 
 }
 
-void CMainWindow::settingsTriggered(bool bTrue)
-{
-    m_setwidget->show();
-}
+//void CMainWindow::settingsTriggered(bool bTrue)
+//{
+//    m_setwidget->show();
+//}
 
-void CMainWindow::keyPressEvent(QKeyEvent *ev)
-{
-    if (ev->key() == Qt::Key_Escape) {
-        m_setwidget->hide();
-    }
-    QWidget::keyReleaseEvent(ev);
-}
+//void CMainWindow::keyPressEvent(QKeyEvent *ev)
+//{
+//    if (ev->key() == Qt::Key_Escape) {
+//        m_setwidget->hide();
+//    }
+//    QWidget::keyReleaseEvent(ev);
+//}
 
 
 

@@ -82,13 +82,15 @@
                     "options": [
                         {
                             "key": "picformat",
-                            "name": "picformat：PNG",
-                            "default": 0
+                            "name": "picformat:",
+                            "type":"formatLabel",
+                            "default": "JPG"
                         },
                         {
                             "key": "vidformat",
-                            "name": "vidformat：MP4",
-                            "default": 0
+                            "name": "vidformat:",
+                            "type":"formatLabel",
+                            "default": "MP4"
                         }
                     ]
                 }

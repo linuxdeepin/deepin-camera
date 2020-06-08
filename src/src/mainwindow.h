@@ -80,7 +80,7 @@ private:
     void resizeEvent(QResizeEvent *event);
     void menuItemInvoked(QAction *action);
     void settingsTriggered(bool bTrue);
-    void keyPressEvent(QKeyEvent *ev);
+    //void keyPressEvent(QKeyEvent *ev);
     void slotPopupSettingsDialog();
 private slots:
     void setSelBtnHide();
@@ -99,7 +99,7 @@ private:
     //PreviewWidget   m_preWgt;
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
-    Set_Widget      *m_setwidget;
+//    Set_Widget      *m_setwidget;
 //    Titlebar        *_titlebar {nullptr};
 //    AnimationLabel *_animationlable {nullptr};
 
