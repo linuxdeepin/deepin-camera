@@ -67,6 +67,9 @@ struct DBImgInfo {
     }
 };
 typedef QList<DBImgInfo> DBImgInfoList;
+
+enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
+
 class ThumbnailsBar : public DFloatingWidget
 {
     Q_OBJECT
@@ -76,10 +79,9 @@ public:
     void load();
     void loadInterface(QString strPath);
     int getItemCount(){return m_nItemCount;}
+    void ChangeActType(int nType);
 
     QHBoxLayout *m_mainLayout;
-    DButtonBoxButton *pushButton_8;
-    DButtonBoxButton *pushButton_9;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
     //QListWidget *imageList;
@@ -93,7 +95,9 @@ private:
     volatile bool m_bFlag;
     int m_current = 0;
     DBImgInfoList m_infos;
-    DIconButton *m_lastButton {nullptr};
+    DPushButton *m_lastButton {nullptr};
+    bool m_bTakePicMode;//拍照或者视频模式，默认拍照
+    int m_nActTpye;
 
 private:
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
@@ -101,6 +105,7 @@ signals:
     void fitToolBar();//调整工具栏
 public slots:
     void onFileChanged(const QString &strDirectory);
+    void onBtnClick();
 };
 
 #endif // THUMBNAILSBAR_H

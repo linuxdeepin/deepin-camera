@@ -149,7 +149,7 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                 setFont(m_pCountItem, 20, str);
                 m_pCountItem->setPlainText(str);
             }
-
+            imageprocessthread->m_img = imageprocessthread->m_img.scaled(this->width(),this->height());
             m_pixmap = QPixmap::fromImage(imageprocessthread->m_img);
             m_pNormalItem->setPixmap(m_pixmap);
 

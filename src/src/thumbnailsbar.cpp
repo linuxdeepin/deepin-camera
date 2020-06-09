@@ -41,6 +41,8 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
+    m_nActTpye = ActTakePic;
+    m_bTakePicMode = true;
     m_nItemCount = 0;
     m_nMaxItem = 0;
     m_wgt = new DWidget(this);
@@ -73,8 +75,18 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //    horizontalLayout->setStretch(1, 12);
 //    horizontalLayout->setStretch(2, 1);
 
-    m_lastButton = new DIconButton(this);
+    m_lastButton = new DPushButton(this);
     m_lastButton->setFixedWidth(50);
+    QIcon iconPic(":/images/icons/button/photograph.svg");
+    m_lastButton->setIcon(iconPic);
+    m_lastButton->setIconSize(QSize(18,18));
+    DPalette pa;
+    QColor clo("#0081FF");
+    pa.setColor(DPalette::Button, clo);
+    m_lastButton->setPalette(pa);
+
+    connect(m_lastButton,SIGNAL(clicked()),this,SLOT(OnBtnClick()));
+
     m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
     m_mainLayout->addSpacing(8);
     this->setLayout(m_mainLayout);
@@ -334,6 +346,41 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
         m_nItemCount ++;
     }
     emit fitToolBar();
+}
+
+void ThumbnailsBar::onBtnClick()
+{
+    if(m_bTakePicMode){
+
+    }
+}
+
+void ThumbnailsBar::ChangeActType(int nType)
+{
+    if(m_nActTpye == nType){
+        return;
+    }
+    m_nActTpye = nType;
+    if(nType == ActTakePic)
+    {
+        QIcon iconPic(":/images/icons/button/photograph.svg");
+        m_lastButton->setIcon(iconPic);
+        m_lastButton->setIconSize(QSize(18,18));
+        DPalette pa;
+        QColor clo("#0081FF");
+        pa.setColor(DPalette::Button, clo);
+        m_lastButton->setPalette(pa);
+    }
+    else {
+        QIcon iconPic(":/images/icons/button/transcribe.svg");
+        m_lastButton->setIcon(iconPic);
+        m_lastButton->setIconSize(QSize(18,18));
+        DPalette pa;
+        QColor clo("#0081FF");
+        pa.setColor(DPalette::Button, clo);
+        m_lastButton->setPalette(pa);
+    }
+
 }
 
 

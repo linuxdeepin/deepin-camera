@@ -6,11 +6,11 @@
             "groups": [
                 {
                     "key": "save",
-                    "name": "Location",
+                    "name": "File location",
                     "options": [
                         {
                             "key": "datapath",
-                            "name": "Datapath",
+                            "name": "Save to",
                             "type": "selectableEdit",
                             "default": "~/Videos"
                         }
@@ -33,20 +33,20 @@
         },
         {
             "key": "photosetting",
-            "name": "PhotoSetting",
+            "name": "Shoot",
             "groups": [
                 {
                     "key": "photosnumber",
-                    "name": "Photosnumber",
+                    "name": "Burst mode",
                     "options": [
                         {
                             "key": "takephotos",
                             "name": " ",
                             "type": "radiogroup",
                             "items": [
-                                "Zero",
-                                "Four",
-                                "Ten"
+                                "None",
+                                "4 pcs",
+                                "10 pcs"
                             ],
                             "default": 0
                         }
@@ -55,16 +55,16 @@
                 },
                 {
                     "key": "photosdelay",
-                    "name": "Photodelay",
+                    "name": "Self-timer delay",
                     "options": [
                         {
                             "key": "photodelays",
                             "name": " ",
                             "type": "radiogroup",
                             "items": [
-                                "Zero",
-                                "three",
-                                "six"
+                                "None",
+                                "3s",
+                                "6s"
                             ],
                             "default": 0
                         }
@@ -74,21 +74,21 @@
         },
         {
             "key": "outsetting",
-            "name": "Outsetting",
+            "name": "Output",
             "groups": [
                 {
                     "key": "outformat",
-                    "name": "OutFormat",
+                    "name": "Output format",
                     "options": [
                         {
                             "key": "picformat",
-                            "name": "picformat:",
+                            "name": "Photo format",
                             "type":"formatLabel",
                             "default": "JPG"
                         },
                         {
                             "key": "vidformat",
-                            "name": "vidformat:",
+                            "name": "Video format",
                             "type":"formatLabel",
                             "default": "MP4"
                         }

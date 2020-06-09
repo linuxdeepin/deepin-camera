@@ -33,11 +33,12 @@ int main(int argc, char *argv[])
     DApplication a(argc, argv);
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     a.setOrganizationName("deepin");
-    a.setApplicationName("dtk application");
+    a.setApplicationName("deepin-camera");
     a.setApplicationVersion("1.0");
-    a.setProductIcon(QIcon(":/images/logo.svg"));
-    a.setProductName("Dtk Application");
-    a.setApplicationDescription("This is a dtk template application.");
+    //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
+    a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
+    a.setProductName("Camera");
+    a.setApplicationDescription("This is a camera.");
 
     //仅允许打开一个相机
     QSharedMemory shared_memory("deepincamera");

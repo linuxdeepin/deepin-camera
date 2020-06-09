@@ -57,7 +57,6 @@ class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
 
-
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
 {
@@ -70,7 +69,6 @@ public:
     DSettings *getDsetMber();
 
     ~CMainWindow();
-
 
 private:
     void initUI();
@@ -86,6 +84,8 @@ private slots:
     void setSelBtnHide();
     void setSelBtnShow();
     void onFitToolBar();
+    void onPicBtn();
+    void onVdBtn();
 private:
     //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   *m_thumbnail;
@@ -109,15 +109,13 @@ private:
     QVector<videowidget *> m_VEffectPreview;
 
     DButtonBox *pDButtonBox;
-    DButtonBoxButton *pTakPictureBtn;
-    DButtonBoxButton *pTakVideoBtn;
+    DButtonBoxButton *pTakPicBtn;
+    DButtonBoxButton *pTakVdBtn;
     DIconButton *pSelectBtn;
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
 
-
-
-
+    int m_nActTpye;
 
 };
 

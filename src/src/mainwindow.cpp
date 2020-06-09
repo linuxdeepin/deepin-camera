@@ -47,6 +47,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Videos/摄像头";
     m_fileWatcher.addPath(m_strPath);
 
+    m_nActTpye = ActTakePic;
     initUI();
     initTitleBar();
     initConnection();
@@ -380,18 +381,32 @@ void CMainWindow::initUI()
 void CMainWindow::initTitleBar()
 {
     pDButtonBox = new DButtonBox();
-    pDButtonBox->setFixedWidth(200);
+    pDButtonBox->setFixedWidth(120);
     QList<DButtonBoxButton *> listButtonBox;
-    pTakPictureBtn = new DButtonBoxButton(QStringLiteral("拍照"));
-    pTakVideoBtn = new DButtonBoxButton(QStringLiteral("视频"));
-    listButtonBox.append(pTakPictureBtn);
-    listButtonBox.append(pTakVideoBtn);
+    QIcon iconPic(":/images/icons/button/photograph.svg");
+    pTakPicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
+    pTakPicBtn->setIcon(iconPic);
+    pTakPicBtn->setIconSize(QSize(15,15));
+    DPalette pa;
+    QColor clo("#0081FF");//启动默认开启拍照功能
+    pa.setColor(DPalette::Button, clo);
+    pTakPicBtn->setPalette(pa);
+
+
+    QIcon iconVd(":/images/icons/record video.svg");
+    pTakVdBtn = new DButtonBoxButton(nullptr);
+    pTakVdBtn->setIcon(iconVd);
+    pTakVdBtn->setIconSize(QSize(19,19));
+    listButtonBox.append(pTakPicBtn);
+    listButtonBox.append(pTakVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
 
-    pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
 
-    titlebar()->setIcon(QIcon::fromTheme("preferences-system"));// /usr/share/icons/bloom/apps/96
+    pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn->setIcon(QIcon(":/images/icons/button/Switch camera"));
+
+    titlebar()->setIcon(QIcon::fromTheme(":/images/logo/deepin-camera-32px.svg"));// /usr/share/icons/bloom/apps/96 //preferences-system
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
 }
 
@@ -463,6 +478,10 @@ void CMainWindow::initConnection()
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
+    //标题栏图片按钮
+    connect(pTakPicBtn, SIGNAL(clicked()), this, SLOT(onPicBtn()));
+    //标题栏视频按钮
+    connect(pTakVdBtn, SIGNAL(clicked()), this, SLOT(onVdBtn()));
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -553,6 +572,58 @@ void CMainWindow::menuItemInvoked(QAction *action)
 //    QWidget::keyReleaseEvent(ev);
 //}
 
+void CMainWindow::onPicBtn()
+{
+    if(m_nActTpye == ActTakePic){
+        return;
+    }
+    m_nActTpye = ActTakePic;
+    //切换标题栏拍照按钮颜色
+    DPalette paPic;
+    QColor cloPic("#0081FF");
+    paPic.setColor(DPalette::Button, cloPic);
+    pTakPicBtn->setPalette(paPic);
 
+    QIcon iconPic(":/images/icons/button/photograph.svg");
+    pTakPicBtn->setIcon(iconPic);
+
+    //切换标题栏视频按钮颜色
+    DPalette paVd;
+    QColor cloVd(Qt::lightGray);//颜色待修改
+    paVd.setColor(DPalette::Button, cloVd);
+    pTakVdBtn->setPalette(paVd);
+
+    QIcon iconVd(":/images/icons/record video.svg");
+    pTakVdBtn->setIcon(iconVd);
+
+    m_thumbnail->ChangeActType(m_nActTpye);
+}
+
+void CMainWindow::onVdBtn()
+{
+    if(m_nActTpye == ActTakeVideo){
+        return;
+    }
+    m_nActTpye = ActTakeVideo;
+    //切换标题栏视频按钮颜色
+    DPalette paPic;
+    QColor cloPic("#0081FF");//颜色待修改
+    paPic.setColor(DPalette::Button, cloPic);
+    pTakVdBtn->setPalette(paPic);
+
+    QIcon iconVd(":/images/icons/button/transcribe.svg");
+    pTakVdBtn->setIcon(iconVd);
+
+    //切换标题栏拍照按钮颜色
+    DPalette paVd;
+    QColor cloVd(Qt::lightGray);
+    paVd.setColor(DPalette::Button, cloVd);
+    pTakPicBtn->setPalette(paVd);
+
+    QIcon iconPic(":/images/icons/photograph.svg");
+    pTakPicBtn->setIcon(iconPic);
+
+    m_thumbnail->ChangeActType(m_nActTpye);
+}
 
 
