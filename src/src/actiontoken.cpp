@@ -40,14 +40,14 @@ void actionToken::onThreeShots()
 }
 
 void actionToken::onTakeVideo()
-{
-    qDebug() << "onTakeVideo";
-
+{    
     if (is_active) {
+        qDebug() << "onTakeVideo stop";
         encode_thread->stop();
         is_active = 0;
         reset_video_timer();
     } else {
+        qDebug() << "onTakeVideo start";
         encode_thread->start();
         is_active = 1;
     }

@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
-    w.setMinimumSize(850, 600);
+    w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
 
     Dtk::Widget::moveToCenter(&w);

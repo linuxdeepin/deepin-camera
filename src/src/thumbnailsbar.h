@@ -69,6 +69,7 @@ struct DBImgInfo {
 typedef QList<DBImgInfo> DBImgInfoList;
 
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
+enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
 
 class ThumbnailsBar : public DFloatingWidget
 {
@@ -96,13 +97,16 @@ private:
     int m_current = 0;
     DBImgInfoList m_infos;
     DPushButton *m_lastButton {nullptr};
-    bool m_bTakePicMode;//拍照或者视频模式，默认拍照
-    int m_nActTpye;
+    int m_nActTpye;//拍照或者视频模式，默认拍照
+    int m_nStatus;//当前状态
 
 private:
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 signals:
     void fitToolBar();//调整工具栏
+    void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
+    void takePic();
+    void takeVd();
 public slots:
     void onFileChanged(const QString &strDirectory);
     void onBtnClick();

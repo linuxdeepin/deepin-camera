@@ -37,6 +37,8 @@
 
 DSettings *sDsetWgt;
 
+static QString nameLast = nullptr;
+
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_devnumMonitor = new DevNumMonitor();
@@ -173,14 +175,14 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
 }
 
 static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
-{
+{   
     auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
     auto le = new DLineEdit();
     auto main = new DWidget;
     auto layout = new QHBoxLayout;
 
-    static QString nameLast = nullptr;
+//    static QString nameLast = nullptr;
 
     main->setLayout(layout);
     DPushButton *icon = new DPushButton;
@@ -242,7 +244,6 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
                     return false;
             }
         }
-
         return true;
     };
     QString temstr = lastOpenedPath();
@@ -372,9 +373,9 @@ void CMainWindow::initUI()
 
     m_thumbnail->setVisible(true);
     m_thumbnail->setMaximumWidth(1200);
-    m_thumbnail->m_nMaxItem = 850;
+    m_thumbnail->m_nMaxItem = MinWindowWidth;
     m_thumbnail->onFileChanged("");
-    this->resize(850, 600);
+    this->resize(MinWindowWidth, MinWindowHeight);
 
 }
 
@@ -418,6 +419,18 @@ void CMainWindow::initConnection()
     connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
+
+    //修改标题栏按钮状态
+    connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
+    //录像按钮信号
+    connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
+    //录像信号--显示计时
+    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
+    //拍照按钮信号
+    connect(m_thumbnail, SIGNAL(takePic()), &m_actToken, SLOT(onTakePic()));
+    //录像结束信号
+    //connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
+
 //    actionToken     m_actToken;
 
 //    avCodec         m_avCodec;
@@ -551,6 +564,27 @@ void CMainWindow::onFitToolBar()
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
+    }
+}
+
+void CMainWindow::onEnableTitleBar(int nType)
+{
+    //1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
+    switch (nType) {
+    case 1:
+        pTakVdBtn->setEnabled(false);
+        break;
+    case 2:
+        pTakPicBtn->setEnabled(false);
+        break;
+    case 3:
+        pTakVdBtn->setEnabled(true);
+        break;
+    case 4:
+        pTakPicBtn->setEnabled(true);
+        break;
+    default:
+        break;
     }
 }
 

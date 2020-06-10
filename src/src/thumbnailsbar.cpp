@@ -29,6 +29,9 @@
 #include <QMenuBar>
 #include <QAction>
 #include <DDesktopServices>
+#include "camview.h"
+
+extern QString nameLast;
 
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 {
@@ -41,8 +44,8 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
+    m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
-    m_bTakePicMode = true;
     m_nItemCount = 0;
     m_nMaxItem = 0;
     m_wgt = new DWidget(this);
@@ -84,8 +87,10 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     QColor clo("#0081FF");
     pa.setColor(DPalette::Button, clo);
     m_lastButton->setPalette(pa);
+    m_lastButton->setToolTip(tr("Take photo"));
+    m_lastButton->setToolTipDuration(500);//0.5s消失
 
-    connect(m_lastButton,SIGNAL(clicked()),this,SLOT(OnBtnClick()));
+    connect(m_lastButton,SIGNAL(clicked()),this,SLOT(onBtnClick()));
 
     m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
     m_mainLayout->addSpacing(8);
@@ -350,8 +355,35 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if(m_bTakePicMode){
+    if(m_nActTpye == ActTakePic){
+        if(m_nStatus == STATPicIng){
+            m_nStatus = STATNULL;
+            emit enableTitleBar(3);
+        }
+        else {
+            m_nStatus = STATPicIng;
+            //1、标题栏视频按钮置灰不可选
+            emit enableTitleBar(1);
+            emit takePic();
+        }
 
+    }
+    else if(m_nActTpye == ActTakeVideo){
+        if(m_nStatus == STATVdIng){
+            m_nStatus = STATNULL;
+            emit enableTitleBar(4);
+        }
+        else {
+            m_nStatus = STATVdIng;
+            //1、标题栏拍照按钮置灰不可选
+            emit enableTitleBar(2);
+            emit takeVd();
+            //video_capture_save_video(1);//保存视频//先按原来的路走，不使用该方法保存视频，后续调整
+        }
+
+    }
+    else {
+        return;
     }
 }
 
@@ -370,8 +402,9 @@ void ThumbnailsBar::ChangeActType(int nType)
         QColor clo("#0081FF");
         pa.setColor(DPalette::Button, clo);
         m_lastButton->setPalette(pa);
+        m_lastButton->setToolTip(tr("Take photo"));
     }
-    else {
+    else if(nType == ActTakeVideo){
         QIcon iconPic(":/images/icons/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(18,18));
@@ -379,6 +412,10 @@ void ThumbnailsBar::ChangeActType(int nType)
         QColor clo("#0081FF");
         pa.setColor(DPalette::Button, clo);
         m_lastButton->setPalette(pa);
+        m_lastButton->setToolTip(tr("Record video"));
+    }
+    else {
+        return;
     }
 
 }

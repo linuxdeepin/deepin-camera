@@ -56,6 +56,8 @@ DWIDGET_USE_NAMESPACE
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
+const int MinWindowWidth = 800;
+const int MinWindowHeight = 533;
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -84,6 +86,7 @@ private slots:
     void setSelBtnHide();
     void setSelBtnShow();
     void onFitToolBar();
+    void onEnableTitleBar(int nType);
     void onPicBtn();
     void onVdBtn();
 private:
@@ -116,6 +119,8 @@ private:
     DSettings *pDSettings;
 
     int m_nActTpye;
+signals:
+    void test111();
 
 };
 
