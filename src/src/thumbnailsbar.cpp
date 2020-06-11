@@ -355,7 +355,7 @@ void ThumbnailsBar::onFileChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if(m_nActTpye == ActTakePic){
+    if(m_nActTpye == ActTakePic){//待完善，拍照完成或取消都要恢复状态
         if(m_nStatus == STATPicIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(3);
@@ -372,15 +372,17 @@ void ThumbnailsBar::onBtnClick()
         if(m_nStatus == STATVdIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(4);
+            emit enableSettings(true);
             emit takeVd();
         }
         else {
             m_nStatus = STATVdIng;
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
+            //2、禁用设置功能
+            emit enableSettings(false);
+            //3、录制
             emit takeVd();
-            //待添加，禁用设置功能
-
             //video_capture_save_video(1);//保存视频//先按原来的路走，不使用该方法保存视频，后续调整
         }
 

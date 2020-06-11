@@ -463,8 +463,11 @@ void CMainWindow::initConnection()
     connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
     //拍照按钮信号
     connect(m_thumbnail, SIGNAL(takePic()), &m_actToken, SLOT(onTakePic()));
-    //录像结束信号
-    //connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
+    //设置按钮信号
+    connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
+    //禁用设置
+    connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
+
 
 //    actionToken     m_actToken;
 
@@ -544,25 +547,15 @@ void CMainWindow::setSelBtnShow()
 void CMainWindow::setupTitlebar()
 {
     DMenu *menu = new DMenu();
-    QAction *settingAction(new QAction(tr("Settings"), this));
-    menu->addAction(settingAction);
+    m_actionSettings = new QAction(tr("Settings"),this);
+    menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
-    //connect(settingAction, &QAction::triggered, this, &CMainWindow::settingsTriggered);
+//    QAction *settingAction(new QAction(tr("Settings"), this));
+//    settingAction->setEnabled(false);
+//    menu->addAction(settingAction);
+//    titlebar()->setMenu(menu);
+//    connect(settingAction, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
 
-
-//    m_setwidget = new Set_Widget(centralWidget());
-//    m_setwidget->setBackgroundRole(QPalette::Background);
-//    m_setwidget->setAutoFillBackground(true);
-//    QPalette *plette = new QPalette();
-
-//    plette->setBrush(QPalette::Background, QBrush(QColor(64, 64, 64, 180), Qt::SolidPattern));
-//    plette->setBrush(QPalette::WindowText, QBrush(QColor(255, 255, 255, 255), Qt::SolidPattern));
-//    m_setwidget->setPalette(*plette);
-
-    connect(settingAction, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
-
-    //m_setwidget->update();
-    //m_setwidget->setGeometry(0, 15 + m_setwidget->height(), this->width(), this->height() - m_setwidget->height());
 }
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
@@ -698,6 +691,11 @@ void CMainWindow::onVdBtn()
 void CMainWindow::onSettingsDlgClose()
 {
     m_fileWatcher.addPath(nameLast);
+}
+
+void CMainWindow::onEnableSettings(bool bTrue)
+{
+    m_actionSettings->setEnabled(bTrue);
 }
 
 

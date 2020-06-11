@@ -90,6 +90,7 @@ private slots:
     void onPicBtn();
     void onVdBtn();
     void onSettingsDlgClose();
+    void onEnableSettings(bool bTrue);
 private:
     //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   *m_thumbnail;
@@ -119,10 +120,11 @@ private:
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
     QString m_strCfgPath;
+    QAction *m_actionSettings;
 
     int m_nActTpye;
 signals:
-    void test111();
+
 
 };
 
