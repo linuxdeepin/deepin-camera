@@ -372,12 +372,15 @@ void ThumbnailsBar::onBtnClick()
         if(m_nStatus == STATVdIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(4);
+            emit takeVd();
         }
         else {
             m_nStatus = STATVdIng;
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
             emit takeVd();
+            //待添加，禁用设置功能
+
             //video_capture_save_video(1);//保存视频//先按原来的路走，不使用该方法保存视频，后续调整
         }
 

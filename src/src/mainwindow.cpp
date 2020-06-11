@@ -34,10 +34,11 @@
 #include <QTextLayout>
 #include <QStyleFactory>
 #include <dsettingswidgetfactory.h>
+#include <DDesktopServices>
 
 DSettings *sDsetWgt;
 
-static QString nameLast = nullptr;
+static QString nameLast = "/home/hujianbo/Videos/";
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
@@ -370,6 +371,26 @@ void CMainWindow::initUI()
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(100);
+
+    //添加右键打开文件夹功能
+    QMenu *menu = new QMenu();
+    QAction *actOpen = new QAction(this);
+    actOpen->setText("打开文件夹");
+    menu->addAction(actOpen);
+    m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+        menu->exec(QCursor::pos());
+    });
+    connect(actOpen, &QAction::triggered, this, [ = ] {
+//        QDesktopServices::openUrl(QUrl(nameLast, QUrl::TolerantMode));
+//#if 1
+//    QUrl url = QUrl::fromLocalFile(QFileInfo(path).absoluteFilePath());
+//#else
+//    QUrl url = QUrl::fromLocalFile(path);
+//#endif
+        Dtk::Widget::DDesktopServices::showFileItem(nameLast);
+
+    });
 
     m_thumbnail->setVisible(true);
     m_thumbnail->setMaximumWidth(1200);
