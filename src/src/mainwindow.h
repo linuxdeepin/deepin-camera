@@ -89,6 +89,7 @@ private slots:
     void onEnableTitleBar(int nType);
     void onPicBtn();
     void onVdBtn();
+    void onSettingsDlgClose();
 private:
     //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   *m_thumbnail;
@@ -117,6 +118,7 @@ private:
     DIconButton *pSelectBtn;
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
+    QString m_strCfgPath;
 
     int m_nActTpye;
 signals:

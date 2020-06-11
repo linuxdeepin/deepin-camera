@@ -35,13 +35,18 @@
 #include <QStyleFactory>
 #include <dsettingswidgetfactory.h>
 #include <DDesktopServices>
+#include <qsettingbackend.h>
 
 DSettings *sDsetWgt;
-
-static QString nameLast = "/home/hujianbo/Videos/";
+static QString nameLast = nullptr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
+    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+    m_strCfgPath = QString("%1/%2/%3/config.conf")
+                  .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
+                  .arg(qApp->organizationName())
+                  .arg(qApp->applicationName());
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
     QString m_strPath;
@@ -312,19 +317,22 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 void CMainWindow::slotPopupSettingsDialog()
 {
     pDSettingDialog = new DSettingsDialog(this);
-    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+
+    pDSettingDialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(pDSettingDialog,SIGNAL(destroyed()),this,SLOT(onSettingsDlgClose()));
+
     sDsetWgt = getDsetMber();
 
     pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
     pDSettingDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     //创建设置存储后端
-    //QSettingBackend *pBackend = new QSettingBackend(m_srConfPath);
+    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
 
     //通过json文件创建DSettings对象
 //    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
 //    sDsetWgt = getDsetMber();
     //设置DSettings存储后端
-    //pDSettings->setBackend(pBackend);
+    pDSettings->setBackend(pBackend);
 
     pDSettingDialog->updateSettings(pDSettings);
     pDSettingDialog->exec();
@@ -382,13 +390,19 @@ void CMainWindow::initUI()
         menu->exec(QCursor::pos());
     });
     connect(actOpen, &QAction::triggered, this, [ = ] {
-//        QDesktopServices::openUrl(QUrl(nameLast, QUrl::TolerantMode));
-//#if 1
-//    QUrl url = QUrl::fromLocalFile(QFileInfo(path).absoluteFilePath());
-//#else
-//    QUrl url = QUrl::fromLocalFile(path);
-//#endif
-        Dtk::Widget::DDesktopServices::showFileItem(nameLast);
+        QString save_path = nameLast;
+        if(nameLast.isEmpty()){
+            save_path = pDSettings->value("base.save.datapath").toString();
+        }
+        if (save_path.size() && save_path[0] == '~') {
+            save_path.replace(0, 1, QDir::homePath());
+        }
+
+        if (!QFileInfo(save_path).exists()) {
+            QDir d;
+            d.mkpath(save_path);
+        }
+        Dtk::Widget::DDesktopServices::showFolder(save_path);
 
     });
 
@@ -679,6 +693,11 @@ void CMainWindow::onVdBtn()
     pTakPicBtn->setIcon(iconPic);
 
     m_thumbnail->ChangeActType(m_nActTpye);
+}
+
+void CMainWindow::onSettingsDlgClose()
+{
+    m_fileWatcher.addPath(nameLast);
 }
 
 
