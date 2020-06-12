@@ -42,18 +42,26 @@ static QString nameLast = nullptr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
-    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
+    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");//json文件只读，不会被修改
     m_strCfgPath = QString("%1/%2/%3/config.conf")
                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
                   .arg(qApp->organizationName())
                   .arg(qApp->applicationName());
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
-    QString m_strPath;
-    m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
-    m_fileWatcher.addPath(m_strPath);
-    m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Videos/摄像头";
-    m_fileWatcher.addPath(m_strPath);
+
+    //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
+    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
+    pDSettings->setBackend(pBackend);
+    QString m_strPath = pDSettings->value("base.save.datapath").toString();
+    if (m_strPath.size() && m_strPath[0] == '~') {
+        m_strPath.replace(0, 1, QDir::homePath());
+    }
+
+    if (QFileInfo(m_strPath).exists()) {
+        m_fileWatcher.addPath(m_strPath);
+    }
+
 
     m_nActTpye = ActTakePic;
     initUI();
@@ -325,9 +333,6 @@ void CMainWindow::slotPopupSettingsDialog()
 
     pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
     pDSettingDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
-    //创建设置存储后端
-    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-    pDSettings->setBackend(pBackend);
 
     pDSettingDialog->updateSettings(pDSettings);
     pDSettingDialog->exec();
@@ -415,21 +420,21 @@ void CMainWindow::initTitleBar()
     pDButtonBox->setFixedWidth(120);
     QList<DButtonBoxButton *> listButtonBox;
     QIcon iconPic(":/images/icons/button/photograph.svg");
-    pTakPicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
-    pTakPicBtn->setIcon(iconPic);
-    pTakPicBtn->setIconSize(QSize(15,15));
+    m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
+    m_pTitlePicBtn->setIcon(iconPic);
+    m_pTitlePicBtn->setIconSize(QSize(15,15));
     DPalette pa;
     QColor clo("#0081FF");//启动默认开启拍照功能
     pa.setColor(DPalette::Button, clo);
-    pTakPicBtn->setPalette(pa);
+    m_pTitlePicBtn->setPalette(pa);
 
 
     QIcon iconVd(":/images/icons/record video.svg");
-    pTakVdBtn = new DButtonBoxButton(nullptr);
-    pTakVdBtn->setIcon(iconVd);
-    pTakVdBtn->setIconSize(QSize(19,19));
-    listButtonBox.append(pTakPicBtn);
-    listButtonBox.append(pTakVdBtn);
+    m_pTitleVdBtn = new DButtonBoxButton(nullptr);
+    m_pTitleVdBtn->setIcon(iconVd);
+    m_pTitleVdBtn->setIconSize(QSize(19,19));
+    listButtonBox.append(m_pTitlePicBtn);
+    listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
 
@@ -456,13 +461,16 @@ void CMainWindow::initConnection()
     connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
     //录像信号--显示计时
     connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
-    //拍照按钮信号
-    connect(m_thumbnail, SIGNAL(takePic()), &m_actToken, SLOT(onTakePic()));
+//    //拍照按钮信号
+//    connect(m_thumbnail, SIGNAL(takePic()), &m_actToken, SLOT(onTakePic()));
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
-
+    //拍照信号--显示倒计时
+    connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onShowCountdown()));
+    //录像信号--显示计时
+    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
     //拍照按钮信号
     connect(&m_toolBar, SIGNAL(sltPhoto()), &m_videoPre, SLOT(onBtnPhoto()));
 
@@ -474,9 +482,6 @@ void CMainWindow::initConnection()
     //特效按钮信号
     //connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
 
-    //拍照信号
-    connect(&m_toolBar, SIGNAL(takepic()), &m_actToken, SLOT(onTakePic()));
-
     //三连拍信号
     connect(&m_toolBar, SIGNAL(threeShots()), &m_actToken, SLOT(onThreeShots()));
     //录像信号
@@ -485,12 +490,10 @@ void CMainWindow::initConnection()
     connect(&m_toolBar, SIGNAL(cancelThreeShots()), &m_actToken, SLOT(onCancelThreeShots()));
     //录像结束信号
     connect(&m_toolBar, SIGNAL(takeVideoOver()), &m_actToken, SLOT(onTakeVideoOver()));
-    //拍照信号--显示倒计时
-    connect(&m_toolBar, SIGNAL(takepic()), &m_videoPre, SLOT(onShowCountdown()));
+
     //三连拍信号--显示倒计时
     connect(&m_toolBar, SIGNAL(threeShots()), &m_videoPre, SLOT(onShowThreeCountdown()));
-    //录像信号--显示计时
-    connect(&m_toolBar, SIGNAL(takeVideo()), &m_videoPre, SLOT(onTShowTime()));
+
     //三连拍取消信号
     //connect(&m_toolBar, SIGNAL(cancelThreeShots()), &m_videoPre, SLOT(onCancelThreeShots()));
     //录像结束信号
@@ -517,9 +520,9 @@ void CMainWindow::initConnection()
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
     //标题栏图片按钮
-    connect(pTakPicBtn, SIGNAL(clicked()), this, SLOT(onPicBtn()));
+    connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
-    connect(pTakVdBtn, SIGNAL(clicked()), this, SLOT(onVdBtn()));
+    connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -587,16 +590,16 @@ void CMainWindow::onEnableTitleBar(int nType)
     //1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
     switch (nType) {
     case 1:
-        pTakVdBtn->setEnabled(false);
+        m_pTitleVdBtn->setEnabled(false);
         break;
     case 2:
-        pTakPicBtn->setEnabled(false);
+        m_pTitlePicBtn->setEnabled(false);
         break;
     case 3:
-        pTakVdBtn->setEnabled(true);
+        m_pTitleVdBtn->setEnabled(true);
         break;
     case 4:
-        pTakPicBtn->setEnabled(true);
+        m_pTitlePicBtn->setEnabled(true);
         break;
     default:
         break;
@@ -621,7 +624,7 @@ void CMainWindow::menuItemInvoked(QAction *action)
 //    QWidget::keyReleaseEvent(ev);
 //}
 
-void CMainWindow::onPicBtn()
+void CMainWindow::onTitlePicBtn()
 {
     if(m_nActTpye == ActTakePic){
         return;
@@ -631,24 +634,24 @@ void CMainWindow::onPicBtn()
     DPalette paPic;
     QColor cloPic("#0081FF");
     paPic.setColor(DPalette::Button, cloPic);
-    pTakPicBtn->setPalette(paPic);
+    m_pTitlePicBtn->setPalette(paPic);
 
     QIcon iconPic(":/images/icons/button/photograph.svg");
-    pTakPicBtn->setIcon(iconPic);
+    m_pTitlePicBtn->setIcon(iconPic);
 
     //切换标题栏视频按钮颜色
     DPalette paVd;
     QColor cloVd(Qt::lightGray);//颜色待修改
     paVd.setColor(DPalette::Button, cloVd);
-    pTakVdBtn->setPalette(paVd);
+    m_pTitleVdBtn->setPalette(paVd);
 
     QIcon iconVd(":/images/icons/record video.svg");
-    pTakVdBtn->setIcon(iconVd);
+    m_pTitleVdBtn->setIcon(iconVd);
 
     m_thumbnail->ChangeActType(m_nActTpye);
 }
 
-void CMainWindow::onVdBtn()
+void CMainWindow::onTitleVdBtn()
 {
     if(m_nActTpye == ActTakeVideo){
         return;
@@ -658,19 +661,19 @@ void CMainWindow::onVdBtn()
     DPalette paPic;
     QColor cloPic("#0081FF");//颜色待修改
     paPic.setColor(DPalette::Button, cloPic);
-    pTakVdBtn->setPalette(paPic);
+    m_pTitleVdBtn->setPalette(paPic);
 
     QIcon iconVd(":/images/icons/button/transcribe.svg");
-    pTakVdBtn->setIcon(iconVd);
+    m_pTitleVdBtn->setIcon(iconVd);
 
     //切换标题栏拍照按钮颜色
     DPalette paVd;
     QColor cloVd(Qt::lightGray);
     paVd.setColor(DPalette::Button, cloVd);
-    pTakPicBtn->setPalette(paVd);
+    m_pTitlePicBtn->setPalette(paVd);
 
     QIcon iconPic(":/images/icons/photograph.svg");
-    pTakPicBtn->setIcon(iconPic);
+    m_pTitlePicBtn->setIcon(iconPic);
 
     m_thumbnail->ChangeActType(m_nActTpye);
 }
