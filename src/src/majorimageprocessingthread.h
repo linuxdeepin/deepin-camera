@@ -63,6 +63,7 @@ private:
 
 signals:
     void SendMajorImageProcessing(QImage image, int result);
+    void reachMaxDelayedFrames();
 
 };
 

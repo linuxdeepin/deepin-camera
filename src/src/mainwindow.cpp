@@ -327,11 +327,6 @@ void CMainWindow::slotPopupSettingsDialog()
     pDSettingDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     //创建设置存储后端
     QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-
-    //通过json文件创建DSettings对象
-//    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");
-//    sDsetWgt = getDsetMber();
-    //设置DSettings存储后端
     pDSettings->setBackend(pBackend);
 
     pDSettingDialog->updateSettings(pDSettings);
@@ -468,13 +463,6 @@ void CMainWindow::initConnection()
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
 
-
-//    actionToken     m_actToken;
-
-//    avCodec         m_avCodec;
-//    CameraDetect    m_camDetect;
-//    effectproxy     m_effProxy;
-//    ToolBar         m_toolBar;
     //拍照按钮信号
     connect(&m_toolBar, SIGNAL(sltPhoto()), &m_videoPre, SLOT(onBtnPhoto()));
 
@@ -485,7 +473,6 @@ void CMainWindow::initConnection()
     connect(&m_toolBar, SIGNAL(sltVideo()), &m_videoPre, SLOT(onBtnVideo()));
     //特效按钮信号
     //connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
-
 
     //拍照信号
     connect(&m_toolBar, SIGNAL(takepic()), &m_actToken, SLOT(onTakePic()));

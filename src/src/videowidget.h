@@ -82,6 +82,7 @@ public slots:
 
 private slots:
     void ReceiveMajorImage(QImage image, int result);
+    void onReachMaxDelayedFrames();
     void flash();
 
 private:
@@ -106,7 +107,8 @@ private:
 
     void init();
     void showCountDownLabel();
-
+    void showNocam();
+    void showCamUsed();
 
 private:
     bool isFindedDevice = false;

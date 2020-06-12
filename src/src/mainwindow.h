@@ -30,9 +30,7 @@
 #include "videoeffect.h"
 #include "videowidget.h"
 #include "widgetproxy.h"
-#include "set_widget.h"
 #include "devnummonitor.h"
-//#include "titlebar.h"
 //#include "animationlabel.h"
 
 #include <QObject>
@@ -92,7 +90,6 @@ private slots:
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
 private:
-    //Titlebar *_titlebar {nullptr};
     ThumbnailsBar   *m_thumbnail;
     actionToken     m_actToken;
     avCodec         m_avCodec;
@@ -101,11 +98,8 @@ private:
     ToolBar         m_toolBar;
     videoEffect     m_videoEffect;
 
-    //PreviewWidget   m_preWgt;
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
-//    Set_Widget      *m_setwidget;
-//    Titlebar        *_titlebar {nullptr};
 //    AnimationLabel *_animationlable {nullptr};
 
     QFileSystemWatcher m_fileWatcher;

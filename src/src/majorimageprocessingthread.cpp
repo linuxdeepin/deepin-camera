@@ -51,6 +51,7 @@ void MajorImageProcessingThread::run()
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
                 stopped = true;
+                emit reachMaxDelayedFrames();
                 //free(vd1);
                 //vd1 = nullptr;
                 close_v4l2_device_handler();

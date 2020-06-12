@@ -61,7 +61,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalView->setScene(m_pNormalScene);
     //m_pNormalScene->setSceneRect(0, 0, m_pNormalView->width(), m_pNormalView->height());
 
-    m_pNormalView->setStyleSheet("padding:0px;border:0px");
     m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
     //m_pNormalView->setWindowFlag(Qt::QGraphicsScene);
     m_pNormalItem = new QGraphicsPixmapItem;
@@ -111,19 +110,62 @@ void videowidget::init()
 
     } else {
         isFindedDevice = false;
-        m_pCountItem->show();
-        QString str = "no device found";
-        m_countdownLen = str.length() * 20;
-        setFont(m_pCountItem, 20, str);
-        m_pNormalScene->addItem(m_pCountItem);
-        qDebug() << "nodevice found" << endl;
-    }
 
+        showNocam();
+        qDebug() << "No webcam found" << endl;
+    }
 
     connect(imageprocessthread, SIGNAL(SendMajorImageProcessing(QImage, int)),
             this, SLOT(ReceiveMajorImage(QImage, int)));
 
+    connect(imageprocessthread, SIGNAL(reachMaxDelayedFrames()),
+            this, SLOT(onReachMaxDelayedFrames()));
+
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
+}
+
+void videowidget::showNocam()
+{
+    DPalette paPic;
+    QColor cloPic(0,0,0,178);
+    paPic.setColor(DPalette::Base, cloPic);
+    setPalette(paPic);
+
+    QImage img(":/images/icons/Not connected.svg");
+    m_pixmap = QPixmap::fromImage(img);
+    //m_pixmap.fill(Qt::red);
+    m_pNormalItem->setPixmap(m_pixmap);
+
+    QString str = "No webcam found";
+    m_countdownLen = str.length() * 20;
+    setFont(m_pCountItem, 12, str);
+    m_pNormalScene->addItem(m_pCountItem);
+    m_pNormalItem->setPos(100,-200);
+    //m_pNormalItem->setOffset(50,50);
+    m_pCountItem->setPos(100,-80);
+}
+
+void videowidget::showCamUsed()
+{
+    DPalette paPic;
+    QColor cloPic(0,0,0,178);
+    paPic.setColor(DPalette::Base, cloPic);
+    setPalette(paPic);
+
+    QImage img(":/images/icons/Take up.svg");
+//    img = img.scaled(img.size());
+    m_pixmap = QPixmap::fromImage(img);
+
+    m_pNormalItem->setPixmap(m_pixmap);
+
+    QString str = "The webcam is in use";
+    m_countdownLen = str.length() * 20;
+    setFont(m_pCountItem, 12, str);
+    m_pNormalScene->addItem(m_pCountItem);
+    m_pNormalItem->setPos(320,100);
+    m_pCountItem->show();
+    m_pCountItem->setPos(330,240);
+
 }
 
 void videowidget::ReceiveMajorImage(QImage image, int result)
@@ -178,8 +220,14 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
     }
 }
 
+void videowidget::onReachMaxDelayedFrames()
+{
+    showCamUsed();
+}
+
 void videowidget::sceneAddItem()
 {
+
 }
 
 void videowidget::updateEffectName()
@@ -351,7 +399,7 @@ void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
     if (item == nullptr)
         return;
     item->setFont(QFont("华文琥珀", size));
-    item->setDefaultTextColor(QColor(255, 255, 255));
+    item->setDefaultTextColor(QColor(40, 39, 39));
     //item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     item->setPlainText(str);
 
