@@ -31,8 +31,6 @@
 #include <DDesktopServices>
 #include "camview.h"
 
-extern QString nameLast;
-
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 {
     static QCollator sortCollator;

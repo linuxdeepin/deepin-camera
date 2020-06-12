@@ -85,8 +85,8 @@ private slots:
     void setSelBtnShow();
     void onFitToolBar();
     void onEnableTitleBar(int nType);
-    void onPicBtn();
-    void onVdBtn();
+    void onTitlePicBtn();
+    void onTitleVdBtn();
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
 private:
@@ -108,8 +108,8 @@ private:
     QVector<videowidget *> m_VEffectPreview;
 
     DButtonBox *pDButtonBox;
-    DButtonBoxButton *pTakPicBtn;
-    DButtonBoxButton *pTakVdBtn;
+    DButtonBoxButton *m_pTitlePicBtn;
+    DButtonBoxButton *m_pTitleVdBtn;
     DIconButton *pSelectBtn;
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
