@@ -30,7 +30,6 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/myscene.cpp \
-    src/set_widget.cpp \
     src/devnummonitor.cpp \
     src/encoderthread.cpp
 
@@ -52,7 +51,6 @@ HEADERS += \
     src/myscene.h \
     libcheese_v4l2core/gview_v4l2core\v4l2_core.h \
     src/videowidget.h \
-    src/set_widget.h \
     src/devnummonitor.h \
     src/encoderthread.h
 
