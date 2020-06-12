@@ -40,6 +40,8 @@
 DSettings *sDsetWgt;
 static QString nameLast = nullptr;
 
+
+
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     pDSettings = DSettings::fromJsonFile(":/resource/settings.json");//json文件只读，不会被修改
