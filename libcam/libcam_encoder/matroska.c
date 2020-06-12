@@ -1125,7 +1125,7 @@ stream_io_t *mkv_add_audio_stream(mkv_context_t *mkv_ctx,
 	{
 		mkv_ctx->pkt_buffer_write_index = 0;
 		mkv_ctx->pkt_buffer_read_index = 0;
-		mkv_ctx->pkt_buffer_list = calloc(mkv_ctx->pkt_buffer_list_size, sizeof(mkv_packet_buff_t));
+        mkv_ctx->pkt_buffer_list = calloc((size_t)(mkv_ctx->pkt_buffer_list_size), sizeof(mkv_packet_buff_t));
 		if (mkv_ctx->pkt_buffer_list == NULL)
 		{
 			fprintf(stderr, "ENCODER: FATAL memory allocation failure (mkv_add_audio_stream): %s\n", strerror(errno));

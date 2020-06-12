@@ -8,7 +8,7 @@ TARGET = depcam
 TEMPLATE = lib
 CONFIG   += c++11 link_pkgconfig
 
-DEFINES += LIBCHEESE_LIBRARY
+DEFINES += LIBCHEESE_LIBRARY QT_NO_WARNING_OUTPUT
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -136,4 +136,4 @@ ClEAR_LIB_OBJ = rm -f ./*.o \
 QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
 }
 
-
+QMAKE_CXXFLAGS += -Wno-enum-compare

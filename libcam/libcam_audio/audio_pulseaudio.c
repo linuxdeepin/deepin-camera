@@ -133,7 +133,7 @@ static void pa_state_cb(pa_context *c, void *data)
  *
  * returns: none
  */
-static void pa_sourcelist_cb(pa_context *c, const pa_source_info *l, int eol, void *data)
+static void pa_sourcelist_cb(__attribute__((unused)) pa_context *c, const pa_source_info *l, int eol, void *data)
 {
     audio_context_t *audio_ctx = (audio_context_t *) data;
 
@@ -144,8 +144,9 @@ static void pa_sourcelist_cb(pa_context *c, const pa_source_info *l, int eol, vo
      * you're at the end of the list
      */
     if (eol > 0)
+    {
         return;
-
+    }
 	source_index++;
 
 	if(l->sample_spec.channels <1)
@@ -176,18 +177,18 @@ static void pa_sourcelist_cb(pa_context *c, const pa_source_info *l, int eol, vo
 	{
 		audio_ctx->num_input_dev++;
 		/*add device to list*/
-		audio_ctx->list_devices = realloc(audio_ctx->list_devices, audio_ctx->num_input_dev * sizeof(audio_device_t));
+        audio_ctx->list_devices = realloc(audio_ctx->list_devices, (size_t)audio_ctx->num_input_dev * sizeof(audio_device_t));
 		if(audio_ctx->list_devices == NULL)
 		{
 			fprintf(stderr,"AUDIO: FATAL memory allocation failure (pa_sourcelist_cb): %s\n", strerror(errno));
 			exit(-1);
 		}
 		/*fill device data*/
-		audio_ctx->list_devices[audio_ctx->num_input_dev-1].id = l->index; /*saves dev id*/
+        audio_ctx->list_devices[audio_ctx->num_input_dev-1].id = (int)l->index; /*saves dev id*/
 		strncpy(audio_ctx->list_devices[audio_ctx->num_input_dev-1].name,  l->name, 511);
 		strncpy(audio_ctx->list_devices[audio_ctx->num_input_dev-1].description, l->description, 255);
 		audio_ctx->list_devices[audio_ctx->num_input_dev-1].channels = channels;
-		audio_ctx->list_devices[audio_ctx->num_input_dev-1].samprate = l->sample_spec.rate;
+        audio_ctx->list_devices[audio_ctx->num_input_dev-1].samprate = (int)l->sample_spec.rate;
 		audio_ctx->list_devices[audio_ctx->num_input_dev-1].low_latency = my_latency; /*in seconds*/
 		audio_ctx->list_devices[audio_ctx->num_input_dev-1].high_latency = my_latency; /*in seconds*/ 
 		
@@ -210,7 +211,7 @@ static void pa_sourcelist_cb(pa_context *c, const pa_source_info *l, int eol, vo
  *
  * returns: none
  */
-static void pa_sinklist_cb(pa_context *c, const pa_sink_info *l, int eol, void *userdata)
+static void pa_sinklist_cb(__attribute__((unused)) pa_context *c, const pa_sink_info *l, int eol, __attribute__((unused)) void *userdata)
 {
 	//audio_context_t *audio_ctx = (audio_context_t *) data;
 
@@ -422,7 +423,7 @@ static void get_latency(pa_stream *s)
  *
  * returns: none
  */
-static void stream_request_cb(pa_stream *s, size_t length, void *data)
+static void stream_request_cb(pa_stream *s, __attribute__((unused)) size_t length, void *data)
 {
 
     audio_context_t *audio_ctx = (audio_context_t *) data;
@@ -439,7 +440,7 @@ static void stream_request_cb(pa_stream *s, size_t length, void *data)
 		return;
 	}
 	
-	uint64_t frame_length = NSEC_PER_SEC / audio_ctx->samprate; /*in nanosec*/
+    uint64_t frame_length = (uint64_t)(NSEC_PER_SEC / audio_ctx->samprate); /*in nanosec*/
 	int64_t ts = 0;
 	int64_t buff_ts = 0;
 	uint32_t i = 0;
@@ -464,7 +465,7 @@ static void stream_request_cb(pa_stream *s, size_t length, void *data)
 
 		get_latency(s);
 
-		ts = ns_time_monotonic() - (latency * 1000);
+        ts = (int64_t)(ns_time_monotonic() - (latency * 1000));
 
 		if(audio_ctx->last_ts <= 0)
 			audio_ctx->last_ts = ts;
@@ -491,7 +492,7 @@ static void stream_request_cb(pa_stream *s, size_t length, void *data)
 
 			if(sample_index >= audio_ctx->capture_buff_size)
 			{
-				buff_ts = ts + ( i / audio_ctx->channels ) * frame_length;
+                buff_ts = (int64_t)((uint64_t)ts + ( i /(uint32_t) audio_ctx->channels ) * frame_length);
 
 				audio_fill_buffer(audio_ctx, buff_ts);
 
@@ -575,8 +576,8 @@ static void *pulse_read_audio(void *data)
     }
 
 	/* set the sample spec (frame rate, channels and format) */
-    ss.rate = audio_ctx->samprate;
-    ss.channels = audio_ctx->channels;
+    ss.rate = (uint32_t)audio_ctx->samprate;
+    ss.channels = (uint8_t)audio_ctx->channels;
     ss.format = PA_SAMPLE_FLOAT32LE; /*for PCM -> PA_SAMPLE_S16LE*/
 
     recordstream = pa_stream_new(pa_ctx, "Record", &ss, NULL);
@@ -596,7 +597,7 @@ static void *pulse_read_audio(void *data)
 
     if (audio_ctx->latency > 0)
     {
-      bufattr.fragsize = bufattr.tlength = pa_usec_to_bytes((audio_ctx->latency * 1000) * PA_USEC_PER_MSEC, &ss);
+      bufattr.fragsize = bufattr.tlength =(uint32_t) pa_usec_to_bytes((pa_usec_t)(audio_ctx->latency * 1000) * PA_USEC_PER_MSEC, &ss);
       flags |= PA_STREAM_ADJUST_LATENCY;
     }
     else

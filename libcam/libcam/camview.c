@@ -593,7 +593,7 @@ static void *audio_processing_loop(void *data)
  *
  * returns: pointer to return code
  */
-static void *encoder_loop(void *data)
+static void *encoder_loop(__attribute__((unused))void *data)
 {
     my_encoder_status = 1;
 

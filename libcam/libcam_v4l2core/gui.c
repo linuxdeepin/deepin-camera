@@ -48,7 +48,7 @@ extern int debug_level;
 int is_control_panel = 0;
 
 /*default camera button action: DEF_ACTION_IMAGE - save image; DEF_ACTION_VIDEO - save video*/
-static int default_camera_button_action = 0;
+__attribute__((unused))static int default_camera_button_action = 0;
 
 /*photo basename*/
 static char *photo_name = NULL;

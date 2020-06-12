@@ -63,7 +63,7 @@ __BEGIN_DECLS
 
 #define MAX_DELAYED_FRAMES 68  /*Maximum supported delayed frames*/
 
-static int my_video_codec_ind = 0;
+__attribute__((unused)) static int my_video_codec_ind = 0;
 
 /*video buffer*/
 typedef struct _video_buffer_t {

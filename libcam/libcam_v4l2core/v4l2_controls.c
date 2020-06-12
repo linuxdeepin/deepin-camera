@@ -142,7 +142,7 @@ static int query_ioctl(v4l2_dev_t *vd, int current_ctrl, struct v4l2_queryctrl* 
     do
     {
         if(ret)
-            ctrl->id = current_ctrl | V4L2_CTRL_FLAG_NEXT_CTRL;
+            ctrl->id = (__u32)current_ctrl | V4L2_CTRL_FLAG_NEXT_CTRL;
         ret = v4l2_ioctl(vd->fd, VIDIOC_QUERYCTRL, ctrl);
     }
     while (ret && tries-- &&
@@ -204,7 +204,7 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			printf("\tmin:%d max:%d def:%d curr:%d\n",
 				control->control.minimum, control->control.maximum,
 				control->control.default_value, control->value);
-			for (j = 0; control->menu[j].index <= control->control.maximum; j++)
+            for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
 				printf("\tmenu[%d]: [%d] -> '%s'\n", j, control->menu[j].index, control->menu_entry[j]);
 			break;
 
@@ -213,7 +213,7 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			printf("\tmin:%d max:%d def:%d curr:%d\n",
 				control->control.minimum, control->control.maximum,
 				control->control.default_value, control->value);
-			for (j = 0; control->menu[j].index <= control->control.maximum; j++)
+            for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
 				printf("\tmenu[%d]: [%d] -> %" PRId64 " (0x%" PRIx64 ")\n", j, control->menu[j].index,
 					(int64_t) control->menu[j].value,
 					(int64_t) control->menu[j].value);
@@ -372,20 +372,20 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
         int i = 0;
         struct v4l2_querymenu querymenu={0};
 
-        for (querymenu.index = queryctrl->minimum;
-            querymenu.index <= queryctrl->maximum;
+        for (querymenu.index = (__u32)queryctrl->minimum;
+            querymenu.index <= (__u32)queryctrl->maximum;
             querymenu.index++)
         {
             querymenu.id = queryctrl->id;
-            if (xioctl (vd->fd, VIDIOC_QUERYMENU, &querymenu) < 0)
+            if (xioctl (vd->fd, (int)VIDIOC_QUERYMENU, &querymenu) < 0)
                 continue;
 
 	        old_menu = menu;
 
 			if(!menu)
-                menu = calloc(i+1, sizeof(struct v4l2_querymenu));
+                menu = calloc((size_t)(i+1), sizeof(struct v4l2_querymenu));
             else
-                menu = realloc(menu, (i+1) * sizeof(struct v4l2_querymenu));
+                menu = realloc(menu, (size_t)(i+1) * sizeof(struct v4l2_querymenu));
 
             if(menu == NULL)
 			{
@@ -406,9 +406,9 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
 
 		/*last entry (NULL name)*/
         if(!menu)
-            menu = calloc(i+1, sizeof(struct v4l2_querymenu));
+            menu = calloc((size_t)(i+1), sizeof(struct v4l2_querymenu));
         else
-            menu = realloc(menu, (i+1) * sizeof(struct v4l2_querymenu));	
+            menu = realloc(menu, (size_t)(i+1) * sizeof(struct v4l2_querymenu));
 
 		if(menu == NULL)
 		{
@@ -422,7 +422,7 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
 		}
 
         menu[i].id = querymenu.id;
-        menu[i].index = queryctrl->maximum+1;
+        menu[i].index = (__u32)queryctrl->maximum+1;
         if(queryctrl->type == V4L2_CTRL_TYPE_MENU)
 			menu[i].name[0] = 0;
 		menu_entries = i;
@@ -431,7 +431,7 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
     /*check for focus control to enable software autofocus*/
     if(queryctrl->id == V4L2_CID_FOCUS_LOGITECH ||
        queryctrl->id == V4L2_CID_FOCUS_ABSOLUTE)
-		vd->has_focus_control_id = queryctrl->id;
+        vd->has_focus_control_id = (int)queryctrl->id;
 	/*check for pan/tilt control*/
 	else if(queryctrl->id == V4L2_CID_TILT_RELATIVE ||
 			queryctrl->id == V4L2_CID_PAN_RELATIVE)
@@ -455,7 +455,7 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
     if(control->menu != NULL && control->control.type == V4L2_CTRL_TYPE_MENU)
     {
 		int i = 0;
-		control->menu_entry = calloc(menu_entries, sizeof(char *));
+        control->menu_entry = calloc((size_t)(menu_entries), sizeof(char *));
 		if(control->menu_entry == NULL)
 		{
 			fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_control): %s\n", strerror(errno));
@@ -473,7 +473,7 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
     //allocate a string with max size if needed
     if(control->control.type == V4L2_CTRL_TYPE_STRING)
     {
-        control->string = (char *) calloc (control->control.maximum + 1, sizeof(char));
+        control->string = (char *) calloc ((size_t)control->control.maximum + 1, sizeof(char));
         if(control->string == NULL)
 		{
 			fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_control): %s\n", strerror(errno));
@@ -534,7 +534,7 @@ int enumerate_v4l2_control(v4l2_dev_t *vd)
 		if(add_control(vd, &queryctrl, &current, &(vd->list_device_controls)) != NULL)
             n++;
 
-        currentctrl = queryctrl.id;
+        currentctrl = (int)queryctrl.id;
 
 		queryctrl.id |= V4L2_CTRL_FLAG_NEXT_CTRL;
 	}
@@ -559,8 +559,8 @@ int enumerate_v4l2_control(v4l2_dev_t *vd)
 	 */
 	for (currentctrl = V4L2_CID_USER_BASE; currentctrl < V4L2_CID_LASTP1; currentctrl++)
 	{
-		queryctrl.id = currentctrl;
-		if (xioctl(vd->fd, VIDIOC_QUERYCTRL, &queryctrl) == 0)
+        queryctrl.id = (__u32)currentctrl;
+        if (xioctl(vd->fd, (int)VIDIOC_QUERYCTRL, &queryctrl) == 0)
 		{
 			if(add_control(vd, &queryctrl, &current, &(vd->list_device_controls)) != NULL)
 				n++;
@@ -569,8 +569,8 @@ int enumerate_v4l2_control(v4l2_dev_t *vd)
 	/* CAMERA CLASS Controls */
 	for (currentctrl = V4L2_CID_CAMERA_CLASS_BASE; currentctrl < V4L2_CID_CAMERA_CLASS_BASE+32; currentctrl++)
 	{
-		queryctrl.id = currentctrl;
-		if (xioctl(vd->fd, VIDIOC_QUERYCTRL, &queryctrl) == 0)
+        queryctrl.id = (__u32)currentctrl;
+        if (xioctl(vd->fd, (int)VIDIOC_QUERYCTRL, &queryctrl) == 0)
 		{
 			if(add_control(vd, &queryctrl, &current, &(vd->list_device_controls)) != NULL)
 				n++;
@@ -578,7 +578,7 @@ int enumerate_v4l2_control(v4l2_dev_t *vd)
 	}
 	/* PRIVATE controls (deprecated) */
 	for (queryctrl.id = V4L2_CID_PRIVATE_BASE;
-		 xioctl(vd->fd, VIDIOC_QUERYCTRL, &queryctrl) == 0; queryctrl.id++)
+         xioctl(vd->fd, (int)VIDIOC_QUERYCTRL, &queryctrl) == 0; queryctrl.id++)
 	{
 		if(add_control(vd, &queryctrl, &current, &(vd->list_device_controls)) != NULL)
             n++;
@@ -806,7 +806,7 @@ static void update_ctrl_list_flags(v4l2_dev_t *vd)
     v4l2_ctrl_t *current = vd->list_device_controls;
 
     for(; current != NULL; current = current->next)
-        update_ctrl_flags(vd, current->control.id);
+        update_ctrl_flags(vd, (int)current->control.id);
 }
 
 /*
@@ -875,7 +875,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
         clist[count].size = 0;
         if(current->control.type == V4L2_CTRL_TYPE_STRING)
         {
-            clist[count].size = current->control.maximum + 1;
+            clist[count].size = (__u32)current->control.maximum + 1;
             clist[count].string = (char *) calloc(clist[count].size,  sizeof(char));
             if(clist[count].string == NULL)
 			{
@@ -888,10 +888,10 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
         if((current->next == NULL) || (current->next->cclass != current->cclass))
         {
             struct v4l2_ext_controls ctrls = {0};
-            ctrls.ctrl_class = current->cclass;
-            ctrls.count = count;
+            ctrls.ctrl_class = (__u32)current->cclass;
+            ctrls.count = (__u32)count;
             ctrls.controls = clist;
-            ret = xioctl(vd->fd, VIDIOC_G_EXT_CTRLS, &ctrls);
+            ret = xioctl(vd->fd, (int)VIDIOC_G_EXT_CTRLS, &ctrls);
             if(ret)
             {
                 fprintf(stderr, "V4L2_CORE: (VIDIOC_G_EXT_CTRLS) failed\n");
@@ -906,7 +906,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
                     {
                         ctrl.id = clist[i].id;
                         ctrl.value = 0;
-                        ret = xioctl(vd->fd, VIDIOC_G_CTRL, &ctrl);
+                        ret = xioctl(vd->fd, (int)VIDIOC_G_CTRL, &ctrl);
                         if(ret)
                             continue;
                         clist[i].value = ctrl.value;
@@ -920,7 +920,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
                     {
                         ctrls.count = 1;
                         ctrls.controls = &clist[i];
-                        ret = xioctl(vd->fd, VIDIOC_G_EXT_CTRLS, &ctrls);
+                        ret = xioctl(vd->fd, (int)VIDIOC_G_EXT_CTRLS, &ctrls);
                         if(ret)
                             fprintf(stderr, "V4L2_CORE: control id: 0x%08x failed to get (error %i)\n",
                                 clist[i].id, ret);
@@ -931,7 +931,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
             //fill in the values on the control list
             for(i=0; i<count; i++)
             {
-                v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, clist[i].id);
+                v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, (int)clist[i].id);
                 if(!ctrl)
                 {
                     fprintf(stderr, "V4L2_CORE: couldn't get control for id: %i\n", clist[i].id);
@@ -946,8 +946,8 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
                          * string gets set on VIDIOC_G_EXT_CTRLS
                          * add the maximum size to value
                          */
-                        unsigned len = strlen(clist[i].string);
-						unsigned max_len = ctrl->control.maximum;
+                        unsigned len =(unsigned) strlen(clist[i].string);
+                        unsigned max_len =(unsigned) ctrl->control.maximum;
 
 						strncpy(ctrl->string, clist[i].string, max_len + 1);
 						if(len > max_len)
@@ -1002,7 +1002,7 @@ v4l2_ctrl_t *get_control_by_id(v4l2_dev_t *vd, int id)
 		if(current == NULL)
 			break;
 
-        if(current->control.id == id)
+        if(current->control.id == (__u32)id)
             return (current);
     }
 
@@ -1043,7 +1043,7 @@ int get_control_value_by_id (v4l2_dev_t *vd, int id)
         struct v4l2_control ctrl;
         ctrl.id = control->control.id;
         ctrl.value = 0;
-        ret = xioctl(vd->fd, VIDIOC_G_CTRL, &ctrl);
+        ret = xioctl(vd->fd, (int)VIDIOC_G_CTRL, &ctrl);
         if(ret)
             fprintf(stderr, "V4L2_CORE: control id: 0x%08x failed to get value (error %i)\n",
                 ctrl.id, ret);
@@ -1058,7 +1058,7 @@ int get_control_value_by_id (v4l2_dev_t *vd, int id)
         ctrl.size = 0;
         if(control->control.type == V4L2_CTRL_TYPE_STRING)
         {
-            ctrl.size = control->control.maximum + 1;
+            ctrl.size = (__u32)control->control.maximum + 1;
             ctrl.string = (char *) calloc(ctrl.size, sizeof(char));
             if(ctrl.string == NULL)
 			{
@@ -1066,10 +1066,10 @@ int get_control_value_by_id (v4l2_dev_t *vd, int id)
 				exit(-1);
 			}
         }
-        ctrls.ctrl_class = control->cclass;
+        ctrls.ctrl_class = (__u32)control->cclass;
         ctrls.count = 1;
         ctrls.controls = &ctrl;
-        ret = xioctl(vd->fd, VIDIOC_G_EXT_CTRLS, &ctrls);
+        ret = xioctl(vd->fd, (int)VIDIOC_G_EXT_CTRLS, &ctrls);
         if(ret)
             printf("control id: 0x%08x failed to get value (error %i)\n",
                 ctrl.id, ret);
@@ -1148,8 +1148,8 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
         {
             case V4L2_CTRL_TYPE_STRING:
             {
-				unsigned len = strlen(current->string);
-				unsigned max_len = current->control.maximum;
+                unsigned len = (unsigned)strlen(current->string);
+                unsigned max_len = (unsigned)current->control.maximum;
 
 				if(len > max_len)
 				{
@@ -1186,10 +1186,10 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
         if((current->next == NULL) || (current->next->cclass != current->cclass))
         {
             struct v4l2_ext_controls ctrls = {0};
-            ctrls.ctrl_class = current->cclass;
-            ctrls.count = count;
+            ctrls.ctrl_class = (__u32)current->cclass;
+            ctrls.count = (__u32)count;
             ctrls.controls = clist;
-            ret = xioctl(vd->fd, VIDIOC_S_EXT_CTRLS, &ctrls);
+            ret = xioctl(vd->fd, (int)VIDIOC_S_EXT_CTRLS, &ctrls);
             if(ret)
             {
                 fprintf(stderr, "V4L2_CORE: VIDIOC_S_EXT_CTRLS for multiple controls failed (error %i)\n", ret);
@@ -1204,10 +1204,10 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
                     {
                         ctrl.id = clist[i].id;
                         ctrl.value = clist[i].value;
-                        ret = xioctl(vd->fd, VIDIOC_S_CTRL, &ctrl);
+                        ret = xioctl(vd->fd, (int)VIDIOC_S_CTRL, &ctrl);
                         if(ret)
                         {
-                            v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, clist[i].id);
+                            v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, (int)clist[i].id);
                             if(ctrl)
                                 fprintf(stderr, "V4L2_CORE: control(0x%08x) \"%s\" failed to set (error %i)\n",
                                     clist[i].id, ctrl->control.name, ret);
@@ -1225,9 +1225,9 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
                     {
                         ctrls.count = 1;
                         ctrls.controls = &clist[i];
-                        ret = xioctl(vd->fd, VIDIOC_S_EXT_CTRLS, &ctrls);
+                        ret = xioctl(vd->fd, (int)VIDIOC_S_EXT_CTRLS, &ctrls);
 
-                        v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, clist[i].id);
+                        v4l2_ctrl_t *ctrl = v4l2core_get_control_by_id(vd, (int)clist[i].id);
 
                         if(ret)
                         {
@@ -1274,7 +1274,8 @@ void set_control_defaults(v4l2_dev_t *vd)
 	}
 
     v4l2_ctrl_t *current = vd->list_device_controls;
-    v4l2_ctrl_t *next = current->next;
+
+    //v4l2_ctrl_t *next = current->next;
 
 	if(verbosity > 0)
 		printf("V4L2_CORE: loading defaults\n");
@@ -1294,7 +1295,7 @@ void set_control_defaults(v4l2_dev_t *vd)
                 break;
             default:
                 /*if its one of the special auto controls disable it first*/
-                disable_special_auto (vd, current->control.id);
+                disable_special_auto (vd, (int)current->control.id);
                 if(verbosity > 1)
 					printf("\tdefault[%i] = %i\n", i, current->control.default_value);
                 current->value = current->control.default_value;
@@ -1339,9 +1340,9 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
 		/*use raw control in this case - prevents uvcvideo cache bug*/
 		uint32_t pantilt = 0;
 		if(id == V4L2_CID_PAN_RELATIVE)
-			pantilt |= (int16_t) control->value;
+            pantilt |= (uint32_t) control->value;
 		else
-			pantilt |= ((int16_t) control->value) << 16;
+            pantilt |= ((uint32_t) control->value) << 16;
 
 		return query_xu_control(vd, vd->pantilt_unit_id, 1, UVC_SET_CUR, &pantilt);
 	}
@@ -1356,7 +1357,7 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
         struct v4l2_control ctrl;
         ctrl.id = control->control.id;
         ctrl.value = control->value;
-        ret = xioctl(vd->fd, VIDIOC_S_CTRL, &ctrl);
+        ret = xioctl(vd->fd, (int)VIDIOC_S_CTRL, &ctrl);
     }
     else
     {
@@ -1368,8 +1369,8 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
         {
             case V4L2_CTRL_TYPE_STRING:
             {
-				unsigned len = strlen(control->string);
-				unsigned max_len = control->control.maximum;
+                unsigned len = (unsigned)strlen(control->string);
+                unsigned max_len = (unsigned)control->control.maximum;
 
 				if(len > max_len)
 				{
@@ -1399,10 +1400,10 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
                 ctrl.value = control->value;
                 break;
         }
-        ctrls.ctrl_class = control->cclass;
+        ctrls.ctrl_class = (__u32)control->cclass;
         ctrls.count = 1;
         ctrls.controls = &ctrl;
-        ret = xioctl(vd->fd, VIDIOC_S_EXT_CTRLS, &ctrls);
+        ret = xioctl(vd->fd, (int)VIDIOC_S_EXT_CTRLS, &ctrls);
         if(ret)
             printf("control id: 0x%08x failed to set (error %i)\n",
                 ctrl.id, ret);

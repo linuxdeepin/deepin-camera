@@ -64,7 +64,7 @@ static int sample_index = 0;
  */
 static int recordCallback (
 	const void *inputBuffer,
-	void *outputBuffer,
+__attribute__((unused))	void *outputBuffer,
 	unsigned long framesPerBuffer,
 	const PaStreamCallbackTimeInfo* timeInfo,
 	PaStreamCallbackFlags statusFlags,

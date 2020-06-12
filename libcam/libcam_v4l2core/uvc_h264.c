@@ -358,7 +358,7 @@ void add_h264_format(v4l2_dev_t *vd)
 
 	vd->list_stream_formats = realloc(
 		vd->list_stream_formats,
-		fmtind * sizeof(v4l2_stream_formats_t));
+        (size_t)fmtind * sizeof(v4l2_stream_formats_t));
 	if(vd->list_stream_formats == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -385,7 +385,7 @@ void add_h264_format(v4l2_dev_t *vd)
 		res_index++;
 		vd->list_stream_formats[fmtind-1].list_stream_cap = realloc(
 			vd->list_stream_formats[fmtind-1].list_stream_cap,
-			res_index * sizeof(v4l2_stream_cap_t));
+            (size_t)res_index * sizeof(v4l2_stream_cap_t));
 		if(vd->list_stream_formats[fmtind-1].list_stream_cap == NULL)
 		{
 			fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -410,7 +410,7 @@ void add_h264_format(v4l2_dev_t *vd)
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].numb_frates = frate_index;
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num = realloc(
 				vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num,
-				frate_index * sizeof(int));
+                (size_t)frate_index * sizeof(int));
 			if(vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -420,7 +420,7 @@ void add_h264_format(v4l2_dev_t *vd)
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num[frate_index-1] = framerate_num;
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom = realloc(
 				vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom,
-				frate_index * sizeof(int));
+                (size_t)frate_index * sizeof(int));
 			if(vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -458,10 +458,10 @@ void set_h264_muxed_format(v4l2_dev_t *vd)
 	vd->h264_no_probe_default = 0;
 
 	/*set resolution*/
-	config_probe_req->wWidth = vd->format.fmt.pix.width;
-	config_probe_req->wHeight = vd->format.fmt.pix.height;
+    config_probe_req->wWidth = (uint16_t)vd->format.fmt.pix.width;
+    config_probe_req->wHeight = (uint16_t)vd->format.fmt.pix.height;
 	/*set frame rate in 100ns units*/
-	uint32_t frame_interval = (vd->fps_num * 1000000000LL / vd->fps_denom)/100;
+    uint32_t frame_interval = ((uint32_t)vd->fps_num * 1000000000LL / (uint32_t)vd->fps_denom)/100;
 	config_probe_req->dwFrameInterval = frame_interval;
 
 	/*set the aux stream (h264)*/
@@ -1046,7 +1046,7 @@ int h264_init_decoder(int width, int height)
 #endif
 
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-	h264_ctx->pic_size = av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
+    h264_ctx->pic_size = av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
 #else
 	h264_ctx->pic_size = avpicture_get_size(h264_ctx->context->pix_fmt, width, height);
 #endif

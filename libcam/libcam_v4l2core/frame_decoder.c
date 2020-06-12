@@ -65,8 +65,8 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 	int i = 0;
 	size_t framebuf_size = 0;
 
-	int width = vd->format.fmt.pix.width;
-	int height = vd->format.fmt.pix.height;
+    int width = (int)vd->format.fmt.pix.width;
+    int height = (int)vd->format.fmt.pix.height;
 
 	if(width <= 0 || height <= 0)
 		return E_ALLOC_ERR;
@@ -89,7 +89,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
-				vd->frame_queue[i].h264_frame_max_size = width * height; /*1 byte per pixel*/
+                vd->frame_queue[i].h264_frame_max_size = (size_t)width * (size_t)height; /*1 byte per pixel*/
 				vd->frame_queue[i].h264_frame = calloc(vd->frame_queue[i].h264_frame_max_size, sizeof(uint8_t));
 
 				if(vd->frame_queue[i].h264_frame == NULL)
@@ -98,7 +98,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 					exit(-1);
 				}
 
-				vd->frame_queue[i].yuv_frame = calloc(framesizeIn, sizeof(uint8_t));
+                vd->frame_queue[i].yuv_frame = calloc((uint8_t)framesizeIn, sizeof(uint8_t));
 				if(vd->frame_queue[i].yuv_frame == NULL)
 				{
 					fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (alloc_v4l2_frames): %s\n", strerror(errno));
@@ -107,7 +107,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 
 			}
 
-			vd->h264_last_IDR = calloc(width * height, sizeof(uint8_t));
+            vd->h264_last_IDR = calloc((uint8_t)(width * height), sizeof(uint8_t));
 			if(vd->h264_last_IDR == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (alloc_v4l2_frames): %s\n", strerror(errno));
@@ -131,7 +131,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
-				vd->frame_queue[i].yuv_frame = calloc(framesizeIn, sizeof(uint8_t));
+                vd->frame_queue[i].yuv_frame = calloc((size_t) framesizeIn, sizeof(uint8_t));
 				if(vd->frame_queue[i].yuv_frame == NULL)
 				{
 					fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (alloc_v4l2_frames): %s\n", strerror(errno));
@@ -198,7 +198,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 		case V4L2_PIX_FMT_ARGB555X:
 		case V4L2_PIX_FMT_XRGB555X:
 #endif
-			framebuf_size = framesizeIn;
+            framebuf_size =(size_t)  framesizeIn;
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
@@ -217,7 +217,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 			 *  video processing disable is set (bayer processing).
 			 *            (logitech cameras only)
 			 */
-			framebuf_size = framesizeIn;
+            framebuf_size = (size_t) framesizeIn;
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
@@ -240,13 +240,13 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 			 *    bayer_to_rgb24(bayer_data, RGB24_data, width, height, 0..3)
 			 *    rgb2yuyv(RGB24_data, vd->framebuffer, width, height)
 			 */
-			framebuf_size = framesizeIn;
+            framebuf_size = (size_t) framesizeIn;
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
 				/* alloc a temp buffer for converting to YUYV*/
 				/* rgb buffer for decoding bayer data*/
-				vd->frame_queue[i].tmp_buffer_max_size = width * height * 3;
+                vd->frame_queue[i].tmp_buffer_max_size =(size_t) (width * height * 3);
 				vd->frame_queue[i].tmp_buffer = calloc(vd->frame_queue[i].tmp_buffer_max_size, sizeof(uint8_t));
 				if(vd->frame_queue[i].tmp_buffer == NULL)
 				{
@@ -447,21 +447,21 @@ static int parse_NALU(uint8_t type, uint8_t **NALU, uint8_t *buff, int size)
 		   sp[2] == 0x00 &&
 		   sp[3] == 0x01)
 		{
-			nal_size = sp - nal;
+            nal_size =(int)(sp - nal);
 			break;
 		}
 	}
 
 	if(!nal_size)
-		nal_size = buff + size - nal;
+        nal_size = (int)(buff + size - nal);
 
-	*NALU = calloc(nal_size, sizeof(uint8_t));
+    *NALU = calloc((size_t)nal_size, sizeof(uint8_t));
 	if(*NALU == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (parse_NALU): %s\n", strerror(errno));
 		exit(-1);
 	}
-	memcpy(*NALU, nal, nal_size);
+    memcpy(*NALU, nal, (size_t)nal_size);
 
 	//char test_filename2[20];
 	//snprintf(test_filename2, 20, "frame_nalu-%i.raw", type);
@@ -484,9 +484,9 @@ static int parse_NALU(uint8_t type, uint8_t **NALU, uint8_t *buff, int size)
  *
  * returns: data size and copies NALU data to h264 buffer
  */
-static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, int h264_max_size)
+static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, __attribute__((unused))int h264_max_size)
 {
-	/*asserts*/
+    /*asserts*/
 	assert(h264_data != NULL);
 	assert(buff != NULL);
 
@@ -511,7 +511,7 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, int h264_m
 	 *includes payload size + header + 6 bytes(2 length + 4 payload size)
 	 */
 	uint16_t length = 0;
-	length  = (uint16_t) spl[0] << 8;
+    length  = (uint16_t)((uint16_t) spl[0] << 8);
 	length |= (uint16_t) spl[1];
 
 	header = spl + 2;
@@ -558,11 +558,11 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, int h264_m
 		   sp[1] != 0xE4)
 		{
 			fprintf(stderr, "V4L2_CORE: expected APP4 marker but none found (demux_uvcH264)\n");
-			return (ph264 - h264_data);
+            return (int) (ph264 - h264_data);
 		}
 		else
 		{
-			length  = (uint16_t) sp[2] << 8;
+            length  = (uint16_t)((uint16_t) sp[2] << 8);
 			length |= (uint16_t) sp[3];
 
 			length -= 2; /*remove the 2 bytes from length*/
@@ -583,7 +583,7 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, int h264_m
 		if((epl-sp) > 0 && (epl-sp < 4))
 		{
 			fprintf(stderr, "V4L2_CORE: payload ended unexpectedly (demux_uvcH264)\n");
-			return (ph264 - h264_data);
+            return (int)(ph264 - h264_data);
 		}
 	}
 
@@ -591,11 +591,11 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, int h264_m
 	{
 		fprintf(stderr, "V4L2_CORE: copy segment with %i bytes (demux_uvcH264)\n", (int) (epl-sp));
 		/*copy the remaining data*/
-		memcpy(ph264, sp, epl-sp);
+        memcpy(ph264, sp, (size_t)(epl-sp));
 		ph264 += epl-sp;
 	}
 
-	return (ph264 - h264_data);
+    return (int)(ph264 - h264_data);
 }
 
 /*
@@ -616,7 +616,7 @@ static int store_extra_data(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 
 	if(vd->h264_SPS == NULL)
 	{
-		vd->h264_SPS_size = parse_NALU( 7, &vd->h264_SPS,
+        vd->h264_SPS_size =(uint16_t) parse_NALU( 7, &vd->h264_SPS,
 			frame->h264_frame,
 			(int) frame->h264_frame_size);
 
@@ -632,7 +632,7 @@ static int store_extra_data(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 
 	if(vd->h264_PPS == NULL)
 	{
-		vd->h264_PPS_size = parse_NALU( 8, &vd->h264_PPS,
+        vd->h264_PPS_size = (uint16_t)parse_NALU((uint8_t) 8, &vd->h264_PPS,
 			frame->h264_frame,
 			(int) frame->h264_frame_size);
 
@@ -664,10 +664,10 @@ static int store_extra_data(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 static uint8_t is_h264_keyframe (v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 {
 	//check for a IDR frame type
-	if(check_NALU(5, frame->h264_frame, frame->h264_frame_size) != NULL)
+    if(check_NALU(5, frame->h264_frame, (int)frame->h264_frame_size) != NULL)
 	{
 		memcpy(vd->h264_last_IDR, frame->h264_frame, frame->h264_frame_size);
-		vd->h264_last_IDR_size = frame->h264_frame_size;
+        vd->h264_last_IDR_size = (int)frame->h264_frame_size;
 		if(verbosity > 1)
 			printf("V4L2_CORE: (uvc H264) IDR frame found in frame %" PRIu64 "\n",
 				vd->frame_index);
@@ -720,7 +720,7 @@ static int demux_h264(uint8_t* h264_data, uint8_t* buffer, int size, int h264_ma
 			h264_max_size);
 		size = h264_max_size;
 	}
-	memcpy(h264_data, buffer, size);
+    memcpy(h264_data, buffer, (unsigned long)size);
 	return size;
 
 }
@@ -743,18 +743,19 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 
 	if(!frame->raw_frame || frame->raw_frame_size == 0)
 	{
-		fprintf(stderr, "V4L2_CORE: not decoding empty raw frame (frame of size %i at 0x%p)\n", (int) frame->raw_frame_size, frame->raw_frame);
+        fprintf(stderr, "V4L2_CORE: not decoding empty raw frame (frame of size %i at 0x%p)\n", (int) frame->raw_frame_size, (void *)frame->raw_frame);
 		return E_DECODE_ERR;
 	}
-
+    //LMH0612消除警告
 	if(verbosity > 3)
 		printf("V4L2_CORE: decoding raw frame of size %i at 0x%p\n",
-			(int) frame->raw_frame_size, frame->raw_frame );
+            (int) frame->raw_frame_size, (void *)frame->raw_frame );
 
 	int ret = E_OK;
 
-	int width = vd->format.fmt.pix.width;
-	int height = vd->format.fmt.pix.height;
+    //LMH0612消除警告
+    int width = (int)vd->format.fmt.pix.width;
+    int height = (int)vd->format.fmt.pix.height;
 
 	frame->isKeyframe = 0; /*reset*/
 
@@ -764,18 +765,19 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 	 */
 	int format = vd->requested_fmt;
 
-	int framesizeIn =(width * height << 1);//2 bytes per pixel
+    //LMH0612消除警告
+    //int framesizeIn =(width * height << 1);//2 bytes per pixel
 	switch (format)
 	{
 		case V4L2_PIX_FMT_H264:
 			/*
 			 * get the h264 frame in the tmp_buffer
 			 */
-			frame->h264_frame_size = demux_h264(
+            frame->h264_frame_size = (size_t)demux_h264(
 				frame->h264_frame,
 				frame->raw_frame,
-				frame->raw_frame_size,
-				frame->h264_frame_max_size);
+                (int)frame->raw_frame_size,
+                (int)frame->h264_frame_max_size);
 
 			/*
 			 * store SPS and PPS info (usually the first two NALU)
@@ -792,7 +794,7 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 			if(vd->h264_last_IDR_size > 0)
 			{
 				/*no need to convert output*/
-				h264_decode(frame->yuv_frame, frame->h264_frame, frame->h264_frame_size);
+                h264_decode(frame->yuv_frame, frame->h264_frame, (int)frame->h264_frame_size);
 			}
 			break;
 
@@ -806,7 +808,7 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 				return (ret);
 			}
 
-			ret = jpeg_decode(frame->yuv_frame, frame->raw_frame, frame->raw_frame_size);
+            ret = jpeg_decode(frame->yuv_frame, frame->raw_frame,(int) frame->raw_frame_size);
 
 			//memcpy(frame->tmp_buffer, frame->raw_frame, frame->raw_frame_size);
 			//ret = jpeg_decode(&frame->yuv_frame, frame->tmp_buffer, width, height);
@@ -853,8 +855,8 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 			break;
 
 		case V4L2_PIX_FMT_YUV420:
-			if(frame->raw_frame_size > (width * height * 3/2))
-				frame->raw_frame_size = width * height * 3/2;
+            if(frame->raw_frame_size >(size_t) (width * height * 3/2))
+                frame->raw_frame_size = (size_t)(width * height * 3/2);
 			memcpy(frame->yuv_frame, frame->raw_frame, frame->raw_frame_size);
 			break;
 
@@ -928,7 +930,7 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 				if (!(frame->tmp_buffer))
 				{
 					/* rgb buffer for decoding bayer data*/
-					frame->tmp_buffer_max_size = width * height * 3;
+                    frame->tmp_buffer_max_size = (size_t)(width * height * 3);
 					frame->tmp_buffer = calloc(frame->tmp_buffer_max_size, sizeof(uint8_t));
 					if(frame->tmp_buffer == NULL)
 					{

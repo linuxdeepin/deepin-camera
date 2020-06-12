@@ -102,7 +102,7 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 					avi_ctx,
 					0,
 					enc_video_ctx->outbuf,
-					enc_video_ctx->outbuf_coded_size,
+          (uint32_t)enc_video_ctx->outbuf_coded_size,
 					enc_video_ctx->dts,
 					block_align,
 					enc_video_ctx->flags);
@@ -116,7 +116,7 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 					enc_video_ctx->outbuf,
 					enc_video_ctx->outbuf_coded_size,
 					enc_video_ctx->duration,
-					enc_video_ctx->pts,
+          (uint64_t)enc_video_ctx->pts,
 					enc_video_ctx->flags);
 			break;
 
@@ -171,7 +171,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					avi_ctx,
 					1,
 					enc_audio_ctx->outbuf,
-					enc_audio_ctx->outbuf_coded_size,
+          (uint32_t)enc_audio_ctx->outbuf_coded_size,
 					enc_audio_ctx->dts,
 					block_align,
 					enc_audio_ctx->flags);
@@ -185,7 +185,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					enc_audio_ctx->outbuf,
 					enc_audio_ctx->outbuf_coded_size,
 					enc_audio_ctx->duration,
-					enc_audio_ctx->pts,
+          (uint64_t)enc_audio_ctx->pts,
 					enc_audio_ctx->flags);
 			break;
 
@@ -231,7 +231,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 	}
 	else if(video_codec_data)
 	{
-		video_codec_id = video_codec_data->codec_context->codec_id;
+        video_codec_id = (int)video_codec_data->codec_context->codec_id;
 	}
 
 	if(verbosity > 1)
@@ -269,7 +269,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 				encoder_codec_data_t *audio_codec_data = (encoder_codec_data_t *) encoder_ctx->enc_audio_ctx->codec_data;
 				if(audio_codec_data)
 				{
-					int acodec_ind = get_audio_codec_list_index(audio_codec_data->codec_context->codec_id);
+                    int acodec_ind = get_audio_codec_list_index((int)audio_codec_data->codec_context->codec_id);
 					/*sample size - only used for PCM*/
 					int32_t a_bits = encoder_get_audio_bits(acodec_ind);
 					/*bit rate (compressed formats)*/
@@ -281,7 +281,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 						encoder_ctx->audio_samprate,
 						a_bits,
 						b_rate,
-						audio_codec_data->codec_context->codec_id,
+                        (int32_t)audio_codec_data->codec_context->codec_id,
 						encoder_ctx->enc_audio_ctx->avi_4cc);
 
 					if(audio_codec_data->codec_context->codec_id == AV_CODEC_ID_VORBIS)
@@ -345,7 +345,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 						encoder_ctx->audio_samprate,
 						a_bits,
 						b_rate,
-						audio_codec_data->codec_context->codec_id,
+                        (int32_t)audio_codec_data->codec_context->codec_id,
 						encoder_ctx->enc_audio_ctx->avi_4cc);
 
 					audio_stream->extra_data_size = encoder_set_audio_mkvCodecPriv(encoder_ctx);
@@ -384,17 +384,17 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
 				float tottime = (float) ((int64_t) (encoder_ctx->enc_video_ctx->pts) / 1000000); // convert to miliseconds
 
 				if (verbosity > 0)
-					printf("ENCODER: (avi) time = %f\n", tottime);
+                    printf("ENCODER: (avi) time = %f\n", (double)tottime);
 
 				if (tottime > 0)
 				{
 					/*try to find the real frame rate*/
-					avi_ctx->fps = (double) (encoder_ctx->enc_video_ctx->framecount * 1000) / tottime;
+                    avi_ctx->fps = (double) (encoder_ctx->enc_video_ctx->framecount * 1000) / (double)tottime;
 				}
 
 				if (verbosity > 0)
 					printf("ENCODER: (avi) %"PRId64" frames in %f ms [ %f fps]\n",
-						encoder_ctx->enc_video_ctx->framecount, tottime, avi_ctx->fps);
+                        encoder_ctx->enc_video_ctx->framecount, (double)tottime, avi_ctx->fps);
 
 				//close sound ??
 
@@ -447,8 +447,8 @@ int encoder_disk_supervisor(int treshold, const char *path)
 
     statfs(path, &buf);
 
-    total_kbytes= buf.f_blocks * (buf.f_bsize/1024);
-    free_kbytes= buf.f_bavail * (buf.f_bsize/1024);
+    total_kbytes= buf.f_blocks * (__fsblkcnt_t)(buf.f_bsize/1024);
+    free_kbytes= buf.f_bavail * (__fsblkcnt_t)(buf.f_bsize/1024);
 
     if(total_kbytes > 0)
         percent = (int) ((1.0f-((float)free_kbytes/(float)total_kbytes))*100.0f);
@@ -463,7 +463,7 @@ int encoder_disk_supervisor(int treshold, const char *path)
             path, (unsigned long long) free_kbytes,
             (unsigned long long) total_kbytes, percent, treshold);
 
-    if(free_kbytes < treshold)
+    if(free_kbytes < (uint64_t)treshold)
     {
         fprintf(stderr,"ENCODER: Not enough free disk space (%lluKb) left on disk, need > %ik \n",
             (unsigned long long) free_kbytes, treshold);
