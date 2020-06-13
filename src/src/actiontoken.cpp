@@ -34,11 +34,6 @@ void actionToken::onTakePic()
     qDebug() << "onTakePic";
 }
 
-void actionToken::onThreeShots()
-{
-    qDebug() << "onThreeShots";
-}
-
 void actionToken::onTakeVideo()
 {    
     if (is_active) {

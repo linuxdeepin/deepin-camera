@@ -45,16 +45,13 @@ class QSpacerItem;
 //xxj
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, EFFECT, AUDIO, SHOOT};
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
-static int EFFECT_INDEX = NO;
-//static QImage *CURRENT_IMAGE = new QImage;
 
 class videowidget : public DWidget
 {
     Q_OBJECT
 public:
     explicit     videowidget(DWidget *parent = nullptr);
-    void        showEvent(QShowEvent *event);
-    //QImage     getCurrentImg();
+    //    void        showEvent(QShowEvent *event);
 
 signals:
     void finishTakedCamera();//结束拍照或三连拍
@@ -62,22 +59,21 @@ signals:
     void sigFlash();
     void disableButtons();
     void ableButtons();
+    void takePicDone();
+
+public:
+    void setSaveFolder(QString strFolder) { m_strFolder = strFolder; }
 public slots:
     void onShowCountdown();
     void onShowThreeCountdown();
     void onTShowTime();
     void onCancelThreeShots();
     void onTakeVideoOver();
-//    void onChooseEffect();
-//    void onMoreEffectLeft();
-//    void onMoreEffectRight();
     void onBtnPhoto();
     void onBtnThreeShots();
     void onBtnVideo();
 
-    void changePicture(PRIVIEW_STATE state, QImage *img, int effectIndex);
     void showCountdown();
-//    void effectChoose(QString name);
     void changeDev();
 
 private slots:
@@ -101,8 +97,6 @@ private:
     void newPreViewByState(PRIVIEW_STATE state);//新建view
     void sceneAddItem();
     void updateEffectName();
-    void newEffectPreview();//创建特效view
-    void delEffectPreview();//释放view
     void showPreviewByState(PRIVIEW_STATE state);//展示view
 
     void init();
@@ -113,7 +107,7 @@ private:
 private:
     bool isFindedDevice = false;
     videoEffect *eff;
-    DLabel labTimer;
+    DLabel m_flashLabel;
 
     QGraphicsView *m_pNormalView;
     QGraphicsScene *m_pNormalScene;
@@ -123,7 +117,7 @@ private:
 
     QGridLayout *m_pGridLayout;
 
-    int countDown;
+    int m_nInterval; //拍照间隔时间
     QTimer *countTimer;
     QTimer *flashTimer;
     QDateTime begin_time;
@@ -139,6 +133,9 @@ private:
     bool m_bTakePic;
     QImage m_img;
     QPixmap m_pixmap;
+
+    int m_nFileID;
+    QString m_strFolder;
 };
 
 #endif // VIDEOWIDGET_H

@@ -37,7 +37,6 @@ signals:
 
 public slots:
     void onTakePic();
-    void onThreeShots();
     void onTakeVideo();
 
 private:

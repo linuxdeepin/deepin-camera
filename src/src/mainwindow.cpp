@@ -38,7 +38,7 @@
 #include <qsettingbackend.h>
 
 DSettings *sDsetWgt;
-static QString nameLast = nullptr;
+static QString g_lastFileName = nullptr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
@@ -49,19 +49,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
                   .arg(qApp->applicationName());
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
-
-    //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
-    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-    pDSettings->setBackend(pBackend);
-    QString m_strPath = pDSettings->value("base.save.datapath").toString();
-    if (m_strPath.size() && m_strPath[0] == '~') {
-        m_strPath.replace(0, 1, QDir::homePath());
-    }
-
-    if (QFileInfo(m_strPath).exists()) {
-        m_fileWatcher.addPath(m_strPath);
-    }
-
 
     m_nActTpye = ActTakePic;
     initUI();
@@ -213,7 +200,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             le->setText(option->value().toString());
     });
     le->setText(pe);
-    nameLast = pe;
+    g_lastFileName = pe;
 
     icon->setIcon(QIcon(":resources/icons/select-normal.svg"));
     icon->setFixedHeight(30);
@@ -267,7 +254,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
             option->setValue(name);
-            nameLast = name;
+            g_lastFileName = name;
         }
         QFileInfo fm(name);
         if ((!fm.isReadable() || !fm.isWritable()) && !name.isEmpty()) {
@@ -284,7 +271,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 
         auto pn = ElideText(name, {285, fm.height()}, QTextOption::WrapAnywhere,
                             le->font(), Qt::ElideMiddle, fm.height(), 285);
-        auto nmls = ElideText(nameLast, {285, fm.height()}, QTextOption::WrapAnywhere,
+        auto nmls = ElideText(g_lastFileName, {285, fm.height()}, QTextOption::WrapAnywhere,
                               le->font(), Qt::ElideMiddle, fm.height(), 285);
 
         if (!validate(le->text(), false)) {
@@ -297,11 +284,11 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             if (validate(le->text(), false)) {
                 option->setValue(le->text());
                 le->setText(pn);
-                nameLast = name;
+                g_lastFileName = name;
             } else if (pn == pe) {
                 le->setText(pe);
             } else {
-                option->setValue(nameLast);
+                option->setValue(g_lastFileName);
                 le->setText(nmls);
             }
         }
@@ -344,7 +331,17 @@ void CMainWindow::initUI()
     DWidget *wget = new DWidget;
     qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
+    //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
+    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
+    pDSettings->setBackend(pBackend);
+    g_lastFileName = pDSettings->value("base.save.datapath").toString();
+    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
+        g_lastFileName.replace(0, 1, QDir::homePath());
+    }
 
+    if (QFileInfo(g_lastFileName).exists()) {
+        m_fileWatcher.addPath(g_lastFileName);
+    }
 //    QPalette *pal = new QPalette(m_videoPre.palette());
 //    pal->setColor(QPalette::Background, Qt::black); //设置黑色边框
 //    m_videoPre.setAutoFillBackground(true);
@@ -389,9 +386,9 @@ void CMainWindow::initUI()
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         menu->exec(QCursor::pos());
     });
-    connect(actOpen, &QAction::triggered, this, [ = ] {
-        QString save_path = nameLast;
-        if(nameLast.isEmpty()){
+    connect(actOpen, &QAction::triggered, this, [=] {
+        QString save_path = g_lastFileName;
+        if (g_lastFileName.isEmpty()) {
             save_path = pDSettings->value("base.save.datapath").toString();
         }
         if (save_path.size() && save_path[0] == '~') {
@@ -403,13 +400,13 @@ void CMainWindow::initUI()
             d.mkpath(save_path);
         }
         Dtk::Widget::DDesktopServices::showFolder(save_path);
-
     });
 
     m_thumbnail->setVisible(true);
     m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
-    m_thumbnail->onFileChanged("");
+    m_thumbnail->addPath(g_lastFileName);
+    m_videoPre.setSaveFolder(g_lastFileName);
     this->resize(MinWindowWidth, MinWindowHeight);
 
 }
@@ -449,9 +446,9 @@ void CMainWindow::initTitleBar()
 void CMainWindow::initConnection()
 {
     //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
 
@@ -461,16 +458,13 @@ void CMainWindow::initConnection()
     connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
     //录像信号--显示计时
     connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
-//    //拍照按钮信号
-//    connect(m_thumbnail, SIGNAL(takePic()), &m_actToken, SLOT(onTakePic()));
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
     connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onShowCountdown()));
-    //录像信号--显示计时
-    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
+
     //拍照按钮信号
     connect(&m_toolBar, SIGNAL(sltPhoto()), &m_videoPre, SLOT(onBtnPhoto()));
 
@@ -482,8 +476,6 @@ void CMainWindow::initConnection()
     //特效按钮信号
     //connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
 
-    //三连拍信号
-    connect(&m_toolBar, SIGNAL(threeShots()), &m_actToken, SLOT(onThreeShots()));
     //录像信号
     connect(&m_toolBar, SIGNAL(takeVideo()), &m_actToken, SLOT(onTakeVideo()));
     //三连拍取消信号
@@ -512,6 +504,8 @@ void CMainWindow::initConnection()
     connect(&m_videoPre, SIGNAL(finishTakedCamera()), &m_toolBar, SLOT(onFinishTakedCamera()));
     //结束特效选择信号
     connect(&m_videoPre, SIGNAL(finishEffectChoose()), &m_toolBar, SLOT(onFinishEffectChoose()));
+    //拍照结束
+    connect(&m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
     //单设备信号
@@ -563,7 +557,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     }
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8;
+        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20; //两个边框的宽度.+20需要继续调整，后续规范
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
@@ -577,7 +571,7 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8;
+        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20;
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
@@ -680,7 +674,9 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
-    m_fileWatcher.addPath(nameLast);
+    m_fileWatcher.addPath(g_lastFileName);
+    m_thumbnail->addPath(g_lastFileName);
+    m_videoPre.setSaveFolder(g_lastFileName);
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
@@ -688,4 +684,8 @@ void CMainWindow::onEnableSettings(bool bTrue)
     m_actionSettings->setEnabled(bTrue);
 }
 
-
+void CMainWindow::onTakePicDone()
+{
+    onEnableTitleBar(3); //恢复按钮状态
+    m_thumbnail->m_nStatus = STATNULL;
+}

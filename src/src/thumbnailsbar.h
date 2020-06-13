@@ -81,6 +81,7 @@ public:
     void loadInterface(QString strPath);
     int getItemCount(){return m_nItemCount;}
     void ChangeActType(int nType);
+    void addPath(QString strPath);
 
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
@@ -88,9 +89,9 @@ public:
     //QListWidget *imageList;
     QMap<QString, QPixmap> m_imagemap;
     int m_nMaxItem;
+    int m_nStatus; //当前状态
 private:
     int m_nItemCount;
-    QString m_strPath;
     mutable QReadWriteLock m_readlock;
     mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
@@ -98,7 +99,8 @@ private:
     DBImgInfoList m_infos;
     DPushButton *m_lastButton {nullptr};
     int m_nActTpye;//拍照或者视频模式，默认拍照
-    int m_nStatus;//当前状态
+
+    QStringList m_strlstFolders;
 
 private:
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
@@ -109,7 +111,7 @@ signals:
     void takeVd();
     void enableSettings(bool bTrue);
 public slots:
-    void onFileChanged(const QString &strDirectory);
+    void onFoldersChanged(const QString &strDirectory);
     void onBtnClick();
 };
 

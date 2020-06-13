@@ -20,6 +20,7 @@
 */
 
 #include "thumbnailsbar.h"
+#include "camview.h"
 #include <sys/time.h>
 #include <QCollator>
 #include <DLabel>
@@ -29,7 +30,12 @@
 #include <QMenuBar>
 #include <QAction>
 #include <DDesktopServices>
-#include "camview.h"
+#include <QDir>
+#include <QProcess>
+#include <QDateTime>
+#include <QApplication>
+#include <QMimeData>
+#include <QClipboard>
 
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 {
@@ -91,10 +97,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     connect(m_lastButton,SIGNAL(clicked()),this,SLOT(onBtnClick()));
 
     m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
-    m_mainLayout->addSpacing(8);
+    m_mainLayout->addSpacing(4);
     this->setLayout(m_mainLayout);
-    m_strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Pictures/摄像头";
-
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     m_hBOx->setMargin(5);
@@ -210,150 +214,155 @@ void ThumbnailsBar::loadInterface(QString path)
     //m_writelock.unlock();
 }
 
-//待完善内容：1、先获取路径并排序再加载;2、视频获取第一帧作为缩略图，或者直接贴图。
-void ThumbnailsBar::onFileChanged(const QString &strDirectory)
+//待完善内容：1、视频缩略图显示时间;2、文件排序。
+void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
-    m_nItemCount = 1;
+    m_nItemCount = 0;
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - 58)/(THUMBNAIL_WIDTH+8);
-
-    //获取所选文件类型过滤器
-    QStringList filters;
-    filters << QString("*.jpg");
-    QDir dir(m_strPath);
-    if (!dir.exists()) {
-        return;
-    }
+    int nLetAddCount = (m_nMaxItem - 58) / (THUMBNAIL_WIDTH + 8) - 1;
 
     QLayoutItem *child;
-    while ((child = m_hBOx->takeAt(0)) != 0) {
+    while ((child = m_hBOx->takeAt(0)) != nullptr) {
         //setParent为NULL，防止删除之后界面不消失
         if (child->widget()) {
-            child->widget()->setParent(NULL);
+            child->widget()->setParent(nullptr);
         }
 
         delete child;
     }
-    //定义迭代器并设置过滤器
-    QDirIterator dir_iterator(m_strPath,
-                              filters,
-                              QDir::Files | QDir::NoSymLinks,
-                              QDirIterator::Subdirectories);
-    while (dir_iterator.hasNext()) {
-        if(nLetAddCount == m_nItemCount){
-            break;
-        }
-        QString strFile = dir_iterator.next();
-        QPixmap *pix = new QPixmap(/*dir_iterator.next()*/strFile);
-        DLabel *pLabel = new DLabel(this);
-        QMenu *menu = new QMenu();
-        QAction *actOpen = new QAction(this);
-        actOpen->setText("打开");
-        QAction *actSave = new QAction(this);
-        actSave->setText("另存为");
-        QAction *actMove = new QAction(this);
-        actMove->setText("移入回收站");
-        QAction *actDel = new QAction(this);
-        actDel->setText("删除");
-        menu->addAction(actOpen);
-        menu->addAction(actSave);
-        menu->addAction(actMove);
-        menu->addAction(actDel);
-        pLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-        //connect(pLabel, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showListWidgetMenuSlot(QPoint)));
 
-        connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
-            menu->exec(QCursor::pos());
-        });
-        connect(actOpen, &QAction::triggered, this, [ = ] {
-            QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
-            system(cmd.toStdString().c_str());
-        });
-        connect(actSave, &QAction::triggered, this, [ = ] {
-            QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                            strFile,
-                                                            tr("Images (*.jpg)"));
-        });
-        connect(actMove, &QAction::triggered, this, [ = ] {
-            DDesktopServices::trash(strFile);
-        });
-        connect(actDel, &QAction::triggered, this, [ = ] {
-            QFile filetmp(strFile);
-            filetmp.remove();
-        });
-        pLabel->setPixmap(*pix);
-        pLabel->setScaledContents(true);
-        pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-        pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
-        m_hBOx->addWidget(pLabel);
-        m_hBOx->addSpacing(5);
-        m_nItemCount ++;
+    //获取所选文件类型过滤器
+    QStringList filters;
+    filters << QString("*.jpg") << QString("*.mp4") << QString("*.mkv");
+
+    QString strFolder;
+    for (int i = 0; i < m_strlstFolders.size(); i++) {
+        strFolder = m_strlstFolders[i];
+        QDir dir(strFolder);
+        if (dir.exists()) {
+            //定义迭代器并设置过滤器
+            QDirIterator dir_iterator(strFolder,
+                                      filters,
+                                      QDir::Files | QDir::NoSymLinks,
+                                      QDirIterator::Subdirectories);
+            while (dir_iterator.hasNext()) {
+                if (nLetAddCount <= m_nItemCount) {
+                    break;
+                }
+                DLabel *pLabel = new DLabel(this);
+                pLabel->setScaledContents(true);
+                pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+
+                QString strFile = dir_iterator.next();
+                QFileInfo fileInfo(strFile);
+                QPixmap *pix = nullptr;
+                QImage *tmpimg = nullptr;
+                if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4") {
+                    tmpimg = new QImage(":/images/123.jpg");
+                    //                    tmpimg->scaled(pLabel->width()-50,pLabel->height()-50);
+                    pix = new QPixmap(QPixmap::fromImage(*tmpimg));
+                } else if (fileInfo.suffix() == "jpg") {
+                    pix = new QPixmap(/*dir_iterator.next()*/ strFile);
+                } else {
+                    continue; //其他格式不管
+                }
+                pLabel->setPixmap(*pix);
+
+                QMenu *menu = new QMenu();
+                QAction *actOpen = new QAction(this);
+                actOpen->setText("打开");
+                QAction *actCopy = new QAction(this);
+                actCopy->setText("复制");
+                QAction *actDel = new QAction(this);
+                actDel->setText("删除");
+                QAction *actOpenFolder = new QAction(this);
+                actOpenFolder->setText("打开文件夹");
+                menu->addAction(actOpen);
+                menu->addAction(actCopy);
+                menu->addAction(actDel);
+                menu->addAction(actOpenFolder);
+
+                pLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+                //connect(pLabel, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showListWidgetMenuSlot(QPoint)));
+
+                connect(pLabel, &DLabel::customContextMenuRequested, this, [=](QPoint pos) {
+                    menu->exec(QCursor::pos());
+                });
+                connect(actOpen, &QAction::triggered, this, [=] {
+                    //                    QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+                    //                    system(cmd.toStdString().c_str());
+
+                    if (fileInfo.suffix() == "jpg") {
+                        QString program = "deepin-image-viewer";
+                        QStringList arguments;
+                        arguments << strFile;
+                        QProcess *myProcess = new QProcess(this);
+                        myProcess->startDetached(program, arguments);
+                    } else {
+                        QString program = "deepin-movie";
+                        QStringList arguments;
+                        arguments << strFile;
+                        QProcess *myProcess = new QProcess(this);
+                        myProcess->startDetached(program, arguments);
+                    }
+                });
+                connect(actCopy, &QAction::triggered, this, [=] {
+                    //                    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
+                    //                                                                    strFile,
+                    //                                                                    tr("Images (*.jpg)"));
+                    QStringList paths = QStringList(strFile);
+                    QClipboard *cb = qApp->clipboard();
+                    QMimeData *newMimeData = new QMimeData();
+                    QByteArray gnomeFormat = QByteArray("copy\n");
+                    QString text;
+                    QList<QUrl> dataUrls;
+                    for (QString path : paths) {
+                        if (!path.isEmpty())
+                            text += path + '\n';
+                        dataUrls << QUrl::fromLocalFile(path);
+                        gnomeFormat.append(QUrl::fromLocalFile(path).toEncoded()).append("\n");
+                    }
+
+                    newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
+                    newMimeData->setUrls(dataUrls);
+                    gnomeFormat.remove(gnomeFormat.length() - 1, 1);
+                    newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
+
+                    QImage img(paths.first());
+                    Q_ASSERT(!img.isNull());
+                    newMimeData->setImageData(img);
+
+                    cb->setMimeData(newMimeData, QClipboard::Clipboard);
+                });
+                connect(actOpenFolder, &QAction::triggered, this, [=] {
+                    //DDesktopServices::trash(strFile);//这个函数是移入回收站
+                    QString strtmp = strFolder;
+                    if (strtmp.size() && strtmp[0] == '~') {
+                        //奇怪，这里不能直接使用strFolder调replace函数
+                        strtmp.replace(0, 1, QDir::homePath());
+                    }
+                    Dtk::Widget::DDesktopServices::showFolder(strtmp);
+                });
+                connect(actDel, &QAction::triggered, this, [=] {
+                    QFile filetmp(strFile);
+                    filetmp.remove();
+                });
+                //tmpimg->scaled(pLabel->size());
+
+                pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
+                m_hBOx->addWidget(pLabel);
+                m_hBOx->addSpacing(5);
+                m_nItemCount++;
+            }
+        }
     }
 
-    QString strPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/Videos/摄像头";
-    QStringList filters1;
-    filters1 << QString("*.webm") << QString("*.avi");
-    QDirIterator dir_iterator1(strPath,
-                               filters1,
-                               QDir::Files | QDir::NoSymLinks,
-                               QDirIterator::Subdirectories);
-    while (dir_iterator1.hasNext()) {
-        if(nLetAddCount == m_nItemCount){
-            break;
-        }
-        QString strFile = dir_iterator1.next();
-        QImage *tmp = new QImage(":/images/123.jpg");
-        QPixmap *pix = new QPixmap(/*dir_iterator1.next()*/strFile);
-        DLabel *pLabel = new DLabel();
-        QMenu *menu = new QMenu();
-        QAction *actOpen = new QAction(this);
-        actOpen->setText("打开");
-        QAction *actSave = new QAction(this);
-        actSave->setText("另存为");
-        QAction *actMove = new QAction(this);
-        actMove->setText("移入回收站");
-        QAction *actDel = new QAction(this);
-        actDel->setText("删除");
-        menu->addAction(actOpen);
-        menu->addAction(actSave);
-        menu->addAction(actMove);
-        menu->addAction(actDel);
-        pLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-        //connect(pLabel, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showListWidgetMenuSlot(QPoint)));
-
-        connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
-            menu->exec(QCursor::pos());
-        });
-        connect(actOpen, &QAction::triggered, this, [ = ] {
-            QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
-            system(cmd.toStdString().c_str());
-        });
-        connect(actSave, &QAction::triggered, this, [ = ] {
-            QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
-                                                            strFile,
-                                                            tr("Videos (*.avi *.webm)"));
-        });
-        connect(actMove, &QAction::triggered, this, [ = ] {
-            DDesktopServices::trash(strFile);
-        });
-        connect(actDel, &QAction::triggered, this, [ = ] {
-            QFile filetmp(strFile);
-            filetmp.remove();
-        });
-        pLabel->setPixmap(QPixmap::fromImage(*tmp));
-        pLabel->setScaledContents(true);
-        pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-        pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
-        m_hBOx->addWidget(pLabel);
-        m_hBOx->addSpacing(5);
-        m_nItemCount ++;
-    }
     emit fitToolBar();
 }
 
 void ThumbnailsBar::onBtnClick()
 {
-    if(m_nActTpye == ActTakePic){//待完善，拍照完成或取消都要恢复状态
+    if (m_nActTpye == ActTakePic) {
         if(m_nStatus == STATPicIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(3);
@@ -365,8 +374,7 @@ void ThumbnailsBar::onBtnClick()
             emit takePic();
         }
 
-    }
-    else if(m_nActTpye == ActTakeVideo){
+    } else if (m_nActTpye == ActTakeVideo) {
         if(m_nStatus == STATVdIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(4);
@@ -381,11 +389,22 @@ void ThumbnailsBar::onBtnClick()
             emit enableSettings(false);
             //3、录制
             emit takeVd();
+
+            QLayoutItem *child;
+            while ((child = m_hBOx->takeAt(0)) != nullptr) {
+                //setParent为NULL，防止删除之后界面不消失
+                if (child->widget()) {
+                    child->widget()->setParent(nullptr);
+                }
+
+                delete child;
+            }
+            m_nItemCount = 0;
+            emit fitToolBar();
             //video_capture_save_video(1);//保存视频//先按原来的路走，不使用该方法保存视频，后续调整
         }
 
-    }
-    else {
+    } else {
         return;
     }
 }
@@ -423,5 +442,11 @@ void ThumbnailsBar::ChangeActType(int nType)
 
 }
 
+void ThumbnailsBar::addPath(QString strPath)
+{
+    if (!m_strlstFolders.contains(strPath)) {
+        m_strlstFolders.push_back(strPath);
+    }
 
-
+    onFoldersChanged("");
+}

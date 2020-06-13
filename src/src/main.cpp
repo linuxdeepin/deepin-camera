@@ -34,9 +34,11 @@ int main(int argc, char *argv[])
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
+    a.setApplicationDisplayName("Camera");
     a.setApplicationVersion("1.0");
+    a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
-    a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
+    //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));//setWindowIcon之后此处不需要了
     a.setProductName("Camera");
     a.setApplicationDescription("This is a camera.");
 
@@ -53,6 +55,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
+
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
 

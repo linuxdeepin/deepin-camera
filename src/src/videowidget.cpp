@@ -34,13 +34,14 @@
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
-
+    m_strFolder = "";
+    m_nFileID = 0;
     char *tmp = new char[1024 * 720];
     if (tmp == nullptr) {
         int i = 0;
         i++;
     }
-    countDown = 3;
+    m_nInterval = 3;
     m_curTakePicTime = 0;
     eff = new videoEffect;
     //labTimer = new DLabel;
@@ -69,8 +70,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
 
-//    m_pGridLayout->setHorizontalSpacing(0);
-//    m_pGridLayout->setVerticalSpacing(0);
+    //    m_pGridLayout->setHorizontalSpacing(0);
+    //    m_pGridLayout->setVerticalSpacing(0);
 
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -90,12 +91,11 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 void videowidget::init()
 {
-    err11 = err19 = 0;
     m_bTakePic = false;
     imageprocessthread = new MajorImageProcessingThread;
-    labTimer.showFullScreen();
-    labTimer.setWindowFlag(Qt::WindowType::ToolTip);
-    labTimer.hide();
+
+    m_flashLabel.setWindowFlag(Qt::WindowType::ToolTip);
+    m_flashLabel.hide();
 
     //启动视频
     if (camInit("/dev/video0") == E_OK) {
@@ -153,7 +153,7 @@ void videowidget::showCamUsed()
     setPalette(paPic);
 
     QImage img(":/images/icons/Take up.svg");
-//    img = img.scaled(img.size());
+    //    img = img.scaled(img.size());
     m_pixmap = QPixmap::fromImage(img);
 
     m_pNormalItem->setPixmap(m_pixmap);
@@ -191,11 +191,37 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                 setFont(m_pCountItem, 20, str);
                 m_pCountItem->setPlainText(str);
             }
-            imageprocessthread->m_img = imageprocessthread->m_img.scaled(this->width(),this->height());
-            m_pixmap = QPixmap::fromImage(imageprocessthread->m_img);
-            m_pNormalItem->setPixmap(m_pixmap);
+            {
+                QImage tmpImg = imageprocessthread->m_img;
+                imageprocessthread->m_img = imageprocessthread->m_img.scaled(this->width(), this->height());
+                m_pixmap = QPixmap::fromImage(imageprocessthread->m_img);
+                m_pNormalItem->setPixmap(m_pixmap);
+                //保存图片
+                if (m_bTakePic) {
+                    QString strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHMMss") + "_" + QString::number(m_nFileID) + ".jpg";
 
-            //changePicture(STATE, &image, EFFECT_INDEX);
+                    bool bTrue = tmpImg.save(strPath);
+                    if (!bTrue) {
+                        qDebug() << strPath;
+                        qDebug() << "保存照片失败";
+                    }
+                    m_nFileID++;
+                    if (m_curTakePicTime == 0) {
+                        //拍照结束，恢复按钮状态和缩略图标志位
+                        emit takePicDone();
+                    }
+
+                    m_nInterval = 3;
+                    //隐藏闪光窗口
+                    m_flashLabel.hide();
+                    m_bTakePic = false;
+
+                    if (m_curTakePicTime > 1) {
+                        m_curTakePicTime--;
+                        onShowCountdown();
+                    }
+                }
+            }
 
             break;
         case 11:
@@ -238,7 +264,7 @@ void videowidget::showPreviewByState(PRIVIEW_STATE state)
 {
     switch (state) {
     case NODEVICE:
-    //创建黑屏效果
+        //创建黑屏效果
     case  NORMALVIDEO:
     case AUDIO:
     case SHOOT:
@@ -267,41 +293,6 @@ void videowidget::showPreviewByState(PRIVIEW_STATE state)
     }
 }
 
-void videowidget::changePicture(PRIVIEW_STATE state,  QImage *img, int effectIndex = 0)
-{
-    if (img == nullptr || img->isNull()) {
-        return;
-    }
-    //transformImage(img);
-    resizeImage(img);
-
-    if (state == EFFECT) {
-    } else {
-        eff->chooseEffect(img, effectIndex);
-        //m_VPixmapItem[0]->setPixmap();
-        m_pNormalItem->setPixmap(QPixmap::fromImage(*img));
-    }
-    //m_pPixmapItem->setTransformationMode(Qt::SmoothTransformation);
-
-    //保存图片
-    if (m_bTakePic) {
-        QDateTime end_time;
-        end_time = QDateTime::currentDateTime();             //获取或设置时间
-        QString strTime = end_time.toString("yyyy-MM-dd-HHMMss");
-        //CURRENT_IMAGE->save((QString(getenv("HOME")) + "/Pictures/摄像头/" + strTime + ".jpg"), "jpg", 100);
-        countDown = 3;
-        //隐藏闪光窗口
-        labTimer.hide();
-        m_bTakePic = false;
-
-        if (m_curTakePicTime > 1) {
-            m_curTakePicTime --;
-            onShowCountdown();
-        }
-    }
-    //resizeEvent(NULL);//消耗怎么样？？？？？
-}
-
 void videowidget::transformImage(QImage *img)
 {
     if (img == NULL || img->isNull())
@@ -327,36 +318,35 @@ void videowidget::transformImage(QImage *img)
 void videowidget::resizeImage(QImage *img)
 {
     //*img = img->scaled(this->width(),this->height());
-//    float wImg = img->width();
-//    float hImg = img->height();
-//    float  wLab = this->width();
-//    float hLab = this->height();
-//    if (STATE == EFFECT) {
-//    } else {
-//        wLab = this->width();
-//        hLab = this->height();
-//    }
+    //    float wImg = img->width();
+    //    float hImg = img->height();
+    //    float  wLab = this->width();
+    //    float hLab = this->height();
+    //    if (STATE == EFFECT) {
+    //    } else {
+    //        wLab = this->width();
+    //        hLab = this->height();
+    //    }
 
+    //    if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
+    //        return;
+    //    }
 
-//    if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
-//        return;
-//    }
+    //    //声明一个QMatrix类的实例
+    //    QMatrix martix;
 
-//    //声明一个QMatrix类的实例
-//    QMatrix martix;
+    //    //取小边
+    //    bool    isW = wLab * 3 / 4 <= hLab;
+    //    float timeW = isW  ? wLab / img->width() : hLab / img->height();
 
-//    //取小边
-//    bool    isW = wLab * 3 / 4 <= hLab;
-//    float timeW = isW  ? wLab / img->width() : hLab / img->height();
+    //    martix.scale(timeW, timeW);
 
-//    martix.scale(timeW, timeW);
-
-//    *img = img->transformed(martix);
+    //    *img = img->transformed(martix);
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
-    qDebug() << "countDown" << countDown;
+    qDebug() << "countDown" << m_nInterval;
     QDateTime end_time;
     QTime m_time;
     QString str;
@@ -366,8 +356,9 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pCountItem->show();
         m_pTimeItem->hide();
         m_countdownLen = 50;
-        setFont(m_pCountItem, 50, QString::number(countDown));
-        //m_pNormalScene->addItem(m_pCountItem);
+        setFont(m_pCountItem, 50, QString::number(m_nInterval));
+        m_pNormalScene->addItem(m_pCountItem);
+        resizePixMap();
         //m_pNormalScene->addItem(m_pCountItem);
         break;
     case AUDIO:
@@ -377,12 +368,13 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_time.setHMS(0, 0, 0, 0);                                       //初始化数据，时 分 秒 毫秒
         str = m_time.addSecs(begin_time.secsTo(end_time)).toString("hh:mm:ss");//计算时间差(秒)，将时间差加入m_time，格式化输出
         setFont(m_pTimeItem, 20, str);
-        //m_pNormalScene->addItem(m_pTimeItem);
+        m_pNormalScene->addItem(m_pTimeItem);
+        resizePixMap();
         break;
     case SHOOT:
         m_pCountItem->show();
         m_pTimeItem->hide();
-        str = QString::number(countDown);
+        str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
         //m_pNormalScene->addItem(m_pCountItem);
         break;
@@ -417,42 +409,34 @@ void videowidget::hideTimeLabel()
     //m_pNormalScene->removeItem(m_pTimeItem);
 }
 
-//QImage videowidget::getCurrentImg()
+//void videowidget::showEvent(QShowEvent *event)
 //{
-//    return *CURRENT_IMAGE;
+//    if (isFindedDevice)
+//        ableButtons();
+//    else {
+//        disableButtons();
+//    }
 //}
-
-void videowidget::showEvent(QShowEvent *event)
-{
-    if (isFindedDevice)
-        ableButtons();
-    else {
-        disableButtons();
-    }
-}
 
 void videowidget::resizePixMap()
 {
-    if (STATE != EFFECT) {
+    if (m_pCountItem->isVisible()) {
         QRect rect = this->rect();
-        //QRect rect = m_pNormalView->rect();
-
         m_pNormalScene->setSceneRect(rect);
-//        int x = m_pNormalView->x();
-//        int y = m_pNormalView->y();
         int x = this->x();
         int y = this->y();
-        m_pNormalItem->setX( rect.width() / 2 - m_pNormalItem->pixmap().width() / 2 );
-        m_pNormalItem->setY( rect.height() / 2 - m_pNormalItem->pixmap().height() / 2 );
 
         m_pCountItem->setX(x + rect.width() / 2 - m_countdownLen / 2);
         m_pCountItem->setY(y + rect.height() / 2 - 50); //设置高度的一半
+    }
+    if (m_pTimeItem->isVisible()) {
+        QRect rect = this->rect();
+        m_pNormalScene->setSceneRect(rect);
+        int x = this->x();
+        int y = this->y();
 
         m_pTimeItem->setX(x + rect.width() / 2 - 50);
         m_pTimeItem->setY(y + rect.height() - 50);
-        //int width = m_pNormalItem->pixmap().width();
-        //int height = m_pNormalItem->pixmap().height();
-    } else {
     }
 }
 
@@ -463,18 +447,6 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 }
 
-void videowidget::onShowCountdown()
-{
-    qDebug() << "onShowCountdown";
-    VIDEO_STATE = NORMALVIDEO;
-    if (countTimer->isActive()) {//连续点击拍照
-        countTimer->stop();
-        countDown = 3;
-    }
-
-    countTimer->start(1000);
-}
-
 void videowidget::showCountdown()
 {
     qDebug() << "showCountdown";
@@ -483,10 +455,10 @@ void videowidget::showCountdown()
         showCountDownLabel(VIDEO_STATE);
     } else {
         //显示倒数，3s后结束，并拍照
-        if (countDown == 0) {
+        if (m_nInterval == 0) {
             //发送就结束信号处理按钮状态
             countTimer->stop();
-            countDown = 3;
+            m_nInterval = 3;
             m_bTakePic = true;
             hideCountDownLabel();
             if (m_curTakePicTime <= 1) {
@@ -495,13 +467,13 @@ void videowidget::showCountdown()
         } else {
             if (countTimer->isActive()) {
                 showCountDownLabel(VIDEO_STATE);
-                if (countDown % 3 == 1) {
+                if (m_nInterval % 3 == 1) {
                     if (flashTimer->isActive()) {//连续点击拍照
                         flashTimer->stop();
                     }
                     flashTimer->start(500);
                 }
-                countDown--;
+                m_nInterval--;
             }
         }
     }
@@ -509,8 +481,9 @@ void videowidget::showCountdown()
 
 void videowidget::flash()
 {
-    labTimer.showFullScreen();
-    labTimer.setWindowFlag(Qt::WindowType::ToolTip);
+    m_flashLabel.resize(this->size());
+    m_flashLabel.move(this->mapToGlobal(this->pos()));
+    m_flashLabel.show();
     flashTimer->stop();
 }
 
@@ -567,18 +540,31 @@ void videowidget::changeDev()
         }
     }
 }
+
+void videowidget::onShowCountdown()
+{
+    qDebug() << "onShowCountdown";
+    VIDEO_STATE = NORMALVIDEO;
+    if (countTimer->isActive()) { //连续点击拍照
+        countTimer->stop();
+        m_nInterval = 3;
+    }
+
+    countTimer->start(1000);
+}
+
 void videowidget::onShowThreeCountdown()
 {
     qDebug() << "onShowThreeCountdown";
     if (countTimer->isActive()) {//连续点击拍照
         countTimer->stop();
-        countDown = 3;
+        m_nInterval = 3;
         hideCountDownLabel();
         //拍照保存
     } else {
         VIDEO_STATE = SHOOT;
         //显示倒数，3s后结束，并拍照
-        countDown = 3;
+        m_nInterval = 3;
         m_curTakePicTime = 3;
         onShowCountdown();
     }
@@ -605,7 +591,7 @@ void videowidget::onCancelThreeShots()
     VIDEO_STATE = NORMALVIDEO;
     if (countTimer->isActive()) {
         countTimer->stop();
-        countDown = 3;
+        m_nInterval = 3;
         hideCountDownLabel();
     }
 }
@@ -618,54 +604,6 @@ void videowidget::onTakeVideoOver()
     hideTimeLabel();
 }
 
-//void videowidget::onChooseEffect()
-//{
-//    qDebug() << "onChooseEffect";
-//    //by xxj
-//    if (m_pGridLayout->count() == 1) {
-//        STATE = EFFECT;
-//        showPreviewByState(STATE);
-//    } else {
-//        STATE = NORMALVIDEO;
-//        //delEffectPreview();
-//        showPreviewByState(STATE);
-//    }
-//    //end
-//}
-
-//void videowidget::onMoreEffectLeft()
-//{
-//    qDebug() << "onMoreEffectLeft";
-//    EFFECT_PAGE--;
-
-//    if (EFFECT_PAGE < 0)
-//        EFFECT_PAGE++;
-
-//    updateEffectName();
-//}
-
-//void videowidget::onMoreEffectRight()
-//{
-//    qDebug() << "onMoreEffectRight";
-//    EFFECT_PAGE++;
-//    if (EFFECT_PAGE > (EFFECTS_NUM ) / 9)
-//        EFFECT_PAGE--;
-//    updateEffectName();
-//}
-
-//void videowidget::effectChoose(QString name)
-//{
-//    qDebug() << name;
-//    //根据名字得带index
-//    int index = eff->FindEffIndexByName(name);
-//    EFFECT_INDEX = index;
-//    //返回预览界面
-//    STATE = NORMALVIDEO;
-//    //delEffectPreview();
-//    showPreviewByState(STATE);
-//    //返回特效选择结束信号
-//    finishEffectChoose();
-//}
 void videowidget::onBtnVideo()
 {
     hideCountDownLabel();

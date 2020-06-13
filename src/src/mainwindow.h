@@ -89,6 +89,8 @@ private slots:
     void onTitleVdBtn();
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
+    void onTakePicDone();
+
 private:
     ThumbnailsBar   *m_thumbnail;
     actionToken     m_actToken;
