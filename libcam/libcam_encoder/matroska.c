@@ -103,7 +103,7 @@ static int ebml_id_size(unsigned int id)
 {
 	int bytes = 4, mask = 0x10;
 
-	while (!(id & (mask << ((bytes - 1) * 8))) && bytes > 0)
+    while (!(id & (size_t)(mask << ((bytes - 1) * 8))) && bytes > 0)
 	{
 		mask <<= 1;
 		bytes--;
@@ -117,7 +117,7 @@ static void mkv_put_ebml_id(mkv_context_t *mkv_ctx, unsigned int id)
 {
     int i = ebml_id_size(id);
     while (i--)
-        io_write_w8(mkv_ctx->writer, id >> (i*8));
+        io_write_w8(mkv_ctx->writer, (uint8_t)(id >> (i*8)));
 }
 
 /**
@@ -850,16 +850,16 @@ static int mkv_cache_packet(mkv_context_t* mkv_ctx,
 
 	}
 
-	if(size > mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size)
+    if(size > (int)mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size)
 	{
-		mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size = size;
+        mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size = (unsigned int)size;
 
 		if(mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
-			mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc(size, sizeof(uint8_t));
+            mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc((uint8_t)size, sizeof(uint8_t));
 		else
 			mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = realloc(
 				mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data,
-				size * sizeof(uint8_t));
+                (size_t)size * sizeof(uint8_t));
 	}
 	
 	if (mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
