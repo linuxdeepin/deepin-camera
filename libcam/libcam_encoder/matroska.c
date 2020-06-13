@@ -103,7 +103,7 @@ static int ebml_id_size(unsigned int id)
 {
 	int bytes = 4, mask = 0x10;
 
-    while (!(id & (size_t)(mask << ((bytes - 1) * 8))) && bytes > 0)
+    while (!(id & (unsigned int)(mask << ((bytes - 1) * 8))) && bytes > 0)
 	{
 		mask <<= 1;
 		bytes--;
@@ -855,11 +855,11 @@ static int mkv_cache_packet(mkv_context_t* mkv_ctx,
         mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size = (unsigned int)size;
 
 		if(mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
-            mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc((uint8_t)size, sizeof(uint8_t));
+            mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc((size_t)size, sizeof(size_t));
 		else
 			mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = realloc(
 				mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data,
-                (size_t)size * sizeof(uint8_t));
+                (uint8_t)size * sizeof(uint8_t));
 	}
 	
 	if (mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
@@ -940,7 +940,7 @@ int mkv_write_packet(mkv_context_t* mkv_ctx,
      * or every 3 MB if it is a video packet
      */
     if (mkv_ctx->cluster_pos &&
-        ((cluster_size > 6*1024*1024 && ts >(uint64_t) mkv_ctx->cluster_pts + 5000) ||
+        ((cluster_size > 6*1024*1024 && ts >(uint64_t)( mkv_ctx->cluster_pts + 5000)) ||
          (stream->type == STREAM_TYPE_VIDEO && keyframe) ||
          (stream->type == STREAM_TYPE_VIDEO && cluster_size > 3*1024*1024)))
     {
@@ -1000,7 +1000,7 @@ int mkv_close(mkv_context_t* mkv_ctx)
 		printf("ENCODER: (matroska)writing cues\n");
 		cuespos = mkv_write_cues(mkv_ctx, mkv_ctx->cues, mkv_ctx->stream_list_size);
 		printf("ENCODER: (matroska)add seekhead\n");
-        ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_CUES,(uint64_t) cuespos);
+        ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_CUES, (uint64_t)cuespos);
         if (ret < 0) return ret;
 	}
 	printf("ENCODER: (matroska)write seekhead\n");
