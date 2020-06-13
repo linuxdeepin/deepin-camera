@@ -220,7 +220,9 @@ static void pa_sinklist_cb(__attribute__((unused)) pa_context *c, const pa_sink_
      * you're at the end of the list
      */
     if (eol > 0)
+    {
         return;
+    }
 
 	sink_index++;
 

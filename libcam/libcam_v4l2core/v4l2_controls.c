@@ -378,8 +378,9 @@ static v4l2_ctrl_t *add_control(v4l2_dev_t *vd, struct v4l2_queryctrl* queryctrl
         {
             querymenu.id = queryctrl->id;
             if (xioctl (vd->fd, (int)VIDIOC_QUERYMENU, &querymenu) < 0)
+            {
                 continue;
-
+            }
 	        old_menu = menu;
 
 			if(!menu)
@@ -860,6 +861,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
 	}
 
     int ret = 0;
+
     struct v4l2_ext_control clist[vd->num_controls];
     v4l2_ctrl_t *current = vd->list_device_controls;
 
@@ -887,7 +889,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
 
         if((current->next == NULL) || (current->next->cclass != current->cclass))
         {
-            struct v4l2_ext_controls ctrls = {0};
+            struct v4l2_ext_controls ctrls /*= {0}*/;
             ctrls.ctrl_class = (__u32)current->cclass;
             ctrls.count = (__u32)count;
             ctrls.controls = clist;
@@ -1052,7 +1054,7 @@ int get_control_value_by_id (v4l2_dev_t *vd, int id)
     }
     else
     {
-        struct v4l2_ext_controls ctrls = {0};
+        struct v4l2_ext_controls ctrls /*= {0}*/;
         struct v4l2_ext_control ctrl = {0};
         ctrl.id = control->control.id;
         ctrl.size = 0;
@@ -1185,7 +1187,7 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
 
         if((current->next == NULL) || (current->next->cclass != current->cclass))
         {
-            struct v4l2_ext_controls ctrls = {0};
+            struct v4l2_ext_controls ctrls /*= {0}*/;
             ctrls.ctrl_class = (__u32)current->cclass;
             ctrls.count = (__u32)count;
             ctrls.controls = clist;
@@ -1362,7 +1364,7 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
     else
     {
         //using VIDIOC_G_EXT_CTRLS on single controls
-        struct v4l2_ext_controls ctrls = {0};
+        struct v4l2_ext_controls ctrls /*= {0}*/;
         struct v4l2_ext_control ctrl = {0};
         ctrl.id = control->control.id;
         switch (control->control.type)

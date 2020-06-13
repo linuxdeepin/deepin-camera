@@ -484,9 +484,13 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 
     if(video_defaults->gop_size > 0)
+    {
         video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+    }
     else
+    {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
+    }
 
 	if(video_defaults->codec_id == AV_CODEC_ID_H264)
 	{
