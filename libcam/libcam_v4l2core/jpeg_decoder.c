@@ -44,6 +44,8 @@
 #include "gview.h"
 #include "config.h"
 
+//LMH0613++
+#include <libavutil/imgutils.h>
 extern int verbosity;
 
 /* default Huffman table*/
@@ -125,7 +127,9 @@ typedef struct _jpeg_decoder_context_t
 
 static jpeg_decoder_context_t *jpeg_ctx = NULL;
 
-#if MJPG_BUILTIN //use internal jpeg decoder
+//LMH0613
+#if 0 //use internal jpeg decoder
+//#if MJPG_BUILTIN //use internal jpeg decoder
 
 #define ISHIFT 11
 

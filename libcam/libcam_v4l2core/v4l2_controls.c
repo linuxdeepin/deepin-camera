@@ -224,10 +224,12 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			break;
 
 		case V4L2_CTRL_TYPE_BITMASK:
-			printf("control[%d]:(bitmask) 0x%x '%s'\n",i ,control->control.id, control->name);
-			printf("\tmin:%x max:%x def:%x curr:%x\n",
-				control->control.minimum, control->control.maximum, 
-				control->control.default_value, control->value);
+         //LMH0613减去这2条有警告的打印信息
+//			printf("control[%d]:(bitmask) 0x%x '%s'\n",i ,control->control.id, control->name);
+
+//			printf("\tmin:%x max:%x def:%x curr:%x\n",
+//				control->control.minimum, control->control.maximum,
+//				control->control.default_value, control->value);
 
 		default:
 			printf("control[%d]:(unknown - 0x%x) 0x%x '%s'\n",i ,control->control.type,
