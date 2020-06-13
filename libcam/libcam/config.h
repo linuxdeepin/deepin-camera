@@ -65,18 +65,18 @@ typedef struct _config_t {
 } config_t;
 
 /*video sufix flag*/
-static int video_sufix_flag = 1;
+__attribute__((unused))static int video_sufix_flag = 1;
 
 /*photo sufix flag*/
-static int photo_sufix_flag = 1;
+__attribute__((unused))static int photo_sufix_flag = 1;
 
 /*control profile file name*/
-static char *profile_name = NULL;
+__attribute__((unused))static char *profile_name = NULL;
 
 /*control profile path to dir*/
-static char *profile_path = NULL;
+__attribute__((unused))static char *profile_path = NULL;
 
-static int debug_level;
+__attribute__((unused))static int debug_level;
 /*
  * get the internal config data
  * args:

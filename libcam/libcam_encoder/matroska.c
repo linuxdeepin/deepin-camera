@@ -103,7 +103,7 @@ static int ebml_id_size(unsigned int id)
 {
 	int bytes = 4, mask = 0x10;
 
-	while (!(id & (mask << ((bytes - 1) * 8))) && bytes > 0)
+    while (!(id & (size_t)(mask << ((bytes - 1) * 8))) && bytes > 0)
 	{
 		mask <<= 1;
 		bytes--;
@@ -117,7 +117,7 @@ static void mkv_put_ebml_id(mkv_context_t *mkv_ctx, unsigned int id)
 {
     int i = ebml_id_size(id);
     while (i--)
-        io_write_w8(mkv_ctx->writer, id >> (i*8));
+        io_write_w8(mkv_ctx->writer, (uint8_t)(id >> (i*8)));
 }
 
 /**
@@ -129,7 +129,7 @@ static void mkv_put_ebml_size_unknown(mkv_context_t *mkv_ctx, int bytes)
 {
     if(bytes <= 8) //max is 64 bits
     {
-		io_write_w8(mkv_ctx->writer, 0x1ff >> bytes);
+        io_write_w8(mkv_ctx->writer,(uint8_t)( 0x1ff >> bytes));
 		while (--bytes)
 			io_write_w8(mkv_ctx->writer, 0xff);
 	}
@@ -178,7 +178,7 @@ static void mkv_put_ebml_num(mkv_context_t *mkv_ctx, uint64_t num, int bytes)
 
     num |= 1ULL << bytes*7;
     for (i = bytes - 1; i >= 0; i--)
-        io_write_w8(mkv_ctx->writer, num >> i*8);
+        io_write_w8(mkv_ctx->writer,(uint8_t)( num >> i*8));
 }
 
 static void mkv_put_ebml_uint(mkv_context_t *mkv_ctx, unsigned int elementid, uint64_t val)
@@ -188,9 +188,9 @@ static void mkv_put_ebml_uint(mkv_context_t *mkv_ctx, unsigned int elementid, ui
     while (tmp>>=8) bytes++;
 
     mkv_put_ebml_id(mkv_ctx, elementid);
-    mkv_put_ebml_num(mkv_ctx, bytes, 0);
+    mkv_put_ebml_num(mkv_ctx,(uint64_t) bytes, 0);
     for (i = bytes - 1; i >= 0; i--)
-        io_write_w8(mkv_ctx->writer, val >> i*8);
+        io_write_w8(mkv_ctx->writer,(uint8_t)( val >> i*8));
 }
 
 static void mkv_put_ebml_float(mkv_context_t *mkv_ctx, unsigned int elementid, double val)
@@ -204,13 +204,13 @@ static void mkv_put_ebml_binary(mkv_context_t *mkv_ctx, unsigned int elementid,
                             void *buf, int size)
 {
     mkv_put_ebml_id(mkv_ctx, elementid);
-    mkv_put_ebml_num(mkv_ctx, size, 0);
+    mkv_put_ebml_num(mkv_ctx,(uint64_t) size, 0);
     io_write_buf(mkv_ctx->writer, buf, size);
 }
 
 static void mkv_put_ebml_string(mkv_context_t *mkv_ctx, unsigned int elementid, char *str)
 {
-    mkv_put_ebml_binary(mkv_ctx, elementid, str, strlen(str));
+    mkv_put_ebml_binary(mkv_ctx, elementid, str, (int)strlen(str));
 }
 
 /**
@@ -236,7 +236,7 @@ static void mkv_put_ebml_void(mkv_context_t *mkv_ctx, uint64_t size)
         mkv_put_ebml_num(mkv_ctx, size-1, 0);
     else
         mkv_put_ebml_num(mkv_ctx, size-9, 8);
-    while(io_get_offset(mkv_ctx->writer) < currentpos + size)
+    while(io_get_offset(mkv_ctx->writer) < (int64_t)(currentpos +(int64_t) size))
         io_write_w8(mkv_ctx->writer, 0);
 }
 
@@ -257,7 +257,7 @@ static void mkv_end_ebml_master(mkv_context_t *mkv_ctx, ebml_master_t master)
 
     if (io_seek(mkv_ctx->writer, master.pos - master.sizebytes) < 0)
         return;
-    mkv_put_ebml_num(mkv_ctx, pos - master.pos, master.sizebytes);
+    mkv_put_ebml_num(mkv_ctx, (uint64_t)(pos - master.pos), master.sizebytes);
 	io_seek(mkv_ctx->writer, pos);
 }
 
@@ -303,7 +303,7 @@ static mkv_seekhead_t *mkv_start_seekhead(mkv_context_t *mkv_ctx,
          */
         new_seekhead->reserved_size = numelements * MAX_SEEKENTRY_SIZE + 13;
         new_seekhead->max_entries = numelements;
-        mkv_put_ebml_void(mkv_ctx, new_seekhead->reserved_size);
+        mkv_put_ebml_void(mkv_ctx, (uint64_t)new_seekhead->reserved_size);
     }
     return new_seekhead;
 }
@@ -318,7 +318,7 @@ static int mkv_add_seekhead_entry(mkv_seekhead_t *seekhead,
     if (seekhead->max_entries > 0 && seekhead->max_entries <= seekhead->num_entries)
         return -1;
 
-	entries = realloc(entries, (seekhead->num_entries + 1) * sizeof(mkv_seekhead_entry_t));
+    entries = realloc(entries, (size_t)(seekhead->num_entries + 1) * sizeof(mkv_seekhead_entry_t));
 	if (entries == NULL)
 	{
 		fprintf(stderr, "ENCODER: FATAL memory allocation failure (mkv_add_seekhead_entry): %s\n", strerror(errno));
@@ -326,7 +326,7 @@ static int mkv_add_seekhead_entry(mkv_seekhead_t *seekhead,
 	}
 	
     entries[seekhead->num_entries].elementid = elementid;
-    entries[seekhead->num_entries].segmentpos = filepos - seekhead->segment_offset;
+    entries[seekhead->num_entries].segmentpos = filepos - (uint64_t)seekhead->segment_offset;
 
 	seekhead->num_entries++;
 
@@ -361,7 +361,7 @@ static int64_t mkv_write_seekhead(mkv_context_t* mkv_ctx, mkv_seekhead_t *seekhe
         }
     }
 
-    metaseek = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_SEEKHEAD, seekhead->reserved_size);
+    metaseek = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_SEEKHEAD, (uint64_t)seekhead->reserved_size);
     for (i = 0; i < seekhead->num_entries; i++)
     {
         mkv_seekhead_entry_t *entry = &seekhead->entries[i];
@@ -369,7 +369,7 @@ static int64_t mkv_write_seekhead(mkv_context_t* mkv_ctx, mkv_seekhead_t *seekhe
         seekentry = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_SEEKENTRY, MAX_SEEKENTRY_SIZE);
 
         mkv_put_ebml_id(mkv_ctx, MATROSKA_ID_SEEKID);
-        mkv_put_ebml_num(mkv_ctx, ebml_id_size(entry->elementid), 0);
+        mkv_put_ebml_num(mkv_ctx,(uint64_t) ebml_id_size(entry->elementid), 0);
         mkv_put_ebml_id(mkv_ctx, entry->elementid);
 
         mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_SEEKPOSITION, entry->segmentpos);
@@ -378,7 +378,7 @@ static int64_t mkv_write_seekhead(mkv_context_t* mkv_ctx, mkv_seekhead_t *seekhe
     mkv_end_ebml_master(mkv_ctx, metaseek);
 
     if (seekhead->reserved_size > 0) {
-        uint64_t remaining = seekhead->filepos + seekhead->reserved_size - io_get_offset(mkv_ctx->writer);
+        uint64_t remaining = (uint64_t)(seekhead->filepos + seekhead->reserved_size - io_get_offset(mkv_ctx->writer));
         mkv_put_ebml_void(mkv_ctx, remaining);
         io_seek(mkv_ctx->writer, currentpos);
 
@@ -411,7 +411,7 @@ static int mkv_add_cuepoint(mkv_cues_t *cues, int stream, int64_t ts, int64_t cl
     if (ts < 0)
         return 0;
 
-	entries = realloc(entries, (cues->num_entries + 1) * sizeof(mkv_cuepoint_t));
+    entries = realloc(entries, (size_t)(cues->num_entries + 1) * sizeof(mkv_cuepoint_t));
 
     if (entries == NULL)
 	{
@@ -419,7 +419,7 @@ static int mkv_add_cuepoint(mkv_cues_t *cues, int stream, int64_t ts, int64_t cl
 		exit(-1);
 	}
 
-    entries[cues->num_entries].pts = ts;
+    entries[cues->num_entries].pts = (uint64_t)ts;
     entries[cues->num_entries].tracknum = stream + 1;
     entries[cues->num_entries].cluster_pos = cluster_pos - cues->segment_offset;
 
@@ -444,7 +444,7 @@ static int64_t mkv_write_cues(mkv_context_t *mkv_ctx, mkv_cues_t *cues, int num_
         mkv_cuepoint_t *entry = &cues->entries[i];
         uint64_t pts = entry->pts;
 
-        cuepoint = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_POINTENTRY, MAX_CUEPOINT_SIZE(num_tracks));
+        cuepoint = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_POINTENTRY, (uint64_t)MAX_CUEPOINT_SIZE((uint64_t)num_tracks));
         mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CUETIME, pts);
 
         // put all the entries from different tracks that have the exact same
@@ -452,8 +452,8 @@ static int64_t mkv_write_cues(mkv_context_t *mkv_ctx, mkv_cues_t *cues, int num_
         for (j = 0; j < cues->num_entries - i && entry[j].pts == pts; j++)
         {
             track_positions = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_CUETRACKPOSITION, MAX_CUETRACKPOS_SIZE);
-            mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CUETRACK          , entry[j].tracknum   );
-            mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CUECLUSTERPOSITION, entry[j].cluster_pos);
+            mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CUETRACK          , (uint64_t)entry[j].tracknum   );
+            mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CUECLUSTERPOSITION, (uint64_t)entry[j].cluster_pos);
             mkv_end_ebml_master(mkv_ctx, track_positions);
         }
         i += j - 1;
@@ -474,7 +474,7 @@ static void  mkv_write_trackdefaultduration(mkv_context_t *mkv_ctx, stream_io_t 
 {
 	if(stream->type == STREAM_TYPE_VIDEO)
 	{
-		mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_TRACKDEFAULTDURATION, floor(1E9/stream->fps));
+        mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_TRACKDEFAULTDURATION, (uint64_t)floor(1E9/stream->fps));
 	}
 }
 
@@ -483,7 +483,7 @@ static int mkv_write_tracks(mkv_context_t *mkv_ctx)
     ebml_master_t tracks;
     int i, ret;
 
-    ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_TRACKS, io_get_offset(mkv_ctx->writer));
+    ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_TRACKS,(uint64_t) io_get_offset(mkv_ctx->writer));
     if (ret < 0) return ret;
 
     tracks = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_TRACKS, 0);
@@ -494,8 +494,8 @@ static int mkv_write_tracks(mkv_context_t *mkv_ctx)
         ebml_master_t subinfo, track;
 
         track = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_TRACKENTRY, 0);
-        mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_TRACKNUMBER     , i + 1);
-        mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_TRACKUID        , i + 1);
+        mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_TRACKNUMBER     ,(uint64_t)(i + 1));
+        mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_TRACKUID        ,(uint64_t)(i + 1));
         mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_TRACKFLAGLACING , 0);    // no lacing (yet)
 		mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_TRACKFLAGDEFAULT, 1);
 
@@ -508,7 +508,7 @@ static int mkv_write_tracks(mkv_context_t *mkv_ctx)
 				fprintf(stderr, "ENCODER: (matroska) bad video codec index for id:0x%x\n",stream->codec_id);
 				return -1;
 			}
-			mkv_codec_name = (char *) encoder_get_video_mkv_codec(codec_index);
+            mkv_codec_name = (char *) encoder_get_video_mkv_codec(codec_index);
 		}
 		else
 		{
@@ -539,10 +539,10 @@ static int mkv_write_tracks(mkv_context_t *mkv_ctx)
                 mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_TRACKTYPE, MATROSKA_TRACK_TYPE_VIDEO);
                 subinfo = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_TRACKVIDEO, 0);
                 // XXX: interlace flag?
-                mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_VIDEOPIXELWIDTH , stream->width);
-				mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_VIDEOPIXELHEIGHT, stream->height);
-                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_VIDEODISPLAYWIDTH , stream->width);
-                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_VIDEODISPLAYHEIGHT, stream->height);
+                mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_VIDEOPIXELWIDTH ,(uint64_t) stream->width);
+                mkv_put_ebml_uint (mkv_ctx, MATROSKA_ID_VIDEOPIXELHEIGHT,(uint64_t) stream->height);
+                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_VIDEODISPLAYWIDTH , (uint64_t)stream->width);
+                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_VIDEODISPLAYHEIGHT,(uint64_t) stream->height);
                 mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_VIDEODISPLAYUNIT, 3);
 
                 mkv_end_ebml_master(mkv_ctx, subinfo);
@@ -556,9 +556,9 @@ static int mkv_write_tracks(mkv_context_t *mkv_ctx)
                 //put_ebml_string(pb, MATROSKA_ID_CODECID, "A_MS/ACM");
 
                 subinfo = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_TRACKAUDIO, 0);
-                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_AUDIOCHANNELS, stream->a_chans);
+                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_AUDIOCHANNELS, (uint64_t)stream->a_chans);
                 mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_AUDIOSAMPLINGFREQ, stream->a_rate);
-                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_AUDIOBITDEPTH, stream->a_bits);
+                mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_AUDIOBITDEPTH, (uint64_t)stream->a_bits);
                 mkv_end_ebml_master(mkv_ctx, subinfo);
                 break;
 
@@ -613,7 +613,7 @@ int mkv_write_header(mkv_context_t *mkv_ctx)
         return -1;
     }
 
-    ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_INFO, io_get_offset(mkv_ctx->writer));
+    ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_INFO, (uint64_t)io_get_offset(mkv_ctx->writer));
     if (ret < 0) return ret;
 
     segment_info = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_INFO, 0);
@@ -706,7 +706,7 @@ static int mkv_processh264_nalu(uint8_t *data, int size)
 			   ep[2] == 0x00 &&
 			   ep[3] == 0x01)
 			{
-				nal_size = ep - nal_start;
+                nal_size = (uint32_t)(ep - nal_start);
 				nal_start = ep;/*reset for next NALU*/
 				break;
 			}
@@ -715,7 +715,7 @@ static int mkv_processh264_nalu(uint8_t *data, int size)
 		if(!nal_size)
 		{
 			last_nalu = 1;
-			nal_size = data + size - nal_start;
+            nal_size = (uint32_t)(data + size - nal_start);
 		}
 
 		sp[0] = (nal_size >> 24) & 0x000000FF;
@@ -733,10 +733,10 @@ static int mkv_processh264_nalu(uint8_t *data, int size)
 static int mkv_blockgroup_size(int pkt_size)
 {
     int size = pkt_size + 4;
-    size += ebml_num_size(size);
+    size += ebml_num_size((uint64_t)size);
     size += 2;              // EBML ID for block and block duration
     size += 8;              // max size of block duration
-    size += ebml_num_size(size);
+    size += ebml_num_size((uint64_t)size);
     size += 1;              // blockgroup EBML ID
     return size;
 }
@@ -759,9 +759,9 @@ static void mkv_write_block(mkv_context_t* mkv_ctx,
 		block_flags |= 0x80;
 
     mkv_put_ebml_id(mkv_ctx, blockid);
-    mkv_put_ebml_num(mkv_ctx, size+4, 0);
-    io_write_w8(mkv_ctx->writer, 0x80 | (stream_index + 1));// this assumes stream_index is less than 126
-    io_write_wb16(mkv_ctx->writer, pts - mkv_ctx->cluster_pts); //pts and cluster_pts are scaled
+    mkv_put_ebml_num(mkv_ctx,(uint64_t) (size+4), 0);
+    io_write_w8(mkv_ctx->writer, (uint8_t)(0x80 | (stream_index + 1)));// this assumes stream_index is less than 126
+    io_write_wb16(mkv_ctx->writer,(uint16_t)( pts - (uint64_t)mkv_ctx->cluster_pts)); //pts and cluster_pts are scaled
     io_write_w8(mkv_ctx->writer, block_flags);
     io_write_buf(mkv_ctx->writer, data, size);
 }
@@ -788,29 +788,29 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
         mkv_ctx->cluster_pos = io_get_offset(mkv_ctx->writer);
         mkv_ctx->cluster = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_CLUSTER, 0);
         mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_CLUSTERTIMECODE, MAX(0, ts));
-		mkv_ctx->cluster_pts = MAX(0, ts);
+        mkv_ctx->cluster_pts = MAX(0,(int64_t) ts);
     }
 
 	if(use_simpleblock)
 		mkv_write_block(mkv_ctx, MATROSKA_ID_SIMPLEBLOCK, stream_index, data, size, ts, flags);
 	else
 	{
-		ebml_master_t blockgroup = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_BLOCKGROUP, mkv_blockgroup_size(size));
+        ebml_master_t blockgroup = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_BLOCKGROUP,(unsigned int) mkv_blockgroup_size(size));
 		mkv_write_block(mkv_ctx, MATROSKA_ID_BLOCK, stream_index, data, size, ts, flags);
 		if(duration)
-			mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_BLOCKDURATION, duration);
+            mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_BLOCKDURATION, (uint64_t)duration);
 		mkv_end_ebml_master(mkv_ctx, blockgroup);
 	}
 
     if (get_stream(mkv_ctx->stream_list, stream_index)->type == STREAM_TYPE_VIDEO && keyframe)
     {
 		//fprintf(stderr,"mkv_ctx: add a cue point\n");
-        int ret = mkv_add_cuepoint(mkv_ctx->cues, stream_index, ts, mkv_ctx->cluster_pos);
+        int ret = mkv_add_cuepoint(mkv_ctx->cues, stream_index, (int64_t)ts, mkv_ctx->cluster_pos);
         if (ret < 0) 
 			return ret;
     }
 
-    mkv_ctx->duration = MAX(mkv_ctx->duration, ts /*+ duration*/);
+    mkv_ctx->duration = MAX(mkv_ctx->duration, (int64_t)ts /*+ duration*/);
     return 0;
 }
 
@@ -832,7 +832,7 @@ static int mkv_cache_packet(mkv_context_t* mkv_ctx,
 		int ret = mkv_write_packet_internal(mkv_ctx,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].stream_index,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data,
-							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data_size,
+                            (int)mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data_size,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].duration,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].pts,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].flags);
@@ -850,16 +850,16 @@ static int mkv_cache_packet(mkv_context_t* mkv_ctx,
 
 	}
 
-	if(size > mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size)
+    if(size > (int)mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size)
 	{
-		mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size = size;
+        mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].max_size = (unsigned int)size;
 
 		if(mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
-			mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc(size, sizeof(uint8_t));
+            mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = calloc((uint8_t)size, sizeof(uint8_t));
 		else
 			mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data = realloc(
 				mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data,
-				size * sizeof(uint8_t));
+                (size_t)size * sizeof(uint8_t));
 	}
 	
 	if (mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data == NULL)
@@ -872,8 +872,8 @@ static int mkv_cache_packet(mkv_context_t* mkv_ctx,
 	if(verbosity > 3)
 		printf("ENCODER: (matroska) caching packet [%i]\n", mkv_ctx->pkt_buffer_write_index);
 
-	memcpy(mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data, data, size);
-	mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data_size = size;
+    memcpy(mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data, data,(size_t) size);
+    mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].data_size = (unsigned int)size;
     mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].duration = duration;
     mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].pts = pts;
     mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_write_index].flags = flags;
@@ -898,7 +898,7 @@ int mkv_write_packet(mkv_context_t* mkv_ctx,
 
 	ts -= mkv_ctx->first_pts;
 
-    int cluster_size = io_get_offset(mkv_ctx->writer) - mkv_ctx->cluster_pos;
+    int cluster_size = (int)(io_get_offset(mkv_ctx->writer) - mkv_ctx->cluster_pos);
 
 	stream_io_t *stream = get_stream(mkv_ctx->stream_list, stream_index);
 
@@ -917,7 +917,7 @@ int mkv_write_packet(mkv_context_t* mkv_ctx,
 			ret = mkv_write_packet_internal(mkv_ctx,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].stream_index,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data,
-							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data_size,
+                            (int)mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data_size,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].duration,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].pts,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].flags);
@@ -940,7 +940,7 @@ int mkv_write_packet(mkv_context_t* mkv_ctx,
      * or every 3 MB if it is a video packet
      */
     if (mkv_ctx->cluster_pos &&
-        ((cluster_size > 6*1024*1024 && ts > mkv_ctx->cluster_pts + 5000) ||
+        ((cluster_size > 6*1024*1024 && ts >(uint64_t) mkv_ctx->cluster_pts + 5000) ||
          (stream->type == STREAM_TYPE_VIDEO && keyframe) ||
          (stream->type == STREAM_TYPE_VIDEO && cluster_size > 3*1024*1024)))
     {
@@ -974,7 +974,7 @@ int mkv_close(mkv_context_t* mkv_ctx)
 			ret = mkv_write_packet_internal(mkv_ctx,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].stream_index,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data,
-							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data_size,
+                            (int)mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data_size,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].duration,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].pts,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].flags);
@@ -1000,18 +1000,18 @@ int mkv_close(mkv_context_t* mkv_ctx)
 		printf("ENCODER: (matroska)writing cues\n");
 		cuespos = mkv_write_cues(mkv_ctx, mkv_ctx->cues, mkv_ctx->stream_list_size);
 		printf("ENCODER: (matroska)add seekhead\n");
-		ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_CUES, cuespos);
+        ret = mkv_add_seekhead_entry(mkv_ctx->main_seekhead, MATROSKA_ID_CUES,(uint64_t) cuespos);
         if (ret < 0) return ret;
 	}
 	printf("ENCODER: (matroska)write seekhead\n");
     mkv_write_seekhead(mkv_ctx, mkv_ctx->main_seekhead);
 
     // update the duration
-    fprintf(stderr,"ENCODER: (matroska) end duration = %" PRIu64 " (%f) \n", mkv_ctx->duration, (float) mkv_ctx->duration);
+    fprintf(stderr,"ENCODER: (matroska) end duration = %" PRIu64 " (%f) \n", mkv_ctx->duration, (double) mkv_ctx->duration);
     currentpos = io_get_offset(mkv_ctx->writer);
     io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
 
-    mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (float) mkv_ctx->duration);
+    mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
 	io_seek(mkv_ctx->writer, currentpos);
 
     mkv_end_ebml_master(mkv_ctx, mkv_ctx->segment);
@@ -1125,7 +1125,7 @@ stream_io_t *mkv_add_audio_stream(mkv_context_t *mkv_ctx,
 	{
 		mkv_ctx->pkt_buffer_write_index = 0;
 		mkv_ctx->pkt_buffer_read_index = 0;
-		mkv_ctx->pkt_buffer_list = calloc(mkv_ctx->pkt_buffer_list_size, sizeof(mkv_packet_buff_t));
+        mkv_ctx->pkt_buffer_list = calloc((size_t)(mkv_ctx->pkt_buffer_list_size), sizeof(mkv_packet_buff_t));
 		if (mkv_ctx->pkt_buffer_list == NULL)
 		{
 			fprintf(stderr, "ENCODER: FATAL memory allocation failure (mkv_add_audio_stream): %s\n", strerror(errno));

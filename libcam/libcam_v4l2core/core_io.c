@@ -324,6 +324,7 @@ char *set_file_extension(const char *filename, const char *ext)
 
 size_t dirent_buf_size(DIR * dirp)
 {
+    (void)dirp;
     long name_max;
     size_t name_end;
 #   if defined(HAVE_FPATHCONF) && defined(HAVE_DIRFD) \
@@ -342,7 +343,7 @@ size_t dirent_buf_size(DIR * dirp)
 #           error "buffer size for readdir_r cannot be determined"
 #       endif
 #   endif
-    name_end = (size_t)offsetof(struct dirent, d_name) + name_max + 1;
+    name_end = (size_t)offsetof(struct dirent, d_name) + (size_t)name_max + 1;
     return (name_end > sizeof(struct dirent)
             ? name_end : sizeof(struct dirent));
 }

@@ -107,7 +107,7 @@ io_writer_t *io_create_writer(const char *filename, int max_size)
 	else
 		writer->buffer_size = IO_BUFFER_SIZE;
 
-	writer->buffer = calloc(writer->buffer_size, sizeof(uint8_t));
+    writer->buffer = calloc((size_t)(writer->buffer_size), sizeof(uint8_t));
 	if(writer->buffer == NULL)
 	{
 		fprintf(stderr, "ENCODER: FATAL memory allocation failure (io_create_writer): %s\n", strerror(errno));
@@ -188,7 +188,7 @@ int64_t io_flush_buffer(io_writer_t *writer)
 	size_t nitems = 0;
 	if (writer->buf_ptr > writer->buffer)
 	{
-		nitems= writer->buf_ptr - writer->buffer;
+        nitems= (size_t)(writer->buf_ptr - writer->buffer);
 		if(fwrite(writer->buffer, 1, nitems, writer->fp) < nitems)
 		{
 			fprintf(stderr, "ENCODER: (io_flush) file write error: %s\n", strerror(errno));
@@ -202,7 +202,7 @@ int64_t io_flush_buffer(io_writer_t *writer)
 		return -1;
 	}
 
-	int64_t size_inc = nitems - (writer->size - writer->position);
+    int64_t size_inc = (int64_t)nitems - (writer->size - writer->position);
 	if(size_inc > 0)
 		writer->size += size_inc;
 
@@ -368,13 +368,13 @@ void io_write_buf(io_writer_t *writer, uint8_t *buf, int size)
 {
 	while (size > 0)
 	{
-		int len = writer->buf_end - writer->buf_ptr;
+        int len = (int)(writer->buf_end - writer->buf_ptr);
 		if(len < 0)
 			fprintf(stderr,"ENCODER: (io_write_buf) buff pointer outside buffer\n");
 		if(len >= size)
 			len = size;
 
-        memcpy(writer->buf_ptr, buf, len);
+        memcpy(writer->buf_ptr, buf,(size_t) len);
         writer->buf_ptr += len;
 
        if (writer->buf_ptr >= writer->buf_end)
@@ -539,9 +539,9 @@ void io_write_wb64(io_writer_t *writer, uint64_t val)
 void io_write_4cc(io_writer_t *writer, const char *str)
 {
     int len = 4;
-    if(strlen(str) < len )
+    if((int)strlen(str) < len )
 	{
-		len = strlen(str);
+        len = (int)strlen(str);
 	}
 
     io_write_buf(writer, (uint8_t *) str, len);

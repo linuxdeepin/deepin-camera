@@ -525,7 +525,7 @@ int soft_autofocus_get_sharpness (uint8_t *frame, int width, int height, int t)
 	int numMCUy = height/(8*2); /*covers 1/2 of height- height should be even*/
 	int16_t dataMCU[64];
 	int16_t* data;
-	int16_t *Y = calloc(width * height, sizeof(int16_t));
+    int16_t *Y = calloc((size_t)(width * height), sizeof(int16_t));
 
 	if(Y == NULL)
 	{
@@ -579,10 +579,10 @@ int soft_autofocus_get_sharpness (uint8_t *frame, int width, int height, int t)
 		for(j=0;j<t;j++)
 		{
 			sumAC[i*8+j]/=(double) (cnt2); /*average = mean*/
-			res+=sumAC[i*8+j]*ACweight[i*8+j];
+            res+=(float)sumAC[i*8+j]*ACweight[i*8+j];
 		}
 	}
-	return (roundf(res*10)); /*round to int (4 digit precision)*/
+    return (int)(roundf(res*10)); /*round to int (4 digit precision)*/
 }
 
 /*
@@ -601,15 +601,17 @@ int soft_autofocus_get_focus_value()
 	int step2 = focus_ctx->i_step / 2;
 	if (step2 <= 0 ) step2 = 1;
 	int focus=0;
+//LMH0612从switch里面放出来
+    /*--------- first time - run sharpness algorithm -----------------*/
+    if(focus_ctx->ind >= 20)
+    {
+        fprintf (stderr, "V4L2_CORE: (soft_autofocus) ind=%d exceeds 20\n", focus_ctx->ind);
+        focus_ctx->ind = 10;
+    }
 
 	switch (focus_ctx->flag)
 	{
-		/*--------- first time - run sharpness algorithm -----------------*/
-		if(focus_ctx->ind >= 20)
-		{
-			fprintf (stderr, "V4L2_CORE: (soft_autofocus) ind=%d exceeds 20\n", focus_ctx->ind);
-			focus_ctx->ind = 10;
-		}
+
 
 		case 0: /*sample left to right at higher step*/
 			focus_ctx->arr_sharp[focus_ctx->ind] = focus_ctx->sharpness;
@@ -777,12 +779,12 @@ int soft_autofocus_run(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 		focus_ctx->focus = focus_ctx->left; /*start left*/
 
 		focus_ctx->focus_control->value = focus_ctx->focus;
-		if (v4l2core_set_control_value_by_id(vd, focus_ctx->focus_control->control.id) != 0)
+        if (v4l2core_set_control_value_by_id(vd, (int)focus_ctx->focus_control->control.id) != 0)
 			fprintf(stderr, "V4L2_CORE: (sof_autofocus) couldn't set focus to %d\n", focus_ctx->focus);
 
 		/*number of frames until focus is stable*/
 		/*1.4 ms focus time - every 1 step*/
-		focus_ctx->focus_wait = (int) abs(focus_ctx->focus - focus_ctx->last_focus)*1.4/((1000*vd->fps_num)/vd->fps_denom)+1;
+        focus_ctx->focus_wait = (int) abs(focus_ctx->focus - focus_ctx->last_focus)*1.4/((1000*vd->fps_num)/vd->fps_denom)+1;
         focus_ctx->last_focus = focus_ctx->focus;
 	}
 	else
