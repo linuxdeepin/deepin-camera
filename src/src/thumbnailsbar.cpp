@@ -59,7 +59,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_mainLayout->setSpacing(0);
     //setWidget(m_wgt);//放开后缩略图到左上角了
 
-    setBlurBackgroundEnabled(true);
+    setBlurBackgroundEnabled(true); //设置磨砂效果
 
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
 //    pushButton_8 = new DButtonBoxButton(QStyle::SP_ArrowLeft);
@@ -325,12 +325,14 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                     newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
                     newMimeData->setUrls(dataUrls);
+
                     gnomeFormat.remove(gnomeFormat.length() - 1, 1);
+                    //本系统(UOS)特有
                     newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
 
-                    QImage img(paths.first());
-                    Q_ASSERT(!img.isNull());
-                    newMimeData->setImageData(img);
+                    //                    QImage img(paths.first());//img特有，视频不需要
+                    //                    Q_ASSERT(!img.isNull());
+                    //                    newMimeData->setImageData(img);
 
                     cb->setMimeData(newMimeData, QClipboard::Clipboard);
                 });

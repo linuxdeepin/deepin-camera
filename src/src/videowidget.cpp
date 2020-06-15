@@ -41,7 +41,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
         int i = 0;
         i++;
     }
-    m_nInterval = 3;
+    m_nInterval = 0;
     m_curTakePicTime = 0;
     eff = new videoEffect;
     //labTimer = new DLabel;
@@ -91,6 +91,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 void videowidget::init()
 {
+    is_active = false;
+    encode_thread = new encode_voice_Thread();
     m_bTakePic = false;
     imageprocessthread = new MajorImageProcessingThread;
 
@@ -193,8 +195,9 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
             }
             {
                 QImage tmpImg = imageprocessthread->m_img;
+                //                QImage testImg;
                 imageprocessthread->m_img = imageprocessthread->m_img.scaled(this->width(), this->height());
-                m_pixmap = QPixmap::fromImage(imageprocessthread->m_img);
+                m_pixmap = QPixmap::fromImage(/*testImg*/ imageprocessthread->m_img);
                 m_pNormalItem->setPixmap(m_pixmap);
                 //保存图片
                 if (m_bTakePic) {
@@ -206,19 +209,16 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                         qDebug() << "保存照片失败";
                     }
                     m_nFileID++;
-                    if (m_curTakePicTime == 0) {
+                    if (--m_curTakePicTime == 0) {
                         //拍照结束，恢复按钮状态和缩略图标志位
+
                         emit takePicDone();
                     }
 
-                    m_nInterval = 3;
-                    //隐藏闪光窗口
-                    m_flashLabel.hide();
                     m_bTakePic = false;
 
-                    if (m_curTakePicTime > 1) {
-                        m_curTakePicTime--;
-                        onShowCountdown();
+                    if (m_curTakePicTime > 0) {
+                        countTimer->start(1000);
                     }
                 }
             }
@@ -366,7 +366,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pCountItem->hide();
         end_time = QDateTime::currentDateTime();             //获取或设置时间
         m_time.setHMS(0, 0, 0, 0);                                       //初始化数据，时 分 秒 毫秒
-        str = m_time.addSecs(begin_time.secsTo(end_time)).toString("hh:mm:ss");//计算时间差(秒)，将时间差加入m_time，格式化输出
+        str = m_time.addSecs(begin_time.secsTo(end_time)).toString("mm:ss"); //计算时间差(秒)，将时间差加入m_time，格式化输出
         setFont(m_pTimeItem, 20, str);
         m_pNormalScene->addItem(m_pTimeItem);
         resizePixMap();
@@ -409,15 +409,6 @@ void videowidget::hideTimeLabel()
     //m_pNormalScene->removeItem(m_pTimeItem);
 }
 
-//void videowidget::showEvent(QShowEvent *event)
-//{
-//    if (isFindedDevice)
-//        ableButtons();
-//    else {
-//        disableButtons();
-//    }
-//}
-
 void videowidget::resizePixMap()
 {
     if (m_pCountItem->isVisible()) {
@@ -427,7 +418,7 @@ void videowidget::resizePixMap()
         int y = this->y();
 
         m_pCountItem->setX(x + rect.width() / 2 - m_countdownLen / 2);
-        m_pCountItem->setY(y + rect.height() / 2 - 50); //设置高度的一半
+        m_pCountItem->setY(y + rect.height() / 2 - 100); //设置高度的一半
     }
     if (m_pTimeItem->isVisible()) {
         QRect rect = this->rect();
@@ -450,41 +441,71 @@ void videowidget::resizeEvent(QResizeEvent *size)
 void videowidget::showCountdown()
 {
     qDebug() << "showCountdown";
-    //显示计时
-    if (VIDEO_STATE == AUDIO) {
-        showCountDownLabel(VIDEO_STATE);
-    } else {
-        //显示倒数，3s后结束，并拍照
-        if (m_nInterval == 0) {
+    //显示倒数，m_nMaxInterval秒后结束，并拍照
+    if (m_nInterval == 0) {
+        if (VIDEO_STATE == AUDIO) {
+            if (!is_active) {
+                startTakeVideo();
+            }
+
+            //显示录制时长
+            showCountDownLabel(VIDEO_STATE);
+        }
+        if (VIDEO_STATE == NORMALVIDEO) {
+            if (m_nMaxInterval == 0) {
+                if (flashTimer->isActive()) { //连续点击拍照
+                    flashTimer->stop();
+                }
+                //立即闪光，500ms后关闭
+                flashTimer->start(500);
+
+                m_flashLabel.resize(this->size());
+                m_flashLabel.move(this->mapToGlobal(this->pos()));
+                qDebug() << "****m_flashLabel.show();";
+                m_flashLabel.show();
+            }
             //发送就结束信号处理按钮状态
             countTimer->stop();
-            m_nInterval = 3;
+            m_nInterval = m_nMaxInterval;
             m_bTakePic = true;
             hideCountDownLabel();
-            if (m_curTakePicTime <= 1) {
-                finishTakedCamera();
-            }
-        } else {
-            if (countTimer->isActive()) {
-                showCountDownLabel(VIDEO_STATE);
-                if (m_nInterval % 3 == 1) {
-                    if (flashTimer->isActive()) {//连续点击拍照
+        }
+
+    } else {
+        if (countTimer->isActive()) {
+            showCountDownLabel(NORMALVIDEO); //拍照录像都要显示倒计时
+            if (VIDEO_STATE == NORMALVIDEO) {
+                if (m_nInterval % m_nMaxInterval == 1) {
+                    if (flashTimer->isActive()) {
                         flashTimer->stop();
                     }
+                    //等500ms后闪光，内部关闭
                     flashTimer->start(500);
                 }
-                m_nInterval--;
             }
+
+            m_nInterval--;
         }
     }
 }
 
 void videowidget::flash()
 {
-    m_flashLabel.resize(this->size());
-    m_flashLabel.move(this->mapToGlobal(this->pos()));
-    m_flashLabel.show();
-    flashTimer->stop();
+    if (m_flashLabel.isVisible()) {
+        //隐藏闪光窗口
+        qDebug() << "****m_flashLabel.hide();";
+        m_flashLabel.hide(); //为避免没有关闭，放到定时器里边关闭
+        flashTimer->stop();
+    } else {
+        m_flashLabel.resize(this->size());
+        m_flashLabel.move(this->mapToGlobal(this->pos()));
+        qDebug() << "****m_flashLabel.show();";
+        m_flashLabel.show();
+        if (flashTimer->isActive()) { //连续点击拍照
+            flashTimer->stop();
+        }
+        flashTimer->start(500);
+    }
 }
 
 void videowidget::changeDev()
@@ -541,59 +562,34 @@ void videowidget::changeDev()
     }
 }
 
-void videowidget::onShowCountdown()
+void videowidget::onTakePic()
 {
-    qDebug() << "onShowCountdown";
+    qDebug() << "onTakePic";
     VIDEO_STATE = NORMALVIDEO;
     if (countTimer->isActive()) { //连续点击拍照
         countTimer->stop();
-        m_nInterval = 3;
     }
-
+    m_nInterval = m_nMaxInterval;
+    m_curTakePicTime = m_nMaxContinuous;
     countTimer->start(1000);
 }
 
-void videowidget::onShowThreeCountdown()
+void videowidget::onTakeVideo() //点一次开，再点一次关
 {
-    qDebug() << "onShowThreeCountdown";
-    if (countTimer->isActive()) {//连续点击拍照
-        countTimer->stop();
-        m_nInterval = 3;
-        hideCountDownLabel();
-        //拍照保存
-    } else {
-        VIDEO_STATE = SHOOT;
-        //显示倒数，3s后结束，并拍照
-        m_nInterval = 3;
-        m_curTakePicTime = 3;
-        onShowCountdown();
+    if (is_active) {
+        qDebug() << "stop takeVideo";
+        encode_thread->stop();
+        is_active = false;
+        reset_video_timer();
+        return;
     }
-}
 
-void videowidget::onTShowTime()
-{
-    qDebug() << "onTShowTime";
-    if (countTimer->isActive()) {//连续点击拍照
-        begin_time = QDateTime::currentDateTime();
-        showCountdown();
-        //保存视频
+    VIDEO_STATE = AUDIO;
+    if (countTimer->isActive()) { //连续点击拍照
         countTimer->stop();
-    } else {
-        VIDEO_STATE = AUDIO;
-        begin_time = QDateTime::currentDateTime();
-        countTimer->start(1000);
     }
-}
-
-void videowidget::onCancelThreeShots()
-{
-    qDebug() << "onCancelThreeShots";
-    VIDEO_STATE = NORMALVIDEO;
-    if (countTimer->isActive()) {
-        countTimer->stop();
-        m_nInterval = 3;
-        hideCountDownLabel();
-    }
+    m_nInterval = m_nMaxInterval;
+    countTimer->start(1000);
 }
 
 void videowidget::onTakeVideoOver()
@@ -604,23 +600,26 @@ void videowidget::onTakeVideoOver()
     hideTimeLabel();
 }
 
-void videowidget::onBtnVideo()
-{
-    hideCountDownLabel();
-}
-void videowidget::onBtnThreeShots()
-{
-    hideTimeLabel();
-}
-void videowidget::onBtnPhoto()
-{
-    hideTimeLabel();
-}
-
 void videowidget::forbidScrollBar(QGraphicsView *view)
 {
     view->horizontalScrollBar()->blockSignals(true);
     view->verticalScrollBar()->blockSignals(true);
     view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+}
+
+void videowidget::startTakeVideo()
+{
+    if (is_active) {
+        qDebug() << "stop takeVideo";
+        encode_thread->stop();
+        is_active = false;
+        reset_video_timer();
+
+    } else {
+        qDebug() << "start takeVideo";
+        encode_thread->start();
+        is_active = true;
+        begin_time = QDateTime::currentDateTime();
+    }
 }

@@ -248,8 +248,8 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         return true;
     };
     QString temstr = lastOpenedPath();
-    option->connect(icon, &DPushButton::clicked, [ = ]() {
-        QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
+    option->connect(icon, &DPushButton::clicked, [=]() {
+        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                          lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
@@ -261,8 +261,6 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             prompt->show();
         }
     });
-
-
 
     option->connect(le, &DLineEdit::editingFinished, option, [ = ]() {
 
@@ -357,18 +355,6 @@ void CMainWindow::initUI()
     hboxlayout->addWidget(&m_videoPre);
     hboxlayout->setContentsMargins(0, 0, 0, 0);
 
-
-
-//    hboxlayout->addWidget(&m_toolBar);
-    //hboxlayout->addWidget(&m_thumbnail,Qt::AlignBottom);
-
-//    hboxlayout->addWidget(&m_thumbnail, Qt::AlignBottom);
-//    m_thumbnail.setFixedHeight(100);
-
-//    hboxlayout->setStretch(0, 16);
-//    hboxlayout->setStretch(1, 1);
-//    hboxlayout->setStretch(2, 3);
-
     wget->setLayout(hboxlayout);
     setCentralWidget(wget);
 
@@ -407,6 +393,32 @@ void CMainWindow::initUI()
     m_thumbnail->m_nMaxItem = MinWindowWidth;
     m_thumbnail->addPath(g_lastFileName);
     m_videoPre.setSaveFolder(g_lastFileName);
+    int nContinuous = pDSettings->value("photosetting.photosnumber.takephotos").toInt();
+    int nDelayTime = pDSettings->value("photosetting.photosdelay.photodelays").toInt();
+    switch (nContinuous) {
+    case 1:
+        nContinuous = 4;
+        break;
+    case 2:
+        nContinuous = 10;
+        break;
+    default:
+        nContinuous = 1;
+        break;
+    }
+    switch (nDelayTime) {
+    case 1:
+        nDelayTime = 3;
+        break;
+    case 2:
+        nDelayTime = 6;
+        break;
+    default:
+        nDelayTime = 0;
+        break;
+    }
+    m_videoPre.setInterval(nDelayTime);
+    m_videoPre.setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
 
 }
@@ -454,58 +466,19 @@ void CMainWindow::initConnection()
 
     //修改标题栏按钮状态
     connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
-    //录像按钮信号
-    connect(m_thumbnail, SIGNAL(takeVd()), &m_actToken, SLOT(onTakeVideo()));
-    //录像信号--显示计时
-    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTShowTime()));
+    //录像信号
+    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTakeVideo()));
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
-    connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onShowCountdown()));
+    connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onTakePic()));
 
-    //拍照按钮信号
-    connect(&m_toolBar, SIGNAL(sltPhoto()), &m_videoPre, SLOT(onBtnPhoto()));
-
-    //三连拍按钮信号
-    connect(&m_toolBar, SIGNAL(sltThreeShot()), &m_videoPre, SLOT(onBtnThreeShots()));
-
-    //录像按钮信号
-    connect(&m_toolBar, SIGNAL(sltVideo()), &m_videoPre, SLOT(onBtnVideo()));
-    //特效按钮信号
-    //connect(&m_toolBar, SIGNAL(sltEffect()), &m_videoPre, SLOT(onBtnEffect()));
-
-    //录像信号
-    connect(&m_toolBar, SIGNAL(takeVideo()), &m_actToken, SLOT(onTakeVideo()));
-    //三连拍取消信号
-    connect(&m_toolBar, SIGNAL(cancelThreeShots()), &m_actToken, SLOT(onCancelThreeShots()));
-    //录像结束信号
-    connect(&m_toolBar, SIGNAL(takeVideoOver()), &m_actToken, SLOT(onTakeVideoOver()));
-
-    //三连拍信号--显示倒计时
-    connect(&m_toolBar, SIGNAL(threeShots()), &m_videoPre, SLOT(onShowThreeCountdown()));
-
-    //三连拍取消信号
-    //connect(&m_toolBar, SIGNAL(cancelThreeShots()), &m_videoPre, SLOT(onCancelThreeShots()));
-    //录像结束信号
-    //connect(&m_toolBar, SIGNAL(takeVideoOver()), &m_videoPre, SLOT(onTakeVideoOver()));
-    //选择特效信号
-    //connect(&m_toolBar, SIGNAL(chooseEffect()), &m_videoPre, SLOT(onChooseEffect()));
-    //特效选择左边按钮
-    //connect(&m_toolBar, SIGNAL(moreEffectLeft()), &m_videoPre, SLOT(onMoreEffectLeft()));
-    //特效选择右边按钮
-    //connect(&m_toolBar, SIGNAL(moreEffectRight()), &m_videoPre, SLOT(onMoreEffectRight()));
-    //找不到设备信号
-    connect(&m_videoPre, SIGNAL(disableButtons()), &m_toolBar, SLOT(set_btn_state_no_dev()));
-    //正常按钮时能信号
-    connect(&m_videoPre, SIGNAL(ableButtons()), &m_toolBar, SLOT(set_btn_state_wth_dev()));
-    //结束占用按钮状态改变
-    connect(&m_videoPre, SIGNAL(finishTakedCamera()), &m_toolBar, SLOT(onFinishTakedCamera()));
-    //结束特效选择信号
-    connect(&m_videoPre, SIGNAL(finishEffectChoose()), &m_toolBar, SLOT(onFinishEffectChoose()));
     //拍照结束
     connect(&m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
+    //录制超时
+    connect(&m_videoPre, SIGNAL(takeVdTimeout()), this, SLOT(onTakeVdTimeout()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
     //单设备信号
@@ -534,12 +507,6 @@ void CMainWindow::setupTitlebar()
     m_actionSettings = new QAction(tr("Settings"),this);
     menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
-//    QAction *settingAction(new QAction(tr("Settings"), this));
-//    settingAction->setEnabled(false);
-//    menu->addAction(settingAction);
-//    titlebar()->setMenu(menu);
-//    connect(settingAction, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
-
 }
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
@@ -557,7 +524,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     }
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20; //两个边框的宽度.+20需要继续调整，后续规范
+        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20; //两个边框的宽度.+20需要继续调整，待后续规范
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
@@ -604,11 +571,6 @@ void CMainWindow::menuItemInvoked(QAction *action)
 {
 
 }
-
-//void CMainWindow::settingsTriggered(bool bTrue)
-//{
-//    m_setwidget->show();
-//}
 
 //void CMainWindow::keyPressEvent(QKeyEvent *ev)
 //{
@@ -677,6 +639,33 @@ void CMainWindow::onSettingsDlgClose()
     m_fileWatcher.addPath(g_lastFileName);
     m_thumbnail->addPath(g_lastFileName);
     m_videoPre.setSaveFolder(g_lastFileName);
+
+    int nContinuous = pDSettings->value("photosetting.photosnumber.takephotos").toInt();
+    int nDelayTime = pDSettings->value("photosetting.photosdelay.photodelays").toInt();
+    switch (nContinuous) {
+    case 1:
+        nContinuous = 4;
+        break;
+    case 2:
+        nContinuous = 10;
+        break;
+    default:
+        nContinuous = 1;
+        break;
+    }
+    switch (nDelayTime) {
+    case 1:
+        nDelayTime = 3;
+        break;
+    case 2:
+        nDelayTime = 6;
+        break;
+    default:
+        nDelayTime = 0;
+        break;
+    }
+    m_videoPre.setInterval(nDelayTime);
+    m_videoPre.setContinuous(nContinuous);
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
@@ -687,5 +676,11 @@ void CMainWindow::onEnableSettings(bool bTrue)
 void CMainWindow::onTakePicDone()
 {
     onEnableTitleBar(3); //恢复按钮状态
+    m_thumbnail->m_nStatus = STATNULL;
+}
+
+void CMainWindow::onTakeVdTimeout()
+{
+    onEnableTitleBar(4); //恢复按钮状态
     m_thumbnail->m_nStatus = STATNULL;
 }

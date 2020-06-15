@@ -23,7 +23,6 @@ SOURCES += \
     src/widgetproxy.cpp \
     src/cameradetect.cpp \
     src/avcodec.cpp \
-    src/actiontoken.cpp \
     src/videoeffect.cpp \
     src/effectproxy.cpp \
     src/thumbnailsbar.cpp \
@@ -42,7 +41,6 @@ HEADERS += \
     src/widgetproxy.h \
     src/cameradetect.h \
     src/avcodec.h \
-    src/actiontoken.h \
     src/videoeffect.h \
     src/effectproxy.h \
     src/thumbnailsbar.h \

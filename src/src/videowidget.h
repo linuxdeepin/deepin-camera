@@ -24,10 +24,11 @@
 
 #include <DWidget>
 #include <QDateTime>
+#include <DLabel>
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "videoeffect.h"
-#include <DLabel>
+#include "encoderthread.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -54,25 +55,18 @@ public:
     //    void        showEvent(QShowEvent *event);
 
 signals:
-    void finishTakedCamera();//结束拍照或三连拍
-    void finishEffectChoose();//结束特效选择
     void sigFlash();
-    void disableButtons();
-    void ableButtons();
     void takePicDone();
+    void videoTimeout();
 
 public:
     void setSaveFolder(QString strFolder) { m_strFolder = strFolder; }
+    void setInterval(int nInterval) { m_nInterval = m_nMaxInterval = nInterval; }
+    void setContinuous(int nContinuous) { m_curTakePicTime = m_nMaxContinuous = nContinuous; }
 public slots:
-    void onShowCountdown();
-    void onShowThreeCountdown();
-    void onTShowTime();
-    void onCancelThreeShots();
+    void onTakePic();
+    void onTakeVideo();
     void onTakeVideoOver();
-    void onBtnPhoto();
-    void onBtnThreeShots();
-    void onBtnVideo();
-
     void showCountdown();
     void changeDev();
 
@@ -103,6 +97,7 @@ private:
     void showCountDownLabel();
     void showNocam();
     void showCamUsed();
+    void startTakeVideo();
 
 private:
     bool isFindedDevice = false;
@@ -112,21 +107,18 @@ private:
     QGraphicsView *m_pNormalView;
     QGraphicsScene *m_pNormalScene;
     QGraphicsPixmapItem *m_pNormalItem;
-    QGraphicsTextItem *m_pCountItem;
+    QGraphicsTextItem *m_pCountItem; //拍照倒计时显示控件
     QGraphicsTextItem *m_pTimeItem;
 
     QGridLayout *m_pGridLayout;
 
-    int m_nInterval; //拍照间隔时间
     QTimer *countTimer;
     QTimer *flashTimer;
     QDateTime begin_time;
 
-
     PRIVIEW_STATE STATE = NORMALVIDEO;
     int EFFECT_PAGE = 0;
 
-    int m_curTakePicTime;//当前连拍次数
     int m_countdownLen = 1;
     int err11, err19;
     MajorImageProcessingThread *imageprocessthread;
@@ -136,6 +128,14 @@ private:
 
     int m_nFileID;
     QString m_strFolder;
+
+    int m_nMaxContinuous; //最大连拍数：0,4,10
+    int m_curTakePicTime; //当前连拍次数
+    int m_nMaxInterval; //最大间隔：0,3,6
+    int m_nInterval; //当前拍照间隔时间
+
+    bool is_active;
+    encode_voice_Thread *encode_thread;
 };
 
 #endif // VIDEOWIDGET_H

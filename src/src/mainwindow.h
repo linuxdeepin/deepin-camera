@@ -21,7 +21,6 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "actiontoken.h"
 #include "avcodec.h"
 #include "cameradetect.h"
 #include "effectproxy.h"
@@ -90,10 +89,10 @@ private slots:
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
+    void onTakeVdTimeout();
 
 private:
     ThumbnailsBar   *m_thumbnail;
-    actionToken     m_actToken;
     avCodec         m_avCodec;
     CameraDetect    m_camDetect;
     effectproxy     m_effProxy;
