@@ -48,8 +48,6 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
-    m_iconBtn = new DIconButton(nullptr);
-    m_iconBtn->hide();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
@@ -85,14 +83,18 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //    horizontalLayout->setStretch(2, 1);
 
     m_lastButton = new DPushButton(this);
+
     m_lastButton->setFixedWidth(50);
     QIcon iconPic(":/images/icons/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
-    m_lastButton->setIconSize(QSize(18,18));
-    DPalette pa;
+    m_lastButton->setIconSize(QSize(18, 18));
+
+    DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");
-    pa.setColor(DPalette::Button, clo);
+    pa.setColor(DPalette::Dark, clo);
+    pa.setColor(DPalette::Light, clo);
     m_lastButton->setPalette(pa);
+
     m_lastButton->setToolTip(tr("Take photo"));
     m_lastButton->setToolTipDuration(500);//0.5s消失
 
@@ -417,24 +419,26 @@ void ThumbnailsBar::ChangeActType(int nType)
         QIcon iconPic(":/images/icons/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(18,18));
-        DPalette pa;
+
+        DPalette pa = m_lastButton->palette();
         QColor clo("#0081FF");
-        pa.setColor(DPalette::Button, clo);
+        pa.setColor(DPalette::Dark, clo);
+        pa.setColor(DPalette::Light, clo);
         m_lastButton->setPalette(pa);
+
         m_lastButton->setToolTip(tr("Take photo"));
-        DPalette paPic;
-        QColor cloPic("#0081FF"); //颜色待修改
-        paPic.setColor(DPalette::Button, cloPic);
-        m_lastButton->setPalette(paPic);
     }
     else if(nType == ActTakeVideo){
         QIcon iconPic(":/images/icons/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(18,18));
-        DPalette pa;
-        QColor clo("#0081FF");
-        pa.setColor(DPalette::Button, clo);
+
+        DPalette pa = m_lastButton->palette();
+        QColor clo("#FF0000");
+        pa.setColor(DPalette::Dark, clo);
+        pa.setColor(DPalette::Light, clo);
         m_lastButton->setPalette(pa);
+
         m_lastButton->setToolTip(tr("Record video"));
     }
     else {

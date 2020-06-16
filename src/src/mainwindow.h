@@ -112,6 +112,7 @@ private:
     DButtonBoxButton *m_pTitlePicBtn;
     DButtonBoxButton *m_pTitleVdBtn;
     DIconButton *pSelectBtn;
+    DIconButton *m_iconBtn;
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
     QString m_strCfgPath;

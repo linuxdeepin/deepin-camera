@@ -326,6 +326,17 @@ void CMainWindow::slotPopupSettingsDialog()
 void CMainWindow::initUI()
 {
     this->setWindowFlag(Qt::FramelessWindowHint);
+    m_iconBtn = new DIconButton(nullptr);
+
+    DPalette pa = m_iconBtn->palette();
+    QColor clo("#FF0000");
+    pa.setColor(DPalette::Dark, clo);
+    pa.setColor(DPalette::Light, clo);
+    pa.setColor(DPalette::Button, clo);
+    m_iconBtn->setPalette(pa);
+
+    m_iconBtn->hide();
+
     DWidget *wget = new DWidget;
     qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
@@ -432,11 +443,13 @@ void CMainWindow::initTitleBar()
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(15,15));
-    DPalette pa;
-    QColor clo("#0081FF");//启动默认开启拍照功能
+
+    DPalette pa = m_pTitlePicBtn->palette();
+    QColor clo("#0081FF");
+    pa.setColor(DPalette::Dark, clo);
+    pa.setColor(DPalette::Light, clo);
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
-
 
     QIcon iconVd(":/images/icons/record video.svg");
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
@@ -587,18 +600,22 @@ void CMainWindow::onTitlePicBtn()
     }
     m_nActTpye = ActTakePic;
     //切换标题栏拍照按钮颜色
-    DPalette paPic;
-    QColor cloPic("#0081FF");
-    paPic.setColor(DPalette::Button, cloPic);
-    m_pTitlePicBtn->setPalette(paPic);
+    DPalette pa = m_pTitlePicBtn->palette();
+    QColor clo("#0081FF");
+    pa.setColor(DPalette::Dark, clo);
+    pa.setColor(DPalette::Light, clo);
+    pa.setColor(DPalette::Button, clo);
+    m_pTitlePicBtn->setPalette(pa);
 
     QIcon iconPic(":/images/icons/button/photograph.svg");
     m_pTitlePicBtn->setIcon(iconPic);
 
     //切换标题栏视频按钮颜色
-    DPalette paVd;
+    DPalette paVd = m_pTitleVdBtn->palette();
     QColor cloVd("#000000");
     cloVd.setAlpha(20);
+    paVd.setColor(DPalette::Dark, cloVd);
+    paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitleVdBtn->setPalette(paVd);
 
@@ -615,8 +632,10 @@ void CMainWindow::onTitleVdBtn()
     }
     m_nActTpye = ActTakeVideo;
     //切换标题栏视频按钮颜色
-    DPalette paPic;
-    QColor cloPic("#0081FF");//颜色待修改
+    DPalette paPic = m_pTitleVdBtn->palette();
+    QColor cloPic("#0081FF");
+    paPic.setColor(DPalette::Dark, cloPic);
+    paPic.setColor(DPalette::Light, cloPic);
     paPic.setColor(DPalette::Button, cloPic);
     m_pTitleVdBtn->setPalette(paPic);
 
@@ -624,9 +643,11 @@ void CMainWindow::onTitleVdBtn()
     m_pTitleVdBtn->setIcon(iconVd);
 
     //切换标题栏拍照按钮颜色
-    DPalette paVd;
+    DPalette paVd = m_pTitlePicBtn->palette();
     QColor cloVd("#000000");
     cloVd.setAlpha(20);
+    paVd.setColor(DPalette::Dark, cloVd);
+    paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
 

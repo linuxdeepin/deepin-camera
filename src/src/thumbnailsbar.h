@@ -103,7 +103,6 @@ private:
 
     DBImgInfoList m_infos;
     DPushButton *m_lastButton {nullptr};
-    DIconButton *m_iconBtn {nullptr};
 
 private:
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
