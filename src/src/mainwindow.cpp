@@ -477,8 +477,8 @@ void CMainWindow::initConnection()
 
     //拍照结束
     connect(&m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
-    //录制超时
-    connect(&m_videoPre, SIGNAL(takeVdTimeout()), this, SLOT(onTakeVdTimeout()));
+    //录制取消 （倒计时3秒内的）
+    connect(&m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
     //单设备信号
@@ -679,8 +679,9 @@ void CMainWindow::onTakePicDone()
     m_thumbnail->m_nStatus = STATNULL;
 }
 
-void CMainWindow::onTakeVdTimeout()
+void CMainWindow::onTakeVdCancel() //待保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
     onEnableTitleBar(4); //恢复按钮状态
     m_thumbnail->m_nStatus = STATNULL;
+    m_thumbnail->onFoldersChanged(""); //恢复缩略图
 }

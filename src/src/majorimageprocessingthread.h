@@ -37,6 +37,7 @@ extern "C" {
 #include "malloc.h"
 #include "stdio.h"
 #include "math.h"
+
 #ifdef __cplusplus
 }
 #endif
@@ -46,10 +47,15 @@ class MajorImageProcessingThread : public QThread
 public:
     MajorImageProcessingThread();
 
-    QImage majorImage;
     void stop();
     void init();
+
+public:
     QImage m_img;
+    QMutex m_rwMtxImg;
+    QString m_strPath;
+    QMutex m_rwMtxPath;
+    bool m_bTake; //是否拍照
 protected:
     void run();
 

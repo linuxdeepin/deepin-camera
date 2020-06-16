@@ -57,11 +57,14 @@ public:
 signals:
     void sigFlash();
     void takePicDone();
-    void videoTimeout();
+    void takeVdCancel(); //录制倒计时期间取消了
 
 public:
     void setSaveFolder(QString strFolder) { m_strFolder = strFolder; }
-    void setInterval(int nInterval) { m_nInterval = m_nMaxInterval = nInterval; }
+    void setInterval(int nInterval)
+    { /*m_nInterval = */
+        m_nMaxInterval = nInterval;
+    }
     void setContinuous(int nContinuous) { m_curTakePicTime = m_nMaxContinuous = nContinuous; }
 public slots:
     void onTakePic();
@@ -115,14 +118,16 @@ private:
     QTimer *countTimer;
     QTimer *flashTimer;
     QDateTime begin_time;
+    QDateTime m_btnClickTime; //按钮点击时间
+    int m_nFastClick; //快速点击次数，小于200ms计入
+    //bool m_bCountDownOver;
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
     int EFFECT_PAGE = 0;
 
     int m_countdownLen = 1;
     int err11, err19;
-    MajorImageProcessingThread *imageprocessthread;
-    bool m_bTakePic;
+    MajorImageProcessingThread *m_imgPrcThread;
     QImage m_img;
     QPixmap m_pixmap;
 
@@ -132,10 +137,11 @@ private:
     int m_nMaxContinuous; //最大连拍数：0,4,10
     int m_curTakePicTime; //当前连拍次数
     int m_nMaxInterval; //最大间隔：0,3,6
-    int m_nInterval; //当前拍照间隔时间
+    int m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
 
     bool is_active;
     encode_voice_Thread *encode_thread;
+    QString m_strFileName;
 };
 
 #endif // VIDEOWIDGET_H

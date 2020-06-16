@@ -89,7 +89,7 @@ private slots:
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
-    void onTakeVdTimeout();
+    void onTakeVdCancel();
 
 private:
     ThumbnailsBar   *m_thumbnail;

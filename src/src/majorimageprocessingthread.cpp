@@ -20,7 +20,7 @@
 */
 
 #include "majorimageprocessingthread.h"
-
+#include "save_image.h"
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
@@ -107,13 +107,21 @@ void MajorImageProcessingThread::run()
             }
         }
         if (!stopped) {
+            if (m_bTake) {
+                int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+                if (nRet < 0) {
+                    qDebug() << "保存照片失败";
+                }
+                //save_image_jpeg(frame,m_strPath.toStdString().c_str());
+                m_bTake = false;
+            }
             rgb24 = static_cast<unsigned char *>(malloc(frame->width * frame->height * 3 * sizeof(char)));
 
             convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
 
-
+            m_rwMtxImg.lock();
             m_img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
-
+            m_rwMtxImg.unlock();
             emit SendMajorImageProcessing(m_img, result);
         }
         v4l2core_release_frame(vd1, frame);
