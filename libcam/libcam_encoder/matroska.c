@@ -913,7 +913,6 @@ int mkv_write_packet(mkv_context_t* mkv_ctx,
 			if(verbosity > 3)
 				printf("ENCODER: (matroska) writing cached packet[%i] of %i\n", 
 					mkv_ctx->pkt_buffer_read_index, mkv_ctx->pkt_buffer_list_size);
-
 			ret = mkv_write_packet_internal(mkv_ctx,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].stream_index,
 							mkv_ctx->pkt_buffer_list[mkv_ctx->pkt_buffer_read_index].data,

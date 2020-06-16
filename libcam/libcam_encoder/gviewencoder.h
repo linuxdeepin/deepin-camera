@@ -48,6 +48,7 @@ __BEGIN_DECLS
 #define ENCODER_MUX_MKV        (0)
 #define ENCODER_MUX_WEBM       (1)
 #define ENCODER_MUX_AVI        (2)
+#define ENCODER_MUX_MP4        (3)
 
 /*Scheduler Modes*/
 #define ENCODER_SCHED_LIN  (0)

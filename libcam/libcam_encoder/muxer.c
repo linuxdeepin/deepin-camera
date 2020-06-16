@@ -28,7 +28,9 @@
 #  Encoder library                                                                #
 #                                                                               #
 ********************************************************************************/
-
+#ifdef __cplusplus
+extern "C"
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -39,6 +41,13 @@
 #include <errno.h>
 #include <assert.h>
 #include <sys/statfs.h>
+#include <libavformat/avformat.h>
+#include <libavutil/avassert.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/opt.h>
+#include <libavutil/mathematics.h>
+#include <libavutil/timestamp.h>
+#include <libavutil/hwcontext.h>
 /* support for internationalization - i18n */
 #include <locale.h>
 #include <libintl.h>
@@ -49,15 +58,27 @@
 #include "stream_io.h"
 #include "matroska.h"
 #include "avi.h"
+#include "mp4.h"
 #include "gview.h"
+
+#ifdef __cplusplus
+}
+#endif
 
 extern int verbosity;
 
 static mkv_context_t *mkv_ctx = NULL;
 static avi_context_t *avi_ctx = NULL;
+static AVFormatContext *mp4_ctx = NULL;
 
 static stream_io_t *video_stream = NULL;
 static stream_io_t *audio_stream = NULL;
+static OutputStream *mp4_video_stream = NULL;
+static OutputStream *mp4_audio_stream = NULL;
+
+static AVCodec *audio_codec = NULL;
+static AVCodec *video_codec = NULL;
+static AVDictionary** opt = NULL;
 
 /*file mutex*/
 static __MUTEX_TYPE mutex = __STATIC_MUTEX_INIT;
@@ -107,6 +128,13 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 					block_align,
 					enc_video_ctx->flags);
 			break;
+
+        case ENCODER_MUX_MP4:
+        mp4_write_video_packet(mp4_ctx,
+                                0,
+                                enc_video_ctx,
+                                video_codec_data);
+        break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -176,6 +204,12 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					block_align,
 					enc_audio_ctx->flags);
 			break;
+        case ENCODER_MUX_MP4:
+            mp4_write_audio_packet(mp4_ctx,
+                    1,
+                    enc_audio_ctx,
+                    audio_codec_data);
+        break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -212,6 +246,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
  */
 void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 {
+
 	/*assertions*/
 	assert(encoder_ctx != NULL);
 	assert(encoder_ctx->enc_video_ctx != NULL);
@@ -297,6 +332,67 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 
 			break;
 
+        case ENCODER_MUX_MP4:
+
+            //av_register_all();
+            if(mp4_ctx != NULL)
+            {
+                mp4_destroy_context(mp4_ctx);
+                mp4_ctx = NULL;
+            }
+            mp4_ctx = mp4_create_context(filename);
+
+            mp4_video_stream = (OutputStream*)calloc(1,sizeof(OutputStream));
+
+            mp4_add_video_stream(
+                mp4_ctx,
+                &video_codec,
+                video_codec_data,
+                mp4_video_stream,
+                video_codec_id);
+            int ret = avcodec_parameters_from_context(mp4_video_stream->st->codecpar, mp4_video_stream->enc);
+                if (ret < 0) {
+                    fprintf(stderr, "Could not copy the stream parameters\n");
+                    exit(1);
+                }
+            if(encoder_ctx->enc_audio_ctx != NULL &&
+                encoder_ctx->audio_channels > 0)
+            {
+                encoder_codec_data_t *audio_codec_data = (encoder_codec_data_t *) encoder_ctx->enc_audio_ctx->codec_data;
+                if(audio_codec_data)
+                {
+                    mp4_audio_stream = (OutputStream*)calloc(1,sizeof(OutputStream));
+                    mp4_add_audio_stream(
+                    mp4_ctx,
+                    &audio_codec,
+                    audio_codec_data,
+                    mp4_audio_stream);
+                }
+                 if(!video_codec_data->private_options)
+                    av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+
+                 int ret = avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
+                     if (ret < 0) {
+                         fprintf(stderr, "Could not copy the stream parameters\n");
+                         exit(1);
+                     }
+                 //if(!audio_codec_data->private_options)
+                    //av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+            }
+
+            ret = avio_open(&mp4_ctx->pb, filename, AVIO_FLAG_WRITE);
+            if (ret < 0) {
+                fprintf(stderr, "Could not open '%s': %s\n", filename,
+                        av_err2str(ret));
+            }
+            ret= avformat_write_header(mp4_ctx, opt);
+            if(ret < 0)
+            {
+                fprintf(stderr, "Error occurred when opening output file: %s\n",
+                                av_err2str(ret));
+            }
+            break;
+
 		default:
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -375,6 +471,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
  */
 void encoder_muxer_close(encoder_context_t *encoder_ctx)
 {
+
 	switch (encoder_ctx->muxer_id)
 	{
 		case ENCODER_MUX_AVI:
@@ -404,6 +501,41 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
 				avi_ctx = NULL;
 			}
 			break;
+
+        case ENCODER_MUX_MP4:
+            if(mp4_ctx)
+            {
+                av_write_trailer(mp4_ctx);
+                avio_closep(&mp4_ctx->pb);
+
+                if(!!mp4_video_stream->enc)
+                    avcodec_free_context(&mp4_video_stream->enc);
+                if(!!mp4_video_stream->frame)
+                    av_frame_free(&mp4_video_stream->frame);
+                if(!!mp4_video_stream->tmp_frame)
+                    av_frame_free(&mp4_video_stream->tmp_frame);
+                if(!!mp4_video_stream->sws_ctx)
+                    sws_freeContext(mp4_video_stream->sws_ctx);
+                if(!!mp4_video_stream->swr_ctx)
+                    swr_free(&mp4_video_stream->swr_ctx);
+
+//                if(!!mp4_audio_stream->enc)
+//                    avcodec_free_context(&mp4_audio_stream->enc);
+//                if(!!mp4_audio_stream->frame)
+//                    av_frame_free(&mp4_audio_stream->frame);
+//                if(!!mp4_audio_stream->tmp_frame)
+//                    av_frame_free(&mp4_audio_stream->tmp_frame);
+//                if(!!mp4_audio_stream->sws_ctx)
+//                    sws_freeContext(mp4_audio_stream->sws_ctx);
+//                if(!!mp4_audio_stream->swr_ctx)
+//                    swr_free(&mp4_audio_stream->swr_ctx);
+
+//                avformat_free_context(mp4_ctx);
+                mp4_destroy_context(mp4_ctx);
+
+                mp4_ctx = NULL;
+            }
+        break;
 
 		default:
 		case ENCODER_MUX_MKV:

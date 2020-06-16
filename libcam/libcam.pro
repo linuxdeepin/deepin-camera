@@ -49,6 +49,7 @@ SOURCES +=libcam_v4l2core/colorspaces.c \
     libcam_encoder/muxer.c \
     libcam_encoder/stream_io.c \
     libcam_encoder/video_codecs.c \
+    libcam_encoder/mp4.c \
     libcam_render/render.c \
     libcam_render/render_fx.c \
     libcam_render/render_osd_crosshair.c \
@@ -87,6 +88,7 @@ HEADERS +=libcam_v4l2core/colorspaces.h \
     libcam_encoder/gviewencoder.h \
     libcam_encoder/matroska.h \
     libcam_encoder/stream_io.h \
+    libcam_encoder/mp4.h \
     libcam_render/gview.h \
     libcam_render/gviewrender.h \
     libcam_render/render.h \

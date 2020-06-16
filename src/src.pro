@@ -70,6 +70,8 @@ LIBS += -L/lib/x86_64-linux-gnu\
         -lusb-1.0\
         -lavcodec\
         -lavutil\
+        -lavformat\
+        -lswscale\
         -lpng\
         -lz\
         -lSDL2\

@@ -62,7 +62,7 @@ static char *video_name = NULL;
 /*video path*/
 static char *video_path = NULL;
 /*photo format*/
-static int video_muxer = ENCODER_MUX_MKV;
+static int video_muxer = ENCODER_MUX_MP4;
 
 /*index: 0 numerator; 1 denominator*/
 static int my_fps[2] = {0, 0};
@@ -368,7 +368,7 @@ void set_video_muxer(int muxer)
 char *get_video_name()
 {
 	if(!video_name)
-		video_name = strdup("my_video.mkv");
+        video_name = strdup("my_video.avi");
 
 	return video_name;
 }
@@ -408,13 +408,18 @@ void set_video_name(const char *name)
 			case ENCODER_MUX_WEBM:
 				video_name = set_file_extension(name, "webm");
 				break;
-			default:
+            case ENCODER_MUX_MP4:
+                video_name = set_file_extension(name,"mp4");
+                break;
+            default:
 				video_name = set_file_extension(name, "avi");
 				break;
 		}
 	}
 	else if( strcasecmp(ext, "mkv") == 0)
 		set_video_muxer(ENCODER_MUX_MKV);
+    else if(strcasecmp(ext,"mp4") == 0)
+        set_video_muxer(ENCODER_MUX_MP4);
 	else if ( strcasecmp(ext, "webm") == 0 )
 	{
 		set_video_muxer(ENCODER_MUX_WEBM);

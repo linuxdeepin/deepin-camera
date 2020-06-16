@@ -548,7 +548,7 @@ stream_io_t *avi_add_video_stream(
 {
 	stream_io_t *stream = add_new_stream(&avi_ctx->stream_list, &avi_ctx->stream_list_size);
 	stream->type = STREAM_TYPE_VIDEO;
-	stream->fps = (double) fps/fps_num;;
+    stream->fps = (double) fps/fps_num;
 	stream->width = width;
 	stream->height = height;
 	stream->codec_id = codec_id;

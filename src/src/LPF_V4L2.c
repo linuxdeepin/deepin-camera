@@ -102,7 +102,7 @@ int convert_yuv_to_rgb_buffer(unsigned char *yuv, unsigned char *rgb, unsigned i
 
 int camInit(const char* devicename)
 {
-    const rlim_t kStackSize = 128L * 1024L * 1024L;
+    const rlim_t kStackSize = 1024L * 1024L * 1024L;
     struct rlimit rl;
     int result;
 
@@ -225,9 +225,9 @@ int camInit(const char* devicename)
     set_video_codec_ind(vcodec_ind);
 
     /*设置音频编码器*/
-//    if(debug_level > 1){
-//        printf("cheese: setting audio codec to '%s'\n", my_config->audio_codec);
-//    }
+    if(debug_level > 1){
+        printf("cheese: setting audio codec to '%s'\n", my_config->audio_codec);
+    }
     int acodec_ind = encoder_get_audio_codec_ind_name(my_config->audio_codec);
     if(acodec_ind < 0)
     {
