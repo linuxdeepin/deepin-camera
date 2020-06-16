@@ -96,11 +96,14 @@ private:
     mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
     int m_current = 0;
-    DBImgInfoList m_infos;
-    DPushButton *m_lastButton {nullptr};
+
     int m_nActTpye;//拍照或者视频模式，默认拍照
 
     QStringList m_strlstFolders;
+
+    DBImgInfoList m_infos;
+    DPushButton *m_lastButton {nullptr};
+    DIconButton *m_iconBtn {nullptr};
 
 private:
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;

@@ -597,7 +597,8 @@ void CMainWindow::onTitlePicBtn()
 
     //切换标题栏视频按钮颜色
     DPalette paVd;
-    QColor cloVd(Qt::lightGray);//颜色待修改
+    QColor cloVd("#000000");
+    cloVd.setAlpha(20);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitleVdBtn->setPalette(paVd);
 
@@ -624,7 +625,8 @@ void CMainWindow::onTitleVdBtn()
 
     //切换标题栏拍照按钮颜色
     DPalette paVd;
-    QColor cloVd(Qt::lightGray);
+    QColor cloVd("#000000");
+    cloVd.setAlpha(20);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
 

@@ -29,8 +29,7 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/myscene.cpp \
-    src/devnummonitor.cpp \
-    src/encoderthread.cpp
+    src/devnummonitor.cpp
 
 RESOURCES += \
     resource/resources.qrc
@@ -49,8 +48,7 @@ HEADERS += \
     src/myscene.h \
     libcheese_v4l2core/gview_v4l2core\v4l2_core.h \
     src/videowidget.h \
-    src/devnummonitor.h \
-    src/encoderthread.h
+    src/devnummonitor.h
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\

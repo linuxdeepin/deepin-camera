@@ -28,7 +28,6 @@
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "videoeffect.h"
-#include "encoderthread.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -140,7 +139,6 @@ private:
     int m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
 
     bool is_active;
-    encode_voice_Thread *encode_thread;
     QString m_strFileName;
 };
 

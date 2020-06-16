@@ -94,7 +94,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 void videowidget::init()
 {
     is_active = false;
-    encode_thread = new encode_voice_Thread();
 
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->m_bTake = false;
@@ -435,7 +434,7 @@ void videowidget::showCountdown()
         }
         if (VIDEO_STATE == NORMALVIDEO) {
             if (m_nMaxInterval == 0) {
-                if (flashTimer->isActive()) { //连续点击拍照
+                if (flashTimer->isActive()) {
                     flashTimer->stop();
                 }
                 //立即闪光，500ms后关闭
@@ -459,7 +458,7 @@ void videowidget::showCountdown()
             }
 
             if (m_curTakePicTime > 0) {
-                countTimer->start(1000);
+                countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
                 m_nInterval = m_nMaxInterval; //改到开始的时候设置
             }
 
@@ -558,16 +557,31 @@ void videowidget::changeDev()
     }
 }
 
-void videowidget::onTakePic()
+void videowidget::onTakePic() //待解决高频单张拍照问题，因为闪屏导致无法继续
 {
-    qDebug() << "onTakePic";
+    if (m_nMaxInterval == 0) {
+        m_nInterval = m_nMaxInterval;
+        m_curTakePicTime = m_nMaxContinuous;
+        countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧
+        return;
+    }
+    if (countTimer->isActive()) {
+        countTimer->stop();
+    }
+    if (m_pCountItem->isVisible()) {
+        m_pCountItem->hide();
+    }
+    if (m_nInterval > 0) { //倒计时期间的处理
+        m_nInterval = 0; //下次可开启
+        return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
+    }
     VIDEO_STATE = NORMALVIDEO;
     if (countTimer->isActive()) { //连续点击拍照
         countTimer->stop();
     }
     m_nInterval = m_nMaxInterval;
     m_curTakePicTime = m_nMaxContinuous;
-    countTimer->start(1000);
+    countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
 }
 
 void videowidget::onTakeVideo() //点一次开，再点一次关
@@ -585,7 +599,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     }
     if (is_active) { //录制完成处理
         qDebug() << "stop takeVideo";
-        encode_thread->stop();
+        stop_encoder_thread();
         is_active = false;
         reset_video_timer();
         return;
@@ -593,8 +607,14 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
     VIDEO_STATE = AUDIO;
 
-    m_nInterval = m_nMaxInterval;
-    countTimer->start(1000);
+    if (m_nMaxInterval == 0) {
+        //直接录制
+        showCountdown();
+    } else {
+        //倒计时结束后录制
+        m_nInterval = m_nMaxInterval;
+        countTimer->start(1000);
+    }
 }
 
 void videowidget::onTakeVideoOver()
@@ -617,7 +637,7 @@ void videowidget::startTakeVideo()
 {
     if (is_active) {
         qDebug() << "stop takeVideo";
-        encode_thread->stop();
+        stop_encoder_thread();
         is_active = false;
         reset_video_timer();
 
@@ -626,7 +646,7 @@ void videowidget::startTakeVideo()
         m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHMMss") + "_" + QString::number(m_nFileID) + ".mkv";
         set_video_path(m_strFolder.toStdString().c_str());
         set_video_name(m_strFileName.toStdString().c_str());
-        encode_thread->start();
+        start_encoder_thread();
         is_active = true;
         begin_time = QDateTime::currentDateTime();
     }

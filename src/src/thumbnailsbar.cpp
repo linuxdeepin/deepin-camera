@@ -48,6 +48,8 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
+    m_iconBtn = new DIconButton(nullptr);
+    m_iconBtn->hide();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
@@ -368,6 +370,7 @@ void ThumbnailsBar::onBtnClick()
         if(m_nStatus == STATPicIng){
             m_nStatus = STATNULL;
             emit enableTitleBar(3);
+            emit takePic();
         }
         else {
             m_nStatus = STATPicIng;
@@ -392,18 +395,10 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
 
-            QLayoutItem *child;
-            while ((child = m_hBOx->takeAt(0)) != nullptr) {
-                //setParent为NULL，防止删除之后界面不消失
-                if (child->widget()) {
-                    child->widget()->setParent(nullptr);
-                }
+            this->hide();
 
-                delete child;
-            }
             m_nItemCount = 0;
             emit fitToolBar();
-            //video_capture_save_video(1);//保存视频//先按原来的路走，不使用该方法保存视频，后续调整
         }
 
     } else {
@@ -427,6 +422,10 @@ void ThumbnailsBar::ChangeActType(int nType)
         pa.setColor(DPalette::Button, clo);
         m_lastButton->setPalette(pa);
         m_lastButton->setToolTip(tr("Take photo"));
+        DPalette paPic;
+        QColor cloPic("#0081FF"); //颜色待修改
+        paPic.setColor(DPalette::Button, cloPic);
+        m_lastButton->setPalette(paPic);
     }
     else if(nType == ActTakeVideo){
         QIcon iconPic(":/images/icons/button/transcribe.svg");
