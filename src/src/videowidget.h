@@ -24,6 +24,7 @@
 
 #include <DWidget>
 #include <QDateTime>
+#include <DFloatingWidget>
 #include <DLabel>
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
@@ -39,7 +40,6 @@ class MyScene;
 class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
-
 
 //预览代理
 //xxj
@@ -79,6 +79,7 @@ private slots:
 
 private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
+    //void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizePixMap();
 
     void transformImage(QImage *img);
@@ -113,6 +114,10 @@ private:
     QGraphicsTextItem *m_pTimeItem;
 
     QGridLayout *m_pGridLayout;
+
+    DFloatingWidget *m_fWgtTime; //显示拍摄时间
+    DFloatingWidget *m_fWgtCountdown; //显示倒计时
+    DLabel *m_dLabel;
 
     QTimer *countTimer;
     QTimer *flashTimer;

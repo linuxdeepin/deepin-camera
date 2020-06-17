@@ -20,7 +20,6 @@
 */
 
 #include "majorimageprocessingthread.h"
-#include "save_image.h"
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
@@ -44,7 +43,6 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     while (!stopped) {
-        msleep(1000 / 20);
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
@@ -107,25 +105,22 @@ void MajorImageProcessingThread::run()
             }
         }
         if (!stopped) {
+            //目前转换方法有问题，先保存图像为jpg，再读取出来，后续优化为从内存读取，待处理
+            save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
             if (m_bTake) {
                 int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
                 if (nRet < 0) {
                     qDebug() << "保存照片失败";
                 }
-                //save_image_jpeg(frame,m_strPath.toStdString().c_str());
+
                 m_bTake = false;
             }
-            rgb24 = static_cast<unsigned char *>(malloc(frame->width * frame->height * 3 * sizeof(char)));
-
-            convert_yuv_to_rgb_buffer(static_cast<unsigned char *>(frame->raw_frame), rgb24, static_cast<unsigned int>(frame->width), static_cast<unsigned int>(frame->height));
-
             m_rwMtxImg.lock();
-            m_img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
+            m_img = QImage("a123");
             m_rwMtxImg.unlock();
             emit SendMajorImageProcessing(m_img, result);
         }
         v4l2core_release_frame(vd1, frame);
-        free(rgb24);
         rgb24 = nullptr;
         msleep(1000 / 30);
     }

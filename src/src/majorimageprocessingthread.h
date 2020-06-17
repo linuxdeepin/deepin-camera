@@ -37,7 +37,7 @@ extern "C" {
 #include "malloc.h"
 #include "stdio.h"
 #include "math.h"
-
+#include "save_image.h"
 #ifdef __cplusplus
 }
 #endif

@@ -78,15 +78,15 @@ LIBS += -L/lib/x86_64-linux-gnu\
 
 DESTDIR = ./app
 
-ClEAR_OBJ_CHEESE = rm -rf ./*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_OBJ_CHEESE)
+#ClEAR_OBJ_CHEESE = rm -rf ./*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_OBJ_CHEESE)
 
-ClEAR_LIB_OBJ = rm -f ./*.o \
-            ../libcam/*.o \
-            ../libcam/libcam_v4l2core/*.o \
-            ../libcam/libcam_render/*.o \
-            ../libcam/libcam_encoder/*.o \
-            ../libcam/libcam_audio/*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
+#ClEAR_LIB_OBJ = rm -f ./*.o \
+#            ../libcam/*.o \
+#            ../libcam/libcam_v4l2core/*.o \
+#            ../libcam/libcam_render/*.o \
+#            ../libcam/libcam_encoder/*.o \
+#            ../libcam/libcam_audio/*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
 
 

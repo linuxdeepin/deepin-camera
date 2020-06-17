@@ -56,7 +56,22 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalView = new QGraphicsView(this);
 
+    m_fWgtTime = new DFloatingWidget(m_pNormalView);
+    m_fWgtTime->hide(); //先隐藏
+    m_fWgtTime->setFixedSize(84, 36);
+    m_fWgtTime->setBlurBackgroundEnabled(true);
 
+    m_fWgtCountdown = new DFloatingWidget(m_pNormalView);
+    m_fWgtCountdown->hide(); //先隐藏
+    m_fWgtCountdown->setFixedSize(160, 144);
+    m_fWgtCountdown->setBlurBackgroundEnabled(true);
+    m_dLabel = new DLabel(m_fWgtCountdown);
+    m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
+    QPalette palette;
+    palette.setColor(QPalette::Text, QColor(40, 39, 39));
+    m_dLabel->setPalette(palette);
+    m_dLabel->setFont(QFont("华文琥珀", 60 /*,  QFont::Bold*/));
+    m_dLabel->setAlignment(Qt::AlignCenter);
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
@@ -72,23 +87,18 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
 
-    //    m_pGridLayout->setHorizontalSpacing(0);
-    //    m_pGridLayout->setVerticalSpacing(0);
-
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
 
     m_pGridLayout->addWidget(m_pNormalView);
-    //m_pGridLayout->addWidget(m_pNormalView, 0, 0, 1, 1);
 
     m_pNormalScene->addItem(m_pNormalItem);
-    //m_pNormalScene->addItem(m_pCountItem);
-    //m_pNormalScene->addItem(m_pTimeItem);
+    m_pNormalScene->addItem(m_pCountItem);
+    m_pNormalScene->addItem(m_pTimeItem);
     qDebug() << "this widget--height:" << this->height() << "--width:" << this->width() << endl;
     qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
     qDebug() << "this widget--height:" << m_pNormalScene->height() << "--width:" << m_pNormalScene->width() << endl;
     init();
     showPreviewByState(NORMALVIDEO);
-
 }
 
 void videowidget::init()
@@ -143,7 +153,7 @@ void videowidget::showNocam()
     QString str = "No webcam found";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalScene->addItem(m_pCountItem);
+    //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(100,-200);
     //m_pNormalItem->setOffset(50,50);
     m_pCountItem->setPos(100,-80);
@@ -165,7 +175,7 @@ void videowidget::showCamUsed()
     QString str = "The webcam is in use";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalScene->addItem(m_pCountItem);
+    //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(320,100);
     m_pCountItem->show();
     m_pCountItem->setPos(330,240);
@@ -195,15 +205,12 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
                 setFont(m_pCountItem, 20, str);
                 m_pCountItem->setPlainText(str);
             }
-            {
-                //QImage tmpImg = imageprocessthread->m_img;
-                m_imgPrcThread->m_rwMtxImg.lock();
-                m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(this->width(), this->height());
-                m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
-                m_imgPrcThread->m_rwMtxImg.unlock();
-                m_pNormalItem->setPixmap(m_pixmap);
-            }
+            m_imgPrcThread->m_rwMtxImg.lock();
+            m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(this->width(), this->height());
+            m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
+            m_imgPrcThread->m_rwMtxImg.unlock();
 
+            m_pNormalItem->setPixmap(m_pixmap);
             break;
         case 11:
             err11++;
@@ -334,26 +341,38 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
     switch (state) {
     case NORMALVIDEO:
         //no device found
+
+        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
+                              (this->height() - m_fWgtCountdown->height()) / 2);
+        m_fWgtCountdown->show();
         m_pCountItem->show();
         m_pTimeItem->hide();
         m_countdownLen = 50;
         setFont(m_pCountItem, 50, QString::number(m_nInterval));
-        m_pNormalScene->addItem(m_pCountItem);
+        m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
+                       (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
+        m_dLabel->setText(QString::number(m_nInterval));
+        //m_pNormalScene->addItem(m_pCountItem);
         resizePixMap();
         //m_pNormalScene->addItem(m_pCountItem);
         break;
     case AUDIO:
         m_pTimeItem->show();
         m_pCountItem->hide();
+        m_fWgtCountdown->hide();
         end_time = QDateTime::currentDateTime();             //获取或设置时间
         m_time.setHMS(0, 0, 0, 0);                                       //初始化数据，时 分 秒 毫秒
         str = m_time.addSecs(begin_time.secsTo(end_time)).toString("mm:ss"); //计算时间差(秒)，将时间差加入m_time，格式化输出
         setFont(m_pTimeItem, 20, str);
-        m_pNormalScene->addItem(m_pTimeItem);
+        //m_pNormalScene->addItem(m_pTimeItem);
         resizePixMap();
         break;
     case SHOOT:
+        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
+                              (this->height() - m_fWgtCountdown->height()) / 2);
+
         m_pCountItem->show();
+        m_fWgtCountdown->show();
         m_pTimeItem->hide();
         str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
@@ -362,6 +381,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
     default:
         m_pTimeItem->hide();
         m_pCountItem->hide();
+        m_fWgtCountdown->hide();
         break;
     }
     //resizeEvent(NULL);
@@ -381,6 +401,7 @@ void videowidget::hideCountDownLabel()
 {
     //关闭
     m_pCountItem->hide();
+    m_fWgtCountdown->hide();
     //m_pNormalScene->removeItem(m_pCountItem);
 }
 
@@ -415,9 +436,29 @@ void videowidget::resizePixMap()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     //resizePixMap();
+
     return DWidget::resizeEvent(size);
 
 }
+
+//void videowidget::paintEvent(QPaintEvent *event)
+//{
+//    if (m_fWgtCountdown) {
+//        QPainter painter(this);
+//        painter.setPen(QColor(0, 160, 230));
+//        QFont font;
+//        font.setFamily("Microsoft YaHei");
+//        font.setPointSize(16);
+//        painter.setFont(font);
+////        QTransform transform;
+////        transform.rotate(45);
+////        painter.setTransform(transform);
+//        painter.drawText(rect(), QStringLiteral("3"));
+//    }
+
+//    return DWidget::paintEvent(event);
+
+//}
 
 void videowidget::showCountdown()
 {
@@ -559,6 +600,14 @@ void videowidget::changeDev()
 
 void videowidget::onTakePic() //待解决高频单张拍照问题，因为闪屏导致无法继续
 {
+    //    if (m_bWgtTime) {
+    //        m_bWgtTime->move((this->width() - m_bWgtTime->width()) / 2,
+    //                          this->height() - m_bWgtTime->height() - 80);
+    //    }
+    if (m_fWgtCountdown) {
+        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
+                              (this->height() - m_fWgtCountdown->height()) / 2);
+    }
     if (m_nMaxInterval == 0) {
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
@@ -570,6 +619,9 @@ void videowidget::onTakePic() //待解决高频单张拍照问题，因为闪屏
     }
     if (m_pCountItem->isVisible()) {
         m_pCountItem->hide();
+    }
+    if (m_fWgtCountdown->isVisible()) {
+        m_fWgtCountdown->hide();
     }
     if (m_nInterval > 0) { //倒计时期间的处理
         m_nInterval = 0; //下次可开启
@@ -592,6 +644,9 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     }
     if (m_pCountItem->isVisible()) {
         m_pCountItem->hide();
+    }
+    if (m_fWgtCountdown->isVisible()) {
+        m_fWgtCountdown->hide();
     }
     if (m_nInterval > 0) { //倒计时期间的处理
         m_nInterval = 0; //下次可开启
