@@ -38,8 +38,8 @@
 
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT    100
-#define THUMBNAIL_WIDTH         80
-#define THUMBNAIL_HEIGHT        100
+#define THUMBNAIL_WIDTH 30
+#define THUMBNAIL_HEIGHT 40
 //缩略图
 //hjb
 struct DBImgInfo {

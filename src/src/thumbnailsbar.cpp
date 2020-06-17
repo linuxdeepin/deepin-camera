@@ -52,42 +52,29 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
     m_nMaxItem = 0;
-    m_wgt = new DWidget(this);
-    m_hBOx = new QHBoxLayout(m_wgt);
+    m_hBOx = new QHBoxLayout();
+    m_hBOx->setSpacing(2);
     m_mainLayout = new QHBoxLayout();
-    m_mainLayout->setContentsMargins(8, 8, 0, 8);
-    m_mainLayout->setSpacing(0);
-    //setWidget(m_wgt);//放开后缩略图到左上角了
+    m_mainLayout->setContentsMargins(5, 0, 5, 0);
 
     setBlurBackgroundEnabled(true); //设置磨砂效果
 
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
-//    pushButton_8 = new DButtonBoxButton(QStyle::SP_ArrowLeft);
-//    pushButton_8->setObjectName(QStringLiteral("pushButton_8"));
-//    pushButton_8->setFixedWidth(20);
-//    horizontalLayout->addWidget(pushButton_8);
-    //horizontalLayout->addSpacing(10);
 
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
-    m_mainLayout->addWidget(m_wgt);
-
-//    pushButton_9 = new DButtonBoxButton(QStyle::SP_ArrowRight);
-//    pushButton_9->setObjectName(QStringLiteral("pushButton_9"));
-//    pushButton_9->setFixedWidth(20);
-//    horizontalLayout->addWidget(pushButton_9);
-
-
-//    horizontalLayout->setStretch(0, 1);
-//    horizontalLayout->setStretch(1, 12);
-//    horizontalLayout->setStretch(2, 1);
+    m_mainLayout->addLayout(m_hBOx, Qt::AlignLeft);
+    //    QSpacerItem *horizontalSpacer;
+    //    horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    //    m_mainLayout->addItem(horizontalSpacer);
 
     m_lastButton = new DPushButton(this);
 
-    m_lastButton->setFixedWidth(50);
+    m_lastButton->setFixedWidth(64);
+    m_lastButton->setFixedHeight(50);
     QIcon iconPic(":/images/icons/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
-    m_lastButton->setIconSize(QSize(18, 18));
+    m_lastButton->setIconSize(QSize(24, 20));
 
     DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");
@@ -101,92 +88,9 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     connect(m_lastButton,SIGNAL(clicked()),this,SLOT(onBtnClick()));
 
     m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
-    m_mainLayout->addSpacing(4);
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_hBOx->setMargin(5);
-
-    //layout()->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    //this->setFixedWidth(300);
-
-//    m_hBOx->setStretch()
-
-//    QDir dir(strPath);
-////    if(!dir.exists())
-////    {
-////        return;
-////    }
-////    imageList = new QListWidget;
-////    //获取所选文件类型过滤器
-//    QStringList filters;
-////    filters<<QString("*.webm");
-
-
-////    //定义迭代器并设置过滤器
-//    QDirIterator dir_iterator(strPath,
-//                              filters,
-//                              QDir::Files | QDir::NoSymLinks,
-//                              QDirIterator::Subdirectories);
-//    DBImgInfo info;
-////    while(dir_iterator.hasNext())
-////    {
-////        info.filePath = dir_iterator.next();
-////        info.fileName = dir_iterator.fileInfo().fileName();
-////        m_infos.append(info);
-////        QListWidgetItem *imageItem = new QListWidgetItem;
-////        //为单元项设置属性
-////        imageItem->setIcon(QIcon(info.filePath));
-////        //imageItem->setText(tr("Browse"));
-////        //重新设置单元项图片的宽度和高度
-////        imageItem->setSizeHint(QSize(100,120));
-////        //将单元项添加到QListWidget中
-////        imageList->addItem(imageItem);
-////    }
-
-//    strPath = "/home/hujianbo/Pictures/摄像头";
-//    //strPath = QFileDialog::getExistingDirectory(this, "选择目录", "./", QFileDialog::ShowDirsOnly);
-//    QDir dir1(strPath);
-//    if(!dir.exists())
-//    {
-//        return;
-//    }
-
-//    //获取所选文件类型过滤器
-//    filters.clear();
-//    filters<<QString("*.jpg");
-
-//    //定义迭代器并设置过滤器
-//    QDirIterator dir_iterator1(strPath,
-//                              filters,
-//                              QDir::Files | QDir::NoSymLinks,
-//                              QDirIterator::Subdirectories);
-
-//    while(dir_iterator.hasNext())
-//    {
-//        info.filePath = dir_iterator.next();
-//        info.fileName = dir_iterator.fileInfo().fileName();
-//        m_infos.append(info);
-//        QPixmap *pix = new QPixmap(info.fileName);
-////        QListWidgetItem *imageItem = new QListWidgetItem;
-////        //为单元项设置属性
-////        imageItem->setIcon(QIcon(info.fileName));
-////        //imageItem->setText(tr("Browse"));
-////        //重新设置单元项图片的宽度和高度
-////        imageItem->setSizeHint(QSize(100,120));
-////        //将单元项添加到QListWidget中
-////        imageList->addItem(imageItem);
-
-
-//        QLabel *pLabel = new QLabel(m_widget);
-//        pLabel->setPixmap(*pix);
-//        pLabel->setScaledContents(true);
-//        pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
-//    }
-//    m_widget->show();
-//    //imageList->show();
-//    std::sort(m_infos.begin(), m_infos.end(), compareByString);
-//    load();
 }
 
 
@@ -223,7 +127,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     m_nItemCount = 0;
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - 58) / (THUMBNAIL_WIDTH + 8) - 1;
+    int nLetAddCount = (m_nMaxItem - 64 - 20) / (THUMBNAIL_WIDTH + 2) - 1;
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
@@ -357,12 +261,11 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                 pix->scaled(pLabel->size(), Qt::KeepAspectRatio);
                 m_hBOx->addWidget(pLabel);
-                m_hBOx->addSpacing(5);
+
                 m_nItemCount++;
             }
         }
     }
-
     emit fitToolBar();
 }
 
@@ -418,7 +321,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     {
         QIcon iconPic(":/images/icons/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(18,18));
+        m_lastButton->setIconSize(QSize(24, 20));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#0081FF");
@@ -431,7 +334,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     else if(nType == ActTakeVideo){
         QIcon iconPic(":/images/icons/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(18,18));
+        m_lastButton->setIconSize(QSize(26, 16));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#FF0000");

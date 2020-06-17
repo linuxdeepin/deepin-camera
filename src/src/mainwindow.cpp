@@ -372,7 +372,7 @@ void CMainWindow::initUI()
     setupTitlebar();
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
-    m_thumbnail->setFixedHeight(100);
+    m_thumbnail->setFixedHeight(70);
 
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
@@ -438,11 +438,13 @@ void CMainWindow::initTitleBar()
 {
     pDButtonBox = new DButtonBox();
     pDButtonBox->setFixedWidth(120);
+    pDButtonBox->setFixedHeight(36);
     QList<DButtonBoxButton *> listButtonBox;
     QIcon iconPic(":/images/icons/button/photograph.svg");
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
+
     m_pTitlePicBtn->setIcon(iconPic);
-    m_pTitlePicBtn->setIconSize(QSize(15,15));
+    m_pTitlePicBtn->setIconSize(QSize(19, 16));
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -454,7 +456,7 @@ void CMainWindow::initTitleBar()
     QIcon iconVd(":/images/icons/record video.svg");
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setIcon(iconVd);
-    m_pTitleVdBtn->setIconSize(QSize(19,19));
+    m_pTitleVdBtn->setIconSize(QSize(26, 16));
     listButtonBox.append(m_pTitlePicBtn);
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
@@ -537,9 +539,15 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     }
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20; //两个边框的宽度.+20需要继续调整，待后续规范
+        int nWidth;
+        if (n == 0) {
+            nWidth = 10 * 2 + 64;
+        } else {
+            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
+        }
+
         qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
                           height - m_thumbnail->height() - 5);
         m_thumbnail->m_nMaxItem = width;
@@ -551,9 +559,9 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
-        int nWidth = n * THUMBNAIL_WIDTH + 8 * n + 50 + 8 * 2 + 4 * 2 + 20;
+        int nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
         qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/nWidth, 100);
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
     }

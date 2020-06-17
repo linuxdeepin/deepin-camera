@@ -573,6 +573,7 @@ void videowidget::onTakePic() //待解决高频单张拍照问题，因为闪屏
     }
     if (m_nInterval > 0) { //倒计时期间的处理
         m_nInterval = 0; //下次可开启
+        m_curTakePicTime = 0; //结束当前拍照
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
     VIDEO_STATE = NORMALVIDEO;
