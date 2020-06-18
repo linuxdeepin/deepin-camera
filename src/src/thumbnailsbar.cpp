@@ -85,9 +85,9 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_lastButton->setToolTip(tr("Take photo"));
     m_lastButton->setToolTipDuration(500);//0.5s消失
 
-    connect(m_lastButton,SIGNAL(clicked()),this,SLOT(onBtnClick()));
+    connect(m_lastButton, SIGNAL(clicked()), this, SLOT(onBtnClick()));
 
-    m_mainLayout->addWidget(m_lastButton,Qt::AlignRight);
+    m_mainLayout->addWidget(m_lastButton, Qt::AlignRight);
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -193,20 +193,22 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 pLabel->setContextMenuPolicy(Qt::CustomContextMenu);
                 //connect(pLabel, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showListWidgetMenuSlot(QPoint)));
 
-                connect(pLabel, &DLabel::customContextMenuRequested, this, [=](QPoint pos) {
+                connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
                     menu->exec(QCursor::pos());
                 });
-                connect(actOpen, &QAction::triggered, this, [=] {
+                connect(actOpen, &QAction::triggered, this, [ = ] {
                     //                    QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
                     //                    system(cmd.toStdString().c_str());
 
-                    if (fileInfo.suffix() == "jpg") {
+                    if (fileInfo.suffix() == "jpg")
+                    {
                         QString program = "deepin-image-viewer";
                         QStringList arguments;
                         arguments << strFile;
                         QProcess *myProcess = new QProcess(this);
                         myProcess->startDetached(program, arguments);
-                    } else {
+                    } else
+                    {
                         QString program = "deepin-movie";
                         QStringList arguments;
                         arguments << strFile;
@@ -214,7 +216,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                         myProcess->startDetached(program, arguments);
                     }
                 });
-                connect(actCopy, &QAction::triggered, this, [=] {
+                connect(actCopy, &QAction::triggered, this, [ = ] {
                     //                    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                     //                                                                    strFile,
                     //                                                                    tr("Images (*.jpg)"));
@@ -224,7 +226,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     QByteArray gnomeFormat = QByteArray("copy\n");
                     QString text;
                     QList<QUrl> dataUrls;
-                    for (QString path : paths) {
+                    for (QString path : paths)
+                    {
                         if (!path.isEmpty())
                             text += path + '\n';
                         dataUrls << QUrl::fromLocalFile(path);
@@ -244,16 +247,17 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                     cb->setMimeData(newMimeData, QClipboard::Clipboard);
                 });
-                connect(actOpenFolder, &QAction::triggered, this, [=] {
+                connect(actOpenFolder, &QAction::triggered, this, [ = ] {
                     //DDesktopServices::trash(strFile);//这个函数是移入回收站
                     QString strtmp = strFolder;
-                    if (strtmp.size() && strtmp[0] == '~') {
+                    if (strtmp.size() && strtmp[0] == '~')
+                    {
                         //奇怪，这里不能直接使用strFolder调replace函数
                         strtmp.replace(0, 1, QDir::homePath());
                     }
                     Dtk::Widget::DDesktopServices::showFolder(strtmp);
                 });
-                connect(actDel, &QAction::triggered, this, [=] {
+                connect(actDel, &QAction::triggered, this, [ = ] {
                     QFile filetmp(strFile);
                     filetmp.remove();
                 });
@@ -272,12 +276,11 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 void ThumbnailsBar::onBtnClick()
 {
     if (m_nActTpye == ActTakePic) {
-        if(m_nStatus == STATPicIng){
+        if (m_nStatus == STATPicIng) {
             m_nStatus = STATNULL;
             emit enableTitleBar(3);
             emit takePic();
-        }
-        else {
+        } else {
             m_nStatus = STATPicIng;
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
@@ -285,13 +288,12 @@ void ThumbnailsBar::onBtnClick()
         }
 
     } else if (m_nActTpye == ActTakeVideo) {
-        if(m_nStatus == STATVdIng){
+        if (m_nStatus == STATVdIng) {
             m_nStatus = STATNULL;
             emit enableTitleBar(4);
             emit enableSettings(true);
             emit takeVd();
-        }
-        else {
+        } else {
             m_nStatus = STATVdIng;
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
@@ -300,7 +302,7 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
 
-            this->hide();
+            //this->hide();
 
             m_nItemCount = 0;
             emit fitToolBar();
@@ -313,12 +315,11 @@ void ThumbnailsBar::onBtnClick()
 
 void ThumbnailsBar::ChangeActType(int nType)
 {
-    if(m_nActTpye == nType){
+    if (m_nActTpye == nType) {
         return;
     }
     m_nActTpye = nType;
-    if(nType == ActTakePic)
-    {
+    if (nType == ActTakePic) {
         QIcon iconPic(":/images/icons/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(24, 20));
@@ -330,8 +331,7 @@ void ThumbnailsBar::ChangeActType(int nType)
         m_lastButton->setPalette(pa);
 
         m_lastButton->setToolTip(tr("Take photo"));
-    }
-    else if(nType == ActTakeVideo){
+    } else if (nType == ActTakeVideo) {
         QIcon iconPic(":/images/icons/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(26, 16));
@@ -343,8 +343,7 @@ void ThumbnailsBar::ChangeActType(int nType)
         m_lastButton->setPalette(pa);
 
         m_lastButton->setToolTip(tr("Record video"));
-    }
-    else {
+    } else {
         return;
     }
 

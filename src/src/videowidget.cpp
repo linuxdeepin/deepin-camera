@@ -141,7 +141,7 @@ void videowidget::init()
 void videowidget::showNocam()
 {
     DPalette paPic;
-    QColor cloPic(0,0,0,178);
+    QColor cloPic(0, 0, 0, 178);
     paPic.setColor(DPalette::Base, cloPic);
     setPalette(paPic);
 
@@ -156,13 +156,13 @@ void videowidget::showNocam()
     //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(100,-200);
     //m_pNormalItem->setOffset(50,50);
-    m_pCountItem->setPos(100,-80);
+    m_pCountItem->setPos(100, -80);
 }
 
 void videowidget::showCamUsed()
 {
     DPalette paPic;
-    QColor cloPic(0,0,0,178);
+    QColor cloPic(0, 0, 0, 178);
     paPic.setColor(DPalette::Base, cloPic);
     setPalette(paPic);
 
@@ -178,7 +178,7 @@ void videowidget::showCamUsed()
     //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(320,100);
     m_pCountItem->show();
-    m_pCountItem->setPos(330,240);
+    m_pCountItem->setPos(330, 240);
 
 }
 
@@ -252,7 +252,7 @@ void videowidget::showPreviewByState(PRIVIEW_STATE state)
 {
     switch (state) {
     case NODEVICE:
-        //创建黑屏效果
+    //创建黑屏效果
     case  NORMALVIDEO:
     case AUDIO:
     case SHOOT:
@@ -334,7 +334,7 @@ void videowidget::resizeImage(QImage *img)
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
-    qDebug() << "countDown" << m_nInterval;
+    //qDebug() << "countDown" << m_nInterval;
     QDateTime end_time;
     QTime m_time;
     QString str;
@@ -462,7 +462,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 void videowidget::showCountdown()
 {
-    qDebug() << "showCountdown";
+    //qDebug() << "showCountdown";
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0) {
         if (VIDEO_STATE == AUDIO) {
@@ -489,7 +489,7 @@ void videowidget::showCountdown()
             //发送就结束信号处理按钮状态
             countTimer->stop();
 
-            m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHMMss") + "_" + QString::number(m_nFileID) + ".jpg";
+            m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             m_imgPrcThread->m_bTake = true; //保存图片
 
             m_nFileID++;
@@ -699,7 +699,7 @@ void videowidget::startTakeVideo()
 
     } else {
         qDebug() << "start takeVideo";
-        m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHMMss") + "_" + QString::number(m_nFileID) + ".mkv";
+        m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
         set_video_path(m_strFolder.toStdString().c_str());
         set_video_name(m_strFileName.toStdString().c_str());
         start_encoder_thread();

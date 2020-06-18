@@ -778,7 +778,7 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
 
 	int use_simpleblock = 1;
 
-    uint64_t ts = pts / mkv_ctx->timescale; //scale the time stamp
+    uint64_t ts = pts / mkv_ctx->timescale; //scale the time stamp:1000000
 
 	stream_io_t *stream = get_stream(mkv_ctx->stream_list, stream_index);
 	stream->packet_count++;

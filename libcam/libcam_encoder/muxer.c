@@ -130,11 +130,17 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 			break;
 
         case ENCODER_MUX_MP4:
-        mp4_write_video_packet(mp4_ctx,
-                                0,
-                                enc_video_ctx,
-                                video_codec_data);
-        break;
+        ret = mp4_write_packet(mp4_ctx,
+                         video_codec_data,
+                         0,
+                         enc_video_ctx->outbuf,
+                (uint32_t)enc_video_ctx->outbuf_coded_size,
+                         enc_video_ctx->flags);
+//        mp4_write_video_packet(mp4_ctx,
+//                               0,
+//                               enc_video_ctx,
+//                               video_codec_data);
+            break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -205,11 +211,18 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					enc_audio_ctx->flags);
 			break;
         case ENCODER_MUX_MP4:
-            mp4_write_audio_packet(mp4_ctx,
+            mp4_write_packet(
+                    mp4_ctx,
+                    audio_codec_data,
                     1,
-                    enc_audio_ctx,
-                    audio_codec_data);
-        break;
+                    enc_audio_ctx->outbuf,
+            (uint32_t)enc_audio_ctx->outbuf_coded_size,
+                    enc_audio_ctx->flags);
+//        mp4_write_audio_packet(mp4_ctx,
+//                               1,
+//                               enc_audio_ctx,
+//                               audio_codec_data);
+            break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:

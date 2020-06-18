@@ -36,6 +36,7 @@ extern "C" {
 
 #include "encoder.h"
 #include "gviewencoder.h"
+#include "gview.h"
 
 #ifdef __cplusplus
 } // endof extern "C"
@@ -83,7 +84,15 @@ int mp4_write_audio_packet(
     AVFormatContext *mp4_ctx,
     int stream_index,
     encoder_audio_context_t *enc_audio_ctx,
-    encoder_codec_data_t *audio_codec_data);
+    encoder_codec_data_t *codec_data);
+
+int mp4_write_packet(
+    AVFormatContext *mp4_ctx,
+    encoder_codec_data_t *codec_data,
+    int stream_index,
+    uint8_t *outbuf,
+    uint32_t outbuf_size,
+    int flags);
 
 int mp4_write_header(AVFormatContext *mp4_ctx);
 

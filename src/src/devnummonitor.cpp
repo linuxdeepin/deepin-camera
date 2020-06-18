@@ -34,7 +34,7 @@ DevNumMonitor::DevNumMonitor()
 {
     v4l2_device_list_t *devlist = get_device_list();
     for (int i = 0; i < devlist->num_devices; i++) {
-        qDebug() << devlist->list_devices[i].name << "," << devlist->list_devices[i].device << endl;
+        //qDebug() << devlist->list_devices[i].name << "," << devlist->list_devices[i].device << endl;
     }
 }
 void DevNumMonitor::stop()

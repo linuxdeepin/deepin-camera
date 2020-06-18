@@ -1819,8 +1819,6 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	/*close video codec*/
 	if(enc_video_ctx)
 	{
-        //测试video时长是否正常
-        printf("\nvideo_duration:%d\n",enc_video_ctx->duration);
 
 		video_codec_data = (encoder_codec_data_t *) enc_video_ctx->codec_data;
 		if(video_codec_data)

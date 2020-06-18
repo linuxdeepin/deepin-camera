@@ -43,6 +43,7 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     while (!stopped) {
+        //msleep(1000 / 20);
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {

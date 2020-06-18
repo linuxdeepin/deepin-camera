@@ -44,9 +44,9 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     pDSettings = DSettings::fromJsonFile(":/resource/settings.json");//json文件只读，不会被修改
     m_strCfgPath = QString("%1/%2/%3/config.conf")
-                  .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
-                  .arg(qApp->organizationName())
-                  .arg(qApp->applicationName());
+                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
+                   .arg(qApp->organizationName())
+                   .arg(qApp->applicationName());
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
 
@@ -176,7 +176,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
 }
 
 static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
-{   
+{
     auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
     auto le = new DLineEdit();
@@ -248,7 +248,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         return true;
     };
     QString temstr = lastOpenedPath();
-    option->connect(icon, &DPushButton::clicked, [=]() {
+    option->connect(icon, &DPushButton::clicked, [ = ]() {
         QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                          lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
@@ -312,7 +312,7 @@ void CMainWindow::slotPopupSettingsDialog()
     pDSettingDialog = new DSettingsDialog(this);
 
     pDSettingDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(pDSettingDialog,SIGNAL(destroyed()),this,SLOT(onSettingsDlgClose()));
+    connect(pDSettingDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
     sDsetWgt = getDsetMber();
 
@@ -338,7 +338,7 @@ void CMainWindow::initUI()
     m_iconBtn->hide();
 
     DWidget *wget = new DWidget;
-    qDebug() << "initUI";
+    //qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
     //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
     QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
@@ -383,16 +383,19 @@ void CMainWindow::initUI()
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         menu->exec(QCursor::pos());
     });
-    connect(actOpen, &QAction::triggered, this, [=] {
+    connect(actOpen, &QAction::triggered, this, [ = ] {
         QString save_path = g_lastFileName;
-        if (g_lastFileName.isEmpty()) {
+        if (g_lastFileName.isEmpty())
+        {
             save_path = pDSettings->value("base.save.datapath").toString();
         }
-        if (save_path.size() && save_path[0] == '~') {
+        if (save_path.size() && save_path[0] == '~')
+        {
             save_path.replace(0, 1, QDir::homePath());
         }
 
-        if (!QFileInfo(save_path).exists()) {
+        if (!QFileInfo(save_path).exists())
+        {
             QDir d;
             d.mkpath(save_path);
         }
@@ -450,6 +453,7 @@ void CMainWindow::initTitleBar()
     QColor clo("#0081FF");
     pa.setColor(DPalette::Dark, clo);
     pa.setColor(DPalette::Light, clo);
+
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
 
@@ -457,6 +461,7 @@ void CMainWindow::initTitleBar()
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 16));
+
     listButtonBox.append(m_pTitlePicBtn);
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
@@ -486,7 +491,7 @@ void CMainWindow::initConnection()
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //禁用设置
-    connect(m_thumbnail, SIGNAL(enableSettings(bool)),this,SLOT(onEnableSettings(bool)));
+    connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
     connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onTakePic()));
 
@@ -519,7 +524,7 @@ void CMainWindow::setSelBtnShow()
 void CMainWindow::setupTitlebar()
 {
     DMenu *menu = new DMenu();
-    m_actionSettings = new QAction(tr("Settings"),this);
+    m_actionSettings = new QAction(tr("Settings"), this);
     menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
 }
@@ -548,6 +553,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
+
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
                           height - m_thumbnail->height() - 5);
         m_thumbnail->m_nMaxItem = width;
@@ -559,9 +565,11 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
+
         int nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
         qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
+
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
     }
@@ -603,7 +611,7 @@ void CMainWindow::menuItemInvoked(QAction *action)
 
 void CMainWindow::onTitlePicBtn()
 {
-    if(m_nActTpye == ActTakePic){
+    if (m_nActTpye == ActTakePic) {
         return;
     }
     m_nActTpye = ActTakePic;
@@ -635,7 +643,7 @@ void CMainWindow::onTitlePicBtn()
 
 void CMainWindow::onTitleVdBtn()
 {
-    if(m_nActTpye == ActTakeVideo){
+    if (m_nActTpye == ActTakeVideo) {
         return;
     }
     m_nActTpye = ActTakeVideo;
