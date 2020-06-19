@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
     a.setApplicationVersion("1.0");
     a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
-    //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));//setWindowIcon之后此处不需要了
+    a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
     a.setProductName("Camera");
-    a.setApplicationDescription("This is a camera.");
+    a.setApplicationDescription("This is camera.");
 
     //仅允许打开一个相机
     QSharedMemory shared_memory("deepincamera");

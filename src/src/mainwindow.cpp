@@ -723,4 +723,5 @@ void CMainWindow::onTakeVdCancel() //待保存视频完成，通过已有的文�
     onEnableTitleBar(4); //恢复按钮状态
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->onFoldersChanged(""); //恢复缩略图
+    m_thumbnail->show();
 }

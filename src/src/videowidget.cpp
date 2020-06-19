@@ -32,6 +32,7 @@
 #include <QThread>
 #include <QScrollBar>
 //#include "LPF_V4L2.h"
+#define MAX_REC_TIME 60 * 30 /*Maximum record time*/
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
@@ -45,8 +46,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     }
     m_nInterval = 0;
     m_curTakePicTime = 0;
+    m_nCount = 0;
     eff = new videoEffect;
-    //labTimer = new DLabel;
 
     countTimer = new QTimer(this);
     connect(countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
@@ -58,8 +59,36 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_fWgtTime = new DFloatingWidget(m_pNormalView);
     m_fWgtTime->hide(); //先隐藏
-    m_fWgtTime->setFixedSize(84, 36);
+    m_fWgtTime->setFixedSize(84, 40);
     m_fWgtTime->setBlurBackgroundEnabled(true);
+    m_fWgtTime->setFramRadius(1);
+
+    m_dLabelVdTime = new DLabel(m_fWgtTime);
+    m_dLabelVdTime->setFixedWidth(84);
+    m_dLabelVdTime->setAttribute(Qt::WA_TranslucentBackground);
+    QPalette paletteTime;
+    paletteTime.setColor(QPalette::Text, QColor("#FF2C2C"));
+    m_dLabelVdTime->setPalette(paletteTime);
+    m_dLabelVdTime->setFont(QFont("思源黑体 ExtraLight", 10, QFont::ExtraLight));
+    m_dLabelVdTime->setAlignment(Qt::AlignCenter);
+    m_time.setHMS(0, 0, 0, 0);
+    m_dLabelVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
+
+    m_fWgtBtn = new DFloatingWidget(m_pNormalView);
+    m_fWgtBtn->setFixedSize(QSize(36, 40));
+
+    m_endBtn = new DPushButton(m_fWgtBtn);
+    m_endBtn->setFixedSize(QSize(36, 36));
+    DPalette pa = m_endBtn->palette();
+    QColor clo("#FF2C2C");
+    pa.setColor(DPalette::Dark, clo);
+    pa.setColor(DPalette::Light, clo);
+    m_endBtn->setPalette(pa);
+    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
+
+    m_endBtn->setToolTip(tr("Stop taking photos"));
+    m_endBtn->setToolTipDuration(500); //0.5s消失
+    m_fWgtBtn->hide();
 
     m_fWgtCountdown = new DFloatingWidget(m_pNormalView);
     m_fWgtCountdown->hide(); //先隐藏
@@ -68,10 +97,11 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_dLabel = new DLabel(m_fWgtCountdown);
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     QPalette palette;
-    palette.setColor(QPalette::Text, QColor(40, 39, 39));
+    palette.setColor(QPalette::Text, QColor("#000000"));
     m_dLabel->setPalette(palette);
-    m_dLabel->setFont(QFont("华文琥珀", 60 /*,  QFont::Bold*/));
+    m_dLabel->setFont(QFont("思源黑体 ExtraLight", 60, QFont::ExtraLight));
     m_dLabel->setAlignment(Qt::AlignCenter);
+
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
@@ -153,9 +183,7 @@ void videowidget::showNocam()
     QString str = "No webcam found";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(100,-200);
-    //m_pNormalItem->setOffset(50,50);
     m_pCountItem->setPos(100, -80);
 }
 
@@ -175,7 +203,6 @@ void videowidget::showCamUsed()
     QString str = "The webcam is in use";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    //m_pNormalScene->addItem(m_pCountItem);
     m_pNormalItem->setPos(320,100);
     m_pCountItem->show();
     m_pCountItem->setPos(330, 240);
@@ -335,8 +362,6 @@ void videowidget::resizeImage(QImage *img)
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
     //qDebug() << "countDown" << m_nInterval;
-    QDateTime end_time;
-    QTime m_time;
     QString str;
     switch (state) {
     case NORMALVIDEO:
@@ -345,35 +370,35 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
         m_fWgtCountdown->show();
-        m_pCountItem->show();
+        //m_pCountItem->show();
         m_pTimeItem->hide();
+        m_fWgtTime->hide();
+        m_fWgtBtn->hide();
         m_countdownLen = 50;
         setFont(m_pCountItem, 50, QString::number(m_nInterval));
         m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
                        (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
         m_dLabel->setText(QString::number(m_nInterval));
-        //m_pNormalScene->addItem(m_pCountItem);
         resizePixMap();
-        //m_pNormalScene->addItem(m_pCountItem);
         break;
     case AUDIO:
-        m_pTimeItem->show();
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
-        end_time = QDateTime::currentDateTime();             //获取或设置时间
-        m_time.setHMS(0, 0, 0, 0);                                       //初始化数据，时 分 秒 毫秒
-        str = m_time.addSecs(begin_time.secsTo(end_time)).toString("mm:ss"); //计算时间差(秒)，将时间差加入m_time，格式化输出
-        setFont(m_pTimeItem, 20, str);
-        //m_pNormalScene->addItem(m_pTimeItem);
+        m_dLabelVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
+        if (m_nCount >= MAX_REC_TIME) {
+            endBtnClicked(); //结束录制
+        }
         resizePixMap();
         break;
     case SHOOT:
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
 
-        m_pCountItem->show();
+        //m_pCountItem->show();
         m_fWgtCountdown->show();
         m_pTimeItem->hide();
+        m_fWgtTime->hide();
+        m_fWgtBtn->hide();
         str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
         //m_pNormalScene->addItem(m_pCountItem);
@@ -382,16 +407,17 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pTimeItem->hide();
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
+        m_fWgtTime->hide();
+        m_fWgtBtn->hide();
         break;
     }
-    //resizeEvent(NULL);
 }
 
 void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
 {
     if (item == nullptr)
         return;
-    item->setFont(QFont("华文琥珀", size));
+    item->setFont(QFont("思源黑体 ExtraLight", size, QFont::ExtraLight));
     item->setDefaultTextColor(QColor(40, 39, 39));
     //item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     item->setPlainText(str);
@@ -402,13 +428,13 @@ void videowidget::hideCountDownLabel()
     //关闭
     m_pCountItem->hide();
     m_fWgtCountdown->hide();
-    //m_pNormalScene->removeItem(m_pCountItem);
 }
 
 void videowidget::hideTimeLabel()
 {
     m_pTimeItem->hide();
-    //m_pNormalScene->removeItem(m_pTimeItem);
+    m_fWgtTime->hide();
+    m_fWgtBtn->hide();
 }
 
 void videowidget::resizePixMap()
@@ -429,7 +455,7 @@ void videowidget::resizePixMap()
         int y = this->y();
 
         m_pTimeItem->setX(x + rect.width() / 2 - 50);
-        m_pTimeItem->setY(y + rect.height() - 50);
+        m_pTimeItem->setY(y + rect.height());
     }
 }
 
@@ -541,6 +567,29 @@ void videowidget::flash()
         }
         flashTimer->start(500);
     }
+}
+
+void videowidget::endBtnClicked()
+{
+    if (countTimer->isActive()) {
+        countTimer->stop();
+    }
+    if (m_pCountItem->isVisible()) {
+        m_pCountItem->hide();
+    }
+    if (m_fWgtCountdown->isVisible()) {
+        m_fWgtCountdown->hide();
+    }
+
+    m_fWgtTime->hide();
+    m_fWgtBtn->hide();
+    if (is_active) { //录制完成处理
+        qDebug() << "stop takeVideo";
+        stop_encoder_thread();
+        is_active = false;
+        reset_video_timer();
+    }
+    emit takeVdCancel();
 }
 
 void videowidget::changeDev()
@@ -666,6 +715,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     if (m_nMaxInterval == 0) {
         //直接录制
         showCountdown();
+        countTimer->start(1000);
     } else {
         //倒计时结束后录制
         m_nInterval = m_nMaxInterval;
@@ -705,5 +755,20 @@ void videowidget::startTakeVideo()
         start_encoder_thread();
         is_active = true;
         begin_time = QDateTime::currentDateTime();
+        countTimer->stop();
+        countTimer->start(1000); //重新计时，否则时间与显示时间
+
+        m_fWgtTime->show();
+        m_time.setHMS(0, 0, 0, 0);
+        m_nCount = 0;
+        m_dLabelVdTime->setText(m_time.toString("mm:ss"));
+        m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
+                         this->height() - m_fWgtTime->height() - 5);
+        m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
+                             (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
+        m_fWgtBtn->show();
+        m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
+                        this->height() - m_fWgtTime->height() - 5);
+        qDebug() << m_fWgtTime->width() << "******";
     }
 }

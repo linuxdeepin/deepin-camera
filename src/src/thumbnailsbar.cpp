@@ -158,6 +158,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     break;
                 }
                 DLabel *pLabel = new DLabel(this);
+
                 pLabel->setScaledContents(true);
                 pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 
@@ -302,7 +303,7 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
 
-            //this->hide();
+            this->hide();
 
             m_nItemCount = 0;
             emit fitToolBar();

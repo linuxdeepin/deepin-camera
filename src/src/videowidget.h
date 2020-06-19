@@ -26,6 +26,8 @@
 #include <QDateTime>
 #include <DFloatingWidget>
 #include <DLabel>
+#include <DFontSizeManager>
+#include <DPushButton>
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "videoeffect.h"
@@ -76,6 +78,7 @@ private slots:
     void ReceiveMajorImage(QImage image, int result);
     void onReachMaxDelayedFrames();
     void flash();
+    void endBtnClicked();
 
 private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
@@ -84,7 +87,7 @@ private:
 
     void transformImage(QImage *img);
     void resizeImage(QImage *img);
-    void setFont(QGraphicsTextItem *item, int size, QString str); //自体
+    void setFont(QGraphicsTextItem *item, int size, QString str); //字体
 
     void showCountDownLabel(PRIVIEW_STATE state);
     void hideCountDownLabel();
@@ -117,14 +120,18 @@ private:
 
     DFloatingWidget *m_fWgtTime; //显示拍摄时间
     DFloatingWidget *m_fWgtCountdown; //显示倒计时
+    //浮动窗口添加磨砂窗口和结束按钮
     DLabel *m_dLabel;
+    DLabel *m_dLabelVdTime; //录制屏显时长
+
+    DFloatingWidget *m_fWgtBtn; //结束按钮浮动窗
+    DPushButton *m_endBtn;
 
     QTimer *countTimer;
     QTimer *flashTimer;
     QDateTime begin_time;
     QDateTime m_btnClickTime; //按钮点击时间
     int m_nFastClick; //快速点击次数，小于200ms计入
-    //bool m_bCountDownOver;
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
     int EFFECT_PAGE = 0;
@@ -145,6 +152,8 @@ private:
 
     bool is_active;
     QString m_strFileName;
+    QTime m_time;
+    int m_nCount; //录制计时
 };
 
 #endif // VIDEOWIDGET_H
