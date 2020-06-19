@@ -678,12 +678,12 @@ static void *encoder_loop(__attribute__((unused))void *data)
     char *name = strdup(get_video_name());
     char *path = strdup(get_video_path());
 
-    if(get_video_sufix_flag())
-    {
-        char *new_name = add_file_suffix(path, name);
-        free(name); /*free old name*/
-        name = new_name; /*replace with suffixed name*/
-    }
+    //    if(get_video_sufix_flag())
+    //    {
+    //        char *new_name = add_file_suffix(path, name);
+    //        free(name); /*free old name*/
+    //        name = new_name; /*replace with suffixed name*/
+    //    }
     int pathsize = strlen(path);
     if(path[pathsize - 1] != '/')
         video_filename = smart_cat(path, '/', name);
