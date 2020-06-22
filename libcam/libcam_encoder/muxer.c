@@ -45,6 +45,7 @@ extern "C"
 #include <libavutil/avassert.h>
 #include <libavutil/channel_layout.h>
 #include <libavutil/opt.h>
+#include <libavutil/frame.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/timestamp.h>
 #include <libavutil/hwcontext.h>
@@ -130,11 +131,13 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 			break;
 
         case ENCODER_MUX_MP4:
-        ret = mp4_write_packet(mp4_ctx,
+            ret = mp4_write_packet(mp4_ctx,
                          video_codec_data,
                          0,
                          enc_video_ctx->outbuf,
-                (uint32_t)enc_video_ctx->outbuf_coded_size,
+                 (uint32_t)enc_video_ctx->outbuf_coded_size,
+                 (uint64_t)enc_video_ctx->pts,
+                         enc_video_ctx->duration,
                          enc_video_ctx->flags);
 //        mp4_write_video_packet(mp4_ctx,
 //                               0,
@@ -217,6 +220,8 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
                     1,
                     enc_audio_ctx->outbuf,
             (uint32_t)enc_audio_ctx->outbuf_coded_size,
+            (uint64_t)enc_audio_ctx->pts,
+                    enc_audio_ctx->duration,
                     enc_audio_ctx->flags);
 //        mp4_write_audio_packet(mp4_ctx,
 //                               1,

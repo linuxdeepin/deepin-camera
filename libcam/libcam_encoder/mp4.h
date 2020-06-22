@@ -92,6 +92,8 @@ int mp4_write_packet(
     int stream_index,
     uint8_t *outbuf,
     uint32_t outbuf_size,
+    uint64_t pts,
+    int duration,
     int flags);
 
 int mp4_write_header(AVFormatContext *mp4_ctx);

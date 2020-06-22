@@ -123,7 +123,7 @@ void MajorImageProcessingThread::run()
         }
         v4l2core_release_frame(vd1, frame);
         rgb24 = nullptr;
-        msleep(1000 / 30);
+//        msleep(1000 / 30);
     }
     v4l2core_stop_stream(vd1);
 }
