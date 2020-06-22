@@ -204,7 +204,7 @@ int mp4_write_packet(
         outpacket->stream_index = stream_index;
         video_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
-        av_packet_rescale_ts(outpacket, (AVRational){1, 24}, video_time);
+        av_packet_rescale_ts(outpacket, time_base, video_time);
         log_packet(mp4_ctx, outpacket);
         //outpacket->pts = av_rescale_q(outpacket->pts, time_base, (AVRational){1, 30});
         int ret = av_interleaved_write_frame(mp4_ctx, outpacket);
@@ -232,11 +232,13 @@ int mp4_write_packet(
         audio_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
         av_packet_rescale_ts(outpacket, time_base, audio_time);
+        log_packet(mp4_ctx, outpacket);
     //         audio_pts += outpacket->pts;
         av_write_frame(mp4_ctx, outpacket);
     //         free(outpacket->data);
          free(outpacket->data);
-         audio_pts++;
+         audio_pts+= 1152;
+
          //audio_pts += 1152;
     }
     else {
