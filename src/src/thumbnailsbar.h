@@ -35,6 +35,10 @@
 #include <DButtonBox>
 #include <DFloatingWidget>
 #include <DIconButton>
+#include <QTimer>
+#include <DLabel>
+#include <DSpinner>
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
@@ -71,14 +75,66 @@ typedef QList<DBImgInfo> DBImgInfoList;
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
 
+class ImageItem : public DLabel
+{
+    Q_OBJECT
+public:
+    ImageItem(int index = 0, QString path = NULL, QWidget *parent = 0);
+    void setPic(QImage image)
+    {
+        //      _image->setPixmap(QPixmap::fromImage(image.scaled(60,50)));
+    }
+    void updatePic(QPixmap pixmap)
+    {
+        _pixmap = pixmap;
+        update();
+    }
+    void setIndex(int index)
+    {
+        _index = index;
+    }
+    void SetPath(QString path)
+    {
+        _path = path;
+    }
+    inline QString getPath()
+    {
+        return _path;
+    }
+    inline int getIndex()
+    {
+        return _index;
+    }
+signals:
+    void imageItemclicked(int index, int indexNow);
+
+protected:
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+
+    //    void mousePressEvent(QMouseEvent *ev) override
+    //    {
+    //        bmouserelease = false;
+    //    }
+    void paintEvent(QPaintEvent *event) override;
+
+private:
+    int _index;
+    DLabel *_image = nullptr;
+    QString _path;
+    QPixmap _pixmap;
+    DSpinner *m_spinner;
+    QString m_pixmapstring;
+    bool bFirstUpdate = true;
+};
+
 class ThumbnailsBar : public DFloatingWidget
 {
     Q_OBJECT
 public:
 
     explicit ThumbnailsBar(DWidget *parent = nullptr);
-    void load();
-    void loadInterface(QString strPath);
+    //    void load();
+    //    void loadInterface(QString strPath);
     int getItemCount(){return m_nItemCount;}
     void ChangeActType(int nType);
     void addPath(QString strPath);
@@ -87,7 +143,7 @@ public:
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
     //QListWidget *imageList;
-    QMap<QString, QPixmap> m_imagemap;
+    //QMap<QString, QPixmap> m_imagemap;
     int m_nMaxItem;
     int m_nStatus; //当前状态
 private:
