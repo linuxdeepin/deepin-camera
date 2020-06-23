@@ -136,13 +136,7 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
                          0,
                          enc_video_ctx->outbuf,
                  (uint32_t)enc_video_ctx->outbuf_coded_size,
-                 (uint64_t)enc_video_ctx->pts,
-                         enc_video_ctx->duration,
                          enc_video_ctx->flags);
-//        mp4_write_video_packet(mp4_ctx,
-//                               0,
-//                               enc_video_ctx,
-//                               video_codec_data);
             break;
 
 		case ENCODER_MUX_MKV:
@@ -220,13 +214,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
                     1,
                     enc_audio_ctx->outbuf,
             (uint32_t)enc_audio_ctx->outbuf_coded_size,
-            (uint64_t)enc_audio_ctx->pts,
-                    enc_audio_ctx->duration,
                     enc_audio_ctx->flags);
-//        mp4_write_audio_packet(mp4_ctx,
-//                               1,
-//                               enc_audio_ctx,
-//                               audio_codec_data);
             break;
 
 		case ENCODER_MUX_MKV:
@@ -364,10 +352,8 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 
             mp4_add_video_stream(
                 mp4_ctx,
-                &video_codec,
                 video_codec_data,
-                mp4_video_stream,
-                video_codec_id);
+                mp4_video_stream);
             int ret = avcodec_parameters_from_context(mp4_video_stream->st->codecpar, mp4_video_stream->enc);
                 if (ret < 0) {
                     fprintf(stderr, "Could not copy the stream parameters\n");
@@ -382,7 +368,6 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                     mp4_audio_stream = (OutputStream*)calloc(1,sizeof(OutputStream));
                     mp4_add_audio_stream(
                     mp4_ctx,
-                    &audio_codec,
                     audio_codec_data,
                     mp4_audio_stream);
                 }
@@ -526,8 +511,8 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                 av_write_trailer(mp4_ctx);
                 avio_closep(&mp4_ctx->pb);
 
-                if(!!mp4_video_stream->enc)
-                    avcodec_free_context(&mp4_video_stream->enc);
+//                if(!!mp4_video_stream->enc)
+//                    avcodec_free_context(&mp4_video_stream->enc);
                 if(!!mp4_video_stream->frame)
                     av_frame_free(&mp4_video_stream->frame);
                 if(!!mp4_video_stream->tmp_frame)
@@ -537,18 +522,17 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                 if(!!mp4_video_stream->swr_ctx)
                     swr_free(&mp4_video_stream->swr_ctx);
 
-//                if(!!mp4_audio_stream->enc)
-//                    avcodec_free_context(&mp4_audio_stream->enc);
-//                if(!!mp4_audio_stream->frame)
-//                    av_frame_free(&mp4_audio_stream->frame);
-//                if(!!mp4_audio_stream->tmp_frame)
-//                    av_frame_free(&mp4_audio_stream->tmp_frame);
-//                if(!!mp4_audio_stream->sws_ctx)
-//                    sws_freeContext(mp4_audio_stream->sws_ctx);
-//                if(!!mp4_audio_stream->swr_ctx)
-//                    swr_free(&mp4_audio_stream->swr_ctx);
+                //if(!!mp4_audio_stream->enc)
+                    //avcodec_free_context(&mp4_audio_stream->enc);
+                if(!!mp4_audio_stream->frame)
+                    av_frame_free(&mp4_audio_stream->frame);
+                if(!!mp4_audio_stream->tmp_frame)
+                    av_frame_free(&mp4_audio_stream->tmp_frame);
+                if(!!mp4_audio_stream->sws_ctx)
+                    sws_freeContext(mp4_audio_stream->sws_ctx);
+                if(!!mp4_audio_stream->swr_ctx)
+                    swr_free(&mp4_audio_stream->swr_ctx);
 
-//                avformat_free_context(mp4_ctx);
                 mp4_destroy_context(mp4_ctx);
 
                 mp4_ctx = NULL;

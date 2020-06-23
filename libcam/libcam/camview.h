@@ -37,6 +37,30 @@ typedef struct _capture_loop_data_t {
 } capture_loop_data_t;
 
 /*
+ * set capture_pause flag
+ * args:
+ *    value - flag value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_capture_pause(void);
+
+/*
+ * get capture_pause value
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: apture_pause
+ */
+int get_capture_pause(void);
+
+/*
  * set render flag
  * args:
  *    value - flag value

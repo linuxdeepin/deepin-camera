@@ -82,7 +82,8 @@ void MajorImageProcessingThread::run()
                 }
             }
             /*把帧加入编码队列*/
-            encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
+            if (!get_capture_pause())
+                encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
 
             /*
              * exponencial scheduler

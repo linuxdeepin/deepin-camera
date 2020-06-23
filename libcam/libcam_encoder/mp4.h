@@ -63,28 +63,14 @@ AVFormatContext *mp4_create_context(const char *filename);
 
 void mp4_add_video_stream(
     AVFormatContext *mp4_ctx,
-    AVCodec **codec,
     encoder_codec_data_t *video_codec_data,
-    OutputStream *video_stream,
-    int32_t codec_id);
+    OutputStream *video_stream);
 
 void mp4_add_audio_stream(
     AVFormatContext *mp4_ctx,
-    AVCodec **codec,
     encoder_codec_data_t *audio_codec_data,
     OutputStream *audio_stream);
 
-int mp4_write_video_packet(
-    AVFormatContext *mp4_ctx,
-    int stream_index,
-    encoder_video_context_t *enc_video_ctx,
-    encoder_codec_data_t *video_codec_data);
-
-int mp4_write_audio_packet(
-    AVFormatContext *mp4_ctx,
-    int stream_index,
-    encoder_audio_context_t *enc_audio_ctx,
-    encoder_codec_data_t *codec_data);
 
 int mp4_write_packet(
     AVFormatContext *mp4_ctx,
@@ -92,8 +78,6 @@ int mp4_write_packet(
     int stream_index,
     uint8_t *outbuf,
     uint32_t outbuf_size,
-    uint64_t pts,
-    int duration,
     int flags);
 
 int mp4_write_header(AVFormatContext *mp4_ctx);

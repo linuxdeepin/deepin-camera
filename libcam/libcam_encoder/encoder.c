@@ -1830,7 +1830,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
 			}
 
             avcodec_close(video_codec_data->codec_context);
-            free(video_codec_data->codec_context);
+                free(video_codec_data->codec_context);
 
 			av_dict_free(&(video_codec_data->private_options));
 

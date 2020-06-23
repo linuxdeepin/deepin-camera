@@ -69,6 +69,9 @@ static uint32_t my_render_mask = REND_FX_YUV_NOFILT; /*render fx filter mask*/
 
 static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
 
+/*暂停录制*/
+static int capture_pause = 0;
+
 /*continues focus*/
 static int do_soft_autofocus = 0;
 /*single time focus (can happen during continues focus)*/
@@ -86,6 +89,42 @@ static int my_encoder_status = 0;
 
 static char status_message[80];
 
+
+/*
+ * set capture_pause flag
+ * args:
+ *    value - flag value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_capture_pause()
+{
+    if(capture_pause == 0)
+        capture_pause = 1;
+    else
+        capture_pause = 0;
+
+}
+
+/*
+ * get capture_pause value
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: apture_pause
+ */
+int get_capture_pause()
+{
+    return capture_pause;
+}
+
+
 /*
  * set render flag
  * args:
@@ -100,6 +139,7 @@ void set_render_flag(int value)
 {
     render = value;
 }
+
 
 /*
  * get render fx mask
@@ -537,6 +577,11 @@ static void *audio_processing_loop(void *data)
 
     while(video_capture_get_save_video())
     {
+        if(!get_capture_pause())
+        {
+            continue;
+        }
+
         int ret = audio_get_next_buffer(audio_ctx, audio_buff,
                 sample_type, my_audio_mask);
 

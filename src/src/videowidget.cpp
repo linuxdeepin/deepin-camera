@@ -183,7 +183,7 @@ void videowidget::showNocam()
     QString str = "No webcam found";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos(100,-200);
+    m_pNormalItem->setPos(100, -200);
     m_pCountItem->setPos(100, -80);
 }
 
@@ -203,7 +203,7 @@ void videowidget::showCamUsed()
     QString str = "The webcam is in use";
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos(320,100);
+    m_pNormalItem->setPos(320, 100);
     m_pCountItem->show();
     m_pCountItem->setPos(330, 240);
 
