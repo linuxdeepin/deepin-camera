@@ -395,14 +395,14 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
 
-        //m_pCountItem->show();
+
         m_fWgtCountdown->show();
         m_pTimeItem->hide();
         m_fWgtTime->hide();
         m_fWgtBtn->hide();
         str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
-        //m_pNormalScene->addItem(m_pCountItem);
+
         break;
     default:
         m_pTimeItem->hide();
@@ -716,7 +716,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     if (m_nMaxInterval == 0) {
         //直接录制
         showCountdown();
-        countTimer->start(1000);
+        if (m_bActive)
+            countTimer->start(1000);
     } else {
         //倒计时结束后录制
         m_nInterval = m_nMaxInterval;
@@ -749,27 +750,46 @@ void videowidget::startTakeVideo()
         reset_video_timer();
 
     } else {
-        qDebug() << "start takeVideo";
-        m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
-        set_video_path(m_strFolder.toStdString().c_str());
-        set_video_name(m_strFileName.toStdString().c_str());
-        start_encoder_thread();
-        m_bActive = true;
-        begin_time = QDateTime::currentDateTime();
-        countTimer->stop();
-        countTimer->start(1000); //重新计时，否则时间与显示时间
+        if (get_v4l2_device_handler()) {
+            qDebug() << "start takeVideo";
+            m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
+            set_video_path(m_strFolder.toStdString().c_str());
+            set_video_name(m_strFileName.toStdString().c_str());
+            m_fWgtBtn->show();
+            start_encoder_thread();
+            m_bActive = true;
+            begin_time = QDateTime::currentDateTime();
+            countTimer->stop();
+            countTimer->start(1000); //重新计时，否则时间与显示时间
 
-        m_fWgtTime->show();
-        m_time.setHMS(0, 0, 0, 0);
-        m_nCount = 0;
-        m_dLabelVdTime->setText(m_time.toString("mm:ss"));
-        m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
-                         this->height() - m_fWgtTime->height() - 5);
-        m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
-                             (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
-        m_fWgtBtn->show();
-        m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
-                        this->height() - m_fWgtTime->height() - 5);
-        qDebug() << m_fWgtTime->width() << "******";
+            m_fWgtTime->show();
+            m_time.setHMS(0, 0, 0, 0);
+            m_nCount = 0;
+            m_dLabelVdTime->setText(m_time.toString("mm:ss"));
+            m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
+                             this->height() - m_fWgtTime->height() - 5);
+            m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
+                                 (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
+
+            m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
+                            this->height() - m_fWgtTime->height() - 5);
+            qDebug() << m_fWgtTime->width() << "******";
+        } else {
+            reset_video_timer();
+            countTimer->stop();
+            countTimer->start(1000);
+            m_time.setHMS(0, 0, 0, 0);
+            m_fWgtBtn->show();
+            m_bActive = false;
+            m_nCount = 0;
+            m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
+                            this->height() - m_fWgtTime->height() - 5);
+            m_fWgtTime->show();
+            m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
+                             this->height() - m_fWgtTime->height() - 5);
+            m_dLabelVdTime->setText(m_time.toString("mm:ss"));
+            m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
+                                 (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
+        }
     }
 }
