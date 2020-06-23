@@ -468,6 +468,7 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
+    //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
     connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //系统文件变化信号
@@ -501,7 +502,7 @@ void CMainWindow::initConnection()
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
-    connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString &text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString &text)));
+    connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -572,6 +573,15 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         }
+    }
+}
+
+void CMainWindow::changeEvent(QEvent *event)
+{
+    if (this->windowState() == Qt::WindowMinimized) {
+        set_capture_pause(1);
+    } else if (this->isVisible() == true) {
+        set_capture_pause(0);
     }
 }
 
@@ -739,3 +749,9 @@ void CMainWindow::onTakeVdCancel() //待保存视频完成，通过已有的文�
     m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
 }
+
+//void CMainWindow::onCapturepause(Qt::WindowState windowState)
+//{
+//    if (windowState == Qt::WindowMinimized)
+//        set_capture_pause(1);
+//}

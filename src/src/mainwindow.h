@@ -31,6 +31,7 @@
 #include "widgetproxy.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
+#include "camview.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -76,6 +77,7 @@ private:
     void setupTitlebar();
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
     void menuItemInvoked(QAction *action);
     void settingsTriggered(bool bTrue);
     //void keyPressEvent(QKeyEvent *ev);
@@ -91,6 +93,7 @@ private slots:
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
     void onTakeVdCancel();
+    //void onCapturepause(Qt::WindowState windowState);
     //    void onTakePicBtnClicked();
     //    void onTakeVdBtnClicked();
 private:

@@ -46,7 +46,7 @@ typedef struct _capture_loop_data_t {
  *
  * returns: none
  */
-void set_capture_pause(void);
+void set_capture_pause(int bvalue);
 
 /*
  * get capture_pause value

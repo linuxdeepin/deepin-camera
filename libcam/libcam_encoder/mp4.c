@@ -137,6 +137,8 @@ int mp4_write_packet(
 
 void mp4_destroy_context(AVFormatContext *mp4_ctx)
 {
+    video_pts = 0;
+    audio_pts = 0;
     if(mp4_ctx != NULL)
     {
         avformat_free_context(mp4_ctx);

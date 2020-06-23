@@ -100,13 +100,10 @@ static char status_message[80];
  *
  * returns: none
  */
-void set_capture_pause()
+void set_capture_pause(int bvalue)
 {
-    if(!capture_pause)
-        capture_pause = 1;
-    else
-        capture_pause = 0;
-
+    capture_pause = bvalue;
+    printf("capture_pause = %d\n", bvalue);
 }
 
 /*
@@ -122,6 +119,7 @@ void set_capture_pause()
 int get_capture_pause()
 {
     return capture_pause;
+
 }
 
 

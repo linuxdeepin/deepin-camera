@@ -384,7 +384,8 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
     case AUDIO:
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
-        m_dLabelVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
+        if (!get_capture_pause())
+            m_dLabelVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
         if (m_nCount >= MAX_REC_TIME) {
             endBtnClicked(); //结束录制
         }
