@@ -30,7 +30,7 @@
 #include "videowidget.h"
 #include "widgetproxy.h"
 #include "devnummonitor.h"
-//#include "animationlabel.h"
+#include "closedialog.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -74,7 +74,8 @@ private:
     void initTitleBar();
     void initConnection();
     void setupTitlebar();
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
     void menuItemInvoked(QAction *action);
     void settingsTriggered(bool bTrue);
     //void keyPressEvent(QKeyEvent *ev);
@@ -90,7 +91,8 @@ private slots:
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
     void onTakeVdCancel();
-
+    //    void onTakePicBtnClicked();
+    //    void onTakeVdBtnClicked();
 private:
     ThumbnailsBar   *m_thumbnail;
     avCodec         m_avCodec;
@@ -101,7 +103,8 @@ private:
 
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
-//    AnimationLabel *_animationlable {nullptr};
+    CloseDialog *m_closeDlg;
+    //    AnimationLabel *_animationlable {nullptr};
 
     QFileSystemWatcher m_fileWatcher;
     DevNumMonitor *m_devnumMonitor;
@@ -111,14 +114,17 @@ private:
     DButtonBox *pDButtonBox;
     DButtonBoxButton *m_pTitlePicBtn;
     DButtonBoxButton *m_pTitleVdBtn;
-    DIconButton *pSelectBtn;
-    DIconButton *m_iconBtn;
+    DIconButton *pSelectBtn; //切换按钮
     DSettingsDialog *pDSettingDialog;
     DSettings *pDSettings;
     QString m_strCfgPath;
     QAction *m_actionSettings;
 
+    //DMessageBox *m_pMsgBox;
     int m_nActTpye;
+
+    //    bool m_bMultiCam;//是否多摄像头
+    //    bool m_bLockCam;//是否锁定摄像头，拍照和录像过程中锁定
 signals:
 
 

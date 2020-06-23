@@ -143,7 +143,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4") << QString("*.mkv");
 
-    QString strFolder;
+    QString strFolder; //时间逆序排序，待完善
     for (int i = 0; i < m_strlstFolders.size(); i++) {
         strFolder = m_strlstFolders[i];
         QDir dir(strFolder);
@@ -274,7 +274,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     emit fitToolBar();
 }
 
-void ThumbnailsBar::onBtnClick()
+void ThumbnailsBar::onBtnClick() //没有相机录像崩溃，待处理
 {
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {

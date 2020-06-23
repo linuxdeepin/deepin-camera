@@ -12,5 +12,6 @@
         <file>images/icons/button/photograph.svg</file>
         <file>images/icons/button/Switch camera.svg</file>
         <file>images/icons/button/transcribe.svg</file>
+        <file>images/icons/warning.svg</file>
     </qresource>
 </RCC>

@@ -63,7 +63,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_fWgtTime->setBlurBackgroundEnabled(true);
     m_fWgtTime->setFramRadius(1);
 
-    m_dLabelVdTime = new DLabel(m_fWgtTime);
+    m_dLabelVdTime = new DLabel(m_fWgtTime); //有个圆点，待处理
     m_dLabelVdTime->setFixedWidth(84);
     m_dLabelVdTime->setAttribute(Qt::WA_TranslucentBackground);
     QPalette paletteTime;
@@ -133,7 +133,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 void videowidget::init()
 {
-    is_active = false;
+    m_bActive = false;
 
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->m_bTake = false;
@@ -492,7 +492,7 @@ void videowidget::showCountdown()
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0) {
         if (VIDEO_STATE == AUDIO) {
-            if (!is_active) {
+            if (!m_bActive) {
                 startTakeVideo();
             }
 
@@ -583,10 +583,10 @@ void videowidget::endBtnClicked()
 
     m_fWgtTime->hide();
     m_fWgtBtn->hide();
-    if (is_active) { //录制完成处理
+    if (m_bActive) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        is_active = false;
+        m_bActive = false;
         reset_video_timer();
     }
     emit takeVdCancel();
@@ -702,10 +702,10 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         emit takeVdCancel(); //用于恢复缩略图
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
-    if (is_active) { //录制完成处理
+    if (m_bActive) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        is_active = false;
+        m_bActive = false;
         reset_video_timer();
         return;
     }
@@ -741,10 +741,10 @@ void videowidget::forbidScrollBar(QGraphicsView *view)
 
 void videowidget::startTakeVideo()
 {
-    if (is_active) {
+    if (m_bActive) {
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        is_active = false;
+        m_bActive = false;
         reset_video_timer();
 
     } else {
@@ -753,7 +753,7 @@ void videowidget::startTakeVideo()
         set_video_path(m_strFolder.toStdString().c_str());
         set_video_name(m_strFileName.toStdString().c_str());
         start_encoder_thread();
-        is_active = true;
+        m_bActive = true;
         begin_time = QDateTime::currentDateTime();
         countTimer->stop();
         countTimer->start(1000); //重新计时，否则时间与显示时间

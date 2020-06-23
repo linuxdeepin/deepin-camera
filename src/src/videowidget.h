@@ -67,6 +67,8 @@ public:
         m_nMaxInterval = nInterval;
     }
     void setContinuous(int nContinuous) { m_curTakePicTime = m_nMaxContinuous = nContinuous; }
+
+    bool m_bActive;
 public slots:
     void onTakePic();
     void onTakeVideo();
@@ -150,7 +152,6 @@ private:
     int m_nMaxInterval; //最大间隔：0,3,6
     int m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
 
-    bool is_active;
     QString m_strFileName;
     QTime m_time;
     int m_nCount; //录制计时

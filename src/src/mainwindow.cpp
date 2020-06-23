@@ -36,6 +36,7 @@
 #include <dsettingswidgetfactory.h>
 #include <DDesktopServices>
 #include <qsettingbackend.h>
+#include <DMessageBox>
 
 DSettings *sDsetWgt;
 static QString g_lastFileName = nullptr;
@@ -326,17 +327,7 @@ void CMainWindow::slotPopupSettingsDialog()
 void CMainWindow::initUI()
 {
     this->setWindowFlag(Qt::FramelessWindowHint);
-    m_iconBtn = new DIconButton(nullptr);
-
-    DPalette pa = m_iconBtn->palette();
-    QColor clo("#FF0000");
-    pa.setColor(DPalette::Dark, clo);
-    pa.setColor(DPalette::Light, clo);
-    pa.setColor(DPalette::Button, clo);
-    m_iconBtn->setPalette(pa);
-
-    m_iconBtn->hide();
-
+    m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
     DWidget *wget = new DWidget;
     //qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
@@ -510,6 +501,7 @@ void CMainWindow::initConnection()
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
+    connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString &text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString &text)));
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -559,6 +551,28 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
         m_thumbnail->m_nMaxItem = width;
     }
 
+}
+
+void CMainWindow::closeEvent(QCloseEvent *event)
+{
+    //    DMessageBox *m_pMsgBox = new DMessageBox(DMessageBox::Icon::Warning,
+    //                                tr("Warning"), tr("Video recording is in progress. Close the window?"),
+    //                                DMessageBox::StandardButton::Cancel
+    //                                | DMessageBox::StandardButton::Close, this);
+    if (m_videoPre.m_bActive) {
+        int ret = m_closeDlg->exec();
+        switch (ret) {
+        case 0:
+            event->ignore();
+            break;
+        case 1:
+            event->accept();
+            break;
+        default:
+            event->ignore();
+            break;
+        }
+    }
 }
 
 void CMainWindow::onFitToolBar()
