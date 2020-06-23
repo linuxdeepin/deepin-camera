@@ -102,7 +102,7 @@ static char status_message[80];
  */
 void set_capture_pause()
 {
-    if(capture_pause == 0)
+    if(!capture_pause)
         capture_pause = 1;
     else
         capture_pause = 0;
@@ -577,7 +577,7 @@ static void *audio_processing_loop(void *data)
 
     while(video_capture_get_save_video())
     {
-        if(!get_capture_pause())
+        if(get_capture_pause())
         {
             continue;
         }
