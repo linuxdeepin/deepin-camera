@@ -338,7 +338,7 @@ void CMainWindow::initUI()
     if (g_lastFileName.size() && g_lastFileName[0] == '~') {
         g_lastFileName.replace(0, 1, QDir::homePath());
     }
-
+    m_videoPre.setSaveFolder(g_lastFileName);
     if (QFileInfo(g_lastFileName).exists()) {
         m_fileWatcher.addPath(g_lastFileName);
     }
@@ -699,6 +699,9 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
+    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
+        g_lastFileName.replace(0, 1, QDir::homePath());
+    }
     m_fileWatcher.addPath(g_lastFileName);
     m_thumbnail->addPath(g_lastFileName);
     m_videoPre.setSaveFolder(g_lastFileName);

@@ -12,7 +12,7 @@
                             "key": "datapath",
                             "name": "Save to",
                             "type": "selectableEdit",
-                            "default": "/home"
+                            "default": "~/Videos"
                         }
                     ]
                 },

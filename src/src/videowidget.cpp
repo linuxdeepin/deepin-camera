@@ -648,7 +648,7 @@ void videowidget::startTakeVideo()
     } else {
         if (get_v4l2_device_handler()) {
             qDebug() << "start takeVideo";
-            m_strFileName = "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
+            m_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(m_strFileName.toStdString().c_str());
             m_fWgtBtn->show();
