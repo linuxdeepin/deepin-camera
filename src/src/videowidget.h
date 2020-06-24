@@ -30,7 +30,6 @@
 #include <DPushButton>
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
-#include "videoeffect.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -38,7 +37,6 @@ class QGraphicsScene;
 class QGraphicsPixmapItem;
 class QGraphicsTextItem;
 class QGridLayout;
-class MyScene;
 class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
@@ -52,8 +50,7 @@ class videowidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit     videowidget(DWidget *parent = nullptr);
-    //    void        showEvent(QShowEvent *event);
+    explicit videowidget(DWidget *parent = nullptr);
 
 signals:
     void sigFlash();
@@ -61,12 +58,19 @@ signals:
     void takeVdCancel(); //录制倒计时期间取消了
 
 public:
-    void setSaveFolder(QString strFolder) { m_strFolder = strFolder; }
+    void setSaveFolder(QString strFolder)
+    {
+        m_strFolder = strFolder;
+    }
     void setInterval(int nInterval)
-    { /*m_nInterval = */
+    {
+        /*m_nInterval = */
         m_nMaxInterval = nInterval;
     }
-    void setContinuous(int nContinuous) { m_curTakePicTime = m_nMaxContinuous = nContinuous; }
+    void setContinuous(int nContinuous)
+    {
+        m_curTakePicTime = m_nMaxContinuous = nContinuous;
+    }
 
     bool m_bActive;
 public slots:
@@ -83,33 +87,37 @@ private slots:
     void endBtnClicked();
 
 private:
+    void init();
+
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-    //void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
     void resizePixMap();
 
-    void transformImage(QImage *img);
-    void resizeImage(QImage *img);
-    void setFont(QGraphicsTextItem *item, int size, QString str); //字体
-
+    //设置字体
+    void setFont(QGraphicsTextItem *item, int size, QString str);
     void showCountDownLabel(PRIVIEW_STATE state);
     void hideCountDownLabel();
     void hideTimeLabel();
+
+    //关闭滚轮显示区域
     void forbidScrollBar(QGraphicsView *view);
 
-    void newPreViewByState(PRIVIEW_STATE state);//新建view
-    void sceneAddItem();
-    void updateEffectName();
-    void showPreviewByState(PRIVIEW_STATE state);//展示view
+    //新建view
+    void newPreViewByState(PRIVIEW_STATE state);
 
-    void init();
+    //显示录制和拍照倒计时
     void showCountDownLabel();
+
+    //未发现摄像头
     void showNocam();
+
+    //摄像头被占用
     void showCamUsed();
+
+    //开始录像
     void startTakeVideo();
 
 private:
     bool isFindedDevice = false;
-    videoEffect *eff;
     DLabel m_flashLabel;
 
     QGraphicsView *m_pNormalView;

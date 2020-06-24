@@ -1,9 +1,9 @@
 /*
 * Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
 *
-* Author:     shicetu <shicetu@uniontech.com>
+* Author:     hujianbo <hujianbo@uniontech.com>
 *
-* Maintainer: shicetu <shicetu@uniontech.com>
+* Maintainer: hujianbo <hujianbo@uniontech.com>
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by

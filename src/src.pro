@@ -23,12 +23,10 @@ SOURCES += \
     src/widgetproxy.cpp \
     src/cameradetect.cpp \
     src/avcodec.cpp \
-    src/videoeffect.cpp \
     src/effectproxy.cpp \
     src/thumbnailsbar.cpp \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
-    src/myscene.cpp \
     src/devnummonitor.cpp \
     src/closedialog.cpp
 
@@ -41,13 +39,12 @@ HEADERS += \
     src/widgetproxy.h \
     src/cameradetect.h \
     src/avcodec.h \
-    src/videoeffect.h \
     src/effectproxy.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
-    src/myscene.h \
-    libcheese_v4l2core/gview_v4l2core\v4l2_core.h \
+    libcheese_v4l2core/gview_v4l2core \
+    src/v4l2_core.h \
     src/videowidget.h \
     src/devnummonitor.h \
     src/closedialog.h

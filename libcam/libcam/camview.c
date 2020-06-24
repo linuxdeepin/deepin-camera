@@ -784,7 +784,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
             if(!encoder_disk_supervisor(treshold, path))
             {
                 /*stop capture*/
-                if((save_image||save_video) == 1)
+                if((save_image || save_video) == 1)
                 {
                     save_image = 0;
                     save_video = 0;
@@ -814,12 +814,13 @@ static void *encoder_loop(__attribute__((unused))void *data)
     /*close the encoder context (clean up)*/
     encoder_close(encoder_ctx);
 
-    if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
-    {
-        /* restore framerate */
-        v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+    if(my_vd){
+        if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
+        {
+            /* restore framerate */
+            v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+        }
     }
-
     /*clean strings*/
     free(video_filename);
     free(path);

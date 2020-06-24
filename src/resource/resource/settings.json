@@ -12,7 +12,7 @@
                             "key": "datapath",
                             "name": "Save to",
                             "type": "selectableEdit",
-                            "default": "~/Videos"
+                            "default": "/home/shicetu/Videos"
                         }
                     ]
                 },

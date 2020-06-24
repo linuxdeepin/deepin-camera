@@ -51,6 +51,7 @@ public:
 signals:
     void seltBtnStateEnable();
     void seltBtnStateDisable();
+    void noDeviceFound();
 protected:
     void run();
 

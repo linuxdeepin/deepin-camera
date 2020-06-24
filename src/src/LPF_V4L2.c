@@ -269,7 +269,7 @@ int camInit(const char* devicename)
     audio_set_verbosity(debug_level);
 
     /*初始化音频context*/
-    int audio_ctx = create_audio_context(audio, my_config->audio_device);
+    audio_context_t* audio_ctx = create_audio_context(audio, my_config->audio_device);
     if(audio_ctx != NULL)
     {
         my_config->audio_device = audio_get_device_index(audio_ctx);

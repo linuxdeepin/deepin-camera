@@ -3,7 +3,7 @@
 *
 * Author:     shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
-* Maintainer: shicetu <shicetu@uniontech.com>
+* Maintainer:  shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@
 */
 
 #include "videowidget.h"
-#include "myscene.h"
 #include "camview.h"
 #include "gui.h"
 #include <QPixmap>
@@ -47,7 +46,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
-    eff = new videoEffect;
+    //eff = new videoEffect;
 
     countTimer = new QTimer(this);
     connect(countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
@@ -128,7 +127,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
     qDebug() << "this widget--height:" << m_pNormalScene->height() << "--width:" << m_pNormalScene->width() << endl;
     init();
-    showPreviewByState(NORMALVIDEO);
 }
 
 void videowidget::init()
@@ -168,6 +166,8 @@ void videowidget::init()
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 }
 
+
+//显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
     DPalette paPic;
@@ -187,6 +187,7 @@ void videowidget::showNocam()
     m_pCountItem->setPos(100, -80);
 }
 
+//显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
     DPalette paPic;
@@ -266,99 +267,6 @@ void videowidget::onReachMaxDelayedFrames()
     showCamUsed();
 }
 
-void videowidget::sceneAddItem()
-{
-
-}
-
-void videowidget::updateEffectName()
-{
-
-}
-void videowidget::showPreviewByState(PRIVIEW_STATE state)
-{
-    switch (state) {
-    case NODEVICE:
-    //创建黑屏效果
-    case  NORMALVIDEO:
-    case AUDIO:
-    case SHOOT:
-        m_pGridLayout->addWidget(m_pNormalView, 0, 0);
-
-        m_pNormalView->show();
-        this->setLayout(m_pGridLayout);
-        break;
-
-    case EFFECT:
-        //现实九宫格效果
-        m_pNormalView->hide();
-        int x, y;
-
-
-        m_pGridLayout->removeWidget(m_pNormalView); //需要remove？？
-        //m_pGridLayout->setAlignment(m_VEffectPreview[1], Qt::AlignJustify | Qt::AlignBaseline);
-        //m_pGridLayout->setVerticalSpacing(1);
-
-        //end
-        this->setLayout(m_pGridLayout);
-        break;
-
-    default:
-        break;
-    }
-}
-
-void videowidget::transformImage(QImage *img)
-{
-    if (img == NULL || img->isNull())
-        return;
-    float wImg = img->width();
-    float hImg = img->height();
-
-    if (wImg == 0 || hImg == 0) {
-        return;
-    }
-
-    //声明一个QMatrix类的实例
-    QMatrix martix;
-    if (wImg <= hImg) {
-        martix.scale(hImg / wImg * 4 / 3, 1);
-    } else {
-        martix.scale(1, wImg / hImg * 3 / 4);
-    }
-    *img = img->transformed(martix);
-    resizeImage(img);
-}
-
-void videowidget::resizeImage(QImage *img)
-{
-    //*img = img->scaled(this->width(),this->height());
-    //    float wImg = img->width();
-    //    float hImg = img->height();
-    //    float  wLab = this->width();
-    //    float hLab = this->height();
-    //    if (STATE == EFFECT) {
-    //    } else {
-    //        wLab = this->width();
-    //        hLab = this->height();
-    //    }
-
-    //    if (wImg == 0 || hImg == 0 || wLab == 0 || hLab == 0) {
-    //        return;
-    //    }
-
-    //    //声明一个QMatrix类的实例
-    //    QMatrix martix;
-
-    //    //取小边
-    //    bool    isW = wLab * 3 / 4 <= hLab;
-    //    float timeW = isW  ? wLab / img->width() : hLab / img->height();
-
-    //    martix.scale(timeW, timeW);
-
-    //    *img = img->transformed(martix);
-}
-
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
     //qDebug() << "countDown" << m_nInterval;
@@ -369,11 +277,14 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
+
         m_fWgtCountdown->show();
+
         //m_pCountItem->show();
         m_pTimeItem->hide();
         m_fWgtTime->hide();
         m_fWgtBtn->hide();
+
         m_countdownLen = 50;
         setFont(m_pCountItem, 50, QString::number(m_nInterval));
         m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
@@ -384,7 +295,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
     case AUDIO:
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
-        if (!get_capture_pause())
+        if (!get_capture_pause())//判断是否是暂停状态
             m_dLabelVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
         if (m_nCount >= MAX_REC_TIME) {
             endBtnClicked(); //结束录制
@@ -468,25 +379,6 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 }
 
-//void videowidget::paintEvent(QPaintEvent *event)
-//{
-//    if (m_fWgtCountdown) {
-//        QPainter painter(this);
-//        painter.setPen(QColor(0, 160, 230));
-//        QFont font;
-//        font.setFamily("Microsoft YaHei");
-//        font.setPointSize(16);
-//        painter.setFont(font);
-////        QTransform transform;
-////        transform.rotate(45);
-////        painter.setTransform(transform);
-//        painter.drawText(rect(), QStringLiteral("3"));
-//    }
-
-//    return DWidget::paintEvent(event);
-
-//}
-
 void videowidget::showCountdown()
 {
     //qDebug() << "showCountdown";
@@ -494,6 +386,11 @@ void videowidget::showCountdown()
     if (m_nInterval == 0) {
         if (VIDEO_STATE == AUDIO) {
             if (!m_bActive) {
+
+                /*m_bActive录制状态判断
+                *false：非录制状态
+                *true：录制状态
+                */
                 startTakeVideo();
             }
 
@@ -599,8 +496,7 @@ void videowidget::changeDev()
     if (m_imgPrcThread != nullptr) {
         m_imgPrcThread->stop();
     }
-    while (m_imgPrcThread->isRunning())
-        ;
+    while (m_imgPrcThread->isRunning());
     QString str;
     if (vd != nullptr) {
         str = QString(vd->videodevice);
@@ -758,7 +654,7 @@ void videowidget::startTakeVideo()
             m_fWgtBtn->show();
             start_encoder_thread();
             m_bActive = true;
-            begin_time = QDateTime::currentDateTime();
+            //begin_time = QDateTime::currentDateTime();
             countTimer->stop();
             countTimer->start(1000); //重新计时，否则时间与显示时间
 
@@ -775,9 +671,9 @@ void videowidget::startTakeVideo()
                             this->height() - m_fWgtTime->height() - 5);
             qDebug() << m_fWgtTime->width() << "******";
         } else {
-            reset_video_timer();
+            reset_video_timer();//重置底层定时器
             countTimer->stop();
-            countTimer->start(1000);
+            //countTimer->start(1000);
             m_time.setHMS(0, 0, 0, 0);
             m_fWgtBtn->show();
             m_bActive = false;

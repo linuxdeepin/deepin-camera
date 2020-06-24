@@ -20,7 +20,6 @@
 */
 
 #include "devnummonitor.h"
-#include "QCameraInfo"
 
 
 extern "C"
@@ -65,16 +64,18 @@ void DevNumMonitor::run()
 void DevNumMonitor::timeOutSlot()
 {
     QMutexLocker locker(&mutex);
-    //devlist = get_device_list();
-//    if (devlist != nullptr) {
-//        v4l2core_close_v4l2_device_list();
-//    }
+
     check_device_list_events(get_v4l2_device_handler());
     devlist = get_device_list();
+    if (devlist->num_devices == 0) {
+        //没有设备发送信号
+        emit noDeviceFound();
+    }
     if (devlist->num_devices > 1) {
+        //显示切换按钮
         emit seltBtnStateEnable();
     } else {
+        //隐藏切换按钮
         emit seltBtnStateDisable();
     }
-    //v4l2core_close_v4l2_device_list();
 }

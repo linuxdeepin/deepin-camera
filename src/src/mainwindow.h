@@ -26,7 +26,6 @@
 #include "effectproxy.h"
 #include "thumbnailsbar.h"
 #include "toolbar.h"
-#include "videoeffect.h"
 #include "videowidget.h"
 #include "widgetproxy.h"
 #include "devnummonitor.h"
@@ -65,7 +64,6 @@ public:
     CMainWindow(DWidget *w = nullptr);
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
-    void showPreviewByState(PRIVIEW_STATE state);
     DSettings *getDsetMber();
 
     ~CMainWindow();
@@ -102,7 +100,6 @@ private:
     CameraDetect    m_camDetect;
     effectproxy     m_effProxy;
     ToolBar         m_toolBar;
-    videoEffect     m_videoEffect;
 
     videowidget     m_videoPre;
     widgetProxy     m_wgtProxy;
