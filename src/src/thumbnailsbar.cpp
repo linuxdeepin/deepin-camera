@@ -71,6 +71,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
+    Q_UNUSED(ev);
     if (_index != _indexNow) {
         ImageItem *tItem = m_indexImage.value(_indexNow);
         tItem->update();
@@ -81,7 +82,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 void ImageItem::paintEvent(QPaintEvent *event)
 {
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-    qDebug() << "paint" << _index;
+    //qDebug() << "paint" << _index;
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
