@@ -37,6 +37,7 @@
 #include <QMimeData>
 #include <QClipboard>
 //QMap<QString, QPixmap> m_imagemap;
+QMap<int, ImageItem *> m_indexImage;
 int _indexNow = 0;
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 {
@@ -68,9 +69,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     //    });
 }
 
-void ImageItem::mouseReleaseEvent(QMouseEvent *ev)
+void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
     if (_index != _indexNow) {
+        ImageItem *tItem = m_indexImage.value(_indexNow);
+        tItem->update();
         _indexNow = _index;
         update();
     }
@@ -78,7 +81,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev)
 void ImageItem::paintEvent(QPaintEvent *event)
 {
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-
+    qDebug() << "paint" << _index;
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
@@ -295,6 +298,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         delete child;
     }
     //    m_imagemap.clear();
+    m_indexImage.clear();
     //获取所选文件类型过滤器
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4");
@@ -317,6 +321,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 QFileInfo fileInfo(strFile);
                 //DLabel *pLabel = new DLabel(this);
                 ImageItem *pLabel = new ImageItem(tIndex, fileInfo.path());
+                m_indexImage.insert(tIndex, pLabel);
                 tIndex++;
                 pLabel->setScaledContents(true);
                 pLabel->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
