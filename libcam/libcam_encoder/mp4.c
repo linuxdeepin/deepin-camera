@@ -64,19 +64,19 @@ void mp4_add_audio_stream(
     }
 }
 
-static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt)  //log日志相关 打印一些信息 	Definition at line 70 of file muxing.c.
-{
-    AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
+//static void log_packet(const AVFormatContext *fmt_ctx, const AVPacket *pkt)  //log日志相关 打印一些信息 	Definition at line 70 of file muxing.c.
+//{
+//    AVRational *time_base = &fmt_ctx->streams[pkt->stream_index]->time_base;
 
-    printf("pts:%s pts_time:%s duration:%s\n",av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base),av_ts2str(pkt->duration));
-    /*
-    printf("pts:%s pts_time:%s dts:%s dts_time:%s duration:%s duration_time:%s stream_index:%d\n",
-           av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base),
-           av_ts2str(pkt->dts), av_ts2timestr(pkt->dts, time_base),
-           av_ts2str(pkt->duration), av_ts2timestr(pkt->duration, time_base),
-           pkt->stream_index);  //这里pts和dts都源自编码前frame.pts 而duration没有被赋值，是初始化时的0
-    */
-}
+//    printf("pts:%s pts_time:%s duration:%s\n",av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base),av_ts2str(pkt->duration));
+//    /*
+//    printf("pts:%s pts_time:%s dts:%s dts_time:%s duration:%s duration_time:%s stream_index:%d\n",
+//           av_ts2str(pkt->pts), av_ts2timestr(pkt->pts, time_base),
+//           av_ts2str(pkt->dts), av_ts2timestr(pkt->dts, time_base),
+//           av_ts2str(pkt->duration), av_ts2timestr(pkt->duration, time_base),
+//           pkt->stream_index);  //这里pts和dts都源自编码前frame.pts 而duration没有被赋值，是初始化时的0
+//    */
+//}
 
 int mp4_write_packet(
         AVFormatContext *mp4_ctx,
@@ -126,12 +126,12 @@ int mp4_write_packet(
         //AAC音频标准是1024
         //MP3音频标准是1152
         audio_pts+= 1024;
-
     }
     if(outpacket->data){
         free(outpacket->data);
         outpacket->data = NULL;
     }
+    return 0;
 }
 
 

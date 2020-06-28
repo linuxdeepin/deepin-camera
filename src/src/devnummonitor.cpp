@@ -21,13 +21,13 @@
 
 #include "devnummonitor.h"
 
-
 extern "C"
 {
 #include "v4l2_devices.h"
 #include "camview.h"
 }
 //QMap<QString, QString> DevNumMonitor::devmap;
+
 
 DevNumMonitor::DevNumMonitor()
 {
@@ -67,15 +67,17 @@ void DevNumMonitor::timeOutSlot()
 
     check_device_list_events(get_v4l2_device_handler());
     devlist = get_device_list();
-    if (devlist->num_devices == 0) {
-        //没有设备发送信号
-        emit noDeviceFound();
-    }
-    if (devlist->num_devices > 1) {
+    if (devlist->num_devices <= 1) {
+        emit seltBtnStateDisable();
+        if (devlist->num_devices < 1)
+            //没有设备发送信号
+            emit noDeviceFound();
+        else
+            emit existDevice();
+    } else {
+        emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();
-    } else {
-        //隐藏切换按钮
-        emit seltBtnStateDisable();
+
     }
 }

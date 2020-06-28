@@ -38,7 +38,7 @@
 #include <qsettingbackend.h>
 #include <DMessageBox>
 
-DSettings *sDsetWgt;
+static DSettings *sDsetWgt = nullptr;
 static QString g_lastFileName = nullptr;
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
@@ -86,9 +86,6 @@ static QString lastOpenedPath()
 
 /*
 QTextOption::WrapMode:描述text以什么方式显示在文档中
-
-
-
 */
 
 
@@ -169,6 +166,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     lab->setFixedHeight(30);
     QString str = option->value().toString();
     lab->setText(option->value().toString());
+    lab->setAlignment(Qt::AlignTop);
     lab->show();
     //lab->setEnabled(false);
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
@@ -372,6 +370,7 @@ void CMainWindow::initUI()
     menu->addAction(actOpen);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+        Q_UNUSED(pos);
         menu->exec(QCursor::pos());
     });
     connect(actOpen, &QAction::triggered, this, [ = ] {
@@ -578,6 +577,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 
 void CMainWindow::changeEvent(QEvent *event)
 {
+    Q_UNUSED(event);
     if (this->windowState() == Qt::WindowMinimized) {
         set_capture_pause(1);
     } else if (this->isVisible() == true) {
@@ -622,7 +622,7 @@ void CMainWindow::onEnableTitleBar(int nType)
 
 void CMainWindow::menuItemInvoked(QAction *action)
 {
-
+    Q_UNUSED(action);
 }
 
 //void CMainWindow::keyPressEvent(QKeyEvent *ev)

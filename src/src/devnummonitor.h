@@ -52,6 +52,7 @@ signals:
     void seltBtnStateEnable();
     void seltBtnStateDisable();
     void noDeviceFound();
+    void existDevice();
 protected:
     void run();
 

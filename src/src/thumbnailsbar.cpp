@@ -49,6 +49,7 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 }
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
+    Q_UNUSED(parent);
     _index = index;
     _path = path;
     //    if (m_imagemap.contains(path)) {
@@ -81,6 +82,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event);
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
     //qDebug() << "paint" << _index;
     QPainter painter(this);
@@ -285,6 +287,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //待完善内容：1、视频缩略图显示时间;2、文件排序。
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
+    Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     qDebug() << m_nMaxItem;
     int nLetAddCount = (m_nMaxItem - 64 - 20) / (THUMBNAIL_WIDTH + 2) - 1;
@@ -360,6 +363,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 //connect(pLabel, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showListWidgetMenuSlot(QPoint)));
 
                 connect(pLabel, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+                    Q_UNUSED(pos);
                     menu->exec(QCursor::pos());
                 });
                 connect(actOpen, &QAction::triggered, this, [ = ] {

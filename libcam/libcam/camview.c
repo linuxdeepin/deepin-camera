@@ -48,8 +48,8 @@
 /*flags*/
 extern int debug_level;//debug
 
-extern __MUTEX_TYPE capture_mutex;
-extern __COND_TYPE capture_cond;
+__MUTEX_TYPE capture_mutex = __STATIC_MUTEX_INIT;//初始化静态锁
+__COND_TYPE capture_cond;
 
 static int render = RENDER_SDL; /*render API*/
 static int quit = 0; /*terminate flag*/
@@ -114,7 +114,7 @@ void set_capture_pause(int bvalue)
  * asserts:
  *    none
  *
- * returns: apture_pause
+ * returns: capture_pause
  */
 int get_capture_pause()
 {

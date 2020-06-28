@@ -31,7 +31,11 @@
 #include <QThread>
 #include <QScrollBar>
 //#include "LPF_V4L2.h"
+
+
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
+
+static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {

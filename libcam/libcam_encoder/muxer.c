@@ -28,9 +28,7 @@
 #  Encoder library                                                                #
 #                                                                               #
 ********************************************************************************/
-#ifdef __cplusplus
-extern "C"
-#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -62,10 +60,6 @@ extern "C"
 #include "mp4.h"
 #include "gview.h"
 
-#ifdef __cplusplus
-}
-#endif
-
 extern int verbosity;
 
 static mkv_context_t *mkv_ctx = NULL;
@@ -77,8 +71,8 @@ static stream_io_t *audio_stream = NULL;
 static OutputStream *mp4_video_stream = NULL;
 static OutputStream *mp4_audio_stream = NULL;
 
-static AVCodec *audio_codec = NULL;
-static AVCodec *video_codec = NULL;
+//static AVCodec *audio_codec = NULL;
+//static AVCodec *video_codec = NULL;
 static AVDictionary** opt = NULL;
 
 /*file mutex*/

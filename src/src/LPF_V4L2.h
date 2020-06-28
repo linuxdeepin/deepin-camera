@@ -56,7 +56,7 @@ extern "C" {
 #include "options.h"
 #include "gui.h"
 
-int convert_yuv_to_rgb_buffer(unsigned char *yuv, unsigned char *rgb, unsigned int width, unsigned int height);
+//int convert_yuv_to_rgb_buffer(unsigned char *yuv, unsigned char *rgb, unsigned int width, unsigned int height);
 
 int camInit(const char *device_name);
 

@@ -44,7 +44,7 @@ class QSpacerItem;
 //预览代理
 //xxj
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, EFFECT, AUDIO, SHOOT};
-static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
+
 
 class videowidget : public DWidget
 {

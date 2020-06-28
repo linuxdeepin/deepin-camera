@@ -79,9 +79,10 @@ class ImageItem : public DLabel
 {
     Q_OBJECT
 public:
-    ImageItem(int index = 0, QString path = NULL, QWidget *parent = 0);
+    ImageItem(int index = 0, QString path = nullptr, QWidget *parent = 0);
     void setPic(QImage image)
     {
+        Q_UNUSED(image);
         //      _image->setPixmap(QPixmap::fromImage(image.scaled(60,50)));
     }
     void updatePic(QPixmap pixmap)
@@ -135,7 +136,10 @@ public:
     explicit ThumbnailsBar(DWidget *parent = nullptr);
     //    void load();
     //    void loadInterface(QString strPath);
-    int getItemCount(){return m_nItemCount;}
+    int getItemCount()
+    {
+        return m_nItemCount;
+    }
     void ChangeActType(int nType);
     void addPath(QString strPath);
 
