@@ -37,6 +37,7 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QKeyEvent>
+#include <QShortcut>
 //QMap<QString, QPixmap> m_imagemap;
 static QMap<int, ImageItem *> m_indexImage;
 static int _indexNow = 0;
@@ -264,6 +265,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
     this->grabKeyboard(); //获取键盘事件的关键处理
+    QShortcut *shortcut = new QShortcut(QKeySequence(tr("ctrl+c")), this);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
+    QShortcut *shortcutDel = new QShortcut(QKeySequence(Qt::Key_Delete), this);
+    connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
+
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
@@ -403,8 +409,9 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 //                actOpen->setText("打开");
                 QAction *actCopy = new QAction(this);
                 actCopy->setText("复制");
-                //this->addAction(actCopy);
-                //actCopy->setShortcut(QKeySequence("Ctrl+c"));
+
+                //actCopy->setShortcut(/*QKeySequence("Ctrl+C")*/QKeySequence(Qt::CTRL | Qt::Key_C));
+                //addAction(actCopy);
 
                 QAction *actDel = new QAction(this);
                 actDel->setText("删除");
@@ -561,6 +568,55 @@ void ThumbnailsBar::onBtnClick() //没有相机录像崩溃，待处理
     }
 }
 
+void ThumbnailsBar::onShortcutCopy()
+{
+    QStringList paths;
+    if (m_index.isEmpty()) {
+        paths = QStringList(m_indexImage.value(_indexNow)->getPath());
+        qDebug() << "sigle way";
+    } else {
+        QSet<int>::iterator it;
+        for (it = m_index.begin(); it != m_index.end(); ++it) {
+            paths << m_indexImage.value(*it)->getPath();
+            qDebug() << m_indexImage.value(*it)->getPath();
+        }
+    }
+
+    QClipboard *cb = qApp->clipboard();
+    QMimeData *newMimeData = new QMimeData();
+    QByteArray gnomeFormat = QByteArray("copy\n");
+    QString text;
+    QList<QUrl> dataUrls;
+    for (QString path : paths) //待添加复制和删除功能以及快捷键效果
+    {
+        if (!path.isEmpty())
+            text += path + '\n';
+        dataUrls << QUrl::fromLocalFile(path);
+
+        gnomeFormat.append(QUrl::fromLocalFile(path).toEncoded()).append("\n");
+    }
+
+    newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
+    newMimeData->setUrls(dataUrls);
+
+    gnomeFormat.remove(gnomeFormat.length() - 1, 1);
+    //本系统(UOS)特有
+    newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
+    cb->setMimeData(newMimeData, QClipboard::Clipboard);
+}
+
+void ThumbnailsBar::onShortcutDel()
+{
+    if (m_index.isEmpty()) {
+        DDesktopServices::trash(m_indexImage.value(_indexNow)->getPath());
+    } else {
+        QSet<int>::iterator it;
+        for (it = m_index.begin(); it != m_index.end(); ++it) {
+            DDesktopServices::trash(m_indexImage.value(*it)->getPath());
+        }
+    }
+}
+
 void ThumbnailsBar::ChangeActType(int nType)
 {
     if (m_nActTpye == nType) {
@@ -616,10 +672,10 @@ void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
 
 void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
 {
-    if (e->key() == Qt::Key_Shift) {
-        m_bMulti = false;
-        m_index.clear();
-        //不填0就是默认当前选项
-        //m_index.insert(0);//始终选择第一个，选择当前的话，有可能正好是取消当前选项，此时需要定义选中哪个选项
-    }
+    //    if (e->key() == Qt::Key_Shift) {
+    //        m_bMulti = false;
+    //        m_index.clear();
+    //        //不填0就是默认当前选项
+    //        //m_index.insert(0);//始终选择第一个，选择当前的话，有可能正好是取消当前选项，此时需要定义选中哪个选项
+    //    }
 }

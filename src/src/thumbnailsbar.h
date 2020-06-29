@@ -176,6 +176,8 @@ signals:
 public slots:
     void onFoldersChanged(const QString &strDirectory);
     void onBtnClick();
+    void onShortcutCopy();
+    void onShortcutDel();
 };
 
 #endif // THUMBNAILSBAR_H
