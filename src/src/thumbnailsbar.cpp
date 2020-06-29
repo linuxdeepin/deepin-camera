@@ -36,9 +36,12 @@
 #include <QApplication>
 #include <QMimeData>
 #include <QClipboard>
+#include <QKeyEvent>
 //QMap<QString, QPixmap> m_imagemap;
-QMap<int, ImageItem *> m_indexImage;
-int _indexNow = 0;
+static QMap<int, ImageItem *> m_indexImage;
+static int _indexNow = 0;
+static QSet<int> m_index;
+static bool m_bMulti = false; //是否多选
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 {
     static QCollator sortCollator;
@@ -72,12 +75,40 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
-    Q_UNUSED(ev);
-    if (_index != _indexNow) {
-        ImageItem *tItem = m_indexImage.value(_indexNow);
-        tItem->update();
-        _indexNow = _index;
-        update();
+    if (ev->button() == Qt::LeftButton) {
+        if (_index != _indexNow) {
+            //ImageItem *tItem = m_indexImage.value(_indexNow);
+            //tItem->update();
+            _indexNow = _index;
+            //update();
+        }
+    }
+    //    if (m_bMulti) {
+    //        if (m_index.contains(_index)) {
+    //            m_index.remove(_index);
+    //        }
+    //        else {
+    //            m_index.insert(_index);
+    //        }
+    //    }
+}
+
+void ImageItem::mousePressEvent(QMouseEvent *ev)
+{
+    if (ev->button() == Qt::RightButton) {
+        if (_index != _indexNow) {
+            //ImageItem *tItem = m_indexImage.value(_indexNow);
+            //tItem->update();
+            _indexNow = _index;
+            //update();
+        }
+    }
+    if (m_bMulti && ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
+        if (m_index.contains(_index)) {
+            m_index.remove(_index);
+        } else {
+            m_index.insert(_index);
+        }
     }
 }
 void ImageItem::paintEvent(QPaintEvent *event)
@@ -92,7 +123,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     QRect pixmapRect;
     QFileInfo fileinfo(_path);
     QString str = fileinfo.suffix();
-    if (_index == _indexNow) {
+    if (m_index.contains(_index) || (m_index.isEmpty() && _index == _indexNow)) {
         QPainterPath backgroundBp;
         QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
                                  backgroundRect.width() - 2, backgroundRect.height() - 2);
@@ -148,6 +179,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
+        this->setFixedSize(48, 58);
     } else {
         pixmapRect.setX(backgroundRect.x() + 1);
         pixmapRect.setY(backgroundRect.y() + 0);
@@ -185,6 +217,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
+        this->setFixedSize(30, 40);
     }
     //    QPixmap blankPix = _pixmap;
     //    blankPix.fill(Qt::white);
@@ -211,6 +244,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
+    this->grabKeyboard(); //获取键盘事件的关键处理
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
@@ -324,7 +358,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 QString strFile = dir_iterator.next();
                 QFileInfo fileInfo(strFile);
                 //DLabel *pLabel = new DLabel(this);
-                ImageItem *pLabel = new ImageItem(tIndex, fileInfo.path());
+                ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
                 m_indexImage.insert(tIndex, pLabel);
                 tIndex++;
                 pLabel->setScaledContents(true);
@@ -350,6 +384,9 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 actOpen->setText("打开");
                 QAction *actCopy = new QAction(this);
                 actCopy->setText("复制");
+                //this->addAction(actCopy);
+                //actCopy->setShortcut(QKeySequence("Ctrl+c"));
+
                 QAction *actDel = new QAction(this);
                 actDel->setText("删除");
                 QAction *actOpenFolder = new QAction(this);
@@ -372,14 +409,14 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                     if (fileInfo.suffix() == "jpg")
                     {
-                        QString program = "deepin-image-viewer";
+                        QString program = "deepin-image-viewer"; //用看图打开
                         QStringList arguments;
                         arguments << strFile;
                         QProcess *myProcess = new QProcess(this);
                         myProcess->startDetached(program, arguments);
                     } else
                     {
-                        QString program = "deepin-camera";
+                        QString program = "deepin-movie"; //用影院打开
                         QStringList arguments;
                         arguments << strFile;
                         QProcess *myProcess = new QProcess(this);
@@ -390,17 +427,29 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     //                    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                     //                                                                    strFile,
                     //                                                                    tr("Images (*.jpg)"));
-                    QStringList paths = QStringList(strFile);
+                    QStringList paths;
+                    if (m_index.isEmpty()) {
+                        paths = QStringList(strFile);
+                        qDebug() << "sigle way";
+                    } else {
+                        QSet<int>::iterator it;
+                        for (it = m_index.begin(); it != m_index.end(); ++it) {
+                            paths << m_indexImage.value(*it)->getPath();
+                            qDebug() << m_indexImage.value(*it)->getPath();
+                        }
+                    }
+
                     QClipboard *cb = qApp->clipboard();
                     QMimeData *newMimeData = new QMimeData();
                     QByteArray gnomeFormat = QByteArray("copy\n");
                     QString text;
                     QList<QUrl> dataUrls;
-                    for (QString path : paths)
+                    for (QString path : paths) //待添加复制和删除功能以及快捷键效果
                     {
                         if (!path.isEmpty())
                             text += path + '\n';
                         dataUrls << QUrl::fromLocalFile(path);
+
                         gnomeFormat.append(QUrl::fromLocalFile(path).toEncoded()).append("\n");
                     }
 
@@ -427,9 +476,17 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     }
                     Dtk::Widget::DDesktopServices::showFolder(strtmp);
                 });
-                connect(actDel, &QAction::triggered, this, [ = ] {
-                    QFile filetmp(strFile);
-                    filetmp.remove();
+                connect(actDel, &QAction::triggered, this, [=] {
+                    if (m_index.isEmpty()) {
+                        QFile filetmp(strFile);
+                        filetmp.remove();
+                    } else {
+                        QSet<int>::iterator it;
+                        for (it = m_index.begin(); it != m_index.end(); ++it) {
+                            QFile filetmp(m_indexImage.value(*it)->getPath());
+                            filetmp.remove();
+                        }
+                    }
                 });
                 //tmpimg->scaled(pLabel->size());
 
@@ -526,4 +583,22 @@ void ThumbnailsBar::addPath(QString strPath)
     }
 
     onFoldersChanged("");
+}
+
+void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        m_bMulti = true; //完成ctrl+c或者删除等操作后恢复false
+        m_index.insert(_indexNow);
+    }
+}
+
+void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        m_bMulti = false;
+        m_index.clear();
+        //不填0就是默认当前选项
+        //m_index.insert(0);//始终选择第一个，选择当前的话，有可能正好是取消当前选项，此时需要定义选中哪个选项
+    }
 }

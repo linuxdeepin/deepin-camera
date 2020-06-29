@@ -111,11 +111,9 @@ signals:
 
 protected:
     void mouseReleaseEvent(QMouseEvent *ev) override;
-
-    //    void mousePressEvent(QMouseEvent *ev) override
-    //    {
-    //        bmouserelease = false;
-    //    }
+    //    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    //    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) override;
 
 private:
@@ -165,6 +163,8 @@ private:
     DPushButton *m_lastButton {nullptr};
 
 private:
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 signals:
     void fitToolBar();//调整工具栏
