@@ -515,6 +515,11 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                     sws_freeContext(mp4_video_stream->sws_ctx);
                 if(!!mp4_video_stream->swr_ctx)
                     swr_free(&mp4_video_stream->swr_ctx);
+                if(!!mp4_video_stream)
+                {
+                    free(mp4_video_stream);
+                    mp4_video_stream = NULL;
+                }
 
                 //if(!!mp4_audio_stream->enc)
                     //avcodec_free_context(&mp4_audio_stream->enc);
@@ -526,10 +531,16 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                     sws_freeContext(mp4_audio_stream->sws_ctx);
                 if(!!mp4_audio_stream->swr_ctx)
                     swr_free(&mp4_audio_stream->swr_ctx);
+                if(!!mp4_audio_stream)
+                {
+                    free(mp4_audio_stream);
+                    mp4_audio_stream = NULL;
+                }
 
                 mp4_destroy_context(mp4_ctx);
 
                 mp4_ctx = NULL;
+                malloc_trim(0);
             }
         break;
 

@@ -59,6 +59,7 @@ static int save_video = 0; /*save video flag*/
 static uint64_t my_photo_timer = 0; /*timer count*/
 
 static uint64_t my_video_timer = 0; /*timer count*/
+
 static uint64_t my_video_begin_time = 0; /*first video frame ts*/
 
 static int restart = 0; /*restart flag*/

@@ -182,8 +182,6 @@ int camInit(const char* devicename)
 //        set_render_flag(render);
     }
 
-
-
     if(my_options->disable_libv4l2){
         v4l2core_disable_libv4l2(my_vd);
     }

@@ -22,21 +22,22 @@
 #include "mainwindow.h"
 
 #include <QListWidgetItem>
-#include <DLabel>
+#include <QTextLayout>
+#include <QStyleFactory>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <qsettingbackend.h>
+
+#include <DLabel>
 #include <DSettingsDialog>
 #include <DSettingsOption>
 #include <DSettings>
 #include <DLineEdit>
 #include <DFileDialog>
 #include <DDialog>
-#include <QTextLayout>
-#include <QStyleFactory>
-#include <dsettingswidgetfactory.h>
 #include <DDesktopServices>
-#include <qsettingbackend.h>
 #include <DMessageBox>
+#include <dsettingswidgetfactory.h>
 
 static DSettings *sDsetWgt = nullptr;
 static QString g_lastFileName = nullptr;
@@ -359,6 +360,7 @@ void CMainWindow::initUI()
     setCentralWidget(wget);
 
     setupTitlebar();
+
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(70);
@@ -559,7 +561,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
     //                                tr("Warning"), tr("Video recording is in progress. Close the window?"),
     //                                DMessageBox::StandardButton::Cancel
     //                                | DMessageBox::StandardButton::Close, this);
-    if (m_videoPre.m_bActive) {
+    if (m_videoPre.getCapstatus()) {
         int ret = m_closeDlg->exec();
         switch (ret) {
         case 0:

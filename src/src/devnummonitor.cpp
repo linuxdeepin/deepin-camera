@@ -31,10 +31,7 @@ extern "C"
 
 DevNumMonitor::DevNumMonitor()
 {
-    v4l2_device_list_t *devlist = get_device_list();
-    for (int i = 0; i < devlist->num_devices; i++) {
-        //qDebug() << devlist->list_devices[i].name << "," << devlist->list_devices[i].device << endl;
-    }
+    m_pTimer = nullptr;
 }
 void DevNumMonitor::stop()
 {
@@ -54,7 +51,9 @@ void DevNumMonitor::init()
 
 void DevNumMonitor::run()
 {
-    QTimer *m_pTimer = new QTimer;
+    if (m_pTimer == nullptr) {
+        m_pTimer = new QTimer;
+    }
     m_pTimer->setInterval(200);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
@@ -78,6 +77,5 @@ void DevNumMonitor::timeOutSlot()
         emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();
-
     }
 }

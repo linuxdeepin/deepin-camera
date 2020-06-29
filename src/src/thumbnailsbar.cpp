@@ -494,6 +494,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 });
                 connect(actOpenFolder, &QAction::triggered, this, [ = ] {
                     //DDesktopServices::trash(strFile);//这个函数是移入回收站
+
                     QString strtmp = strFolder;
                     if (strtmp.size() && strtmp[0] == '~')
                     {

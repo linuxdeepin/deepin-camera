@@ -20,10 +20,6 @@ SOURCES += \
     src/mainwindow.cpp \
     src/toolbar.cpp \
     src/videowidget.cpp \
-    src/widgetproxy.cpp \
-    src/cameradetect.cpp \
-    src/avcodec.cpp \
-    src/effectproxy.cpp \
     src/thumbnailsbar.cpp \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
@@ -36,10 +32,6 @@ RESOURCES += \
 HEADERS += \
     src/mainwindow.h \
     src/toolbar.h \
-    src/widgetproxy.h \
-    src/cameradetect.h \
-    src/avcodec.h \
-    src/effectproxy.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \

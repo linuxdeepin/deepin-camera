@@ -21,13 +21,9 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "avcodec.h"
-#include "cameradetect.h"
-#include "effectproxy.h"
 #include "thumbnailsbar.h"
 #include "toolbar.h"
 #include "videowidget.h"
-#include "widgetproxy.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
 #include "camview.h"
@@ -95,33 +91,22 @@ private slots:
     //    void onTakePicBtnClicked();
     //    void onTakeVdBtnClicked();
 private:
-    ThumbnailsBar   *m_thumbnail;
-    avCodec         m_avCodec;
-    CameraDetect    m_camDetect;
-    effectproxy     m_effProxy;
-    ToolBar         m_toolBar;
-
-    videowidget     m_videoPre;
-    widgetProxy     m_wgtProxy;
-    CloseDialog *m_closeDlg;
-    //    AnimationLabel *_animationlable {nullptr};
-
-    QFileSystemWatcher m_fileWatcher;
-    DevNumMonitor *m_devnumMonitor;
-
-    QVector<videowidget *> m_VEffectPreview;
-
-    DButtonBox *pDButtonBox;
-    DButtonBoxButton *m_pTitlePicBtn;
-    DButtonBoxButton *m_pTitleVdBtn;
-    DIconButton *pSelectBtn; //切换按钮
-    DSettingsDialog *pDSettingDialog;
-    DSettings *pDSettings;
-    QString m_strCfgPath;
-    QAction *m_actionSettings;
-
-    //DMessageBox *m_pMsgBox;
-    int m_nActTpye;
+    ThumbnailsBar              *m_thumbnail;
+    ToolBar                     m_toolBar;
+    videowidget                  m_videoPre;
+    CloseDialog                  *m_closeDlg;
+    QFileSystemWatcher           m_fileWatcher;
+    DevNumMonitor              *m_devnumMonitor;
+    QVector<videowidget *>       m_VEffectPreview;
+    DButtonBox                  *pDButtonBox;
+    DButtonBoxButton            *m_pTitlePicBtn;
+    DButtonBoxButton            *m_pTitleVdBtn;
+    DIconButton                 *pSelectBtn; //切换按钮
+    DSettingsDialog              *pDSettingDialog;
+    DSettings                    *pDSettings;
+    QString                      m_strCfgPath;
+    QAction                     *m_actionSettings;
+    int                          m_nActTpye;
 
     //    bool m_bMultiCam;//是否多摄像头
     //    bool m_bLockCam;//是否锁定摄像头，拍照和录像过程中锁定

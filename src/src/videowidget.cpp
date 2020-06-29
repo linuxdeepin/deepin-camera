@@ -114,6 +114,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
     //m_pNormalView->setWindowFlag(Qt::QGraphicsScene);
+
     m_pNormalItem = new QGraphicsPixmapItem;
     m_pCountItem = new QGraphicsTextItem;
 
@@ -135,7 +136,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 void videowidget::init()
 {
-    m_bActive = false;
+    setCapstatus(false);
 
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->m_bTake = false;
@@ -170,7 +171,6 @@ void videowidget::init()
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 }
 
-
 //显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
@@ -202,7 +202,6 @@ void videowidget::showCamUsed()
     QImage img(":/images/icons/Take up.svg");
     //    img = img.scaled(img.size());
     m_pixmap = QPixmap::fromImage(img);
-
     m_pNormalItem->setPixmap(m_pixmap);
 
     QString str = "The webcam is in use";
@@ -211,7 +210,6 @@ void videowidget::showCamUsed()
     m_pNormalItem->setPos(320, 100);
     m_pCountItem->show();
     m_pCountItem->setPos(330, 240);
-
 }
 
 void videowidget::ReceiveMajorImage(QImage image, int result)
@@ -310,7 +308,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
 
-
         m_fWgtCountdown->show();
         m_pTimeItem->hide();
         m_fWgtTime->hide();
@@ -377,19 +374,15 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
-    //resizePixMap();
-
     return DWidget::resizeEvent(size);
-
 }
 
 void videowidget::showCountdown()
 {
-    //qDebug() << "showCountdown";
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0) {
         if (VIDEO_STATE == AUDIO) {
-            if (!m_bActive) {
+            if (!getCapstatus()) {
 
                 /*m_bActive录制状态判断
                 *false：非录制状态
@@ -485,10 +478,10 @@ void videowidget::endBtnClicked()
 
     m_fWgtTime->hide();
     m_fWgtBtn->hide();
-    if (m_bActive) { //录制完成处理
+    if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        m_bActive = false;
+        setCapstatus(false);
         reset_video_timer();
     }
     emit takeVdCancel();
@@ -603,10 +596,10 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         emit takeVdCancel(); //用于恢复缩略图
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
-    if (m_bActive) { //录制完成处理
+    if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        m_bActive = false;
+        setCapstatus(false);
         reset_video_timer();
         return;
     }
@@ -616,7 +609,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     if (m_nMaxInterval == 0) {
         //直接录制
         showCountdown();
-        if (m_bActive)
+        if (getCapstatus())
             countTimer->start(1000);
     } else {
         //倒计时结束后录制
@@ -643,10 +636,10 @@ void videowidget::forbidScrollBar(QGraphicsView *view)
 
 void videowidget::startTakeVideo()
 {
-    if (m_bActive) {
+    if (getCapstatus()) {
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
-        m_bActive = false;
+        setCapstatus(false);
         reset_video_timer();
 
     } else {
@@ -657,7 +650,7 @@ void videowidget::startTakeVideo()
             set_video_name(m_strFileName.toStdString().c_str());
             m_fWgtBtn->show();
             start_encoder_thread();
-            m_bActive = true;
+            setCapstatus(true);
             //begin_time = QDateTime::currentDateTime();
             countTimer->stop();
             countTimer->start(1000); //重新计时，否则时间与显示时间
@@ -680,7 +673,7 @@ void videowidget::startTakeVideo()
             //countTimer->start(1000);
             m_time.setHMS(0, 0, 0, 0);
             m_fWgtBtn->show();
-            m_bActive = false;
+            setCapstatus(false);
             m_nCount = 0;
             m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
                             this->height() - m_fWgtTime->height() - 5);
