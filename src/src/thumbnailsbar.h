@@ -110,6 +110,7 @@ signals:
     void imageItemclicked(int index, int indexNow);
 
 protected:
+    void mouseDoubleClickEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
     //    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     //    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;

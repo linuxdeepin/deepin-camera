@@ -73,6 +73,25 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     //    });
 }
 
+void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
+{
+    Q_UNUSED(ev);
+    QFileInfo fileInfo(_path);
+    if (fileInfo.suffix() == "jpg") {
+        QString program = "deepin-image-viewer"; //用看图打开
+        QStringList arguments;
+        arguments << _path;
+        QProcess *myProcess = new QProcess(this);
+        myProcess->startDetached(program, arguments);
+    } else {
+        QString program = "deepin-movie"; //用影院打开
+        QStringList arguments;
+        arguments << _path;
+        QProcess *myProcess = new QProcess(this);
+        myProcess->startDetached(program, arguments);
+    }
+}
+
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
     if (ev->button() == Qt::LeftButton) {
@@ -380,8 +399,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 //pLabel->setPixmap(*pix);
 
                 QMenu *menu = new QMenu();
-                QAction *actOpen = new QAction(this);
-                actOpen->setText("打开");
+                //                QAction *actOpen = new QAction(this);//改为双击打开
+                //                actOpen->setText("打开");
                 QAction *actCopy = new QAction(this);
                 actCopy->setText("复制");
                 //this->addAction(actCopy);
@@ -391,7 +410,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 actDel->setText("删除");
                 QAction *actOpenFolder = new QAction(this);
                 actOpenFolder->setText("打开文件夹");
-                menu->addAction(actOpen);
+                //                menu->addAction(actOpen);
                 menu->addAction(actCopy);
                 menu->addAction(actDel);
                 menu->addAction(actOpenFolder);
@@ -403,26 +422,26 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     Q_UNUSED(pos);
                     menu->exec(QCursor::pos());
                 });
-                connect(actOpen, &QAction::triggered, this, [ = ] {
-                    //                    QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
-                    //                    system(cmd.toStdString().c_str());
+                //                connect(actOpen, &QAction::triggered, this, [ = ] {
+                //                    //                    QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
+                //                    //                    system(cmd.toStdString().c_str());
 
-                    if (fileInfo.suffix() == "jpg")
-                    {
-                        QString program = "deepin-image-viewer"; //用看图打开
-                        QStringList arguments;
-                        arguments << strFile;
-                        QProcess *myProcess = new QProcess(this);
-                        myProcess->startDetached(program, arguments);
-                    } else
-                    {
-                        QString program = "deepin-movie"; //用影院打开
-                        QStringList arguments;
-                        arguments << strFile;
-                        QProcess *myProcess = new QProcess(this);
-                        myProcess->startDetached(program, arguments);
-                    }
-                });
+                //                    if (fileInfo.suffix() == "jpg")
+                //                    {
+                //                        QString program = "deepin-image-viewer"; //用看图打开
+                //                        QStringList arguments;
+                //                        arguments << strFile;
+                //                        QProcess *myProcess = new QProcess(this);
+                //                        myProcess->startDetached(program, arguments);
+                //                    } else
+                //                    {
+                //                        QString program = "deepin-movie"; //用影院打开
+                //                        QStringList arguments;
+                //                        arguments << strFile;
+                //                        QProcess *myProcess = new QProcess(this);
+                //                        myProcess->startDetached(program, arguments);
+                //                    }
+                //                });
                 connect(actCopy, &QAction::triggered, this, [ = ] {
                     //                    QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"),
                     //                                                                    strFile,
@@ -478,13 +497,15 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 });
                 connect(actDel, &QAction::triggered, this, [=] {
                     if (m_index.isEmpty()) {
-                        QFile filetmp(strFile);
-                        filetmp.remove();
+                        //                        QFile filetmp(strFile);
+                        //                        filetmp.remove();
+                        DDesktopServices::trash(strFile);
                     } else {
                         QSet<int>::iterator it;
                         for (it = m_index.begin(); it != m_index.end(); ++it) {
-                            QFile filetmp(m_indexImage.value(*it)->getPath());
-                            filetmp.remove();
+                            //                            QFile filetmp(m_indexImage.value(*it)->getPath());
+                            //                            filetmp.remove();
+                            DDesktopServices::trash(m_indexImage.value(*it)->getPath());
                         }
                     }
                 });
