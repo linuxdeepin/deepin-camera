@@ -477,6 +477,7 @@ void videowidget::endBtnClicked()
 
     m_fWgtTime->hide();
     m_fWgtBtn->hide();
+    VIDEO_STATE = NORMALVIDEO;
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
@@ -615,14 +616,6 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         m_nInterval = m_nMaxInterval;
         countTimer->start(1000);
     }
-}
-
-void videowidget::onTakeVideoOver()
-{
-    qDebug() << "onTakeVideoOver";
-    VIDEO_STATE = NORMALVIDEO;
-    countTimer->stop();
-    hideTimeLabel();
 }
 
 void videowidget::forbidScrollBar(QGraphicsView *view)

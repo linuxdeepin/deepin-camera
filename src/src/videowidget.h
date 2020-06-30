@@ -84,7 +84,6 @@ public:
 public slots:
     void onTakePic();
     void onTakeVideo();
-    void onTakeVideoOver();
     void showCountdown();
     void changeDev();
 
