@@ -744,6 +744,7 @@ void CMainWindow::onEnableSettings(bool bTrue)
 void CMainWindow::onTakePicDone()
 {
     onEnableTitleBar(3); //恢复按钮状态
+    onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
 }
 

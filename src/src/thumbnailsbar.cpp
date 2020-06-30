@@ -135,7 +135,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-    qDebug() << "paint" << _index;
+    //qDebug() << "paint" << _index;
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
@@ -537,11 +537,13 @@ void ThumbnailsBar::onBtnClick() //没有相机录像崩溃，待处理
             m_nStatus = STATNULL;
             emit enableTitleBar(3);
             emit takePic();
+            emit enableSettings(true);
         } else {
             m_nStatus = STATPicIng;
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
             emit takePic();
+            emit enableSettings(false);
         }
 
     } else if (m_nActTpye == ActTakeVideo) {
