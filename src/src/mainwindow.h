@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
@@ -22,7 +22,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "thumbnailsbar.h"
-#include "toolbar.h"
+//#include "toolbar.h"
 #include "videowidget.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
@@ -62,7 +62,7 @@ public:
     void newNinePreview();
     DSettings *getDsetMber();
 
-    ~CMainWindow();
+    ~CMainWindow() override;
 
 private:
     void initUI();
@@ -92,7 +92,7 @@ private slots:
     //    void onTakeVdBtnClicked();
 private:
     ThumbnailsBar              *m_thumbnail;
-    ToolBar                     m_toolBar;
+    //    ToolBar                     m_toolBar;
     videowidget                  m_videoPre;
     CloseDialog                  *m_closeDlg;
     QFileSystemWatcher           m_fileWatcher;

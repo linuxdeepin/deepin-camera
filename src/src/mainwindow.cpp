@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
@@ -368,7 +368,7 @@ void CMainWindow::initUI()
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
     QAction *actOpen = new QAction(this);
-    actOpen->setText("打开文件夹");
+    actOpen->setText("Open folder");
     menu->addAction(actOpen);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
@@ -503,7 +503,7 @@ void CMainWindow::initConnection()
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
-    connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
+    //connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
 }
 void CMainWindow::setSelBtnHide()
 {

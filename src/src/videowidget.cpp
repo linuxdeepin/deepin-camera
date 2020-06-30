@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
@@ -31,7 +31,6 @@
 #include <QThread>
 #include <QScrollBar>
 //#include "LPF_V4L2.h"
-
 
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
 

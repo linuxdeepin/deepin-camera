@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2020 ~ %YEAR% Uniontech Software Technology Co.,Ltd.
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     hujianbo <hujianbo@uniontech.com>
 *
@@ -409,15 +409,15 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 //                QAction *actOpen = new QAction(this);//改为双击打开
                 //                actOpen->setText("打开");
                 QAction *actCopy = new QAction(this);
-                actCopy->setText("复制");
+                actCopy->setText("Copy");
 
                 //actCopy->setShortcut(/*QKeySequence("Ctrl+C")*/QKeySequence(Qt::CTRL | Qt::Key_C));
                 //addAction(actCopy);
 
                 QAction *actDel = new QAction(this);
-                actDel->setText("删除");
+                actDel->setText("Delete");
                 QAction *actOpenFolder = new QAction(this);
-                actOpenFolder->setText("打开文件夹");
+                actOpenFolder->setText("Open folder");
                 //                menu->addAction(actOpen);
                 menu->addAction(actCopy);
                 menu->addAction(actDel);
