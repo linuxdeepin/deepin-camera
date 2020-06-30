@@ -36,7 +36,6 @@
 #include "core_io.h"
 #include "gui.h"
 #include "config.h"
-#include "config.h"
 
 #define MAXLINE 100 /*100 char lines max*/
 
@@ -44,25 +43,25 @@ extern int debug_level;
 
 static config_t my_config =
 {
-	.width = 640,
-	.height = 480,
+    .width = 1280,
+    .height = 720,
     .format = V4L2_PIX_FMT_YUYV,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",
 	.capture = "mmap",
     .video_codec = "h264",
-    .audio_codec = "mp3",
+    .audio_codec = "aac",
 	.profile_name = NULL,
 	.profile_path = NULL,
-	.video_name = NULL,
+    .video_name = NULL,
 	.video_path = NULL,
 	.photo_name = NULL,
 	.photo_path = NULL,
 	.video_sufix = 1,
 	.photo_sufix = 1,
 	.fps_num = 1,
-	.fps_denom = 25,
+    .fps_denom = 25,
     .audio_device = -1,/*will use API default in this case*/
 	.video_fx = 0, /*no video fx*/
 	.audio_fx = 0, /*no audio fx*/

@@ -484,9 +484,13 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 
     if(video_defaults->gop_size > 0)
+    {
         video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+    }
     else
+    {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
+    }
 
 	if(video_defaults->codec_id == AV_CODEC_ID_H264)
 	{
@@ -1439,11 +1443,11 @@ static int libav_encode(AVCodecContext *avctx, AVPacket *pkt, AVFrame *frame, in
   *got_packet = 0;
 
 	if(frame)
-	{
+    {
 		ret = avcodec_send_frame(avctx, frame);
-  	if (ret < 0)
-  		return ret; //if (ret == AVERROR(EAGAIN)) //input buffer is full
-	}
+        if (ret < 0)
+            return ret; //if (ret == AVERROR(EAGAIN)) //input buffer is full
+    }
 
   ret = avcodec_receive_packet(avctx, pkt);
   if (!ret)
@@ -1670,7 +1674,6 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 	int got_packet = 0;
 	int ret = 0;
 
-
 	if(!enc_audio_ctx->flush_delayed_frames)
 	{
 		/*number of samples per channel*/
@@ -1816,6 +1819,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	/*close video codec*/
 	if(enc_video_ctx)
 	{
+
 		video_codec_data = (encoder_codec_data_t *) enc_video_ctx->codec_data;
 		if(video_codec_data)
 		{
@@ -1824,8 +1828,9 @@ void encoder_close(encoder_context_t *encoder_ctx)
 				avcodec_flush_buffers(video_codec_data->codec_context);
 				enc_video_ctx->flushed_buffers = 1;
 			}
-			avcodec_close(video_codec_data->codec_context);
-			free(video_codec_data->codec_context);
+
+            avcodec_close(video_codec_data->codec_context);
+                free(video_codec_data->codec_context);
 
 			av_dict_free(&(video_codec_data->private_options));
 
@@ -1851,6 +1856,8 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	/*close audio codec*/
 	if(enc_audio_ctx)
 	{
+        //测试video时长是否正常
+        printf("video_duration:%d",enc_audio_ctx->duration);
 		audio_codec_data = (encoder_codec_data_t *) enc_audio_ctx->codec_data;
 		if(audio_codec_data)
 		{

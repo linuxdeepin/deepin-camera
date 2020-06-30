@@ -48,8 +48,8 @@
 /*flags*/
 extern int debug_level;//debug
 
-extern __MUTEX_TYPE capture_mutex;
-extern __COND_TYPE capture_cond;
+__MUTEX_TYPE capture_mutex = __STATIC_MUTEX_INIT;//初始化静态锁
+__COND_TYPE capture_cond;
 
 static int render = RENDER_SDL; /*render API*/
 static int quit = 0; /*terminate flag*/
@@ -59,6 +59,7 @@ static int save_video = 0; /*save video flag*/
 static uint64_t my_photo_timer = 0; /*timer count*/
 
 static uint64_t my_video_timer = 0; /*timer count*/
+
 static uint64_t my_video_begin_time = 0; /*first video frame ts*/
 
 static int restart = 0; /*restart flag*/
@@ -68,6 +69,9 @@ static char render_caption[30]; /*render window caption*/
 static uint32_t my_render_mask = REND_FX_YUV_NOFILT; /*render fx filter mask*/
 
 static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
+
+/*暂停录制*/
+static int capture_pause = 0;
 
 /*continues focus*/
 static int do_soft_autofocus = 0;
@@ -86,6 +90,40 @@ static int my_encoder_status = 0;
 
 static char status_message[80];
 
+
+/*
+ * set capture_pause flag
+ * args:
+ *    value - flag value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_capture_pause(int bvalue)
+{
+    capture_pause = bvalue;
+    printf("capture_pause = %d\n", bvalue);
+}
+
+/*
+ * get capture_pause value
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: capture_pause
+ */
+int get_capture_pause()
+{
+    return capture_pause;
+
+}
+
+
 /*
  * set render flag
  * args:
@@ -100,6 +138,7 @@ void set_render_flag(int value)
 {
     render = value;
 }
+
 
 /*
  * get render fx mask
@@ -373,7 +412,7 @@ void request_format_update()
  *
  * returns: pointer to v4l2 device handler (or null on error)
  */
-v4l2_dev_t *create_v4l2_device_handler(const char *device)
+v4l2_dev_t *get_v4l2_dev(const char *device)
 {
     my_vd = v4l2core_init_dev(device);
 
@@ -537,6 +576,11 @@ static void *audio_processing_loop(void *data)
 
     while(video_capture_get_save_video())
     {
+        if(get_capture_pause())
+        {
+            continue;
+        }
+
         int ret = audio_get_next_buffer(audio_ctx, audio_buff,
                 sample_type, my_audio_mask);
 
@@ -593,7 +637,7 @@ static void *audio_processing_loop(void *data)
  *
  * returns: pointer to return code
  */
-static void *encoder_loop(void *data)
+static void *encoder_loop(__attribute__((unused))void *data)
 {
     my_encoder_status = 1;
 
@@ -678,12 +722,12 @@ static void *encoder_loop(void *data)
     char *name = strdup(get_video_name());
     char *path = strdup(get_video_path());
 
-    if(get_video_sufix_flag())
-    {
-        char *new_name = add_file_suffix(path, name);
-        free(name); /*free old name*/
-        name = new_name; /*replace with suffixed name*/
-    }
+    //    if(get_video_sufix_flag())
+    //    {
+    //        char *new_name = add_file_suffix(path, name);
+    //        free(name); /*free old name*/
+    //        name = new_name; /*replace with suffixed name*/
+    //    }
     int pathsize = strlen(path);
     if(path[pathsize - 1] != '/')
         video_filename = smart_cat(path, '/', name);
@@ -741,7 +785,7 @@ static void *encoder_loop(void *data)
             if(!encoder_disk_supervisor(treshold, path))
             {
                 /*stop capture*/
-                if((save_image||save_video) == 1)
+                if((save_image || save_video) == 1)
                 {
                     save_image = 0;
                     save_video = 0;
@@ -771,12 +815,13 @@ static void *encoder_loop(void *data)
     /*close the encoder context (clean up)*/
     encoder_close(encoder_ctx);
 
-    if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
-    {
-        /* restore framerate */
-        v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+    if(my_vd){
+        if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
+        {
+            /* restore framerate */
+            v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+        }
     }
-
     /*clean strings*/
     free(video_filename);
     free(path);
@@ -785,6 +830,23 @@ static void *encoder_loop(void *data)
     my_encoder_status = 0;
 
     return ((void *) 0);
+}
+
+/*
+ * create a v4l2 device handler
+ * args:
+ *    device - device name
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to v4l2 device handler (or null on error)
+ */
+v4l2_dev_t *create_v4l2_device_handler(const char *device)
+{
+    my_vd = v4l2core_init_dev(device);
+
+    return my_vd;
 }
 
 /*

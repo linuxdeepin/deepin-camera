@@ -1,14 +1,32 @@
+/*
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+*
+* Author:     shicetu <shicetu@uniontech.com>
+*             hujianbo <hujianbo@uniontech.com>
+* Maintainer: shicetu <shicetu@uniontech.com>
+*             hujianbo <hujianbo@uniontech.com>
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "actiontoken.h"
-#include "avcodec.h"
-#include "cameradetect.h"
-#include "effectproxy.h"
 #include "thumbnailsbar.h"
-#include "toolbar.h"
-#include "videoeffect.h"
-#include "videopreviewwidget.h"
-#include "widgetproxy.h"
+//#include "toolbar.h"
+#include "videowidget.h"
+#include "devnummonitor.h"
+#include "closedialog.h"
+#include "camview.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -23,9 +41,16 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <DTitlebar>
+#include <DSettingsDialog>
+
+DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
-
+const int TOP_TOOLBAR_HEIGHT = 50;
+const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
+const int MinWindowWidth = 800;
+const int MinWindowHeight = 533;
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -33,31 +58,60 @@ class CMainWindow : public DMainWindow
     Q_OBJECT
 public:
     CMainWindow(DWidget *w = nullptr);
-
-
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
-    void showPreviewByState(PRIVIEW_STATE state);
+    DSettings *getDsetMber();
 
+    ~CMainWindow() override;
 
 private:
-    ThumbnailsBar   m_thumbnail;
-    actionToken     m_actToken;
-    avCodec         m_avCodec;
-    CameraDetect    m_camDetect;
-    effectproxy     m_effProxy;
-    ToolBar         m_toolBar;
-    videoEffect     m_videoEffect;
-    videopreviewwidget  m_videoPre;
-    widgetProxy     m_wgtProxy;
-
-    QFileSystemWatcher m_fileWatcher;
-
-    QVector<videopreviewwidget *> m_VEffectPreview;
     void initUI();
+    void initTitleBar();
     void initConnection();
-
+    void setupTitlebar();
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void menuItemInvoked(QAction *action);
+    void settingsTriggered(bool bTrue);
+    //void keyPressEvent(QKeyEvent *ev);
+    void slotPopupSettingsDialog();
+private slots:
+    void setSelBtnHide();
+    void setSelBtnShow();
+    void onFitToolBar();
+    void onEnableTitleBar(int nType);
+    void onTitlePicBtn();
+    void onTitleVdBtn();
+    void onSettingsDlgClose();
+    void onEnableSettings(bool bTrue);
+    void onTakePicDone();
+    void onTakeVdCancel();
+    //void onCapturepause(Qt::WindowState windowState);
+    //    void onTakePicBtnClicked();
+    //    void onTakeVdBtnClicked();
 private:
+    ThumbnailsBar              *m_thumbnail;
+    //    ToolBar                     m_toolBar;
+    videowidget                  m_videoPre;
+    CloseDialog                  *m_closeDlg;
+    QFileSystemWatcher           m_fileWatcher;
+    DevNumMonitor              *m_devnumMonitor;
+    QVector<videowidget *>       m_VEffectPreview;
+    DButtonBox                  *pDButtonBox;
+    DButtonBoxButton            *m_pTitlePicBtn;
+    DButtonBoxButton            *m_pTitleVdBtn;
+    DIconButton                 *pSelectBtn; //切换按钮
+    DSettingsDialog              *pDSettingDialog;
+    DSettings                    *pDSettings;
+    QString                      m_strCfgPath;
+    QAction                     *m_actionSettings;
+    int                          m_nActTpye;
+
+    //    bool m_bMultiCam;//是否多摄像头
+    //    bool m_bLockCam;//是否锁定摄像头，拍照和录像过程中锁定
+signals:
+
 
 };
 

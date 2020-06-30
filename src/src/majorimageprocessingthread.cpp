@@ -1,9 +1,29 @@
+/*
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+*
+* Author:     shicetu <shicetu@uniontech.com>
+*
+* Maintainer: shicetu <shicetu@uniontech.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "majorimageprocessingthread.h"
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
-    stopped = false;
-    majorindex = -1;
+    init();
 }
 
 void MajorImageProcessingThread::stop()
@@ -13,37 +33,38 @@ void MajorImageProcessingThread::stop()
 
 void MajorImageProcessingThread::init()
 {
-    //condition = new QWaitCondition();
+    stopped = false;
+    majorindex = -1;
 }
 
 void MajorImageProcessingThread::run()
 {
-
-    v4l2_dev_t *vd1 = get_v4l2_dev();
-    v4l2_frame_buff_t *frame;
-    unsigned char *rgb24;
-    render_init(RENDER_NONE, 640, 480, 2, 0, 0);
-
+    vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
-    QString *img_filename  = new QString();
+    int framedely = 0;
     while (!stopped) {
-        msleep(1000 / 20);
+
+        result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
+            framedely++;
+            if (framedely == MAX_DELAYED_FRAMES) {
+                stopped = true;
+
+                //发送设备中断信号
+                emit reachMaxDelayedFrames();
+                close_v4l2_device_handler();
+                return ;
+            }
             continue;
         }
-        render_frame_fx(frame->yuv_frame, my_render_mask);
-        int result = -1;
-        if (frame != nullptr) {
-            result = 0;
-        }
-
-        printf("(raw)frame->timestamp:%llu\n", frame->timestamp);
-
+        result = 0;
+        framedely = 0;
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
 
             uint8_t *input_frame = frame->yuv_frame;
+
             /*
              * TODO: check codec_id, format and frame flags
              * (we may want to store a compressed format
@@ -52,18 +73,17 @@ void MajorImageProcessingThread::run()
                 switch (v4l2core_get_requested_frame_format(vd1)) {
                 case  V4L2_PIX_FMT_H264:
                     input_frame = frame->h264_frame;
-                    size = (int) frame->h264_frame_size;
+                    size = static_cast<int>(frame->h264_frame_size);
                     break;
                 default:
                     input_frame = frame->raw_frame;
-                    size = (int) frame->raw_frame_size;
+                    size = static_cast<int>(frame->raw_frame_size);
                     break;
                 }
             }
-            /*add the frame to the encoder buffer*/
-            encoder_add_video_frame(input_frame, size, frame->timestamp, frame->isKeyframe);
-
-            //printf("(video)frame->timestamp:%llu\n", frame->timestamp);
+            /*把帧加入编码队列*/
+            if (!get_capture_pause())
+                encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
 
             /*
              * exponencial scheduler
@@ -73,58 +93,39 @@ void MajorImageProcessingThread::run()
             double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
             if (time_sched > 0) {
                 switch (v4l2core_get_requested_frame_format(vd1)) {
-                case  V4L2_PIX_FMT_H264: {
-                    uint32_t framerate = lround(time_sched * 1E6); /*nanosec*/
+                case V4L2_PIX_FMT_H264: {
+                    uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
                     v4l2core_set_h264_frame_rate_config(vd1, framerate);
                     break;
                 }
                 default: {
-                    struct timespec req = {
-                        .tv_sec = 0,
-                        .tv_nsec = (uint32_t) (time_sched * 1E6)
-                    };/*nanosec*/
-                    nanosleep(&req, NULL);
+                    struct timespec req = {0, static_cast<__syscall_slong_t>(time_sched * 1E6)}; /*nanosec*/
+                    nanosleep(&req, nullptr);
                     break;
                 }
                 }
             }
         }
-        rgb24 = (unsigned char *)malloc(frame->width * frame->height * 3 * sizeof(char));
-        //*img_filename = "/home/shicetu/Desktop/shicetu/image/" + QString::number(n) + ".jpg";
-        //img_filename.;
-        //v4l2core_save_image(frame, ( *img_filename).toLatin1().data(), IMG_FMT_JPG);
-        convert_yuv_to_rgb_buffer((unsigned char *)frame->raw_frame, rgb24, frame->width, frame->height);
-        QImage img;
-        img = QImage(rgb24, frame->width, frame->height, QImage::Format_RGB888);
-        //img.save(img_filename, "JPG");
-        emit SendMajorImageProcessing(img, result);
-//        jpeg_encoder_ctx_t *jpeg_ctx = (jpeg_encoder_ctx_t *)calloc(1, sizeof(jpeg_encoder_ctx_t));
-//        if (jpeg_ctx != nullptr) {
-//            uint8_t *jpeg = (uint8_t *)calloc((frame->width * frame->height) >> 1, sizeof(uint8_t));
-//            if (jpeg != nullptr)
-//            }
-        render_frame_osd(frame->yuv_frame);
-        render_frame(frame->yuv_frame);
+        if (!stopped) {
+            //目前转换方法有问题，先保存图像为jpg，再读取出来，后续优化为从内存读取，待处理
+            save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
+            if (m_bTake) {
+                int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+                if (nRet < 0) {
+                    qDebug() << "保存照片失败";
+                }
+
+                m_bTake = false;
+            }
+            m_rwMtxImg.lock();
+            m_img = QImage("a123");
+            m_rwMtxImg.unlock();
+            emit SendMajorImageProcessing(m_img, result);
+        }
         v4l2core_release_frame(vd1, frame);
-        msleep(1000 / 30);
+        rgb24 = nullptr;
+//        msleep(1000 / 30);
     }
     v4l2core_stop_stream(vd1);
-    render_close();
 }
-//    if (majorindex != -1) {
-//        while (!stopped) {
-//            msleep(1000 / 30);
-
-//            QImage img;
-//            int ret = LPF_GetFrame();
-//            if (ret == 0) {
-//                int WV = LPF_GetCurResWidth();
-//                int HV = LPF_GetCurResHeight();
-//                img = QImage(rgb24, WV, HV, QImage::Format_RGB888);
-//            }
-
-//            emit SendMajorImageProcessing(img, ret);
-//        }
-//    }
-//}
 

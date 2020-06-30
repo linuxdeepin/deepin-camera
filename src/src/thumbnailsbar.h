@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+*
+* Author:     shicetu <shicetu@uniontech.com>
+*
+* Maintainer: shicetu <shicetu@uniontech.com>
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef THUMBNAILSBAR_H
 #define THUMBNAILSBAR_H
 
@@ -12,11 +33,17 @@
 #include <QFileSystemWatcher>
 #include <QPushButton>
 #include <DButtonBox>
+#include <DFloatingWidget>
+#include <DIconButton>
+#include <QTimer>
+#include <DLabel>
+#include <DSpinner>
+#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
-#define IMAGE_HEIGHT_DEFAULT    100
-#define THUMBNAIL_WIDTH         130
-#define THUMBNAIL_HEIGHT        100
+#define IMAGE_HEIGHT_DEFAULT 40
+#define THUMBNAIL_WIDTH 30
+#define THUMBNAIL_HEIGHT 40
 //缩略图
 //hjb
 struct DBImgInfo {
@@ -44,35 +71,113 @@ struct DBImgInfo {
     }
 };
 typedef QList<DBImgInfo> DBImgInfoList;
-class ThumbnailsBar : public DWidget
+
+enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
+enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
+
+class ImageItem : public DLabel
+{
+    Q_OBJECT
+public:
+    ImageItem(int index = 0, QString path = nullptr, QWidget *parent = 0);
+    void setPic(QImage image)
+    {
+        Q_UNUSED(image);
+        //      _image->setPixmap(QPixmap::fromImage(image.scaled(60,50)));
+    }
+    void updatePic(QPixmap pixmap)
+    {
+        _pixmap = pixmap;
+        update();
+    }
+    void setIndex(int index)
+    {
+        _index = index;
+    }
+    void SetPath(QString path)
+    {
+        _path = path;
+    }
+    inline QString getPath()
+    {
+        return _path;
+    }
+    inline int getIndex()
+    {
+        return _index;
+    }
+signals:
+    void imageItemclicked(int index, int indexNow);
+
+protected:
+    void mouseDoubleClickEvent(QMouseEvent *ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    //    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    //    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *event) override;
+
+private:
+    int _index;
+    DLabel *_image = nullptr;
+    QString _path;
+    QPixmap _pixmap;
+    DSpinner *m_spinner;
+    QString m_pixmapstring;
+    bool bFirstUpdate = true;
+};
+
+class ThumbnailsBar : public DFloatingWidget
 {
     Q_OBJECT
 public:
 
     explicit ThumbnailsBar(DWidget *parent = nullptr);
-    void load();
-    void loadInterface(QString strPath);
+    //    void load();
+    //    void loadInterface(QString strPath);
+    int getItemCount()
+    {
+        return m_nItemCount;
+    }
+    void ChangeActType(int nType);
+    void addPath(QString strPath);
 
-    QHBoxLayout *horizontalLayout;
-    DButtonBoxButton *pushButton_8;
-    DButtonBoxButton *pushButton_9;
+    QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
     //QListWidget *imageList;
-    QMap<QString, QPixmap> m_imagemap;
-
+    //QMap<QString, QPixmap> m_imagemap;
+    int m_nMaxItem;
+    int m_nStatus; //当前状态
 private:
-    QString m_strPath;
+    int m_nItemCount;
     mutable QReadWriteLock m_readlock;
     mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
     int m_current = 0;
-    DBImgInfoList m_infos;
-    void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-signals:
 
+    int m_nActTpye;//拍照或者视频模式，默认拍照
+
+    QStringList m_strlstFolders;
+
+    DBImgInfoList m_infos;
+    DPushButton *m_lastButton {nullptr};
+
+private:
+    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
+signals:
+    void fitToolBar();//调整工具栏
+    void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
+    void takePic();
+    void takeVd();
+    void enableSettings(bool bTrue);
 public slots:
-    void onFileChanged(const QString &strDirectory);
+    void onFoldersChanged(const QString &strDirectory);
+    void onBtnClick();
+    void onShortcutCopy();
+    void onShortcutDel();
 };
 
 #endif // THUMBNAILSBAR_H

@@ -20,6 +20,9 @@
 ********************************************************************************/
 #ifndef VIDEO_CAPTURE_H
 #define VIDEO_CAPTURE_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <inttypes.h>
 #include <sys/types.h>
@@ -32,6 +35,30 @@ typedef struct _capture_loop_data_t {
     void *config;
     void *device;
 } capture_loop_data_t;
+
+/*
+ * set capture_pause flag
+ * args:
+ *    value - flag value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_capture_pause(int bvalue);
+
+/*
+ * get capture_pause value
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: apture_pause
+ */
+int get_capture_pause(void);
 
 /*
  * set render flag
@@ -106,6 +133,18 @@ void set_audio_fx_mask(uint32_t new_mask);
 void set_soft_autofocus(int value);
 
 /*
+ * create a v4l2 device handler
+ * args:
+ *    device - device name
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to v4l2 device handler (or null on error)
+ */
+v4l2_dev_t *create_v4l2_device_handler(const char *device);
+
+/*
  * set software focus flag
  * args:
  *    value - flag value
@@ -163,7 +202,7 @@ int check_video_timer(void);
  *
  * returns: none
  */
-void reset_video_timer(void);
+extern void reset_video_timer(void);
 
 /*
  * sets the save image flag
@@ -175,6 +214,9 @@ void reset_video_timer(void);
  *
  * returns: none
  */
+
+extern int video_capture_get_save_video(void);
+
 void video_capture_save_image(void);
 
 /*
@@ -211,7 +253,7 @@ void request_format_update(void);
  *
  * returns: pointer to v4l2 device handler (or null on error)
  */
-v4l2_dev_t *create_v4l2_device_handler(const char *device);
+v4l2_dev_t *get_v4l2_dev(const char *device);
 
 /*
  * close the v4l2 device handler
@@ -235,7 +277,7 @@ void close_v4l2_device_handler(void);
  *
  * returns: pointer to v4l2 device handler
  */
-v4l2_dev_t *get_v4l2_device_handler(void);
+extern v4l2_dev_t *get_v4l2_device_handler(void);
 
 /*
  * create an audio context
@@ -296,7 +338,7 @@ int start_encoder_thread();
  *
  * returns: error code
  */
-int stop_encoder_thread(void);
+extern int stop_encoder_thread(void);
 
 /*
  * capture loop (should run in a separate thread)
@@ -308,6 +350,10 @@ int stop_encoder_thread(void);
  *
  * returns: pointer to return code
  */
-void *capture_loop(void *data);
+extern void *capture_loop(void *data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

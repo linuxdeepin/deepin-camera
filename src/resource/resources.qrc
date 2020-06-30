@@ -1,6 +1,17 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/logo.svg</file>
         <file>images/123.jpg</file>
+        <file>resource/settings.json</file>
+        <file>images/logo/deepin-camera-96px.svg</file>
+        <file>images/logo/deepin-camera-512px.svg</file>
+        <file>images/logo/deepin-camera-32px.svg</file>
+        <file>images/icons/Not connected.svg</file>
+        <file>images/icons/photograph.svg</file>
+        <file>images/icons/record video.svg</file>
+        <file>images/icons/Take up.svg</file>
+        <file>images/icons/button/photograph.svg</file>
+        <file>images/icons/button/Switch camera.svg</file>
+        <file>images/icons/button/transcribe.svg</file>
+        <file>images/icons/warning.svg</file>
     </qresource>
 </RCC>
