@@ -366,22 +366,23 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4");
     int tIndex = 0;
-    QString strFolder; //时间逆序排序，待完善.思路，读取所有文件名，排序后，加载图片
-    for (int i = 0; i < m_strlstFolders.size(); i++) {
-        strFolder = m_strlstFolders[i];
+    QString strFolder;
+    for (int i = m_strlstFolders.size(); i >= 1; i--) {
+        strFolder = m_strlstFolders[i - 1];
         QDir dir(strFolder);
+        //按时间逆序排序
+        dir.setNameFilters(filters);
+        dir.setSorting(QDir::Time /*| QDir::Reversed*/);
         if (dir.exists()) {
-            //定义迭代器并设置过滤器
-            QDirIterator dir_iterator(strFolder,
-                                      filters,
-                                      QDir::Files | QDir::NoSymLinks,
-                                      QDirIterator::Subdirectories);
-            while (dir_iterator.hasNext()) {
+            //使用dir就不要使用迭代器了，会让dir的设置失效
+            //QDirIterator dir_iterator(dir);
+            QFileInfoList list = dir.entryInfoList();
+            for (int i = 0; i < list.size(); ++i) {
                 if (nLetAddCount <= m_nItemCount) {
                     break;
                 }
-                QString strFile = dir_iterator.next();
-                QFileInfo fileInfo(strFile);
+                QString strFile = list.at(i).filePath();
+                QFileInfo fileInfo = list.at(i);
                 //DLabel *pLabel = new DLabel(this);
                 ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
                 m_indexImage.insert(tIndex, pLabel);
