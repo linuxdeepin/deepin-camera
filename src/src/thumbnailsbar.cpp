@@ -100,7 +100,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
             //ImageItem *tItem = m_indexImage.value(_indexNow);
             //tItem->update();
             _indexNow = _index;
-            //update();
+            update();
         }
     }
     //    if (m_bMulti) {
@@ -120,7 +120,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             //ImageItem *tItem = m_indexImage.value(_indexNow);
             //tItem->update();
             _indexNow = _index;
-            //update();
+            update();
         }
     }
     if (m_bMulti && ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
@@ -135,7 +135,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-    //qDebug() << "paint" << _index;
+    qDebug() << "paint" << _index;
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
