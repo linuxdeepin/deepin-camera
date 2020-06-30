@@ -1,4 +1,4 @@
-Source: deepin_camera
+Source: deepin-camera
 Section: utils
 Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
@@ -12,11 +12,11 @@ Build-Depends:
 Standards-Version: 1.0.0
 Homepage: http://www.deepin.org
 
-Package: deepin_camera
+Package: deepin-camera
 Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  dde-api
-Description: deepin_camera software for  UOS
- deepin_camera is a tool to view camera, and also a smart take photo and video in life.
+Description: deepin-camera software for  UOS
+ deepin-camera is a tool to view camera, and also a smart take photo and video in life.
