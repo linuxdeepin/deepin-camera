@@ -31,29 +31,8 @@ extern "C" {
 #include <math.h>
 #include <float.h>
 
-#include <libavutil/avassert.h>
-#include <libavutil/channel_layout.h>
-#include <libavutil/opt.h>
-#include <libavutil/mathematics.h>
-#include <libavutil/timestamp.h>
-#include <libavutil/hwcontext.h>
 #include <libavformat/avformat.h>
-#include <libswscale/swscale.h>
-#include <libswresample/swresample.h>
 #include <libavcodec/avcodec.h>
-
-#include <va/va.h>
-#include <va/va_x11.h>
-#include <X11/Xlib.h>
-#include <X11/extensions/Xv.h>
-#include <X11/extensions/XShm.h>
-#include <X11/extensions/Xvlib.h>
-#include <sys/shm.h>
-#include <X11/Xfuncproto.h>
-#include <libavfilter/buffersink.h>
-#include <libavutil/log.h>
-#include <va/va_drm.h>
-#include <libavutil/avstring.h>
 
 #include "encoder.h"
 #include "gviewencoder.h"
