@@ -540,7 +540,7 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                 mp4_destroy_context(mp4_ctx);
 
                 mp4_ctx = NULL;
-                malloc_trim(0);
+                //malloc_trim(0);
             }
         break;
 

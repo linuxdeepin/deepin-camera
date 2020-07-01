@@ -33,7 +33,7 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
 {
     this->setIcon(QIcon(":/images/icons/warning.svg"));
     setFixedSize(380, 140);
-    DWidget *widet = new DWidget(this);
+    widet = new DWidget(this);
     addContent(widet);
     m_vlayout = new QVBoxLayout(widet);
     m_hlayout = new QHBoxLayout();
@@ -42,7 +42,7 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
     m_vlayout->addStretch();
     addButton(btnName1);
     addButton(btnName2);
-    QLbtoDLabel *labtitle = new QLbtoDLabel();
+    labtitle = new QLbtoDLabel();
     labtitle->setText(strText);
     labtitle->setAlignment(Qt::AlignCenter);
     m_vlayout->addWidget(labtitle);

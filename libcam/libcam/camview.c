@@ -1194,6 +1194,8 @@ int stop_encoder_thread()
 {
     video_capture_save_video(0);
 
+    //usleep(2000);
+
     __THREAD_JOIN(encoder_thread);
 
     if(debug_level > 1)

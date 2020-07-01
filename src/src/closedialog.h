@@ -30,6 +30,8 @@
 #include <DSuggestButton>
 #include <DLabel>
 DWIDGET_USE_NAMESPACE
+
+typedef DLabel QLbtoDLabel;
 class CloseDialog : public DDialog
 {
     Q_OBJECT
@@ -40,6 +42,8 @@ private:
     QVBoxLayout *m_vlayout;
     QHBoxLayout *m_hlayout;
     QHBoxLayout *m_edtlayout;
+    DWidget *widet;
+    QLbtoDLabel *labtitle;
 };
 
 #endif // CLOSEDIALOG_H
