@@ -7,7 +7,8 @@ Build-Depends:
  pkg-config,qtbase5-dev,libdtkgui-dev,libdtkwidget-dev,
  libavutil-dev, libavformat-dev, libavcodec-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
- libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
+ libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libswscale-dev,
+ libswresample-dev,libasound2-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev
 Standards-Version: 1.0.0
 Homepage: http://www.deepin.org
