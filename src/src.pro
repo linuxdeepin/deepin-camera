@@ -18,7 +18,6 @@ QMAKE_CFLAGS_ISYSTEM = -I
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/toolbar.cpp \
     src/videowidget.cpp \
     src/thumbnailsbar.cpp \
     src/majorimageprocessingthread.cpp \
@@ -31,7 +30,6 @@ RESOURCES += \
 
 HEADERS += \
     src/mainwindow.h \
-    src/toolbar.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
