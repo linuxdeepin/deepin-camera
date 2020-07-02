@@ -23,20 +23,21 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/devnummonitor.cpp \
-    src/Settings.cpp
-    src/imageitem.cpp
+    src/Settings.cpp\
+    src/imageitem.cpp\
+    src/closedialog.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
-    libcheese_v4l2core/gview_v4l2core \
-    src/v4l2_core.h \
+#    src/v4l2_core.h \
     src/videowidget.h \
     src/devnummonitor.h \
-    src/imageitem.h
-    src/Settings.h
+    src/imageitem.h\
+    src/Settings.h\
+    src/closedialog.h
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\
@@ -98,7 +99,7 @@ dbus_service.path = $$PREFIX/share/dbus-1/services
 
 unix {
     target.path = /usr/bin
-    INSTALLS += target
+#    INSTALLS += target
 }
 
 INSTALLS += target desktop icon_files manual dbus_service
