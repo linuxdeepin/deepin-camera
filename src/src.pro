@@ -23,8 +23,8 @@ SOURCES += \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
     src/devnummonitor.cpp \
-    src/closedialog.cpp \
     src/Settings.cpp
+    src/imageitem.cpp
 
 HEADERS += \
     src/mainwindow.h \
@@ -35,7 +35,7 @@ HEADERS += \
     src/v4l2_core.h \
     src/videowidget.h \
     src/devnummonitor.h \
-    src/closedialog.h \
+    src/imageitem.h
     src/Settings.h
 
 
@@ -63,6 +63,7 @@ LIBS += -L/lib/x86_64-linux-gnu\
         -lSDL2\
         -lportaudio\
          -lasound
+LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
 
 
 RESOURCES += \

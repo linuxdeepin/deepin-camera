@@ -35,6 +35,7 @@
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
 
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
+QString g_strFileName = nullptr;
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
@@ -183,7 +184,7 @@ void videowidget::showNocam()
     //m_pixmap.fill(Qt::red);
     m_pNormalItem->setPixmap(m_pixmap);
 
-    QString str = "No webcam found";
+    QString str(tr("No webcam found"));
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
     m_pNormalItem->setPos(100, -200);
@@ -203,7 +204,7 @@ void videowidget::showCamUsed()
     m_pixmap = QPixmap::fromImage(img);
     m_pNormalItem->setPixmap(m_pixmap);
 
-    QString str = "The webcam is in use";
+    QString str(tr("The webcam is in use"));
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
     m_pNormalItem->setPos(320, 100);
@@ -478,6 +479,7 @@ void videowidget::endBtnClicked()
     m_fWgtTime->hide();
     m_fWgtBtn->hide();
     VIDEO_STATE = NORMALVIDEO;
+    g_strFileName = nullptr;
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
@@ -637,9 +639,9 @@ void videowidget::startTakeVideo()
     } else {
         if (get_v4l2_device_handler()) {
             qDebug() << "start takeVideo";
-            m_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
+            g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".mp4";
             set_video_path(m_strFolder.toStdString().c_str());
-            set_video_name(m_strFileName.toStdString().c_str());
+            set_video_name(g_strFileName.toStdString().c_str());
             m_fWgtBtn->show();
             start_encoder_thread();
             setCapstatus(true);
