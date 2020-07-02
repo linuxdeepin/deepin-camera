@@ -24,7 +24,7 @@
 #include <DLabel>
 #include <QMenu>
 #include <QAction>
-
+#include <QFileInfo>
 DWIDGET_USE_NAMESPACE
 #define THUMBNAIL_WIDTH 30
 #define THUMBNAIL_HEIGHT 40
@@ -65,6 +65,7 @@ public:
     {
         return m_index;
     }
+    bool parseFromFile(const QFileInfo &fi);
 signals:
     void imageItemclicked(int index, int indexNow);
 

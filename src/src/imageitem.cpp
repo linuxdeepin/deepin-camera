@@ -32,7 +32,11 @@
 #include <QMediaPlayer>
 #include <QTime>
 #include <QThread>
-
+extern "C" {
+#include <libavformat/avformat.h>
+#include <libavutil/dict.h>
+#include <libavutil/avutil.h>
+}
 using namespace ffmpegthumbnailer;
 
 QSet<int> m_setIndex;
@@ -50,15 +54,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     QFileInfo fileInfo(m_path);
     if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4") {
         VideoThumbnailer thumber;
+        thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
-        //方式1：QMediaPlayer判断视频文件是否可用
-        QTime d(0, 0, 0, 0);
-        thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
-        QMediaPlayer *mediaPlayer = new QMediaPlayer(this);
-        mediaPlayer->setMedia(QUrl::fromLocalFile(m_path));
-        qDebug() << QString::number(mediaPlayer->error()) << "&&&&&&&";
-        if (mediaPlayer->isVideoAvailable()) {
-            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
+        if (parseFromFile(fileInfo)) {
+            thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
             QImage img = QImage::fromData(buf.data(), buf.size(), "png");
             pix = QPixmap::fromImage(img);
         } else {
@@ -129,16 +128,18 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(this, &DLabel::customContextMenuRequested, this, [=](QPoint pos) {
+    connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         menu->exec(QCursor::pos());
     });
-    connect(actCopy, &QAction::triggered, this, [=] {
+    connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
-        if (m_setIndex.isEmpty()) {
+        if (m_setIndex.isEmpty())
+        {
             paths = QStringList(path);
             qDebug() << "sigle way";
-        } else {
+        } else
+        {
             QSet<int>::iterator it;
             for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
                 paths << m_indexImage.value(*it)->getPath();
@@ -173,18 +174,21 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
         cb->setMimeData(newMimeData, QClipboard::Clipboard);
     });
-    connect(actOpenFolder, &QAction::triggered, this, [=] {
+    connect(actOpenFolder, &QAction::triggered, this, [ = ] {
         QString strtmp = fileInfo.path();
-        if (strtmp.size() && strtmp[0] == '~') {
+        if (strtmp.size() && strtmp[0] == '~')
+        {
             //奇怪，这里不能直接使用strFolder调replace函数
             strtmp.replace(0, 1, QDir::homePath());
         }
         Dtk::Widget::DDesktopServices::showFolder(strtmp);
     });
-    connect(actDel, &QAction::triggered, this, [=] {
-        if (m_setIndex.isEmpty()) {
+    connect(actDel, &QAction::triggered, this, [ = ] {
+        if (m_setIndex.isEmpty())
+        {
             DDesktopServices::trash(path);
-        } else {
+        } else
+        {
             QSet<int>::iterator it;
             for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
                 DDesktopServices::trash(m_indexImage.value(*it)->getPath());
@@ -387,4 +391,80 @@ void ImageItem::paintEvent(QPaintEvent *event)
         QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
     painter.drawRoundedRect(pixmapRect, 4, 4);
     painter.restore();
+}
+static int open_codec_context(int *stream_idx,
+                              AVCodecParameters **dec_ctx, AVFormatContext *fmt_ctx, enum AVMediaType type)
+{
+    int ret, stream_index;
+    AVStream *st;
+    AVCodec *dec = nullptr;
+    //AVDictionary *opts = nullptr;
+    ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
+    if (ret < 0) {
+        qWarning() << "Could not find " << av_get_media_type_string(type)
+                   << " stream in input file";
+        return ret;
+    }
+
+    stream_index = ret;
+    st = fmt_ctx->streams[stream_index];
+#if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
+    *dec_ctx = st->codecpar;
+    dec = avcodec_find_decoder((*dec_ctx)->codec_id);
+#else
+    /* find decoder for the stream */
+    dec = avcodec_find_decoder(st->codecpar->codec_id);
+    if (!dec) {
+        fprintf(stderr, "Failed to find %s codec\n",
+                av_get_media_type_string(type));
+        return AVERROR(EINVAL);
+    }
+    /* Allocate a codec context for the decoder */
+    *dec_ctx = avcodec_alloc_context3(dec);
+    if (!*dec_ctx) {
+        fprintf(stderr, "Failed to allocate the %s codec context\n",
+                av_get_media_type_string(type));
+        return AVERROR(ENOMEM);
+    }
+    /* Copy codec parameters from input stream to output codec context */
+    if ((ret = avcodec_parameters_to_context(*dec_ctx, st->codecpar)) < 0) {
+        fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
+                av_get_media_type_string(type));
+        return ret;
+    }
+#endif
+
+    *stream_idx = stream_index;
+    return 0;
+}
+bool ImageItem::parseFromFile(const QFileInfo &fi)
+{
+    bool mi = false;
+    AVFormatContext *av_ctx = nullptr;
+    int stream_id = -1;
+    AVCodecParameters *dec_ctx = nullptr;
+
+    if (!fi.exists()) {
+        return mi;
+    }
+
+    auto ret = avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
+    if (ret < 0) {
+        qWarning() << "avformat: could not open input";
+        return mi;
+    }
+
+    if (avformat_find_stream_info(av_ctx, nullptr) < 0) {
+        qWarning() << "av_find_stream_info failed";
+        return mi;
+    }
+
+    if (av_ctx->nb_streams == 0) {
+        return mi;
+    }
+    if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
+        return mi;
+    }
+    avformat_close_input(&av_ctx);
+    return true;
 }
