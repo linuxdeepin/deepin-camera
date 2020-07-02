@@ -41,10 +41,9 @@
 #include <QMediaPlayer>
 #include "imageitem.h"
 //QMap<QString, QPixmap> m_imagemap;
-static QMap<int, ImageItem *> m_indexImage;
-static int _indexNow = 0;
-static QSet<int> m_index;
-static bool m_bMulti = false; //是否多选
+extern QMap<int, ImageItem *> m_indexImage;
+static int m_indexNow = 0;
+extern QSet<int> m_setIndex;
 extern QString g_strFileName;
 
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
@@ -137,7 +136,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //    //m_writelock.unlock();
 //}
 
-//待完善内容：1、视频缩略图显示时间;2、文件排序。
+//待完善内容：1、视频缩略图显示时间。
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
@@ -147,7 +146,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(child);
+        ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
         tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
@@ -244,12 +243,12 @@ void ThumbnailsBar::onBtnClick() //没有相机录像崩溃，待处理
 void ThumbnailsBar::onShortcutCopy()
 {
     QStringList paths;
-    if (m_index.isEmpty()) {
-        paths = QStringList(m_indexImage.value(_indexNow)->getPath());
+    if (m_setIndex.isEmpty()) {
+        paths = QStringList(m_indexImage.value(m_indexNow)->getPath());
         qDebug() << "sigle way";
     } else {
         QSet<int>::iterator it;
-        for (it = m_index.begin(); it != m_index.end(); ++it) {
+        for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
             paths << m_indexImage.value(*it)->getPath();
             qDebug() << m_indexImage.value(*it)->getPath();
         }
@@ -260,8 +259,7 @@ void ThumbnailsBar::onShortcutCopy()
     QByteArray gnomeFormat = QByteArray("copy\n");
     QString text;
     QList<QUrl> dataUrls;
-    for (QString path : paths) //待添加复制和删除功能以及快捷键效果
-    {
+    for (QString path : paths) {
         if (!path.isEmpty())
             text += path + '\n';
         dataUrls << QUrl::fromLocalFile(path);
@@ -280,11 +278,11 @@ void ThumbnailsBar::onShortcutCopy()
 
 void ThumbnailsBar::onShortcutDel()
 {
-    if (m_index.isEmpty()) {
-        DDesktopServices::trash(m_indexImage.value(_indexNow)->getPath());
+    if (m_setIndex.isEmpty()) {
+        DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
     } else {
         QSet<int>::iterator it;
-        for (it = m_index.begin(); it != m_index.end(); ++it) {
+        for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
             DDesktopServices::trash(m_indexImage.value(*it)->getPath());
         }
     }
@@ -330,27 +328,49 @@ void ThumbnailsBar::addPath(QString strPath)
 {
     if (!m_strlstFolders.contains(strPath)) {
         m_strlstFolders.push_back(strPath);
+        onFoldersChanged("");
     }
-
-    onFoldersChanged("");
 }
 
 void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
-        m_bMulti = true; //完成ctrl+c或者删除等操作后恢复false
-        m_index.insert(_indexNow);
+        m_bShiftPressed = true;
+        for (int i = 0; i < m_hBOx->count(); i++) {
+            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+            tmp->SetMulti(true);
+        }
+        m_setIndex.insert(m_indexNow);
     }
 }
 
 void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
 {
     //预留接口，关于shift按键取消后的操作
-    Q_UNUSED(e);
+    if (e->key() == Qt::Key_Shift) {
+        m_bShiftPressed = false;
+        for (int i = 0; i < m_hBOx->count(); i++) {
+            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+            tmp->SetMulti(false);
+        }
+    }
+
     //    if (e->key() == Qt::Key_Shift) {
     //        m_bMulti = false;
     //        m_index.clear();
     //        //不填0就是默认当前选项
     //        //m_index.insert(0);//始终选择第一个，选择当前的话，有可能正好是取消当前选项，此时需要定义选中哪个选项
     //    }
+}
+
+void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //不会进来
+{
+    if (!m_bShiftPressed) {
+        for (int i = 0; i < m_hBOx->count(); i++) {
+            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+            tmp->SetMulti(false);
+            tmp->update();
+        }
+        //m_index.insert(_indexNow);
+    }
 }

@@ -111,10 +111,12 @@ private:
     DPushButton *m_lastButton {nullptr};
 
     bool m_bThumbnailReadOK = false;
+    bool m_bShiftPressed = false;
 
 private:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 signals:
     void fitToolBar();//调整工具栏

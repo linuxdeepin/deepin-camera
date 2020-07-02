@@ -41,24 +41,29 @@ public:
     }
     void updatePic(QPixmap pixmap)
     {
-        _pixmap = pixmap;
+        m_pixmap = pixmap;
         update();
     }
     void setIndex(int index)
     {
-        _index = index;
+        m_index = index;
     }
     void SetPath(QString path)
     {
-        _path = path;
+        m_path = path;
+    }
+    void SetMulti(bool bMulti)
+    {
+        m_bMultiSlt = bMulti;
+        update();
     }
     inline QString getPath()
     {
-        return _path;
+        return m_path;
     }
     inline int getIndex()
     {
-        return _index;
+        return m_index;
     }
 signals:
     void imageItemclicked(int index, int indexNow);
@@ -72,15 +77,19 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
-    int _index;
-    QString _path;
-    QPixmap _pixmap;
+    int m_index;
+    QString m_path;
+    QPixmap m_pixmap;
     QString m_pixmapstring;
     bool bFirstUpdate = true;
     QMenu *m_menu;
     QAction *m_actCopy;
     QAction *m_actDel;
     QAction *m_actOpenFolder;
+    bool m_bMultiSlt = false; //是否多选
+    bool m_bThumbnailReadOK = false;
+
+    int m_indexNow = 0;
 };
 
 #endif // IMAGEITEM_H

@@ -29,87 +29,83 @@
 #include <QDir>
 #include <DDesktopServices>
 #include <libffmpegthumbnailer/videothumbnailer.h>
+#include <QMediaPlayer>
+#include <QTime>
+#include <QThread>
 
 using namespace ffmpegthumbnailer;
 
-static int _indexNow = 0;
-static QSet<int> m_index;
-static bool m_bMulti = false; //是否多选
-static QMap<int, ImageItem *> m_indexImage;
+QSet<int> m_setIndex;
+QMap<int, ImageItem *> m_indexImage;
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
     Q_UNUSED(parent);
-    _index = index;
-    _path = path;
+    m_index = index;
+    m_path = path;
     setScaledContents(true);
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 
     QPixmap pix;
-    QFileInfo fileInfo(_path);
+    QFileInfo fileInfo(m_path);
     if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4") {
         VideoThumbnailer thumber;
         std::vector<uint8_t> buf;
-
-        //                    QTime d(0, 0, 0, 0);
-        //                    thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
-        //                    QMediaPlayer *mediaPlayer = new QMediaPlayer(this);
-
-        //                    mediaPlayer->setMedia(QUrl::fromLocalFile(strFile));
-        //                    qDebug() << QString::number(mediaPlayer->error()) << "&&&&&&&";
-        //                    if (mediaPlayer->isVideoAvailable()) {
-        //                        thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //                        QImage img = QImage::fromData(buf.data(), buf.size(), "png");
-        //                        pix = new QPixmap(QPixmap::fromImage(/**tmpimg*/img));
-        //                    }
-        //                    else {
-        //                        QImage *tmpimg = nullptr;
-        //                        tmpimg = new QImage(":/images/123.jpg");
-        //                        pix = new QPixmap(QPixmap::fromImage(*tmpimg));
-        //                    }
-
-        //                    m_bThumbnailReadOK = false;
-        //                    QThread *tmpTh = QThread::create([ = ]() {
-        //                        VideoThumbnailer thumber;
-        //                        QTime d(0, 0, 0, 0);
-        //                        thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
-        //                        thumber.setThumbnailSize(480 * qApp->devicePixelRatio());
-        //                        thumber.setMaintainAspectRatio(true);
-        //                        std::vector<uint8_t> buf;
-        //                        thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //                        m_bThumbnailReadOK = true;
-        //                        QThread::currentThread()->quit();
-        //                    });
-        //                    tmpTh->start();
-        //                    QThread::msleep(50);
-        //                    if (m_bThumbnailReadOK) {
-        //                        thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //                        QImage img = QImage::fromData(buf.data(), buf.size(), "png");
-        //                        //pix = new QPixmap(QPixmap::fromImage(img));
-        //                        pix = QPixmap::fromImage(QImage(img));
-        //                    }
-        //                    else
-        {
-            QImage tmpimg = QImage(":/images/123.jpg");
+        //方式1：QMediaPlayer判断视频文件是否可用
+        QTime d(0, 0, 0, 0);
+        thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
+        QMediaPlayer *mediaPlayer = new QMediaPlayer(this);
+        mediaPlayer->setMedia(QUrl::fromLocalFile(m_path));
+        qDebug() << QString::number(mediaPlayer->error()) << "&&&&&&&";
+        if (mediaPlayer->isVideoAvailable()) {
+            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
+            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
+            pix = QPixmap::fromImage(img);
+        } else {
             pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
         }
 
-        //                    QFile f(strFile);
-        //                    bool bValid = false;
-        //                    if (f.open(QIODevice::ReadOnly)) {
-        //                        QDataStream ds(&f);
-        //                        ds >> bValid;
-        //                        if (bValid) {
-        //                            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //                            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
-        //                            pix = new QPixmap(QPixmap::fromImage(/**tmpimg*/img));
-        //                        }
-        //                        else {
-        //                            QImage *tmpimg = nullptr;
-        //                            tmpimg = new QImage(":/images/123.jpg");
-        //                            pix = new QPixmap(QPixmap::fromImage(*tmpimg));
-        //                        }
-        //                    }
+        //方式2：先使用线程尝试加载，加载失败只是线程出问题
+        //        m_bThumbnailReadOK = false;
+        //        QThread *tmpTh = QThread::create([ = ]() {
+        //            VideoThumbnailer thumber;
+        //            QTime d(0, 0, 0, 0);
+        //            thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
+        //            thumber.setThumbnailSize(480 * qApp->devicePixelRatio());
+        //            thumber.setMaintainAspectRatio(true);
+        //            std::vector<uint8_t> buf;
+        //            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
+        //            m_bThumbnailReadOK = true;
+        //            QThread::currentThread()->quit();
+        //        });
+        //        tmpTh->start();
+        //        QThread::msleep(50);
+        //        if (m_bThumbnailReadOK) {
+        //            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
+        //            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
+        //            //pix = new QPixmap(QPixmap::fromImage(img));
+        //            pix = QPixmap::fromImage(QImage(img));
+        //        }
+        //        else
+        //        {
+        //            pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
+        //        }
+
+        //方式3：数据流加载文件，判断加载的文件是否正确，再读取视频缩略图
+        //        QFile f(m_path);
+        //        bool bValid = false;
+        //        if (f.open(QIODevice::ReadOnly)) {
+        //            QDataStream ds(&f);
+        //            ds >> bValid;
+        //            if (bValid) {
+        //                thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
+        //                QImage img = QImage::fromData(buf.data(), buf.size(), "png");
+        //                pix = QPixmap::fromImage(img);
+        //            }
+        //            else {
+        //                pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
+        //            }
+        //        }
 
     } else if (fileInfo.suffix() == "jpg") {
         pix = QPixmap::fromImage(QImage(path));
@@ -127,7 +123,6 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     actDel->setText("Delete");
     QAction *actOpenFolder = new QAction(this);
     actOpenFolder->setText("Open folder");
-    //                menu->addAction(actOpen);
     menu->addAction(actCopy);
     menu->addAction(actDel);
     menu->addAction(actOpenFolder);
@@ -138,34 +133,14 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Q_UNUSED(pos);
         menu->exec(QCursor::pos());
     });
-    //                connect(actOpen, &QAction::triggered, this, [ = ] {
-    //                    //                    QString  cmd = QString("xdg-open ") + strFile; //在linux下，可以通过system来xdg-open命令调用默认程序打开文件；
-    //                    //                    system(cmd.toStdString().c_str());
-
-    //                    if (fileInfo.suffix() == "jpg")
-    //                    {
-    //                        QString program = "deepin-image-viewer"; //用看图打开
-    //                        QStringList arguments;
-    //                        arguments << strFile;
-    //                        QProcess *myProcess = new QProcess(this);
-    //                        myProcess->startDetached(program, arguments);
-    //                    } else
-    //                    {
-    //                        QString program = "deepin-movie"; //用影院打开
-    //                        QStringList arguments;
-    //                        arguments << strFile;
-    //                        QProcess *myProcess = new QProcess(this);
-    //                        myProcess->startDetached(program, arguments);
-    //                    }
-    //                });
     connect(actCopy, &QAction::triggered, this, [=] {
         QStringList paths;
-        if (m_index.isEmpty()) {
+        if (m_setIndex.isEmpty()) {
             paths = QStringList(path);
             qDebug() << "sigle way";
         } else {
             QSet<int>::iterator it;
-            for (it = m_index.begin(); it != m_index.end(); ++it) {
+            for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
                 paths << m_indexImage.value(*it)->getPath();
                 qDebug() << m_indexImage.value(*it)->getPath();
             }
@@ -192,9 +167,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         //本系统(UOS)特有
         newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
 
-        //                    QImage img(paths.first());//img特有，视频不需要
-        //                    Q_ASSERT(!img.isNull());
-        //                    newMimeData->setImageData(img);
+        //        QImage img(paths.first());//img特有，视频不需要
+        //        Q_ASSERT(!img.isNull());
+        //        newMimeData->setImageData(img);
 
         cb->setMimeData(newMimeData, QClipboard::Clipboard);
     });
@@ -207,11 +182,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Dtk::Widget::DDesktopServices::showFolder(strtmp);
     });
     connect(actDel, &QAction::triggered, this, [=] {
-        if (m_index.isEmpty()) {
+        if (m_setIndex.isEmpty()) {
             DDesktopServices::trash(path);
         } else {
             QSet<int>::iterator it;
-            for (it = m_index.begin(); it != m_index.end(); ++it) {
+            for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
                 DDesktopServices::trash(m_indexImage.value(*it)->getPath());
             }
         }
@@ -222,26 +197,26 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
 ImageItem::~ImageItem()
 {
-    m_menu->deleteLater();
-    m_actCopy->deleteLater();
-    m_actDel->deleteLater();
-    m_actOpenFolder->deleteLater();
+    //    m_menu->deleteLater();
+    //    m_actCopy->deleteLater();
+    //    m_actDel->deleteLater();
+    //    m_actOpenFolder->deleteLater();
 }
 
 void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev);
-    QFileInfo fileInfo(_path);
+    QFileInfo fileInfo(m_path);
     if (fileInfo.suffix() == "jpg") {
         QString program = "deepin-image-viewer"; //用看图打开
         QStringList arguments;
-        arguments << _path;
+        arguments << m_path;
         QProcess *myProcess = new QProcess(this);
         myProcess->startDetached(program, arguments);
     } else {
         QString program = "deepin-movie"; //用影院打开
         QStringList arguments;
-        arguments << _path;
+        arguments << m_path;
         QProcess *myProcess = new QProcess(this);
         myProcess->startDetached(program, arguments);
     }
@@ -250,10 +225,10 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
     if (ev->button() == Qt::LeftButton) {
-        if (_index != _indexNow) {
+        if (m_index != m_indexNow) {
             //ImageItem *tItem = m_indexImage.value(_indexNow);
             //tItem->update();
-            _indexNow = _index;
+            m_indexNow = m_index;
             update();
         }
     }
@@ -270,16 +245,16 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::RightButton) {
-        if (_index != _indexNow) {
-            _indexNow = _index;
+        if (m_index != m_indexNow) {
+            m_indexNow = m_index;
             update();
         }
     }
-    if (m_bMulti && ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
-        if (m_index.contains(_index)) {
-            m_index.remove(_index);
+    if (m_bMultiSlt && ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
+        if (m_setIndex.contains(m_index)) {
+            m_setIndex.remove(m_index);
         } else {
-            m_index.insert(_index);
+            m_setIndex.insert(m_index);
         }
     }
 }
@@ -293,9 +268,9 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
     QRect backgroundRect = rect();
     QRect pixmapRect;
-    QFileInfo fileinfo(_path);
+    QFileInfo fileinfo(m_path);
     QString str = fileinfo.suffix();
-    if (m_index.contains(_index) || (m_index.isEmpty() && _index == _indexNow)) {
+    if (m_setIndex.contains(m_index) || (m_setIndex.isEmpty() && m_index == m_indexNow)) {
         QPainterPath backgroundBp;
         QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
                                  backgroundRect.width() - 2, backgroundRect.height() - 2);
@@ -305,12 +280,12 @@ void ImageItem::paintEvent(QPaintEvent *event)
             reduceRect,
             QBrush(DGuiApplicationHelper::instance()->applicationPalette().highlight().color()));
 
-        if (_pixmap.width() > _pixmap.height()) {
-            _pixmap = _pixmap.copy((_pixmap.width() - _pixmap.height()) / 2, 0, _pixmap.height(),
-                                   _pixmap.height());
-        } else if (_pixmap.width() < _pixmap.height()) {
-            _pixmap = _pixmap.copy(0, (_pixmap.height() - _pixmap.width()) / 2, _pixmap.width(),
-                                   _pixmap.width());
+        if (m_pixmap.width() > m_pixmap.height()) {
+            m_pixmap = m_pixmap.copy((m_pixmap.width() - m_pixmap.height()) / 2, 0, m_pixmap.height(),
+                                     m_pixmap.height());
+        } else if (m_pixmap.width() < m_pixmap.height()) {
+            m_pixmap = m_pixmap.copy(0, (m_pixmap.height() - m_pixmap.width()) / 2, m_pixmap.width(),
+                                     m_pixmap.width());
         }
 
         pixmapRect.setX(backgroundRect.x() + 5);
@@ -325,7 +300,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             painter.fillRect(pixmapRect, QBrush(Qt::white));
         else if (themeType == DGuiApplicationHelper::DarkType)
             painter.fillRect(pixmapRect, QBrush(Qt::black));
-        if (!_pixmap.isNull()) {
+        if (!m_pixmap.isNull()) {
             //            painter.fillRect(pixmapRect,
             //            QBrush(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color()));
         }
@@ -345,7 +320,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
         //        QPixmap pixmap = utils::base::renderSVG(m_pixmapstring, QSize(60, 60));
         QPainterPath bg;
         bg.addRoundedRect(pixmapRect, 4, 4);
-        if (_pixmap.isNull()) {
+        if (m_pixmap.isNull()) {
             painter.setClipPath(bg);
             //            painter.drawPixmap(pixmapRect, m_pixmapstring);
             QIcon icon(m_pixmapstring);
@@ -362,7 +337,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
         bg0.addRoundedRect(pixmapRect, 4, 4);
         painter.setClipPath(bg0);
 
-        if (!_pixmap.isNull()) {
+        if (!m_pixmap.isNull()) {
             //            painter.fillRect(pixmapRect,
             //            QBrush(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color()));
         }
@@ -382,7 +357,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
         //        QPixmap pixmap = utils::base::renderSVG(m_pixmapstring, QSize(30, 40));
         QPainterPath bg;
         bg.addRoundedRect(pixmapRect, 4, 4);
-        if (_pixmap.isNull()) {
+        if (m_pixmap.isNull()) {
             painter.setClipPath(bg);
             //            painter.drawPixmap(pixmapRect, m_pixmapstring);
 
@@ -405,7 +380,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setClipPath(bg1);
 
     //    painter.drawPixmap(pixmapRect, blankPix);
-    painter.drawPixmap(pixmapRect, _pixmap);
+    painter.drawPixmap(pixmapRect, m_pixmap);
 
     painter.save();
     painter.setPen(
