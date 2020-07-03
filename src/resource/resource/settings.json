@@ -41,7 +41,7 @@
                     "options": [
                         {
                             "key": "takephotos",
-                            "name": " ",
+                            "name": "",
                             "type": "radiogroup",
                             "items": [
                                 "None",
@@ -59,7 +59,7 @@
                     "options": [
                         {
                             "key": "photodelays",
-                            "name": " ",
+                            "name": "",
                             "type": "radiogroup",
                             "items": [
                                 "None",

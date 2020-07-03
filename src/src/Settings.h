@@ -1,5 +1,5 @@
-#ifndef _DC_SETTINGS_H
-#define _DC_SETTINGS_H
+#ifndef DC_SETTINGS_H
+#define DC_SETTINGS_H
 
 #include <QObject>
 #include <QPointer>

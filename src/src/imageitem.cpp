@@ -393,11 +393,12 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.restore();
 }
 static int open_codec_context(int *stream_idx,
-                              AVCodecParameters **dec_ctx, AVFormatContext *fmt_ctx, enum AVMediaType type)
+                              AVCodecParameters **dec_par, AVFormatContext *fmt_ctx, enum AVMediaType type)
 {
     int ret, stream_index;
     AVStream *st;
     AVCodec *dec = nullptr;
+
     //AVDictionary *opts = nullptr;
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
     if (ret < 0) {
@@ -408,30 +409,40 @@ static int open_codec_context(int *stream_idx,
 
     stream_index = ret;
     st = fmt_ctx->streams[stream_index];
+    *dec_par = st->codecpar;
 #if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
-    *dec_ctx = st->codecpar;
     dec = avcodec_find_decoder((*dec_ctx)->codec_id);
 #else
     /* find decoder for the stream */
+    //*dec_ctx = st->codecpar;
     dec = avcodec_find_decoder(st->codecpar->codec_id);
+
     if (!dec) {
         fprintf(stderr, "Failed to find %s codec\n",
                 av_get_media_type_string(type));
         return AVERROR(EINVAL);
     }
     /* Allocate a codec context for the decoder */
-    *dec_ctx = avcodec_alloc_context3(dec);
-    if (!*dec_ctx) {
+    AVCodecContext *dec_ctx = avcodec_alloc_context3(dec);
+    //*dec_par = avcodec_parameters_alloc();
+    if (!dec_ctx) {
         fprintf(stderr, "Failed to allocate the %s codec context\n",
                 av_get_media_type_string(type));
         return AVERROR(ENOMEM);
     }
     /* Copy codec parameters from input stream to output codec context */
-    if ((ret = avcodec_parameters_to_context(*dec_ctx, st->codecpar)) < 0) {
+    if ((ret = avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
         fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
                 av_get_media_type_string(type));
         return ret;
     }
+    ret = avcodec_parameters_from_context(*dec_par, dec_ctx);
+    if (ret < 0) {
+        fprintf(stderr, "Could not copy the stream parameters\n");
+        avcodec_free_context(&dec_ctx);
+        exit(1);
+    }
+    avcodec_free_context(&dec_ctx);
 #endif
 
     *stream_idx = stream_index;

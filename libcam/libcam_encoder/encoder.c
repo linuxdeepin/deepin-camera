@@ -50,6 +50,7 @@
 #include "stream_io.h"
 #include "gview.h"
 
+
 #if LIBAVUTIL_VER_AT_LEAST(52,2)
 #include <libavutil/channel_layout.h>
 #endif
@@ -1126,6 +1127,7 @@ encoder_context_t *encoder_init(
  */
 int encoder_add_video_frame(uint8_t *frame, int size, int64_t timestamp, int isKeyframe)
 {
+//    cheese_print_log("encoder_add_video_frame");
 	if(!video_ring_buffer)
 		return -1;
 
@@ -1214,6 +1216,7 @@ int encoder_process_next_video_buffer(encoder_context_t *encoder_ctx)
 	NEXT_IND(video_read_index, video_ring_buffer_size);
 
 	__UNLOCK_MUTEX ( __PMUTEX );
+
 
 	encoder_write_video_data(encoder_ctx);
 
@@ -1450,6 +1453,9 @@ static int libav_encode(AVCodecContext *avctx, AVPacket *pkt, AVFrame *frame, in
     }
 
   ret = avcodec_receive_packet(avctx, pkt);
+  char str[50];
+  sprintf(str,"avcode_receive_packet of ret=%d",ret);
+  //cheese_print_log(str);
   if (!ret)
   	*got_packet = 1;
   if (ret == AVERROR(EAGAIN)) //output buffer is empty
@@ -1507,6 +1513,9 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
 		}
 		/*outbuf_coded_size must already be set*/
 		outsize = enc_video_ctx->outbuf_coded_size;
+        char str[100];
+        sprintf(str,"enc_video_ctx->outbuf_coded_size of outsize is %d\n",outsize);
+        //cheese_print_log(str);
 		if(outsize > enc_video_ctx->outbuf_size)
 		{
 			enc_video_ctx->outbuf_size = outsize;
@@ -1578,6 +1587,10 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
 		fprintf(stderr, "ENCODER: Error encoding video frame: %i\n", ret);
 		return ret;
 	}
+
+    char str_gotpacket[30];
+    sprintf(str_gotpacket,"ret = %d, gotpacket = %d\n",ret, got_packet);
+    //cheese_print_log(str_gotpacket);
 
 	if(got_packet)
 	{

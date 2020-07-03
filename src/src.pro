@@ -25,14 +25,14 @@ SOURCES += \
     src/devnummonitor.cpp \
     src/Settings.cpp\
     src/imageitem.cpp\
-    src/closedialog.cpp
+    src/closedialog.cpp \
+    src/settings_translation.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
-#    src/v4l2_core.h \
     src/videowidget.h \
     src/devnummonitor.h \
     src/imageitem.h\
