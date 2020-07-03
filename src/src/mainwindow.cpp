@@ -39,56 +39,19 @@
 #include <DMessageBox>
 #include <dsettingswidgetfactory.h>
 
-static DSettings *sDsetWgt = nullptr;
-static QString g_lastFileName = nullptr;
+using namespace dc;
 
-CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
+QString CMainWindow::m_lastfilename = {""};
+static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
-    pDSettings = DSettings::fromJsonFile(":/resource/settings.json");//json文件只读，不会被修改
-    m_strCfgPath = QString("%1/%2/%3/config.conf")
-                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
-                   .arg(qApp->organizationName())
-                   .arg(qApp->applicationName());
-    m_devnumMonitor = new DevNumMonitor();
-    m_devnumMonitor->start();
-
-    m_nActTpye = ActTakePic;
-    initUI();
-    initTitleBar();
-    initConnection();
-}
-
-DSettings *CMainWindow::getDsetMber()
-{
-    return pDSettings;
-}
-
-CMainWindow::~CMainWindow()
-{
-}
-
-static QString lastOpenedPath()
-{
-
-    if (!sDsetWgt) {
-        sDsetWgt = new DSettings;
-    }
-    QString lastPath = sDsetWgt->getOption("base.general.last_open_path").toString();
-    QDir lastDir(lastPath);
-    if (lastPath.isEmpty() || !lastDir.exists()) {
-        lastPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-        QDir newLastDir(lastPath);
-        if (!newLastDir.exists()) {
-            lastPath = QDir::currentPath();
+    parent->setStyle(QStyleFactory::create(theme));
+    for (auto obj : parent->children()) {
+        auto w = qobject_cast<QWidget *>(obj);
+        if (w) {
+            workaround_updateStyle(w, theme);
         }
     }
-    return lastPath;
 }
-
-/*
-QTextOption::WrapMode:描述text以什么方式显示在文档中
-*/
-
 
 static QString ElideText(const QString &text, const QSize &size,
                          QTextOption::WrapMode wordWrap, const QFont &font,
@@ -141,24 +104,13 @@ static QString ElideText(const QString &text, const QSize &size,
     return str;
 }
 
-static void workaround_updateStyle(QWidget *parent, const QString &theme)
-{
-    parent->setStyle(QStyleFactory::create(theme));
-    for (auto obj : parent->children()) {
-        auto w = qobject_cast<QWidget *>(obj);
-        if (w) {
-            workaround_updateStyle(w, theme);
-        }
-    }
-}
-
 static QWidget *createFormatLabelOptionHandle(QObject *opt)
 {
     auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
-    DLabel *lab = new DLabel();
-    DWidget *main = new DWidget;
-    QHBoxLayout *layout = new QHBoxLayout;
+    auto *lab = new DLabel();
+    auto *main = new DWidget;
+    auto *layout = new QHBoxLayout;
 
     main->setLayout(layout);
     layout->addWidget(lab);
@@ -183,14 +135,13 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     auto main = new DWidget;
     auto layout = new QHBoxLayout;
 
-//    static QString nameLast = nullptr;
+    static QString nameLast = nullptr;
 
     main->setLayout(layout);
-    DPushButton *icon = new DPushButton;
+    auto *icon = new DPushButton;
     icon->setAutoDefault(false);
-    le->setFixedHeight(30);
+    le->setFixedHeight(25);
     le->setObjectName("OptionSelectableLineEdit");
-    //QString str = option->value().toString();
     le->setText(option->value().toString());
     auto fm = le->fontMetrics();
     auto pe = ElideText(le->text(), {285, fm.height()}, QTextOption::WrapAnywhere,
@@ -198,20 +149,25 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     option->connect(le, &DLineEdit::focusChanged, [ = ](bool on) {
         if (on)
             le->setText(option->value().toString());
+
     });
     le->setText(pe);
-    g_lastFileName = pe;
-
+    nameLast = pe;
+//    icon->setIconVisible(true);
     icon->setIcon(QIcon(":resources/icons/select-normal.svg"));
-    icon->setFixedHeight(30);
+    icon->setFixedHeight(25);
     layout->addWidget(le);
     layout->addWidget(icon);
+//    icon->setNormalIcon(":resources/icons/select-normal.svg");
+//    icon->setHoverIcon(":resources/icons/select-hover.svg");
+//    icon->setPressIcon(":resources/icons/select-press.svg");
 
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
     workaround_updateStyle(optionWidget, "light");
 
     DDialog *prompt = new DDialog(optionWidget);
     prompt->setIcon(QIcon(":/resources/icons/warning.svg"));
+    //prompt->setTitle(QObject::tr("Permissions prompt"));
     prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
     prompt->setWindowFlags(prompt->windowFlags() | Qt::WindowStaysOnTopHint);
     prompt->addButton(QObject::tr("OK"), true, DDialog::ButtonRecommend);
@@ -235,6 +191,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             }
 
             if (!fi.isReadable() || !fi.isWritable()) {
+//                if (alert) le->showAlertMessage(QObject::tr("You don't have permission to operate this folder"));
                 return false;
             }
         } else
@@ -245,22 +202,25 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
                     return false;
             }
         }
+
         return true;
     };
-    QString temstr = lastOpenedPath();
+
     option->connect(icon, &DPushButton::clicked, [ = ]() {
-        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
-                                                         lastOpenedPath(),
+        QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
+                                                         CMainWindow::lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
             option->setValue(name);
-            g_lastFileName = name;
+            nameLast = name;
         }
         QFileInfo fm(name);
         if ((!fm.isReadable() || !fm.isWritable()) && !name.isEmpty()) {
             prompt->show();
         }
     });
+
+
 
     option->connect(le, &DLineEdit::editingFinished, option, [ = ]() {
 
@@ -269,7 +229,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 
         auto pn = ElideText(name, {285, fm.height()}, QTextOption::WrapAnywhere,
                             le->font(), Qt::ElideMiddle, fm.height(), 285);
-        auto nmls = ElideText(g_lastFileName, {285, fm.height()}, QTextOption::WrapAnywhere,
+        auto nmls = ElideText(nameLast, {285, fm.height()}, QTextOption::WrapAnywhere,
                               le->font(), Qt::ElideMiddle, fm.height(), 285);
 
         if (!validate(le->text(), false)) {
@@ -282,11 +242,13 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             if (validate(le->text(), false)) {
                 option->setValue(le->text());
                 le->setText(pn);
-                g_lastFileName = name;
+                nameLast = name;
             } else if (pn == pe) {
                 le->setText(pe);
             } else {
-                option->setValue(g_lastFileName);
+//                option->setValue(option->defaultValue());//设置为默认路径
+//                le->setText(option->defaultValue().toString());
+                option->setValue(nameLast);
                 le->setText(nmls);
             }
         }
@@ -307,20 +269,60 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     return  optionWidget;
 }
 
+QString CMainWindow::lastOpenedPath()
+{
+    QString lastPath = Settings::get().generalOption("last_open_path").toString();
+    QDir lastDir(lastPath);
+    if (lastPath.isEmpty() || !lastDir.exists()) {
+        lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+        QDir newLastDir(lastPath);
+        if (!newLastDir.exists()) {
+            lastPath = QDir::currentPath();
+        }
+    }
+
+    return lastPath;
+}
+
+CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
+{
+    m_devnumMonitor = new DevNumMonitor();
+    m_devnumMonitor->start();
+
+    m_nActTpye = ActTakePic;
+    initUI();
+    initTitleBar();
+    initConnection();
+}
+
+//DSettings *CMainWindow::getDsetMber()
+//{
+//    return pDSettings;
+//}
+
+CMainWindow::~CMainWindow()
+{
+}
+
 void CMainWindow::slotPopupSettingsDialog()
 {
-    pDSettingDialog = new DSettingsDialog(this);
+    auto dsd = new DSettingsDialog(this);
+    dsd->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+    dsd->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
 
-    pDSettingDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(pDSettingDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
+    connect(dsd, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
-    sDsetWgt = getDsetMber();
+    dsd->setProperty("_d_QSSThemename", "dark");
+    dsd->setProperty("_d_QSSFilename", "DSettingsDialog");
+    dsd->updateSettings(Settings::get().settings());
 
-    pDSettingDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
-    pDSettingDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
+    auto reset = dsd->findChild<QPushButton *>("SettingsContentReset");
+    reset->setDefault(false);
+    reset->setAutoDefault(false);
 
-    pDSettingDialog->updateSettings(pDSettings);
-    pDSettingDialog->exec();
+    dsd->exec();
+    delete dsd;
+    Settings::get().settings()->sync();
 }
 
 void CMainWindow::initUI()
@@ -328,18 +330,22 @@ void CMainWindow::initUI()
     this->setWindowFlag(Qt::FramelessWindowHint);
     m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
     DWidget *wget = new DWidget;
-    //qDebug() << "initUI";
     QVBoxLayout *hboxlayout = new QVBoxLayout;
     //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
-    QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-    pDSettings->setBackend(pBackend);
-    g_lastFileName = pDSettings->value("base.save.datapath").toString();
-    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
-        g_lastFileName.replace(0, 1, QDir::homePath());
+    //QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
+    //pDSettings->setBackend(pBackend);
+//    g_lastFileName = pDSettings->value("base.save.datapath").toString();
+//    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
+//        g_lastFileName.replace(0, 1, QDir::homePath());
+//    }
+//    m_pSettingDialog->setBackEndinIt(m_strCfgPath);
+    CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
+    if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
+        CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
     }
-    m_videoPre.setSaveFolder(g_lastFileName);
-    if (QFileInfo(g_lastFileName).exists()) {
-        m_fileWatcher.addPath(g_lastFileName);
+    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
+        m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     }
 //    QPalette *pal = new QPalette(m_videoPre.palette());
 //    pal->setColor(QPalette::Background, Qt::black); //设置黑色边框
@@ -368,7 +374,7 @@ void CMainWindow::initUI()
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
     QAction *actOpen = new QAction(this);
-    actOpen->setText("Open folder");
+    actOpen->setText(tr("Open folder"));
     menu->addAction(actOpen);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
@@ -376,10 +382,10 @@ void CMainWindow::initUI()
         menu->exec(QCursor::pos());
     });
     connect(actOpen, &QAction::triggered, this, [ = ] {
-        QString save_path = g_lastFileName;
-        if (g_lastFileName.isEmpty())
+        QString save_path = Settings::get().generalOption("last_open_path").toString();
+        if (save_path.isEmpty())
         {
-            save_path = pDSettings->value("base.save.datapath").toString();
+            save_path = Settings::get().getOption("base.save.datapath").toString();
         }
         if (save_path.size() && save_path[0] == '~')
         {
@@ -397,10 +403,10 @@ void CMainWindow::initUI()
     m_thumbnail->setVisible(true);
     m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
-    m_thumbnail->addPath(g_lastFileName);
-    m_videoPre.setSaveFolder(g_lastFileName);
-    int nContinuous = pDSettings->value("photosetting.photosnumber.takephotos").toInt();
-    int nDelayTime = pDSettings->value("photosetting.photosdelay.photodelays").toInt();
+    m_thumbnail->addPath(CMainWindow::m_lastfilename);
+    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
+    int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
     switch (nContinuous) {
     case 1:
         nContinuous = 4;
@@ -517,7 +523,7 @@ void CMainWindow::setSelBtnShow()
 
 void CMainWindow::setupTitlebar()
 {
-    DMenu *menu = new DMenu();
+    menu = new DMenu();
     m_actionSettings = new QAction(tr("Settings"), this);
     menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
@@ -557,10 +563,6 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
 void CMainWindow::closeEvent(QCloseEvent *event)
 {
-    //    DMessageBox *m_pMsgBox = new DMessageBox(DMessageBox::Icon::Warning,
-    //                                tr("Warning"), tr("Video recording is in progress. Close the window?"),
-    //                                DMessageBox::StandardButton::Cancel
-    //                                | DMessageBox::StandardButton::Close, this);
     if (m_videoPre.getCapstatus()) {
         int ret = m_closeDlg->exec();
         switch (ret) {
@@ -701,15 +703,29 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
-    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
-        g_lastFileName.replace(0, 1, QDir::homePath());
-    }
-    m_fileWatcher.addPath(g_lastFileName);
-    m_thumbnail->addPath(g_lastFileName);
-    m_videoPre.setSaveFolder(g_lastFileName);
+//    if (settingDialog::getLastFileName().size() && settingDialog::getLastFileName()[0] == '~') {
+//        settingDialog::getLastFileName().replace(0, 1, QDir::homePath());
+//    }
+//    m_fileWatcher.addPath(settingDialog::getLastFileName());
+//    m_thumbnail->addPath(settingDialog::getLastFileName());
+//    m_videoPre.setSaveFolder(settingDialog::getLastFileName());
 
-    int nContinuous = pDSettings->value("photosetting.photosnumber.takephotos").toInt();
-    int nDelayTime = pDSettings->value("photosetting.photosdelay.photodelays").toInt();
+//    int nContinuous = m_pSettingDialog->getValue("photosetting.photosnumber.takephotos").toInt();
+//    int nDelayTime = m_pSettingDialog->getValue("photosetting.photosdelay.photodelays").toInt();
+
+    /**********************************************/
+    if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
+        CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
+    }
+    //m_fileWatcher.addPath(CMainWindow::m_lastfilename);
+    //m_thumbnail->addPath(CMainWindow::m_lastfilename);
+    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+
+    int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
+    int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
+
+
+    /**********************************************/
     switch (nContinuous) {
     case 1:
         nContinuous = 4;
@@ -756,6 +772,8 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
     m_thumbnail->show();
     onEnableSettings(true);
 }
+
+
 
 //void CMainWindow::onCapturepause(Qt::WindowState windowState)
 //{

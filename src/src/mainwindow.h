@@ -27,6 +27,7 @@
 #include "devnummonitor.h"
 #include "closedialog.h"
 #include "camview.h"
+#include "Settings.h"
 
 #include <QObject>
 #include <DMainWindow>
@@ -60,6 +61,7 @@ public:
     CMainWindow(DWidget *w = nullptr);
     void newPreViewByState(PRIVIEW_STATE state);
     void newNinePreview();
+    static QString lastOpenedPath();
     DSettings *getDsetMber();
 
     ~CMainWindow() override;
@@ -92,7 +94,7 @@ private slots:
     //    void onTakeVdBtnClicked();
 private:
     ThumbnailsBar              *m_thumbnail;
-    //    ToolBar                     m_toolBar;
+    DMenu                     *menu;
     videowidget                  m_videoPre;
     CloseDialog                  *m_closeDlg;
     QFileSystemWatcher           m_fileWatcher;
@@ -102,11 +104,14 @@ private:
     DButtonBoxButton            *m_pTitlePicBtn;
     DButtonBoxButton            *m_pTitleVdBtn;
     DIconButton                 *pSelectBtn; //切换按钮
-    DSettingsDialog              *pDSettingDialog;
-    DSettings                    *pDSettings;
+    //DSettingsDialog              *pDSettingDialog;
+    //DSettings                    *pDSettings;
     QString                      m_strCfgPath;
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
+    static QString                m_lastfilename;
+    //settingDialog                 *m_pSettingDialog;
+
 
     //    bool m_bMultiCam;//是否多摄像头
     //    bool m_bLockCam;//是否锁定摄像头，拍照和录像过程中锁定

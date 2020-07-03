@@ -122,9 +122,9 @@ int mp4_write_packet(
         outpacket->flags = flags;
         outpacket->stream_index = stream_index;
         AVRational video_time = mp4_ctx->streams[stream_index]->time_base;
-        /*AVRational time_base = codec_data->codec_context->time_base;*/
+        AVRational time_base = codec_data->codec_context->time_base;
 
-        av_packet_rescale_ts(outpacket, (AVRational){1, 33}, video_time);
+        av_packet_rescale_ts(outpacket, time_base, video_time);
         //log_packet(mp4_ctx, outpacket);
 
         av_write_frame(mp4_ctx, outpacket);

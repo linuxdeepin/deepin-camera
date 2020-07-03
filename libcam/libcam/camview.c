@@ -844,6 +844,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
  */
 v4l2_dev_t *create_v4l2_device_handler(const char *device)
 {
+//    cheese_print_log("create_v4l2_device_handler\n");
     my_vd = v4l2core_init_dev(device);
 
     return my_vd;
@@ -1193,6 +1194,8 @@ int start_encoder_thread(void *data)
 int stop_encoder_thread()
 {
     video_capture_save_video(0);
+
+    //usleep(2000);
 
     __THREAD_JOIN(encoder_thread);
 

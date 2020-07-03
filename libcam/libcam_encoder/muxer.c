@@ -47,6 +47,8 @@
 #include <libavutil/mathematics.h>
 #include <libavutil/timestamp.h>
 #include <libavutil/hwcontext.h>
+#include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 /* support for internationalization - i18n */
 #include <locale.h>
 #include <libintl.h>
@@ -59,6 +61,7 @@
 #include "avi.h"
 #include "mp4.h"
 #include "gview.h"
+
 
 extern int verbosity;
 
@@ -96,10 +99,14 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 
 	encoder_video_context_t *enc_video_ctx = encoder_ctx->enc_video_ctx;
 	assert(enc_video_ctx);
-
-	if(enc_video_ctx->outbuf_coded_size <= 0)
+     //cheese_print_log("encoder_write_video_data");
+    if(enc_video_ctx->outbuf_coded_size <= 0){
+         //cheese_print_log("enc_video_ctx->outbuf_coded_size <= 0");
 		return -1;
-
+    }
+    //else {
+        //cheese_print_log("enc_video_ctx->outbuf_coded_size >= 0");
+    //}
 	enc_video_ctx->framecount++;
 
 	int ret =0;
@@ -125,6 +132,7 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 			break;
 
         case ENCODER_MUX_MP4:
+        //cheese_print_log("write video data");
             ret = mp4_write_packet(mp4_ctx,
                          video_codec_data,
                          0,
@@ -202,6 +210,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					enc_audio_ctx->flags);
 			break;
         case ENCODER_MUX_MP4:
+//        cheese_print_log("write audio data");
             mp4_write_packet(
                     mp4_ctx,
                     audio_codec_data,
@@ -540,7 +549,7 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                 mp4_destroy_context(mp4_ctx);
 
                 mp4_ctx = NULL;
-                malloc_trim(0);
+                //malloc_trim(0);
             }
         break;
 

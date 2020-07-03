@@ -1,9 +1,9 @@
 /*
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
-* Author:     shicetu <shicetu@uniontech.com>
+* Author:     hujianbo <hujianbo@uniontech.com>
 *
-* Maintainer: shicetu <shicetu@uniontech.com>
+* Maintainer: hujianbo <hujianbo@uniontech.com>
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@
 #include <QTimer>
 #include <DLabel>
 #include <DSpinner>
-#include <DGuiApplicationHelper>
 
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
@@ -74,58 +73,6 @@ typedef QList<DBImgInfo> DBImgInfoList;
 
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
-
-class ImageItem : public DLabel
-{
-    Q_OBJECT
-public:
-    ImageItem(int index = 0, QString path = nullptr, QWidget *parent = 0);
-    void setPic(QImage image)
-    {
-        Q_UNUSED(image);
-        //      _image->setPixmap(QPixmap::fromImage(image.scaled(60,50)));
-    }
-    void updatePic(QPixmap pixmap)
-    {
-        _pixmap = pixmap;
-        update();
-    }
-    void setIndex(int index)
-    {
-        _index = index;
-    }
-    void SetPath(QString path)
-    {
-        _path = path;
-    }
-    inline QString getPath()
-    {
-        return _path;
-    }
-    inline int getIndex()
-    {
-        return _index;
-    }
-signals:
-    void imageItemclicked(int index, int indexNow);
-
-protected:
-    void mouseDoubleClickEvent(QMouseEvent *ev) override;
-    void mouseReleaseEvent(QMouseEvent *ev) override;
-    //    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    //    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *event) override;
-
-private:
-    int _index;
-    DLabel *_image = nullptr;
-    QString _path;
-    QPixmap _pixmap;
-    DSpinner *m_spinner;
-    QString m_pixmapstring;
-    bool bFirstUpdate = true;
-};
 
 class ThumbnailsBar : public DFloatingWidget
 {
@@ -163,9 +110,13 @@ private:
     DBImgInfoList m_infos;
     DPushButton *m_lastButton {nullptr};
 
+    bool m_bThumbnailReadOK = false;
+    bool m_bShiftPressed = false;
+
 private:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 signals:
     void fitToolBar();//调整工具栏

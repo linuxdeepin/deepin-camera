@@ -129,13 +129,13 @@ unix {
     } else {
         target.path = $${PREFIX}/lib
     }
-ClEAR_LIB_OBJ = rm -f ./*.o \
-            ../libcam/*.o \
-            ../libcam/libcam_v4l2core/*.o \
-            ../libcam/libcam_render/*.o \
-            ../libcam/libcam_encoder/*.o \
-            ../libcam/libcam_audio/*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
+#ClEAR_LIB_OBJ = rm -f ./*.o \
+#            ../libcam/*.o \
+#            ../libcam/libcam_v4l2core/*.o \
+#            ../libcam/libcam_render/*.o \
+#            ../libcam/libcam_encoder/*.o \
+#            ../libcam/libcam_audio/*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
 }
 
 #QMAKE_CXXFLAGS += -Wno-enum-compare
