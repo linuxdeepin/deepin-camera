@@ -8,7 +8,7 @@ Build-Depends:
  libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
- libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,
+ libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev
  libx11-dev,libva-dev
 Standards-Version: 1.0.0
 Homepage: http://www.deepin.org
