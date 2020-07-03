@@ -374,7 +374,7 @@ void CMainWindow::initUI()
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
     QAction *actOpen = new QAction(this);
-    actOpen->setText("Open folder");
+    actOpen->setText(tr("Open folder"));
     menu->addAction(actOpen);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
@@ -563,10 +563,6 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
 void CMainWindow::closeEvent(QCloseEvent *event)
 {
-    //    DMessageBox *m_pMsgBox = new DMessageBox(DMessageBox::Icon::Warning,
-    //                                tr("Warning"), tr("Video recording is in progress. Close the window?"),
-    //                                DMessageBox::StandardButton::Cancel
-    //                                | DMessageBox::StandardButton::Close, this);
     if (m_videoPre.getCapstatus()) {
         int ret = m_closeDlg->exec();
         switch (ret) {

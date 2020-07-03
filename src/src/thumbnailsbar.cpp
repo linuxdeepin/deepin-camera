@@ -159,7 +159,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     m_indexImage.clear();
     //获取所选文件类型过滤器
     QStringList filters;
-    filters << QString("*.jpg") << QString("*.mp4") /*<< QString("*.mkv")*/;
+    filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
     int tIndex = 0;
     QString strFolder;
     for (int i = m_strlstFolders.size(); i >= 1; i--) {
@@ -179,7 +179,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                 QString strFile = list.at(i).filePath();
                 QFileInfo fileInfo = list.at(i);
-                if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4") {
+                if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
                     QString strFileName = fileInfo.fileName();
                     if (strFileName.compare(g_strFileName) == 0) {
                         continue; //mp4文件此时还不完整，读取generateThumbnail会崩溃
@@ -365,6 +365,7 @@ void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
 
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //不会进来
 {
+    Q_UNUSED(ev);
     if (!m_bShiftPressed) {
         for (int i = 0; i < m_hBOx->count(); i++) {
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());

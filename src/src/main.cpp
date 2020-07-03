@@ -24,6 +24,7 @@
 #include <DMainWindow>
 #include <DWidgetUtil>
 #include <QSharedMemory>
+#include <DLog>
 
 DWIDGET_USE_NAMESPACE
 
@@ -32,6 +33,11 @@ int main(int argc, char *argv[])
     DApplication::loadDXcbPlugin();
     DApplication a(argc, argv);
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
+    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
+
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
     a.setApplicationDisplayName("Camera");

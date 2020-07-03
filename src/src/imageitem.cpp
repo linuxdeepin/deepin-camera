@@ -52,7 +52,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QPixmap pix;
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4") {
+    if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
@@ -91,7 +91,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         //        }
 
         //方式3：数据流加载文件，判断加载的文件是否正确，再读取视频缩略图
-        //        QFile f(m_path);
+        //        QFile f(m_path);//webm生效
         //        bool bValid = false;
         //        if (f.open(QIODevice::ReadOnly)) {
         //            QDataStream ds(&f);
@@ -116,12 +116,12 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QMenu *menu = new QMenu();
     QAction *actCopy = new QAction(this);
-    actCopy->setText("Copy");
+    actCopy->setText(tr("Copy"));
 
     QAction *actDel = new QAction(this);
-    actDel->setText("Delete");
+    actDel->setText(tr("Delete"));
     QAction *actOpenFolder = new QAction(this);
-    actOpenFolder->setText("Open folder");
+    actOpenFolder->setText(tr("Open folder"));
     menu->addAction(actCopy);
     menu->addAction(actDel);
     menu->addAction(actOpenFolder);
