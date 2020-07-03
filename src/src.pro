@@ -123,6 +123,19 @@ INSTALLS += target desktop icon_files manual dbus_service
 #    isEmpty(lrelease):lrelease=lrelease
 #    system($$lrelease $$_PRO_FILE_)
 #}
+CONFIG(release, debug|release) {
+    TRANSLATIONS = $$files($$PWD/translations/*.ts)
+    #遍历目录中的ts文件，调用lrelease将其生成为qm文件
+    for(tsfile, TRANSLATIONS) {
+        qmfile = $$replace(tsfile, .ts$, .qm)
+        system(lrelease $$tsfile -qm $$qmfile) | error("Failed to lrelease")
+    }
+}
+
+translations.path = $$APPSHAREDIR/translations
+translations.files = $$PWD/translations/*.qm
+
+INSTALLS = target desktop dbus_service icons manual manual_icon app_icon translations
 
 #DSR_LANG_PATH += $$DSRDIR/translations
 #DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""

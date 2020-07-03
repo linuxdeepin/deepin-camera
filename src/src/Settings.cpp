@@ -157,17 +157,17 @@ QString Settings::screenshotLocation()
     return save_path;
 }
 
-QString Settings::screenshotNameTemplate()
-{
-    return tr("%1/Movie%2.jpg").arg(screenshotLocation())
-           .arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
-}
+//QString Settings::screenshotNameTemplate()
+//{
+//    return tr("%1/Movie%2.jpg").arg(screenshotLocation())
+//           .arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
+//}
 
-QString Settings::screenshotNameSeqTemplate()
-{
-    return tr("%1/Movie%2(%3).jpg").arg(screenshotLocation())
-           .arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
-}
+//QString Settings::screenshotNameSeqTemplate()
+//{
+//    return tr("%1/Movie%2(%3).jpg").arg(screenshotLocation())
+//           .arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss"));
+//}
 
 void Settings::setGeneralOption(const QString &opt, const QVariant &v)
 {

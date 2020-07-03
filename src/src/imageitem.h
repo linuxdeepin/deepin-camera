@@ -89,8 +89,7 @@ private:
     QAction *m_actOpenFolder;
     bool m_bMultiSlt = false; //是否多选
     bool m_bThumbnailReadOK = false;
-
-    int m_indexNow = 0;
+    int64_t m_nDuration = 0; //视频文件时长
 };
 
 #endif // IMAGEITEM_H

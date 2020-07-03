@@ -38,11 +38,11 @@
 #include <QTimer>
 #include <DLabel>
 #include <DSpinner>
-
+#include "imageitem.h"
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
-#define THUMBNAIL_WIDTH 30
-#define THUMBNAIL_HEIGHT 40
+//#define THUMBNAIL_WIDTH 30
+//#define THUMBNAIL_HEIGHT 40
 //缩略图
 //hjb
 struct DBImgInfo {
@@ -112,6 +112,7 @@ private:
 
     bool m_bThumbnailReadOK = false;
     bool m_bShiftPressed = false;
+    bool m_bMultiSltFlag = false;
 
 private:
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;

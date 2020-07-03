@@ -116,7 +116,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     layout->addWidget(lab);
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName("OptionFormatLabel");
-    lab->setFixedHeight(30);
+    lab->setFixedHeight(THUMBNAIL_HEIGHT);
     QString str = option->value().toString();
     lab->setText(option->value().toString());
     lab->setAlignment(Qt::AlignTop);
@@ -369,7 +369,7 @@ void CMainWindow::initUI()
 
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
-    m_thumbnail->setFixedHeight(70);
+    m_thumbnail->setFixedHeight(THUMBNAIL_HEIGHT + 30);
 
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
@@ -596,7 +596,7 @@ void CMainWindow::onFitToolBar()
 
         int nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
         qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);

@@ -3,13 +3,13 @@ host = https://www.transifex.com
 minimum_perc = 80
 mode = developer
 
-[deepin-cemera.deepin-cemera_v3]
-file_filter = src/translations/deepin-cemera_<lang>.ts
-source_file = src/translations/deepin-cemera.ts
+[deepin-camera.deepin-camera_v3]
+file_filter = src/translations/deepin-camera_<lang>.ts
+source_file = src/translations/deepin-camera.ts
 source_lang = en
 type = QT
 
-[deepin-cemera.deepin-cemera-desktop]
+[deepin-camera.deepin-camera-desktop]
 file_filter = src/translations/desktop/desktop_<lang>.ts
 source_file = src/translations/desktop/desktop.ts
 source_lang = en

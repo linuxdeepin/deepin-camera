@@ -39,11 +39,11 @@
 
 #include <QThread>
 #include <QMediaPlayer>
-#include "imageitem.h"
+
 //QMap<QString, QPixmap> m_imagemap;
-extern QMap<int, ImageItem *> m_indexImage;
-static int m_indexNow = 0;
-extern QSet<int> m_setIndex;
+QMap<int, ImageItem *> m_indexImage;
+int m_indexNow = 0;
+QSet<int> m_setIndex;
 extern QString g_strFileName;
 
 bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
@@ -58,7 +58,7 @@ bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
     this->grabKeyboard(); //获取键盘事件的关键处理
-    QShortcut *shortcut = new QShortcut(QKeySequence(tr("ctrl+c")), this);
+    QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
     QShortcut *shortcutDel = new QShortcut(QKeySequence(Qt::Key_Delete), this);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
@@ -136,7 +136,6 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 //    //m_writelock.unlock();
 //}
 
-//待完善内容：1、视频缩略图显示时间。
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
@@ -336,6 +335,7 @@ void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         m_bShiftPressed = true;
+        m_bMultiSltFlag = true;
         for (int i = 0; i < m_hBOx->count(); i++) {
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
             tmp->SetMulti(true);
@@ -349,6 +349,7 @@ void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
     //预留接口，关于shift按键取消后的操作
     if (e->key() == Qt::Key_Shift) {
         m_bShiftPressed = false;
+        m_bMultiSltFlag = false;
         for (int i = 0; i < m_hBOx->count(); i++) {
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
             tmp->SetMulti(false);
@@ -363,15 +364,15 @@ void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
     //    }
 }
 
-void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //不会进来
+void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
 {
     Q_UNUSED(ev);
-    if (!m_bShiftPressed) {
-        for (int i = 0; i < m_hBOx->count(); i++) {
-            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-            tmp->SetMulti(false);
-            tmp->update();
-        }
-        //m_index.insert(_indexNow);
-    }
+    //    if (!m_bShiftPressed && m_bMultiSltFlag) {
+    //        for (int i = 0; i < m_hBOx->count(); i++) {
+    //            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+    //            tmp->SetMulti(false);
+    //            tmp->update();
+    //        }
+    //        //m_index.insert(_indexNow);
+    //    }
 }
