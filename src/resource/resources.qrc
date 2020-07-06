@@ -14,5 +14,6 @@
         <file>images/icons/button/transcribe.svg</file>
         <file>images/icons/warning.svg</file>
         <file>deepin-camera.svg</file>
+        <file>../translations/deepin-camera.qm</file>
     </qresource>
 </RCC>

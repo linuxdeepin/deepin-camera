@@ -170,7 +170,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     //prompt->setTitle(QObject::tr("Permissions prompt"));
     prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
     prompt->setWindowFlags(prompt->windowFlags() | Qt::WindowStaysOnTopHint);
-    prompt->addButton(QObject::tr("OK"), true, DDialog::ButtonRecommend);
+    prompt->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
 
     auto validate = [ = ](QString name, bool alert = true) -> bool {
         name = name.trimmed();
