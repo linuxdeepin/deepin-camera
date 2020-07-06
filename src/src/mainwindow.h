@@ -51,7 +51,7 @@ class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
 const int MinWindowWidth = 800;
-const int MinWindowHeight = 533;
+const int MinWindowHeight = 583;
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow

@@ -86,12 +86,11 @@ public slots:
     void onTakeVideo();
     void showCountdown();
     void changeDev();
-
+    void endBtnClicked();
 private slots:
     void ReceiveMajorImage(QImage image, int result);
     void onReachMaxDelayedFrames();
     void flash();
-    void endBtnClicked();
 
 private:
     void init();
@@ -124,8 +123,8 @@ private:
     void startTakeVideo();
 
 private:
-    bool                  m_bActive;
-    bool                  isFindedDevice = false;
+    bool m_bActive;
+    bool isFindedDevice = false;
     DLabel               m_flashLabel;
 
     QGraphicsView        *m_pNormalView;
@@ -136,40 +135,39 @@ private:
 
     QGridLayout          *m_pGridLayout;
 
-    DFloatingWidget       *m_fWgtTime; //显示拍摄时间
-    DFloatingWidget       *m_fWgtCountdown; //显示倒计时
+    DFloatingWidget *m_fWgtTime; //显示拍摄时间
+    DFloatingWidget *m_fWgtCountdown; //显示倒计时
     //浮动窗口添加磨砂窗口和结束按钮
-    DLabel                *m_dLabel;
-    DLabel                *m_dLabelVdTime; //录制屏显时长
+    DLabel *m_dLabel;
+    DLabel *m_dLabelVdTime; //录制屏显时长
 
-    DFloatingWidget        *m_fWgtBtn; //结束按钮浮动窗
     DPushButton          *m_endBtn;
 
     QTimer               *countTimer;
     QTimer               *flashTimer;
     QDateTime            begin_time;
     QDateTime            m_btnClickTime; //按钮点击时间
-    int                    m_nFastClick; //快速点击次数，小于200ms计入
+    int m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
-    int                    EFFECT_PAGE = 0;
+    int EFFECT_PAGE = 0;
 
-    int                    m_countdownLen = 1;
-    int                    err11, err19;
+    int m_countdownLen = 1;
+    int err11, err19;
     MajorImageProcessingThread *m_imgPrcThread;
     QImage               m_img;
     QPixmap              m_pixmap;
 
-    int                    m_nFileID;
-    QString                m_strFolder;
+    int m_nFileID;
+    QString m_strFolder;
 
-    int                    m_nMaxContinuous; //最大连拍数：0,4,10
-    int                    m_curTakePicTime; //当前连拍次数
-    int                    m_nMaxInterval; //最大间隔：0,3,6
-    int                    m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
+    int m_nMaxContinuous; //最大连拍数：0,4,10
+    int m_curTakePicTime; //当前连拍次数
+    int m_nMaxInterval; //最大间隔：0,3,6
+    int m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
 
     QTime                m_time;
-    int                    m_nCount; //录制计时
+    int m_nCount; //录制计时
 };
 
 #endif // VIDEOWIDGET_H

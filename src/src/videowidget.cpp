@@ -64,11 +64,13 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_fWgtTime->hide(); //先隐藏
     m_fWgtTime->setFixedSize(84, 40);
     m_fWgtTime->setBlurBackgroundEnabled(true);
-    m_fWgtTime->setFramRadius(1);
+    //m_fWgtTime->setFramRadius(1);
 
     m_dLabelVdTime = new DLabel(m_fWgtTime); //有个圆点，待处理
     m_dLabelVdTime->setFixedWidth(84);
     m_dLabelVdTime->setAttribute(Qt::WA_TranslucentBackground);
+    //m_dLabelVdTime->setAutoFillBackground(true);
+    //m_dLabelVdTime->setWindowOpacity(0.2);
     QPalette paletteTime;
     paletteTime.setColor(QPalette::Text, QColor("#FF2C2C"));
     m_dLabelVdTime->setPalette(paletteTime);
@@ -77,24 +79,23 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_time.setHMS(0, 0, 0, 0);
     m_dLabelVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
 
-    m_fWgtBtn = new DFloatingWidget(m_pNormalView);
-    m_fWgtBtn->setFixedSize(QSize(36, 40));
+    m_endBtn = new DPushButton(m_pNormalView);
+    m_endBtn->setFlat(true);
+    m_endBtn->setFixedSize(QSize(56, 51));
 
-    m_endBtn = new DPushButton(m_fWgtBtn);
-    m_endBtn->setFixedSize(QSize(36, 36));
-    DPalette pa = m_endBtn->palette();
-    QColor clo("#FF2C2C");
-    pa.setColor(DPalette::Dark, clo);
-    pa.setColor(DPalette::Light, clo);
-    m_endBtn->setPalette(pa);
-    m_endBtn->setIconSize(QSize(36, 36));
+    //    DPalette pa = m_endBtn->palette();
+    //    QColor clo("#E5463D");
+    //    pa.setColor(DPalette::Dark, clo);
+    //    pa.setColor(DPalette::Light, clo);
+    //    m_endBtn->setPalette(pa);
+    m_endBtn->setIconSize(QSize(56, 51));
     m_endBtn->setIcon(QIcon(":/images/icons/Stop Recording.svg"));
 
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
 
     m_endBtn->setToolTip(tr("Stop taking video"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
-    m_fWgtBtn->hide();
+    m_endBtn->hide();
 
     m_fWgtCountdown = new DFloatingWidget(m_pNormalView);
     m_fWgtCountdown->hide(); //先隐藏
@@ -288,7 +289,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         //m_pCountItem->show();
         m_pTimeItem->hide();
         m_fWgtTime->hide();
-        m_fWgtBtn->hide();
+        m_endBtn->hide();
 
         m_countdownLen = 50;
         setFont(m_pCountItem, 50, QString::number(m_nInterval));
@@ -314,7 +315,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->show();
         m_pTimeItem->hide();
         m_fWgtTime->hide();
-        m_fWgtBtn->hide();
+        m_endBtn->hide();
         str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
 
@@ -324,7 +325,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
         m_fWgtTime->hide();
-        m_fWgtBtn->hide();
+        m_endBtn->hide();
         break;
     }
 }
@@ -350,7 +351,7 @@ void videowidget::hideTimeLabel()
 {
     m_pTimeItem->hide();
     m_fWgtTime->hide();
-    m_fWgtBtn->hide();
+    m_endBtn->hide();
 }
 
 void videowidget::resizePixMap()
@@ -480,7 +481,7 @@ void videowidget::endBtnClicked()
     }
 
     m_fWgtTime->hide();
-    m_fWgtBtn->hide();
+    m_endBtn->hide();
     VIDEO_STATE = NORMALVIDEO;
     g_strFileName = nullptr;
     if (getCapstatus()) { //录制完成处理
@@ -645,7 +646,7 @@ void videowidget::startTakeVideo()
             g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(g_strFileName.toStdString().c_str());
-            m_fWgtBtn->show();
+            m_endBtn->show();
             start_encoder_thread();
             setCapstatus(true);
             //begin_time = QDateTime::currentDateTime();
@@ -661,19 +662,19 @@ void videowidget::startTakeVideo()
             m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
                                  (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
 
-            m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
-                            this->height() - m_fWgtTime->height() - 5);
+            m_endBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
+                           this->height() - m_fWgtTime->height() - 10);
             qDebug() << m_fWgtTime->width() << "******";
         } else {
             reset_video_timer();//重置底层定时器
             countTimer->stop();
             //countTimer->start(1000);
             m_time.setHMS(0, 0, 0, 0);
-            m_fWgtBtn->show();
+            m_endBtn->show();
             setCapstatus(false);
             m_nCount = 0;
-            m_fWgtBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
-                            this->height() - m_fWgtTime->height() - 5);
+            m_endBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
+                           this->height() - m_fWgtTime->height() - 10);
             m_fWgtTime->show();
             m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
                              this->height() - m_fWgtTime->height() - 5);

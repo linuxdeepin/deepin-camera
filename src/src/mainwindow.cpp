@@ -570,6 +570,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         case 1:
+            m_videoPre.endBtnClicked();
             event->accept();
             break;
         default:

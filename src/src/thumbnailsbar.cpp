@@ -38,7 +38,6 @@
 #include <QShortcut>
 
 #include <QThread>
-#include <QMediaPlayer>
 
 //QMap<QString, QPixmap> m_imagemap;
 QMap<int, ImageItem *> m_indexImage;

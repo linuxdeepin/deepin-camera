@@ -29,7 +29,6 @@
 #include <QDir>
 #include <DDesktopServices>
 #include <libffmpegthumbnailer/videothumbnailer.h>
-#include <QMediaPlayer>
 #include <QTime>
 #include <QThread>
 extern "C" {
