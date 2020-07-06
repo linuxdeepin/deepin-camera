@@ -87,9 +87,12 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     pa.setColor(DPalette::Dark, clo);
     pa.setColor(DPalette::Light, clo);
     m_endBtn->setPalette(pa);
+    m_endBtn->setIconSize(QSize(36, 36));
+    m_endBtn->setIcon(QIcon(":/images/icons/Stop Recording.svg"));
+
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
 
-    m_endBtn->setToolTip(tr("Stop taking photos"));
+    m_endBtn->setToolTip(tr("Stop taking video"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
     m_fWgtBtn->hide();
 

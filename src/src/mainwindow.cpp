@@ -154,19 +154,19 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     le->setText(pe);
     nameLast = pe;
 //    icon->setIconVisible(true);
-    icon->setIcon(QIcon(":resources/icons/select-normal.svg"));
+    icon->setIcon(QIcon(":/images/icons/select-normal.svg"));
     icon->setFixedHeight(25);
     layout->addWidget(le);
     layout->addWidget(icon);
-//    icon->setNormalIcon(":resources/icons/select-normal.svg");
-//    icon->setHoverIcon(":resources/icons/select-hover.svg");
-//    icon->setPressIcon(":resources/icons/select-press.svg");
+//    icon->setNormalIcon(":resource/images/icons/select-normal.svg");
+//    icon->setHoverIcon(":resource/images/icons/select-hover.svg");
+//    icon->setPressIcon(":resource/images/icons/select-press.svg");
 
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
     workaround_updateStyle(optionWidget, "light");
 
     DDialog *prompt = new DDialog(optionWidget);
-    prompt->setIcon(QIcon(":/resources/icons/warning.svg"));
+    prompt->setIcon(QIcon(":/images/icons/warning.svg"));
     //prompt->setTitle(QObject::tr("Permissions prompt"));
     prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
     prompt->setWindowFlags(prompt->windowFlags() | Qt::WindowStaysOnTopHint);

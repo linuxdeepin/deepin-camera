@@ -14,6 +14,11 @@
         <file>images/icons/button/transcribe.svg</file>
         <file>images/icons/warning.svg</file>
         <file>deepin-camera.svg</file>
+        <file>images/icons/Timer Status.svg</file>
+        <file>images/icons/Stop Recording.svg</file>
+        <file>images/icons/select-hover.svg</file>
+        <file>images/icons/select-normal.svg</file>
+        <file>images/icons/select-press.svg</file>
         <file>../translations/deepin-camera.qm</file>
     </qresource>
 </RCC>
