@@ -479,6 +479,12 @@ void set_video_path(const char *path)
 	if(video_path != NULL)
 		free(video_path);
 
+    if(strcmp(path,"") == 0)
+    {
+        path = getenv("HOME");
+        strcat(path,"/Videos");
+    }
+
 	video_path = strdup(path);
 
 	/* update the config */

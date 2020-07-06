@@ -72,7 +72,7 @@ RESOURCES += \
 
 isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(APPDIR):APPDIR=/usr/share/applications
-isEmpty(DSRDIR):DSRDIR=/usr/share/dde-camera
+isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-camera
 isEmpty(PREFIX){
     PREFIX = /usr
 }
@@ -83,7 +83,7 @@ isEmpty(PREFIX){
 
 target.path = $$INSTROOT$$BINDIR
 icon_files.path = $$PREFIX/share/icons/hicolor/scalable/apps/
-icon_files.files = $$PWD/src/resource/deepin-camera.svg
+icon_files.files = $$PWD/resource/deepin-camera.svg
 
 desktop.path = $$INSTROOT$$APPDIR
 desktop.files = deepin-camera.desktop
