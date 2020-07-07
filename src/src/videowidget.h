@@ -135,11 +135,10 @@ private:
 
     QGridLayout          *m_pGridLayout;
 
-    DFloatingWidget *m_fWgtTime; //显示拍摄时间
     DFloatingWidget *m_fWgtCountdown; //显示倒计时
     //浮动窗口添加磨砂窗口和结束按钮
     DLabel *m_dLabel;
-    DLabel *m_dLabelVdTime; //录制屏显时长
+    DPushButton *m_btnVdTime; //录制屏显时长
 
     DPushButton          *m_endBtn;
 

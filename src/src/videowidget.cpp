@@ -60,24 +60,30 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalView = new QGraphicsView(this);
 
-    m_fWgtTime = new DFloatingWidget(m_pNormalView);
-    m_fWgtTime->hide(); //先隐藏
-    m_fWgtTime->setFixedSize(84, 40);
-    m_fWgtTime->setBlurBackgroundEnabled(true);
-    //m_fWgtTime->setFramRadius(1);
+    m_btnVdTime = new DPushButton(m_pNormalView);
+    m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
+    m_btnVdTime->setIconSize(QSize(6, 6));
+    m_btnVdTime->hide(); //先隐藏
+    m_btnVdTime->setFixedSize(84, 40);
+    m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
+    m_btnVdTime->setEnabled(false);
+    //设置背景透明
+    m_btnVdTime->setFlat(true);
+    m_btnVdTime->setAutoFillBackground(true);
 
-    m_dLabelVdTime = new DLabel(m_fWgtTime); //有个圆点，待处理
-    m_dLabelVdTime->setFixedWidth(84);
-    m_dLabelVdTime->setAttribute(Qt::WA_TranslucentBackground);
-    //m_dLabelVdTime->setAutoFillBackground(true);
-    //m_dLabelVdTime->setWindowOpacity(0.2);
-    QPalette paletteTime;
-    paletteTime.setColor(QPalette::Text, QColor("#FF2C2C"));
-    m_dLabelVdTime->setPalette(paletteTime);
-    m_dLabelVdTime->setFont(QFont("思源黑体 ExtraLight", 10, QFont::ExtraLight));
-    m_dLabelVdTime->setAlignment(Qt::AlignCenter);
+    m_btnVdTime->setWindowOpacity(0.2);
+
+    QPalette palette0 = m_btnVdTime->palette();
+    palette0.setColor(QPalette::Button,QColor(255, 0, 255, 100));
+    m_btnVdTime->setPalette(palette0);
+
+    //设置字体颜色
+    QPalette paletteTime = m_btnVdTime->palette();
+    paletteTime.setColor(QPalette::ButtonText, QColor("#FF2C2C"));
+    m_btnVdTime->setPalette(paletteTime);
+    m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
     m_time.setHMS(0, 0, 0, 0);
-    m_dLabelVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
+    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
 
     m_endBtn = new DPushButton(m_pNormalView);
     m_endBtn->setFlat(true);
@@ -106,7 +112,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     QPalette palette;
     palette.setColor(QPalette::Text, QColor("#000000"));
     m_dLabel->setPalette(palette);
-    m_dLabel->setFont(QFont("思源黑体 ExtraLight", 60, QFont::ExtraLight));
+    m_dLabel->setFont(QFont("SourceHanSansSC", 60, QFont::ExtraLight));
     m_dLabel->setAlignment(Qt::AlignCenter);
 
     m_pNormalScene = new QGraphicsScene;
@@ -288,7 +294,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 
         //m_pCountItem->show();
         m_pTimeItem->hide();
-        m_fWgtTime->hide();
+        m_btnVdTime->hide();
         m_endBtn->hide();
 
         m_countdownLen = 50;
@@ -302,7 +308,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
-            m_dLabelVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
+            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
         if (m_nCount >= MAX_REC_TIME) {
             endBtnClicked(); //结束录制
         }
@@ -314,7 +320,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 
         m_fWgtCountdown->show();
         m_pTimeItem->hide();
-        m_fWgtTime->hide();
+        m_btnVdTime->hide();
         m_endBtn->hide();
         str = QString::number(m_nInterval);
         setFont(m_pCountItem, 50, str);
@@ -324,7 +330,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_pTimeItem->hide();
         m_pCountItem->hide();
         m_fWgtCountdown->hide();
-        m_fWgtTime->hide();
+        m_btnVdTime->hide();
         m_endBtn->hide();
         break;
     }
@@ -334,7 +340,7 @@ void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
 {
     if (item == nullptr)
         return;
-    item->setFont(QFont("思源黑体 ExtraLight", size, QFont::ExtraLight));
+    item->setFont(QFont("SourceHanSansSC", size, QFont::ExtraLight));
     item->setDefaultTextColor(QColor(40, 39, 39));
     //item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     item->setPlainText(str);
@@ -350,7 +356,7 @@ void videowidget::hideCountDownLabel()
 void videowidget::hideTimeLabel()
 {
     m_pTimeItem->hide();
-    m_fWgtTime->hide();
+    m_btnVdTime->hide();
     m_endBtn->hide();
 }
 
@@ -378,7 +384,26 @@ void videowidget::resizePixMap()
 
 void videowidget::resizeEvent(QResizeEvent *size)
 {
-    return DWidget::resizeEvent(size);
+    Q_UNUSED(size);
+    int nWidth = this->width();
+    int nHeight = this->height();
+
+    if (m_endBtn) {
+        m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
+                       nHeight - m_btnVdTime->height() - 10);
+    }
+
+    if (m_btnVdTime) {
+        m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
+                         nHeight - m_btnVdTime->height() - 5);
+    }
+//    m_imgPrcThread->m_rwMtxImg.lock();
+//    m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(nWidth, nHeight);
+//    m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
+//    m_imgPrcThread->m_rwMtxImg.unlock();
+//    m_pNormalItem->setPixmap(m_pixmap);
+//    repaint();
+//    return DWidget::resizeEvent(size);
 }
 
 void videowidget::showCountdown()
@@ -480,7 +505,7 @@ void videowidget::endBtnClicked()
         m_fWgtCountdown->hide();
     }
 
-    m_fWgtTime->hide();
+    m_btnVdTime->hide();
     m_endBtn->hide();
     VIDEO_STATE = NORMALVIDEO;
     g_strFileName = nullptr;
@@ -646,41 +671,32 @@ void videowidget::startTakeVideo()
             g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(g_strFileName.toStdString().c_str());
-            m_endBtn->show();
+
             start_encoder_thread();
             setCapstatus(true);
             //begin_time = QDateTime::currentDateTime();
             countTimer->stop();
             countTimer->start(1000); //重新计时，否则时间与显示时间
-
-            m_fWgtTime->show();
-            m_time.setHMS(0, 0, 0, 0);
-            m_nCount = 0;
-            m_dLabelVdTime->setText(m_time.toString("mm:ss"));
-            m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
-                             this->height() - m_fWgtTime->height() - 5);
-            m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
-                                 (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
-
-            m_endBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
-                           this->height() - m_fWgtTime->height() - 10);
-            qDebug() << m_fWgtTime->width() << "******";
         } else {
             reset_video_timer();//重置底层定时器
             countTimer->stop();
             //countTimer->start(1000);
-            m_time.setHMS(0, 0, 0, 0);
-            m_endBtn->show();
             setCapstatus(false);
-            m_nCount = 0;
-            m_endBtn->move((this->width() - m_fWgtTime->width()) / 2 + 20 + 84,
-                           this->height() - m_fWgtTime->height() - 10);
-            m_fWgtTime->show();
-            m_fWgtTime->move((this->width() - m_fWgtTime->width()) / 2,
-                             this->height() - m_fWgtTime->height() - 5);
-            m_dLabelVdTime->setText(m_time.toString("mm:ss"));
-            m_dLabelVdTime->move((m_fWgtTime->width() - m_dLabelVdTime->width()) / 2,
-                                 (m_fWgtTime->height() - m_dLabelVdTime->height()) / 2);
         }
+        m_nCount = 0;
+        m_time.setHMS(0, 0, 0, 0);
+        m_btnVdTime->setText(m_time.toString("mm:ss"));
+
+        int nWidth = this->width();
+        int nHeight = this->height();
+
+        m_endBtn->show();
+        m_btnVdTime->show();
+
+        m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
+                         nHeight - m_btnVdTime->height() - 5);
+
+        m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
+                       nHeight - m_btnVdTime->height() - 10);
     }
 }

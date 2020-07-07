@@ -68,10 +68,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         QPainter painter1;
         painter1.begin(&pix);
         painter1.setPen(Qt::red);
-        painter1.setFont(QFont("思源黑体 ExtraLight", 16, QFont::ExtraLight));
+        painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
         painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(m_nDuration / 1000000).toString("mm:ss"));
-        qDebug() << pix.width() << " " << pix.height();
-        qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
+        //qDebug() << pix.width() << " " << pix.height();
+        //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
         painter1.end();
 
         //方式2：先使用线程尝试加载，加载失败只是线程出问题
@@ -421,7 +421,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     //    QPainter painter1;
     //    painter1.begin(&m_pixmap);
     //    painter1.setPen(Qt::red);
-    //    painter1.setFont(QFont("思源黑体 ExtraLight", 10, QFont::Black));
+    //    painter1.setFont(QFont("SourceHanSansSC", 10, QFont::Black));
     //    painter1.drawText(0,10,this->width(),this->height(), Qt::AlignBottom, tm.addSecs(m_nDuration/1000000).toString("mm:ss"));
     ////    qDebug() << QString::number(m_nDuration);
     ////    qDebug() << tm.addSecs(m_nDuration/1000000).toString("mm:ss");
