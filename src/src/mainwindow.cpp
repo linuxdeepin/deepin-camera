@@ -531,17 +531,10 @@ void CMainWindow::setupTitlebar()
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
+
     int width = this->width();
-    int height = this->height();
-    //Q_UNUSED(event);
-    if (QEvent::Resize == event->type()) {
-
-        //qDebug() << width << " " << height;
-        m_videoPre.resize(width, height);
-
-//        v4l2_dev_t *myvd = get_v4l2_device_handler();
-//        myvd->format
-    }
+    int height = this->height();    
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
         int nWidth;
