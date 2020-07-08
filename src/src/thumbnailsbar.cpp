@@ -86,7 +86,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 
     m_lastButton->setFixedWidth(64);
     m_lastButton->setFixedHeight(50);
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(24, 20));
 
@@ -293,7 +293,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     }
     m_nActTpye = nType;
     if (nType == ActTakePic) {
-        QIcon iconPic(":/images/icons/button/photograph.svg");
+        QIcon iconPic(":/images/icons/light/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(24, 20));
 
@@ -305,7 +305,7 @@ void ThumbnailsBar::ChangeActType(int nType)
 
         m_lastButton->setToolTip(tr("Take photo"));
     } else if (nType == ActTakeVideo) {
-        QIcon iconPic(":/images/icons/button/transcribe.svg");
+        QIcon iconPic(":/images/icons/light/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(26, 16));
 

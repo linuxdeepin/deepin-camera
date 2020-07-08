@@ -96,6 +96,7 @@ private:
     void init();
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void resizePixMap();
 
     //设置字体
