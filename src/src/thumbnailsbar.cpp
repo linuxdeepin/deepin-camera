@@ -84,7 +84,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 
     m_lastButton = new DPushButton(this);
 
-    m_lastButton->setFixedWidth(64);
+    m_lastButton->setFixedWidth(LAST_BUTTON_WIDTH);
     m_lastButton->setFixedHeight(50);
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
@@ -140,7 +140,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - 64 - 20) / (THUMBNAIL_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - 20) / (THUMBNAIL_WIDTH + 2) - 1;
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
