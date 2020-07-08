@@ -41,6 +41,7 @@
 #include "imageitem.h"
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
+#define LAST_BUTTON_WIDTH 64
 //#define THUMBNAIL_WIDTH 30
 //#define THUMBNAIL_HEIGHT 40
 //缩略图
