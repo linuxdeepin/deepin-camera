@@ -45,7 +45,7 @@
 
 extern int debug_level;
 
-int is_control_panel = 0;
+//int is_control_panel = 0;
 
 /*default camera button action: DEF_ACTION_IMAGE - save image; DEF_ACTION_VIDEO - save video*/
 __attribute__((unused))static int default_camera_button_action = 0;
@@ -479,13 +479,13 @@ void set_video_path(const char *path)
 	if(video_path != NULL)
 		free(video_path);
 
-    if(strcmp(path,"") == 0)
-    {
-        path = getenv("HOME");
-        strcat(path,"/Videos");
-    }
-
 	video_path = strdup(path);
+
+    if(strcmp(video_path,"") == 0)
+    {
+        video_path = getenv("HOME");
+        strcat(video_path,"/Videos");
+    }
 
 	/* update the config */
 	config_t *my_config = config_get();
