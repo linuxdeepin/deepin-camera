@@ -30,6 +30,9 @@
 #include <QVBoxLayout>
 #include <QThread>
 #include <QScrollBar>
+#include <DGuiApplicationHelper>
+#include <DApplicationHelper>
+
 //#include "LPF_V4L2.h"
 
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
@@ -67,20 +70,25 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setFixedSize(84, 40);
     m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
     m_btnVdTime->setEnabled(false);
-    //设置背景透明
-    m_btnVdTime->setFlat(true);
-    m_btnVdTime->setAutoFillBackground(true);
-
-    m_btnVdTime->setWindowOpacity(0.2);
-
-    QPalette palette0 = m_btnVdTime->palette();
-    palette0.setColor(QPalette::Button,QColor(255, 0, 255, 100));
-    m_btnVdTime->setPalette(palette0);
 
     //设置字体颜色
     QPalette paletteTime = m_btnVdTime->palette();
     paletteTime.setColor(QPalette::ButtonText, QColor("#FF2C2C"));
     m_btnVdTime->setPalette(paletteTime);
+
+    DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);
+    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
+        pa_cb.setBrush(QPalette::Light, QColor(255, 255, 255, 51)); //浅色
+        pa_cb.setBrush(QPalette::Dark, QColor(155, 155, 155, 230));
+    } else {
+        pa_cb.setBrush(QPalette::Light, QColor(155, 155, 155, 230));
+        pa_cb.setBrush(QPalette::Dark, QColor(0, 0, 0, 200)); //深色
+    }
+    m_btnVdTime->setPalette(pa_cb);
+
+//    与QPalette效果相同
+//    m_btnVdTime->setStyleSheet(QString("background-color:rgba(155,155,155,230);border-style: outset;border-radius: 8px;"));
+
     m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
     m_time.setHMS(0, 0, 0, 0);
     m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
@@ -95,7 +103,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     //    pa.setColor(DPalette::Light, clo);
     //    m_endBtn->setPalette(pa);
     m_endBtn->setIconSize(QSize(56, 51));
-    m_endBtn->setIcon(QIcon(":/images/icons/Stop Recording.svg"));
+    m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
 
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
 
@@ -395,7 +403,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     if (m_btnVdTime) {
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                         nHeight - m_btnVdTime->height() - 5);
+                          nHeight - m_btnVdTime->height() - 5);
     }
 //    m_imgPrcThread->m_rwMtxImg.lock();
 //    m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(nWidth, nHeight);
@@ -403,7 +411,12 @@ void videowidget::resizeEvent(QResizeEvent *size)
 //    m_imgPrcThread->m_rwMtxImg.unlock();
 //    m_pNormalItem->setPixmap(m_pixmap);
 //    repaint();
-//    return DWidget::resizeEvent(size);
+    //    return DWidget::resizeEvent(size);
+}
+
+void videowidget::paintEvent(QPaintEvent *e)
+{
+    Q_UNUSED(e);
 }
 
 void videowidget::showCountdown()
@@ -694,7 +707,7 @@ void videowidget::startTakeVideo()
         m_btnVdTime->show();
 
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                         nHeight - m_btnVdTime->height() - 5);
+                          nHeight - m_btnVdTime->height() - 5);
 
         m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
                        nHeight - m_btnVdTime->height() - 10);

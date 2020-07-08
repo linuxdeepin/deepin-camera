@@ -140,7 +140,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     main->setLayout(layout);
     auto *icon = new DPushButton;
     icon->setAutoDefault(false);
-    le->setFixedHeight(25);
+    le->setFixedHeight(30);
     le->setObjectName("OptionSelectableLineEdit");
     le->setText(option->value().toString());
     auto fm = le->fontMetrics();
@@ -154,13 +154,11 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     le->setText(pe);
     nameLast = pe;
 //    icon->setIconVisible(true);
-    icon->setIcon(QIcon(":/images/icons/select-normal.svg"));
-    icon->setFixedHeight(25);
+    icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
+    icon->setIconSize(QSize(25, 25));
+    icon->setFixedHeight(30);
     layout->addWidget(le);
     layout->addWidget(icon);
-//    icon->setNormalIcon(":resource/images/icons/select-normal.svg");
-//    icon->setHoverIcon(":resource/images/icons/select-hover.svg");
-//    icon->setPressIcon(":resource/images/icons/select-press.svg");
 
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
     workaround_updateStyle(optionWidget, "light");
@@ -437,11 +435,12 @@ void CMainWindow::initUI()
 
 void CMainWindow::initTitleBar()
 {
+    int type = DGuiApplicationHelper::instance()->themeType();
     pDButtonBox = new DButtonBox();
     pDButtonBox->setFixedWidth(120);
     pDButtonBox->setFixedHeight(36);
     QList<DButtonBoxButton *> listButtonBox;
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
 
     m_pTitlePicBtn->setIcon(iconPic);
@@ -454,8 +453,13 @@ void CMainWindow::initTitleBar()
 
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
+    QIcon iconVd;
 
-    QIcon iconVd(":/images/icons/record video.svg");
+    if (type == 0 || type == 1)
+        iconVd = QIcon(":/images/icons/light/record video.svg");
+    else
+        iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
+
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 16));
@@ -467,7 +471,7 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
-    pSelectBtn->setIcon(QIcon(":/images/icons/button/Switch camera"));
+    pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
 
     titlebar()->setIcon(QIcon::fromTheme(":/images/logo/deepin-camera-32px.svg"));// /usr/share/icons/bloom/apps/96 //preferences-system
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
@@ -510,6 +514,8 @@ void CMainWindow::initConnection()
     //标题栏视频按钮
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
     //connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -636,6 +642,7 @@ void CMainWindow::onTitlePicBtn()
     if (m_nActTpye == ActTakePic) {
         return;
     }
+    int type = DGuiApplicationHelper::instance()->themeType();
     m_nActTpye = ActTakePic;
     //切换标题栏拍照按钮颜色
     DPalette pa = m_pTitlePicBtn->palette();
@@ -645,7 +652,7 @@ void CMainWindow::onTitlePicBtn()
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
 
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_pTitlePicBtn->setIcon(iconPic);
 
     //切换标题栏视频按钮颜色
@@ -656,10 +663,13 @@ void CMainWindow::onTitlePicBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitleVdBtn->setPalette(paVd);
-
-    QIcon iconVd(":/images/icons/record video.svg");
-    m_pTitleVdBtn->setIcon(iconVd);
-
+    if (type == 0 || type == 1) {
+        QIcon iconVd(":/images/icons/light/record video.svg");
+        m_pTitleVdBtn->setIcon(iconVd);
+    } else {
+        QIcon iconVd(":/images/icons/dark/button/record video_dark.svg");
+        m_pTitleVdBtn->setIcon(iconVd);
+    }
     m_thumbnail->ChangeActType(m_nActTpye);
 }
 
@@ -668,6 +678,7 @@ void CMainWindow::onTitleVdBtn()
     if (m_nActTpye == ActTakeVideo) {
         return;
     }
+    int type = DGuiApplicationHelper::instance()->themeType();
     m_nActTpye = ActTakeVideo;
     //切换标题栏视频按钮颜色
     DPalette paPic = m_pTitleVdBtn->palette();
@@ -677,7 +688,7 @@ void CMainWindow::onTitleVdBtn()
     paPic.setColor(DPalette::Button, cloPic);
     m_pTitleVdBtn->setPalette(paPic);
 
-    QIcon iconVd(":/images/icons/button/transcribe.svg");
+    QIcon iconVd(":/images/icons/light/button/transcribe.svg");
     m_pTitleVdBtn->setIcon(iconVd);
 
     //切换标题栏拍照按钮颜色
@@ -688,10 +699,13 @@ void CMainWindow::onTitleVdBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
-
-    QIcon iconPic(":/images/icons/photograph.svg");
-    m_pTitlePicBtn->setIcon(iconPic);
-
+    if (type == 0 || type == 1) {
+        QIcon iconVd(":/images/icons/light/photograph.svg");
+        m_pTitlePicBtn->setIcon(iconVd);
+    } else {
+        QIcon iconPic(":/images/icons/dark/button/photograph_dark.svg");
+        m_pTitlePicBtn->setIcon(iconPic);
+    }
     m_thumbnail->ChangeActType(m_nActTpye);
 }
 
@@ -765,6 +779,26 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
     m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
     onEnableSettings(true);
+}
+
+void CMainWindow::onThemeChange(int type)
+{
+    if (type == 0 || type == 1) {
+        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+        if (m_nActTpye == ActTakePic) {
+            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
+        } else {
+            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/light/photograph.svg"));
+        }
+    }
+    if (type == 2) {
+        if (m_nActTpye == ActTakePic) {
+            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
+        } else {
+            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/dark/button/photograph_dark.svg"));
+        }
+    }
 }
 
 
