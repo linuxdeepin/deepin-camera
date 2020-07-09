@@ -42,6 +42,8 @@ QString g_strFileName = nullptr;
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
+    isFindedDevice = true;
+
     m_btnClickTime = QDateTime::currentDateTime();
     m_strFolder = "";
     m_nFileID = 0;
@@ -174,15 +176,11 @@ void videowidget::init()
         //imageprocessthread->init();(/*ui->camComboBox->currentIndex()*/0);
         //QWaitCondition *condition  = new QWaitCondition();
         //mutex->lock();
-
         isFindedDevice = true;
+
         m_pCountItem->hide();
-        //imageprocessthread->init();
         m_imgPrcThread->start();
-
     } else {
-        isFindedDevice = false;
-
         showNocam();
         qDebug() << "No webcam found" << endl;
     }
@@ -204,6 +202,8 @@ void videowidget::showNocam()
     paPic.setColor(DPalette::Base, cloPic);
     setPalette(paPic);
 
+    isFindedDevice = false;//没有设备
+
     QImage img(":/images/icons/Not connected.svg");
     m_pixmap = QPixmap::fromImage(img);
     //m_pixmap.fill(Qt::red);
@@ -224,8 +224,9 @@ void videowidget::showCamUsed()
     paPic.setColor(DPalette::Base, cloPic);
     setPalette(paPic);
 
+    isFindedDevice = false;//没有设备
+
     QImage img(":/images/icons/Take up.svg");
-    //    img = img.scaled(img.size());
     m_pixmap = QPixmap::fromImage(img);
     m_pNormalItem->setPixmap(m_pixmap);
 
@@ -538,6 +539,15 @@ void videowidget::endBtnClicked()
     emit takeVdCancel();
 }
 
+void videowidget::restartDevices()
+{
+    if (isFindedDevice == false) {
+        isFindedDevice = true;
+        m_pNormalItem->setPos(0, 0);
+        changeDev();
+    }
+}
+
 void videowidget::changeDev()
 {
     v4l2_dev_t *vd =  get_v4l2_device_handler();
@@ -557,9 +567,10 @@ void videowidget::changeDev()
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
                 m_pCountItem->hide();
-                camInit(devlist->list_devices[i].device);
-                m_imgPrcThread->init();
-                m_imgPrcThread->start();
+                if (camInit(devlist->list_devices[i].device) == E_OK) {
+                    m_imgPrcThread->init();
+                    m_imgPrcThread->start();
+                }
                 break;
             }
         }
@@ -569,23 +580,26 @@ void videowidget::changeDev()
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
                     m_pCountItem->hide();
-                    camInit(devlist->list_devices[0].device);
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
+                    if (camInit(devlist->list_devices[0].device) == E_OK) {
+                        m_imgPrcThread->init();
+                        m_imgPrcThread->start();
+                    }
                     break;
                 } else {
                     m_pCountItem->hide();
-                    camInit(devlist->list_devices[i + 1].device);
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
+                    if (camInit(devlist->list_devices[i + 1].device) == E_OK) {
+                        m_imgPrcThread->init();
+                        m_imgPrcThread->start();
+                    }
                     break;
                 }
             }
             if (str.isEmpty() == true) {
                 m_pCountItem->hide();
-                camInit(devlist->list_devices[0].device);
-                m_imgPrcThread->init();
-                m_imgPrcThread->start();
+                if (camInit(devlist->list_devices[0].device) == E_OK) {
+                    m_imgPrcThread->init();
+                    m_imgPrcThread->start();
+                }
                 break;
             }
         }

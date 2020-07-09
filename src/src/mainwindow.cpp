@@ -286,7 +286,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
-
     m_nActTpye = ActTakePic;
     initUI();
     initTitleBar();
@@ -509,6 +508,8 @@ void CMainWindow::initConnection()
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
+    connect(m_devnumMonitor, SIGNAL(existDevice()), &m_videoPre, SLOT(restartDevices()));
+
     //标题栏图片按钮
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
@@ -540,7 +541,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     int width = this->width();
-    int height = this->height();    
+    int height = this->height();
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
         int nWidth;
