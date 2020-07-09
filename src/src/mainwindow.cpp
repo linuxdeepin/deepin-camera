@@ -545,9 +545,9 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
         int n = m_thumbnail->getItemCount();
         int nWidth;
         if (n == 0) {
-            nWidth = 10 * 2 + 64;
+            nWidth = 10 * 2 + LAST_BUTTON_WIDTH + 4;
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
+            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + LAST_BUTTON_WIDTH + 4;
         }
 
         qDebug() << n << " " << nWidth;
@@ -593,9 +593,14 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
+        int nWidth = 0;
+        if (n <= 0) {
+            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 10 * 2 + LAST_BUTTON_WIDTH + 4;//4是选中边框宽度
+        }
+        else {
+            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + LAST_BUTTON_WIDTH + 4;
+        }
 
-        int nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
-        qDebug() << n << " " << nWidth;
         m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
