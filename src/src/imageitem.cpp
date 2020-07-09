@@ -52,7 +52,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QPixmap pix;
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
@@ -162,7 +162,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         QByteArray gnomeFormat = QByteArray("copy\n");
         QString text;
         QList<QUrl> dataUrls;
-        for (QString path : paths) //待添加复制和删除功能以及快捷键效果
+        for (QString path : paths)
         {
             if (!path.isEmpty())
                 text += path + '\n';
@@ -355,7 +355,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
-        this->setFixedSize(48, 58);
+        this->setFixedSize(58, 58);
     } else {
         pixmapRect.setX(backgroundRect.x() + 1);
         pixmapRect.setY(backgroundRect.y() + 0);

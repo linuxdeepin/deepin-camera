@@ -41,8 +41,6 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
 
-//预览代理
-//xxj
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, EFFECT, AUDIO, SHOOT};
 
 

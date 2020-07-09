@@ -32,7 +32,7 @@
 #include <QScrollBar>
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
-
+#include <QGraphicsBlurEffect>
 //#include "LPF_V4L2.h"
 
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
@@ -74,17 +74,24 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     //设置字体颜色
     QPalette paletteTime = m_btnVdTime->palette();
     paletteTime.setColor(QPalette::ButtonText, QColor("#FF2C2C"));
+    //paletteTime.setColor(QPalette::Button, Qt::transparent);
     m_btnVdTime->setPalette(paletteTime);
 
     DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        pa_cb.setBrush(QPalette::Light, QColor(255, 255, 255, 51)); //浅色
-        pa_cb.setBrush(QPalette::Dark, QColor(155, 155, 155, 230));
+        pa_cb.setBrush(QPalette::Light, QColor(/*"#D2D2D2"*/255, 255, 255, 51)); //浅色
+        //pa_cb.setBrush(QPalette::Dark, QColor(155, 155, 155, 230));
     } else {
-        pa_cb.setBrush(QPalette::Light, QColor(155, 155, 155, 230));
-        pa_cb.setBrush(QPalette::Dark, QColor(0, 0, 0, 200)); //深色
+        //pa_cb.setBrush(QPalette::Light, QColor(155, 155, 155, 230));
+        pa_cb.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     }
     m_btnVdTime->setPalette(pa_cb);
+
+    //设置模糊
+//    QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
+//    //effect.setBlurRadius(1.5);
+//    effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
+//    m_btnVdTime->setGraphicsEffect(effect);
 
 //    与QPalette效果相同
 //    m_btnVdTime->setStyleSheet(QString("background-color:rgba(155,155,155,230);border-style: outset;border-radius: 8px;"));
@@ -585,12 +592,8 @@ void videowidget::changeDev()
     }
 }
 
-void videowidget::onTakePic() //待解决高频单张拍照问题，因为闪屏导致无法继续
+void videowidget::onTakePic()
 {
-    //    if (m_bWgtTime) {
-    //        m_bWgtTime->move((this->width() - m_bWgtTime->width()) / 2,
-    //                          this->height() - m_bWgtTime->height() - 80);
-    //    }
     if (m_fWgtCountdown) {
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
                               (this->height() - m_fWgtCountdown->height()) / 2);
