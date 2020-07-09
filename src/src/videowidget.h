@@ -85,6 +85,7 @@ public slots:
     void showCountdown();
     void changeDev();
     void endBtnClicked();
+    void restartDevices();
 private slots:
     void ReceiveMajorImage(QImage image, int result);
     void onReachMaxDelayedFrames();
@@ -123,7 +124,7 @@ private:
 
 private:
     bool m_bActive;
-    bool isFindedDevice = false;
+    volatile bool isFindedDevice = false;
     DLabel               m_flashLabel;
 
     QGraphicsView        *m_pNormalView;
