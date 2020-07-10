@@ -21,6 +21,7 @@
 #include "imageitem.h"
 #include <DGuiApplicationHelper>
 #include <QFileInfo>
+#include <libffmpegthumbnailer/videothumbnailer.h>
 #include <QProcess>
 #include <QMouseEvent>
 #include <QDebug>
@@ -28,7 +29,6 @@
 #include <QClipboard>
 #include <QDir>
 #include <DDesktopServices>
-#include <libffmpegthumbnailer/videothumbnailer.h>
 #include <QTime>
 #include <QThread>
 extern "C" {

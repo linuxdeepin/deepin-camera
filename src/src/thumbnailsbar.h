@@ -21,7 +21,6 @@
 
 #ifndef THUMBNAILSBAR_H
 #define THUMBNAILSBAR_H
-
 #include <DWidget>
 #include <QDateTime>
 #include <QObject>
