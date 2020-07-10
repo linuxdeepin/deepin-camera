@@ -21,6 +21,7 @@
 #include "imageitem.h"
 #include <DGuiApplicationHelper>
 #include <QFileInfo>
+#include <libffmpegthumbnailer/videothumbnailer.h>
 #include <QProcess>
 #include <QMouseEvent>
 #include <QDebug>
@@ -28,8 +29,6 @@
 #include <QClipboard>
 #include <QDir>
 #include <DDesktopServices>
-#include <libffmpegthumbnailer/videothumbnailer.h>
-#include <QMediaPlayer>
 #include <QTime>
 #include <QThread>
 extern "C" {
@@ -39,8 +38,9 @@ extern "C" {
 }
 using namespace ffmpegthumbnailer;
 
-QSet<int> m_setIndex;
-QMap<int, ImageItem *> m_indexImage;
+extern QSet<int> m_setIndex;
+extern QMap<int, ImageItem *> m_indexImage;
+extern int m_indexNow;
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -49,20 +49,29 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     m_path = path;
     setScaledContents(true);
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
     QPixmap pix;
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
         if (parseFromFile(fileInfo)) {
             thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
-            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
+            QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
             pix = QPixmap::fromImage(img);
         } else {
             pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
         }
+
+        QTime tm(0, 0, 0, 0);
+        QPainter painter1;
+        painter1.begin(&pix);
+        painter1.setPen(Qt::red);
+        painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
+        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss"));
+        //qDebug() << pix.width() << " " << pix.height();
+        //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
+        painter1.end();
 
         //方式2：先使用线程尝试加载，加载失败只是线程出问题
         //        m_bThumbnailReadOK = false;
@@ -152,7 +161,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         QByteArray gnomeFormat = QByteArray("copy\n");
         QString text;
         QList<QUrl> dataUrls;
-        for (QString path : paths) //待添加复制和删除功能以及快捷键效果
+        for (QString path : paths)
         {
             if (!path.isEmpty())
                 text += path + '\n';
@@ -249,16 +258,31 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
     if (ev->button() == Qt::RightButton) {
-        if (m_index != m_indexNow) {
+        //        if (m_index != m_indexNow) {
+        //            m_indexNow = m_index;
+        //            //update();
+        //        }
+        if (m_bMultiSlt) {
+            if (m_setIndex.contains(m_index)) {
+                m_setIndex.remove(m_index);
+            } else {
+                m_setIndex.insert(m_index);
+            }
+        } else {
+            m_setIndex.clear();
             m_indexNow = m_index;
-            update();
         }
     }
-    if (m_bMultiSlt && ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
-        if (m_setIndex.contains(m_index)) {
-            m_setIndex.remove(m_index);
+    if (ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
+        if (m_bMultiSlt) {
+            if (m_setIndex.contains(m_index)) {
+                m_setIndex.remove(m_index);
+            } else {
+                m_setIndex.insert(m_index);
+            }
         } else {
-            m_setIndex.insert(m_index);
+            m_setIndex.clear();
+            m_indexNow = m_index;
         }
     }
 }
@@ -266,7 +290,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-    //qDebug() << "paint" << _index;
+    //qDebug() << "paint this index" << m_index << "indexnow " << m_indexNow  << "setsize " << m_setIndex.size();
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
@@ -330,7 +354,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
-        this->setFixedSize(48, 58);
+        this->setFixedSize(58, 58);
     } else {
         pixmapRect.setX(backgroundRect.x() + 1);
         pixmapRect.setY(backgroundRect.y() + 0);
@@ -368,7 +392,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
-        this->setFixedSize(30, 40);
+        this->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     }
     //    QPixmap blankPix = _pixmap;
     //    blankPix.fill(Qt::white);
@@ -391,13 +415,23 @@ void ImageItem::paintEvent(QPaintEvent *event)
         QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
     painter.drawRoundedRect(pixmapRect, 4, 4);
     painter.restore();
+
+    //    QTime tm(0,0,0,0);
+    //    QPainter painter1;
+    //    painter1.begin(&m_pixmap);
+    //    painter1.setPen(Qt::red);
+    //    painter1.setFont(QFont("SourceHanSansSC", 10, QFont::Black));
+    //    painter1.drawText(0,10,this->width(),this->height(), Qt::AlignBottom, tm.addSecs(m_nDuration/1000000).toString("mm:ss"));
+    ////    qDebug() << QString::number(m_nDuration);
+    ////    qDebug() << tm.addSecs(m_nDuration/1000000).toString("mm:ss");
+    //    painter1.end();
 }
 static int open_codec_context(int *stream_idx,
                               AVCodecParameters **dec_par, AVFormatContext *fmt_ctx, enum AVMediaType type)
 {
     int ret, stream_index;
     AVStream *st;
-    AVCodec *dec = nullptr;
+
 
     //AVDictionary *opts = nullptr;
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
@@ -411,10 +445,11 @@ static int open_codec_context(int *stream_idx,
     st = fmt_ctx->streams[stream_index];
     *dec_par = st->codecpar;
 #if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
-    dec = avcodec_find_decoder((*dec_par)->codec_id);
+    avcodec_find_decoder((*dec_par)->codec_id);
 #else
     /* find decoder for the stream */
     //*dec_ctx = st->codecpar;
+    AVCodec *dec = nullptr;
     dec = avcodec_find_decoder(st->codecpar->codec_id);
 
     if (!dec) {
@@ -476,6 +511,8 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
     if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
         return mi;
     }
+    m_nDuration = av_ctx->duration;
     avformat_close_input(&av_ctx);
+
     return true;
 }

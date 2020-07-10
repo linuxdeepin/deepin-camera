@@ -25,6 +25,7 @@
 #include <DWidgetUtil>
 #include <QSharedMemory>
 #include <DLog>
+#include <DApplicationSettings>
 
 DWIDGET_USE_NAMESPACE
 
@@ -32,6 +33,18 @@ int main(int argc, char *argv[])
 {
     DApplication::loadDXcbPlugin();
     DApplication a(argc, argv);
+    //加载翻译
+    a.loadTranslator(QList<QLocale>() << QLocale::system());
+
+    QTranslator *translator = new QTranslator;
+
+    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
+    if (!bLoaded) {
+        qDebug() << "load transfile error";
+    }
+
+    a.installTranslator(translator);
+
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     DLogManager::registerConsoleAppender();
@@ -47,6 +60,8 @@ int main(int argc, char *argv[])
     a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
     a.setProductName("Camera");
     a.setApplicationDescription("This is camera.");
+
+    DApplicationSettings saveTheme;
 
     //仅允许打开一个相机
     QSharedMemory shared_memory("deepincamera");

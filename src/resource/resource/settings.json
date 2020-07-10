@@ -84,13 +84,13 @@
                             "key": "picformat",
                             "name": "Photo format",
                             "type":"formatLabel",
-                            "default": "JPG"
+                            "default": "  JPG"
                         },
                         {
                             "key": "vidformat",
                             "name": "Video format",
                             "type":"formatLabel",
-                            "default": "MP4"
+                            "default": "  MP4"
                         }
                     ]
                 }

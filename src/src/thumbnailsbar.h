@@ -21,7 +21,6 @@
 
 #ifndef THUMBNAILSBAR_H
 #define THUMBNAILSBAR_H
-
 #include <DWidget>
 #include <QDateTime>
 #include <QObject>
@@ -38,38 +37,13 @@
 #include <QTimer>
 #include <DLabel>
 #include <DSpinner>
-
+#include "imageitem.h"
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
-#define THUMBNAIL_WIDTH 30
-#define THUMBNAIL_HEIGHT 40
-//缩略图
-//hjb
-struct DBImgInfo {
-    QString filePath;
-    QString fileName;
-    QString dirHash;
-    QDateTime time;
-
-    bool operator==(const DBImgInfo &other)
-    {
-        return (filePath == other.filePath &&
-                fileName == other.fileName &&
-                time == other.time);
-    }
-
-    friend QDebug operator<<(QDebug &dbg, const DBImgInfo &info)
-    {
-        dbg << "(DBImgInfo)["
-            << "Path:" << info.filePath
-            << "Name:" << info.fileName
-            << "Dir:" << info.dirHash
-            << "Time:" << info.time
-            << "]";
-        return dbg;
-    }
-};
-typedef QList<DBImgInfo> DBImgInfoList;
+#define LAST_BUTTON_WIDTH 64
+#define LAST_BUTTON_HEIGHT 50
+#define LAST_BUTTON_SPACE 14//按钮与窗体的间隔
+#define ITEM_SPACE 2//控件间距
 
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
@@ -80,8 +54,6 @@ class ThumbnailsBar : public DFloatingWidget
 public:
 
     explicit ThumbnailsBar(DWidget *parent = nullptr);
-    //    void load();
-    //    void loadInterface(QString strPath);
     int getItemCount()
     {
         return m_nItemCount;
@@ -107,13 +79,14 @@ private:
 
     QStringList m_strlstFolders;
 
-    DBImgInfoList m_infos;
     DPushButton *m_lastButton {nullptr};
 
     bool m_bThumbnailReadOK = false;
     bool m_bShiftPressed = false;
+    bool m_bMultiSltFlag = false;
 
 private:
+    //void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;

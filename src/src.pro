@@ -45,26 +45,52 @@ INCLUDEPATH += ../libcam/libcam_v4l2core\
                 ../libcam/libcam_encoder \
                 ../libcam/libcam_audio \
                 ../libcam/libcam
-                /usr/include
-
 
 LIBS += -L./libs \
         -ldepcam
 
+
+
 LIBS += -L/lib/x86_64-linux-gnu\
-        -lv4l2\
+        -lasound\
         -ludev\
         -lusb-1.0\
-        -lavcodec\
-        -lavutil\
+        -lv4l2\
         -lavformat\
+        -lavutil\
         -lswscale\
         -lpng\
         -lz\
         -lSDL2\
-        -lportaudio\
-         -lasound
+        -lavcodec\
+        -lportaudio
+
+
+
 LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
+
+#LIBS +=/usr/lib/x86_64-linux-gnu/libv4l2.a\
+# /usr/lib/x86_64-linux-gnu/libusb-1.0.a\
+# /usr/lib/x86_64-linux-gnu/libavformat.a\
+# /usr/lib/x86_64-linux-gnu/libavutil.a\
+# /usr/lib/x86_64-linux-gnu/libswscale.a\
+# /usr/lib/x86_64-linux-gnu/libpng.a\
+# /usr/lib/x86_64-linux-gnu/libz.a\
+# /usr/lib/x86_64-linux-gnu/libSDL2.a\
+# /usr/lib/x86_64-linux-gnu/libavcodec.a\
+# /usr/lib/x86_64-linux-gnu/libportaudio.a
+
+#        libv4l2.a\
+#        libusb-1.0.a\
+#        libavcodec.a\
+#        libavutil.a\
+#        libavformat.a\
+#        libswscale.a\
+#        libpng.a\
+#        libz.a\
+#        libSDL2.a\
+#        libportaudio.a
+
 
 
 RESOURCES += \
@@ -72,7 +98,7 @@ RESOURCES += \
 
 isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(APPDIR):APPDIR=/usr/share/applications
-isEmpty(DSRDIR):DSRDIR=/usr/share/dde-camera
+isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-camera
 isEmpty(PREFIX){
     PREFIX = /usr
 }
@@ -83,7 +109,7 @@ isEmpty(PREFIX){
 
 target.path = $$INSTROOT$$BINDIR
 icon_files.path = $$PREFIX/share/icons/hicolor/scalable/apps/
-icon_files.files = $$PWD/src/resource/deepin-camera.svg
+icon_files.files = $$PWD/resource/deepin-camera.svg
 
 desktop.path = $$INSTROOT$$APPDIR
 desktop.files = deepin-camera.desktop
@@ -123,6 +149,19 @@ INSTALLS += target desktop icon_files manual dbus_service
 #    isEmpty(lrelease):lrelease=lrelease
 #    system($$lrelease $$_PRO_FILE_)
 #}
+CONFIG(release, debug|release) {
+    TRANSLATIONS = $$files($$PWD/translations/*.ts)
+    #遍历目录中的ts文件，调用lrelease将其生成为qm文件
+    for(tsfile, TRANSLATIONS) {
+        qmfile = $$replace(tsfile, .ts$, .qm)
+        system(lrelease $$tsfile -qm $$qmfile) | error("Failed to lrelease")
+    }
+}
+
+translations.path = $$APPSHAREDIR/translations
+translations.files = $$PWD/translations/*.qm
+
+INSTALLS = target desktop dbus_service icons manual manual_icon app_icon translations
 
 #DSR_LANG_PATH += $$DSRDIR/translations
 #DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""

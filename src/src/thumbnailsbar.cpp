@@ -36,29 +36,19 @@
 #include <QClipboard>
 #include <QKeyEvent>
 #include <QShortcut>
-
 #include <QThread>
-#include <QMediaPlayer>
-#include "imageitem.h"
+
 //QMap<QString, QPixmap> m_imagemap;
-extern QMap<int, ImageItem *> m_indexImage;
-static int m_indexNow = 0;
-extern QSet<int> m_setIndex;
+QMap<int, ImageItem *> m_indexImage;
+int m_indexNow = 0;
+QSet<int> m_setIndex;
 extern QString g_strFileName;
-
-bool compareByString(const DBImgInfo &str1, const DBImgInfo &str2)
-{
-    static QCollator sortCollator;
-
-    sortCollator.setNumericMode(true);
-
-    return sortCollator.compare(str1.fileName, str2.fileName) < 0;
-}
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
     this->grabKeyboard(); //获取键盘事件的关键处理
-    QShortcut *shortcut = new QShortcut(QKeySequence(tr("ctrl+c")), this);
+    //this->setFramRadius(18);
+    QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
     QShortcut *shortcutDel = new QShortcut(QKeySequence(Qt::Key_Delete), this);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
@@ -68,9 +58,9 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_nItemCount = 0;
     m_nMaxItem = 0;
     m_hBOx = new QHBoxLayout();
-    m_hBOx->setSpacing(2);
+    m_hBOx->setSpacing(/*ITEM_SPACE*/0);
     m_mainLayout = new QHBoxLayout();
-    m_mainLayout->setContentsMargins(5, 0, 5, 0);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
 
     setBlurBackgroundEnabled(true); //设置磨砂效果
 
@@ -84,10 +74,11 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     //    m_mainLayout->addItem(horizontalSpacer);
 
     m_lastButton = new DPushButton(this);
-
-    m_lastButton->setFixedWidth(64);
-    m_lastButton->setFixedHeight(50);
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+//    m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    //m_lastButton->setStyleSheet("border-radius:8px;");
+    m_lastButton->setFixedWidth(LAST_BUTTON_WIDTH);
+    m_lastButton->setFixedHeight(LAST_BUTTON_HEIGHT);
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(24, 20));
 
@@ -108,15 +99,6 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
-//void ThumbnailsBar::load()
-//{
-//    QString path;
-//    for (int i = 0; i < m_infos.size(); i ++) {
-//        path = m_infos[i].filePath;
-//        loadInterface(path);
-//    }
-//}
-
 //void ThumbnailsBar::resizeEvent(QResizeEvent *size)
 //{
 //    int nWidth = this->width();
@@ -125,24 +107,12 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 
 //}
 
-//void ThumbnailsBar::loadInterface(QString path)
-//{
-//    QImage tImg;
-//    tImg = QImage(path);
-//    QPixmap pixmap = QPixmap::fromImage(tImg);
-
-//    //m_writelock.lockForWrite();
-//    m_imagemap.insert(path, pixmap.scaledToHeight(IMAGE_HEIGHT_DEFAULT,  Qt::FastTransformation));
-//    //m_writelock.unlock();
-//}
-
-//待完善内容：1、视频缩略图显示时间。
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - 64 - 20) / (THUMBNAIL_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - LAST_BUTTON_SPACE * 2) / (THUMBNAIL_WIDTH + 2) - 1;
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
@@ -179,7 +149,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
                 QString strFile = list.at(i).filePath();
                 QFileInfo fileInfo = list.at(i);
-                if (fileInfo.suffix() == "mkv" || fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+                if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
                     QString strFileName = fileInfo.fileName();
                     if (strFileName.compare(g_strFileName) == 0) {
                         continue; //mp4文件此时还不完整，读取generateThumbnail会崩溃
@@ -198,7 +168,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     emit fitToolBar();
 }
 
-void ThumbnailsBar::onBtnClick() //没有相机录像崩溃，待处理
+void ThumbnailsBar::onBtnClick()
 {
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {
@@ -295,7 +265,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     }
     m_nActTpye = nType;
     if (nType == ActTakePic) {
-        QIcon iconPic(":/images/icons/button/photograph.svg");
+        QIcon iconPic(":/images/icons/light/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(24, 20));
 
@@ -307,7 +277,7 @@ void ThumbnailsBar::ChangeActType(int nType)
 
         m_lastButton->setToolTip(tr("Take photo"));
     } else if (nType == ActTakeVideo) {
-        QIcon iconPic(":/images/icons/button/transcribe.svg");
+        QIcon iconPic(":/images/icons/light/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
         m_lastButton->setIconSize(QSize(26, 16));
 
@@ -332,10 +302,16 @@ void ThumbnailsBar::addPath(QString strPath)
     }
 }
 
+//void ThumbnailsBar::paintEvent(QPaintEvent *e)
+//{
+//    qDebug() << this->width() << " " << this->height() << " " << m_lastButton->width() << " " << m_lastButton->height();
+//}
+
 void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         m_bShiftPressed = true;
+        m_bMultiSltFlag = true;
         for (int i = 0; i < m_hBOx->count(); i++) {
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
             tmp->SetMulti(true);
@@ -349,6 +325,7 @@ void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
     //预留接口，关于shift按键取消后的操作
     if (e->key() == Qt::Key_Shift) {
         m_bShiftPressed = false;
+        m_bMultiSltFlag = false;
         for (int i = 0; i < m_hBOx->count(); i++) {
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
             tmp->SetMulti(false);
@@ -363,15 +340,15 @@ void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
     //    }
 }
 
-void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //不会进来
+void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
 {
     Q_UNUSED(ev);
-    if (!m_bShiftPressed) {
-        for (int i = 0; i < m_hBOx->count(); i++) {
-            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-            tmp->SetMulti(false);
-            tmp->update();
-        }
-        //m_index.insert(_indexNow);
-    }
+    //    if (!m_bShiftPressed && m_bMultiSltFlag) {
+    //        for (int i = 0; i < m_hBOx->count(); i++) {
+    //            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+    //            tmp->SetMulti(false);
+    //            tmp->update();
+    //        }
+    //        //m_index.insert(_indexNow);
+    //    }
 }

@@ -73,8 +73,8 @@ public:
     bool iscommonPlayableProtocol(const QString &scheme) const;
 
     QString screenshotLocation();
-    QString screenshotNameTemplate();
-    QString screenshotNameSeqTemplate();
+    //    QString screenshotNameTemplate();
+    //    QString screenshotNameSeqTemplate();
 
 signals:
     void shortcutsChanged(const QString &, const QVariant &);

@@ -76,7 +76,6 @@ static QString ElideText(const QString &text, const QSize &size,
         if (height + lineHeight >= size.height()) {
             str += fontMetrics.elidedText(text.mid(line.textStart() + line.textLength() + 1),
                                           mode, lastLineWidth);
-
             break;
         }
 
@@ -113,16 +112,23 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     auto *layout = new QHBoxLayout;
 
     main->setLayout(layout);
+    main->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(lab);
+    layout->setContentsMargins(0, 0, 0, 0);
+
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName("OptionFormatLabel");
-    lab->setFixedHeight(30);
+    lab->setFixedHeight(15);
     QString str = option->value().toString();
     lab->setText(option->value().toString());
-    lab->setAlignment(Qt::AlignTop);
+    QFont font = lab->font();
+    font.setPointSize(11);
+    lab->setFont(font);
+    lab->setAlignment(Qt::AlignVCenter);
     lab->show();
     //lab->setEnabled(false);
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+    optionWidget->setContentsMargins(0, 0, 0, 0);
     workaround_updateStyle(optionWidget, "light");
     return optionWidget;
 }
@@ -140,7 +146,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     main->setLayout(layout);
     auto *icon = new DPushButton;
     icon->setAutoDefault(false);
-    le->setFixedHeight(25);
+    le->setFixedHeight(30);
     le->setObjectName("OptionSelectableLineEdit");
     le->setText(option->value().toString());
     auto fm = le->fontMetrics();
@@ -154,23 +160,21 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     le->setText(pe);
     nameLast = pe;
 //    icon->setIconVisible(true);
-    icon->setIcon(QIcon(":resources/icons/select-normal.svg"));
-    icon->setFixedHeight(25);
+    icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
+    icon->setIconSize(QSize(25, 25));
+    icon->setFixedHeight(30);
     layout->addWidget(le);
     layout->addWidget(icon);
-//    icon->setNormalIcon(":resources/icons/select-normal.svg");
-//    icon->setHoverIcon(":resources/icons/select-hover.svg");
-//    icon->setPressIcon(":resources/icons/select-press.svg");
 
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
     workaround_updateStyle(optionWidget, "light");
 
     DDialog *prompt = new DDialog(optionWidget);
-    prompt->setIcon(QIcon(":/resources/icons/warning.svg"));
+    prompt->setIcon(QIcon(":/images/icons/warning.svg"));
     //prompt->setTitle(QObject::tr("Permissions prompt"));
     prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
     prompt->setWindowFlags(prompt->windowFlags() | Qt::WindowStaysOnTopHint);
-    prompt->addButton(QObject::tr("OK"), true, DDialog::ButtonRecommend);
+    prompt->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
 
     auto validate = [ = ](QString name, bool alert = true) -> bool {
         name = name.trimmed();
@@ -207,7 +211,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     };
 
     option->connect(icon, &DPushButton::clicked, [ = ]() {
-        QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
+        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                          CMainWindow::lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
@@ -288,7 +292,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
-
     m_nActTpye = ActTakePic;
     initUI();
     initTitleBar();
@@ -369,7 +372,7 @@ void CMainWindow::initUI()
 
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
-    m_thumbnail->setFixedHeight(70);
+    m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
 
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
@@ -437,11 +440,12 @@ void CMainWindow::initUI()
 
 void CMainWindow::initTitleBar()
 {
+    DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
     pDButtonBox = new DButtonBox();
     pDButtonBox->setFixedWidth(120);
     pDButtonBox->setFixedHeight(36);
     QList<DButtonBoxButton *> listButtonBox;
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
 
     m_pTitlePicBtn->setIcon(iconPic);
@@ -454,8 +458,13 @@ void CMainWindow::initTitleBar()
 
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
+    QIcon iconVd;
 
-    QIcon iconVd(":/images/icons/record video.svg");
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType)
+        iconVd = QIcon(":/images/icons/light/record video.svg");
+    else
+        iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
+
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 16));
@@ -467,7 +476,13 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
-    pSelectBtn->setIcon(QIcon(":/images/icons/button/Switch camera"));
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        pSelectBtn->setIconSize(QSize(12, 12));
+        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+    } else {
+        pSelectBtn->setIconSize(QSize(24, 24));
+        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+    }
 
     titlebar()->setIcon(QIcon::fromTheme(":/images/logo/deepin-camera-32px.svg"));// /usr/share/icons/bloom/apps/96 //preferences-system
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
@@ -505,11 +520,15 @@ void CMainWindow::initConnection()
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
+    connect(m_devnumMonitor, SIGNAL(existDevice()), &m_videoPre, SLOT(restartDevices()));
+
     //标题栏图片按钮
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
     //标题栏视频按钮
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
     //connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 }
 void CMainWindow::setSelBtnHide()
 {
@@ -531,28 +550,21 @@ void CMainWindow::setupTitlebar()
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
+
     int width = this->width();
     int height = this->height();
-    //Q_UNUSED(event);
-    if (QEvent::Resize == event->type()) {
-
-        //qDebug() << width << " " << height;
-        m_videoPre.resize(width, height);
-
-//        v4l2_dev_t *myvd = get_v4l2_device_handler();
-//        myvd->format
-    }
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
         int nWidth;
         if (n == 0) {
-            nWidth = 10 * 2 + 64;
+            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
+            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;
         }
 
         qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 90);
 
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
                           height - m_thumbnail->height() - 5);
@@ -570,6 +582,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         case 1:
+            m_videoPre.endBtnClicked();
             event->accept();
             break;
         default:
@@ -593,10 +606,14 @@ void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
         int n = m_thumbnail->getItemCount();
+        int nWidth = 0;
+        if (n <= 0) {
+            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
+        } else {
+            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;//4是选中边框宽度
+        }
 
-        int nWidth = n * THUMBNAIL_WIDTH + 2 * (n - 1) + 20 + 10 * 2 + 64;
-        qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 70);
+        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
@@ -642,6 +659,7 @@ void CMainWindow::onTitlePicBtn()
     if (m_nActTpye == ActTakePic) {
         return;
     }
+    int type = DGuiApplicationHelper::instance()->themeType();
     m_nActTpye = ActTakePic;
     //切换标题栏拍照按钮颜色
     DPalette pa = m_pTitlePicBtn->palette();
@@ -651,7 +669,7 @@ void CMainWindow::onTitlePicBtn()
     pa.setColor(DPalette::Button, clo);
     m_pTitlePicBtn->setPalette(pa);
 
-    QIcon iconPic(":/images/icons/button/photograph.svg");
+    QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_pTitlePicBtn->setIcon(iconPic);
 
     //切换标题栏视频按钮颜色
@@ -662,10 +680,13 @@ void CMainWindow::onTitlePicBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitleVdBtn->setPalette(paVd);
-
-    QIcon iconVd(":/images/icons/record video.svg");
-    m_pTitleVdBtn->setIcon(iconVd);
-
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        QIcon iconVd(":/images/icons/light/record video.svg");
+        m_pTitleVdBtn->setIcon(iconVd);
+    } else {
+        QIcon iconVd(":/images/icons/dark/button/record video_dark.svg");
+        m_pTitleVdBtn->setIcon(iconVd);
+    }
     m_thumbnail->ChangeActType(m_nActTpye);
 }
 
@@ -674,6 +695,7 @@ void CMainWindow::onTitleVdBtn()
     if (m_nActTpye == ActTakeVideo) {
         return;
     }
+    DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
     m_nActTpye = ActTakeVideo;
     //切换标题栏视频按钮颜色
     DPalette paPic = m_pTitleVdBtn->palette();
@@ -683,7 +705,7 @@ void CMainWindow::onTitleVdBtn()
     paPic.setColor(DPalette::Button, cloPic);
     m_pTitleVdBtn->setPalette(paPic);
 
-    QIcon iconVd(":/images/icons/button/transcribe.svg");
+    QIcon iconVd(":/images/icons/light/button/transcribe.svg");
     m_pTitleVdBtn->setIcon(iconVd);
 
     //切换标题栏拍照按钮颜色
@@ -694,10 +716,13 @@ void CMainWindow::onTitleVdBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
-
-    QIcon iconPic(":/images/icons/photograph.svg");
-    m_pTitlePicBtn->setIcon(iconPic);
-
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        QIcon iconVd(":/images/icons/light/photograph.svg");
+        m_pTitlePicBtn->setIcon(iconVd);
+    } else {
+        QIcon iconPic(":/images/icons/dark/button/photograph_dark.svg");
+        m_pTitlePicBtn->setIcon(iconPic);
+    }
     m_thumbnail->ChangeActType(m_nActTpye);
 }
 
@@ -771,6 +796,28 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
     m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
     onEnableSettings(true);
+}
+
+void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
+{
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        pSelectBtn->setIconSize(QSize(12, 12));
+        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+        if (m_nActTpye == ActTakePic) {
+            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
+        } else {
+            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/light/photograph.svg"));
+        }
+    }
+    if (type == DGuiApplicationHelper::DarkType) {
+        if (m_nActTpye == ActTakePic) {
+            pSelectBtn->setIconSize(QSize(24, 24));
+            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
+        } else {
+            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/dark/button/photograph_dark.svg"));
+        }
+    }
 }
 
 

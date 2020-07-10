@@ -6,7 +6,7 @@
 
 TARGET = depcam
 TEMPLATE = lib
-CONFIG   += c++11 link_pkgconfig
+CONFIG   +=static c++11 link_pkgconfig
 
 DEFINES += LIBCHEESE_LIBRARY
 #DEFINES +=QT_NO_WARNING_OUTPUT
