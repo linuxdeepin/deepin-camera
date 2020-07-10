@@ -45,26 +45,52 @@ INCLUDEPATH += ../libcam/libcam_v4l2core\
                 ../libcam/libcam_encoder \
                 ../libcam/libcam_audio \
                 ../libcam/libcam
-                /usr/include
-
 
 LIBS += -L./libs \
         -ldepcam
 
+
+
 LIBS += -L/lib/x86_64-linux-gnu\
-        -lv4l2\
+        -lasound\
         -ludev\
         -lusb-1.0\
-        -lavcodec\
-        -lavutil\
+        -lv4l2\
         -lavformat\
+        -lavutil\
         -lswscale\
         -lpng\
         -lz\
         -lSDL2\
-        -lportaudio\
-         -lasound
+        -lavcodec\
+        -lportaudio
+
+
+
 LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
+
+#LIBS +=/usr/lib/x86_64-linux-gnu/libv4l2.a\
+# /usr/lib/x86_64-linux-gnu/libusb-1.0.a\
+# /usr/lib/x86_64-linux-gnu/libavformat.a\
+# /usr/lib/x86_64-linux-gnu/libavutil.a\
+# /usr/lib/x86_64-linux-gnu/libswscale.a\
+# /usr/lib/x86_64-linux-gnu/libpng.a\
+# /usr/lib/x86_64-linux-gnu/libz.a\
+# /usr/lib/x86_64-linux-gnu/libSDL2.a\
+# /usr/lib/x86_64-linux-gnu/libavcodec.a\
+# /usr/lib/x86_64-linux-gnu/libportaudio.a
+
+#        libv4l2.a\
+#        libusb-1.0.a\
+#        libavcodec.a\
+#        libavutil.a\
+#        libavformat.a\
+#        libswscale.a\
+#        libpng.a\
+#        libz.a\
+#        libSDL2.a\
+#        libportaudio.a
+
 
 
 RESOURCES += \

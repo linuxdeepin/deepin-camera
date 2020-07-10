@@ -89,7 +89,7 @@ private slots:
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
     void onTakeVdCancel();
-    void onThemeChange(int type);
+    void onThemeChange(DGuiApplicationHelper::ColorType type);
     //void onCapturepause(Qt::WindowState windowState);
     //    void onTakePicBtnClicked();
     //    void onTakeVdBtnClicked();

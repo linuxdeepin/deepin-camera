@@ -76,7 +76,6 @@ static QString ElideText(const QString &text, const QSize &size,
         if (height + lineHeight >= size.height()) {
             str += fontMetrics.elidedText(text.mid(line.textStart() + line.textLength() + 1),
                                           mode, lastLineWidth);
-
             break;
         }
 
@@ -113,16 +112,23 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     auto *layout = new QHBoxLayout;
 
     main->setLayout(layout);
+    main->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(lab);
+    layout->setContentsMargins(0, 0, 0, 0);
+
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName("OptionFormatLabel");
-    lab->setFixedHeight(THUMBNAIL_HEIGHT);
+    lab->setFixedHeight(15);
     QString str = option->value().toString();
     lab->setText(option->value().toString());
-    lab->setAlignment(Qt::AlignTop);
+    QFont font = lab->font();
+    font.setPointSize(11);
+    lab->setFont(font);
+    lab->setAlignment(Qt::AlignVCenter);
     lab->show();
     //lab->setEnabled(false);
     auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+    optionWidget->setContentsMargins(0, 0, 0, 0);
     workaround_updateStyle(optionWidget, "light");
     return optionWidget;
 }
@@ -205,7 +211,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     };
 
     option->connect(icon, &DPushButton::clicked, [ = ]() {
-        QString name = DFileDialog::getExistingDirectory(0, QObject::tr("Open folder"),
+        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                          CMainWindow::lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
         if (validate(name, false)) {
@@ -434,7 +440,7 @@ void CMainWindow::initUI()
 
 void CMainWindow::initTitleBar()
 {
-    int type = DGuiApplicationHelper::instance()->themeType();
+    DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
     pDButtonBox = new DButtonBox();
     pDButtonBox->setFixedWidth(120);
     pDButtonBox->setFixedHeight(36);
@@ -454,7 +460,7 @@ void CMainWindow::initTitleBar()
     m_pTitlePicBtn->setPalette(pa);
     QIcon iconVd;
 
-    if (type == 0 || type == 1)
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType)
         iconVd = QIcon(":/images/icons/light/record video.svg");
     else
         iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
@@ -470,13 +476,11 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
-    if (type == 0 || type == 1){
-        pSelectBtn->setIconSize(QSize(12,12));
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        pSelectBtn->setIconSize(QSize(12, 12));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
-    }
-    else
-    {
-        pSelectBtn->setIconSize(QSize(24,24));
+    } else {
+        pSelectBtn->setIconSize(QSize(24, 24));
         pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
     }
 
@@ -605,8 +609,7 @@ void CMainWindow::onFitToolBar()
         int nWidth = 0;
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
-        }
-        else {
+        } else {
             nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;//4是选中边框宽度
         }
 
@@ -677,7 +680,7 @@ void CMainWindow::onTitlePicBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitleVdBtn->setPalette(paVd);
-    if (type == 0 || type == 1) {
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         QIcon iconVd(":/images/icons/light/record video.svg");
         m_pTitleVdBtn->setIcon(iconVd);
     } else {
@@ -692,7 +695,7 @@ void CMainWindow::onTitleVdBtn()
     if (m_nActTpye == ActTakeVideo) {
         return;
     }
-    int type = DGuiApplicationHelper::instance()->themeType();
+    DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
     m_nActTpye = ActTakeVideo;
     //切换标题栏视频按钮颜色
     DPalette paPic = m_pTitleVdBtn->palette();
@@ -713,7 +716,7 @@ void CMainWindow::onTitleVdBtn()
     paVd.setColor(DPalette::Light, cloVd);
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
-    if (type == 0 || type == 1) {
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         QIcon iconVd(":/images/icons/light/photograph.svg");
         m_pTitlePicBtn->setIcon(iconVd);
     } else {
@@ -795,10 +798,10 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
     onEnableSettings(true);
 }
 
-void CMainWindow::onThemeChange(int type)
+void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
-    if (type == 0 || type == 1) {
-        pSelectBtn->setIconSize(QSize(12,12));
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        pSelectBtn->setIconSize(QSize(12, 12));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
         if (m_nActTpye == ActTakePic) {
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -806,9 +809,9 @@ void CMainWindow::onThemeChange(int type)
             m_pTitlePicBtn->setIcon(QIcon(":/images/icons/light/photograph.svg"));
         }
     }
-    if (type == 2) {
+    if (type == DGuiApplicationHelper::DarkType) {
         if (m_nActTpye == ActTakePic) {
-            pSelectBtn->setIconSize(QSize(24,24));
+            pSelectBtn->setIconSize(QSize(24, 24));
             pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
         } else {
