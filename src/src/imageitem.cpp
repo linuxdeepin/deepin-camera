@@ -49,7 +49,6 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     m_path = path;
     setScaledContents(true);
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
     QPixmap pix;
     QFileInfo fileInfo(m_path);
     if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
@@ -58,7 +57,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         std::vector<uint8_t> buf;
         if (parseFromFile(fileInfo)) {
             thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
-            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
+            QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
             pix = QPixmap::fromImage(img);
         } else {
             pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
@@ -69,7 +68,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         painter1.begin(&pix);
         painter1.setPen(Qt::red);
         painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
-        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(m_nDuration / 1000000).toString("mm:ss"));
+        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss"));
         //qDebug() << pix.width() << " " << pix.height();
         //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
         painter1.end();
@@ -432,7 +431,7 @@ static int open_codec_context(int *stream_idx,
 {
     int ret, stream_index;
     AVStream *st;
-    AVCodec *dec = nullptr;
+
 
     //AVDictionary *opts = nullptr;
     ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
@@ -446,10 +445,11 @@ static int open_codec_context(int *stream_idx,
     st = fmt_ctx->streams[stream_index];
     *dec_par = st->codecpar;
 #if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
-    dec = avcodec_find_decoder((*dec_par)->codec_id);
+    avcodec_find_decoder((*dec_par)->codec_id);
 #else
     /* find decoder for the stream */
     //*dec_ctx = st->codecpar;
+    AVCodec *dec = nullptr;
     dec = avcodec_find_decoder(st->codecpar->codec_id);
 
     if (!dec) {
