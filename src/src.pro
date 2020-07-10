@@ -63,7 +63,8 @@ LIBS += -L/lib/x86_64-linux-gnu\
         -lz\
         -lSDL2\
         -lavcodec\
-        -lportaudio
+        -lportaudio\
+        -lswresample
 
 
 
