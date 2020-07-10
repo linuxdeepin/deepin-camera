@@ -470,7 +470,15 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
-    pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+    if (type == 0 || type == 1){
+        pSelectBtn->setIconSize(QSize(12,12));
+        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+    }
+    else
+    {
+        pSelectBtn->setIconSize(QSize(24,24));
+        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+    }
 
     titlebar()->setIcon(QIcon::fromTheme(":/images/logo/deepin-camera-32px.svg"));// /usr/share/icons/bloom/apps/96 //preferences-system
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
@@ -790,6 +798,7 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
 void CMainWindow::onThemeChange(int type)
 {
     if (type == 0 || type == 1) {
+        pSelectBtn->setIconSize(QSize(12,12));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
         if (m_nActTpye == ActTakePic) {
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -799,6 +808,7 @@ void CMainWindow::onThemeChange(int type)
     }
     if (type == 2) {
         if (m_nActTpye == ActTakePic) {
+            pSelectBtn->setIconSize(QSize(24,24));
             pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
         } else {
