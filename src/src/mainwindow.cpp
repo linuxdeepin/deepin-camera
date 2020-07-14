@@ -250,9 +250,9 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             } else if (pn == pe) {
                 le->setText(pe);
             } else {
-//                option->setValue(option->defaultValue());//设置为默认路径
-//                le->setText(option->defaultValue().toString());
-                option->setValue(nameLast);
+                option->setValue(QVariant("~/Videos"));//设置为默认路径
+                le->setText(QString("~/Videos"));
+                option->setValue(QVariant("~/Videos"));
                 le->setText(nmls);
             }
         }
@@ -344,8 +344,13 @@ void CMainWindow::initUI()
 //    m_pSettingDialog->setBackEndinIt(m_strCfgPath);
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
-        CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
+        QString str = QDir::homePath();
+        CMainWindow::m_lastfilename.replace(0, 1, str);
     }
+    if (QDir(CMainWindow::m_lastfilename).isEmpty())
+        CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
+    QString test1 = CMainWindow::m_lastfilename;
+
     m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
@@ -407,6 +412,9 @@ void CMainWindow::initUI()
     m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
+
+    QString test = CMainWindow::m_lastfilename;
+
     m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -745,10 +753,17 @@ void CMainWindow::onSettingsDlgClose()
         CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
     }
 
-    QString str = Settings::get().getOption("base.save.datapath").toString();
-    m_videoPre.setSaveFolder(str);
-    m_fileWatcher.addPath(str);
-    m_thumbnail->addPath(str);
+    CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
+    if (QDir(CMainWindow::m_lastfilename).isEmpty()) {
+        CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
+        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
+    }
+    //CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
+    QString test = CMainWindow::m_lastfilename;
+
+    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    m_fileWatcher.addPath(CMainWindow::m_lastfilename);
+    m_thumbnail->addPath(CMainWindow::m_lastfilename);
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
