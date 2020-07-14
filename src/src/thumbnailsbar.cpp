@@ -46,7 +46,9 @@ extern QString g_strFileName;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
-    this->grabKeyboard(); //获取键盘事件的关键处理
+    //this->grabKeyboard(); //获取键盘事件的关键处理
+    setFocus(Qt::OtherFocusReason);
+    setFocusPolicy(Qt::StrongFocus);
     //this->setFramRadius(18);
     QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
