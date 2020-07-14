@@ -251,6 +251,9 @@ void ThumbnailsBar::onShortcutCopy()
 void ThumbnailsBar::onShortcutDel()
 {
     if (m_setIndex.isEmpty()) {
+        if (m_indexImage.size() <= 0) {
+            return;
+        }
         DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
     } else {
         QSet<int>::iterator it;
