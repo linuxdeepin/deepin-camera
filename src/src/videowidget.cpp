@@ -226,6 +226,7 @@ void videowidget::showCamUsed()
 
     isFindedDevice = false;//没有设备
 
+
     QImage img(":/images/icons/Take up.svg");
     m_pixmap = QPixmap::fromImage(img);
     m_pNormalItem->setPixmap(m_pixmap);
@@ -293,6 +294,7 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
 void videowidget::onReachMaxDelayedFrames()
 {
     showCamUsed();
+    emit setBtnStatues(false);
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
