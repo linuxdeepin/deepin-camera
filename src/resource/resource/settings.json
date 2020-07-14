@@ -90,7 +90,7 @@
                             "key": "vidformat",
                             "name": "Video format",
                             "type":"formatLabel",
-                            "default": "  MP4"
+                            "default": "  webm"
                         }
                     ]
                 }
