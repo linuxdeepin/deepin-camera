@@ -124,7 +124,7 @@ private:
     void startTakeVideo();
 
 private:
-    bool m_bActive;
+    bool m_bActive;//是否录制中
     volatile bool isFindedDevice = false;
     DLabel               m_flashLabel;
 

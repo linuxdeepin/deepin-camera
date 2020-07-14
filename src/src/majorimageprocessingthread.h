@@ -56,6 +56,8 @@ public:
     QString m_strPath;
     QMutex m_rwMtxPath;
     bool m_bTake; //是否拍照
+
+    bool getStatus(){return stopped;}
 protected:
     void run();
 

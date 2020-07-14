@@ -466,6 +466,7 @@ void CMainWindow::initTitleBar()
         iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
 
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
+    m_pTitleVdBtn->setFocusPolicy(Qt::NoFocus);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 16));
 

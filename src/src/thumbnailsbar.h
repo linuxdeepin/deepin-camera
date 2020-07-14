@@ -70,8 +70,8 @@ public:
     int m_nStatus; //当前状态
 private:
     int m_nItemCount;
-    mutable QReadWriteLock m_readlock;
-    mutable QReadWriteLock m_writelock;
+//    mutable QReadWriteLock m_readlock;
+//    mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
     int m_current = 0;
 
