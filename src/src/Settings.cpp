@@ -82,9 +82,9 @@ QVariant Settings::getOption(const QString &opt)
     return settings()->getOption(opt);
 }
 
-void Settings::setInternalOption(const QString &opt, const QVariant &v)
+void Settings::setPathOption(const QString &opt, const QVariant &v)
 {
-    settings()->setOption(QString("base.play.%1").arg(opt), v);
+    settings()->setOption(QString("base.save.%1").arg(opt), v);
     settings()->sync();
 }
 

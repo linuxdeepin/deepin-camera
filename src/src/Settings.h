@@ -55,7 +55,7 @@ public:
 
     QVariant generalOption(const QString &opt);
 
-    void setInternalOption(const QString &opt, const QVariant &v);
+    void setPathOption(const QString &opt, const QVariant &v);
 
     QVariant getOption(const QString &opt);
 

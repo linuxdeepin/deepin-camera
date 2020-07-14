@@ -460,7 +460,14 @@ char *get_video_path()
 {
 	if(!video_path)
 		video_path = strdup(getenv("HOME"));
-
+    if(access(video_path,F_OK&W_OK) < 0)
+    {
+        char* str = getenv("HOME");
+        if(strstr(str, "/Videos") == NULL)
+            strcat(str, "/Videos");
+        video_path = (char*)malloc(sizeof(str));
+        strcpy(video_path, str);
+    }
 	return video_path;
 }
 
