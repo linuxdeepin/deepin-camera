@@ -53,26 +53,16 @@ public:
         return group("subtitle");
     }
 
-    void setGeneralOption(const QString &opt, const QVariant &v);
     QVariant generalOption(const QString &opt);
 
     void setInternalOption(const QString &opt, const QVariant &v);
-    QVariant internalOption(const QString &opt);
+
     QVariant getOption(const QString &opt);
 
     // user override for mpv opengl interop
-    QString forcedInterop();
     // disable interop at all
-    bool disableInterop();
 
     // convient helpers
-
-    bool isSet(Flag f) const;
-
-    QStringList commonPlayableProtocols() const;
-    bool iscommonPlayableProtocol(const QString &scheme) const;
-
-    QString screenshotLocation();
     //    QString screenshotNameTemplate();
     //    QString screenshotNameSeqTemplate();
 

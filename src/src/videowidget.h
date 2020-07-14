@@ -54,6 +54,7 @@ signals:
     void sigFlash();
     void takePicDone();
     void takeVdCancel(); //录制倒计时期间取消了
+    void setBtnStatues(bool status);
 
 public:
     void setSaveFolder(QString strFolder)

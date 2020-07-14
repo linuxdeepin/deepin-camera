@@ -528,6 +528,7 @@ void CMainWindow::initConnection()
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
     //connect(m_closeDlg, SIGNAL(buttonClicked(int index, const QString & text)), this, SLOT(onCloseDlgBtnClicked(int index, const QString & text)));
 
+    //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 }
 void CMainWindow::setSelBtnHide()
@@ -742,9 +743,11 @@ void CMainWindow::onSettingsDlgClose()
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
         CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
     }
-    //m_fileWatcher.addPath(CMainWindow::m_lastfilename);
-    //m_thumbnail->addPath(CMainWindow::m_lastfilename);
-    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+
+    QString str = Settings::get().getOption("base.save.datapath").toString();
+    m_videoPre.setSaveFolder(str);
+    m_fileWatcher.addPath(str);
+    m_thumbnail->addPath(str);
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
