@@ -554,7 +554,6 @@ void videowidget::endBtnClicked()
         setCapstatus(false);
         reset_video_timer();
     }
-    VIDEO_STATE = NORMALVIDEO;
     emit takeVdCancel();
 }
 
