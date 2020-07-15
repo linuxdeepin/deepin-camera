@@ -244,7 +244,9 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
             m_indexNow = m_index;
             update();
         }
+
         update();
+
     }
     //    if (m_bMulti) {
     //        if (m_index.contains(_index)) {
