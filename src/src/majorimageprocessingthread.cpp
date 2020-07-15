@@ -26,6 +26,21 @@ MajorImageProcessingThread::MajorImageProcessingThread()
     init();
 }
 
+MajorImageProcessingThread::~MajorImageProcessingThread()
+{
+    vd1 = get_v4l2_device_handler();
+    if (vd1 != nullptr) {
+        stopped = true;
+        if (video_capture_get_save_video() > 0) {
+            qDebug() << "stop_encoder_thread";
+            stop_encoder_thread();
+        }
+        qDebug() << "close_v4l2_device_handler";
+        close_v4l2_device_handler();
+    }
+    qDebug() << "~MajorImageProcessingThread";
+}
+
 void MajorImageProcessingThread::stop()
 {
     stopped = true;

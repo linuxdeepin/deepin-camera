@@ -46,6 +46,7 @@ class MajorImageProcessingThread : public QThread
     Q_OBJECT
 public:
     MajorImageProcessingThread();
+    ~MajorImageProcessingThread();
 
     void stop();
     void init();
@@ -57,7 +58,10 @@ public:
     QMutex m_rwMtxPath;
     bool m_bTake; //是否拍照
 
-    bool getStatus(){return stopped;}
+    bool getStatus()
+    {
+        return stopped;
+    }
 protected:
     void run();
 

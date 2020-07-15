@@ -161,6 +161,11 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     init();
 }
 
+videowidget::~videowidget()
+{
+    m_imgPrcThread->deleteLater();
+}
+
 void videowidget::init()
 {
     setCapstatus(false);
@@ -181,9 +186,8 @@ void videowidget::init()
         m_pCountItem->hide();
         m_imgPrcThread->start();
     } else {
-        v4l2_dev_t* vd = get_v4l2_device_handler();
-        if(vd != nullptr)
-        {
+        v4l2_dev_t *vd = get_v4l2_device_handler();
+        if (vd != nullptr) {
             close_v4l2_device_handler();
             vd = nullptr;
         }
@@ -210,7 +214,7 @@ void videowidget::showNocam()
     setPalette(paPic);
 
     isFindedDevice = false;//没有设备
-    int nWidth,nHeight;
+    int nWidth, nHeight;
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Not connected.svg");
         nWidth = img.width();
@@ -229,8 +233,8 @@ void videowidget::showNocam()
     QString str(tr("No webcam found"));
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos((this->width()-nWidth)/2, (this->height()-nHeight)/2);
-    m_pCountItem->setPos((this->width()-nWidth)/2 + 30, (this->height()-nHeight)/2 + nHeight + 10);
+    m_pNormalItem->setPos((this->width() - nWidth) / 2, (this->height() - nHeight) / 2);
+    m_pCountItem->setPos((this->width() - nWidth) / 2 + 30, (this->height() - nHeight) / 2 + nHeight + 10);
 }
 
 //显示设备被占用或者拔掉的图片的槽函数
@@ -242,7 +246,7 @@ void videowidget::showCamUsed()
     setPalette(paPic);
 
     isFindedDevice = false;//没有设备
-    int nWidth,nHeight;
+    int nWidth, nHeight;
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
         nWidth = img.width();
@@ -259,9 +263,9 @@ void videowidget::showCamUsed()
     QString str(tr("The webcam is in use"));//摄像头已被占用
     m_countdownLen = str.length() * 20;
     setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos((this->width()-nWidth)/2, (this->height()-nHeight)/2);
+    m_pNormalItem->setPos((this->width() - nWidth) / 2, (this->height() - nHeight) / 2);
     m_pCountItem->show();
-    m_pCountItem->setPos((this->width()-nWidth)/2 + 30, (this->height()-nHeight)/2 + nHeight + 10);
+    m_pCountItem->setPos((this->width() - nWidth) / 2 + 30, (this->height() - nHeight) / 2 + nHeight + 10);
 }
 
 void videowidget::ReceiveMajorImage(QImage image, int result)
@@ -284,9 +288,8 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
             m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(this->width(), this->height());
             m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
             m_imgPrcThread->m_rwMtxImg.unlock();
-            m_pCountItem->hide();
             m_pNormalItem->setPixmap(m_pixmap);
-            m_pNormalItem->setPos(0,0);
+            m_pNormalItem->setPos(0, 0);
             break;
         default:
             break;
@@ -327,10 +330,10 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         break;
     case AUDIO:
         m_pCountItem->hide();
-        m_fWgtCountdown->hide();
         if (m_nCount > MAX_REC_TIME) {
             endBtnClicked(); //结束录制
         }
+        m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
             m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
 
@@ -433,8 +436,7 @@ void videowidget::showCountdown()
         if (VIDEO_STATE == AUDIO) {
             if (getCapstatus()) {//录制中
                 endBtnClicked();
-            }
-            else {
+            } else {
                 emit takeVdCancel();
             }
         }
@@ -545,7 +547,6 @@ void videowidget::endBtnClicked()
 
     m_btnVdTime->hide();
     m_endBtn->hide();
-    //VIDEO_STATE = NORMALVIDEO;
     g_strFileName = nullptr;
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
@@ -559,7 +560,8 @@ void videowidget::endBtnClicked()
 void videowidget::restartDevices()
 {
     if (isFindedDevice == false) {
-        m_pNormalItem->setPixmap(m_pixmap);
+        //isFindedDevice = true;
+        //m_pNormalItem->setPos(0, 0);
         changeDev();
     }
 }
@@ -582,13 +584,12 @@ void videowidget::changeDev()
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
-
                 if (camInit(devlist->list_devices[i].device) == E_OK) {
-                    isFindedDevice = true;
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-                }                
-                //m_pCountItem->hide();
+                    isFindedDevice = true;
+                    m_pCountItem->hide();
+                }
                 break;
             }
         }
@@ -597,29 +598,29 @@ void videowidget::changeDev()
             QString str1 = QString(devlist->list_devices[i].device);
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
-                    //m_pCountItem->hide();
                     if (camInit(devlist->list_devices[0].device) == E_OK) {
-                        isFindedDevice = true;
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
+                        isFindedDevice = true;
+                        m_pCountItem->hide();
                     }
                     break;
                 } else {
-                   // m_pCountItem->hide();
                     if (camInit(devlist->list_devices[i + 1].device) == E_OK) {
-                        isFindedDevice = true;
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
+                        isFindedDevice = true;
+                        m_pCountItem->hide();
                     }
                     break;
                 }
             }
             if (str.isEmpty() == true) {
-                //m_pCountItem->hide();
                 if (camInit(devlist->list_devices[0].device) == E_OK) {
-                    isFindedDevice = true;
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
+                    isFindedDevice = true;
+                    m_pCountItem->hide();
                 }
                 break;
             }

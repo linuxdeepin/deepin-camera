@@ -305,6 +305,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 
 CMainWindow::~CMainWindow()
 {
+    qDebug() << "stop_encoder_thread";
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -635,15 +636,19 @@ void CMainWindow::onEnableTitleBar(int nType)
     switch (nType) {
     case 1:
         m_pTitleVdBtn->setEnabled(false);
+        pSelectBtn->setEnabled(false);
         break;
     case 2:
         m_pTitlePicBtn->setEnabled(false);
+        pSelectBtn->setEnabled(false);
         break;
     case 3:
         m_pTitleVdBtn->setEnabled(true);
+        pSelectBtn->setEnabled(true);
         break;
     case 4:
         m_pTitlePicBtn->setEnabled(true);
+        pSelectBtn->setEnabled(true);
         break;
     default:
         break;

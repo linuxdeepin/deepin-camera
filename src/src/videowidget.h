@@ -49,6 +49,7 @@ class videowidget : public DWidget
     Q_OBJECT
 public:
     explicit videowidget(DWidget *parent = nullptr);
+    ~videowidget();
 
 signals:
     void sigFlash();
