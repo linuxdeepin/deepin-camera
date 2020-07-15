@@ -244,6 +244,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
             m_indexNow = m_index;
             update();
         }
+        update();
     }
     //    if (m_bMulti) {
     //        if (m_index.contains(_index)) {
@@ -285,6 +286,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             m_indexNow = m_index;
         }
     }
+    //this->update();
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {

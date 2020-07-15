@@ -443,7 +443,6 @@ void CMainWindow::initUI()
     m_videoPre.setInterval(nDelayTime);
     m_videoPre.setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
-
 }
 
 void CMainWindow::initTitleBar()
