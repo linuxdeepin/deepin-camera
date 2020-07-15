@@ -43,6 +43,7 @@ QMap<int, ImageItem *> m_indexImage;
 int m_indexNow = 0;
 QSet<int> m_setIndex;
 extern QString g_strFileName;
+extern bool isFindedDevice;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
@@ -172,7 +173,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if (!get_v4l2_device_handler()) {
+    if (!isFindedDevice) {
         return;
     }
     if (m_nActTpye == ActTakePic) {
@@ -197,6 +198,7 @@ void ThumbnailsBar::onBtnClick()
             emit takeVd();
         } else {
             m_nStatus = STATVdIng;
+            this->hide();
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
             //2、禁用设置功能
@@ -204,10 +206,8 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
 
-            this->hide();
-
-            m_nItemCount = 0;
-            emit fitToolBar();
+//            m_nItemCount = 0;
+//            emit fitToolBar();
         }
 
     } else {
@@ -258,6 +258,7 @@ void ThumbnailsBar::onShortcutDel()
             return;
         }
         DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
+        m_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
     } else {
         QSet<int>::iterator it;
         for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
