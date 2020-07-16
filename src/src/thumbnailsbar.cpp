@@ -102,6 +102,12 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
+void ThumbnailsBar::setBtntooltip()
+{
+    m_lastButton->setToolTip(tr("Take photo"));
+    m_lastButton->setToolTipDuration(500);
+}
+
 //void ThumbnailsBar::resizeEvent(QResizeEvent *size)
 //{
 //    int nWidth = this->width();
@@ -179,11 +185,15 @@ void ThumbnailsBar::onBtnClick()
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {
             m_nStatus = STATNULL;
+            m_lastButton->setToolTip(tr("Take photo"));
+            m_lastButton->setToolTipDuration(500);
             emit enableTitleBar(3);
             emit takePic();
             emit enableSettings(true);
         } else {
             m_nStatus = STATPicIng;
+            m_lastButton->setToolTip(tr("Stop Taking photo"));
+            m_lastButton->setToolTipDuration(500);
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
             emit takePic();
