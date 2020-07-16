@@ -467,6 +467,9 @@ static int open_codec_context(int *stream_idx,
                 av_get_media_type_string(type));
         return AVERROR(ENOMEM);
     }
+    if (avcodec_open2(dec_ctx, dec, nullptr) < 0) {
+        fprintf(stderr, "Could not open the codec\n");
+    }
     /* Copy codec parameters from input stream to output codec context */
     if ((ret = avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
         fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
@@ -513,7 +516,11 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
     if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
         return mi;
     }
+
     m_nDuration = av_ctx->duration;
+    if (m_nDuration < 0) {
+        return mi;
+    }
     avformat_close_input(&av_ctx);
 
     return true;
