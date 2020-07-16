@@ -20,7 +20,8 @@
 */
 
 #include "mainwindow.h"
-#include <DApplication>
+//#include <DApplication>
+#include "capplication.h"
 #include <DMainWindow>
 #include <DWidgetUtil>
 #include <QSharedMemory>
@@ -31,8 +32,8 @@ DWIDGET_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
-    DApplication::loadDXcbPlugin();
-    DApplication a(argc, argv);
+    CApplication::loadDXcbPlugin();
+    CApplication a(argc, argv);
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
 
