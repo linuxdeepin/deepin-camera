@@ -38,10 +38,13 @@ HEADERS += \
     src/LPF_V4L2.h \
     src/videowidget.h \
     src/devnummonitor.h \
-    src/imageitem.h\
-    src/Settings.h\
+    src/imageitem.h \
+    src/Settings.h \
     src/closedialog.h \
     src/capplication.h
+
+
+
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\
