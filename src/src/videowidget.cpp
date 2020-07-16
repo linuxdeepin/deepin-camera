@@ -35,7 +35,7 @@
 #include <QGraphicsBlurEffect>
 //#include "LPF_V4L2.h"
 
-#define MAX_REC_TIME 60 * 30 /*Maximum record time*/
+#define MAX_REC_TIME  30 /*Maximum record time*/
 
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 QString g_strFileName = nullptr;
@@ -410,6 +410,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
                           nHeight - m_btnVdTime->height() - 5);
     }
+    resizePixMap();
 //    m_imgPrcThread->m_rwMtxImg.lock();
 //    m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(nWidth, nHeight);
 //    m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
@@ -487,12 +488,10 @@ void videowidget::showCountdown()
                 //拍照结束，恢复按钮状态和缩略图标志位
                 emit takePicDone();
             }
-
             if (m_curTakePicTime > 0) {
                 countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
                 m_nInterval = m_nMaxInterval; //改到开始的时候设置
             }
-
             hideCountDownLabel();
         }
 
@@ -639,6 +638,7 @@ void videowidget::onTakePic()
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
         countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧
+        emit takePicDone();
         return;
     }
     if (countTimer->isActive()) {

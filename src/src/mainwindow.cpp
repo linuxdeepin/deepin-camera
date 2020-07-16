@@ -500,12 +500,16 @@ void CMainWindow::initTitleBar()
 void CMainWindow::initConnection()
 {
     connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
-        if (m_videoPre.getCapstatus()) {
+        if (m_videoPre.getCapstatus())
+        {
             int ret = m_closeDlg->exec();
             if (ret == 1) {
                 m_videoPre.endBtnClicked();
                 dApp->quit();
             }
+        } else
+        {
+            dApp->quit();
         }
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
@@ -588,8 +592,9 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
         m_thumbnail->move((width - m_thumbnail->width()) / 2,
                           height - m_thumbnail->height() - 5);
         m_thumbnail->m_nMaxItem = width;
+        m_thumbnail->update();
     }
-
+    m_videoPre.resize(this->size());
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
