@@ -43,10 +43,13 @@ QMap<int, ImageItem *> m_indexImage;
 int m_indexNow = 0;
 QSet<int> m_setIndex;
 extern QString g_strFileName;
+extern bool isFindedDevice;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
-    this->grabKeyboard(); //获取键盘事件的关键处理
+    //this->grabKeyboard(); //获取键盘事件的关键处理
+    setFocus(Qt::OtherFocusReason);
+    setFocusPolicy(Qt::StrongFocus);
     //this->setFramRadius(18);
     QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
@@ -170,6 +173,9 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
+    if (!isFindedDevice) {
+        return;
+    }
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {
             m_nStatus = STATNULL;
@@ -192,6 +198,7 @@ void ThumbnailsBar::onBtnClick()
             emit takeVd();
         } else {
             m_nStatus = STATVdIng;
+            this->hide();
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
             //2、禁用设置功能
@@ -199,10 +206,8 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
 
-            this->hide();
-
-            m_nItemCount = 0;
-            emit fitToolBar();
+//            m_nItemCount = 0;
+//            emit fitToolBar();
         }
 
     } else {
@@ -249,7 +254,11 @@ void ThumbnailsBar::onShortcutCopy()
 void ThumbnailsBar::onShortcutDel()
 {
     if (m_setIndex.isEmpty()) {
+        if (m_indexImage.size() <= 0) {
+            return;
+        }
         DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
+        m_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
     } else {
         QSet<int>::iterator it;
         for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {

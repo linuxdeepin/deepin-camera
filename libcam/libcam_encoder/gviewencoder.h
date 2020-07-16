@@ -62,7 +62,7 @@ __BEGIN_DECLS
 #define GV_SAMPLE_TYPE_FLOATP (3) //planar
 #endif
 
-#define MAX_DELAYED_FRAMES 68  /*Maximum supported delayed frames*/
+#define MAX_DELAYED_FRAMES 20  /*Maximum supported delayed frames*/
 
 __attribute__((unused)) static int my_video_codec_ind = 0;
 

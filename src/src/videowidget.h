@@ -41,7 +41,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
 
-enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, EFFECT, AUDIO, SHOOT};
+enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
 
 
 class videowidget : public DWidget
@@ -49,11 +49,13 @@ class videowidget : public DWidget
     Q_OBJECT
 public:
     explicit videowidget(DWidget *parent = nullptr);
+    ~videowidget();
 
 signals:
     void sigFlash();
     void takePicDone();
     void takeVdCancel(); //录制倒计时期间取消了
+    void setBtnStatues(bool status);
 
 public:
     void setSaveFolder(QString strFolder)
@@ -123,22 +125,22 @@ private:
     void startTakeVideo();
 
 private:
-    bool m_bActive;
-    volatile bool isFindedDevice = false;
+    bool m_bActive;//是否录制中
+
     DLabel               m_flashLabel;
 
     QGraphicsView        *m_pNormalView;
     QGraphicsScene       *m_pNormalScene;
     QGraphicsPixmapItem *m_pNormalItem;
-    QGraphicsTextItem    *m_pCountItem; //拍照倒计时显示控件
+    QGraphicsTextItem    *m_pCountItem; //摄像头异常提示
     QGraphicsTextItem    *m_pTimeItem;
 
     QGridLayout          *m_pGridLayout;
 
-    DFloatingWidget *m_fWgtCountdown; //显示倒计时
+    DFloatingWidget     *m_fWgtCountdown; //显示倒计时
     //浮动窗口添加磨砂窗口和结束按钮
-    DLabel *m_dLabel;
-    DPushButton *m_btnVdTime; //录制屏显时长
+    DLabel              *m_dLabel;
+    DPushButton         *m_btnVdTime; //录制屏显时长
 
     DPushButton          *m_endBtn;
 

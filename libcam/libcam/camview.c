@@ -722,6 +722,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
     char *name = strdup(get_video_name());
     char *path = strdup(get_video_path());
 
+
     //    if(get_video_sufix_flag())
     //    {
     //        char *new_name = add_file_suffix(path, name);
@@ -738,6 +739,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
     //gui_status_message(status_message);
 
     /*muxer initialization*/
+
     encoder_muxer_init(encoder_ctx, video_filename);
 
     /*start video capture*/
