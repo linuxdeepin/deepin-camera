@@ -65,7 +65,6 @@ public:
     DSettings *getDsetMber();
 
     ~CMainWindow() override;
-
 private:
     void initUI();
     void initTitleBar();

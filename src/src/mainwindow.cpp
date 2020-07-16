@@ -20,7 +20,7 @@
 */
 
 #include "mainwindow.h"
-
+#include "capplication.h"
 #include <QListWidgetItem>
 #include <QTextLayout>
 #include <QStyleFactory>
@@ -499,6 +499,15 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
+    connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
+        if (m_videoPre.getCapstatus()) {
+            int ret = m_closeDlg->exec();
+            if (ret == 1) {
+                m_videoPre.endBtnClicked();
+                dApp->quit();
+            }
+        }
+    });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
     connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
