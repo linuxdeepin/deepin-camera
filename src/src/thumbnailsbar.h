@@ -58,6 +58,7 @@ public:
     {
         return m_nItemCount;
     }
+    void setBtntooltip();
     void ChangeActType(int nType);
     void addPath(QString strPath);
 

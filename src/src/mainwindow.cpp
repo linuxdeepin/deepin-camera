@@ -810,6 +810,7 @@ void CMainWindow::onTakePicDone()
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
+    m_thumbnail->setBtntooltip();
 }
 
 void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
