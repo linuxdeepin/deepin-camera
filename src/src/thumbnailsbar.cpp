@@ -270,10 +270,16 @@ void ThumbnailsBar::onShortcutDel()
         DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
         m_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
     } else {
+        if (m_setIndex.size() <= 0) {
+            return;
+        }
         QSet<int>::iterator it;
         for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
             DDesktopServices::trash(m_indexImage.value(*it)->getPath());
+            m_indexImage.remove(*it);
         }
+        m_setIndex.clear();
+        m_indexNow = 0;
     }
 }
 
