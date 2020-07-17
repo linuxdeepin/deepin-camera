@@ -457,7 +457,7 @@ void CMainWindow::initTitleBar()
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
 
     m_pTitlePicBtn->setIcon(iconPic);
-    m_pTitlePicBtn->setIconSize(QSize(19, 16));
+    m_pTitlePicBtn->setIconSize(QSize(26, 26));
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -476,7 +476,7 @@ void CMainWindow::initTitleBar()
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setFocusPolicy(Qt::NoFocus);
     m_pTitleVdBtn->setIcon(iconVd);
-    m_pTitleVdBtn->setIconSize(QSize(26, 16));
+    m_pTitleVdBtn->setIconSize(QSize(26, 26));
 
     listButtonBox.append(m_pTitlePicBtn);
     listButtonBox.append(m_pTitleVdBtn);
@@ -485,11 +485,11 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn->setFixedSize(QSize(37, 37));
+    pSelectBtn->setIconSize(QSize(37, 37));
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        pSelectBtn->setIconSize(QSize(12, 12));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
-        pSelectBtn->setIconSize(QSize(24, 24));
         pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
     }
 
@@ -767,18 +767,21 @@ void CMainWindow::onSettingsDlgClose()
 //    int nDelayTime = m_pSettingDialog->getValue("photosetting.photosdelay.photodelays").toInt();
 
     /**********************************************/
+    if (QDir(Settings::get().getOption("base.save.datapath").toString()).exists() == false) {
+        CMainWindow::m_lastfilename = QString("~") + QString("/Videos");
+        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
+    }
+
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
         CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
     }
 
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    if (QDir(CMainWindow::m_lastfilename).isEmpty()) {
+    if (QDir(CMainWindow::m_lastfilename).exists() == false) {
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
-        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
     }
-    //CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    QString test = CMainWindow::m_lastfilename;
 
+//    QString test = CMainWindow::m_lastfilename;
     m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
     m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
@@ -839,7 +842,7 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        pSelectBtn->setIconSize(QSize(12, 12));
+        pSelectBtn->setIconSize(QSize(37, 37));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
         if (m_nActTpye == ActTakePic) {
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -848,9 +851,9 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
         }
     }
     if (type == DGuiApplicationHelper::DarkType) {
+        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
         if (m_nActTpye == ActTakePic) {
-            pSelectBtn->setIconSize(QSize(24, 24));
-            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            //pSelectBtn->setIconSize(QSize(20, 20));
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
         } else {
             m_pTitlePicBtn->setIcon(QIcon(":/images/icons/dark/button/photograph_dark.svg"));
