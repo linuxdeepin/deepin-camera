@@ -14,7 +14,7 @@
         <translation>打开文件夹</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="556"/>
+        <location filename="../src/mainwindow.cpp" line="569"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
@@ -142,6 +142,18 @@
         <source>None</source>
         <translation>无</translation>
     </message>
+    <message>
+        <location filename="../src/main.cpp" line="57"/>
+        <location filename="../src/main.cpp" line="62"/>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="63"/>
+        <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
+        <translatorcomment>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translatorcomment>
+        <translation>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translation>
+    </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
@@ -149,7 +161,7 @@
         <location filename="../src/thumbnailsbar.cpp" line="94"/>
         <location filename="../src/thumbnailsbar.cpp" line="107"/>
         <location filename="../src/thumbnailsbar.cpp" line="188"/>
-        <location filename="../src/thumbnailsbar.cpp" line="297"/>
+        <location filename="../src/thumbnailsbar.cpp" line="303"/>
         <source>Take photo</source>
         <translation>拍照</translation>
     </message>
@@ -159,7 +171,7 @@
         <translation>结束拍照</translation>
     </message>
     <message>
-        <location filename="../src/thumbnailsbar.cpp" line="309"/>
+        <location filename="../src/thumbnailsbar.cpp" line="315"/>
         <source>Record video</source>
         <translation>录制视频</translation>
     </message>
@@ -176,12 +188,12 @@
         <translation>结束录制</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="233"/>
+        <location filename="../src/videowidget.cpp" line="232"/>
         <source>No webcam found</source>
         <translation>未连接摄像头</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="263"/>
+        <location filename="../src/videowidget.cpp" line="272"/>
         <source>The webcam is in use</source>
         <translation>摄像头已被占用</translation>
     </message>

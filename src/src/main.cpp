@@ -54,13 +54,13 @@ int main(int argc, char *argv[])
 
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
-    a.setApplicationDisplayName("Camera");
+    a.setApplicationDisplayName(QObject::tr("Camera"));
     a.setApplicationVersion("1.0");
     a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
-    a.setProductName("Camera");
-    a.setApplicationDescription("This is camera.");
+    a.setProductName(QObject::tr("Camera"));
+    a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     DApplicationSettings saveTheme;
 
