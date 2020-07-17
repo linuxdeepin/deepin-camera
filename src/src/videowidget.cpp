@@ -635,6 +635,15 @@ void videowidget::onTakePic()
     }
     VIDEO_STATE = NORMALVIDEO;
     if (m_nMaxInterval == 0) {
+        if (m_curTakePicTime > 0 && m_curTakePicTime != m_nMaxContinuous) {
+            m_nInterval = 0; //下次可开启
+            m_curTakePicTime = 0; //结束当前拍照
+            if (countTimer->isActive()) {
+                countTimer->stop();
+            }
+            emit takePicDone();
+            return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
+        }
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
         countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧

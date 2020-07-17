@@ -154,7 +154,6 @@ private:
     int                     EFFECT_PAGE = 0;
 
     int                     m_countdownLen = 1;
-    int                     err11, err19;
     MajorImageProcessingThread *m_imgPrcThread;
     QImage               m_img;
     QPixmap              m_pixmap;
