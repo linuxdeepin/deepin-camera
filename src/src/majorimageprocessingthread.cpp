@@ -78,6 +78,8 @@ void MajorImageProcessingThread::run()
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
 
+
+
             uint8_t *input_frame = frame->yuv_frame;
 
             /*
@@ -97,9 +99,13 @@ void MajorImageProcessingThread::run()
                 }
             }
             /*把帧加入编码队列*/
-            if (!get_capture_pause())
+            if (!get_capture_pause()) {
+                set_video_timestamptmp(static_cast<int64_t>(frame->timestamp));
                 encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
-
+            } else {
+                int64_t timespausestamp = get_video_timestamptmp();
+                set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
+            }
             /*
              * exponencial scheduler
              *  with 50% threshold (milisec)
