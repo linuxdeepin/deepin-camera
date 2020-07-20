@@ -29,12 +29,37 @@ extern "C" {
 
 #include "gviewaudio.h"
 #include "gviewv4l2core.h"
+#include "encoder.h"
 
 typedef struct _capture_loop_data_t {
     void *options;
     void *config;
     void *device;
 } capture_loop_data_t;
+
+/*
+ * set pause times
+ * args:
+ *    value - timestamp
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_timestamptmp(int64_t timestamp);
+
+/*
+ * get pause times
+ * args:
+ *    value: none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause_time
+ */
+int64_t get_video_timestamptmp(void);
 
 /*
  * set capture_pause flag
