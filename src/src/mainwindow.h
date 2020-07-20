@@ -49,7 +49,7 @@ DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
-const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
+//const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
 const int MinWindowWidth = 800;
 const int MinWindowHeight = 583;
 

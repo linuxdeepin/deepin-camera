@@ -410,9 +410,9 @@ void CMainWindow::initUI()
     });
 
     m_thumbnail->setVisible(true);
-    m_thumbnail->setMaximumWidth(1200);
+    //m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
-    m_thumbnail->addPath(CMainWindow::m_lastfilename);
+
 
     QString test = CMainWindow::m_lastfilename;
 
@@ -444,6 +444,7 @@ void CMainWindow::initUI()
     m_videoPre.setInterval(nDelayTime);
     m_videoPre.setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
+    m_thumbnail->addPath(CMainWindow::m_lastfilename);
 }
 
 void CMainWindow::initTitleBar()
@@ -576,23 +577,22 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     int width = this->width();
-    int height = this->height();
+    //int height = this->height();
+    int nOldWidth = m_thumbnail->m_nMaxItem;
+    m_thumbnail->m_nMaxItem = width;
+    if (nOldWidth > width) {//画面缩小了，要重新调整；
+        m_thumbnail->onFoldersChanged("");
+    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
+        m_thumbnail->hide();
+        QTimer::singleShot(200, this, [=]
+        {
+            m_thumbnail->onFoldersChanged("");
+            m_thumbnail->show();
+        });
+    }
+
     if (m_thumbnail) {
-        int n = m_thumbnail->getItemCount();
-        int nWidth;
-        if (n == 0) {
-            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
-        } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;
-        }
-
-        qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 90);
-
-        m_thumbnail->move((width - m_thumbnail->width()) / 2,
-                          height - m_thumbnail->height() - 5);
-        m_thumbnail->m_nMaxItem = width;
-        m_thumbnail->update();
+        onFitToolBar();
     }
     m_videoPre.resize(this->size());
 }
@@ -634,13 +634,17 @@ void CMainWindow::onFitToolBar()
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;//4是选中边框宽度
+            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
         }
 
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, THUMBNAIL_HEIGHT + 30);
+        m_thumbnail->resize(qMin(this->width(),nWidth), THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
+
+        //qDebug() << "nCount " << n << " nWidth " << nWidth << " winWidth " << this->width();
+
+        //m_thumbnail->update();
     }
 }
 
