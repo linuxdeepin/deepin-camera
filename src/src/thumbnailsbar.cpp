@@ -61,7 +61,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_nItemCount = 0;
     m_nMaxItem = 0;
     m_hBOx = new QHBoxLayout();
-    m_hBOx->setSpacing(/*ITEM_SPACE*/0);
+    m_hBOx->setSpacing(ITEM_SPACE);
     m_mainLayout = new QHBoxLayout();
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
 
