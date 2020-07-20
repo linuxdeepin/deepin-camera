@@ -27,6 +27,45 @@
 #include "gviewv4l2core.h"
 #include "v4l2_core.h"
 
+typedef struct _jpeg_encoder_ctx_t {
+    uint16_t    image_width;
+    uint16_t    image_height;
+    uint16_t    mcu_width;
+    uint16_t    mcu_height;
+    uint16_t    horizontal_mcus;
+    uint16_t    vertical_mcus;
+
+    uint16_t    rows;
+    uint16_t    cols;
+
+    uint16_t    length_minus_mcu_width;
+    uint16_t    length_minus_width;
+    uint16_t    incr;
+    uint16_t    mcu_width_size;
+    uint16_t    offset;
+
+    int16_t     ldc1;
+    int16_t     ldc2;
+    int16_t     ldc3;
+
+    uint32_t    lcode;
+    uint16_t    bitindex;
+
+    /* MCUs */
+    int16_t     Y1 [64];
+    int16_t     Y2 [64];
+    int16_t     Temp [64];
+    int16_t     CB [64];
+    int16_t     CR [64];
+
+    /* Quantization Tables */
+    uint8_t     Lqt [64];
+    uint8_t     Cqt [64];
+    uint16_t    ILqt [64];
+    uint16_t    ICqt [64];
+
+} jpeg_encoder_ctx_t;
+
 /*
  * save the current frame to file
  * args:
@@ -81,4 +120,38 @@ int save_image_bmp(v4l2_frame_buff_t *frame, const char *filename);
  */
 int save_image_png(v4l2_frame_buff_t *frame, const char *filename);
 
+/*
+ * encode jpeg
+ * args:
+ *    input - pointer to input buffer (yuyv format)
+ *    output - pointer to output buffer (jpeg format)
+ *    jpeg_ctx - pointer to jpeg encoder context
+ *    huff - huffman flag
+ *
+ *
+ * asserts:
+ *    input is not null
+ *    ouput is not null
+ *    jpeg_ctx is not null
+ *
+ * returns: ouput size
+ */
+int encode_jpeg (uint8_t *input, uint8_t *output,
+                 jpeg_encoder_ctx_t *jpeg_ctx, int huff);
+
+/*
+ * init jpeg encoder context
+ * args:
+ *    jpeg_ctx - pointer to jpeg encoder context
+ *    image_width - image width (in pixels)
+ *    image_height - image height (in pixels)
+ *
+ * asserts:
+ *    jpeg_ctx is not null
+ *
+ * returns: none
+ */
+void initialization (jpeg_encoder_ctx_t *jpeg_ctx, int image_width, int image_height);
+
+void initialize_quantization_tables (jpeg_encoder_ctx_t *jpeg_ctx);
 #endif
