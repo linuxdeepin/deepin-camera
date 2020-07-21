@@ -39,11 +39,11 @@
 #include <QThread>
 
 //QMap<QString, QPixmap> m_imagemap;
-QMap<int, ImageItem *> m_indexImage;
-int m_indexNow = 0;
-QSet<int> m_setIndex;
+QMap<int, ImageItem *> g_indexImage;
+int g_indexNow = 0;
+QSet<int> g_setIndex;
 extern QString g_strFileName;
-extern bool isFindedDevice;
+extern bool g_bFoundDevice;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
@@ -72,9 +72,6 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
     m_mainLayout->addLayout(m_hBOx, Qt::AlignLeft);
-    //    QSpacerItem *horizontalSpacer;
-    //    horizontalSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
-    //    m_mainLayout->addItem(horizontalSpacer);
 
     m_lastButton = new DPushButton(this);
 //    m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
@@ -108,14 +105,6 @@ void ThumbnailsBar::setBtntooltip()
     m_lastButton->setToolTipDuration(500);
 }
 
-//void ThumbnailsBar::resizeEvent(QResizeEvent *size)
-//{
-//    int nWidth = this->width();
-
-////    printf("resize w %d, h %d\n", size.w);
-
-//}
-
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
@@ -134,8 +123,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
             child->widget()->setParent(nullptr);
         }
     }
-    //    m_imagemap.clear();
-    m_indexImage.clear();
+    g_indexImage.clear();
     //获取所选文件类型过滤器
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
@@ -165,7 +153,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                     }
                 }
                 ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
-                m_indexImage.insert(tIndex, pLabel);
+                g_indexImage.insert(tIndex, pLabel);
                 tIndex++;
 
                 m_hBOx->addWidget(pLabel);
@@ -179,7 +167,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if (!isFindedDevice) {
+    if (!g_bFoundDevice) {
         return;
     }
     if (m_nActTpye == ActTakePic) {
@@ -215,9 +203,6 @@ void ThumbnailsBar::onBtnClick()
             emit enableSettings(false);
             //3、录制
             emit takeVd();
-
-//            m_nItemCount = 0;
-//            emit fitToolBar();
         }
 
     } else {
@@ -228,14 +213,14 @@ void ThumbnailsBar::onBtnClick()
 void ThumbnailsBar::onShortcutCopy()
 {
     QStringList paths;
-    if (m_setIndex.isEmpty()) {
-        paths = QStringList(m_indexImage.value(m_indexNow)->getPath());
+    if (g_setIndex.isEmpty()) {
+        paths = QStringList(g_indexImage.value(g_indexNow)->getPath());
         qDebug() << "sigle way";
     } else {
         QSet<int>::iterator it;
-        for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
-            paths << m_indexImage.value(*it)->getPath();
-            qDebug() << m_indexImage.value(*it)->getPath();
+        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            paths << g_indexImage.value(*it)->getPath();
+            qDebug() << g_indexImage.value(*it)->getPath();
         }
     }
 
@@ -263,23 +248,23 @@ void ThumbnailsBar::onShortcutCopy()
 
 void ThumbnailsBar::onShortcutDel()
 {
-    if (m_setIndex.isEmpty()) {
-        if (m_indexImage.size() <= 0) {
+    if (g_setIndex.isEmpty()) {
+        if (g_indexImage.size() <= 0) {
             return;
         }
-        DDesktopServices::trash(m_indexImage.value(m_indexNow)->getPath());
-        m_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
+        DDesktopServices::trash(g_indexImage.value(g_indexNow)->getPath());
+        g_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
     } else {
-        if (m_setIndex.size() <= 0) {
+        if (g_setIndex.size() <= 0) {
             return;
         }
         QSet<int>::iterator it;
-        for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
-            DDesktopServices::trash(m_indexImage.value(*it)->getPath());
-            m_indexImage.remove(*it);
+        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            DDesktopServices::trash(g_indexImage.value(*it)->getPath());
+            g_indexImage.remove(*it);
         }
-        m_setIndex.clear();
-        m_indexNow = 0;
+        g_setIndex.clear();
+        g_indexNow = 0;
     }
 }
 
@@ -327,53 +312,7 @@ void ThumbnailsBar::addPath(QString strPath)
     }
 }
 
-//void ThumbnailsBar::paintEvent(QPaintEvent *e)
-//{
-//    qDebug() << this->width() << " " << this->height() << " " << m_lastButton->width() << " " << m_lastButton->height();
-//}
-
-void ThumbnailsBar::keyPressEvent(QKeyEvent *e)
-{
-    if (e->key() == Qt::Key_Shift) {
-        m_bShiftPressed = true;
-        m_bMultiSltFlag = true;
-        for (int i = 0; i < m_hBOx->count(); i++) {
-            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-            tmp->SetMulti(true);
-        }
-        m_setIndex.insert(m_indexNow);
-    }
-}
-
-void ThumbnailsBar::keyReleaseEvent(QKeyEvent *e)
-{
-    //预留接口，关于shift按键取消后的操作
-    if (e->key() == Qt::Key_Shift) {
-        m_bShiftPressed = false;
-        m_bMultiSltFlag = false;
-        for (int i = 0; i < m_hBOx->count(); i++) {
-            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-            tmp->SetMulti(false);
-        }
-    }
-
-    //    if (e->key() == Qt::Key_Shift) {
-    //        m_bMulti = false;
-    //        m_index.clear();
-    //        //不填0就是默认当前选项
-    //        //m_index.insert(0);//始终选择第一个，选择当前的话，有可能正好是取消当前选项，此时需要定义选中哪个选项
-    //    }
-}
-
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
 {
     Q_UNUSED(ev);
-    //    if (!m_bShiftPressed && m_bMultiSltFlag) {
-    //        for (int i = 0; i < m_hBOx->count(); i++) {
-    //            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-    //            tmp->SetMulti(false);
-    //            tmp->update();
-    //        }
-    //        //m_index.insert(_indexNow);
-    //    }
 }

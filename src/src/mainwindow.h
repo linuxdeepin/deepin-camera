@@ -89,9 +89,9 @@ private slots:
     void onTakePicDone();
     void onTakeVdCancel();
     void onThemeChange(DGuiApplicationHelper::ColorType type);
-    //void onCapturepause(Qt::WindowState windowState);
-    //    void onTakePicBtnClicked();
-    //    void onTakeVdBtnClicked();
+protected:
+    void keyPressEvent(QKeyEvent *e) override;
+    void keyReleaseEvent(QKeyEvent *e) override;
 private:
     ThumbnailsBar              *m_thumbnail;
     DMenu                     *menu;
@@ -104,20 +104,10 @@ private:
     DButtonBoxButton            *m_pTitlePicBtn;
     DButtonBoxButton            *m_pTitleVdBtn;
     DIconButton                 *pSelectBtn; //切换按钮
-    //DSettingsDialog              *pDSettingDialog;
-    //DSettings                    *pDSettings;
     QString                      m_strCfgPath;
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
     static QString                m_lastfilename;
-    //settingDialog                 *m_pSettingDialog;
-
-
-    //    bool m_bMultiCam;//是否多摄像头
-    //    bool m_bLockCam;//是否锁定摄像头，拍照和录像过程中锁定
-signals:
-
-
 };
 
 #endif // MAINWINDOW_H

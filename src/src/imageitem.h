@@ -52,11 +52,6 @@ public:
     {
         m_path = path;
     }
-    void SetMulti(bool bMulti)
-    {
-        m_bMultiSlt = bMulti;
-        update();
-    }
     inline QString getPath()
     {
         return m_path;
@@ -72,9 +67,7 @@ signals:
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
-    //    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    //    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *ev) override;
     void paintEvent(QPaintEvent *event) override;
 
 private:
@@ -87,8 +80,7 @@ private:
     QAction *m_actCopy;
     QAction *m_actDel;
     QAction *m_actOpenFolder;
-    bool m_bMultiSlt = false; //是否多选
-    bool m_bThumbnailReadOK = false;
+
     int64_t m_nDuration = 0; //视频文件时长
 };
 

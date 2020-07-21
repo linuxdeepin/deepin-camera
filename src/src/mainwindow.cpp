@@ -40,6 +40,9 @@
 #include <dsettingswidgetfactory.h>
 
 using namespace dc;
+extern bool g_bMultiSlt; //是否多选
+extern QSet<int> g_setIndex;
+extern int g_indexNow;
 
 QString CMainWindow::m_lastfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
@@ -298,11 +301,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     initConnection();
 }
 
-//DSettings *CMainWindow::getDsetMber()
-//{
-//    return pDSettings;
-//}
-
 CMainWindow::~CMainWindow()
 {
     qDebug() << "stop_encoder_thread";
@@ -335,14 +333,7 @@ void CMainWindow::initUI()
     m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
     DWidget *wget = new DWidget;
     QVBoxLayout *hboxlayout = new QVBoxLayout;
-    //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
-    //QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-    //pDSettings->setBackend(pBackend);
-//    g_lastFileName = pDSettings->value("base.save.datapath").toString();
-//    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
-//        g_lastFileName.replace(0, 1, QDir::homePath());
-//    }
-//    m_pSettingDialog->setBackEndinIt(m_strCfgPath);
+
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
         QString str = QDir::homePath();
@@ -356,18 +347,7 @@ void CMainWindow::initUI()
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     }
-//    QPalette *pal = new QPalette(m_videoPre.palette());
-//    pal->setColor(QPalette::Background, Qt::black); //设置黑色边框
-//    m_videoPre.setAutoFillBackground(true);
-//    m_videoPre.setPalette(*pal);
-//    _animationlable = new AnimationLabel;
-//    _animationlable->setAttribute(Qt::WA_TranslucentBackground);
-//    _animationlable->setWindowFlags(Qt::FramelessWindowHint);
-//    _animationlable->setParent(this);
-//    _animationlable->setGeometry(width() / 2 - 100, height() / 2 - 100, 200, 200);
 
-    //m_preWgt = new PreviewWidget(centralWidget());
-    //hboxlayout->addWidget(&m_preWgt);
     hboxlayout->addWidget(&m_videoPre);
     hboxlayout->setContentsMargins(0, 0, 0, 0);
 
@@ -678,14 +658,6 @@ void CMainWindow::menuItemInvoked(QAction *action)
     Q_UNUSED(action);
 }
 
-//void CMainWindow::keyPressEvent(QKeyEvent *ev)
-//{
-//    if (ev->key() == Qt::Key_Escape) {
-//        m_setwidget->hide();
-//    }
-//    QWidget::keyReleaseEvent(ev);
-//}
-
 void CMainWindow::onTitlePicBtn()
 {
     if (m_nActTpye == ActTakePic) {
@@ -760,16 +732,6 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
-//    if (settingDialog::getLastFileName().size() && settingDialog::getLastFileName()[0] == '~') {
-//        settingDialog::getLastFileName().replace(0, 1, QDir::homePath());
-//    }
-//    m_fileWatcher.addPath(settingDialog::getLastFileName());
-//    m_thumbnail->addPath(settingDialog::getLastFileName());
-//    m_videoPre.setSaveFolder(settingDialog::getLastFileName());
-
-//    int nContinuous = m_pSettingDialog->getValue("photosetting.photosnumber.takephotos").toInt();
-//    int nDelayTime = m_pSettingDialog->getValue("photosetting.photosdelay.photodelays").toInt();
-
     /**********************************************/
     if (QDir(Settings::get().getOption("base.save.datapath").toString()).exists() == false) {
         CMainWindow::m_lastfilename = QString("~") + QString("/Videos");
@@ -865,10 +827,19 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
     }
 }
 
+void CMainWindow::keyPressEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        g_bMultiSlt = true;
+        g_setIndex.insert(g_indexNow);
+    }
+}
 
-
-//void CMainWindow::onCapturepause(Qt::WindowState windowState)
-//{
-//    if (windowState == Qt::WindowMinimized)
-//        set_capture_pause(1);
-//}
+void CMainWindow::keyReleaseEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        g_bMultiSlt = false;
+        g_setIndex.clear();
+        //g_setIndex.insert(g_indexNow);
+    }
+}
