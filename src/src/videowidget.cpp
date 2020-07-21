@@ -136,7 +136,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
 
     m_pNormalItem = new QGraphicsPixmapItem;
-    m_pCountItem = new QGraphicsTextItem;
+    m_pCamErrItem = new QGraphicsTextItem;
 
     m_pTimeItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
@@ -146,7 +146,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pGridLayout->addWidget(m_pNormalView);
 
     m_pNormalScene->addItem(m_pNormalItem);
-    m_pNormalScene->addItem(m_pCountItem);
+    m_pNormalScene->addItem(m_pCamErrItem);
     m_pNormalScene->addItem(m_pTimeItem);
     qDebug() << "this widget--height:" << this->height() << "--width:" << this->width() << endl;
     qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
@@ -177,7 +177,7 @@ void videowidget::init()
     if (camInit("/dev/video0") == E_OK) {
         g_bFoundDevice = true;
 
-        m_pCountItem->hide();
+        m_pCamErrItem->hide();
         m_imgPrcThread->start();
     } else {
         v4l2_dev_t *vd = get_v4l2_device_handler();
@@ -226,9 +226,9 @@ void videowidget::showNocam()
 
     QString str(tr("No webcam found"));//未连接摄像头
     m_countdownLen = str.length() * 20;
-    setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos((800 - nWidth) / 2, (533 - nHeight) / 2);
-    m_pCountItem->setPos((800 - nWidth) / 2 + 30, (533 - nHeight) / 2 + nHeight + 10);
+    setFont(m_pCamErrItem, 12, str);
+    m_pNormalItem->setPos((800 - nWidth) / 2, (533 - nHeight) / 3);
+    m_pCamErrItem->setPos((800 - nWidth) / 2 + 30, (533 - nHeight) / 3 + nHeight + 10);
 }
 
 //显示设备被占用或者拔掉的图片的槽函数
@@ -258,10 +258,10 @@ void videowidget::showCamUsed()
     }
     QString str(tr("The webcam is in use"));//摄像头已被占用
     m_countdownLen = str.length() * 20;
-    setFont(m_pCountItem, 12, str);
-    m_pNormalItem->setPos((this->width() - nWidth) / 2, (this->height() - nHeight) / 2);
-    m_pCountItem->show();
-    m_pCountItem->setPos((this->width() - nWidth) / 2 + 30, (this->height() - nHeight) / 2 + nHeight + 10);
+    setFont(m_pCamErrItem, 12, str);
+    m_pNormalItem->setPos((this->width() - nWidth) / 2, (this->height() - nHeight) / 3);
+    m_pCamErrItem->show();
+    m_pCamErrItem->setPos((this->width() - nWidth) / 2 + 30, (this->height() - nHeight) / 3 + nHeight + 10);
 }
 
 void videowidget::ReceiveMajorImage(QImage image, int result)
@@ -314,7 +314,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         resizePixMap();
         break;
     case AUDIO:
-        m_pCountItem->hide();
+        m_pCamErrItem->hide();
         if (m_nCount > MAX_REC_TIME) {
             endBtnClicked(); //结束录制
         }
@@ -326,7 +326,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         break;
     default:
         m_pTimeItem->hide();
-        m_pCountItem->hide();
+        m_pCamErrItem->hide();
         m_fWgtCountdown->hide();
         m_btnVdTime->hide();
         m_endBtn->hide();
@@ -347,7 +347,7 @@ void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
 void videowidget::hideCountDownLabel()
 {
     //关闭
-    m_pCountItem->hide();
+    m_pCamErrItem->hide();
     m_fWgtCountdown->hide();
 }
 
@@ -360,15 +360,6 @@ void videowidget::hideTimeLabel()
 
 void videowidget::resizePixMap()
 {
-    if (m_pCountItem->isVisible()) {
-        QRect rect = this->rect();
-        m_pNormalScene->setSceneRect(rect);
-        int x = this->x();
-        int y = this->y();
-
-        m_pCountItem->setX(x + rect.width() / 2 - m_countdownLen / 2);
-        m_pCountItem->setY(y + rect.height() / 2 - 100); //设置高度的一半
-    }
     if (m_pTimeItem->isVisible()) {
         QRect rect = this->rect();
         m_pNormalScene->setSceneRect(rect);
@@ -395,6 +386,15 @@ void videowidget::resizeEvent(QResizeEvent *size)
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
                           nHeight - m_btnVdTime->height() - 5);
     }
+    if (m_pNormalItem->isVisible()) {
+        m_pNormalItem->setPos((this->width() - m_pNormalItem->pixmap().toImage().width()) / 2, (this->height() - m_pNormalItem->pixmap().toImage().height()) / 3);
+    }
+
+    if (m_pCamErrItem->isVisible()) {
+        m_pCamErrItem->setPos((this->width() - m_pNormalItem->pixmap().toImage().width()) / 2 + 30, (this->height() - m_pNormalItem->pixmap().toImage().height()) / 3 + m_pNormalItem->pixmap().toImage().height() + 10);
+    }
+
+
     resizePixMap();
 }
 
@@ -515,8 +515,8 @@ void videowidget::endBtnClicked()
     if (countTimer->isActive()) {
         countTimer->stop();
     }
-    if (m_pCountItem->isVisible() && !m_imgPrcThread->getStatus()) {
-        m_pCountItem->hide();
+    if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+        m_pCamErrItem->hide();
     }
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->hide();
@@ -563,7 +563,7 @@ void videowidget::changeDev()
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     g_bFoundDevice = true;
-                    m_pCountItem->hide();
+                    m_pCamErrItem->hide();
                 }
                 break;
             }
@@ -577,7 +577,7 @@ void videowidget::changeDev()
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
-                        m_pCountItem->hide();
+                        m_pCamErrItem->hide();
                     }
                     break;
                 } else {
@@ -585,7 +585,7 @@ void videowidget::changeDev()
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
-                        m_pCountItem->hide();
+                        m_pCamErrItem->hide();
                     }
                     break;
                 }
@@ -595,7 +595,7 @@ void videowidget::changeDev()
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     g_bFoundDevice = true;
-                    m_pCountItem->hide();
+                    m_pCamErrItem->hide();
                 }
                 break;
             }
@@ -629,8 +629,8 @@ void videowidget::onTakePic()
     if (countTimer->isActive()) {
         countTimer->stop();
     }
-    if (m_pCountItem->isVisible() && !m_imgPrcThread->getStatus()) {
-        m_pCountItem->hide();
+    if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+        m_pCamErrItem->hide();
     }
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->hide();
@@ -654,8 +654,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     if (countTimer->isActive()) {
         countTimer->stop();
     }
-    if (m_pCountItem->isVisible()) {
-        m_pCountItem->hide();
+    if (m_pCamErrItem->isVisible()) {
+        m_pCamErrItem->hide();
     }
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->hide();
