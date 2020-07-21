@@ -64,7 +64,6 @@ public:
     }
     void setInterval(int nInterval)
     {
-        /*m_nInterval = */
         m_nMaxInterval = nInterval;
     }
     void setContinuous(int nContinuous)
