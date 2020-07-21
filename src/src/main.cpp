@@ -37,14 +37,14 @@ int main(int argc, char *argv[])
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
 
-    QTranslator *translator = new QTranslator;
+//    QTranslator *translator = new QTranslator;
 
-    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
-    if (!bLoaded) {
-        qDebug() << "load transfile error";
-    }
+//    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
+//    if (!bLoaded) {
+//        qDebug() << "load transfile error";
+//    }
 
-    a.installTranslator(translator);
+//    a.installTranslator(translator);
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 

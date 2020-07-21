@@ -136,7 +136,7 @@ unix {
 #    INSTALLS += target
 }
 
-INSTALLS += target desktop icon_files manual dbus_service
+#INSTALLS += target desktop icon_files manual dbus_service
 
 #isEmpty(TRANSLATIONS) {
 #     include(translations.pri)
@@ -166,10 +166,10 @@ CONFIG(release, debug|release) {
     }
 }
 
-translations.path = $$APPSHAREDIR/translations
+translations.path = $$PREFIX/share/deepin-camera/translations
 translations.files = $$PWD/translations/*.qm
 
-INSTALLS = target desktop dbus_service icons manual manual_icon app_icon translations
+INSTALLS = target desktop dbus_service icons manual translations
 
 #DSR_LANG_PATH += $$DSRDIR/translations
 #DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
