@@ -4,17 +4,17 @@
 <context>
     <name>CMainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="335"/>
+        <location filename="../src/mainwindow.cpp" line="333"/>
         <source>Video recording is in progress. Close the window?</source>
         <translation>正在录制视频，是否关闭？</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="386"/>
+        <location filename="../src/mainwindow.cpp" line="366"/>
         <source>Open folder</source>
         <translation>打开文件夹</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="569"/>
+        <location filename="../src/mainwindow.cpp" line="550"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
@@ -35,17 +35,17 @@
 <context>
     <name>ImageItem</name>
     <message>
-        <location filename="../src/imageitem.cpp" line="128"/>
+        <location filename="../src/imageitem.cpp" line="129"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="131"/>
+        <location filename="../src/imageitem.cpp" line="132"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="133"/>
+        <location filename="../src/imageitem.cpp" line="134"/>
         <source>Open folder</source>
         <translation>打开文件夹</translation>
     </message>
@@ -53,22 +53,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="175"/>
+        <location filename="../src/mainwindow.cpp" line="178"/>
         <source>You don&apos;t have permission to operate this folder</source>
         <translation>无权限打开文件夹</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="177"/>
+        <location filename="../src/mainwindow.cpp" line="180"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="193"/>
+        <location filename="../src/mainwindow.cpp" line="196"/>
         <source>Invalid folder</source>
         <translation>无效文件夹</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="214"/>
+        <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Open folder</source>
         <translation>打开文件夹</translation>
     </message>
@@ -146,7 +146,8 @@
         <location filename="../src/main.cpp" line="57"/>
         <location filename="../src/main.cpp" line="62"/>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>相机</translatorcomment>
+        <translation>相机</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="63"/>
@@ -158,20 +159,20 @@
 <context>
     <name>ThumbnailsBar</name>
     <message>
-        <location filename="../src/thumbnailsbar.cpp" line="94"/>
-        <location filename="../src/thumbnailsbar.cpp" line="107"/>
-        <location filename="../src/thumbnailsbar.cpp" line="188"/>
-        <location filename="../src/thumbnailsbar.cpp" line="303"/>
+        <location filename="../src/thumbnailsbar.cpp" line="91"/>
+        <location filename="../src/thumbnailsbar.cpp" line="104"/>
+        <location filename="../src/thumbnailsbar.cpp" line="176"/>
+        <location filename="../src/thumbnailsbar.cpp" line="288"/>
         <source>Take photo</source>
         <translation>拍照</translation>
     </message>
     <message>
-        <location filename="../src/thumbnailsbar.cpp" line="195"/>
+        <location filename="../src/thumbnailsbar.cpp" line="183"/>
         <source>Stop Taking photo</source>
         <translation>结束拍照</translation>
     </message>
     <message>
-        <location filename="../src/thumbnailsbar.cpp" line="315"/>
+        <location filename="../src/thumbnailsbar.cpp" line="300"/>
         <source>Record video</source>
         <translation>录制视频</translation>
     </message>
@@ -183,17 +184,17 @@
         <translation type="vanished">结束拍照</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="119"/>
+        <location filename="../src/videowidget.cpp" line="114"/>
         <source>Stop taking video</source>
         <translation>结束录制</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="232"/>
+        <location filename="../src/videowidget.cpp" line="227"/>
         <source>No webcam found</source>
         <translation>未连接摄像头</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="272"/>
+        <location filename="../src/videowidget.cpp" line="259"/>
         <source>The webcam is in use</source>
         <translation>摄像头已被占用</translation>
     </message>
