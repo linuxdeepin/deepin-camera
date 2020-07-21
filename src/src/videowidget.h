@@ -131,7 +131,7 @@ private:
     QGraphicsView        *m_pNormalView;
     QGraphicsScene       *m_pNormalScene;
     QGraphicsPixmapItem *m_pNormalItem;
-    QGraphicsTextItem    *m_pCountItem; //摄像头异常提示
+    QGraphicsTextItem    *m_pCamErrItem; //摄像头异常提示
     QGraphicsTextItem    *m_pTimeItem;
 
     QGridLayout          *m_pGridLayout;
