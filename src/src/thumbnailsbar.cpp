@@ -80,7 +80,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_lastButton->setFixedHeight(LAST_BUTTON_HEIGHT);
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
-    m_lastButton->setIconSize(QSize(24, 20));
+    m_lastButton->setIconSize(QSize(33, 33));
 
     DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");
@@ -277,7 +277,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     if (nType == ActTakePic) {
         QIcon iconPic(":/images/icons/light/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(24, 20));
+        m_lastButton->setIconSize(QSize(33, 33));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#0081FF");
@@ -289,7 +289,7 @@ void ThumbnailsBar::ChangeActType(int nType)
     } else if (nType == ActTakeVideo) {
         QIcon iconPic(":/images/icons/light/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(26, 16));
+        m_lastButton->setIconSize(QSize(33, 33));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#FF0000");
