@@ -20,7 +20,8 @@
 */
 
 #include "mainwindow.h"
-#include <DApplication>
+//#include <DApplication>
+#include "capplication.h"
 #include <DMainWindow>
 #include <DWidgetUtil>
 #include <QSharedMemory>
@@ -31,19 +32,19 @@ DWIDGET_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
-    DApplication::loadDXcbPlugin();
-    DApplication a(argc, argv);
+    CApplication::loadDXcbPlugin();
+    CApplication a(argc, argv);
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
 
-    QTranslator *translator = new QTranslator;
+//    QTranslator *translator = new QTranslator;
 
-    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
-    if (!bLoaded) {
-        qDebug() << "load transfile error";
-    }
+//    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
+//    if (!bLoaded) {
+//        qDebug() << "load transfile error";
+//    }
 
-    a.installTranslator(translator);
+//    a.installTranslator(translator);
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
@@ -53,13 +54,13 @@ int main(int argc, char *argv[])
 
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
-    a.setApplicationDisplayName("Camera");
+    a.setApplicationDisplayName(QObject::tr("Camera"));
     a.setApplicationVersion("1.0");
     a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
-    a.setProductName("Camera");
-    a.setApplicationDescription("This is camera.");
+    a.setProductName(QObject::tr("Camera"));
+    a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     DApplicationSettings saveTheme;
 

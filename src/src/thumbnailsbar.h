@@ -58,20 +58,17 @@ public:
     {
         return m_nItemCount;
     }
+    void setBtntooltip();
     void ChangeActType(int nType);
     void addPath(QString strPath);
 
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
-    //QListWidget *imageList;
-    //QMap<QString, QPixmap> m_imagemap;
     int m_nMaxItem;
     int m_nStatus; //当前状态
 private:
     int m_nItemCount;
-//    mutable QReadWriteLock m_readlock;
-//    mutable QReadWriteLock m_writelock;
     volatile bool m_bFlag;
     int m_current = 0;
 
@@ -81,16 +78,8 @@ private:
 
     DPushButton *m_lastButton {nullptr};
 
-    bool m_bThumbnailReadOK = false;
-    bool m_bShiftPressed = false;
-    bool m_bMultiSltFlag = false;
-
 private:
-    //void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
-    void keyPressEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
-    void keyReleaseEvent(QKeyEvent *e) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
-    //void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 signals:
     void fitToolBar();//调整工具栏
     void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照

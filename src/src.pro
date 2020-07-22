@@ -15,6 +15,8 @@ DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
 
+include(qtsingleapplication/qtsingleapplication.pri)
+
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -26,7 +28,8 @@ SOURCES += \
     src/Settings.cpp\
     src/imageitem.cpp\
     src/closedialog.cpp \
-    src/settings_translation.cpp
+    src/settings_translation.cpp \
+    src/capplication.cpp
 
 HEADERS += \
     src/mainwindow.h \
@@ -35,9 +38,13 @@ HEADERS += \
     src/LPF_V4L2.h \
     src/videowidget.h \
     src/devnummonitor.h \
-    src/imageitem.h\
-    src/Settings.h\
-    src/closedialog.h
+    src/imageitem.h \
+    src/Settings.h \
+    src/closedialog.h \
+    src/capplication.h
+
+
+
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\
@@ -129,7 +136,7 @@ unix {
 #    INSTALLS += target
 }
 
-INSTALLS += target desktop icon_files manual dbus_service
+#INSTALLS += target desktop icon_files manual dbus_service
 
 #isEmpty(TRANSLATIONS) {
 #     include(translations.pri)
@@ -159,10 +166,10 @@ CONFIG(release, debug|release) {
     }
 }
 
-translations.path = $$APPSHAREDIR/translations
+translations.path = $$PREFIX/share/deepin-camera/translations
 translations.files = $$PWD/translations/*.qm
 
-INSTALLS = target desktop dbus_service icons manual manual_icon app_icon translations
+INSTALLS = target desktop dbus_service icons manual translations
 
 #DSR_LANG_PATH += $$DSRDIR/translations
 #DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""

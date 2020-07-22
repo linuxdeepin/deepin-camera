@@ -38,9 +38,10 @@ extern "C" {
 }
 using namespace ffmpegthumbnailer;
 
-extern QSet<int> m_setIndex;
-extern QMap<int, ImageItem *> m_indexImage;
-extern int m_indexNow;
+extern QSet<int> g_setIndex;
+extern QMap<int, ImageItem *> g_indexImage;
+extern int g_indexNow;
+bool g_bMultiSlt = false; //是否多选
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -143,16 +144,16 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     });
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
-        if (m_setIndex.isEmpty())
+        if (g_setIndex.isEmpty())
         {
             paths = QStringList(path);
             qDebug() << "sigle way";
         } else
         {
             QSet<int>::iterator it;
-            for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
-                paths << m_indexImage.value(*it)->getPath();
-                qDebug() << m_indexImage.value(*it)->getPath();
+            for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+                paths << g_indexImage.value(*it)->getPath();
+                qDebug() << g_indexImage.value(*it)->getPath();
             }
         }
 
@@ -193,16 +194,22 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Dtk::Widget::DDesktopServices::showFolder(strtmp);
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
-        if (m_setIndex.isEmpty())
+        if (g_setIndex.isEmpty())
         {
             DDesktopServices::trash(path);
-        } else
-        {
+        } else {
             QSet<int>::iterator it;
-            for (it = m_setIndex.begin(); it != m_setIndex.end(); ++it) {
-                DDesktopServices::trash(m_indexImage.value(*it)->getPath());
+            for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+                DDesktopServices::trash(g_indexImage.value(*it)->getPath());
             }
+            g_setIndex.clear();
+            g_indexNow = 0;
         }
+    });
+    connect(menu,&QMenu::aboutToHide,this, [ = ] {
+        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
+        g_setIndex.clear();
+        g_bMultiSlt = false;//此时shift键焦点已丢失，且暂时还无法获取到是否按下的信息，因此置false，需要多选重新按下即可
     });
 
     pix.scaled(this->size(), Qt::KeepAspectRatio);
@@ -237,56 +244,25 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
 {
-    if (ev->button() == Qt::LeftButton) {
-        if (m_index != m_indexNow) {
-            //ImageItem *tItem = m_indexImage.value(_indexNow);
-            //tItem->update();
-            m_indexNow = m_index;
-            update();
-        }
-        update();
-    }
-    //    if (m_bMulti) {
-    //        if (m_index.contains(_index)) {
-    //            m_index.remove(_index);
-    //        }
-    //        else {
-    //            m_index.insert(_index);
-    //        }
-    //    }
+    Q_UNUSED(ev);
 }
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
-    if (ev->button() == Qt::RightButton) {
-        //        if (m_index != m_indexNow) {
-        //            m_indexNow = m_index;
-        //            //update();
-        //        }
-        if (m_bMultiSlt) {
-            if (m_setIndex.contains(m_index)) {
-                m_setIndex.remove(m_index);
-            } else {
-                m_setIndex.insert(m_index);
+    g_indexNow = m_index;
+    if (g_bMultiSlt) {
+        if (g_setIndex.contains(m_index)) {
+            if (ev->button() == Qt::LeftButton) {
+                g_setIndex.remove(m_index);
             }
         } else {
-            m_setIndex.clear();
-            m_indexNow = m_index;
+            g_setIndex.insert(m_index);
         }
+    } else {
+        g_setIndex.clear();
+
     }
-    if (ev->button() == Qt::LeftButton) { //左键选择，右键腾出来用于选择菜单
-        if (m_bMultiSlt) {
-            if (m_setIndex.contains(m_index)) {
-                m_setIndex.remove(m_index);
-            } else {
-                m_setIndex.insert(m_index);
-            }
-        } else {
-            m_setIndex.clear();
-            m_indexNow = m_index;
-        }
-    }
-    //this->update();
+    update();
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {
@@ -300,7 +276,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     QRect pixmapRect;
     QFileInfo fileinfo(m_path);
     QString str = fileinfo.suffix();
-    if (m_setIndex.contains(m_index) || (m_setIndex.isEmpty() && m_index == m_indexNow)) {
+    if (g_setIndex.contains(m_index) || (g_setIndex.isEmpty() && m_index == g_indexNow)) {
         QPainterPath backgroundBp;
         QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
                                  backgroundRect.width() - 2, backgroundRect.height() - 2);
@@ -330,29 +306,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
             painter.fillRect(pixmapRect, QBrush(Qt::white));
         else if (themeType == DGuiApplicationHelper::DarkType)
             painter.fillRect(pixmapRect, QBrush(Qt::black));
-        if (!m_pixmap.isNull()) {
-            //            painter.fillRect(pixmapRect,
-            //            QBrush(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color()));
-        }
 
-        //        if (themeType == DGuiApplicationHelper::DarkType) {
-        //            if(bFirstUpdate)
-        //                m_pixmapstring = LOCMAP_SELECTED_DARK;
-        //            else
-        //                m_pixmapstring = LOCMAP_SELECTED_DAMAGED_DARK;
-        //        } else {
-        //            if(bFirstUpdate)
-        //                m_pixmapstring = LOCMAP_SELECTED_LIGHT;
-        //            else
-        //                m_pixmapstring = LOCMAP_SELECTED_DAMAGED_LIGHT;
-        //        }
-
-        //        QPixmap pixmap = utils::base::renderSVG(m_pixmapstring, QSize(60, 60));
         QPainterPath bg;
         bg.addRoundedRect(pixmapRect, 4, 4);
         if (m_pixmap.isNull()) {
             painter.setClipPath(bg);
-            //            painter.drawPixmap(pixmapRect, m_pixmapstring);
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
@@ -367,24 +325,6 @@ void ImageItem::paintEvent(QPaintEvent *event)
         bg0.addRoundedRect(pixmapRect, 4, 4);
         painter.setClipPath(bg0);
 
-        if (!m_pixmap.isNull()) {
-            //            painter.fillRect(pixmapRect,
-            //            QBrush(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color()));
-        }
-
-        //        if (themeType == DGuiApplicationHelper::DarkType) {
-        //            if(bFirstUpdate)
-        //                m_pixmapstring = LOCMAP_NOT_SELECTED_DARK;
-        //            else
-        //                m_pixmapstring = LOCMAP_NOT_SELECTED_DAMAGED_DARK;
-        //        } else {
-        //            if(bFirstUpdate)
-        //                m_pixmapstring = LOCMAP_NOT_SELECTED_LIGHT;
-        //            else
-        //                m_pixmapstring = LOCMAP_NOT_SELECTED_DAMAGED_LIGHT;
-        //        }
-
-        //        QPixmap pixmap = utils::base::renderSVG(m_pixmapstring, QSize(30, 40));
         QPainterPath bg;
         bg.addRoundedRect(pixmapRect, 4, 4);
         if (m_pixmap.isNull()) {
@@ -396,20 +336,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
         }
         this->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     }
-    //    QPixmap blankPix = _pixmap;
-    //    blankPix.fill(Qt::white);
-
-    //    QRect whiteRect;
-    //    whiteRect.setX(pixmapRect.x() + 1);
-    //    whiteRect.setY(pixmapRect.y() + 1);
-    //    whiteRect.setWidth(pixmapRect.width() - 2);
-    //    whiteRect.setHeight(pixmapRect.height() - 2);
 
     QPainterPath bg1;
     bg1.addRoundedRect(pixmapRect, 4, 4);
     painter.setClipPath(bg1);
 
-    //    painter.drawPixmap(pixmapRect, blankPix);
     painter.drawPixmap(pixmapRect, m_pixmap);
 
     painter.save();
@@ -417,17 +348,8 @@ void ImageItem::paintEvent(QPaintEvent *event)
         QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
     painter.drawRoundedRect(pixmapRect, 4, 4);
     painter.restore();
-
-    //    QTime tm(0,0,0,0);
-    //    QPainter painter1;
-    //    painter1.begin(&m_pixmap);
-    //    painter1.setPen(Qt::red);
-    //    painter1.setFont(QFont("SourceHanSansSC", 10, QFont::Black));
-    //    painter1.drawText(0,10,this->width(),this->height(), Qt::AlignBottom, tm.addSecs(m_nDuration/1000000).toString("mm:ss"));
-    ////    qDebug() << QString::number(m_nDuration);
-    ////    qDebug() << tm.addSecs(m_nDuration/1000000).toString("mm:ss");
-    //    painter1.end();
 }
+
 static int open_codec_context(int *stream_idx,
                               AVCodecParameters **dec_par, AVFormatContext *fmt_ctx, enum AVMediaType type)
 {
@@ -466,6 +388,9 @@ static int open_codec_context(int *stream_idx,
         fprintf(stderr, "Failed to allocate the %s codec context\n",
                 av_get_media_type_string(type));
         return AVERROR(ENOMEM);
+    }
+    if (avcodec_open2(dec_ctx, dec, nullptr) < 0) {
+        fprintf(stderr, "Could not open the codec\n");
     }
     /* Copy codec parameters from input stream to output codec context */
     if ((ret = avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
@@ -513,7 +438,11 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
     if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
         return mi;
     }
+
     m_nDuration = av_ctx->duration;
+    if (m_nDuration < 0) {
+        return mi;
+    }
     avformat_close_input(&av_ctx);
 
     return true;

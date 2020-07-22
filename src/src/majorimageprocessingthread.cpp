@@ -78,6 +78,8 @@ void MajorImageProcessingThread::run()
         if (video_capture_get_save_video()) {
             int size = (frame->width * frame->height * 3) / 2;
 
+
+
             uint8_t *input_frame = frame->yuv_frame;
 
             /*
@@ -97,9 +99,13 @@ void MajorImageProcessingThread::run()
                 }
             }
             /*把帧加入编码队列*/
-            if (!get_capture_pause())
+            if (!get_capture_pause()) {
+                set_video_timestamptmp(static_cast<int64_t>(frame->timestamp));
                 encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
-
+            } else {
+                int64_t timespausestamp = get_video_timestamptmp();
+                set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
+            }
             /*
              * exponencial scheduler
              *  with 50% threshold (milisec)
@@ -123,7 +129,7 @@ void MajorImageProcessingThread::run()
         }
         if (!stopped) {
             //目前转换方法有问题，先保存图像为jpg，再读取出来，后续优化为从内存读取，待处理
-            save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
+//            save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
             if (m_bTake) {
                 int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
                 if (nRet < 0) {
@@ -132,13 +138,35 @@ void MajorImageProcessingThread::run()
 
                 m_bTake = false;
             }
+            jpeg_encoder_ctx_t *jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
+            if (jpeg_ctx == nullptr) {
+                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
+                exit(-1);
+            }
+            uint8_t *jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
+            if (jpeg == nullptr) {
+                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
+                exit(-1);
+            }
+            initialization (jpeg_ctx, frame->width, frame->height);
+            initialize_quantization_tables (jpeg_ctx);
+
+            int jpeg_size = encode_jpeg(frame->yuv_frame, jpeg, jpeg_ctx, 1);
             m_rwMtxImg.lock();
-            m_img = QImage("a123");
+            if (m_img.loadFromData(jpeg, jpeg_size) == true) {
+//            m_img = QImage("a123");
+                emit SendMajorImageProcessing(m_img, result);
+            }
             m_rwMtxImg.unlock();
-            emit SendMajorImageProcessing(m_img, result);
+
+            free(jpeg);
+            free(jpeg_ctx);
+            jpeg = nullptr;
+            jpeg_ctx = nullptr;
         }
         v4l2core_release_frame(vd1, frame);
         rgb24 = nullptr;
+
 //        msleep(1000 / 30);
     }
     v4l2core_stop_stream(vd1);

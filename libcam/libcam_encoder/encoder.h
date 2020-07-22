@@ -124,6 +124,31 @@
 #define VIDEO_BUFF_USED    (1)
 
 /*
+ * set pause timestamp
+ * args:
+ *   value - timestamp value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_pause_timestamp(int64_t timestamp);
+
+/*
+ * get pause timestamp
+ * args:
+ *   value: nome
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause timestamp
+ */
+int64_t get_video_pause_timestamp(void);
+
+
+/*
  * codec data struct used for encoder context
  * we set all avcodec stuff here so that we don't
  * need to export any of it's symbols in the public API

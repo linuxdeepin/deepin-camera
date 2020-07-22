@@ -43,8 +43,8 @@ extern int debug_level;
 
 static config_t my_config =
 {
-    .width = 1280,
-    .height = 720,
+    .width = 1920,
+    .height = 1080,
     .format = V4L2_PIX_FMT_YUYV,
 	.render = "sdl",
 	.gui = "qt5",

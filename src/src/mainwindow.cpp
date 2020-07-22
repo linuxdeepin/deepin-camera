@@ -20,7 +20,7 @@
 */
 
 #include "mainwindow.h"
-
+#include "capplication.h"
 #include <QListWidgetItem>
 #include <QTextLayout>
 #include <QStyleFactory>
@@ -40,6 +40,9 @@
 #include <dsettingswidgetfactory.h>
 
 using namespace dc;
+extern bool g_bMultiSlt; //是否多选
+extern QSet<int> g_setIndex;
+extern int g_indexNow;
 
 QString CMainWindow::m_lastfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
@@ -298,11 +301,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     initConnection();
 }
 
-//DSettings *CMainWindow::getDsetMber()
-//{
-//    return pDSettings;
-//}
-
 CMainWindow::~CMainWindow()
 {
     qDebug() << "stop_encoder_thread";
@@ -335,14 +333,7 @@ void CMainWindow::initUI()
     m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
     DWidget *wget = new DWidget;
     QVBoxLayout *hboxlayout = new QVBoxLayout;
-    //创建设置存储后端，没有添加backend的时候，读取dsettings属性是json文件的
-    //QSettingBackend *pBackend = new QSettingBackend(m_strCfgPath);
-    //pDSettings->setBackend(pBackend);
-//    g_lastFileName = pDSettings->value("base.save.datapath").toString();
-//    if (g_lastFileName.size() && g_lastFileName[0] == '~') {
-//        g_lastFileName.replace(0, 1, QDir::homePath());
-//    }
-//    m_pSettingDialog->setBackEndinIt(m_strCfgPath);
+
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
         QString str = QDir::homePath();
@@ -356,18 +347,7 @@ void CMainWindow::initUI()
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     }
-//    QPalette *pal = new QPalette(m_videoPre.palette());
-//    pal->setColor(QPalette::Background, Qt::black); //设置黑色边框
-//    m_videoPre.setAutoFillBackground(true);
-//    m_videoPre.setPalette(*pal);
-//    _animationlable = new AnimationLabel;
-//    _animationlable->setAttribute(Qt::WA_TranslucentBackground);
-//    _animationlable->setWindowFlags(Qt::FramelessWindowHint);
-//    _animationlable->setParent(this);
-//    _animationlable->setGeometry(width() / 2 - 100, height() / 2 - 100, 200, 200);
 
-    //m_preWgt = new PreviewWidget(centralWidget());
-    //hboxlayout->addWidget(&m_preWgt);
     hboxlayout->addWidget(&m_videoPre);
     hboxlayout->setContentsMargins(0, 0, 0, 0);
 
@@ -410,9 +390,9 @@ void CMainWindow::initUI()
     });
 
     m_thumbnail->setVisible(true);
-    m_thumbnail->setMaximumWidth(1200);
+    //m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
-    m_thumbnail->addPath(CMainWindow::m_lastfilename);
+
 
     QString test = CMainWindow::m_lastfilename;
 
@@ -444,6 +424,7 @@ void CMainWindow::initUI()
     m_videoPre.setInterval(nDelayTime);
     m_videoPre.setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
+    m_thumbnail->addPath(CMainWindow::m_lastfilename);
 }
 
 void CMainWindow::initTitleBar()
@@ -457,7 +438,7 @@ void CMainWindow::initTitleBar()
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
 
     m_pTitlePicBtn->setIcon(iconPic);
-    m_pTitlePicBtn->setIconSize(QSize(19, 16));
+    m_pTitlePicBtn->setIconSize(QSize(26, 26));
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -476,7 +457,7 @@ void CMainWindow::initTitleBar()
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
     m_pTitleVdBtn->setFocusPolicy(Qt::NoFocus);
     m_pTitleVdBtn->setIcon(iconVd);
-    m_pTitleVdBtn->setIconSize(QSize(26, 16));
+    m_pTitleVdBtn->setIconSize(QSize(26, 26));
 
     listButtonBox.append(m_pTitlePicBtn);
     listButtonBox.append(m_pTitleVdBtn);
@@ -485,11 +466,11 @@ void CMainWindow::initTitleBar()
 
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn->setFixedSize(QSize(37, 37));
+    pSelectBtn->setIconSize(QSize(37, 37));
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        pSelectBtn->setIconSize(QSize(12, 12));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
-        pSelectBtn->setIconSize(QSize(24, 24));
         pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
     }
 
@@ -499,6 +480,19 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
+    connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
+        if (m_videoPre.getCapstatus())
+        {
+            int ret = m_closeDlg->exec();
+            if (ret == 1) {
+                m_videoPre.endBtnClicked();
+                dApp->quit();
+            }
+        } else
+        {
+            dApp->quit();
+        }
+    });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
     connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
@@ -563,24 +557,24 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     int width = this->width();
-    int height = this->height();
-    if (m_thumbnail) {
-        int n = m_thumbnail->getItemCount();
-        int nWidth;
-        if (n == 0) {
-            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
-        } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;
-        }
-
-        qDebug() << n << " " << nWidth;
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, 90);
-
-        m_thumbnail->move((width - m_thumbnail->width()) / 2,
-                          height - m_thumbnail->height() - 5);
-        m_thumbnail->m_nMaxItem = width;
+    //int height = this->height();
+    int nOldWidth = m_thumbnail->m_nMaxItem;
+    m_thumbnail->m_nMaxItem = width;
+    if (nOldWidth > width) {//画面缩小了，要重新调整；
+        m_thumbnail->onFoldersChanged("");
+    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
+        m_thumbnail->hide();
+        QTimer::singleShot(200, this, [=]
+        {
+            m_thumbnail->onFoldersChanged("");
+            m_thumbnail->show();
+        });
     }
 
+    if (m_thumbnail) {
+        onFitToolBar();
+    }
+    m_videoPre.resize(this->size());
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
@@ -620,13 +614,17 @@ void CMainWindow::onFitToolBar()
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 4;//4是选中边框宽度
+            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
         }
 
-        m_thumbnail->resize(/*qMin(width,TOOLBAR_MINIMUN_WIDTH)*/ nWidth, THUMBNAIL_HEIGHT + 30);
+        m_thumbnail->resize(qMin(this->width(),nWidth), THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
+
+        //qDebug() << "nCount " << n << " nWidth " << nWidth << " winWidth " << this->width();
+
+        //m_thumbnail->update();
     }
 }
 
@@ -659,14 +657,6 @@ void CMainWindow::menuItemInvoked(QAction *action)
 {
     Q_UNUSED(action);
 }
-
-//void CMainWindow::keyPressEvent(QKeyEvent *ev)
-//{
-//    if (ev->key() == Qt::Key_Escape) {
-//        m_setwidget->hide();
-//    }
-//    QWidget::keyReleaseEvent(ev);
-//}
 
 void CMainWindow::onTitlePicBtn()
 {
@@ -742,29 +732,22 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
-//    if (settingDialog::getLastFileName().size() && settingDialog::getLastFileName()[0] == '~') {
-//        settingDialog::getLastFileName().replace(0, 1, QDir::homePath());
-//    }
-//    m_fileWatcher.addPath(settingDialog::getLastFileName());
-//    m_thumbnail->addPath(settingDialog::getLastFileName());
-//    m_videoPre.setSaveFolder(settingDialog::getLastFileName());
-
-//    int nContinuous = m_pSettingDialog->getValue("photosetting.photosnumber.takephotos").toInt();
-//    int nDelayTime = m_pSettingDialog->getValue("photosetting.photosdelay.photodelays").toInt();
-
     /**********************************************/
+    if (QDir(Settings::get().getOption("base.save.datapath").toString()).exists() == false) {
+        CMainWindow::m_lastfilename = QString("~") + QString("/Videos");
+        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
+    }
+
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
         CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
     }
 
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    if (QDir(CMainWindow::m_lastfilename).isEmpty()) {
+    if (QDir(CMainWindow::m_lastfilename).exists() == false) {
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
-        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
     }
-    //CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    QString test = CMainWindow::m_lastfilename;
 
+//    QString test = CMainWindow::m_lastfilename;
     m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
     m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
@@ -810,6 +793,7 @@ void CMainWindow::onTakePicDone()
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
+    m_thumbnail->setBtntooltip();
 }
 
 void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
@@ -824,7 +808,7 @@ void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件�
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        pSelectBtn->setIconSize(QSize(12, 12));
+        pSelectBtn->setIconSize(QSize(37, 37));
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
         if (m_nActTpye == ActTakePic) {
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -833,9 +817,9 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
         }
     }
     if (type == DGuiApplicationHelper::DarkType) {
+        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
         if (m_nActTpye == ActTakePic) {
-            pSelectBtn->setIconSize(QSize(24, 24));
-            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            //pSelectBtn->setIconSize(QSize(20, 20));
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
         } else {
             m_pTitlePicBtn->setIcon(QIcon(":/images/icons/dark/button/photograph_dark.svg"));
@@ -843,10 +827,19 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
     }
 }
 
+void CMainWindow::keyPressEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        g_bMultiSlt = true;
+        g_setIndex.insert(g_indexNow);
+    }
+}
 
-
-//void CMainWindow::onCapturepause(Qt::WindowState windowState)
-//{
-//    if (windowState == Qt::WindowMinimized)
-//        set_capture_pause(1);
-//}
+void CMainWindow::keyReleaseEvent(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Shift) {
+        g_bMultiSlt = false;
+        g_setIndex.clear();
+        //g_setIndex.insert(g_indexNow);
+    }
+}

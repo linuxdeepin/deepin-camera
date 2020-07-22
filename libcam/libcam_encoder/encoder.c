@@ -76,6 +76,37 @@ static int video_read_index = 0;
 static int video_write_index = 0;
 static int video_scheduler = 0;
 
+static int64_t video_pause_timestamp = 0;
+
+/*
+ * set pause timestamp
+ * args:
+ *   value - timestamp value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_pause_timestamp(int64_t timestamp){
+    video_pause_timestamp = timestamp;
+}
+
+/*
+ * get pause timestamp
+ * args:
+ *   value: nome
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause timestamp
+ */
+int64_t get_video_pause_timestamp()
+{
+    return video_pause_timestamp;
+}
+
 /*
  * set verbosity
  * args:
@@ -1137,8 +1168,14 @@ int encoder_add_video_frame(uint8_t *frame, int size, int64_t timestamp, int isK
 		if(verbosity > 0)
 			printf("ENCODER: ref ts = %" PRId64 "\n", timestamp);
 	}
+    int64_t video_pause_timestamp = get_video_pause_timestamp();
+    if(video_pause_timestamp != 0)
+    {
+        reference_pts += video_pause_timestamp;
+        set_video_pause_timestamp(0);
+    }
 
-	int64_t pts = timestamp - reference_pts;
+    int64_t pts = timestamp - reference_pts;
 
 	__LOCK_MUTEX( __PMUTEX );
 	int flag = video_ring_buffer[video_write_index].flag;

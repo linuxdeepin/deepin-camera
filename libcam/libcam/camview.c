@@ -73,6 +73,18 @@ static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
 /*暂停录制*/
 static int capture_pause = 0;
 
+/*暂停时刻的视频时间*/
+static int64_t video_timestamp_tmp = 0;
+
+/*音频时间引用*/
+static int64_t audio_timestamp_reference = 0;
+
+/*暂停时刻的音频时间*/
+static int64_t audio_timestamp_tmp = 0;
+
+/*音频的暂停总时间*/
+static int64_t audio_pause_timestamp = 0;
+
 /*continues focus*/
 static int do_soft_autofocus = 0;
 /*single time focus (can happen during continues focus)*/
@@ -90,6 +102,36 @@ static int my_encoder_status = 0;
 
 static char status_message[80];
 
+
+/*
+ * set pause times
+ * args:
+ *    value - timestamp
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_timestamptmp(int64_t timestamp)
+{
+    video_timestamp_tmp = timestamp;
+}
+
+/*
+ * get pause times
+ * args:
+ *    value: none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause_time
+ */
+int64_t get_video_timestamptmp(void)
+{
+    return video_timestamp_tmp;
+}
 
 /*
  * set capture_pause flag
@@ -578,12 +620,23 @@ static void *audio_processing_loop(void *data)
     {
         if(get_capture_pause())
         {
+            int ret = audio_get_next_buffer(audio_ctx, audio_buff, sample_type, my_audio_mask);
+            if(ret == 0)
+            {
+                audio_pause_timestamp = audio_buff->timestamp - audio_timestamp_tmp;
+            }
             continue;
         }
 
         int ret = audio_get_next_buffer(audio_ctx, audio_buff,
                 sample_type, my_audio_mask);
 
+        audio_timestamp_tmp = audio_buff->timestamp;
+        if(audio_pause_timestamp != 0)
+        {
+            audio_timestamp_reference += audio_pause_timestamp;
+            audio_pause_timestamp = 0;
+        }
         if(ret > 0)
         {
             /*
@@ -597,7 +650,7 @@ static void *audio_processing_loop(void *data)
         }
         else if(ret == 0)
         {
-            encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp;
+            encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp - audio_timestamp_reference;
 
             /*OSD vu meter level*/
             render_set_vu_level(audio_buff->level_meter);
