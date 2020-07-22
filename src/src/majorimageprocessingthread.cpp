@@ -138,6 +138,8 @@ void MajorImageProcessingThread::run()
 
                 m_bTake = false;
             }
+
+            //将帧图像转换为jpg图像，通过QImage转换，发送到界面端现实。
             jpeg_encoder_ctx_t *jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
             if (jpeg_ctx == nullptr) {
                 fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
