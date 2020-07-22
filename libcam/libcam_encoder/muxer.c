@@ -603,7 +603,7 @@ int encoder_disk_supervisor(int treshold, const char *path)
     else
     {
         fprintf(stderr, "ENCODER: couldn't get disk stats for %s\n", path);
-        return (1); /* don't invalidate video capture*/
+        return (0); /* don't invalidate video capture*/
     }
 
     if(verbosity > 0)

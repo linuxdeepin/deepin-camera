@@ -34,6 +34,7 @@
 #include <DApplicationHelper>
 #include <QGraphicsBlurEffect>
 #include <QKeyEvent>
+#include <QDir>
 
 #define MAX_REC_TIME 60 * 30 /*Maximum record time*/
 
@@ -275,6 +276,9 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
             m_imgPrcThread->m_rwMtxImg.unlock();
             m_pNormalItem->setPixmap(m_pixmap);
             m_pNormalItem->setPos(0, 0);
+            if (get_encoder_status() == 0 && getCapstatus() == true) {
+                endBtnClicked();
+            }
             break;
         default:
             break;
@@ -527,7 +531,8 @@ void videowidget::endBtnClicked()
     g_strFileName = nullptr;
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
-        stop_encoder_thread();
+        if (video_capture_get_save_video() == 1)
+            stop_encoder_thread();
         setCapstatus(false);
         reset_video_timer();
     }
@@ -623,7 +628,7 @@ void videowidget::onTakePic()
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
         countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧
-        emit takePicDone();
+//        emit takePicDone();
         return;
     }
     if (countTimer->isActive()) {
@@ -708,6 +713,9 @@ void videowidget::startTakeVideo()
             qDebug() << "start takeVideo";
             g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
             QString str = m_strFolder;
+            if (QDir(m_strFolder).exists() == false) {
+                m_strFolder = QDir::homePath() + QString("/Videos");
+            }
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(g_strFileName.toStdString().c_str());
 

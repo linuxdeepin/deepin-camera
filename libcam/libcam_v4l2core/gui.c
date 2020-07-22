@@ -488,7 +488,7 @@ void set_video_path(const char *path)
 
 	video_path = strdup(path);
 
-    if(strcmp(video_path,"") == 0)
+    if(access(video_path, 0) != 0)
     {
         video_path = getenv("HOME");
         strcat(video_path,"/Videos");
