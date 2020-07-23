@@ -330,10 +330,16 @@ void CMainWindow::slotPopupSettingsDialog()
 
 void CMainWindow::initUI()
 {
-    this->setWindowFlag(Qt::FramelessWindowHint);
+//    this->setWindowFlag(Qt::FramelessWindowHint);
     m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
-    DWidget *wget = new DWidget;
-    QVBoxLayout *hboxlayout = new QVBoxLayout;
+//    DWidget *wget = new DWidget;
+//    QHBoxLayout *hboxlayout = new QHBoxLayout(this);
+    this->resize(MinWindowWidth, MinWindowHeight);
+    m_videoPre = new videowidget(this);
+
+    QPalette paletteTime = m_videoPre->palette();
+    paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
+    m_videoPre->setPalette(paletteTime);
 
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
     if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
@@ -344,16 +350,12 @@ void CMainWindow::initUI()
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
     QString test1 = CMainWindow::m_lastfilename;
 
-    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     }
+    this->setCentralWidget(m_videoPre);
 
-    hboxlayout->addWidget(&m_videoPre);
-    hboxlayout->setContentsMargins(0, 0, 0, 0);
-
-    wget->setLayout(hboxlayout);
-    setCentralWidget(wget);
 
     setupTitlebar();
 
@@ -400,7 +402,7 @@ void CMainWindow::initUI()
 
     QString test = CMainWindow::m_lastfilename;
 
-    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
     switch (nContinuous) {
@@ -425,8 +427,8 @@ void CMainWindow::initUI()
         nDelayTime = 0;
         break;
     }
-    m_videoPre.setInterval(nDelayTime);
-    m_videoPre.setContinuous(nContinuous);
+    m_videoPre->setInterval(nDelayTime);
+    m_videoPre->setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
 }
@@ -485,11 +487,11 @@ void CMainWindow::initTitleBar()
 void CMainWindow::initConnection()
 {
     connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
-        if (m_videoPre.getCapstatus())
+        if (m_videoPre->getCapstatus())
         {
             int ret = m_closeDlg->exec();
             if (ret == 1) {
-                m_videoPre.endBtnClicked();
+                m_videoPre->endBtnClicked();
                 dApp->quit();
             }
         } else
@@ -508,32 +510,32 @@ void CMainWindow::initConnection()
     //修改标题栏按钮状态
     connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
     //录像信号
-    connect(m_thumbnail, SIGNAL(takeVd()), &m_videoPre, SLOT(onTakeVideo()));
+    connect(m_thumbnail, SIGNAL(takeVd()), m_videoPre, SLOT(onTakeVideo()));
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
-    connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onTakePic()));
+    connect(m_thumbnail, SIGNAL(takePic()), m_videoPre, SLOT(onTakePic()));
 
 
-    connect(&m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
+    connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
     //拍照取消
-    connect(&m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
+    connect(m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
     //拍照结束
-    connect(&m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
+    connect(m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
     //录制结束
-    connect(&m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
+    connect(m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
     //录制取消 （倒计时3秒内的）
-    connect(&m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
+    connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //设备切换信号
-    connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
+    connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
 
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
 
-    connect(m_devnumMonitor, SIGNAL(existDevice()), &m_videoPre, SLOT(restartDevices()));
+    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
 
     //标题栏图片按钮
     connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
@@ -584,20 +586,20 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     if (m_thumbnail) {
         onFitToolBar();
     }
-//    m_videoPre.resize(this->size());
-    m_videoPre.repaint();
+    //m_videoPre->resize(this->size());
+    m_videoPre->update();
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
 {
-    if (m_videoPre.getCapstatus()) {
+    if (m_videoPre->getCapstatus()) {
         int ret = m_closeDlg->exec();
         switch (ret) {
         case 0:
             event->ignore();
             break;
         case 1:
-            m_videoPre.endBtnClicked();
+            m_videoPre->endBtnClicked();
             event->accept();
             break;
         default:
@@ -759,7 +761,7 @@ void CMainWindow::onSettingsDlgClose()
     }
 
 //    QString test = CMainWindow::m_lastfilename;
-    m_videoPre.setSaveFolder(CMainWindow::m_lastfilename);
+    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
 
@@ -790,8 +792,8 @@ void CMainWindow::onSettingsDlgClose()
         nDelayTime = 0;
         break;
     }
-    m_videoPre.setInterval(nDelayTime);
-    m_videoPre.setContinuous(nContinuous);
+    m_videoPre->setInterval(nDelayTime);
+    m_videoPre->setContinuous(nContinuous);
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
@@ -807,12 +809,12 @@ void CMainWindow::onTakePicDone()
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
     QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre.m_imgPrcThread->m_strPath);
+        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
         if (!file.exists())
         {
             usleep(200000);
         }
-        m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
+        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
     });
 
 }
@@ -821,12 +823,12 @@ void CMainWindow::onTakePicOnce()
 {
     qDebug() << "onTakePicOnce";
     QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre.m_imgPrcThread->m_strPath);
+        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
         if (!file.exists())
         {
             usleep(200000);
         }
-        m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
+        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
     });
 }
 
@@ -846,7 +848,7 @@ void CMainWindow::onTakeVdDone()
     m_thumbnail->show();
     onEnableSettings(true);
     QTimer::singleShot(200, this, [ = ] {
-        QString strFileName = m_videoPre.getFolder() + "/" + g_strFileName;
+        QString strFileName = m_videoPre->getFolder() + "/" + g_strFileName;
         QFile file(strFileName);
         if (!file.exists())
         {

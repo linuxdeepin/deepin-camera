@@ -89,6 +89,7 @@ __BEGIN_DECLS
 #define E_WRONG_MARKER_ERR        (-29)
 #define E_NO_EOI_ERR              (-30)
 #define E_FILE_IO_ERR             (-31)
+#define E_NO_DEVICE_ERR         (-32)
 #define E_UNKNOWN_ERR             (-40)
 
 /*
