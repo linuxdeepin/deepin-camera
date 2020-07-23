@@ -56,7 +56,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
-    //eff = new videoEffect;
 
     countTimer = new QTimer(this);
     connect(countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
@@ -77,27 +76,16 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     //设置字体颜色
     QPalette paletteTime = m_btnVdTime->palette();
     paletteTime.setColor(QPalette::ButtonText, QColor("#FF2C2C"));
-    //paletteTime.setColor(QPalette::Button, Qt::transparent);
     m_btnVdTime->setPalette(paletteTime);
 
     DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         pa_cb.setBrush(QPalette::Light, QColor(/*"#D2D2D2"*/255, 255, 255, 51)); //浅色
-        //pa_cb.setBrush(QPalette::Dark, QColor(155, 155, 155, 230));
     } else {
-        //pa_cb.setBrush(QPalette::Light, QColor(155, 155, 155, 230));
         pa_cb.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     }
     m_btnVdTime->setPalette(pa_cb);
 
-    //设置模糊
-//    QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
-//    //effect.setBlurRadius(1.5);
-//    effect->setBlurHints(QGraphicsBlurEffect::QualityHint);
-//    m_btnVdTime->setGraphicsEffect(effect);
-
-//    与QPalette效果相同
-//    m_btnVdTime->setStyleSheet(QString("background-color:rgba(155,155,155,230);border-style: outset;border-radius: 8px;"));
 
     m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
     m_time.setHMS(0, 0, 0, 0);
@@ -168,10 +156,6 @@ void videowidget::init()
     m_imgPrcThread->m_bTake = false;
 
     m_flashLabel.setWindowFlag(Qt::WindowType::ToolTip);
-    //黑色主题下黑色闪光灯，放到show之前调用都没效果
-//    QPalette pltFlash = m_btnVdTime->palette();
-//    pltFlash.setColor(QPalette::ButtonText, QColor("#FFFFFF"));
-//    m_flashLabel.setPalette(pltFlash);
     m_flashLabel.hide();
 
     //启动视频
@@ -181,12 +165,13 @@ void videowidget::init()
         m_pCamErrItem->hide();
         m_imgPrcThread->start();
     } else {
+        //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
+        //如果不为空，则关闭vd
         if (vd != nullptr) {
             close_v4l2_device_handler();
             vd = nullptr;
         }
-
         showNocam();
         qDebug() << "No webcam found" << endl;
     }
@@ -228,6 +213,7 @@ void videowidget::showNocam()
     QString str(tr("No webcam found"));//未连接摄像头
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
+    m_pCamErrItem->show();
     m_pNormalItem->setPos((800 - nWidth) / 2, (533 - nHeight) / 3);
     m_pCamErrItem->setPos((800 - nWidth) / 2 + 30, (533 - nHeight) / 3 + nHeight + 10);
 }
@@ -260,6 +246,8 @@ void videowidget::showCamUsed()
     QString str(tr("The webcam is in use"));//摄像头已被占用
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
+//    QColor textcol(255, 255, 255, 255);
+//    m_pCamErrItem->setDefaultTextColor(textcol);
     m_pNormalItem->setPos((this->width() - nWidth) / 2, (this->height() - nHeight) / 3);
     m_pCamErrItem->show();
     m_pCamErrItem->setPos((this->width() - nWidth) / 2 + 30, (this->height() - nHeight) / 3 + nHeight + 10);
@@ -288,7 +276,11 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
 
 void videowidget::onReachMaxDelayedFrames()
 {
-    showCamUsed();
+    if (g_bFoundDevice)
+        showCamUsed();
+    else {
+        showNocam();
+    }
     emit setBtnStatues(false);
 }
 
@@ -344,7 +336,6 @@ void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
         return;
     item->setFont(QFont("SourceHanSansSC", size, QFont::ExtraLight));
     item->setDefaultTextColor(QColor(40, 39, 39));
-    //item->setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
     item->setPlainText(str);
 
 }
@@ -366,7 +357,7 @@ void videowidget::resizePixMap()
 {
     if (m_pTimeItem->isVisible()) {
         QRect rect = this->rect();
-        m_pNormalScene->setSceneRect(rect);
+//        m_pNormalScene->setSceneRect(rect);
         int x = this->x();
         int y = this->y();
 
@@ -378,6 +369,12 @@ void videowidget::resizePixMap()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
+    this->repaint();
+}
+
+void videowidget::paintEvent(QPaintEvent *e)
+{
+    Q_UNUSED(e);
     int nWidth = this->width();
     int nHeight = this->height();
 
@@ -390,21 +387,21 @@ void videowidget::resizeEvent(QResizeEvent *size)
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
                           nHeight - m_btnVdTime->height() - 5);
     }
+
     if (m_pNormalItem->isVisible()) {
         m_pNormalItem->setPos((this->width() - m_pNormalItem->pixmap().toImage().width()) / 2, (this->height() - m_pNormalItem->pixmap().toImage().height()) / 3);
+        m_pNormalItem->show();
+    } else {
+        m_pNormalItem->hide();
     }
 
     if (m_pCamErrItem->isVisible()) {
         m_pCamErrItem->setPos((this->width() - m_pNormalItem->pixmap().toImage().width()) / 2 + 30, (this->height() - m_pNormalItem->pixmap().toImage().height()) / 3 + m_pNormalItem->pixmap().toImage().height() + 10);
+        m_pCamErrItem->show();
+    } else {
+        m_pCamErrItem->hide();
     }
-
-
     resizePixMap();
-}
-
-void videowidget::paintEvent(QPaintEvent *e)
-{
-    Q_UNUSED(e);
 }
 
 void videowidget::showCountdown()
@@ -435,7 +432,6 @@ void videowidget::showCountdown()
     if (m_nInterval == 0) {
         if (VIDEO_STATE == AUDIO) {
             if (!getCapstatus()) {
-
                 /*m_bActive录制状态判断
                 *false：非录制状态
                 *true：录制状态
@@ -560,8 +556,6 @@ void videowidget::changeDev()
     QString str;
     if (vd != nullptr) {
         str = QString(vd->videodevice);
-
-        close_v4l2_device_handler();
     }
     v4l2_device_list_t *devlist = get_device_list();
     if (devlist->num_devices == 2) {
@@ -569,9 +563,9 @@ void videowidget::changeDev()
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
                 if (camInit(devlist->list_devices[i].device) == E_OK) {
+                    g_bFoundDevice = true;
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-                    g_bFoundDevice = true;
                     m_pCamErrItem->hide();
                 }
                 break;

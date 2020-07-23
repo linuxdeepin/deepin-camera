@@ -392,6 +392,8 @@ void CMainWindow::initUI()
 
     m_thumbnail->show();
     m_thumbnail->setVisible(true);
+    m_thumbnail->show();
+
     //m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
 
@@ -526,7 +528,7 @@ void CMainWindow::initConnection()
     connect(&m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), &m_videoPre, SLOT(changeDev()));
-    //单设备信号
+
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
@@ -582,7 +584,8 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     if (m_thumbnail) {
         onFitToolBar();
     }
-    m_videoPre.resize(this->size());
+//    m_videoPre.resize(this->size());
+    m_videoPre.repaint();
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
@@ -625,7 +628,7 @@ void CMainWindow::onFitToolBar()
             nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
         }
 
-        m_thumbnail->resize(qMin(this->width(),nWidth), THUMBNAIL_HEIGHT + 30);
+        m_thumbnail->resize(qMin(this->width(), nWidth), THUMBNAIL_HEIGHT + 30);
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
@@ -803,10 +806,10 @@ void CMainWindow::onTakePicDone()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    QTimer::singleShot(200, this, [=]
-    {
+    QTimer::singleShot(200, this, [ = ] {
         QFile file(m_videoPre.m_imgPrcThread->m_strPath);
-        if (!file.exists()) {
+        if (!file.exists())
+        {
             usleep(200000);
         }
         m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
@@ -817,10 +820,10 @@ void CMainWindow::onTakePicDone()
 void CMainWindow::onTakePicOnce()
 {
     qDebug() << "onTakePicOnce";
-    QTimer::singleShot(200, this, [=]
-    {
+    QTimer::singleShot(200, this, [ = ] {
         QFile file(m_videoPre.m_imgPrcThread->m_strPath);
-        if (!file.exists()) {
+        if (!file.exists())
+        {
             usleep(200000);
         }
         m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
@@ -842,11 +845,11 @@ void CMainWindow::onTakeVdDone()
     //m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
     onEnableSettings(true);
-    QTimer::singleShot(200, this, [=]
-    {
+    QTimer::singleShot(200, this, [ = ] {
         QString strFileName = m_videoPre.getFolder() + "/" + g_strFileName;
         QFile file(strFileName);
-        if (!file.exists()) {
+        if (!file.exists())
+        {
             usleep(200000);
         }
         m_thumbnail->addFile(strFileName);

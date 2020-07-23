@@ -94,6 +94,8 @@ public slots:
     void changeDev();
     void endBtnClicked();
     void restartDevices();
+
+
 private slots:
     void ReceiveMajorImage(QImage image, int result);
     void onReachMaxDelayedFrames();
@@ -121,11 +123,11 @@ private:
     //显示录制和拍照倒计时
     void showCountDownLabel();
 
-    //未发现摄像头
-    void showNocam();
-
     //摄像头被占用
     void showCamUsed();
+
+    //未发现摄像头
+    void showNocam();
 
     //开始录像
     void startTakeVideo();
@@ -171,7 +173,6 @@ private:
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-
     QTime                m_time;
     int m_nCount; //录制计时
 };
