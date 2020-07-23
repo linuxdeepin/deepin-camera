@@ -43,6 +43,7 @@ using namespace dc;
 extern bool g_bMultiSlt; //是否多选
 extern QSet<int> g_setIndex;
 extern int g_indexNow;
+extern QString g_strFileName;
 
 QString CMainWindow::m_lastfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
@@ -389,6 +390,7 @@ void CMainWindow::initUI()
         Dtk::Widget::DDesktopServices::showFolder(save_path);
     });
 
+    m_thumbnail->show();
     m_thumbnail->setVisible(true);
     //m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
@@ -495,9 +497,9 @@ void CMainWindow::initConnection()
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+//    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
 
@@ -512,8 +514,14 @@ void CMainWindow::initConnection()
     //拍照信号--显示倒计时
     connect(m_thumbnail, SIGNAL(takePic()), &m_videoPre, SLOT(onTakePic()));
 
+
+    connect(&m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
+    //拍照取消
+    connect(&m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
     //拍照结束
     connect(&m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
+    //录制结束
+    connect(&m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
     //录制取消 （倒计时3秒内的）
     connect(&m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //设备切换信号
@@ -560,17 +568,17 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     //int height = this->height();
     int nOldWidth = m_thumbnail->m_nMaxItem;
     m_thumbnail->m_nMaxItem = width;
-    if (nOldWidth > width) {//画面缩小了，要重新调整；
-        m_thumbnail->onFoldersChanged("");
-    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
-        m_thumbnail->hide();
-        QTimer::singleShot(200, this, [=]
-        {
-            m_thumbnail->onFoldersChanged("");
-            m_thumbnail->show();
-        });
-    }
-
+//    if (nOldWidth > width) {//画面缩小了，要重新调整；
+//        m_thumbnail->onFoldersChanged("");
+//    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
+//        m_thumbnail->hide();
+//        QTimer::singleShot(200, this, [=]
+//        {
+//            m_thumbnail->onFoldersChanged("");
+//            m_thumbnail->show();
+//        });
+//    }
+    //m_thumbnail->onFoldersChanged("");
     if (m_thumbnail) {
         onFitToolBar();
     }
@@ -790,17 +798,66 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
+    qDebug() << "onTakePicDone";
+    onEnableTitleBar(3); //恢复按钮状态
+    onEnableSettings(true);
+    m_thumbnail->m_nStatus = STATNULL;
+    m_thumbnail->setBtntooltip();
+    QTimer::singleShot(200, this, [=]
+    {
+        QFile file(m_videoPre.m_imgPrcThread->m_strPath);
+        if (!file.exists()) {
+            usleep(200000);
+        }
+        m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
+    });
+
+}
+
+void CMainWindow::onTakePicOnce()
+{
+    qDebug() << "onTakePicOnce";
+    QTimer::singleShot(200, this, [=]
+    {
+        QFile file(m_videoPre.m_imgPrcThread->m_strPath);
+        if (!file.exists()) {
+            usleep(200000);
+        }
+        m_thumbnail->addFile(m_videoPre.m_imgPrcThread->m_strPath);
+    });
+}
+
+void CMainWindow::onTakePicCancel()
+{
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
 }
 
+void CMainWindow::onTakeVdDone()
+{
+    onEnableTitleBar(4); //恢复按钮状态
+    m_thumbnail->m_nStatus = STATNULL;
+    //m_thumbnail->onFoldersChanged(""); //恢复缩略图
+    m_thumbnail->show();
+    onEnableSettings(true);
+    QTimer::singleShot(200, this, [=]
+    {
+        QString strFileName = m_videoPre.getFolder() + "/" + g_strFileName;
+        QFile file(strFileName);
+        if (!file.exists()) {
+            usleep(200000);
+        }
+        m_thumbnail->addFile(strFileName);
+    });
+}
+
 void CMainWindow::onTakeVdCancel() //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
     onEnableTitleBar(4); //恢复按钮状态
     m_thumbnail->m_nStatus = STATNULL;
-    m_thumbnail->onFoldersChanged(""); //恢复缩略图
+    //m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
     onEnableSettings(true);
 }

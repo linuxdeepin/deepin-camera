@@ -61,6 +61,8 @@ public:
     void setBtntooltip();
     void ChangeActType(int nType);
     void addPath(QString strPath);
+    void addFile(QString strFile);
+    void delFile(QString strFile);
 
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
@@ -78,8 +80,17 @@ private:
 
     DPushButton *m_lastButton {nullptr};
 
+    QTime m_lastDelTime;
+
+    int m_lastItemCount;
+
+    QFileInfoList m_fileInfoLst;//所有文件信息
+
+    int m_curFileIndex;//当前读取到的文件位置
+
 private:
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
+    void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
 signals:
     void fitToolBar();//调整工具栏
     void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
@@ -88,9 +99,11 @@ signals:
     void enableSettings(bool bTrue);
 public slots:
     void onFoldersChanged(const QString &strDirectory);
+    void onFileChanged(const QString &strDirectory);
     void onBtnClick();
     void onShortcutCopy();
     void onShortcutDel();
+    void onTrashFile();
 };
 
 #endif // THUMBNAILSBAR_H

@@ -42,7 +42,7 @@
 QMap<int, ImageItem *> g_indexImage;
 int g_indexNow = 0;
 QSet<int> g_setIndex;
-extern QString g_strFileName;
+//extern QString g_strFileName;
 extern bool g_bFoundDevice;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
@@ -97,6 +97,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_lastDelTime = QTime::currentTime();
+    m_lastItemCount = 0;
 }
 
 void ThumbnailsBar::setBtntooltip()
@@ -124,6 +126,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         }
     }
     g_indexImage.clear();
+    m_fileInfoLst.clear();
+    m_curFileIndex = 0;
     //获取所选文件类型过滤器
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
@@ -135,34 +139,44 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         //按时间逆序排序
         dir.setNameFilters(filters);
         dir.setSorting(QDir::Time /*| QDir::Reversed*/);
-        if (dir.exists()) {
-            //使用dir就不要使用迭代器了，会让dir的设置失效
-            //QDirIterator dir_iterator(dir);
-            QFileInfoList list = dir.entryInfoList();
-            for (int i = 0; i < list.size(); ++i) {
-                if (nLetAddCount <= m_nItemCount) {
-                    break;
-                }
-
-                QString strFile = list.at(i).filePath();
-                QFileInfo fileInfo = list.at(i);
-                if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
-                    QString strFileName = fileInfo.fileName();
-                    if (strFileName.compare(g_strFileName) == 0) {
-                        continue; //mp4文件此时还不完整，读取generateThumbnail会崩溃
-                    }
-                }
-                ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
-                g_indexImage.insert(tIndex, pLabel);
-                tIndex++;
-
-                m_hBOx->addWidget(pLabel);
-
-                m_nItemCount++;
-            }
+        if (dir.exists()) {            
+            m_fileInfoLst += dir.entryInfoList();
         }
     }
-    emit fitToolBar();
+
+    for (int i = 0; i < m_fileInfoLst.size(); ++i) {
+        if (nLetAddCount <= m_nItemCount) {
+            m_curFileIndex = m_nItemCount;
+            break;
+        }
+
+        QString strFile = m_fileInfoLst.at(i).filePath();
+        QFileInfo fileInfo = m_fileInfoLst.at(i);
+        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+            QString strFileName = fileInfo.fileName();
+//                    if (strFileName.compare(g_strFileName) == 0) {
+//                        continue; //mp4文件此时还不完整，读取generateThumbnail会崩溃
+//                    }
+        }
+        ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
+        connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
+        g_indexImage.insert(tIndex, pLabel);
+        tIndex++;
+
+        m_hBOx->addWidget(pLabel);
+
+        m_nItemCount++;
+    }
+    if (m_lastItemCount != m_nItemCount) {
+        emit fitToolBar();
+        m_lastItemCount = m_nItemCount;
+    }
+
+}
+
+void ThumbnailsBar::onFileChanged(const QString &strDirectory)
+{
+
 }
 
 void ThumbnailsBar::onBtnClick()
@@ -248,12 +262,19 @@ void ThumbnailsBar::onShortcutCopy()
 
 void ThumbnailsBar::onShortcutDel()
 {
+    QTime timeNow = QTime::currentTime();
+    if (m_lastDelTime.msecsTo(timeNow) < 200) {
+        return;
+    }
+    m_lastDelTime = timeNow;
     if (g_setIndex.isEmpty()) {
         if (g_indexImage.size() <= 0) {
             return;
         }
-        DDesktopServices::trash(g_indexImage.value(g_indexNow)->getPath());
-        g_indexNow = 0;//如果需要，可以通过+1的方式往后挪，超出范围就变为0
+        QString strFile = g_indexImage.value(g_indexNow)->getPath();
+        DDesktopServices::trash(strFile);
+        delFile(strFile);
+        g_indexImage.remove(g_indexNow);
     } else {
         if (g_setIndex.size() <= 0) {
             return;
@@ -261,11 +282,39 @@ void ThumbnailsBar::onShortcutDel()
         QSet<int>::iterator it;
         for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
             DDesktopServices::trash(g_indexImage.value(*it)->getPath());
-            g_indexImage.remove(*it);
+            delFile(g_indexImage.value(*it)->getPath());
+            g_indexImage.remove(*it);            
         }
         g_setIndex.clear();
-        g_indexNow = 0;
     }
+
+    ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    g_indexNow = tmp->getIndex();//如果需要，可以通过+1的方式往后挪，超出范围就变为0
+}
+
+void ThumbnailsBar::onTrashFile()
+{
+    if (g_setIndex.isEmpty())//删除
+    {
+        ImageItem * tmp = g_indexImage.value(g_indexNow);
+        QString strPath = tmp->getPath();
+        QFile file(strPath);
+        if (!file.exists()) {
+            qDebug() << "file not exist";
+        }
+        DDesktopServices::trash(strPath);
+        delFile(strPath);
+    } else {
+        QSet<int>::iterator it;
+        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            DDesktopServices::trash(g_indexImage.value(*it)->getPath());
+            delFile(g_indexImage.value(*it)->getPath());
+        }
+
+    }
+    g_setIndex.clear();
+    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    g_indexNow = itemNow->getIndex();
 }
 
 void ThumbnailsBar::ChangeActType(int nType)
@@ -312,7 +361,100 @@ void ThumbnailsBar::addPath(QString strPath)
     }
 }
 
+void ThumbnailsBar::addFile(QString strFile)
+{
+    //获取当前选中图片在ui中的位置，insert之后，将g_indexNow指向该位置
+    int nIndex = -1;
+    for(int i = 0; i < m_hBOx->count(); i ++) {
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+        if (itemNow->getIndex() == g_indexNow) {
+            nIndex = i;
+            break;
+        }
+    }
+    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    int nIndex0 = itemNow->getIndex();
+    itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
+    int nIndex1 = itemNow->getIndex();
+    int nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
+
+    ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
+    connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
+    g_indexImage.remove(m_nItemCount);
+    g_indexImage.insert(g_indexImage.size() + 1 , pLabel);
+
+    ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->takeAt(m_nItemCount-1)->widget());
+    m_hBOx->removeWidget(tmp);
+    tmp->deleteLater();
+    m_hBOx->insertWidget(0,pLabel);
+    //m_hBOx->addWidget(pLabel);
+
+    if (m_lastItemCount != m_nItemCount) {
+        emit fitToolBar();
+        m_lastItemCount = m_nItemCount;
+    }
+    //找到对应的widget，然后把选中的item改到对应的g_indexNow
+    itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(nIndex)->widget());
+    g_indexNow = itemNow->getIndex();
+}
+
+void ThumbnailsBar::delFile(QString strFile)
+{
+    //获取当前选中ui标号
+//    int nIndex = -1;
+//    for(int i = 0; i < m_hBOx->count(); i ++) {
+//        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+//        if (itemNow->getIndex() == g_indexNow) {
+//            nIndex = i;
+//            break;
+//        }
+//    }
+    //获取最大的set值
+    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    int nIndex0 = itemNow->getIndex();
+    itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
+    int nIndex1 = itemNow->getIndex();
+    int nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
+
+    //1、通过路径找到界面图元，区分imageitem删除还是dele键删除
+    //2、删除对应图元
+    //3、找到set里边对应数据，删除
+    //4、读取下一个fileinfolist数据，写到set和图元
+    for(int i = 0; i < m_hBOx->count(); i ++) {
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+        if (itemNow->getPath().compare(strFile) == 0) {
+            ImageItem *itemUI = dynamic_cast<ImageItem *>(m_hBOx->takeAt(i)->widget());
+            m_hBOx->removeWidget(itemUI);
+            itemUI->deleteLater();
+            itemUI = nullptr;
+            break;
+        }
+    }
+
+    //g_indexImage里边的数据是已经删掉了的
+    if (m_curFileIndex + 1 > m_fileInfoLst.size()) {
+        return;
+    }
+    QFileInfo fileInfo = m_fileInfoLst.at(++m_curFileIndex);
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+        QString strFileName = fileInfo.fileName();
+    }
+    QString str111 = fileInfo.filePath();
+    ImageItem *pLabel = new ImageItem(nIndexMax + 1 , fileInfo.filePath());
+    connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
+    g_indexImage.insert(nIndexMax + 1 , pLabel);
+    m_hBOx->insertWidget(m_hBOx->count(),pLabel);
+    int nCount = m_hBOx->count();
+    nCount = g_indexImage.size();
+    emit fitToolBar();
+}
+
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
 {
     Q_UNUSED(ev);
+}
+
+void ThumbnailsBar::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
 }

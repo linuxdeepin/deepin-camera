@@ -469,7 +469,10 @@ void videowidget::showCountdown()
             if (--m_curTakePicTime == 0) {
                 //拍照结束，恢复按钮状态和缩略图标志位
                 emit takePicDone();
+            } else {
+                emit takePicOnce();
             }
+
             if (m_curTakePicTime > 0) {
                 countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
                 m_nInterval = m_nMaxInterval; //改到开始的时候设置
@@ -528,7 +531,7 @@ void videowidget::endBtnClicked()
 
     m_btnVdTime->hide();
     m_endBtn->hide();
-    g_strFileName = nullptr;
+
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
         if (video_capture_get_save_video() == 1)
@@ -536,7 +539,8 @@ void videowidget::endBtnClicked()
         setCapstatus(false);
         reset_video_timer();
     }
-    emit takeVdCancel();
+    emit takeVdDone();
+//    g_strFileName = nullptr;
 }
 
 void videowidget::restartDevices()
@@ -616,19 +620,19 @@ void videowidget::onTakePic()
     }
     VIDEO_STATE = NORMALVIDEO;
     if (m_nMaxInterval == 0) {
-        if (m_curTakePicTime > 0 && m_curTakePicTime != m_nMaxContinuous) {
+        if (m_curTakePicTime > 0 && m_curTakePicTime != m_nMaxContinuous) {//连拍完成前点击了拍照按钮->取消后续拍照
             m_nInterval = 0; //下次可开启
             m_curTakePicTime = 0; //结束当前拍照
             if (countTimer->isActive()) {
                 countTimer->stop();
             }
-            emit takePicDone();
+            emit takePicCancel();
             return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
         }
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
         countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧
-//        emit takePicDone();
+        //emit takePicDone();
         return;
     }
     if (countTimer->isActive()) {
