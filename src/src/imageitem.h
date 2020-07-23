@@ -63,12 +63,13 @@ public:
     bool parseFromFile(const QFileInfo &fi);
 signals:
     void imageItemclicked(int index, int indexNow);
-
+    void trashFile();
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
     void mousePressEvent(QMouseEvent *ev) override;
     void paintEvent(QPaintEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
 
 private:
     int m_index;

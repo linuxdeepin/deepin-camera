@@ -87,6 +87,9 @@ private slots:
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
+    void onTakePicOnce();//多连拍的时候用
+    void onTakePicCancel();
+    void onTakeVdDone();
     void onTakeVdCancel();
     void onThemeChange(DGuiApplicationHelper::ColorType type);
 protected:

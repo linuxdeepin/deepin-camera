@@ -53,11 +53,18 @@ public:
 
 signals:
     void sigFlash();
-    void takePicDone();
+    void takePicCancel();
+    void takePicDone();//拍照结束信号
+    void takePicOnce();//多连拍时，除最后一次，每次提交一个信号
     void takeVdCancel(); //录制倒计时期间取消了
+    void takeVdDone();
     void setBtnStatues(bool status);
 
 public:
+    QString getFolder()
+    {
+        return m_strFolder;
+    }
     void setSaveFolder(QString strFolder)
     {
         m_strFolder = strFolder;
@@ -122,6 +129,8 @@ private:
 
     //开始录像
     void startTakeVideo();
+public:
+    MajorImageProcessingThread *m_imgPrcThread;
 
 private:
     bool m_bActive;//是否录制中
@@ -153,7 +162,7 @@ private:
     int                     EFFECT_PAGE = 0;
 
     int                     m_countdownLen = 1;
-    MajorImageProcessingThread *m_imgPrcThread;
+
     QImage               m_img;
     QPixmap              m_pixmap;
     int                     m_nFileID;
