@@ -174,7 +174,7 @@ int camInit(const char* devicename)
             char message[150];
             sprintf(message, "no video device (%s) found", my_options->device);
             options_clean();
-            return -1;
+            return E_NO_DEVICE_ERR;
         }
     }
     else{

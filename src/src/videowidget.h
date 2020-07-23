@@ -50,6 +50,8 @@ class videowidget : public DWidget
 public:
     explicit videowidget(DWidget *parent = nullptr);
     ~videowidget();
+    //未发现摄像头
+    void showNocam();
 
 signals:
     void sigFlash();
@@ -126,8 +128,7 @@ private:
     //摄像头被占用
     void showCamUsed();
 
-    //未发现摄像头
-    void showNocam();
+
 
     //开始录像
     void startTakeVideo();
@@ -137,7 +138,7 @@ public:
 private:
     bool m_bActive;//是否录制中
 
-    DLabel               m_flashLabel;
+    DLabel               *m_flashLabel;
 
     QGraphicsView        *m_pNormalView;
     QGraphicsScene       *m_pNormalScene;
