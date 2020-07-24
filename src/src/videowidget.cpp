@@ -36,8 +36,6 @@
 #include <QKeyEvent>
 #include <QDir>
 
-#define MAX_REC_TIME 60 * 30 /*Maximum record time*/
-
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 QString g_strFileName = nullptr;
 volatile bool g_bFoundDevice = false;
@@ -128,10 +126,10 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pCamErrItem = new QGraphicsTextItem;
 
     m_pTimeItem = new QGraphicsTextItem;
+
+    //添加布局
     m_pGridLayout = new QGridLayout(this);
-
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
-
     m_pGridLayout->addWidget(m_pNormalView);
 
     m_pNormalScene->addItem(m_pNormalItem);
@@ -188,8 +186,8 @@ void videowidget::init()
         qDebug() << "No webcam found" << endl;
     }
 
-    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage, int)),
-            this, SLOT(ReceiveMajorImage(QImage, int)));
+    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap, int)),
+            this, SLOT(ReceiveMajorImage(QPixmap, int)));
 
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -257,17 +255,14 @@ void videowidget::showCamUsed()
                           (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4 + m_pNormalItem->pixmap().height() + 10);
 }
 
-void videowidget::ReceiveMajorImage(QImage image, int result)
+void videowidget::ReceiveMajorImage(QPixmap image, int result)
 {
     if (!image.isNull()) {
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
-            m_imgPrcThread->m_img = m_imgPrcThread->m_img.scaled(this->width(), this->height());
-            m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
+            m_pNormalItem->setPixmap(image.scaled(this->width(), this->height()));
             m_imgPrcThread->m_rwMtxImg.unlock();
-            m_pNormalItem->setPixmap(m_pixmap);
-
             m_pNormalItem->setPos(0, 0);
             if (get_encoder_status() == 0 && getCapstatus() == true) {
                 endBtnClicked();
@@ -322,7 +317,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
             m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
-
         resizePixMap();
         break;
     default:
@@ -374,45 +368,40 @@ void videowidget::resizePixMap()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
-    int nWidth = this->parentWidget()->width();
-    int nHeight = this->parentWidget()->height();
 
     if (m_flashLabel->isVisible() == true) {
-        m_flashLabel->resize(this->parentWidget()->size());
-        m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
+        m_flashLabel->resize(parentWidget()->size());
+        m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
         m_flashLabel->update();
     }
-    if (m_endBtn) {
-        m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
-                       nHeight - m_btnVdTime->height() - 10);
+
+    //结束按钮放大缩小的显示
+    if (m_endBtn->isVisible()) {
+        m_endBtn->move((width() + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
+                       height() - m_btnVdTime->height() - 10);
     }
 
-    if (m_btnVdTime) {
-        m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                          nHeight - m_btnVdTime->height() - 5);
+    //计时窗口放大缩小的显示
+    if (m_btnVdTime->isVisible()) {
+        m_btnVdTime->move((width() - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
+                          height() - m_btnVdTime->height() - 5);
     }
 
-//    m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 3);
-//        m_pNormalItem->show();
     if (m_fWgtCountdown->isVisible()) {
-        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
-                              (this->height() - m_fWgtCountdown->height()) / 2);
+        m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
+                              (height() - m_fWgtCountdown->height()) / 2);
+
         m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
                        (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
     }
 
     if (m_pCamErrItem->isVisible()) {
-//        m_pCamErrItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().toImage().width()) / 2 + 30, (this->parentWidget()->width() - m_pNormalItem->pixmap().toImage().height()) / 3 + m_pNormalItem->pixmap().toImage().height() + 10);
         m_pCamErrItem->show();
     } else {
         m_pCamErrItem->hide();
     }
     resizePixMap();
 }
-
-//    m_pNormalItem->setPos(0, 0);
-//    m_pCamErrItem->setPos((this->width() - m_pNormalItem->pixmap().width()) / 2 + 30, (this->width() - m_pNormalItem->pixmap().height()) / 3 + m_pNormalItem->pixmap().height() + 10);
-
 
 void videowidget::showCountdown()
 {

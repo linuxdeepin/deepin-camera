@@ -58,7 +58,6 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     while (!stopped) {
-
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
@@ -76,9 +75,10 @@ void MajorImageProcessingThread::run()
         result = 0;
         framedely = 0;
         if (video_capture_get_save_video()) {
+            if (get_myvideo_bebin_timer() == 0) {
+                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
+            }
             int size = (frame->width * frame->height * 3) / 2;
-
-
 
             uint8_t *input_frame = frame->yuv_frame;
 
@@ -103,6 +103,7 @@ void MajorImageProcessingThread::run()
                 set_video_timestamptmp(static_cast<int64_t>(frame->timestamp));
                 encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
             } else {
+                //设置暂停时长
                 int64_t timespausestamp = get_video_timestamptmp();
                 set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
             }
@@ -154,12 +155,20 @@ void MajorImageProcessingThread::run()
             initialize_quantization_tables (jpeg_ctx);
 
             int jpeg_size = encode_jpeg(frame->yuv_frame, jpeg, jpeg_ctx, 1);
-            m_rwMtxImg.lock();
-            if (m_img.loadFromData(jpeg, jpeg_size) == true) {
-//            m_img = QImage("a123");
-                emit SendMajorImageProcessing(m_img, result);
+
+            if (!stopped) {
+                if (m_img.loadFromData(jpeg, static_cast<uint>(jpeg_size)) == true) {
+                    m_rwMtxImg.lock();
+                    if (!stopped)
+                        emit SendMajorImageProcessing(m_img, result);
+                    m_rwMtxImg.unlock();
+                } else {
+                    free(jpeg);
+                    free(jpeg_ctx);
+                    jpeg = nullptr;
+                    jpeg_ctx = nullptr;
+                }
             }
-            m_rwMtxImg.unlock();
 
             free(jpeg);
             free(jpeg_ctx);
@@ -167,7 +176,6 @@ void MajorImageProcessingThread::run()
             jpeg_ctx = nullptr;
         }
         v4l2core_release_frame(vd1, frame);
-        rgb24 = nullptr;
 
 //        msleep(1000 / 30);
     }

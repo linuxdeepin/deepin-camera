@@ -99,7 +99,7 @@ public slots:
 
 
 private slots:
-    void ReceiveMajorImage(QImage image, int result);
+    void ReceiveMajorImage(QPixmap image, int result);
     void onReachMaxDelayedFrames();
     void flash();
 
@@ -156,16 +156,14 @@ private:
 
     QTimer                  *countTimer;
     QTimer                  *flashTimer;
-    QDateTime               begin_time;
+
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
-    int                     EFFECT_PAGE = 0;
 
     int                     m_countdownLen = 1;
 
-    QImage               m_img;
     QPixmap              m_pixmap;
     int                     m_nFileID;
     QString                 m_strFolder;

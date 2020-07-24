@@ -31,6 +31,8 @@ extern "C" {
 #include "gviewv4l2core.h"
 #include "encoder.h"
 
+
+
 typedef struct _capture_loop_data_t {
     void *options;
     void *config;
@@ -48,6 +50,42 @@ typedef struct _capture_loop_data_t {
  * returns: none
  */
 void set_video_timestamptmp(int64_t timestamp);
+
+/*
+ * set video begin timer
+ * args:
+ *   begin_time
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_myvideo_begin_timer(ulong begin_time);
+
+/*
+ * get video begin timer
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: video begin timer
+ */
+ulong get_myvideo_bebin_timer(void);
+
+/*
+ * set video timer
+ * args:
+ *   timer
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_video_timer(ulong timer);
 
 /*
  * get pause times
