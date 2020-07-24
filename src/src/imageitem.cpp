@@ -153,19 +153,6 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Dtk::Widget::DDesktopServices::showFolder(strtmp);
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
-//        if (g_setIndex.isEmpty())
-//        {
-//            QFile file(path);
-//            if (!file.exists()) {
-//                qDebug() << "file not exist";
-//            }
-//            DDesktopServices::trash(path);
-//        } else {
-//            QSet<int>::iterator it;
-//            for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
-//                DDesktopServices::trash(g_indexImage.value(*it)->getPath());
-//            }
-//        }
         emit trashFile();
     });
     //右键菜单先进入aboutToHide再进入QAction::triggered，因此该功能挪到customContextMenuRequested
@@ -222,8 +209,10 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             g_setIndex.insert(m_index);
         }
     } else {
+        if (ev->button() == Qt::RightButton) {
+            return;
+        }
         g_setIndex.clear();
-
     }
     update();
 }
