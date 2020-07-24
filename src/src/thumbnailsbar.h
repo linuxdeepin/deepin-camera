@@ -84,7 +84,7 @@ private:
 
     int m_lastItemCount;
 
-    QFileInfoList m_fileInfoLst;//所有文件信息
+    QFileInfoList m_fileInfoLst;//所有文件信息，界面每加载一个，对应删除一个
 
     int m_curFileIndex;//当前读取到的文件位置
 
