@@ -64,7 +64,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
-    m_flashLabel  = new DLabel();
+    m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
     m_btnVdTime->setIconSize(QSize(6, 6));
@@ -206,16 +206,11 @@ void videowidget::showNocam()
     setPalette(paPic);
 
     g_bFoundDevice = false;//没有设备
-    int nWidth, nHeight;
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Not connected.svg");
-        nWidth = img.width();
-        nHeight = img.height();
         m_pixmap = QPixmap::fromImage(img);
     } else {
         QImage img(":/images/icons/dark/Not connected_dark.svg");
-        nWidth = img.width();
-        nHeight = img.height();
         m_pixmap = QPixmap::fromImage(img);
     }
 
@@ -224,10 +219,6 @@ void videowidget::showNocam()
     QString str(tr("No webcam found"));//未连接摄像头
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
-    int widgets = this->width();
-    int sdjalfk = this->parentWidget()->width();
-    int widgthws = m_pNormalItem->pixmap().width();
-//    m_pNormalItem->
     this->update();
     m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 3);
     m_pCamErrItem->setPos(
@@ -244,16 +235,12 @@ void videowidget::showCamUsed()
     setPalette(paPic);
 
     g_bFoundDevice = false;//没有设备
-    int nWidth, nHeight;
+
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
-        nWidth = img.width();
-        nHeight = img.height();
         m_pixmap = QPixmap::fromImage(img);
     } else {
         QImage img(":/images/icons/dark/Take up_dark.svg");
-        nWidth = img.width();
-        nHeight = img.height();
         m_pixmap = QPixmap::fromImage(img);
     }
     m_pNormalItem->setPixmap(m_pixmap);
@@ -263,8 +250,6 @@ void videowidget::showCamUsed()
     QString str(tr("The webcam is in use"));//摄像头已被占用
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
-//    QColor textcol(255, 255, 255, 255);
-//    m_pCamErrItem->setDefaultTextColor(textcol);
 
     m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4);
     m_pCamErrItem->show();
@@ -282,6 +267,7 @@ void videowidget::ReceiveMajorImage(QImage image, int result)
             m_pixmap = QPixmap::fromImage(m_imgPrcThread->m_img);
             m_imgPrcThread->m_rwMtxImg.unlock();
             m_pNormalItem->setPixmap(m_pixmap);
+
             m_pNormalItem->setPos(0, 0);
             if (get_encoder_status() == 0 && getCapstatus() == true) {
                 endBtnClicked();
@@ -305,7 +291,7 @@ void videowidget::onReachMaxDelayedFrames()
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 {
-    //qDebug() << "countDown" << m_nInterval;
+
     QString str;
     switch (state) {
     case NORMALVIDEO:
@@ -322,9 +308,9 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_endBtn->hide();
 
         m_countdownLen = 50;
-        //setFont(m_pCountItem, 50, QString::number(m_nInterval));
-        m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
-                       (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
+        if (m_dLabel->pos() == QPoint(0, 0))
+            m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
+                           (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
         m_dLabel->setText(QString::number(m_nInterval));
         resizePixMap();
         break;
@@ -376,7 +362,7 @@ void videowidget::resizePixMap()
 {
     if (m_pTimeItem->isVisible()) {
         QRect rect = this->rect();
-//        m_pNormalScene->setSceneRect(rect);
+
         int x = this->x();
         int y = this->y();
 
@@ -388,22 +374,14 @@ void videowidget::resizePixMap()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
-    int widgets = this->width();
-    int sdjalfk = this->parentWidget()->width();
-    int widgthws = m_pNormalItem->pixmap().width();
-    m_pNormalItem->update();
+    int nWidth = this->parentWidget()->width();
+    int nHeight = this->parentWidget()->height();
 
-//    m_pNormalItem->setPos(0, 0);
-//    m_pCamErrItem->setPos((this->width() - m_pNormalItem->pixmap().width()) / 2 + 30, (this->width() - m_pNormalItem->pixmap().height()) / 3 + m_pNormalItem->pixmap().height() + 10);
-
-}
-
-void videowidget::paintEvent(QPaintEvent *e)
-{
-    Q_UNUSED(e);
-    int nWidth = this->width();
-    int nHeight = this->height();
-
+    if (m_flashLabel->isVisible() == true) {
+        m_flashLabel->resize(this->parentWidget()->size());
+        m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
+        m_flashLabel->update();
+    }
     if (m_endBtn) {
         m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
                        nHeight - m_btnVdTime->height() - 10);
@@ -416,7 +394,12 @@ void videowidget::paintEvent(QPaintEvent *e)
 
 //    m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 3);
 //        m_pNormalItem->show();
-
+    if (m_fWgtCountdown->isVisible()) {
+        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
+                              (this->height() - m_fWgtCountdown->height()) / 2);
+        m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
+                       (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
+    }
 
     if (m_pCamErrItem->isVisible()) {
 //        m_pCamErrItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().toImage().width()) / 2 + 30, (this->parentWidget()->width() - m_pNormalItem->pixmap().toImage().height()) / 3 + m_pNormalItem->pixmap().toImage().height() + 10);
@@ -426,6 +409,10 @@ void videowidget::paintEvent(QPaintEvent *e)
     }
     resizePixMap();
 }
+
+//    m_pNormalItem->setPos(0, 0);
+//    m_pCamErrItem->setPos((this->width() - m_pNormalItem->pixmap().width()) / 2 + 30, (this->width() - m_pNormalItem->pixmap().height()) / 3 + m_pNormalItem->pixmap().height() + 10);
+
 
 void videowidget::showCountdown()
 {
@@ -474,7 +461,7 @@ void videowidget::showCountdown()
                 flashTimer->start(500);
 
                 m_flashLabel->resize(this->size());
-                m_flashLabel->move(this->mapToGlobal(this->pos()));
+                m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
                 qDebug() << "****m_flashLabel->show();";
                 m_flashLabel->show();
             }
@@ -526,7 +513,7 @@ void videowidget::flash()
         flashTimer->stop();
     } else {
         m_flashLabel->resize(this->size());
-        m_flashLabel->move(this->mapToGlobal(this->pos()));
+        m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
         qDebug() << "****m_flashLabel->show();";
         m_flashLabel->show();
         if (flashTimer->isActive()) { //连续点击拍照

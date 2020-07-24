@@ -570,7 +570,6 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
     int width = this->width();
     //int height = this->height();
-    int nOldWidth = m_thumbnail->m_nMaxItem;
     m_thumbnail->m_nMaxItem = width;
 //    if (nOldWidth > width) {//画面缩小了，要重新调整；
 //        m_thumbnail->onFoldersChanged("");

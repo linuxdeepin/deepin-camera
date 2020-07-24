@@ -139,7 +139,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         //按时间逆序排序
         dir.setNameFilters(filters);
         dir.setSorting(QDir::Time /*| QDir::Reversed*/);
-        if (dir.exists()) {            
+        if (dir.exists()) {
             m_fileInfoLst += dir.entryInfoList();
         }
     }
@@ -159,7 +159,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 //                    }
         }
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
-        connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
+        connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         g_indexImage.insert(tIndex, pLabel);
         tIndex++;
 
@@ -171,11 +171,6 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         emit fitToolBar();
         m_lastItemCount = m_nItemCount;
     }
-
-}
-
-void ThumbnailsBar::onFileChanged(const QString &strDirectory)
-{
 
 }
 
@@ -283,7 +278,7 @@ void ThumbnailsBar::onShortcutDel()
         for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
             DDesktopServices::trash(g_indexImage.value(*it)->getPath());
             delFile(g_indexImage.value(*it)->getPath());
-            g_indexImage.remove(*it);            
+            g_indexImage.remove(*it);
         }
         g_setIndex.clear();
     }
@@ -294,9 +289,8 @@ void ThumbnailsBar::onShortcutDel()
 
 void ThumbnailsBar::onTrashFile()
 {
-    if (g_setIndex.isEmpty())//删除
-    {
-        ImageItem * tmp = g_indexImage.value(g_indexNow);
+    if (g_setIndex.isEmpty()) { //删除
+        ImageItem *tmp = g_indexImage.value(g_indexNow);
         QString strPath = tmp->getPath();
         QFile file(strPath);
         if (!file.exists()) {
@@ -365,7 +359,7 @@ void ThumbnailsBar::addFile(QString strFile)
 {
     //获取当前选中图片在ui中的位置，insert之后，将g_indexNow指向该位置
     int nIndex = -1;
-    for(int i = 0; i < m_hBOx->count(); i ++) {
+    for (int i = 0; i < m_hBOx->count(); i ++) {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
         if (itemNow->getIndex() == g_indexNow) {
             nIndex = i;
@@ -379,14 +373,14 @@ void ThumbnailsBar::addFile(QString strFile)
     int nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
 
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
-    connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
+    connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     g_indexImage.remove(m_nItemCount);
-    g_indexImage.insert(g_indexImage.size() + 1 , pLabel);
+    g_indexImage.insert(g_indexImage.size() + 1, pLabel);
 
-    ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->takeAt(m_nItemCount-1)->widget());
+    ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->takeAt(m_nItemCount - 1)->widget());
     m_hBOx->removeWidget(tmp);
     tmp->deleteLater();
-    m_hBOx->insertWidget(0,pLabel);
+    m_hBOx->insertWidget(0, pLabel);
     //m_hBOx->addWidget(pLabel);
 
     if (m_lastItemCount != m_nItemCount) {
@@ -420,7 +414,7 @@ void ThumbnailsBar::delFile(QString strFile)
     //2、删除对应图元
     //3、找到set里边对应数据，删除
     //4、读取下一个fileinfolist数据，写到set和图元
-    for(int i = 0; i < m_hBOx->count(); i ++) {
+    for (int i = 0; i < m_hBOx->count(); i ++) {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
         if (itemNow->getPath().compare(strFile) == 0) {
             ImageItem *itemUI = dynamic_cast<ImageItem *>(m_hBOx->takeAt(i)->widget());
@@ -440,12 +434,12 @@ void ThumbnailsBar::delFile(QString strFile)
         QString strFileName = fileInfo.fileName();
     }
     QString str111 = fileInfo.filePath();
-    ImageItem *pLabel = new ImageItem(nIndexMax + 1 , fileInfo.filePath());
-    connect(pLabel,SIGNAL(trashFile()),this,SLOT(onTrashFile()));
-    g_indexImage.insert(nIndexMax + 1 , pLabel);
-    m_hBOx->insertWidget(m_hBOx->count(),pLabel);
-    int nCount = m_hBOx->count();
-    nCount = g_indexImage.size();
+    ImageItem *pLabel = new ImageItem(nIndexMax + 1, fileInfo.filePath());
+    connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+    g_indexImage.insert(nIndexMax + 1, pLabel);
+    m_hBOx->insertWidget(m_hBOx->count(), pLabel);
+//    int nCount = m_hBOx->count();
+//    nCount = g_indexImage.size();
     emit fitToolBar();
 }
 

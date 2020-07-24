@@ -99,7 +99,6 @@ signals:
     void enableSettings(bool bTrue);
 public slots:
     void onFoldersChanged(const QString &strDirectory);
-    void onFileChanged(const QString &strDirectory);
     void onBtnClick();
     void onShortcutCopy();
     void onShortcutDel();
