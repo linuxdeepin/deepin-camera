@@ -516,7 +516,7 @@ void CMainWindow::initConnection()
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
-    connect(m_thumbnail, SIGNAL(takePic()), m_videoPre, SLOT(onTakePic()));
+    connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
 
 
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));

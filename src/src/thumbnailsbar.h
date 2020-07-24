@@ -94,7 +94,7 @@ private:
 signals:
     void fitToolBar();//调整工具栏
     void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
-    void takePic();
+    void takePic(bool bTrue);
     void takeVd();
     void enableSettings(bool bTrue);
 public slots:

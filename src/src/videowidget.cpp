@@ -420,7 +420,7 @@ void videowidget::showCountdown()
             }
         }
         if (VIDEO_STATE == NORMALVIDEO) {
-            onTakePic();
+            onTakePic(true);
             emit takePicDone();
         }
         //hideCountDownLabel();
@@ -451,7 +451,7 @@ void videowidget::showCountdown()
 
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-                qDebug() << "****m_flashLabel->show();";
+                qDebug() << "m_flashLabel->show();";
                 m_flashLabel->show();
             }
             //发送就结束信号处理按钮状态
@@ -497,13 +497,13 @@ void videowidget::flash()
 {
     if (m_flashLabel->isVisible()) {
         //隐藏闪光窗口
-        qDebug() << "****m_flashLabel->hide();";
+        qDebug() << "m_flashLabel->hide();";
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
         flashTimer->stop();
     } else {
         m_flashLabel->resize(this->size());
         m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-        qDebug() << "****m_flashLabel->show();";
+        qDebug() << "m_flashLabel->show();";
         m_flashLabel->show();
         if (flashTimer->isActive()) { //连续点击拍照
             flashTimer->stop();
@@ -605,50 +605,47 @@ void videowidget::changeDev()
     }
 }
 
-void videowidget::onTakePic()
+void videowidget::onTakePic(bool bTrue)
 {
-    if (m_fWgtCountdown) {
-        m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
-                              (this->height() - m_fWgtCountdown->height()) / 2);
-    }
     VIDEO_STATE = NORMALVIDEO;
-    if (m_nMaxInterval == 0) {
-        if (m_curTakePicTime > 0 && m_curTakePicTime != m_nMaxContinuous) {//连拍完成前点击了拍照按钮->取消后续拍照
-            m_nInterval = 0; //下次可开启
-            m_curTakePicTime = 0; //结束当前拍照
-            if (countTimer->isActive()) {
-                countTimer->stop();
-            }
-            emit takePicCancel();
-            return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
+    if (bTrue) {
+        if (m_fWgtCountdown) {
+            m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
+                                  (this->height() - m_fWgtCountdown->height()) / 2);
         }
+        //1、重置状态
+        if (countTimer->isActive()) {
+            countTimer->stop();
+        }
+        if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+            m_pCamErrItem->hide();
+        }
+        if (m_fWgtCountdown->isVisible()) {
+            m_fWgtCountdown->hide();
+        }
+
         m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
-        countTimer->start(m_nMaxInterval == 0 ? 34 : 1000); //最小时间大于一帧
-        //emit takePicDone();
-        return;
-    }
-    if (countTimer->isActive()) {
-        countTimer->stop();
-    }
-    if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
-        m_pCamErrItem->hide();
-    }
-    if (m_fWgtCountdown->isVisible()) {
-        m_fWgtCountdown->hide();
-    }
-    if (m_nInterval > 0) { //倒计时期间的处理
+        countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
+    } else {
+        emit takePicCancel();
+        m_nInterval = m_nMaxInterval;
+        m_curTakePicTime = m_nMaxContinuous;
         m_nInterval = 0; //下次可开启
         m_curTakePicTime = 0; //结束当前拍照
-        return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
+        if (countTimer->isActive()) {
+            countTimer->stop();
+        }
+        if (flashTimer->isActive()) {
+            flashTimer->stop();
+        }
+        if (m_fWgtCountdown->isVisible()) {
+            m_fWgtCountdown->hide();
+        }
+        if (m_flashLabel->isVisible()) {
+            m_flashLabel->hide();
+        }
     }
-
-    if (countTimer->isActive()) { //连续点击拍照
-        countTimer->stop();
-    }
-    m_nInterval = m_nMaxInterval;
-    m_curTakePicTime = m_nMaxContinuous;
-    countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
 }
 
 void videowidget::onTakeVideo() //点一次开，再点一次关

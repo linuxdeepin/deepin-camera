@@ -182,18 +182,19 @@ void ThumbnailsBar::onBtnClick()
             m_lastButton->setToolTip(tr("Take photo"));
             m_lastButton->setToolTipDuration(500);
             emit enableTitleBar(3);
-            emit takePic();
+            emit takePic(false);
             emit enableSettings(true);
+            qDebug() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
         } else {
             m_nStatus = STATPicIng;
             m_lastButton->setToolTip(tr("Stop Taking photo"));
             m_lastButton->setToolTipDuration(500);
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
-            emit takePic();
+            emit takePic(true);
             emit enableSettings(false);
+            qDebug() << "***Take photo";
         }
-
     } else if (m_nActTpye == ActTakeVideo) {
         if (m_nStatus == STATVdIng) {
             m_nStatus = STATNULL;
