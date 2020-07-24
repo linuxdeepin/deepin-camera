@@ -374,6 +374,51 @@ void reset_video_timer()
 }
 
 /*
+ * set video begin timer
+ * args:
+ *   begin_time
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_myvideo_begin_timer(ulong begin_time)
+{
+    my_video_begin_time = begin_time;
+}
+
+/*
+ * get video begin timer
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: video begin timer
+ */
+ulong get_myvideo_bebin_timer(void)
+{
+    return my_video_begin_time;
+}
+
+/*
+ * set video timer
+ * args:
+ *   timer
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_video_timer(ulong timer)
+{
+    my_video_timer = NSEC_PER_SEC * timer;
+}
+
+/*
  * stops the video timed capture
  * args:
  *    none
