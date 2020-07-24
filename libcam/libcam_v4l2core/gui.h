@@ -30,6 +30,8 @@
 #define DEF_ACTION_IMAGE  (0)
 #define DEF_ACTION_VIDEO  (1)
 
+#define MAX_REC_TIME 60 * 30 /*Maximum record time*/
+
 
 
 /*

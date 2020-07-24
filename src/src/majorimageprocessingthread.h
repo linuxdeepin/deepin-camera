@@ -23,7 +23,7 @@
 #define MajorImageProcessingThread_H
 
 #include <QThread>
-#include <QImage>
+#include <QPixmap>
 #include <QDebug>
 #include <QMutex>
 #include <QWaitCondition>
@@ -52,7 +52,7 @@ public:
     void init();
 
 public:
-    QImage m_img;
+    QPixmap m_img;
     QMutex m_rwMtxImg;
     QString m_strPath;
     QMutex m_rwMtxPath;
@@ -70,11 +70,10 @@ private:
     volatile bool stopped;
     v4l2_dev_t *vd1;
     v4l2_frame_buff_t *frame;
-    unsigned char *rgb24;
     int result;
 
 signals:
-    void SendMajorImageProcessing(QImage image, int result);
+    void SendMajorImageProcessing(QPixmap image, int result);
     void reachMaxDelayedFrames();
 
 };
