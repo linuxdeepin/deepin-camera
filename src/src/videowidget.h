@@ -90,7 +90,7 @@ public:
         return m_bActive;
     }
 public slots:
-    void onTakePic();
+    void onTakePic(bool bTrue);
     void onTakeVideo();
     void showCountdown();
     void changeDev();
