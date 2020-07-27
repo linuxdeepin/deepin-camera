@@ -169,7 +169,7 @@ CONFIG(release, debug|release) {
 translations.path = $$PREFIX/share/deepin-camera/translations
 translations.files = $$PWD/translations/*.qm
 
-INSTALLS = target desktop dbus_service icons manual translations
+INSTALLS = target desktop dbus_service icon_files manual translations
 
 #DSR_LANG_PATH += $$DSRDIR/translations
 #DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""

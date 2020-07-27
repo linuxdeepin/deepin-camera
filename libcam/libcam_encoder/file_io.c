@@ -34,6 +34,8 @@
 #include "gviewencoder.h"
 #include "file_io.h"
 #include "gview.h"
+#include "camview.h"
+#include "gviewencoder.h"
 
 
 /*
@@ -192,7 +194,8 @@ int64_t io_flush_buffer(io_writer_t *writer)
 		if(fwrite(writer->buffer, 1, nitems, writer->fp) < nitems)
 		{
 			fprintf(stderr, "ENCODER: (io_flush) file write error: %s\n", strerror(errno));
-			return -1;
+            //stop_encoder_thread();
+            return -1;
 		}
 	}
 	else if (writer->buf_ptr < writer->buffer)

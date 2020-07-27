@@ -50,14 +50,23 @@ class videowidget : public DWidget
 public:
     explicit videowidget(DWidget *parent = nullptr);
     ~videowidget();
+    //未发现摄像头
+    void showNocam();
 
 signals:
     void sigFlash();
-    void takePicDone();
+    void takePicCancel();
+    void takePicDone();//拍照结束信号
+    void takePicOnce();//多连拍时，除最后一次，每次提交一个信号
     void takeVdCancel(); //录制倒计时期间取消了
+    void takeVdDone();
     void setBtnStatues(bool status);
-
+    void updateBlockSystem(bool bTrue);
 public:
+    QString getFolder()
+    {
+        return m_strFolder;
+    }
     void setSaveFolder(QString strFolder)
     {
         m_strFolder = strFolder;
@@ -81,14 +90,16 @@ public:
         return m_bActive;
     }
 public slots:
-    void onTakePic();
+    void onTakePic(bool bTrue);
     void onTakeVideo();
     void showCountdown();
     void changeDev();
     void endBtnClicked();
     void restartDevices();
+
+
 private slots:
-    void ReceiveMajorImage(QImage image, int result);
+    void ReceiveMajorImage(QPixmap image, int result);
     void onReachMaxDelayedFrames();
     void flash();
 
@@ -96,7 +107,6 @@ private:
     void init();
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-    void paintEvent(QPaintEvent *e) Q_DECL_OVERRIDE;
     void resizePixMap();
 
     //设置字体
@@ -114,19 +124,20 @@ private:
     //显示录制和拍照倒计时
     void showCountDownLabel();
 
-    //未发现摄像头
-    void showNocam();
-
     //摄像头被占用
     void showCamUsed();
 
+
+
     //开始录像
     void startTakeVideo();
+public:
+    MajorImageProcessingThread *m_imgPrcThread;
 
 private:
     bool m_bActive;//是否录制中
 
-    DLabel               m_flashLabel;
+    DLabel               *m_flashLabel;
 
     QGraphicsView        *m_pNormalView;
     QGraphicsScene       *m_pNormalScene;
@@ -145,16 +156,14 @@ private:
 
     QTimer                  *countTimer;
     QTimer                  *flashTimer;
-    QDateTime               begin_time;
+
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
-    int                     EFFECT_PAGE = 0;
 
     int                     m_countdownLen = 1;
-    MajorImageProcessingThread *m_imgPrcThread;
-    QImage               m_img;
+
     QPixmap              m_pixmap;
     int                     m_nFileID;
     QString                 m_strFolder;
@@ -162,7 +171,6 @@ private:
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-
     QTime                m_time;
     int m_nCount; //录制计时
 };

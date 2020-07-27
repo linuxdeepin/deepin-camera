@@ -44,6 +44,9 @@
 #include <QtWidgets/QWidget>
 #include <DTitlebar>
 #include <DSettingsDialog>
+#include <QDBusReply>
+#include <QDBusInterface>
+#include <QDBusUnixFileDescriptor>
 
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -77,6 +80,13 @@ private:
     void settingsTriggered(bool bTrue);
     //void keyPressEvent(QKeyEvent *ev);
     void slotPopupSettingsDialog();
+
+    /**
+     * @brief initBlockShutdown 阻塞关机
+     */
+    void initBlockShutdown();
+
+
 private slots:
     void setSelBtnHide();
     void setSelBtnShow();
@@ -87,15 +97,23 @@ private slots:
     void onSettingsDlgClose();
     void onEnableSettings(bool bTrue);
     void onTakePicDone();
+    void onTakePicOnce();//多连拍的时候用
+    void onTakePicCancel();
+    void onTakeVdDone();
     void onTakeVdCancel();
     void onThemeChange(DGuiApplicationHelper::ColorType type);
+
+    /**
+     * @brief updateBlockSystem 更新阻塞关机
+     */
+    void updateBlockSystem(bool bTrue);
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
     ThumbnailsBar              *m_thumbnail;
     DMenu                     *menu;
-    videowidget                  m_videoPre;
+    videowidget                  *m_videoPre;
     CloseDialog                  *m_closeDlg;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;
@@ -108,6 +126,10 @@ private:
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
     static QString                m_lastfilename;
+
+    QDBusReply<QDBusUnixFileDescriptor> m_reply;
+    QDBusInterface *m_pLoginManager = nullptr;
+    QList<QVariant> m_arg;
 };
 
 #endif // MAINWINDOW_H

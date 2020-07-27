@@ -73,49 +73,6 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         //qDebug() << pix.width() << " " << pix.height();
         //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
         painter1.end();
-
-        //方式2：先使用线程尝试加载，加载失败只是线程出问题
-        //        m_bThumbnailReadOK = false;
-        //        QThread *tmpTh = QThread::create([ = ]() {
-        //            VideoThumbnailer thumber;
-        //            QTime d(0, 0, 0, 0);
-        //            thumber.setSeekTime(d.toString("hh:mm:ss:ms").toStdString());
-        //            thumber.setThumbnailSize(480 * qApp->devicePixelRatio());
-        //            thumber.setMaintainAspectRatio(true);
-        //            std::vector<uint8_t> buf;
-        //            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //            m_bThumbnailReadOK = true;
-        //            QThread::currentThread()->quit();
-        //        });
-        //        tmpTh->start();
-        //        QThread::msleep(50);
-        //        if (m_bThumbnailReadOK) {
-        //            thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //            QImage img = QImage::fromData(buf.data(), buf.size(), "png");
-        //            //pix = new QPixmap(QPixmap::fromImage(img));
-        //            pix = QPixmap::fromImage(QImage(img));
-        //        }
-        //        else
-        //        {
-        //            pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
-        //        }
-
-        //方式3：数据流加载文件，判断加载的文件是否正确，再读取视频缩略图
-        //        QFile f(m_path);//webm生效
-        //        bool bValid = false;
-        //        if (f.open(QIODevice::ReadOnly)) {
-        //            QDataStream ds(&f);
-        //            ds >> bValid;
-        //            if (bValid) {
-        //                thumber.generateThumbnail(fileInfo.canonicalFilePath().toUtf8().toStdString(),ThumbnailerImageType::Png, buf);
-        //                QImage img = QImage::fromData(buf.data(), buf.size(), "png");
-        //                pix = QPixmap::fromImage(img);
-        //            }
-        //            else {
-        //                pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
-        //            }
-        //        }
-
     } else if (fileInfo.suffix() == "jpg") {
         pix = QPixmap::fromImage(QImage(path));
     } else {
@@ -141,6 +98,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         menu->exec(QCursor::pos());
+        g_setIndex.clear();
+        g_bMultiSlt = false;
     });
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
@@ -194,23 +153,14 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Dtk::Widget::DDesktopServices::showFolder(strtmp);
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
-        if (g_setIndex.isEmpty())
-        {
-            DDesktopServices::trash(path);
-        } else {
-            QSet<int>::iterator it;
-            for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
-                DDesktopServices::trash(g_indexImage.value(*it)->getPath());
-            }
-            g_setIndex.clear();
-            g_indexNow = 0;
-        }
+        emit trashFile();
     });
-    connect(menu,&QMenu::aboutToHide,this, [ = ] {
-        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
-        g_setIndex.clear();
-        g_bMultiSlt = false;//此时shift键焦点已丢失，且暂时还无法获取到是否按下的信息，因此置false，需要多选重新按下即可
-    });
+    //右键菜单先进入aboutToHide再进入QAction::triggered，因此该功能挪到customContextMenuRequested
+//    connect(menu,&QMenu::aboutToHide,this, [ = ] {
+//        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
+//        g_setIndex.clear();
+//        g_bMultiSlt = false;//此时shift键焦点已丢失，且暂时还无法获取到是否按下的信息，因此置false，需要多选重新按下即可
+//    });
 
     pix.scaled(this->size(), Qt::KeepAspectRatio);
 }
@@ -259,8 +209,10 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             g_setIndex.insert(m_index);
         }
     } else {
+        if (ev->button() == Qt::RightButton) {
+            return;
+        }
         g_setIndex.clear();
-
     }
     update();
 }
@@ -348,6 +300,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
         QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
     painter.drawRoundedRect(pixmapRect, 4, 4);
     painter.restore();
+}
+
+void ImageItem::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
 }
 
 static int open_codec_context(int *stream_idx,
