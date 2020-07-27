@@ -328,6 +328,51 @@ void CMainWindow::slotPopupSettingsDialog()
     Settings::get().settings()->sync();
 }
 
+void CMainWindow::initBlockShutdown()
+{
+    if (!m_arg.isEmpty() || m_reply.value().isValid()) {
+        qDebug() << "m_reply.value().isValid():" << m_reply.value().isValid();
+        return;
+    }
+
+    m_pLoginManager = new QDBusInterface("org.freedesktop.login1",
+                                         "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager",
+                                         QDBusConnection::systemBus());
+
+    m_arg << QString("shutdown")             // what
+          << qApp->productName()           // who
+          << QObject::tr("File not saved")          // why
+          << QString("block");                        // mode
+
+    //int fd = -1;
+    m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
+    if (m_reply.isValid()) {
+        /*fd = */(void)m_reply.value().fileDescriptor();
+    }
+    //如果for结束则表示没有发现未保存的tab项，则放开阻塞关机
+    if (m_reply.isValid()) {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
+        m_reply = QDBusReply<QDBusUnixFileDescriptor>();
+        //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+        qDebug() << "Nublock shutdown.";
+    }
+}
+
+void CMainWindow::updateBlockSystem(bool bTrue)
+{
+    initBlockShutdown();
+
+    if (bTrue) {
+        m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
+    } else {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
+        m_reply = QDBusReply<QDBusUnixFileDescriptor>();
+        //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+        qDebug() << "Nublock shutdown.";
+    }
+}
+
 void CMainWindow::initUI()
 {
 //    this->setWindowFlag(Qt::FramelessWindowHint);
@@ -528,6 +573,8 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
     //录制取消 （倒计时3秒内的）
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
+    //录制关机阻塞
+    connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
 

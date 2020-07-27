@@ -61,7 +61,7 @@ signals:
     void takeVdCancel(); //录制倒计时期间取消了
     void takeVdDone();
     void setBtnStatues(bool status);
-
+    void updateBlockSystem(bool bTrue);
 public:
     QString getFolder()
     {
