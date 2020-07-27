@@ -173,7 +173,7 @@ void videowidget::init()
             vd = nullptr;
         }
         showCamUsed();
-        qDebug() << "No webcam found" << endl;
+        qDebug() << "cam in use" << endl;
     } else if (ret == E_NO_DEVICE_ERR) {
         //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
@@ -311,9 +311,9 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         break;
     case AUDIO:
         m_pCamErrItem->hide();
-        if (m_nCount > MAX_REC_TIME) {
-            endBtnClicked(); //结束录制
-        }
+//        if (m_nCount > MAX_REC_TIME) {
+//            endBtnClicked(); //结束录制
+//        }
         m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
             m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));

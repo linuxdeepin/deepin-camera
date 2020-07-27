@@ -207,6 +207,11 @@ int camInit(const char* devicename)
     }
 
     encoder_set_verbosity(debug_level);
+
+    config_save(config_file);
+    if(config_file)
+        free(config_file);
+
     if(!my_options->control_panel){
 
         //v4l2core_prepare_new_format(my_vd, my_config->format);
