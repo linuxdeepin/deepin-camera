@@ -533,6 +533,7 @@ void videowidget::endBtnClicked()
             stop_encoder_thread();
         setCapstatus(false);
         reset_video_timer();
+        emit updateBlockSystem(false);
     }
     emit takeVdDone();
 //    g_strFileName = nullptr;
@@ -669,6 +670,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         stop_encoder_thread();
         setCapstatus(false);
         reset_video_timer();
+        emit updateBlockSystem(false);
         return;
     }
 
@@ -701,7 +703,7 @@ void videowidget::startTakeVideo()
         stop_encoder_thread();
         setCapstatus(false);
         reset_video_timer();
-
+        emit updateBlockSystem(false);
     } else {
         if (g_bFoundDevice) {
             qDebug() << "start takeVideo";
@@ -714,6 +716,7 @@ void videowidget::startTakeVideo()
             set_video_name(g_strFileName.toStdString().c_str());
 
             start_encoder_thread();
+            emit updateBlockSystem(true);
             setCapstatus(true);
             //begin_time = QDateTime::currentDateTime();
             countTimer->stop();
