@@ -9,12 +9,12 @@
         <translation>正在录制视频，是否关闭？</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="415"/>
+        <location filename="../src/mainwindow.cpp" line="414"/>
         <source>Open folder</source>
         <translation>打开文件夹</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="610"/>
+        <location filename="../src/mainwindow.cpp" line="609"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
@@ -28,24 +28,28 @@
     </message>
     <message>
         <location filename="../src/closedialog.h" line="39"/>
-        <source>Ok</source>
+        <source>Close</source>
         <translation>关闭</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="vanished">关闭</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
-        <location filename="../src/imageitem.cpp" line="86"/>
+        <location filename="../src/imageitem.cpp" line="94"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="89"/>
+        <location filename="../src/imageitem.cpp" line="97"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="91"/>
+        <location filename="../src/imageitem.cpp" line="99"/>
         <source>Open folder</source>
         <translation>打开文件夹</translation>
     </message>
@@ -167,7 +171,7 @@
         <location filename="../src/thumbnailsbar.cpp" line="91"/>
         <location filename="../src/thumbnailsbar.cpp" line="106"/>
         <location filename="../src/thumbnailsbar.cpp" line="182"/>
-        <location filename="../src/thumbnailsbar.cpp" line="361"/>
+        <location filename="../src/thumbnailsbar.cpp" line="377"/>
         <source>Take photo</source>
         <translation>拍照</translation>
     </message>
@@ -177,7 +181,7 @@
         <translation>结束拍照</translation>
     </message>
     <message>
-        <location filename="../src/thumbnailsbar.cpp" line="373"/>
+        <location filename="../src/thumbnailsbar.cpp" line="389"/>
         <source>Record video</source>
         <translation>录制视频</translation>
     </message>
