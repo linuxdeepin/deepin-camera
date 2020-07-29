@@ -127,10 +127,11 @@ private:
     //摄像头被占用
     void showCamUsed();
 
-
-
     //开始录像
     void startTakeVideo();
+
+    //item位置处理
+    void itemPosChange();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 

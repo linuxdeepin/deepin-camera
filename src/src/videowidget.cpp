@@ -218,10 +218,8 @@ void videowidget::showNocam()
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
     this->update();
-    m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 3);
-    m_pCamErrItem->setPos(
-        (this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2 + 30,
-        (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 3 + m_pNormalItem->pixmap().height() + 10);
+    itemPosChange();
+    m_pCamErrItem->show();
 }
 
 //显示设备被占用或者拔掉的图片的槽函数
@@ -248,11 +246,8 @@ void videowidget::showCamUsed()
     QString str(tr("The webcam is in use"));//摄像头已被占用
     m_countdownLen = str.length() * 20;
     setFont(m_pCamErrItem, 12, str);
-
-    m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4);
+    itemPosChange();
     m_pCamErrItem->show();
-    m_pCamErrItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2 + 30,
-                          (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4 + m_pNormalItem->pixmap().height() + 10);
 }
 
 void videowidget::ReceiveMajorImage(QPixmap image, int result)
@@ -276,10 +271,11 @@ void videowidget::ReceiveMajorImage(QPixmap image, int result)
 
 void videowidget::onReachMaxDelayedFrames()
 {
-    if (g_bFoundDevice)
-        showCamUsed();
-    else {
+    check_device_list_events(get_v4l2_device_handler());
+    if (get_device_list()->num_devices < 1)
         showNocam();
+    else {
+        showCamUsed();
     }
     emit setBtnStatues(false);
 }
@@ -396,6 +392,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
     }
 
     if (m_pCamErrItem->isVisible()) {
+        itemPosChange();
         m_pCamErrItem->show();
     } else {
         m_pCamErrItem->hide();
@@ -456,7 +453,9 @@ void videowidget::showCountdown()
             }
             //发送就结束信号处理按钮状态
             countTimer->stop();
-
+            if (QDir(m_strFolder).exists() == false) {
+                m_strFolder = QDir::homePath() + QString("/Videos");
+            }
             m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             m_imgPrcThread->m_bTake = true; //保存图片
 
@@ -556,6 +555,7 @@ void videowidget::changeDev()
     QString str;
     if (vd != nullptr) {
         str = QString(vd->videodevice);
+        close_v4l2_device_handler();
     }
     v4l2_device_list_t *devlist = get_device_list();
     if (devlist->num_devices == 2) {
@@ -567,6 +567,9 @@ void videowidget::changeDev()
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     m_pCamErrItem->hide();
+                } else {
+                    qDebug() << "camInit failed";
+                    emit showCamUsed();
                 }
                 break;
             }
@@ -581,6 +584,9 @@ void videowidget::changeDev()
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
                         m_pCamErrItem->hide();
+                    } else {
+                        qDebug() << "camInit failed 1";
+                        emit showCamUsed();
                     }
                     break;
                 } else {
@@ -589,6 +595,9 @@ void videowidget::changeDev()
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
                         m_pCamErrItem->hide();
+                    } else {
+                        qDebug() << "camInit failed 2";
+                        emit showCamUsed();
                     }
                     break;
                 }
@@ -599,6 +608,9 @@ void videowidget::changeDev()
                     m_imgPrcThread->start();
                     g_bFoundDevice = true;
                     m_pCamErrItem->hide();
+                } else {
+                    qDebug() << "camInit failed 3";
+                    emit showCamUsed();
                 }
                 break;
             }
@@ -708,6 +720,7 @@ void videowidget::startTakeVideo()
         if (g_bFoundDevice) {
             qDebug() << "start takeVideo";
             g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            m_nFileID ++;
             QString str = m_strFolder;
             if (QDir(m_strFolder).exists() == false) {
                 m_strFolder = QDir::homePath() + QString("/Videos");
@@ -743,4 +756,11 @@ void videowidget::startTakeVideo()
         m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
                        nHeight - m_btnVdTime->height() - 10);
     }
+}
+
+void videowidget::itemPosChange()
+{
+    m_pNormalItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2.0, (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4);
+    m_pCamErrItem->setPos((this->parentWidget()->width() - m_pNormalItem->pixmap().width()) / 2 + 30,
+                          (this->parentWidget()->width() - m_pNormalItem->pixmap().height()) / 4 + m_pNormalItem->pixmap().height() + 10);
 }

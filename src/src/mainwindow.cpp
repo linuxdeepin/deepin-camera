@@ -391,7 +391,7 @@ void CMainWindow::initUI()
         QString str = QDir::homePath();
         CMainWindow::m_lastfilename.replace(0, 1, str);
     }
-    if (QDir(CMainWindow::m_lastfilename).isEmpty())
+    if (!QDir(CMainWindow::m_lastfilename).exists())
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
     QString test1 = CMainWindow::m_lastfilename;
 

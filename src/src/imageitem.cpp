@@ -57,9 +57,17 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
         if (parseFromFile(fileInfo)) {
-            thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);
-            QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
-            pix = QPixmap::fromImage(img);
+            try {
+                thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
+
+                QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
+                pix = QPixmap::fromImage(img);
+            }
+            catch(...) {
+                 qDebug() << "generateThumbnail failed";
+                 pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
+            }
+
         } else {
             pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
         }
