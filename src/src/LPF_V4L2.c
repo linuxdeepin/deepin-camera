@@ -64,7 +64,7 @@ int camInit(const char* devicename)
     free(config_path);
     free(device_name);
     /*加载配置文件*/
-    config_load(config_file);
+//    config_load(config_file);
     /*用option更新配置文件*/
     config_update(my_options);
     /*获取配置项数据*/
@@ -230,13 +230,11 @@ int camInit(const char* devicename)
                 fprintf(stderr, "cheese: Video capture failed\n");
             }
         }
-
         return ret;
     }
-    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
+//    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
     return E_OK;
 }
-
 #ifdef __cplusplus
 }
 #endif

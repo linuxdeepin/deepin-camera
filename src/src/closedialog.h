@@ -36,7 +36,7 @@ class CloseDialog : public DDialog
 {
     Q_OBJECT
 public:
-    CloseDialog(QWidget *parent = nullptr, QString strText = "", QString btnName1 = tr("Cancel"), QString btnName2 = tr("Ok"));
+    CloseDialog(QWidget *parent = nullptr, QString strText = "", QString btnName1 = tr("Cancel"), QString btnName2 = tr("Close"));
 
 private:
     QVBoxLayout *m_vlayout;

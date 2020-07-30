@@ -42,7 +42,7 @@ class QHBoxLayout;
 class QSpacerItem;
 
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
-
+enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
 class videowidget : public DWidget
 {
@@ -127,10 +127,11 @@ private:
     //摄像头被占用
     void showCamUsed();
 
-
-
     //开始录像
     void startTakeVideo();
+
+    //item位置处理
+    void itemPosChange();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 
@@ -162,17 +163,15 @@ private:
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
 
-    int                     m_countdownLen = 1;
-
-    QPixmap              m_pixmap;
+    QPixmap               m_pixmap;
     int                     m_nFileID;
     QString                 m_strFolder;
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-    QTime                m_time;
-    int m_nCount; //录制计时
+    QTime                 m_time;
+    int                     m_nCount; //录制计时
 };
 
 #endif // VIDEOWIDGET_H

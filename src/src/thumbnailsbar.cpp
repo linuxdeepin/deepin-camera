@@ -43,7 +43,7 @@ QMap<int, ImageItem *> g_indexImage;
 int g_indexNow = 0;
 QSet<int> g_setIndex;
 //extern QString g_strFileName;
-extern bool g_bFoundDevice;
+extern int g_devStatus;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
@@ -173,7 +173,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if (!g_bFoundDevice) {
+    if (g_devStatus != 2) {
         return;
     }
     if (m_nActTpye == ActTakePic) {
@@ -187,7 +187,7 @@ void ThumbnailsBar::onBtnClick()
             qDebug() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
         } else {
             m_nStatus = STATPicIng;
-            m_lastButton->setToolTip(tr("Stop Taking photo"));
+            m_lastButton->setToolTip(tr("Stop Taking photos"));
             m_lastButton->setToolTipDuration(500);
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
@@ -260,47 +260,24 @@ void ThumbnailsBar::onShortcutDel()
         return;
     }
     m_lastDelTime = timeNow;
-    if (g_setIndex.isEmpty()) {
-        if (g_indexImage.size() <= 0) {
-            return;
-        }
 
-        QString strFile = g_indexImage.value(g_indexNow)->getPath();
-        DDesktopServices::trash(strFile);
-        delFile(strFile);
-
-    } else {
-        if (g_setIndex.size() <= 0) {
-            return;
-        }
-        QSet<int>::iterator it;
-        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
-            DDesktopServices::trash(g_indexImage.value(*it)->getPath());
-            delFile(g_indexImage.value(*it)->getPath());
-            g_indexImage.remove(*it);
-        }
-        g_setIndex.clear();
-    }
-
-    if (m_hBOx->isEmpty()) {
-        g_indexNow = 0;
-        return;
-    } else {
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
-        g_indexNow = itemNow->getIndex();
-    }
-
+    onTrashFile();
 }
 
 void ThumbnailsBar::onTrashFile()
 {
     if (g_setIndex.isEmpty()) { //删除
+        if (g_indexImage.size() <= 0) {
+            return;
+        }
         ImageItem *tmp = g_indexImage.value(g_indexNow);
         QString strPath = tmp->getPath();
         QFile file(strPath);
         if (!file.exists()) {
-            qDebug() << "file not exist";
+            qDebug() << "file not exist !";
+            qDebug() << g_indexNow << " " << strPath;
         }
+
         DDesktopServices::trash(strPath);
         delFile(strPath);
     } else {//边删边加会乱掉，先删完再加
@@ -325,10 +302,9 @@ void ThumbnailsBar::onTrashFile()
             for (int i = 0; i < m_hBOx->count(); i ++) {
                 ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
                 if (itemNow->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
-                    ImageItem *itemUI = dynamic_cast<ImageItem *>(m_hBOx->takeAt(i)->widget());
-                    m_hBOx->removeWidget(itemUI);
-                    itemUI->deleteLater();
-                    itemUI = nullptr;
+                    m_hBOx->removeWidget(itemNow);
+                    itemNow->deleteLater();
+                    itemNow = nullptr;
                     break;
                 }
             }
@@ -344,12 +320,21 @@ void ThumbnailsBar::onTrashFile()
                 } else {
                     ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
                     g_indexNow = itemNow->getIndex();
+                    QFile file1(itemNow->getPath());
+                    if (!file1.exists()) {
+                        qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
+                    }
                 }
                 return;
             }
             QFileInfo fileInfo = m_fileInfoLst.at(0);
+            int nIndexSupply = nIndexMax + 1 + i;
             m_fileInfoLst.removeAt(0);
-            ImageItem *pLabel = new ImageItem(nIndexMax + 1 + i, fileInfo.filePath());
+            ImageItem *pLabel = new ImageItem(nIndexSupply, fileInfo.filePath());
+            qDebug() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
+            if (pLabel == nullptr) {
+                qDebug() << "error! imageitem is null!!";
+            }
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
             g_indexImage.insert(nIndexMax + 1 + i, pLabel);
             m_hBOx->insertWidget(m_hBOx->count(), pLabel);
@@ -364,6 +349,11 @@ void ThumbnailsBar::onTrashFile()
     } else {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
         g_indexNow = itemNow->getIndex();
+        QFile file2(itemNow->getPath());
+        if (!file2.exists()) {
+            qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
+            qDebug() << "path : " << itemNow->getPath();
+        }
     }
 }
 
@@ -413,6 +403,7 @@ void ThumbnailsBar::addPath(QString strPath)
 
 void ThumbnailsBar::addFile(QString strFile)
 {
+    /*********方式1,永远指向某一个房间
     //获取当前选中图片在ui中的位置，insert之后，将g_indexNow指向该位置
     int nIndex = -1;
     for (int i = 0; i < m_hBOx->count(); i ++) {
@@ -422,39 +413,60 @@ void ThumbnailsBar::addFile(QString strFile)
             break;
         }
     }
-
+    ************/
     int nIndexMax = -1;
+    bool bSelectedFirst = false;
     if (!m_hBOx->isEmpty()) {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
         int nIndex0 = itemNow->getIndex();
+        if (nIndex0 == g_indexNow) {
+            bSelectedFirst = true;
+        }
         itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
         int nIndex1 = itemNow->getIndex();
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
-
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
+    qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
-    g_indexImage.remove(m_nItemCount);
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
     int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - LAST_BUTTON_SPACE * 2) / (THUMBNAIL_WIDTH + 2) - 1;
     if (m_hBOx->count() >= nLetAddCount) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->takeAt(m_nItemCount - 1)->widget());
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+        g_indexImage.remove(tmp->getIndex());
         m_hBOx->removeWidget(tmp);
         tmp->deleteLater();
     }
-
-    if (m_hBOx->isEmpty()) {
-        g_indexNow = nIndexMax+1;
+    if (pLabel == nullptr) {
+        qDebug() << "error! imageitem is null!!";
     }
     m_hBOx->insertWidget(0, pLabel);
 
+    m_nItemCount = m_hBOx->count();
+
+    /**************方式1
     //找到对应的widget，然后把选中的item改到对应的g_indexNow
     if (nIndex >= 0) {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(nIndex)->widget());
         g_indexNow = itemNow->getIndex();
     }
-    m_nItemCount = m_hBOx->count();
+    **************/
+
+    if (m_nItemCount <= 1) {//除非最开始没有图元，否则后续根据最开始的图像移动，图像在哪，选中的框在哪儿
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+        g_indexNow = itemNow->getIndex();
+    } else {
+        if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
+            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+            g_indexNow = tmp->getIndex();
+            QFile file(tmp->getPath());
+            if (!file.exists()) {
+                qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
+            }
+        }
+
+    }
     qDebug() << "m_nItemCount " << m_nItemCount;
     emit fitToolBar();
 }
@@ -465,6 +477,8 @@ void ThumbnailsBar::delFile(QString strFile)
     if (m_hBOx->isEmpty()) {
         return;
     }
+
+    //最值始终出现在第一个或者最后一个
     ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
     int nIndex0 = itemNow->getIndex();
     itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
@@ -475,40 +489,41 @@ void ThumbnailsBar::delFile(QString strFile)
     //2、删除对应图元
     //3、找到set里边对应数据，删除
     //4、读取下一个fileinfolist数据，写到set和图元
+    bool bRemoved = false;
     for (int i = 0; i < m_hBOx->count(); i ++) {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
         if (itemNow->getPath().compare(strFile) == 0) {
-            ImageItem *itemUI = dynamic_cast<ImageItem *>(m_hBOx->takeAt(i)->widget());
             g_indexImage.remove(g_indexNow);
-            m_hBOx->removeWidget(itemUI);
-            itemUI->deleteLater();
-            itemUI = nullptr;
+            m_hBOx->removeWidget(itemNow);
+            itemNow->deleteLater();
+            itemNow = nullptr;
+            bRemoved = true;
             break;
         }
+    }
+    if (!bRemoved) {
+        qDebug() << "warning: item didn't removed!!!";
     }
 
     //g_indexImage里边的数据是已经删掉了的
     if (m_fileInfoLst.isEmpty()) {
         m_nItemCount = m_hBOx->count();
         emit fitToolBar();
-        if (m_hBOx->isEmpty()) {
-            g_indexNow = 0;
-        } else {
-            ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
-            g_indexNow = itemNow->getIndex();
-        }
         return;
     }
+
     QFileInfo fileInfo = m_fileInfoLst.at(0);
     m_fileInfoLst.removeAt(0);
-    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
-        QString strFileName = fileInfo.fileName();
-    }
 
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, fileInfo.filePath());
+    qDebug() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
+    if (pLabel == nullptr) {
+        qDebug() << "error! imageitem is null!!";
+    }
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBOx->insertWidget(m_hBOx->count(), pLabel);
+
     emit fitToolBar();
 }
 

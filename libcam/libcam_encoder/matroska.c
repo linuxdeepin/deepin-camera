@@ -50,6 +50,8 @@
 #include "file_io.h"
 #include "matroska.h"
 #include "gview.h"
+#include "gui.h"
+#include "camview.h"
 
 /*
  * default size of pkt ring buffer 
@@ -811,6 +813,14 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
     }
 
     mkv_ctx->duration = MAX(mkv_ctx->duration, (int64_t)ts /*+ duration*/);
+
+    double strsa = (double) mkv_ctx->duration/1000;
+
+    if((int)(strsa*100) > (100*MAX_REC_TIME+30))
+    {
+        stop_encoder_thread();
+        reset_video_timer();
+    }
 //    update duration
     int64_t currentpos = io_get_offset(mkv_ctx->writer);
     io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
