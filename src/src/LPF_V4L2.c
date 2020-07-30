@@ -230,13 +230,11 @@ int camInit(const char* devicename)
                 fprintf(stderr, "cheese: Video capture failed\n");
             }
         }
-
         return ret;
     }
 //    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
     return E_OK;
 }
-
 #ifdef __cplusplus
 }
 #endif
