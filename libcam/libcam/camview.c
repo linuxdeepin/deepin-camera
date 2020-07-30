@@ -53,8 +53,8 @@ __COND_TYPE capture_cond;
 
 static int render = RENDER_SDL; /*render API*/
 static int quit = 0; /*terminate flag*/
-static int save_image = 0; /*save image flag*/
-static int save_video = 0; /*save video flag*/
+volatile static int save_image = 0; /*save image flag*/
+volatile static int save_video = 0; /*save video flag*/
 
 static uint64_t my_photo_timer = 0; /*timer count*/
 
@@ -71,19 +71,19 @@ static uint32_t my_render_mask = REND_FX_YUV_NOFILT; /*render fx filter mask*/
 static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
 
 /*暂停录制*/
-static int capture_pause = 0;
+volatile static int capture_pause = 0;
 
 /*暂停时刻的视频时间*/
-static int64_t video_timestamp_tmp = 0;
+volatile static int64_t video_timestamp_tmp = 0;
 
 /*音频时间引用*/
-static int64_t audio_timestamp_reference = 0;
+volatile static int64_t audio_timestamp_reference = 0;
 
 /*暂停时刻的音频时间*/
-static int64_t audio_timestamp_tmp = 0;
+volatile static int64_t audio_timestamp_tmp = 0;
 
 /*音频的暂停总时间*/
-static int64_t audio_pause_timestamp = 0;
+volatile static int64_t audio_pause_timestamp = 0;
 
 /*continues focus*/
 static int do_soft_autofocus = 0;
@@ -702,12 +702,13 @@ static void *audio_processing_loop(void *data)
 
             encoder_process_audio_buffer(encoder_ctx, audio_buff->data);
         }
-
     }
 
     /*flush any delayed audio frames*/
     encoder_flush_audio_buffer(encoder_ctx);
-
+    audio_timestamp_tmp = 0;
+    audio_pause_timestamp = 0;
+    audio_timestamp_reference = 0;
     /*reset vu meter*/
     audio_buff->level_meter[0] = 0;
     audio_buff->level_meter[1] = 0;

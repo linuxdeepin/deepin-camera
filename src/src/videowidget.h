@@ -173,7 +173,6 @@ private:
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     QTime                 m_time;
-    bool                    m_bcamera_used;//摄像头被占用状态
     int                     m_nCount; //录制计时
 };
 

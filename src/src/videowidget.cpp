@@ -162,9 +162,6 @@ void videowidget::init()
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->m_bTake = false;
 
-    //初始化占用状态
-    m_bcamera_used = false;
-
 
     m_flashLabel->setWindowFlag(Qt::WindowType::ToolTip);
     m_flashLabel->hide();
@@ -176,7 +173,6 @@ void videowidget::init()
 
         m_pCamErrItem->hide();
         m_imgPrcThread->start();
-        m_bcamera_used = false;
     } else if (ret == E_FORMAT_ERR) {
         //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
@@ -213,8 +209,6 @@ void videowidget::showNocam()
 {
     g_bFoundDevice = false;//没有设备
 
-    m_bcamera_used = false;
-
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Not connected.svg");
         m_pixmap = QPixmap::fromImage(img);
@@ -242,9 +236,6 @@ void videowidget::showCamUsed()
     setPalette(paPic);
 
     g_bFoundDevice = false;//没有设备
-
-    //设置占用状态为true
-    m_bcamera_used = true;
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
@@ -507,7 +498,6 @@ void videowidget::showCountdown()
                     flashTimer->start(500);
                 }
             }
-
             m_nInterval--;
         }
     }
@@ -587,12 +577,9 @@ void videowidget::changeDev()
                     g_bFoundDevice = true;
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-//                    m_pCamErrItem->hide();
                 } else {
-                    if (m_bcamera_used == false) {
-                        qDebug() << "camInit failed";
-                        emit showCamUsed();
-                    }
+                    qDebug() << "camInit failed";
+                    showCamUsed();
                 }
                 break;
             }
@@ -606,12 +593,9 @@ void videowidget::changeDev()
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
-//                        m_pCamErrItem->hide();
                     } else {
-                        if (m_bcamera_used == false) {
-                            qDebug() << "camInit failed";
-                            emit showCamUsed();
-                        }
+                        qDebug() << "camInit failed";
+                        showCamUsed();
                     }
                     break;
                 } else {
@@ -619,12 +603,9 @@ void videowidget::changeDev()
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_bFoundDevice = true;
-//                        m_pCamErrItem->hide();
                     } else {
-                        if (m_bcamera_used == false) {
-                            qDebug() << "camInit failed";
-                            emit showCamUsed();
-                        }
+                        qDebug() << "camInit failed";
+                        showCamUsed();
                     }
                     break;
                 }
@@ -634,12 +615,9 @@ void videowidget::changeDev()
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     g_bFoundDevice = true;
-//                    m_pCamErrItem->hide();
                 } else {
-                    if (m_bcamera_used == false) {
-                        qDebug() << "camInit failed";
-                        emit showCamUsed();
-                    }
+                    qDebug() << "camInit failed";
+                    showCamUsed();
                 }
                 break;
             }
