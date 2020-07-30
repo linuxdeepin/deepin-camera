@@ -187,7 +187,7 @@ void ThumbnailsBar::onBtnClick()
             qDebug() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
         } else {
             m_nStatus = STATPicIng;
-            m_lastButton->setToolTip(tr("Stop Taking photo"));
+            m_lastButton->setToolTip(tr("Stop Taking photos"));
             m_lastButton->setToolTipDuration(500);
             //1、标题栏视频按钮置灰不可选
             emit enableTitleBar(1);

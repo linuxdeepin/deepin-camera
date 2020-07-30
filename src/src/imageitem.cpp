@@ -62,10 +62,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
                 pix = QPixmap::fromImage(img);
-            }
-            catch(...) {
-                 qDebug() << "generateThumbnail failed";
-                 pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
+            } catch (...) {
+                qDebug() << "generateThumbnail failed";
+                pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
             }
 
         } else {
@@ -77,7 +76,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         painter1.begin(&pix);
         painter1.setPen(Qt::red);
         painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
-        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss"));
+        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(static_cast<int>(m_nDuration / 1000000)).toString("mm:ss"));
         //qDebug() << pix.width() << " " << pix.height();
         //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
         painter1.end();
