@@ -42,7 +42,7 @@ class QHBoxLayout;
 class QSpacerItem;
 
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
-
+enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
 class videowidget : public DWidget
 {
@@ -162,8 +162,6 @@ private:
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
-
-    int                     m_countdownLen = 1;
 
     QPixmap               m_pixmap;
     int                     m_nFileID;

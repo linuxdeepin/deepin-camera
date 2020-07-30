@@ -43,7 +43,7 @@ QMap<int, ImageItem *> g_indexImage;
 int g_indexNow = 0;
 QSet<int> g_setIndex;
 //extern QString g_strFileName;
-extern bool g_bFoundDevice;
+extern int g_devStatus;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
@@ -173,7 +173,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
 void ThumbnailsBar::onBtnClick()
 {
-    if (!g_bFoundDevice) {
+    if (g_devStatus != 2) {
         return;
     }
     if (m_nActTpye == ActTakePic) {
