@@ -233,7 +233,7 @@ int camInit(const char* devicename)
 
         return ret;
     }
-    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
+//    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
     return E_OK;
 }
 
