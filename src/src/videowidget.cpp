@@ -207,6 +207,11 @@ void videowidget::init()
 //显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
+    DPalette paPic;
+    QColor cloPic(0, 0, 0, 178);
+    paPic.setColor(DPalette::Base, cloPic);
+    setPalette(paPic);
+    
     g_bFoundDevice = false;//没有设备
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
@@ -220,6 +225,9 @@ void videowidget::showNocam()
     //m_pixmap.fill(Qt::red);
     m_pNormalScene->setSceneRect(m_pixmap.rect());
     m_pNormalItem->setPixmap(m_pixmap);
+    if (m_flashLabel->isVisible()) {
+        m_flashLabel->hide();
+    }
     QString str(tr("No webcam found"));//未连接摄像头
 //    m_countdownLen = str.length() * 12;
     setFont(m_pCamErrItem, 12, str);
