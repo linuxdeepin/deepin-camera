@@ -24,11 +24,13 @@
     <message>
         <location filename="../src/closedialog.h" line="39"/>
         <source>Cancel</source>
+        <translatorcomment>取消</translatorcomment>
         <translation>取消</translation>
     </message>
     <message>
         <location filename="../src/closedialog.h" line="39"/>
         <source>Close</source>
+        <translatorcomment>关闭</translatorcomment>
         <translation>关闭</translation>
     </message>
     <message>
@@ -177,8 +179,12 @@
     </message>
     <message>
         <location filename="../src/thumbnailsbar.cpp" line="190"/>
+        <source>Stop Taking photos</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Stop Taking photo</source>
-        <translation>结束拍照</translation>
+        <translation type="vanished">结束拍照</translation>
     </message>
     <message>
         <location filename="../src/thumbnailsbar.cpp" line="389"/>
@@ -193,17 +199,17 @@
         <translation type="vanished">结束拍照</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="101"/>
+        <location filename="../src/videowidget.cpp" line="103"/>
         <source>Stop taking video</source>
         <translation>结束录制</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="217"/>
+        <location filename="../src/videowidget.cpp" line="216"/>
         <source>No webcam found</source>
         <translation>未连接摄像头</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="246"/>
+        <location filename="../src/videowidget.cpp" line="245"/>
         <source>The webcam is in use</source>
         <translation>摄像头已被占用</translation>
     </message>
