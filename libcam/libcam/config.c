@@ -43,9 +43,9 @@ extern int debug_level;
 
 static config_t my_config =
 {
-    .width = 1280,
-    .height = 720,
-    .format = V4L2_PIX_FMT_YUYV,
+    .width = 1920,
+    .height = 1080,
+    .format = V4L2_PIX_FMT_H264,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",
@@ -61,7 +61,7 @@ static config_t my_config =
 	.video_sufix = 1,
 	.photo_sufix = 1,
 	.fps_num = 1,
-    .fps_denom = 24,
+    .fps_denom = 30,
     .audio_device = -1,/*will use API default in this case*/
 	.video_fx = 0, /*no video fx*/
 	.audio_fx = 0, /*no audio fx*/
