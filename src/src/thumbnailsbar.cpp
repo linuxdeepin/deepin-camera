@@ -325,6 +325,7 @@ void ThumbnailsBar::onTrashFile()
                         qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
                     }
                 }
+                g_setIndex.clear();
                 return;
             }
             QFileInfo fileInfo = m_fileInfoLst.at(0);

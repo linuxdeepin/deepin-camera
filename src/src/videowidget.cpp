@@ -78,7 +78,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
     m_time.setHMS(0, 0, 0, 0);
-    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
+    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("hh:mm:ss"));
 
     m_endBtn = new DPushButton(this);
     m_endBtn->setFlat(true);
@@ -194,38 +194,44 @@ void videowidget::init()
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-    [=](DGuiApplicationHelper::ColorType type) {
+    [ = ](DGuiApplicationHelper::ColorType type) {
         if (m_pCamErrItem->isVisible()) {
+            QString str;
             if (type == DGuiApplicationHelper::LightType) {
                 if (g_devStatus == NOCAM) {
                     qDebug() << "changed theme 1";
                     QImage img(":/images/icons/light/Not connected.svg");
                     m_pixmap = QPixmap::fromImage(img);
-                    QString str(tr("No webcam found"));//未连接摄像头
-                    m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
-                    m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
-                    m_pCamErrItem->setPlainText(str);
+                    str = tr("No webcam found");//未连接摄像头
                 } else {//仅CAM_CANNOT_USE
                     qDebug() << "changed theme 2";
                     QImage img(":/images/icons/light/Take up.svg");
                     m_pixmap = QPixmap::fromImage(img);
-                    QString str(tr("The webcam is in use"));//摄像头已被占用
-                    setFont(m_pCamErrItem, 12, str);
+                    str = tr("The webcam is in use");//摄像头已被占用
                 }
+                m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
+                m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
+                m_pCamErrItem->setPlainText(str);
+                setFont(m_pCamErrItem, 12, str);
+                QPalette plt = this->palette();
+                plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+                this->setPalette(plt);
             } else if (type == DGuiApplicationHelper::DarkType) {
                 if (g_devStatus == NOCAM) {
                     qDebug() << "changed theme 3";
                     QImage img(":/images/icons/dark/Not connected_dark.svg");
                     m_pixmap = QPixmap::fromImage(img);
-                    QString str(tr("No webcam found"));//未连接摄像头
-                    setFont(m_pCamErrItem, 12, str);
+                    str = tr("No webcam found");//未连接摄像头
                 } else {//仅CAM_CANNOT_USE
                     qDebug() << "changed theme 4";
                     QImage img(":/images/icons/dark/Take up_dark.svg");
                     m_pixmap = QPixmap::fromImage(img);
-                    QString str(tr("The webcam is in use"));//摄像头已被占用
-                    setFont(m_pCamErrItem, 12, str);
+                    str = tr("The webcam is in use");//摄像头已被占用
                 }
+                setFont(m_pCamErrItem, 12, str);
+                QPalette plt = this->palette();
+                plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+                this->setPalette(plt);
             }
 
             m_pNormalScene->setSceneRect(m_pixmap.rect());
@@ -242,10 +248,6 @@ void videowidget::init()
 void videowidget::showNocam()
 {
     qDebug() << "changed theme 22";
-    DPalette paPic;
-    QColor cloPic(0, 0, 0, 178);
-    paPic.setColor(DPalette::Base, cloPic);
-    setPalette(paPic);
 
     QString str(tr("No webcam found"));//未连接摄像头
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
@@ -254,10 +256,16 @@ void videowidget::showNocam()
         m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
         m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
         m_pCamErrItem->setPlainText(str);
+        QPalette plt = this->palette();
+        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+        this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Not connected_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
         setFont(m_pCamErrItem, 12, str);
+        QPalette plt = this->palette();
+        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+        this->setPalette(plt);
     }
 
     //m_pixmap.fill(Qt::red);
@@ -280,20 +288,30 @@ void videowidget::showCamUsed()
     paPic.setColor(DPalette::Base, cloPic);
     setPalette(paPic);
 
+    QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
         m_pixmap = QPixmap::fromImage(img);
+        m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
+        m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
+        m_pCamErrItem->setPlainText(str);
+        QPalette plt = this->palette();
+        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+        this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Take up_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
+        setFont(m_pCamErrItem, 12, str);
+        QPalette plt = this->palette();
+        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+        this->setPalette(plt);
     }
     m_pNormalScene->setSceneRect(m_pixmap.rect());
     m_pNormalItem->setPixmap(m_pixmap);
     if (m_flashLabel->isVisible()) {
         m_flashLabel->hide();
     }
-    QString str(tr("The webcam is in use"));//摄像头已被占用
-    setFont(m_pCamErrItem, 12, str);
+
     itemPosChange();
     m_pCamErrItem->show();
 }
@@ -325,9 +343,11 @@ void videowidget::ReceiveMajorImage(QPixmap image, int result)
 void videowidget::onReachMaxDelayedFrames()
 {
     check_device_list_events(get_v4l2_device_handler());
-    if (get_device_list()->num_devices < 1)
+    if (get_device_list()->num_devices < 1) {
+        g_devStatus = NOCAM;
         showNocam();
-    else {
+    } else {
+        g_devStatus = CAM_CANNOT_USE;
         showCamUsed();
     }
     emit setBtnStatues(false);
@@ -364,7 +384,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         }
         m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
-            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
+            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("hh:mm:ss"));
         resizePixMap();
         break;
     default:
@@ -781,7 +801,7 @@ void videowidget::startTakeVideo()
             set_video_name(g_strFileName.toStdString().c_str());
 
             start_encoder_thread();
-//            emit updateBlockSystem(true);
+            emit updateBlockSystem(true);
             setCapstatus(true);
             //begin_time = QDateTime::currentDateTime();
             countTimer->stop();
@@ -794,7 +814,7 @@ void videowidget::startTakeVideo()
         }
         m_nCount = 0;
         m_time.setHMS(0, 0, 0, 0);
-        m_btnVdTime->setText(m_time.toString("mm:ss"));
+        m_btnVdTime->setText(m_time.toString("hh:mm:ss"));
 
         int nWidth = this->width();
         int nHeight = this->height();
