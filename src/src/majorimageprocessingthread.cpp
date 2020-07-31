@@ -64,7 +64,6 @@ void MajorImageProcessingThread::run()
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
                 stopped = true;
-
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
                 close_v4l2_device_handler();
@@ -75,9 +74,9 @@ void MajorImageProcessingThread::run()
         result = 0;
         framedely = 0;
         if (video_capture_get_save_video()) {
-            if (get_myvideo_bebin_timer() == 0) {
-                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
-            }
+//            if (get_myvideo_bebin_timer() == 0) {
+//                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
+//            }
             int size = (frame->width * frame->height * 3) / 2;
 
             uint8_t *input_frame = frame->yuv_frame;
@@ -169,7 +168,6 @@ void MajorImageProcessingThread::run()
                     jpeg_ctx = nullptr;
                 }
             }
-
             free(jpeg);
             free(jpeg_ctx);
             jpeg = nullptr;
