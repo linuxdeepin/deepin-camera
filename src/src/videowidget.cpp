@@ -78,7 +78,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
     m_time.setHMS(0, 0, 0, 0);
-    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("mm:ss"));
+    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("hh:mm:ss"));
 
     m_endBtn = new DPushButton(this);
     m_endBtn->setFlat(true);
@@ -194,7 +194,7 @@ void videowidget::init()
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
-    [=](DGuiApplicationHelper::ColorType type) {
+    [ = ](DGuiApplicationHelper::ColorType type) {
         if (m_pCamErrItem->isVisible()) {
             QString str;
             if (type == DGuiApplicationHelper::LightType) {
@@ -214,7 +214,7 @@ void videowidget::init()
                 m_pCamErrItem->setPlainText(str);
                 setFont(m_pCamErrItem, 12, str);
                 QPalette plt = this->palette();
-                plt.setColor(QPalette::Base,QColor(0, 0, 0,178));
+                plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
                 this->setPalette(plt);
             } else if (type == DGuiApplicationHelper::DarkType) {
                 if (g_devStatus == NOCAM) {
@@ -230,7 +230,7 @@ void videowidget::init()
                 }
                 setFont(m_pCamErrItem, 12, str);
                 QPalette plt = this->palette();
-                plt.setColor(QPalette::Base,QColor(255,255,255,178));
+                plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
                 this->setPalette(plt);
             }
 
@@ -257,14 +257,14 @@ void videowidget::showNocam()
         m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
         m_pCamErrItem->setPlainText(str);
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base,QColor(0, 0, 0,178));
+        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
         this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Not connected_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
         setFont(m_pCamErrItem, 12, str);
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base,QColor(255,255,255,178));
+        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
         this->setPalette(plt);
     }
 
@@ -296,14 +296,14 @@ void videowidget::showCamUsed()
         m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
         m_pCamErrItem->setPlainText(str);
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base,QColor(0, 0, 0,178));
+        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
         this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Take up_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
         setFont(m_pCamErrItem, 12, str);
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base,QColor(255,255,255,178));
+        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
         this->setPalette(plt);
     }
     m_pNormalScene->setSceneRect(m_pixmap.rect());
@@ -346,8 +346,7 @@ void videowidget::onReachMaxDelayedFrames()
     if (get_device_list()->num_devices < 1) {
         g_devStatus = NOCAM;
         showNocam();
-    }
-    else {
+    } else {
         g_devStatus = CAM_CANNOT_USE;
         showCamUsed();
     }
@@ -385,7 +384,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         }
         m_fWgtCountdown->hide();
         if (!get_capture_pause())//判断是否是暂停状态
-            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("mm:ss"));
+            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("hh:mm:ss"));
         resizePixMap();
         break;
     default:
@@ -815,7 +814,7 @@ void videowidget::startTakeVideo()
         }
         m_nCount = 0;
         m_time.setHMS(0, 0, 0, 0);
-        m_btnVdTime->setText(m_time.toString("mm:ss"));
+        m_btnVdTime->setText(m_time.toString("hh:mm:ss"));
 
         int nWidth = this->width();
         int nHeight = this->height();
