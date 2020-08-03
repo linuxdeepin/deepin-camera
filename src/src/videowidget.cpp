@@ -59,7 +59,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
     m_btnVdTime->setIconSize(QSize(6, 6));
     m_btnVdTime->hide(); //先隐藏
-    m_btnVdTime->setFixedSize(84, 40);
+    m_btnVdTime->setFixedSize(92, 40);
     m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
     m_btnVdTime->setEnabled(false);
 
@@ -77,8 +77,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setPalette(pa_cb);
 
     m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
-    m_time.setHMS(0, 0, 0, 0);
-    m_btnVdTime->setText(m_time.addSecs(m_nCount).toString("hh:mm:ss"));
+    m_btnVdTime->setText(QString("00:00:00"));
 
     m_endBtn = new DPushButton(this);
     m_endBtn->setFlat(true);
@@ -383,8 +382,43 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
             endBtnClicked(); //结束录制
         }
         m_fWgtCountdown->hide();
-        if (!get_capture_pause())//判断是否是暂停状态
-            m_btnVdTime->setText(m_time.addSecs(m_nCount++).toString("hh:mm:ss"));
+        if (!get_capture_pause()) {//判断是否是暂停状态
+            QString strTime = "";
+            int nHour = m_nCount/3600;
+            if (nHour == 0) {
+                strTime.append("00");
+            } else if (nHour < 10) {
+                strTime.append("0");
+                strTime.append(QString::number(nHour));
+            } else {
+                strTime.append(QString::number(nHour));
+            }
+            strTime.append(":");
+            int nOutHour = m_nCount % 3600;
+            int nMins = nOutHour/60;
+            if (nMins == 0) {
+                strTime.append("00");
+            } else if (nMins < 10) {
+                strTime.append("0");
+                strTime.append(QString::number(nMins));
+            } else {
+                strTime.append(QString::number(nMins));
+            }
+            strTime.append(":");
+            int nSecs = nOutHour % 60;
+            if (nSecs == 0) {
+                strTime.append("00");
+            } else if (nSecs < 10) {
+                strTime.append("0");
+                strTime.append(QString::number(nSecs));
+            } else {
+                strTime.append(QString::number(nSecs));
+            }
+
+            m_btnVdTime->setText(strTime);
+            m_nCount++;
+        }
+
         resizePixMap();
         break;
     default:
@@ -812,9 +846,8 @@ void videowidget::startTakeVideo()
             //countTimer->start(1000);
             setCapstatus(false);
         }
-        m_nCount = 0;
-        m_time.setHMS(0, 0, 0, 0);
-        m_btnVdTime->setText(m_time.toString("hh:mm:ss"));
+        m_nCount = 0;//5184000;
+        m_btnVdTime->setText(QString("00:00:00"));
 
         int nWidth = this->width();
         int nHeight = this->height();
@@ -823,7 +856,7 @@ void videowidget::startTakeVideo()
         m_btnVdTime->show();
 
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                          nHeight - m_btnVdTime->height() - 5);
+                          nHeight - m_btnVdTime->height() - 6);
 
         m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
                        nHeight - m_btnVdTime->height() - 10);
