@@ -62,6 +62,8 @@ signals:
     void takeVdDone();
     void setBtnStatues(bool status);
     void updateBlockSystem(bool bTrue);
+    void noCam();
+    void noCamAvailable();
 public:
     QString getFolder()
     {
@@ -107,7 +109,6 @@ private:
     void init();
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-    void resizePixMap();
 
     //设置字体
     void setFont(QGraphicsTextItem *item, int size, QString str);
@@ -132,6 +133,9 @@ private:
 
     //item位置处理
     void itemPosChange();
+
+    //结束所有操作
+    void stopEverything();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 
@@ -144,7 +148,6 @@ private:
     QGraphicsScene       *m_pNormalScene;
     QGraphicsPixmapItem *m_pNormalItem;
     QGraphicsTextItem    *m_pCamErrItem; //摄像头异常提示
-    QGraphicsTextItem    *m_pTimeItem;
 
     QGridLayout          *m_pGridLayout;
 

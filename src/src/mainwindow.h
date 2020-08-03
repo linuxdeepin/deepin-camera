@@ -107,6 +107,10 @@ private slots:
      * @brief updateBlockSystem 更新阻塞关机
      */
     void updateBlockSystem(bool bTrue);
+    /**
+     * @brief onNoCam 找不到设备恢复按钮和状态
+     */
+    void onNoCam();
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
