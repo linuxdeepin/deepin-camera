@@ -75,7 +75,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         QPainter painter1;
         painter1.begin(&pix);
         painter1.setPen(Qt::red);
-        painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
+        QFont font("SourceHanSansSC", 16, QFont::ExtraLight);
+        font.setPixelSize(15);
+        painter1.setFont(font);
         painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(static_cast<int>(m_nDuration / 1000000)).toString("hh:mm:ss"));
         //qDebug() << pix.width() << " " << pix.height();
         //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
