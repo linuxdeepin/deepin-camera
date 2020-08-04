@@ -59,24 +59,28 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
     m_btnVdTime->setIconSize(QSize(6, 6));
     m_btnVdTime->hide(); //先隐藏
-    m_btnVdTime->setFixedSize(92, 40);
+    m_btnVdTime->setFixedSize(92, 36);
     m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
     m_btnVdTime->setEnabled(false);
 
     //设置字体颜色
     QPalette paletteTime = m_btnVdTime->palette();
-    paletteTime.setColor(QPalette::ButtonText, QColor("#FF2C2C"));
+    paletteTime.setColor(QPalette::ButtonText, QColor(202,0,0));//#ca0000
     m_btnVdTime->setPalette(paletteTime);
 
     DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        pa_cb.setBrush(QPalette::Light, QColor(/*"#D2D2D2"*/255, 255, 255, 51)); //浅色
+        QColor clr(Qt::white);
+        clr.setAlphaF(0.2);
+        pa_cb.setBrush(QPalette::Light, clr); //浅色
     } else {
-        pa_cb.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
+        QColor clr(Qt::black);
+        clr.setAlphaF(0.2);
+        pa_cb.setBrush(QPalette::Dark, clr); //深色
     }
     m_btnVdTime->setPalette(pa_cb);
 
-    m_btnVdTime->setFont(QFont("SourceHanSansSC", 10, QFont::ExtraLight));
+    m_btnVdTime->setFont(QFont("SourceHanSansSC", 11, QFont::Normal));
     m_btnVdTime->setText(QString("00:00:00"));
 
     m_endBtn = new DPushButton(this);
@@ -118,8 +122,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalItem = new QGraphicsPixmapItem;
     m_pCamErrItem = new QGraphicsTextItem;
 
-    m_pTimeItem = new QGraphicsTextItem;
-
     //添加布局
     m_pGridLayout = new QGridLayout(this);
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
@@ -127,7 +129,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    m_pNormalScene->addItem(m_pTimeItem);
+    //m_pNormalScene->addItem(m_pTimeItem);
 //    m_pNormalScene->setSceneRect(this->rect());
 //    m_pNormalItem->setPos(0, 0);
 //    m_pNormalScene->addRect(-100, -75, 200, 150, QPen(Qt::red));
@@ -208,10 +210,13 @@ void videowidget::init()
                     m_pixmap = QPixmap::fromImage(img);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
-                m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
-                m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
+                QFont ft("SourceHanSansSC");
+                ft.setWeight(QFont::Bold);
+                ft.setPixelSize(17);
+                m_pCamErrItem->setFont(ft);
+                m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255, 204));//浅色主题文字和图片是白色，特殊处理
                 m_pCamErrItem->setPlainText(str);
-                setFont(m_pCamErrItem, 12, str);
+
                 QPalette plt = this->palette();
                 plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
                 this->setPalette(plt);
@@ -227,9 +232,16 @@ void videowidget::init()
                     m_pixmap = QPixmap::fromImage(img);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
-                setFont(m_pCamErrItem, 12, str);
+                QFont ft("SourceHanSansSC");
+                ft.setWeight(QFont::Medium);
+                ft.setPixelSize(17);
+                m_pCamErrItem->setFont(ft);
+                QColor clor(0,0,0);
+                clor.setAlphaF(0.8);
+                m_pCamErrItem->setDefaultTextColor(clor);//浅色主题文字和图片是白色，特殊处理
+                m_pCamErrItem->setPlainText(str);
                 QPalette plt = this->palette();
-                plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+                plt.setColor(QPalette::Base, QColor(255, 255, 255, 204));
                 this->setPalette(plt);
             }
 
@@ -246,28 +258,37 @@ void videowidget::init()
 //显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
-    qDebug() << "changed theme 22";
-
     QString str(tr("No webcam found"));//未连接摄像头
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Not connected.svg");
         m_pixmap = QPixmap::fromImage(img);
-        m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
-        m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
-        m_pCamErrItem->setPlainText(str);
-        QPalette plt = this->palette();
-        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+        QColor clr(255, 255, 255);
+        clr.setAlphaF(0.8);
+        m_pCamErrItem->setDefaultTextColor(clr);
+
+        QColor clrBase(0, 0, 0);
+        clrBase.setAlphaF(0.7);
+        QPalette plt = this->palette();        
+        plt.setColor(QPalette::Base, clrBase);
         this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Not connected_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
-        setFont(m_pCamErrItem, 12, str);
+        QColor clr(0, 0, 0);
+        clr.setAlphaF(0.8);
+        m_pCamErrItem->setDefaultTextColor(clr);
+
+        QColor clrBase(255, 255, 255);
+        clrBase.setAlphaF(0.7);
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+        plt.setColor(QPalette::Base, clrBase);
         this->setPalette(plt);
     }
-
-    //m_pixmap.fill(Qt::red);
+    QFont ft("SourceHanSansSC");
+    ft.setWeight(QFont::DemiBold);
+    ft.setPixelSize(17);
+    m_pCamErrItem->setFont(ft);
+    m_pCamErrItem->setPlainText(str);
     m_pNormalScene->setSceneRect(m_pixmap.rect());
     m_pNormalItem->setPixmap(m_pixmap);
     if (m_flashLabel->isVisible()) {
@@ -276,22 +297,23 @@ void videowidget::showNocam()
 
     itemPosChange();
     m_pCamErrItem->show();
+    emit noCam();
+    if (getCapstatus()) { //录制完成处理
+        endBtnClicked();
+    }
 }
 
 //显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
-    qDebug() << "changed theme 11";
-    DPalette paPic;
-    QColor cloPic(0, 0, 0, 178);
-    paPic.setColor(DPalette::Base, cloPic);
-    setPalette(paPic);
-
     QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
         m_pixmap = QPixmap::fromImage(img);
-        m_pCamErrItem->setFont(QFont("SourceHanSansSC", 12, QFont::ExtraLight));
+        QFont ft("SourceHanSansSC");
+        ft.setWeight(QFont::Bold);
+        ft.setPixelSize(17);
+        m_pCamErrItem->setFont(ft);
         m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
         m_pCamErrItem->setPlainText(str);
         QPalette plt = this->palette();
@@ -300,7 +322,7 @@ void videowidget::showCamUsed()
     } else {
         QImage img(":/images/icons/dark/Take up_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
-        setFont(m_pCamErrItem, 12, str);
+        setFont(m_pCamErrItem, 17, str);
         QPalette plt = this->palette();
         plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
         this->setPalette(plt);
@@ -313,6 +335,10 @@ void videowidget::showCamUsed()
 
     itemPosChange();
     m_pCamErrItem->show();
+    emit noCamAvailable();
+    if (getCapstatus()) { //录制完成处理
+        endBtnClicked();
+    }
 }
 
 void videowidget::ReceiveMajorImage(QPixmap image, int result)
@@ -344,6 +370,7 @@ void videowidget::onReachMaxDelayedFrames()
     check_device_list_events(get_v4l2_device_handler());
     if (get_device_list()->num_devices < 1) {
         g_devStatus = NOCAM;
+        stopEverything();
         showNocam();
     } else {
         g_devStatus = CAM_CANNOT_USE;
@@ -366,7 +393,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->show();
 
         //m_pCountItem->show();
-        m_pTimeItem->hide();
         m_btnVdTime->hide();
         m_endBtn->hide();
 
@@ -374,7 +400,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
             m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
                            (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
         m_dLabel->setText(QString::number(m_nInterval));
-        resizePixMap();
         break;
     case AUDIO:
         m_pCamErrItem->hide();
@@ -419,10 +444,8 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
             m_nCount++;
         }
 
-        resizePixMap();
         break;
     default:
-        m_pTimeItem->hide();
         m_pCamErrItem->hide();
         m_fWgtCountdown->hide();
         m_btnVdTime->hide();
@@ -435,7 +458,10 @@ void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
 {
     if (item == nullptr)
         return;
-    item->setFont(QFont("SourceHanSansSC", size, QFont::ExtraLight));
+    QFont ft("SourceHanSansSC");
+    ft.setWeight(QFont::Bold);
+    ft.setPixelSize(17);
+    item->setFont(ft);
     item->setDefaultTextColor(QColor(40, 39, 39));
     item->setPlainText(str);
 
@@ -449,22 +475,8 @@ void videowidget::hideCountDownLabel()
 
 void videowidget::hideTimeLabel()
 {
-    m_pTimeItem->hide();
     m_btnVdTime->hide();
     m_endBtn->hide();
-}
-
-void videowidget::resizePixMap()
-{
-    if (m_pTimeItem->isVisible()) {
-        QRect rect = this->rect();
-
-        int x = this->x();
-        int y = this->y();
-
-        m_pTimeItem->setX(x + rect.width() / 2 - 50);
-        m_pTimeItem->setY(y + rect.height());
-    }
 }
 
 void videowidget::resizeEvent(QResizeEvent *size)
@@ -504,7 +516,6 @@ void videowidget::resizeEvent(QResizeEvent *size)
         itemPosChange();
         m_pCamErrItem->hide();
     }
-    resizePixMap();
 }
 
 void videowidget::showCountdown()
@@ -574,7 +585,7 @@ void videowidget::showCountdown()
                 emit takePicOnce();
             }
 
-            if (m_curTakePicTime > 0) {
+            if (m_curTakePicTime > 0 && g_devStatus == CAM_CANUSE) {
                 countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
                 m_nInterval = m_nMaxInterval; //改到开始的时候设置
             }
@@ -628,7 +639,6 @@ void videowidget::endBtnClicked()
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->hide();
     }
-
     m_btnVdTime->hide();
     m_endBtn->hide();
 
@@ -869,4 +879,25 @@ void videowidget::itemPosChange()
 
     m_pNormalItem->update();
     m_pCamErrItem->update();
+}
+
+void videowidget::stopEverything()
+{
+    //关闭相关动作，倒计时、闪光灯、计时器、等等
+    //countTimer flashTimer m_flashLabel
+    if (flashTimer->isActive()) {
+        flashTimer->stop();
+    }
+    if (countTimer->isActive()) {
+        countTimer->stop();
+    }
+    if (m_flashLabel->isVisible()) {
+        m_flashLabel->hide();
+    }
+    if (m_pCamErrItem->isVisible()) {
+        m_pCamErrItem->hide();
+    }
+    if (m_fWgtCountdown->isVisible()) {
+        m_fWgtCountdown->hide();
+    }
 }

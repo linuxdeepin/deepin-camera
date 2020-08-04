@@ -373,6 +373,18 @@ void CMainWindow::updateBlockSystem(bool bTrue)
     }
 }
 
+void CMainWindow::onNoCam()
+{
+    onEnableTitleBar(3); //恢复按钮状态
+    onEnableTitleBar(4); //恢复按钮状态
+    onEnableSettings(true);
+    m_thumbnail->m_nStatus = STATNULL;
+    m_thumbnail->setBtntooltip();
+    //m_thumbnail->onFoldersChanged(""); //恢复缩略图
+    m_thumbnail->show();
+
+}
+
 void CMainWindow::initUI()
 {
 //    this->setWindowFlag(Qt::FramelessWindowHint);
@@ -563,7 +575,6 @@ void CMainWindow::initConnection()
     //拍照信号--显示倒计时
     connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
 
-
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
     //拍照取消
     connect(m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
@@ -575,6 +586,10 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //录制关机阻塞
     connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
+    //没有相机了，结束拍照、录制
+    connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
+    //相机被抢占了，结束拍照、录制
+    connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
 
