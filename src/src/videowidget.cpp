@@ -56,6 +56,12 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalView = new QGraphicsView(this);
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
+    m_fWgtCountdown = new DFloatingWidget(this);
+    m_fWgtCountdown->hide(); //先隐藏
+    m_fWgtCountdown->setFixedSize(160, 144);
+    m_fWgtCountdown->setBlurBackgroundEnabled(true);
+    m_dLabel = new DLabel(m_fWgtCountdown);
+
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
     m_btnVdTime->setIconSize(QSize(6, 6));
     m_btnVdTime->hide(); //先隐藏
@@ -63,24 +69,55 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
     m_btnVdTime->setEnabled(false);
 
-    //设置字体颜色
-    QPalette paletteTime = m_btnVdTime->palette();
-    paletteTime.setColor(QPalette::ButtonText, QColor(202,0,0));//#ca0000
-    m_btnVdTime->setPalette(paletteTime);
+    int nType = DGuiApplicationHelper::instance()->themeType();
 
-    DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);
-    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        QColor clr(Qt::white);
-        clr.setAlphaF(0.2);
-        pa_cb.setBrush(QPalette::Light, clr); //浅色
+    m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
+    m_dLabel->setAlignment(Qt::AlignCenter);
+    QFont ftLabel("SourceHanSansSC-ExtraLight");
+    ftLabel.setWeight(QFont::Thin);//最小就是50,更小的设置不进去，也是bug？
+    ftLabel.setPixelSize(60);
+    m_dLabel->setFont(ftLabel);
+    //ftLabel.setBold(true);
+    //qDebug() << ftLabel.weight();
+    QPalette pltLabel = m_dLabel->palette();
+    if (DGuiApplicationHelper::LightType == nType) {
+        pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
+        QColor clrFill(235,235,235);
+        clrFill.setAlphaF(0.3);
+        pltLabel.setColor(QPalette::Base, clrFill);
     } else {
-        QColor clr(Qt::black);
-        clr.setAlphaF(0.2);
-        pa_cb.setBrush(QPalette::Dark, clr); //深色
+        pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
+        QColor clrFill(25,25,25);
+        clrFill.setAlphaF(0.8);
+        pltLabel.setColor(QPalette::Base, clrFill);
+    }
+    QColor clrShadow(0,0,0);
+    clrShadow.setAlphaF(0.2);
+    pltLabel.setColor(QPalette::Shadow, clrShadow);
+    m_dLabel->setPalette(pltLabel);
+
+    DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);//不用槽函数，程序打开如果是深色主题，可以正常切换颜色，其他主题不行，DTK的bug？
+    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
+//        QColor clr(Qt::white);//未生效
+//        clr.setAlphaF(0.2);
+//        pa_cb.setBrush(QPalette::Light, clr); //浅色
+        pa_cb.setColor(QPalette::ButtonText, QColor(255,44,44));        
+    } else {
+//        QColor clr(Qt::black);
+//        clr.setAlphaF(0.2);
+//        pa_cb.setColor(QPalette::Light, clr); //深色
+        pa_cb.setColor(QPalette::ButtonText, QColor(202,0,0));
+
+
     }
     m_btnVdTime->setPalette(pa_cb);
 
-    m_btnVdTime->setFont(QFont("SourceHanSansSC", 11, QFont::Normal));
+
+
+    QFont ft("SourceHanSansSC");
+    ft.setWeight(QFont::Normal);
+    ft.setPixelSize(14);
+    m_btnVdTime->setFont(ft);
     m_btnVdTime->setText(QString("00:00:00"));
 
     m_endBtn = new DPushButton(this);
@@ -95,18 +132,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->setToolTip(tr("Stop taking video"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
     m_endBtn->hide();
-
-    m_fWgtCountdown = new DFloatingWidget(this);
-    m_fWgtCountdown->hide(); //先隐藏
-    m_fWgtCountdown->setFixedSize(160, 144);
-    m_fWgtCountdown->setBlurBackgroundEnabled(true);
-    m_dLabel = new DLabel(m_fWgtCountdown);
-    m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
-    QPalette palette;
-    palette.setColor(QPalette::Text, QColor("#000000"));
-    m_dLabel->setPalette(palette);
-    m_dLabel->setFont(QFont("SourceHanSansSC", 60, QFont::ExtraLight));
-    m_dLabel->setAlignment(Qt::AlignCenter);
 
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
@@ -196,6 +221,40 @@ void videowidget::init()
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
+        QPalette pltLabel = m_dLabel->palette();
+        if (DGuiApplicationHelper::LightType == type) {
+            pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
+            QColor clrFill(235,235,235);
+            clrFill.setAlphaF(0.3);
+            pltLabel.setColor(QPalette::Base, clrFill);
+        } else {
+            pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
+            QColor clrFill(25,25,25);
+            clrFill.setAlphaF(0.8);
+            pltLabel.setColor(QPalette::Base, clrFill);
+        }
+//        QColor clrShadow(0,0,0);
+//        clrShadow.setAlphaF(0.2);
+//        pltLabel.setColor(QPalette::Shadow, clrShadow);
+        m_dLabel->setPalette(pltLabel);
+
+        if (m_btnVdTime->isVisible()) {
+            if (type == DGuiApplicationHelper::LightType) {
+                DPalette pa_cb = m_btnVdTime->palette();
+//                QColor clr(Qt::white);
+//                clr.setAlphaF(0.2);
+//                pa_cb.setBrush(QPalette::Light, clr); //浅色
+                pa_cb.setColor(QPalette::ButtonText, QColor(255,44,44));
+                m_btnVdTime->setPalette(pa_cb);
+            } else {
+                DPalette pa_cb = m_btnVdTime->palette();
+//                QColor clr(Qt::black);
+//                clr.setAlphaF(0.2);
+//                pa_cb.setBrush(QPalette::Dark, clr); //深色
+                pa_cb.setColor(QPalette::ButtonText, QColor(202,0,0));
+                m_btnVdTime->setPalette(pa_cb);
+            }
+        }
         if (m_pCamErrItem->isVisible()) {
             QString str;
             if (type == DGuiApplicationHelper::LightType) {
@@ -210,16 +269,19 @@ void videowidget::init()
                     m_pixmap = QPixmap::fromImage(img);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
-                QFont ft("SourceHanSansSC");
-                ft.setWeight(QFont::Bold);
-                ft.setPixelSize(17);
-                m_pCamErrItem->setFont(ft);
-                m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255, 204));//浅色主题文字和图片是白色，特殊处理
+                QColor clrText(Qt::white);
+                clrText.setAlphaF(0.8);
+                m_pCamErrItem->setDefaultTextColor(clrText);
+
                 m_pCamErrItem->setPlainText(str);
 
+                QColor clrBase(Qt::black);
+                clrBase.setAlphaF(0.7);
                 QPalette plt = this->palette();
-                plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+                plt.setColor(QPalette::Base, clrBase);
                 this->setPalette(plt);
+
+
             } else if (type == DGuiApplicationHelper::DarkType) {
                 if (g_devStatus == NOCAM) {
                     qDebug() << "changed theme 3";
@@ -232,18 +294,22 @@ void videowidget::init()
                     m_pixmap = QPixmap::fromImage(img);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
-                QFont ft("SourceHanSansSC");
-                ft.setWeight(QFont::Medium);
-                ft.setPixelSize(17);
-                m_pCamErrItem->setFont(ft);
+
                 QColor clor(0,0,0);
                 clor.setAlphaF(0.8);
                 m_pCamErrItem->setDefaultTextColor(clor);//浅色主题文字和图片是白色，特殊处理
                 m_pCamErrItem->setPlainText(str);
+
+                QColor clrBase(255, 255, 255);
+                clrBase.setAlphaF(0.7);
                 QPalette plt = this->palette();
-                plt.setColor(QPalette::Base, QColor(255, 255, 255, 204));
+                plt.setColor(QPalette::Base, clrBase);
                 this->setPalette(plt);
             }
+            QFont ft("SourceHanSansSC");
+            ft.setWeight(QFont::DemiBold);
+            ft.setPixelSize(17);
+            m_pCamErrItem->setFont(ft);
 
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             itemPosChange();
@@ -310,23 +376,38 @@ void videowidget::showCamUsed()
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
         m_pixmap = QPixmap::fromImage(img);
-        QFont ft("SourceHanSansSC");
-        ft.setWeight(QFont::Bold);
-        ft.setPixelSize(17);
-        m_pCamErrItem->setFont(ft);
-        m_pCamErrItem->setDefaultTextColor(QColor(255, 255, 255));//浅色主题文字和图片是白色，特殊处理
+
+        QColor clrText(Qt::white);
+        clrText.setAlphaF(0.8);
+        m_pCamErrItem->setDefaultTextColor(clrText);//浅色主题文字和图片是白色，特殊处理
+
         m_pCamErrItem->setPlainText(str);
+
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base, QColor(0, 0, 0, 178));
+        QColor clrBackGRD(Qt::black);
+        clrBackGRD.setAlphaF(0.7);
+        plt.setColor(QPalette::Base, clrBackGRD);
         this->setPalette(plt);
     } else {
         QImage img(":/images/icons/dark/Take up_dark.svg");
         m_pixmap = QPixmap::fromImage(img);
-        setFont(m_pCamErrItem, 17, str);
+
+        QColor clrText(Qt::black);
+        clrText.setAlphaF(0.8);
+        m_pCamErrItem->setDefaultTextColor(clrText);
+
+        m_pCamErrItem->setPlainText(str);
+
         QPalette plt = this->palette();
-        plt.setColor(QPalette::Base, QColor(255, 255, 255, 178));
+        QColor clrBackGRD(Qt::white);
+        clrBackGRD.setAlphaF(0.7);
+        plt.setColor(QPalette::Base, clrBackGRD);
         this->setPalette(plt);
     }
+    QFont ft("SourceHanSansSC");
+    ft.setWeight(QFont::DemiBold);
+    ft.setPixelSize(17);
+    m_pCamErrItem->setFont(ft);
     m_pNormalScene->setSceneRect(m_pixmap.rect());
     m_pNormalItem->setPixmap(m_pixmap);
     if (m_flashLabel->isVisible()) {
@@ -454,18 +535,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
     }
 }
 
-void videowidget::setFont(QGraphicsTextItem *item, int size, QString str)
-{
-    if (item == nullptr)
-        return;
-    QFont ft("SourceHanSansSC");
-    ft.setWeight(QFont::Bold);
-    ft.setPixelSize(17);
-    item->setFont(ft);
-    item->setDefaultTextColor(QColor(40, 39, 39));
-    item->setPlainText(str);
-
-}
 void videowidget::hideCountDownLabel()
 {
     //关闭
