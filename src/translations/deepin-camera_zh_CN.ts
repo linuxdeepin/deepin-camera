@@ -15,6 +15,10 @@
         <source>Settings</source>
         <translation>设置</translation>
     </message>
+    <message>
+        <source>no resolutions</source>
+        <translation>无分辨率</translation>
+    </message>
 </context>
 <context>
     <name>CloseDialog</name>
@@ -136,6 +140,11 @@
         <translatorcomment>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translatorcomment>
         <translation>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translation>
     </message>
+    <message>
+        <source>Resolution format</source>
+        <translatorcomment>分辨率格式</translatorcomment>
+        <translation>分辨率格式</translation>
+    </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
@@ -154,6 +163,13 @@
     <message>
         <source>Record video</source>
         <translation>录制视频</translation>
+    </message>
+</context>
+<context>
+    <name>dc::Settings</name>
+    <message>
+        <source>no resolutions</source>
+        <translation>无分辨率</translation>
     </message>
 </context>
 <context>

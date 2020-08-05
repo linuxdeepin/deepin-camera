@@ -103,6 +103,7 @@ private slots:
     void onTakeVdCancel();
     void onThemeChange(DGuiApplicationHelper::ColorType type);
 
+
     /**
      * @brief updateBlockSystem 更新阻塞关机
      */

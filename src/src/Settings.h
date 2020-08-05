@@ -65,12 +65,14 @@ public:
     // convient helpers
     //    QString screenshotNameTemplate();
     //    QString screenshotNameSeqTemplate();
+public slots:
+    void setNewResolutionList();
 
 signals:
     void shortcutsChanged(const QString &, const QVariant &);
     void baseChanged(const QString &, const QVariant &);
     void subtitleChanged(const QString &, const QVariant &);
-    void defaultplaymodechanged(const QString &, const QVariant &);
+    void resolutionchanged(const QString &);//分辨率信号
     void baseMuteChanged(const QString &, const QVariant &);
 
 private:

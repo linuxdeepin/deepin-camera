@@ -81,6 +81,12 @@
                     "name": "Output format",
                     "options": [
                         {
+                            "key": "resolution",
+                            "name": "Resolution format",
+                            "type":"combobox",
+                            "default": " "
+                        },
+                        {
                             "key": "picformat",
                             "name": "Photo format",
                             "type":"formatLabel",
@@ -92,6 +98,7 @@
                             "type":"formatLabel",
                             "default": "  webm"
                         }
+
                     ]
                 }
             ]

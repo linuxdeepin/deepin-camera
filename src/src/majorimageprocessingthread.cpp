@@ -58,6 +58,33 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     while (!stopped) {
+        if (get_resolution_status()) {
+//            int current_width = v4l2core_get_frame_width(vd1);
+//            int current_height = v4l2core_get_frame_height(vd1);
+            request_format_update(0); /*reset*/
+            v4l2core_stop_stream(vd1);
+
+            v4l2core_clean_buffers(vd1);
+
+            /*try new format (values prepared by the request callback)*/
+            int ret = v4l2core_update_current_format(vd1);
+            /*try to set the video stream format on the device*/
+            if (ret != E_OK) {
+                fprintf(stderr, "camera: could not set the defined stream format\n");
+                fprintf(stderr, "camera: trying first listed stream format\n");
+
+                v4l2core_prepare_valid_format(vd1);
+                v4l2core_prepare_valid_resolution(vd1);
+                ret = v4l2core_update_current_format(vd1);
+
+                if (ret != E_OK) {
+                    fprintf(stderr, "camera: also could not set the first listed stream format\n");
+                    stop();
+                }
+            }
+            v4l2core_start_stream(vd1);
+
+        }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
@@ -127,12 +154,11 @@ void MajorImageProcessingThread::run()
                 }
             }
         }
-        m_img.loadFromData(frame->raw_frame,static_cast<uint>(frame->width * frame->height * 3));
+        m_img.loadFromData(frame->raw_frame, static_cast<uint>(frame->width * frame->height * 3));
         m_rwMtxImg.lock();
         emit SendMajorImageProcessing(m_img, result);
         m_rwMtxImg.unlock();
         if (m_bTake) {
-            //save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
             int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
                 qDebug() << "保存照片失败";

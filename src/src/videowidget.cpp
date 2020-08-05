@@ -82,16 +82,16 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     QPalette pltLabel = m_dLabel->palette();
     if (DGuiApplicationHelper::LightType == nType) {
         pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
-        QColor clrFill(235,235,235);
+        QColor clrFill(235, 235, 235);
         clrFill.setAlphaF(0.3);
         pltLabel.setColor(QPalette::Base, clrFill);
     } else {
         pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
-        QColor clrFill(25,25,25);
+        QColor clrFill(25, 25, 25);
         clrFill.setAlphaF(0.8);
         pltLabel.setColor(QPalette::Base, clrFill);
     }
-    QColor clrShadow(0,0,0);
+    QColor clrShadow(0, 0, 0);
     clrShadow.setAlphaF(0.2);
     pltLabel.setColor(QPalette::Shadow, clrShadow);
     m_dLabel->setPalette(pltLabel);
@@ -101,12 +101,12 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 //        QColor clr(Qt::white);//未生效
 //        clr.setAlphaF(0.2);
 //        pa_cb.setBrush(QPalette::Light, clr); //浅色
-        pa_cb.setColor(QPalette::ButtonText, QColor(255,44,44));        
+        pa_cb.setColor(QPalette::ButtonText, QColor(255, 44, 44));
     } else {
 //        QColor clr(Qt::black);
 //        clr.setAlphaF(0.2);
 //        pa_cb.setColor(QPalette::Light, clr); //深色
-        pa_cb.setColor(QPalette::ButtonText, QColor(202,0,0));
+        pa_cb.setColor(QPalette::ButtonText, QColor(202, 0, 0));
 
 
     }
@@ -224,12 +224,12 @@ void videowidget::init()
         QPalette pltLabel = m_dLabel->palette();
         if (DGuiApplicationHelper::LightType == type) {
             pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
-            QColor clrFill(235,235,235);
+            QColor clrFill(235, 235, 235);
             clrFill.setAlphaF(0.3);
             pltLabel.setColor(QPalette::Base, clrFill);
         } else {
             pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
-            QColor clrFill(25,25,25);
+            QColor clrFill(25, 25, 25);
             clrFill.setAlphaF(0.8);
             pltLabel.setColor(QPalette::Base, clrFill);
         }
@@ -244,14 +244,14 @@ void videowidget::init()
 //                QColor clr(Qt::white);
 //                clr.setAlphaF(0.2);
 //                pa_cb.setBrush(QPalette::Light, clr); //浅色
-                pa_cb.setColor(QPalette::ButtonText, QColor(255,44,44));
+                pa_cb.setColor(QPalette::ButtonText, QColor(255, 44, 44));
                 m_btnVdTime->setPalette(pa_cb);
             } else {
                 DPalette pa_cb = m_btnVdTime->palette();
 //                QColor clr(Qt::black);
 //                clr.setAlphaF(0.2);
 //                pa_cb.setBrush(QPalette::Dark, clr); //深色
-                pa_cb.setColor(QPalette::ButtonText, QColor(202,0,0));
+                pa_cb.setColor(QPalette::ButtonText, QColor(202, 0, 0));
                 m_btnVdTime->setPalette(pa_cb);
             }
         }
@@ -295,7 +295,7 @@ void videowidget::init()
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
 
-                QColor clor(0,0,0);
+                QColor clor(0, 0, 0);
                 clor.setAlphaF(0.8);
                 m_pCamErrItem->setDefaultTextColor(clor);//浅色主题文字和图片是白色，特殊处理
                 m_pCamErrItem->setPlainText(str);
@@ -324,6 +324,7 @@ void videowidget::init()
 //显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
+    emit sigDeviceChange();
     QString str(tr("No webcam found"));//未连接摄像头
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Not connected.svg");
@@ -334,7 +335,7 @@ void videowidget::showNocam()
 
         QColor clrBase(0, 0, 0);
         clrBase.setAlphaF(0.7);
-        QPalette plt = this->palette();        
+        QPalette plt = this->palette();
         plt.setColor(QPalette::Base, clrBase);
         this->setPalette(plt);
     } else {
@@ -372,6 +373,7 @@ void videowidget::showNocam()
 //显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
+    emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
         QImage img(":/images/icons/light/Take up.svg");
@@ -449,6 +451,14 @@ void videowidget::ReceiveMajorImage(QPixmap image, int result)
 void videowidget::onReachMaxDelayedFrames()
 {
     check_device_list_events(get_v4l2_device_handler());
+    v4l2_dev_t *vd =  get_v4l2_device_handler();
+    if (m_imgPrcThread != nullptr) {
+        m_imgPrcThread->stop();
+    }
+    while (m_imgPrcThread->isRunning());
+    if (vd != nullptr) {
+        close_v4l2_device_handler();
+    }
     if (get_device_list()->num_devices < 1) {
         g_devStatus = NOCAM;
         stopEverything();
@@ -490,7 +500,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         m_fWgtCountdown->hide();
         if (!get_capture_pause()) {//判断是否是暂停状态
             QString strTime = "";
-            int nHour = m_nCount/3600;
+            int nHour = m_nCount / 3600;
             if (nHour == 0) {
                 strTime.append("00");
             } else if (nHour < 10) {
@@ -501,7 +511,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
             }
             strTime.append(":");
             int nOutHour = m_nCount % 3600;
-            int nMins = nOutHour/60;
+            int nMins = nOutHour / 60;
             if (nMins == 0) {
                 strTime.append("00");
             } else if (nMins < 10) {
@@ -697,6 +707,25 @@ void videowidget::flash()
     }
 }
 
+void videowidget::slotresolutionchanged(const QString &resolution)
+{
+    if (g_devStatus != CAM_CANUSE) {
+        return ;
+    }
+    QStringList ResStr = resolution.split("x");
+    int newwidth = ResStr[0].toInt();//新的宽度
+    int newheight = ResStr[1].toInt();//新的高度
+    //设置刷新率
+    v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
+    //设置新的分辨率
+    v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
+    request_format_update(1);
+    config_t *my_config = config_get();
+
+    my_config->width = newwidth;
+    my_config->height = newheight;
+}
+
 void videowidget::endBtnClicked()
 {
     if (countTimer->isActive()) {
@@ -727,6 +756,7 @@ void videowidget::restartDevices()
 {
     if (g_devStatus != CAM_CANUSE) {
         changeDev();
+        emit sigDeviceChange();
     }
 }
 
