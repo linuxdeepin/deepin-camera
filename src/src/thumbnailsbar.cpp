@@ -37,6 +37,7 @@
 #include <QKeyEvent>
 #include <QShortcut>
 #include <QThread>
+#include <DGuiApplicationHelper>
 
 //QMap<QString, QPixmap> m_imagemap;
 QMap<int, ImageItem *> g_indexImage;
@@ -72,6 +73,17 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
     m_mainLayout->addLayout(m_hBOx, Qt::AlignLeft);
+
+    m_showVdTime = new DLabel(this);
+    m_mainLayout->addWidget(m_showVdTime, Qt::AlignRight);
+    m_showVdTime->setFixedWidth(VIDEO_TIME_WIDTH);
+    QFont ft("SourceHanSansSC");
+    ft.setPixelSize(12);
+    ft.setWeight(QFont::Normal);
+    m_showVdTime->setFont(ft);
+    QPalette pltLabel = m_showVdTime->palette();
+    pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
+    m_showVdTime->setPalette(pltLabel);
 
     m_lastButton = new DPushButton(this);
 //    m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
@@ -111,8 +123,9 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
+    QString strShowTime = "";
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - LAST_BUTTON_SPACE * 2) / (THUMBNAIL_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
@@ -157,18 +170,21 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         }
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+        connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
         g_indexImage.insert(tIndex, pLabel);
         tIndex++;
 
         m_hBOx->addWidget(pLabel);
-
+        if (m_nItemCount == 0) {
+            strShowTime = pLabel->getDuration();
+        }
         m_nItemCount++;
     }
     if (m_lastItemCount != m_nItemCount) {
         emit fitToolBar();
         m_lastItemCount = m_nItemCount;
     }
-
+    m_showVdTime->setText(strShowTime);
 }
 
 void ThumbnailsBar::onBtnClick()
@@ -317,9 +333,11 @@ void ThumbnailsBar::onTrashFile()
                 emit fitToolBar();
                 if (m_hBOx->isEmpty()) {
                     g_indexNow = 0;
+                    m_showVdTime->setText("");
                 } else {
                     ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
                     g_indexNow = itemNow->getIndex();
+                    m_showVdTime->setText(itemNow->getDuration());
                     QFile file1(itemNow->getPath());
                     if (!file1.exists()) {
                         qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
@@ -337,6 +355,7 @@ void ThumbnailsBar::onTrashFile()
                 qDebug() << "error! imageitem is null!!";
             }
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+            connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
             g_indexImage.insert(nIndexMax + 1 + i, pLabel);
             m_hBOx->insertWidget(m_hBOx->count(), pLabel);
         }
@@ -346,16 +365,23 @@ void ThumbnailsBar::onTrashFile()
     g_setIndex.clear();
     if (m_hBOx->isEmpty()) {
         g_indexNow = 0;
+        m_showVdTime->setText("");
         return;
     } else {
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
         g_indexNow = itemNow->getIndex();
+        m_showVdTime->setText(itemNow->getDuration());
         QFile file2(itemNow->getPath());
         if (!file2.exists()) {
             qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
             qDebug() << "path : " << itemNow->getPath();
         }
     }
+}
+
+void ThumbnailsBar::onShowVdTime(QString str)
+{
+    m_showVdTime->setText(str);
 }
 
 void ThumbnailsBar::ChangeActType(int nType)
@@ -428,11 +454,12 @@ void ThumbnailsBar::addFile(QString strFile)
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
+    connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - LAST_BUTTON_SPACE * 2) / (THUMBNAIL_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH- VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
     if (m_hBOx->count() >= nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
@@ -457,10 +484,12 @@ void ThumbnailsBar::addFile(QString strFile)
     if (m_nItemCount <= 1) {//除非最开始没有图元，否则后续根据最开始的图像移动，图像在哪，选中的框在哪儿
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
         g_indexNow = itemNow->getIndex();
+        m_showVdTime->setText(itemNow->getDuration());
     } else {
         if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
             g_indexNow = tmp->getIndex();
+            m_showVdTime->setText(tmp->getDuration());
             QFile file(tmp->getPath());
             if (!file.exists()) {
                 qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
@@ -522,6 +551,7 @@ void ThumbnailsBar::delFile(QString strFile)
         qDebug() << "error! imageitem is null!!";
     }
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+    connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBOx->insertWidget(m_hBOx->count(), pLabel);
 

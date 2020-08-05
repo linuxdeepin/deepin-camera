@@ -782,9 +782,9 @@ void CMainWindow::onFitToolBar()
         int n = m_thumbnail->getItemCount();
         int nWidth = 0;
         if (n <= 0) {
-            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
+            nWidth = LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
+            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
         }
 
         m_thumbnail->resize(qMin(this->width(), nWidth), THUMBNAIL_HEIGHT + 30);
