@@ -54,6 +54,7 @@ public:
     void showNocam();
 
 signals:
+    void sigDeviceChange();
     void sigFlash();
     void takePicCancel();
     void takePicDone();//拍照结束信号
@@ -62,6 +63,8 @@ signals:
     void takeVdDone();
     void setBtnStatues(bool status);
     void updateBlockSystem(bool bTrue);
+    void noCam();
+    void noCamAvailable();
 public:
     QString getFolder()
     {
@@ -102,15 +105,13 @@ private slots:
     void ReceiveMajorImage(QPixmap image, int result);
     void onReachMaxDelayedFrames();
     void flash();
+    void slotresolutionchanged(const QString &);
 
 private:
     void init();
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-    void resizePixMap();
 
-    //设置字体
-    void setFont(QGraphicsTextItem *item, int size, QString str);
     void showCountDownLabel(PRIVIEW_STATE state);
     void hideCountDownLabel();
     void hideTimeLabel();
@@ -132,6 +133,9 @@ private:
 
     //item位置处理
     void itemPosChange();
+
+    //结束所有操作
+    void stopEverything();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 
@@ -144,7 +148,6 @@ private:
     QGraphicsScene       *m_pNormalScene;
     QGraphicsPixmapItem *m_pNormalItem;
     QGraphicsTextItem    *m_pCamErrItem; //摄像头异常提示
-    QGraphicsTextItem    *m_pTimeItem;
 
     QGridLayout          *m_pGridLayout;
 
@@ -170,7 +173,6 @@ private:
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-    QTime                 m_time;
     int                     m_nCount; //录制计时
 };
 

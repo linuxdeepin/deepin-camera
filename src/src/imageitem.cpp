@@ -46,6 +46,7 @@ bool g_bMultiSlt = false; //是否多选
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
     Q_UNUSED(parent);
+    m_bVideo = false;
     m_index = index;
     m_path = path;
     setScaledContents(true);
@@ -53,6 +54,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     QPixmap pix;
     QFileInfo fileInfo(m_path);
     if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+        m_bVideo = true;
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
         std::vector<uint8_t> buf;
@@ -63,26 +65,60 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
                 pix = QPixmap::fromImage(img);
             } catch (...) {
-                qDebug() << "generateThumbnail failed";
-                pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
+                qDebug() << "generateThumbnail failed";                
             }
-
-        } else {
-            pix = QPixmap::fromImage(QImage(":/images/123.jpg"));
         }
 
-        QTime tm(0, 0, 0, 0);
-        QPainter painter1;
-        painter1.begin(&pix);
-        painter1.setPen(Qt::red);
-        painter1.setFont(QFont("SourceHanSansSC", 16, QFont::ExtraLight));
-        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(static_cast<int>(m_nDuration / 1000000)).toString("hh:mm:ss"));
-        //qDebug() << pix.width() << " " << pix.height();
-        //qDebug() << tm.addSecs(int(m_nDuration) / 1000000).toString("mm:ss");
-        painter1.end();
+        QString strTime = "";
+        int nDuration = static_cast<int>(m_nDuration / 1000000);
+        int nHour = nDuration/3600;
+        if (nHour == 0) {
+            strTime.append("00");
+        } else if (nHour < 10) {
+            strTime.append("0");
+            strTime.append(QString::number(nHour));
+        } else {
+            strTime.append(QString::number(nHour));
+        }
+        strTime.append(":");
+        int nOutHour = nDuration % 3600;
+        int nMins = nOutHour/60;
+        if (nMins == 0) {
+            strTime.append("00");
+        } else if (nMins < 10) {
+            strTime.append("0");
+            strTime.append(QString::number(nMins));
+        } else {
+            strTime.append(QString::number(nMins));
+        }
+        strTime.append(":");
+        int nSecs = nOutHour % 60;
+        if (nSecs == 0) {
+            strTime.append("00");
+        } else if (nSecs < 10) {
+            strTime.append("0");
+            strTime.append(QString::number(nSecs));
+        } else {
+            strTime.append(QString::number(nSecs));
+        }
+        m_strDuratuion = strTime;
+
+
+        //显示到缩略图上
+//        QTime tm(0, 0, 0, 0);
+//        QPainter painter1;
+//        painter1.begin(&pix);
+//        painter1.setPen(Qt::red);
+//        QFont font("SourceHanSansSC", 16, QFont::ExtraLight);
+//        font.setPixelSize(15);
+//        painter1.setFont(font);
+//        painter1.drawText(10, 0, pix.width() - 2 * 10, pix.height(), Qt::AlignBottom | Qt::AlignHCenter, tm.addSecs(static_cast<int>(m_nDuration / 1000000)).toString("hh:mm:ss"));
+//        painter1.end();
     } else if (fileInfo.suffix() == "jpg") {
+        m_strDuratuion = "";
         pix = QPixmap::fromImage(QImage(path));
     } else {
+        m_strDuratuion = "";
         //continue; //其他格式不管
         return;
     }
@@ -222,6 +258,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_setIndex.clear();
     }
     update();
+    emit showDuration(m_strDuratuion);
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {
@@ -261,10 +298,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
         QPainterPath bg0;
         bg0.addRoundedRect(pixmapRect, 4, 4);
         painter.setClipPath(bg0);
-        if (themeType == DGuiApplicationHelper::LightType)
+        if (themeType == DGuiApplicationHelper::LightType) {
             painter.fillRect(pixmapRect, QBrush(Qt::white));
-        else if (themeType == DGuiApplicationHelper::DarkType)
+        } else if (themeType == DGuiApplicationHelper::DarkType) {
             painter.fillRect(pixmapRect, QBrush(Qt::black));
+        }
 
         QPainterPath bg;
         bg.addRoundedRect(pixmapRect, 4, 4);
@@ -301,6 +339,29 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setClipPath(bg1);
 
     painter.drawPixmap(pixmapRect, m_pixmap);
+
+    //加入图标
+    if (m_bVideo) {
+        QRect iconRect;
+        int n,m;
+        n = width();
+        m = height();
+        iconRect.setX((width()-14)/2);
+        iconRect.setY((height()-14)/2);
+        iconRect.setWidth(14);
+        iconRect.setHeight(14);
+        if (themeType == DGuiApplicationHelper::LightType) {
+            //QIcon icon(":/images/icons/light/play.svg");
+            //icon.paint(&painter,iconRect);
+            QPixmap pix = QPixmap::fromImage(QImage(":/images/icons/light/play.svg"));
+            painter.drawPixmap(iconRect, pix);
+        } else if (themeType == DGuiApplicationHelper::DarkType) {
+            //QIcon icon(":/images/icons/dark/play_dark.svg");
+            QPixmap pix = QPixmap::fromImage(QImage(":/images/icons/dark/play_dark.svg"));
+            //icon.paint(&painter,iconRect);
+            painter.drawPixmap(iconRect, pix);
+        }
+    }
 
     painter.save();
     painter.setPen(

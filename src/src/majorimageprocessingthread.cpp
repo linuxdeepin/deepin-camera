@@ -58,6 +58,33 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     while (!stopped) {
+        if (get_resolution_status()) {
+//            int current_width = v4l2core_get_frame_width(vd1);
+//            int current_height = v4l2core_get_frame_height(vd1);
+            request_format_update(0); /*reset*/
+            v4l2core_stop_stream(vd1);
+
+            v4l2core_clean_buffers(vd1);
+
+            /*try new format (values prepared by the request callback)*/
+            int ret = v4l2core_update_current_format(vd1);
+            /*try to set the video stream format on the device*/
+            if (ret != E_OK) {
+                fprintf(stderr, "camera: could not set the defined stream format\n");
+                fprintf(stderr, "camera: trying first listed stream format\n");
+
+                v4l2core_prepare_valid_format(vd1);
+                v4l2core_prepare_valid_resolution(vd1);
+                ret = v4l2core_update_current_format(vd1);
+
+                if (ret != E_OK) {
+                    fprintf(stderr, "camera: also could not set the first listed stream format\n");
+                    stop();
+                }
+            }
+            v4l2core_start_stream(vd1);
+
+        }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
         if (frame == nullptr) {
@@ -127,55 +154,21 @@ void MajorImageProcessingThread::run()
                 }
             }
         }
-        if (!stopped) {
-            //目前转换方法有问题，先保存图像为jpg，再读取出来，后续优化为从内存读取，待处理
-//            save_image_jpeg(frame, "a123"); //这个是v4l2core_save_image最终的调用函数，两种方式均可
-            if (m_bTake) {
-                int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-                if (nRet < 0) {
-                    qDebug() << "保存照片失败";
-                }
-
-                m_bTake = false;
+        m_img.loadFromData(frame->raw_frame, static_cast<uint>(frame->width * frame->height * 3));
+        m_rwMtxImg.lock();
+        emit SendMajorImageProcessing(m_img, result);
+        m_rwMtxImg.unlock();
+        if (m_bTake) {
+            int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+            if (nRet < 0) {
+                qDebug() << "保存照片失败";
             }
 
-            //将帧图像转换为jpg图像，通过QImage转换，发送到界面端现实。
-            jpeg_encoder_ctx_t *jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
-            if (jpeg_ctx == nullptr) {
-                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
-                exit(-1);
-            }
-            uint8_t *jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
-            if (jpeg == nullptr) {
-                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
-                exit(-1);
-            }
-            initialization (jpeg_ctx, frame->width, frame->height);
-            initialize_quantization_tables (jpeg_ctx);
-
-            int jpeg_size = encode_jpeg(frame->yuv_frame, jpeg, jpeg_ctx, 1);
-
-            if (!stopped) {
-                if (m_img.loadFromData(jpeg, static_cast<uint>(jpeg_size)) == true) {
-                    m_rwMtxImg.lock();
-                    if (!stopped)
-                        emit SendMajorImageProcessing(m_img, result);
-                    m_rwMtxImg.unlock();
-                } else {
-                    free(jpeg);
-                    free(jpeg_ctx);
-                    jpeg = nullptr;
-                    jpeg_ctx = nullptr;
-                }
-            }
-            free(jpeg);
-            free(jpeg_ctx);
-            jpeg = nullptr;
-            jpeg_ctx = nullptr;
+            m_bTake = false;
         }
         v4l2core_release_frame(vd1, frame);
 
-//        msleep(1000 / 30);
+        msleep(33);//1000 / 30
     }
     v4l2core_stop_stream(vd1);
 }

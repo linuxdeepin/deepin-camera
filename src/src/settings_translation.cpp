@@ -16,4 +16,5 @@ void GenerateSettingTranslate()
     auto outsetting_4pcs = QObject::tr("4 pcs");
     auto outsetting_10pcs = QObject::tr("10 pcs");
     auto outsetting_none = QObject::tr("None");
+    auto outsetting_outformat_resolutionName = QObject::tr("Resolution format");
 }

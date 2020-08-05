@@ -304,7 +304,9 @@ int get_encoder_status(void);
  *
  * returns: none
  */
-void request_format_update(void);
+void request_format_update(int bstatus);
+
+int get_resolution_status(void);
 
 /*
  * create a v4l2 device handler

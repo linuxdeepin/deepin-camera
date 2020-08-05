@@ -24,5 +24,7 @@
         <file>images/icons/dark/button/photograph_dark.svg</file>
         <file>images/icons/dark/button/record video_dark.svg</file>
         <file>images/icons/dark/button/Switch camera_dark.svg</file>
+        <file>images/icons/dark/play_dark.svg</file>
+        <file>images/icons/light/play.svg</file>
     </qresource>
 </RCC>

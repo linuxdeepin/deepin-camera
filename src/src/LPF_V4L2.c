@@ -36,7 +36,7 @@ extern "C" {
 
 int camInit(const char* devicename)
 {
-    const rlim_t kStackSize = 1024L * 1024L * 256L;
+    const rlim_t kStackSize = 1024L * 1024L * 128L;
     struct rlimit rl;
     int result;
 
