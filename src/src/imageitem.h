@@ -60,10 +60,15 @@ public:
     {
         return m_index;
     }
+    QString getDuration()
+    {
+        return m_strDuratuion;
+    }
     bool parseFromFile(const QFileInfo &fi);
 signals:
     void imageItemclicked(int index, int indexNow);
     void trashFile();
+    void showDuration(QString strDuration);
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
     void mouseReleaseEvent(QMouseEvent *ev) override;
@@ -83,6 +88,8 @@ private:
     QAction *m_actOpenFolder;
 
     int64_t m_nDuration = 0; //视频文件时长
+    QString m_strDuratuion;
+    bool m_bVideo;//是否视频
 };
 
 #endif // IMAGEITEM_H
