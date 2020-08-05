@@ -813,20 +813,21 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
     }
 
     mkv_ctx->duration = MAX(mkv_ctx->duration, (int64_t)ts /*+ duration*/);
+    if(stream_index == 0){
+        double strsa = (double) mkv_ctx->duration/1000;
 
-    double strsa = (double) mkv_ctx->duration/1000;
+        if((int)(strsa*100) > (100*MAX_REC_TIME+30))
+        {
+            stop_encoder_thread();
+            reset_video_timer();
+        }
+        //    update duration
+        int64_t currentpos = io_get_offset(mkv_ctx->writer);
+        io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
 
-    if((int)(strsa*100) > (100*MAX_REC_TIME+30))
-    {
-        stop_encoder_thread();
-        reset_video_timer();
+        mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
+        io_seek(mkv_ctx->writer, currentpos);
     }
-//    update duration
-    int64_t currentpos = io_get_offset(mkv_ctx->writer);
-    io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
-
-    mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
-    io_seek(mkv_ctx->writer, currentpos);
     return 0;
 }
 

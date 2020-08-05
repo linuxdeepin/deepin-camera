@@ -45,7 +45,7 @@ static config_t my_config =
 {
     .width = 1920,
     .height = 1080,
-    .format = V4L2_PIX_FMT_H264,
+    .format = V4L2_PIX_FMT_JPEG,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",

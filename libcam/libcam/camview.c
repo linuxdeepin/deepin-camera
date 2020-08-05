@@ -485,10 +485,16 @@ void set_soft_focus(int value)
  *
  * returns: none
  */
-void request_format_update()
+void request_format_update(int bstatus)
 {
-    restart = 1;
+    restart = bstatus;
 }
+
+int get_resolution_status()
+{
+    return restart;
+}
+
 /*
  * create a v4l2 device handler
  * args:

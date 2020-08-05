@@ -54,6 +54,7 @@ public:
     void showNocam();
 
 signals:
+    void sigDeviceChange();
     void sigFlash();
     void takePicCancel();
     void takePicDone();//拍照结束信号
@@ -104,6 +105,7 @@ private slots:
     void ReceiveMajorImage(QPixmap image, int result);
     void onReachMaxDelayedFrames();
     void flash();
+    void slotresolutionchanged(const QString &);
 
 private:
     void init();
