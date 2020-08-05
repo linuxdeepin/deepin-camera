@@ -110,8 +110,6 @@ private:
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
-    //设置字体
-    void setFont(QGraphicsTextItem *item, int size, QString str);
     void showCountDownLabel(PRIVIEW_STATE state);
     void hideCountDownLabel();
     void hideTimeLabel();
