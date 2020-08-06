@@ -422,12 +422,14 @@ void set_video_name(const char *name)
         set_video_muxer(ENCODER_MUX_MP4);
 	else if ( strcasecmp(ext, "webm") == 0 )
 	{
-		set_video_muxer(ENCODER_MUX_WEBM);
+        set_video_muxer(ENCODER_MUX_MKV);
+
+        //注释这个地方是因为占用CPU过高
 		/*force webm codecs*/
-        int video_codec_ind = encoder_get_webm_video_codec_index();
-        set_video_codec_ind(video_codec_ind);
-        int audio_codec_ind = encoder_get_webm_audio_codec_index();
-        set_audio_codec_ind(audio_codec_ind);
+//        int video_codec_ind = encoder_get_webm_video_codec_index();
+//        set_video_codec_ind(video_codec_ind);
+//        int audio_codec_ind = encoder_get_webm_audio_codec_index();
+//        set_audio_codec_ind(audio_codec_ind);
 	}
 	else if ( strcasecmp(ext, "avi") == 0 )
 		set_video_muxer(ENCODER_MUX_AVI);
