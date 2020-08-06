@@ -190,12 +190,12 @@ void videowidget::init()
     } else if (ret == E_FORMAT_ERR) {
         g_devStatus = CAM_CANNOT_USE;
         //启动失败
-        v4l2_dev_t *vd = get_v4l2_device_handler();
-        //如果不为空，则关闭vd
-        if (vd != nullptr) {
-            close_v4l2_device_handler();
-            vd = nullptr;
-        }
+//        v4l2_dev_t *vd = get_v4l2_device_handler();
+//        //如果不为空，则关闭vd
+//        if (vd != nullptr) {
+//            close_v4l2_device_handler();
+//            vd = nullptr;
+//        }
         showCamUsed();
         qDebug() << "cam in use" << endl;
     } else if (ret == E_NO_DEVICE_ERR) {
@@ -426,7 +426,6 @@ void videowidget::showCamUsed()
 
 void videowidget::ReceiveMajorImage(QPixmap image, int result)
 {
-
     if (!image.isNull()) {
         switch (result) {
         case 0:     //Success
@@ -756,7 +755,9 @@ void videowidget::restartDevices()
 {
     if (g_devStatus != CAM_CANUSE) {
         changeDev();
-        emit sigDeviceChange();
+        if (g_devStatus == CAM_CANUSE) {
+            emit sigDeviceChange();
+        }
     }
 }
 

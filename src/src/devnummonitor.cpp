@@ -54,7 +54,7 @@ void DevNumMonitor::run()
     if (m_pTimer == nullptr) {
         m_pTimer = new QTimer;
     }
-    m_pTimer->setInterval(200);
+    m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
     this->exec();
@@ -78,4 +78,5 @@ void DevNumMonitor::timeOutSlot()
         //显示切换按钮
         emit seltBtnStateEnable();
     }
+
 }
