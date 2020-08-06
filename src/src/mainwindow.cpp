@@ -345,7 +345,7 @@ void CMainWindow::slotPopupSettingsDialog()
 
     connect(dsd, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
-    auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.outformat.resolution");
+    auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
@@ -417,11 +417,11 @@ void CMainWindow::slotPopupSettingsDialog()
             resolutionmodeFamily->setData("items", resolutionDatabase);
 
             //设置当前分辨率的索引
-            Settings::get().settings()->setOption(QString("outsetting.outformat.resolution"), defres);
+            Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
-            resolutionDatabase.append(QString(tr("no resolutions")));
-            Settings::get().settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+            resolutionDatabase.append(QString(tr("None")));
+            Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             resolutionmodeFamily->setData("items", resolutionDatabase);
         }
     } else {
@@ -431,8 +431,8 @@ void CMainWindow::slotPopupSettingsDialog()
             resolutionmodeFamily->data("items").clear();
         }
         resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("no resolutions")));
-        Settings::get().settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+        resolutionDatabase.append(QString(tr("None")));
+        Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
 

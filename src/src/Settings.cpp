@@ -74,8 +74,8 @@ Settings::Settings()
 
     connect(_settings, &DSettings::valueChanged,
     [ = ](const QString & key, const QVariant & value) {
-        if (key.startsWith("outsetting.outformat.resolution")) {
-            auto mode_opt = Settings::get().settings()->option("outsetting.outformat.resolution");
+        if (key.startsWith("outsetting.resolutionsetting.resolution")) {
+            auto mode_opt = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
             if (value >= 0) {
                 QString mode = mode_opt->data("items").toStringList()[value.toInt()];
                 emit resolutionchanged(mode);
@@ -84,7 +84,7 @@ Settings::Settings()
     });
 
     qDebug() << "keys" << _settings->keys();
-    auto resolutionmodeFamily = _settings->option("outsetting.outformat.resolution");
+    auto resolutionmodeFamily = _settings->option("outsetting.resolutionsetting.resolution");
 
     QStringList Database = resolutionmodeFamily->data("items").toStringList();
 
@@ -155,11 +155,11 @@ Settings::Settings()
                 }
             }
             resolutionmodeFamily->setData("items", resolutionDatabase);
-            settings()->setOption(QString("outsetting.outformat.resolution"), defres);
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
-            resolutionDatabase.append(QString(tr("no resolutions")));
-            settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+            resolutionDatabase.append(QString(tr("None")));
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             resolutionmodeFamily->setData("items", resolutionDatabase);
         }
     } else {
@@ -169,8 +169,8 @@ Settings::Settings()
             resolutionmodeFamily->data("items").clear();
         }
         resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("no resolutions")));
-        settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+        resolutionDatabase.append(QString(tr("None")));
+        settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
     settings()->sync();
@@ -187,7 +187,7 @@ QVariant Settings::getOption(const QString &opt)
 
 void Settings::setNewResolutionList()
 {
-    auto resolutionmodeFamily = _settings->option("outsetting.outformat.resolution");
+    auto resolutionmodeFamily = _settings->option("outsetting.resolutionsetting.resolution");
 
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
@@ -257,11 +257,11 @@ void Settings::setNewResolutionList()
             }
             resolutionmodeFamily->setData("items", resolutionDatabase);
             //设置当前分辨率的索引
-            settings()->setOption(QString("outsetting.outformat.resolution"), defres);
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
-            resolutionDatabase.append(QString(tr("no resolutions")));
-            settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+            resolutionDatabase.append(QString(tr("None")));
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             resolutionmodeFamily->setData("items", resolutionDatabase);
         }
     } else {
@@ -271,8 +271,8 @@ void Settings::setNewResolutionList()
             resolutionmodeFamily->data("items").clear();
         }
         resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("no resolutions")));
-        settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+        resolutionDatabase.append(QString(tr("None")));
+        settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
     settings()->sync();

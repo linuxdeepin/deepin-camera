@@ -65,13 +65,13 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
                 pix = QPixmap::fromImage(img);
             } catch (...) {
-                qDebug() << "generateThumbnail failed";                
+                qDebug() << "generateThumbnail failed";
             }
         }
 
         QString strTime = "";
         int nDuration = static_cast<int>(m_nDuration / 1000000);
-        int nHour = nDuration/3600;
+        int nHour = nDuration / 3600;
         if (nHour == 0) {
             strTime.append("00");
         } else if (nHour < 10) {
@@ -82,7 +82,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         }
         strTime.append(":");
         int nOutHour = nDuration % 3600;
-        int nMins = nOutHour/60;
+        int nMins = nOutHour / 60;
         if (nMins == 0) {
             strTime.append("00");
         } else if (nMins < 10) {
@@ -343,11 +343,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
     //加入图标
     if (m_bVideo) {
         QRect iconRect;
-        int n,m;
-        n = width();
-        m = height();
-        iconRect.setX((width()-14)/2);
-        iconRect.setY((height()-14)/2);
+//        int n,m;
+//        n = width();
+//        m = height();
+        iconRect.setX((width() - 14) / 2);
+        iconRect.setY((height() - 14) / 2);
         iconRect.setWidth(14);
         iconRect.setHeight(14);
         if (themeType == DGuiApplicationHelper::LightType) {
