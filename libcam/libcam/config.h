@@ -28,7 +28,7 @@
 
 #define PACKAGE_LOCALE_DIR "./"
 #define GETTEXT_PACKAGE "cheese"
-#define VERSION "cheese-1.0"
+//#define VERSION "cheese-1.0"
 #define HAS_QT5 1
 
 #define ENABLE_SDL2 1

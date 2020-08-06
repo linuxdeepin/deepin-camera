@@ -94,7 +94,7 @@ int config_save(const char *filename)
     setlocale(LC_NUMERIC, "C");
 
 	/*write config data*/
-	fprintf(fp, "#Guvcview %s config file\n", VERSION);
+//	fprintf(fp, "#Guvcview %s config file\n", VERSION);
 	fprintf(fp, "\n");
 	fprintf(fp, "#video input width\n");
 	fprintf(fp, "width=%i\n", my_config.width);

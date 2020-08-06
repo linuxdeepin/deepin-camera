@@ -58,9 +58,9 @@
 #ifndef PACKAGE
 #define PACKAGE "guvcview"
 #endif
-#ifndef VERSION
-#define VERSION "1.0"
-#endif
+//#ifndef VERSION
+//#define VERSION "1.0"
+//#endif
 
 #define AVI_INDEX_CLUSTER_SIZE 16384
 
