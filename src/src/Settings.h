@@ -7,6 +7,7 @@
 #include <DSettingsOption>
 #include <DSettingsGroup>
 #include <DSettings>
+#include "videowidget.h"
 
 namespace dc {
 using namespace Dtk::Core;
