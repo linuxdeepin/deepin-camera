@@ -74,8 +74,8 @@ Settings::Settings()
 
     connect(_settings, &DSettings::valueChanged,
     [ = ](const QString & key, const QVariant & value) {
-        if (key.startsWith("outsetting.outformat.resolution")) {
-            auto mode_opt = Settings::get().settings()->option("outsetting.outformat.resolution");
+        if (key.startsWith("outsetting.resolutionsetting.resolution")) {
+            auto mode_opt = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
             if (value >= 0) {
                 QString mode = mode_opt->data("items").toStringList()[value.toInt()];
                 emit resolutionchanged(mode);
@@ -84,7 +84,7 @@ Settings::Settings()
     });
 
     qDebug() << "keys" << _settings->keys();
-    auto resolutionmodeFamily = _settings->option("outsetting.outformat.resolution");
+    auto resolutionmodeFamily = _settings->option("outsetting.resolutionsetting.resolution");
 
     QStringList Database = resolutionmodeFamily->data("items").toStringList();
 
@@ -110,56 +110,70 @@ Settings::Settings()
 
         //当前分辨率下标
         int defres = 0;
+        if (format_index >= 0 && resolu_index >= 0) {//format_index = -1 &&resolu_index = -1 表示设备被占用或者不存在
+            for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
 
-        for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
-
-            if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
-                    && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
-                    (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                     && list_stream_formats[format_index].list_stream_cap[i].height < 4320)) {
-                //加入分辨率的字符串
-                QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
-                resolutionDatabase.append(res_str);
-            }
-        }
-        int tempostion = 0;
-        int len = resolutionDatabase.size() - 1;
-        for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
-            int flag = 1;
-            for (int j = 0 ; j < len; j++) {
-                QStringList resolutiontemp1 = resolutionDatabase[j].split("x");
-                QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
-
-                if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
-                        && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
-
-                    QString resolutionstr = resolutionDatabase[j + 1];
-                    resolutionDatabase[j + 1] = resolutionDatabase[j];
-                    resolutionDatabase[j] = resolutionstr;
-                    flag = 0;
-                    tempostion = j;
+                if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
+                        && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
+                        (list_stream_formats[format_index].list_stream_cap[i].width < 7680
+                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320)) {
+                    //加入分辨率的字符串
+                    QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
+                    resolutionDatabase.append(res_str);
                 }
             }
-            len = tempostion;
-            if (flag == 1) {
-                continue;
-            }
-        }
+            int tempostion = 0;
+            int len = resolutionDatabase.size() - 1;
+            for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
+                int flag = 1;
+                for (int j = 0 ; j < len; j++) {
+                    QStringList resolutiontemp1 = resolutionDatabase[j].split("x");
+                    QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
 
-        for (int i = 0; i < resolutionDatabase.size(); i++) {
-            QStringList resolutiontemp = resolutionDatabase[i].split("x");
-            if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                    (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                defres = i; //set selected resolution index
-                break;
-            }
-        }
+                    if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
+                            && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
 
+                        QString resolutionstr = resolutionDatabase[j + 1];
+                        resolutionDatabase[j + 1] = resolutionDatabase[j];
+                        resolutionDatabase[j] = resolutionstr;
+                        flag = 0;
+                        tempostion = j;
+                    }
+                }
+                len = tempostion;
+                if (flag == 1) {
+                    continue;
+                }
+            }
+
+            for (int i = 0; i < resolutionDatabase.size(); i++) {
+                QStringList resolutiontemp = resolutionDatabase[i].split("x");
+                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
+                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
+                    defres = i; //set selected resolution index
+                    break;
+                }
+            }
+            resolutionmodeFamily->setData("items", resolutionDatabase);
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
+        } else {
+            resolutionDatabase.clear();
+            resolutionDatabase.append(QString(tr("None")));
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+            resolutionmodeFamily->setData("items", resolutionDatabase);
+        }
+    } else {
+        //初始化分辨率字符串表
+        QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
+        if (resolutionDatabase.size() > 0) {
+            resolutionmodeFamily->data("items").clear();
+        }
+        resolutionDatabase.clear();
+        resolutionDatabase.append(QString(tr("None")));
+        settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
-
-        //设置当前分辨率的索引
-        settings()->setOption(QString("outsetting.outformat.resolution"), defres);
     }
+    settings()->sync();
 }
 QVariant Settings::generalOption(const QString &opt)
 {
@@ -173,7 +187,7 @@ QVariant Settings::getOption(const QString &opt)
 
 void Settings::setNewResolutionList()
 {
-    auto resolutionmodeFamily = _settings->option("outsetting.outformat.resolution");
+    auto resolutionmodeFamily = _settings->option("outsetting.resolutionsetting.resolution");
 
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
@@ -197,55 +211,59 @@ void Settings::setNewResolutionList()
 
         //当前分辨率下标
         int defres = 0;
+        if (format_index >= 0 && resolu_index >= 0) {
+            for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
 
-        for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
-
-            if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
-                    && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
-                    (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                     && list_stream_formats[format_index].list_stream_cap[i].height < 4320)) {
-                //加入分辨率的字符串
-                QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
-                resolutionDatabase.append(res_str);
-            }
-        }
-        int tempostion = 0;
-        int len = resolutionDatabase.size() - 1;
-        for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
-            int flag = 1;
-            for (int j = 0 ; j < len; j++) {
-                QStringList resolutiontemp1 = resolutionDatabase[j].split("x");
-                QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
-
-                if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
-                        && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
-
-                    QString resolutionstr = resolutionDatabase[j + 1];
-                    resolutionDatabase[j + 1] = resolutionDatabase[j];
-                    resolutionDatabase[j] = resolutionstr;
-                    flag = 0;
-                    tempostion = j;
+                if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
+                        && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
+                        (list_stream_formats[format_index].list_stream_cap[i].width < 7680
+                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320)) {
+                    //加入分辨率的字符串
+                    QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
+                    resolutionDatabase.append(res_str);
                 }
             }
-            len = tempostion;
-            if (flag == 1) {
-                continue;
+            int tempostion = 0;
+            int len = resolutionDatabase.size() - 1;
+            for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
+                int flag = 1;
+                for (int j = 0 ; j < len; j++) {
+                    QStringList resolutiontemp1 = resolutionDatabase[j].split("x");
+                    QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
+
+                    if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
+                            && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
+
+                        QString resolutionstr = resolutionDatabase[j + 1];
+                        resolutionDatabase[j + 1] = resolutionDatabase[j];
+                        resolutionDatabase[j] = resolutionstr;
+                        flag = 0;
+                        tempostion = j;
+                    }
+                }
+                len = tempostion;
+                if (flag == 1) {
+                    continue;
+                }
             }
-        }
 
-        for (int i = 0; i < resolutionDatabase.size(); i++) {
-            QStringList resolutiontemp = resolutionDatabase[i].split("x");
-            if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                    (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                defres = i; //set selected resolution index
-                break;
+            for (int i = 0; i < resolutionDatabase.size(); i++) {
+                QStringList resolutiontemp = resolutionDatabase[i].split("x");
+                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
+                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
+                    defres = i; //set selected resolution index
+                    break;
+                }
             }
+            resolutionmodeFamily->setData("items", resolutionDatabase);
+            //设置当前分辨率的索引
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
+        } else {
+            resolutionDatabase.clear();
+            resolutionDatabase.append(QString(tr("None")));
+            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+            resolutionmodeFamily->setData("items", resolutionDatabase);
         }
-
-        resolutionmodeFamily->setData("items", resolutionDatabase);
-
-        //设置当前分辨率的索引
-        settings()->setOption(QString("outsetting.outformat.resolution"), defres);
     } else {
         //初始化分辨率字符串表
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
@@ -253,8 +271,8 @@ void Settings::setNewResolutionList()
             resolutionmodeFamily->data("items").clear();
         }
         resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("no resolutions")));
-        settings()->setOption(QString("outsetting.outformat.resolution"), 0);
+        resolutionDatabase.append(QString(tr("None")));
+        settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
     settings()->sync();

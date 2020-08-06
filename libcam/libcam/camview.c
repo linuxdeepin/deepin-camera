@@ -53,8 +53,8 @@ __COND_TYPE capture_cond;
 
 static int render = RENDER_SDL; /*render API*/
 static int quit = 0; /*terminate flag*/
-volatile static int save_image = 0; /*save image flag*/
-volatile static int save_video = 0; /*save video flag*/
+static int save_image = 0; /*save image flag*/
+static int save_video = 0; /*save video flag*/
 
 static uint64_t my_photo_timer = 0; /*timer count*/
 
@@ -71,19 +71,19 @@ static uint32_t my_render_mask = REND_FX_YUV_NOFILT; /*render fx filter mask*/
 static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
 
 /*暂停录制*/
-volatile static int capture_pause = 0;
+static int capture_pause = 0;
 
 /*暂停时刻的视频时间*/
-volatile static int64_t video_timestamp_tmp = 0;
+static int64_t video_timestamp_tmp = 0;
 
 /*音频时间引用*/
-volatile static int64_t audio_timestamp_reference = 0;
+static int64_t audio_timestamp_reference = 0;
 
 /*暂停时刻的音频时间*/
-volatile static int64_t audio_timestamp_tmp = 0;
+static int64_t audio_timestamp_tmp = 0;
 
 /*音频的暂停总时间*/
-volatile static int64_t audio_pause_timestamp = 0;
+static int64_t audio_pause_timestamp = 0;
 
 /*continues focus*/
 static int do_soft_autofocus = 0;

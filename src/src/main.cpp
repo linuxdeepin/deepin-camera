@@ -27,6 +27,7 @@
 #include <QSharedMemory>
 #include <DLog>
 #include <DApplicationSettings>
+#include <stdio.h>
 
 DWIDGET_USE_NAMESPACE
 
@@ -55,7 +56,10 @@ int main(int argc, char *argv[])
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
     a.setApplicationDisplayName(QObject::tr("Camera"));
-    a.setApplicationVersion("1.0");
+    //static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(QDate::currentDate()).replace("  ", " 0"), "MMM dd yyyy");
+    QString t_date = QDate::currentDate().toString("MMdd");
+    // Version Time
+    a.setApplicationVersion(DApplication::buildVersion(t_date));
     a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标

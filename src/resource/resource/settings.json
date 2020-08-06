@@ -10,7 +10,7 @@
                     "options": [
                         {
                             "key": "datapath",
-                            "name": "Save to",
+                            "name": "Save to:",
                             "type": "selectableEdit",
                             "default": "~/Videos"
                         }
@@ -81,24 +81,29 @@
                     "name": "Output format",
                     "options": [
                         {
-                            "key": "resolution",
-                            "name": "Resolution format",
-                            "type":"combobox",
-                            "default": " "
-                        },
-                        {
                             "key": "picformat",
-                            "name": "Photo format",
+                            "name": "Photo:",
                             "type":"formatLabel",
                             "default": "  JPG"
                         },
                         {
                             "key": "vidformat",
-                            "name": "Video format",
+                            "name": "Video:",
                             "type":"formatLabel",
                             "default": "  webm"
                         }
-
+                    ]
+                },
+                {
+                    "key": "resolutionsetting",
+                    "name": "Resolution settings",
+                    "options": [
+                        {
+                            "key": "resolution",
+                            "name": "Resolution:",
+                            "type":"combobox",
+                            "default": " "
+                        }
                     ]
                 }
             ]

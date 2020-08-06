@@ -17,7 +17,11 @@
     </message>
     <message>
         <source>no resolutions</source>
-        <translation>无分辨率</translation>
+        <translation type="vanished">无分辨率</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
     </message>
 </context>
 <context>
@@ -88,7 +92,7 @@
     </message>
     <message>
         <source>Save to</source>
-        <translation>存储位置</translation>
+        <translation type="vanished">存储位置</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -112,11 +116,11 @@
     </message>
     <message>
         <source>Photo format</source>
-        <translation>照片格式</translation>
+        <translation type="vanished">照片格式</translation>
     </message>
     <message>
         <source>Video format</source>
-        <translation>视频格式</translation>
+        <translation type="vanished">视频格式</translation>
     </message>
     <message>
         <source>4 pcs</source>
@@ -143,7 +147,28 @@
     <message>
         <source>Resolution format</source>
         <translatorcomment>分辨率格式</translatorcomment>
-        <translation>分辨率格式</translation>
+        <translation type="vanished">分辨率格式</translation>
+    </message>
+    <message>
+        <source>Save to:</source>
+        <translation>存储位置：</translation>
+    </message>
+    <message>
+        <source>Photo:</source>
+        <translation>照片：</translation>
+    </message>
+    <message>
+        <source>Video:</source>
+        <translation>视频：</translation>
+    </message>
+    <message>
+        <source>Resolution settings</source>
+        <translatorcomment>分辨率设置</translatorcomment>
+        <translation>分辨率设置</translation>
+    </message>
+    <message>
+        <source>Resolution:</source>
+        <translation>分辨率：</translation>
     </message>
 </context>
 <context>
@@ -169,7 +194,11 @@
     <name>dc::Settings</name>
     <message>
         <source>no resolutions</source>
-        <translation>无分辨率</translation>
+        <translation type="vanished">无分辨率</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
     </message>
 </context>
 <context>

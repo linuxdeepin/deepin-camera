@@ -1663,9 +1663,9 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 
 	int format_index = v4l2core_get_frame_format_index(vd, my_pixelformat);
 
-    if(format_index < 0)
+    if(format_index < 0){
         format_index = 0;
-
+    }
 	int resolution_index = 0;
 
 	my_width  = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].width;
