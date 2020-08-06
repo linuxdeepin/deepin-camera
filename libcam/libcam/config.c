@@ -45,12 +45,12 @@ static config_t my_config =
 {
     .width = 1920,
     .height = 1080,
-    .format = V4L2_PIX_FMT_JPEG,
+    .format = V4L2_PIX_FMT_H264,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",
 	.capture = "mmap",
-    .video_codec = "mjpg",
+    .video_codec = "none",/*"none,mjpg,mpeg,flv1,wmv1,mpg2,mp43,h264,hevc,vp80,vp90,theo"*/
     .audio_codec = "aac",
 	.profile_name = NULL,
 	.profile_path = NULL,

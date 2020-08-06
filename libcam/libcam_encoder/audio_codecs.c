@@ -398,7 +398,7 @@ int encoder_check_webm_audio_codec(int codec_ind)
  */
 int encoder_get_webm_audio_codec_index()
 {
-	return get_audio_codec_list_index(AV_CODEC_ID_VORBIS);
+    return get_audio_codec_list_index(AV_CODEC_ID_AAC);
 }
 
 /*

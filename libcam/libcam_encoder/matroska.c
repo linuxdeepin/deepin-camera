@@ -590,7 +590,7 @@ int mkv_write_header(mkv_context_t *mkv_ctx)
     mkv_put_ebml_uint   (mkv_ctx, EBML_ID_EBMLMAXIDLENGTH    ,           4);
     mkv_put_ebml_uint   (mkv_ctx, EBML_ID_EBMLMAXSIZELENGTH  ,           8);
     if (mkv_ctx->mode == ENCODER_MUX_WEBM)
-		mkv_put_ebml_string (mkv_ctx, EBML_ID_DOCTYPE        , "webm");
+        mkv_put_ebml_string (mkv_ctx, EBML_ID_DOCTYPE        , "webm");
 	else
 		mkv_put_ebml_string (mkv_ctx, EBML_ID_DOCTYPE        , "matroska");
     mkv_put_ebml_uint   (mkv_ctx, EBML_ID_DOCTYPEVERSION     ,           2);
