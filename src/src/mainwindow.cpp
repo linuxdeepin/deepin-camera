@@ -26,6 +26,7 @@
 #include <QStyleFactory>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QFormLayout>
 #include <qsettingbackend.h>
 
 #include <DLabel>
@@ -134,7 +135,18 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     lab->setAlignment(Qt::AlignVCenter);
     lab->show();
     //lab->setEnabled(false);
-    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+//    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+
+    auto optionWidget = new QWidget;
+    optionWidget->setObjectName("OptionFrame");
+
+    auto optionLayout = new QFormLayout(optionWidget);
+    optionLayout->setContentsMargins(0, 0, 0, 0);
+    optionLayout->setSpacing(0);
+
+    main->setMinimumWidth(240);
+    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+
     optionWidget->setContentsMargins(0, 0, 0, 0);
     workaround_updateStyle(optionWidget, "light");
     return optionWidget;
@@ -177,7 +189,18 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     layout->addWidget(le);
     layout->addWidget(icon);
 
-    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+//    auto optionWidget = DSettingsWidgetFactory::createTwoColumWidget(option, main);
+
+    auto optionWidget = new QWidget;
+    optionWidget->setObjectName("OptionFrame");
+
+    auto optionLayout = new QFormLayout(optionWidget);
+    optionLayout->setContentsMargins(0, 0, 0, 0);
+    optionLayout->setSpacing(0);
+
+    main->setMinimumWidth(240);
+    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+
     workaround_updateStyle(optionWidget, "light");
 
     DDialog *prompt = new DDialog(optionWidget);
