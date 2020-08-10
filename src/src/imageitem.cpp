@@ -42,6 +42,7 @@ extern QSet<int> g_setIndex;
 extern QMap<int, ImageItem *> g_indexImage;
 extern int g_indexNow;
 bool g_bMultiSlt = false; //是否多选
+int g_videoCount;//缩略图的视频个数
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -68,8 +69,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 qDebug() << "generateThumbnail failed";
             }
         }
-
+        g_videoCount ++;
         QString strTime = "";
+        if (m_nDuration < 0) {
+            m_nDuration = 0;
+        }
         int nDuration = static_cast<int>(m_nDuration / 1000000);
         int nHour = nDuration / 3600;
         if (nHour == 0) {
@@ -210,6 +214,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
 ImageItem::~ImageItem()
 {
+    QFileInfo fileInfo(m_path);
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+        g_videoCount --;
+    }
     //    m_menu->deleteLater();
     //    m_actCopy->deleteLater();
     //    m_actDel->deleteLater();
