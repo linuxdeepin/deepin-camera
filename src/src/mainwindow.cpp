@@ -371,7 +371,7 @@ void CMainWindow::slotPopupSettingsDialog()
         //当前分辨率下标
         int defres = 0;
         if (format_index >= 0 && resolu_index >= 0) {//format_index = -1 &&resolu_index = -1 表示设备被占用或者不存在
-            for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
+            for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
 
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
                         && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
