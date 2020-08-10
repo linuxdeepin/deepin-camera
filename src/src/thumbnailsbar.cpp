@@ -130,7 +130,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
-        tmp->deleteLater();
+        //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
         //setParent为NULL，防止删除之后界面不消失
@@ -319,7 +319,8 @@ void ThumbnailsBar::onTrashFile()
                 ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
                 if (itemNow->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
                     m_hBOx->removeWidget(itemNow);
-                    itemNow->deleteLater();
+                    //itemNow->deleteLater();
+                    delete itemNow;
                     itemNow = nullptr;
                     break;
                 }
@@ -464,7 +465,9 @@ void ThumbnailsBar::addFile(QString strFile)
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
         m_hBOx->removeWidget(tmp);
-        tmp->deleteLater();
+        //tmp->deleteLater();
+        delete tmp;
+        tmp = nullptr;
     }
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";
@@ -525,7 +528,8 @@ void ThumbnailsBar::delFile(QString strFile)
         if (itemNow->getPath().compare(strFile) == 0) {
             g_indexImage.remove(g_indexNow);
             m_hBOx->removeWidget(itemNow);
-            itemNow->deleteLater();
+            //itemNow->deleteLater();
+            delete itemNow;
             itemNow = nullptr;
             bRemoved = true;
             break;

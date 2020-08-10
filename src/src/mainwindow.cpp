@@ -48,6 +48,7 @@ extern bool g_bMultiSlt; //是否多选
 extern QSet<int> g_setIndex;
 extern int g_indexNow;
 extern QString g_strFileName;
+extern int g_videoCount;
 
 QString CMainWindow::m_lastfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
@@ -811,9 +812,16 @@ void CMainWindow::onFitToolBar()
         int n = m_thumbnail->getItemCount();
         int nWidth = 0;
         if (n <= 0) {
-            nWidth = LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
+            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
+            m_thumbnail->m_showVdTime->hide();
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
+            if (g_videoCount <= 0) {
+                m_thumbnail->m_showVdTime->hide();
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
+            } else {
+                m_thumbnail->m_showVdTime->show();
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
+            }
         }
 
         m_thumbnail->resize(qMin(this->width(), nWidth), THUMBNAIL_HEIGHT + 30);
