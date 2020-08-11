@@ -197,7 +197,15 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             //奇怪，这里不能直接使用strFolder调replace函数
             strtmp.replace(0, 1, QDir::homePath());
         }
-        Dtk::Widget::DDesktopServices::showFolder(strtmp);
+
+        if (g_setIndex.size() <= 1) {
+            QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+            Dtk::Widget::DDesktopServices::showFileItem(url);
+        } else {
+            //多选待定义,先打开文件夹吧，可以用showFileItems都选中
+            //https://pms.uniontech.com/zentao/bug-view-41745.html
+            Dtk::Widget::DDesktopServices::showFolder(strtmp);
+        }
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();

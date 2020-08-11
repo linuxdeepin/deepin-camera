@@ -277,8 +277,8 @@ void ThumbnailsBar::onShortcutDel()
         return;
     }
     m_lastDelTime = timeNow;
-
     onTrashFile();
+
 }
 
 void ThumbnailsBar::onTrashFile()
@@ -288,6 +288,14 @@ void ThumbnailsBar::onTrashFile()
             return;
         }
         ImageItem *tmp = g_indexImage.value(g_indexNow);
+        if (tmp == nullptr) {
+            qDebug() << "ImageItem not exist !";
+            qDebug() << "g_indexNow=" << g_indexNow;
+
+            ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+            g_indexNow = itemNow->getIndex();
+            return;
+        }
         QString strPath = tmp->getPath();
         QFile file(strPath);
         if (!file.exists()) {
@@ -299,7 +307,7 @@ void ThumbnailsBar::onTrashFile()
         delFile(strPath);
     } else {//边删边加会乱掉，先删完再加
         //获取最大的set值
-        if (m_hBOx->isEmpty()) {
+        if (g_indexImage.isEmpty()) {
             return;
         }
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
@@ -333,7 +341,7 @@ void ThumbnailsBar::onTrashFile()
             if (m_fileInfoLst.isEmpty()) {
                 m_nItemCount = m_hBOx->count();
                 emit fitToolBar();
-                if (m_hBOx->isEmpty()) {
+                if (g_indexImage.isEmpty()) {
                     g_indexNow = 0;
                     m_showVdTime->setText("");
                 } else {
@@ -365,7 +373,7 @@ void ThumbnailsBar::onTrashFile()
         //g_indexImage里边的数据是已经删掉了的
     }
     g_setIndex.clear();
-    if (m_hBOx->isEmpty()) {
+    if (g_indexImage.isEmpty()) {//这里判断Layout是否为空是不正确的，可能删的太快导致Layout为空
         g_indexNow = 0;
         m_showVdTime->setText("");
         return;
@@ -379,6 +387,7 @@ void ThumbnailsBar::onTrashFile()
             qDebug() << "path : " << itemNow->getPath();
         }
     }
+    //qDebug() << "g_indexNow=" << g_indexNow;
 }
 
 void ThumbnailsBar::onShowVdTime(QString str)
@@ -560,7 +569,7 @@ void ThumbnailsBar::delFile(QString strFile)
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBOx->insertWidget(m_hBOx->count(), pLabel);
 
-    emit fitToolBar();
+    //emit fitToolBar();
 }
 
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
