@@ -84,9 +84,10 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     QPalette pltLabel = m_showVdTime->palette();
     pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
     m_showVdTime->setPalette(pltLabel);
+    m_showVdTime->setAlignment(Qt::AlignCenter);
 
     m_lastButton = new DPushButton(this);
-//    m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    //m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
     //m_lastButton->setStyleSheet("border-radius:8px;");
     m_lastButton->setFixedWidth(LAST_BUTTON_WIDTH);
     m_lastButton->setFixedHeight(LAST_BUTTON_HEIGHT);

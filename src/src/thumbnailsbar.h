@@ -44,7 +44,7 @@ DWIDGET_USE_NAMESPACE
 #define LAST_BUTTON_HEIGHT 50
 #define LAST_BUTTON_SPACE 14//按钮与窗体的间隔
 #define ITEM_SPACE 2//控件间距
-#define VIDEO_TIME_WIDTH 80//视频时长显示的宽度
+#define VIDEO_TIME_WIDTH 72//视频时长显示的宽度
 
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
