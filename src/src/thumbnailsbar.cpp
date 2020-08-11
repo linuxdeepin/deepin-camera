@@ -81,9 +81,19 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     ft.setPixelSize(12);
     ft.setWeight(QFont::Normal);
     m_showVdTime->setFont(ft);
-    QPalette pltLabel = m_showVdTime->palette();
-    pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
-    m_showVdTime->setPalette(pltLabel);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+    [ = ](DGuiApplicationHelper::ColorType type) {
+        QPalette pltLabel = m_showVdTime->palette();
+        if (DGuiApplicationHelper::LightType == type) {
+            pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
+        } else {
+            pltLabel.setColor(QPalette::WindowText, QColor(255,229,209));
+        }
+
+        m_showVdTime->setPalette(pltLabel);
+    });
+
     m_showVdTime->setAlignment(Qt::AlignCenter);
 
     m_lastButton = new DPushButton(this);

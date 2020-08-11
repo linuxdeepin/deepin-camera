@@ -178,6 +178,9 @@ void videowidget::init()
 
 
     m_flashLabel->setWindowFlag(Qt::WindowType::ToolTip);
+    QPalette pltLabel = m_flashLabel->palette();
+    pltLabel.setColor(QPalette::Window, QColor(Qt::white));
+    m_flashLabel->setPalette(pltLabel);
     m_flashLabel->hide();
 
     //启动视频
