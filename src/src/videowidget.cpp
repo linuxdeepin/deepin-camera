@@ -613,8 +613,7 @@ void videowidget::showCountdown()
             }
         }
         if (VIDEO_STATE == NORMALVIDEO) {
-            onTakePic(true);
-            emit takePicDone();
+            emit takePicCancel();
         }
         //hideCountDownLabel();
         m_fWgtCountdown->hide();
@@ -640,7 +639,7 @@ void videowidget::showCountdown()
                     flashTimer->stop();
                 }
                 //立即闪光，500ms后关闭
-                flashTimer->start(500);
+                flashTimer->start(FLASH_TIME);
 
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
@@ -653,14 +652,47 @@ void videowidget::showCountdown()
                 m_strFolder = QDir::homePath() + QString("/Videos");
             }
             m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
-            m_imgPrcThread->m_bTake = true; //保存图片
+            m_imgPrcThread->m_bTake = true; //保存图片标志
 
             m_nFileID++;
             if (--m_curTakePicTime == 0) {
                 //拍照结束，恢复按钮状态和缩略图标志位
-                emit takePicDone();
+                QThread *thread = QThread::create([ = ]() {
+                    int nCount = 0;
+                    while(true) {
+                        if (nCount > 50) {
+                            qDebug() << "too long to emit takePicDone";
+                            break;
+                        }
+                        if (!m_imgPrcThread->m_bTake) {
+                            break;
+                        }
+                        nCount ++;
+                        QThread::msleep(100);
+                    }
+                    emit takePicDone();
+                    QThread::currentThread()->quit();
+                });
+                thread->start();
             } else {
-                emit takePicOnce();
+                QThread *thread = QThread::create([ = ]() {
+                    int nCount = 0;
+                    while(true) {
+                        if (nCount > 50) {
+                            qDebug() << "too long to emit takePicOnce";
+                            break;
+                        }
+                        if (!m_imgPrcThread->m_bTake) {
+                            break;
+                        }
+                        nCount ++;
+                        QThread::msleep(100);
+                    }
+                    emit takePicOnce();
+                    QThread::currentThread()->quit();
+                });
+                thread->start();
+
             }
 
             if (m_curTakePicTime > 0 && g_devStatus == CAM_CANUSE) {
@@ -679,7 +711,7 @@ void videowidget::showCountdown()
                         flashTimer->stop();
                     }
                     //等500ms后闪光，内部关闭
-                    flashTimer->start(500);
+                    flashTimer->start(FLASH_TIME);
                 }
             }
             m_nInterval--;
@@ -702,7 +734,7 @@ void videowidget::flash()
         if (flashTimer->isActive()) { //连续点击拍照
             flashTimer->stop();
         }
-        flashTimer->start(500);
+        flashTimer->start(FLASH_TIME);
     }
 }
 

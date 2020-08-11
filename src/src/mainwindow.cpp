@@ -1002,28 +1002,14 @@ void CMainWindow::onTakePicDone()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
-        if (!file.exists())
-        {
-            usleep(200000);
-        }
-        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
-    });
-
+    QString strPath = m_videoPre->m_imgPrcThread->m_strPath;
+    m_thumbnail->addFile(strPath);
 }
 
 void CMainWindow::onTakePicOnce()
 {
     qDebug() << "onTakePicOnce";
-    QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
-        if (!file.exists())
-        {
-            usleep(200000);
-        }
-        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
-    });
+    m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
 }
 
 void CMainWindow::onTakePicCancel()
