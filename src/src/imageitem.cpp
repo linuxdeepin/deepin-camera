@@ -266,7 +266,11 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_setIndex.clear();
     }
     update();
-    emit showDuration(m_strDuratuion);
+    if (g_setIndex.size() <= 1) {
+        emit showDuration(m_strDuratuion);
+    } else {
+        emit showDuration("... ...");
+    }
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {
