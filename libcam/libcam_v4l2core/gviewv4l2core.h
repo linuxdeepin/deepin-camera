@@ -779,6 +779,19 @@ void v4l2core_prepare_new_resolution(v4l2_dev_t *vd,
                                      int new_width, int new_height);
 
 /*
+ * update the old format (pixelformat, width and height)
+ * args:
+ *    vd - pointer to v4l2 device handler
+ *
+ * asserts:
+ *    vd is not null
+ *
+ * returns:
+ *    error code
+ */
+int v4l2core_update_old_format(v4l2_dev_t *vd, int width, int height, int pixelformat);
+
+/*
  * update the current format (pixelformat, width and height)
  * args:
  *   vd - pointer to v4l2 device handler

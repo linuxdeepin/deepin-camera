@@ -1673,6 +1673,29 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 }
 
 /*
+ * update the old format (pixelformat, width and height)
+ * args:
+ *    vd - pointer to v4l2 device handler
+ *
+ * asserts:
+ *    vd is not null
+ *
+ * returns:
+ *    error code
+ */
+int v4l2core_update_old_format(v4l2_dev_t *vd,int width,int height ,int pixelformat)
+{
+    /*asserts*/
+    assert(vd != NULL);
+    my_pixelformat = pixelformat;
+    my_width = width;
+    my_height = height;
+
+    return(try_video_stream_format(vd, my_width, my_height, my_pixelformat));
+}
+
+
+/*
  * update the current format (pixelformat, width and height)
  * args:
  *    vd - pointer to v4l2 device handler
@@ -1803,7 +1826,7 @@ v4l2_dev_t* v4l2core_init_dev(const char *device)
 		return (NULL);
 	}
 
-	vd->this_device = v4l2core_get_device_index(vd->videodevice);
+    vd->this_device = v4l2core_get_device_index(vd->videodevice);
 	if(vd->this_device < 0)
 		vd->this_device = 0;
 

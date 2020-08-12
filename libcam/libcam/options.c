@@ -322,7 +322,7 @@ static int opt_get_help_max_len()
  */
 void opt_print_help()
 {
-//	printf(_("Guvcview version %s\n\n"), VERSION);
+//	printf(_("Deepin-camera version %s\n\n"), VERSION);
 	printf(_("Usage:\n   guvcview [OPTIONS]\n\n"));
 	printf(_("OPTIONS:\n"));
 
@@ -374,7 +374,7 @@ void opt_print_help()
  */
 void opt_print_version()
 {
-//	printf("Guvcview version %s\n", VERSION);
+//	printf("Deepin-camera version %s\n", VERSION);
 }
 
 /*

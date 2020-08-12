@@ -31,6 +31,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#include "core_io.h"
 #include "LPF_V4L2.h"
 #include "camview.h"
 #include "stdlib.h"
@@ -52,7 +53,7 @@ public:
     void init();
 
 public:
-    QPixmap m_img;
+    QPixmap *m_img;
     QMutex m_rwMtxImg;
     QString m_strPath;
     QMutex m_rwMtxPath;
@@ -73,7 +74,7 @@ private:
     int result;
 
 signals:
-    void SendMajorImageProcessing(QPixmap image, int result);
+    void SendMajorImageProcessing(QPixmap *image, int result);
     void reachMaxDelayedFrames();
 
 };
