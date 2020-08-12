@@ -198,7 +198,7 @@ void MajorImageProcessingThread::run()
             m_bTake = false;
         }
         v4l2core_release_frame(vd1, frame);
-        msleep(50);//1000 / 30
+        msleep(33);//1000 / 30
     }
     v4l2core_stop_stream(vd1);
 }
