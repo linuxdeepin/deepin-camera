@@ -21,6 +21,8 @@
 
 #include "majorimageprocessingthread.h"
 
+
+
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
     init();
@@ -28,8 +30,14 @@ MajorImageProcessingThread::MajorImageProcessingThread()
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
+    if (m_img) {
+        delete m_img;
+    }
     vd1 = get_v4l2_device_handler();
     if (vd1 != nullptr) {
+        if(frame != nullptr){
+            v4l2core_release_frame(vd1, frame);
+        }
         stopped = true;
         if (video_capture_get_save_video() > 0) {
             qDebug() << "stop_encoder_thread";
@@ -50,6 +58,8 @@ void MajorImageProcessingThread::init()
 {
     stopped = false;
     majorindex = -1;
+    m_img = new QPixmap();
+    frame = nullptr;
 }
 
 void MajorImageProcessingThread::run()
@@ -63,11 +73,13 @@ void MajorImageProcessingThread::run()
 //            int current_height = v4l2core_get_frame_height(vd1);
             request_format_update(0); /*reset*/
             v4l2core_stop_stream(vd1);
-
+            m_rwMtxImg.lock();
             v4l2core_clean_buffers(vd1);
-
+            m_rwMtxImg.unlock();
             /*try new format (values prepared by the request callback)*/
             int ret = v4l2core_update_current_format(vd1);
+
+
             /*try to set the video stream format on the device*/
             if (ret != E_OK) {
                 fprintf(stderr, "camera: could not set the defined stream format\n");
@@ -82,11 +94,29 @@ void MajorImageProcessingThread::run()
                     stop();
                 }
             }
-            v4l2core_start_stream(vd1);
 
+            options_t *my_options = options_get();
+            char *device_name = get_file_basename(my_options->device);
+            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin-camera/") + QString(device_name);
+            free(device_name);
+            config_load(config_file.toLatin1().data());
+
+            config_t *my_config = config_get();
+
+            my_config->width = static_cast<int>(vd1->format.fmt.pix.width);
+            my_config->height = static_cast<int>(vd1->format.fmt.pix.height);
+            v4l2_device_list_t *devlist = get_device_list();
+            set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
+            config_save(config_file.toLatin1().data());
+            v4l2core_start_stream(vd1);
         }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
+        m_rwMtxImg.lock();
+//        if (frame->width == 752 && frame->height == 423) {
+//            v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+//        }
+
         if (frame == nullptr) {
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
@@ -94,19 +124,25 @@ void MajorImageProcessingThread::run()
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
                 close_v4l2_device_handler();
-                return ;
             }
             continue;
         }
         result = 0;
         framedely = 0;
+        if (frame->raw_frame != nullptr) {
+            if (m_img->loadFromData(frame->raw_frame, static_cast<uint>(frame->raw_frame_size)) == true) {
+                emit SendMajorImageProcessing(m_img, result);
+            }
+        }
+        m_rwMtxImg.unlock();
+
         if (video_capture_get_save_video()) {
 //            if (get_myvideo_bebin_timer() == 0) {
 //                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
 //            }
             int size = (frame->width * frame->height * 3) / 2;
-
             uint8_t *input_frame = frame->yuv_frame;
+
 
             /*
              * TODO: check codec_id, format and frame flags
@@ -154,20 +190,14 @@ void MajorImageProcessingThread::run()
                 }
             }
         }
-        m_img.loadFromData(frame->raw_frame, static_cast<uint>(frame->width * frame->height * 3));
-        m_rwMtxImg.lock();
-        emit SendMajorImageProcessing(m_img, result);
-        m_rwMtxImg.unlock();
         if (m_bTake) {
             int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
                 qDebug() << "保存照片失败";
             }
-
             m_bTake = false;
         }
         v4l2core_release_frame(vd1, frame);
-
         msleep(33);//1000 / 30
     }
     v4l2core_stop_stream(vd1);

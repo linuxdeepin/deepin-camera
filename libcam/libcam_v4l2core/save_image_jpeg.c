@@ -939,7 +939,7 @@ int encode_jpeg (uint8_t *input, uint8_t *output,
 	/* Writing Marker Data */
 	tmp_optr = write_markers (jpeg_ctx, tmp_optr, huff);
 
-	uint8_t *yuv422 = calloc(jpeg_ctx->image_width * jpeg_ctx->image_height * 2, sizeof(uint8_t));
+    uint8_t *yuv422 = (uint8_t*)calloc(jpeg_ctx->image_width * jpeg_ctx->image_height * 2, sizeof(uint8_t));
 	if(yuv422 == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: couldn't allocate memory for jpeg encoder (fatal)\n");

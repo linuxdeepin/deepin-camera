@@ -49,7 +49,7 @@ int camInit(const char* devicename)
                     result = setrlimit(RLIMIT_STACK, &rl);
                     if (result != 0)
                     {
-                        fprintf(stderr, "GUVCVIEW: setrlimit returned result = %d\n", result);
+                        fprintf(stderr, "deepin-camera: setrlimit returned result = %d\n", result);
                     }
                 }
     }
@@ -64,7 +64,7 @@ int camInit(const char* devicename)
     free(config_path);
     free(device_name);
     /*加载配置文件*/
-//    config_load(config_file);
+    config_load(config_file);
     /*用option更新配置文件*/
     config_update(my_options);
     /*获取配置项数据*/
@@ -79,7 +79,7 @@ int camInit(const char* devicename)
         audio = AUDIO_PORTAUDIO;
 
     if(debug_level > 1)
-        printf("GUVCVIEW: main thread (tid: %u)\n",
+        printf("deepin-camera: main thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     /*设置v4l2debug*/
@@ -87,10 +87,15 @@ int camInit(const char* devicename)
 
     /*得到v4l2的句柄*/
 
+
     v4l2_dev_t *my_vd = create_v4l2_device_handler(devicename);
     if(my_vd == NULL){
         int i;
         v4l2_device_list_t* devlist = get_device_list();
+        if(devlist == NULL)
+        {
+            return E_NO_DEVICE_ERR;
+        }
         for(i = 0; i < devlist->num_devices; i++){
             my_vd = create_v4l2_device_handler(devlist->list_devices[i].device);
             if(my_vd != NULL){
@@ -124,7 +129,7 @@ int camInit(const char* devicename)
     }
 
     /*设置软件自动对焦排序方法*/
-    v4l2core_soft_autofocus_set_sort(AUTOF_SORT_INSERT);
+    v4l2core_soft_autofocus_set_sort(AUTOF_SORT_QUICK);
 
     /*定义fps*/
     v4l2core_define_fps(my_vd, my_config->fps_num, my_config->fps_denom);
@@ -208,18 +213,30 @@ int camInit(const char* devicename)
 
     encoder_set_verbosity(debug_level);
 
-    config_save(config_file);
-    if(config_file)
-        free(config_file);
+
 
     if(!my_options->control_panel){
-
+        int ret = E_NO_DATA;
+        v4l2_device_list_t* devlist = get_device_list();
+        if(devlist == NULL)
+        {
+            return E_NO_DEVICE_ERR;
+        }
         //v4l2core_prepare_new_format(my_vd, my_config->format);
         //v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
         //v4l2core_load_control_profile(my_vd,NULL);
+
         v4l2core_prepare_new_format(my_vd, (int)my_config->format);
         v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
-        int ret = v4l2core_update_current_format(my_vd);
+
+        if((strcmp(my_config->device_name, devlist->list_devices[my_vd->this_device].name) == 0) && (strcmp(my_config->device_location, my_vd->videodevice) == 0))
+        {
+            ret =v4l2core_update_old_format(my_vd,my_config->width, my_config->height, (int)my_config->format);
+        }
+        else {
+            ret = v4l2core_update_current_format(my_vd);
+        }
+
 
         if (ret != E_OK) {
             v4l2core_prepare_valid_format(my_vd);
@@ -233,6 +250,10 @@ int camInit(const char* devicename)
         return ret;
     }
 //    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
+    my_config->device_location = strdup(my_vd->videodevice);
+    config_save(config_file);
+    if(config_file)
+        free(config_file);
     return E_OK;
 }
 #ifdef __cplusplus

@@ -214,8 +214,8 @@ void videowidget::init()
         qDebug() << "No webcam found" << endl;
     }
 
-    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap, int)),
-            this, SLOT(ReceiveMajorImage(QPixmap, int)));
+    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap *, int)),
+            this, SLOT(ReceiveMajorImage(QPixmap *, int)));
 
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -427,16 +427,16 @@ void videowidget::showCamUsed()
     }
 }
 
-void videowidget::ReceiveMajorImage(QPixmap image, int result)
+void videowidget::ReceiveMajorImage(QPixmap *image, int result)
 {
-    if (!image.isNull()) {
+    if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            m_pixmap = image.scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            m_pixmap = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
@@ -662,7 +662,7 @@ void videowidget::showCountdown()
                 //拍照结束，恢复按钮状态和缩略图标志位
                 QThread *thread = QThread::create([ = ]() {
                     int nCount = 0;
-                    while(true) {
+                    while (true) {
                         if (nCount > 50) {
                             qDebug() << "too long to emit takePicDone";
                             break;
@@ -680,7 +680,7 @@ void videowidget::showCountdown()
             } else {
                 QThread *thread = QThread::create([ = ]() {
                     int nCount = 0;
-                    while(true) {
+                    while (true) {
                         if (nCount > 50) {
                             qDebug() << "too long to emit takePicOnce";
                             break;
@@ -749,15 +749,14 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     QStringList ResStr = resolution.split("x");
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
+
     //设置刷新率
     v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
+
     //设置新的分辨率
     v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
     request_format_update(1);
-    config_t *my_config = config_get();
 
-    my_config->width = newwidth;
-    my_config->height = newheight;
 }
 
 void videowidget::endBtnClicked()
