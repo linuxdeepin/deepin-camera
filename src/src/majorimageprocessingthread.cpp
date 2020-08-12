@@ -33,11 +33,11 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
     if (m_img) {
         delete m_img;
     }
-    if (frame) {
-
-    }
     vd1 = get_v4l2_device_handler();
     if (vd1 != nullptr) {
+        if(frame != nullptr){
+            v4l2core_release_frame(vd1, frame);
+        }
         stopped = true;
         if (video_capture_get_save_video() > 0) {
             qDebug() << "stop_encoder_thread";
