@@ -323,7 +323,7 @@ static int opt_get_help_max_len()
 void opt_print_help()
 {
 //	printf(_("Deepin-camera version %s\n\n"), VERSION);
-	printf(_("Usage:\n   guvcview [OPTIONS]\n\n"));
+	printf(_("Usage:\n   Deepin-camera [OPTIONS]\n\n"));
 	printf(_("OPTIONS:\n"));
 
 	int max_len = opt_get_help_max_len();
