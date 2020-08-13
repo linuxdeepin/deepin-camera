@@ -75,6 +75,7 @@ void MajorImageProcessingThread::run()
             v4l2core_stop_stream(vd1);
             m_rwMtxImg.lock();
             v4l2core_clean_buffers(vd1);
+//            framedely = -11;
             m_rwMtxImg.unlock();
             /*try new format (values prepared by the request callback)*/
             int ret = v4l2core_update_current_format(vd1);
@@ -95,19 +96,21 @@ void MajorImageProcessingThread::run()
                 }
             }
 
-            options_t *my_options = options_get();
-            char *device_name = get_file_basename(my_options->device);
+//            options_t *my_options = options_get();
+//            char *device_name = get_file_basename(my_options->device);
             QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin-camera/") + QString("deepin-camera");
-            free(device_name);
+//            free(device_name);
             config_load(config_file.toLatin1().data());
 
             config_t *my_config = config_get();
 
             my_config->width = static_cast<int>(vd1->format.fmt.pix.width);
             my_config->height = static_cast<int>(vd1->format.fmt.pix.height);
+            my_config->format = static_cast<uint>(vd1->format.fmt.pix.pixelformat);
             v4l2_device_list_t *devlist = get_device_list();
             set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
             config_save(config_file.toLatin1().data());
+//            msleep(1000);//1000 / 30
             v4l2core_start_stream(vd1);
         }
         result = -1;
@@ -127,11 +130,17 @@ void MajorImageProcessingThread::run()
             }
             continue;
         }
+//        if (frame && framedely < 0) {
+
+//            framedely++;
+//            v4l2core_release_frame(vd1, frame);
+//            msleep(33);//1000 / 30
+//            continue;
+//        }
         result = 0;
         framedely = 0;
         m_rwMtxImg.lock();
         if (frame->raw_frame != nullptr && (stopped == 0)) {
-//            qDebug() << "frame->raw_frame_size:" << frame->raw_frame_size;
             if (m_img->loadFromData(frame->raw_frame, static_cast<uint>(frame->raw_frame_size))) {
 
                 emit SendMajorImageProcessing(m_img, result);
