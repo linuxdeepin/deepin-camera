@@ -431,6 +431,10 @@ int v4l2core_get_this_device_index(v4l2_dev_t *vd);
  */
 void v4l2core_disable_libv4l2();
 
+int get_my_width(void);
+
+int get_my_height(void);
+
 /*
  * enable libv4l2 calls (default)
  * args:

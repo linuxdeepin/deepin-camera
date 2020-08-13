@@ -97,7 +97,7 @@ void MajorImageProcessingThread::run()
 
             options_t *my_options = options_get();
             char *device_name = get_file_basename(my_options->device);
-            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin-camera/") + QString(device_name);
+            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin-camera/") + QString("deepin-camera");
             free(device_name);
             config_load(config_file.toLatin1().data());
 

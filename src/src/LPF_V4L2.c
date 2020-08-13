@@ -263,6 +263,10 @@ int camInit(const char* devicename)
         my_config->device_location = strdup(my_vd->videodevice);
 
         my_config->format = (unsigned int)v4l2core_get_requested_frame_format(my_vd);
+
+        my_config->width = get_my_width();
+        my_config->height = get_my_height();
+//        my_config->width =
         config_save(config_file);
         if(config_file)
             free(config_file);
