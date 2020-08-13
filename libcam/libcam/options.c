@@ -209,7 +209,7 @@ static opt_values_t opt_values[] =
 static options_t my_options =
 {
 	.verbosity = 0,
-	.device = "/dev/video0",
+    .device = "",
 	.width = 0,
 	.height = 0,
 	.control_panel = 0,
@@ -225,10 +225,10 @@ static options_t my_options =
 	.prof_filename = NULL,
 	.profile_name = NULL,
 	.profile_path = NULL,
-	.video_name = NULL,
-	.video_path = NULL,
-	.photo_name = NULL,
-	.photo_path = NULL,
+    .video_name = "",
+    .video_path = "",
+    .photo_name = "",
+    .photo_path = "",
 	.video_timer = 0,
 	.photo_timer = 0,
 	.photo_npics = 0,
@@ -322,8 +322,8 @@ static int opt_get_help_max_len()
  */
 void opt_print_help()
 {
-//	printf(_("Guvcview version %s\n\n"), VERSION);
-	printf(_("Usage:\n   guvcview [OPTIONS]\n\n"));
+//	printf(_("Deepin-camera version %s\n\n"), VERSION);
+	printf(_("Usage:\n   Deepin-camera [OPTIONS]\n\n"));
 	printf(_("OPTIONS:\n"));
 
 	int max_len = opt_get_help_max_len();
@@ -374,7 +374,7 @@ void opt_print_help()
  */
 void opt_print_version()
 {
-//	printf("Guvcview version %s\n", VERSION);
+//	printf("Deepin-camera version %s\n", VERSION);
 }
 
 /*

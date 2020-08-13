@@ -166,7 +166,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 videowidget::~videowidget()
 {
-    m_imgPrcThread->deleteLater();
+    m_imgPrcThread->stop();
+    m_imgPrcThread->wait();
+    delete m_imgPrcThread;
 }
 
 void videowidget::init()
@@ -178,10 +180,13 @@ void videowidget::init()
 
 
     m_flashLabel->setWindowFlag(Qt::WindowType::ToolTip);
+    QPalette pltLabel = m_flashLabel->palette();
+    pltLabel.setColor(QPalette::Window, QColor(Qt::white));
+    m_flashLabel->setPalette(pltLabel);
     m_flashLabel->hide();
 
     //启动视频
-    int ret =  camInit("/dev/video0");
+    int ret =  camInit("");
     if (ret == E_OK) {
         g_devStatus = CAM_CANUSE;
 
@@ -211,8 +216,8 @@ void videowidget::init()
         qDebug() << "No webcam found" << endl;
     }
 
-    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap, int)),
-            this, SLOT(ReceiveMajorImage(QPixmap, int)));
+    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
+            this, SLOT(ReceiveMajorImage(QImage *, int)));
 
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -424,16 +429,16 @@ void videowidget::showCamUsed()
     }
 }
 
-void videowidget::ReceiveMajorImage(QPixmap image, int result)
+void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
-    if (!image.isNull()) {
+    if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            m_pixmap = image.scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            m_pixmap = QPixmap::fromImage(image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
@@ -613,8 +618,7 @@ void videowidget::showCountdown()
             }
         }
         if (VIDEO_STATE == NORMALVIDEO) {
-            onTakePic(true);
-            emit takePicDone();
+            emit takePicCancel();
         }
         //hideCountDownLabel();
         m_fWgtCountdown->hide();
@@ -640,7 +644,7 @@ void videowidget::showCountdown()
                     flashTimer->stop();
                 }
                 //立即闪光，500ms后关闭
-                flashTimer->start(500);
+                flashTimer->start(FLASH_TIME);
 
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
@@ -653,14 +657,47 @@ void videowidget::showCountdown()
                 m_strFolder = QDir::homePath() + QString("/Videos");
             }
             m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
-            m_imgPrcThread->m_bTake = true; //保存图片
+            m_imgPrcThread->m_bTake = true; //保存图片标志
 
             m_nFileID++;
             if (--m_curTakePicTime == 0) {
                 //拍照结束，恢复按钮状态和缩略图标志位
-                emit takePicDone();
+                QThread *thread = QThread::create([ = ]() {
+                    int nCount = 0;
+                    while (true) {
+                        if (nCount > 50) {
+                            qDebug() << "too long to emit takePicDone";
+                            break;
+                        }
+                        if (!m_imgPrcThread->m_bTake) {
+                            break;
+                        }
+                        nCount ++;
+                        QThread::msleep(100);
+                    }
+                    emit takePicDone();
+                    QThread::currentThread()->quit();
+                });
+                thread->start();
             } else {
-                emit takePicOnce();
+                QThread *thread = QThread::create([ = ]() {
+                    int nCount = 0;
+                    while (true) {
+                        if (nCount > 50) {
+                            qDebug() << "too long to emit takePicOnce";
+                            break;
+                        }
+                        if (!m_imgPrcThread->m_bTake) {
+                            break;
+                        }
+                        nCount ++;
+                        QThread::msleep(100);
+                    }
+                    emit takePicOnce();
+                    QThread::currentThread()->quit();
+                });
+                thread->start();
+
             }
 
             if (m_curTakePicTime > 0 && g_devStatus == CAM_CANUSE) {
@@ -679,7 +716,7 @@ void videowidget::showCountdown()
                         flashTimer->stop();
                     }
                     //等500ms后闪光，内部关闭
-                    flashTimer->start(500);
+                    flashTimer->start(FLASH_TIME);
                 }
             }
             m_nInterval--;
@@ -702,7 +739,7 @@ void videowidget::flash()
         if (flashTimer->isActive()) { //连续点击拍照
             flashTimer->stop();
         }
-        flashTimer->start(500);
+        flashTimer->start(FLASH_TIME);
     }
 }
 
@@ -714,15 +751,14 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     QStringList ResStr = resolution.split("x");
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
+
     //设置刷新率
     v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
+
     //设置新的分辨率
     v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
     request_format_update(1);
-    config_t *my_config = config_get();
 
-    my_config->width = newwidth;
-    my_config->height = newheight;
 }
 
 void videowidget::endBtnClicked()
@@ -730,7 +766,7 @@ void videowidget::endBtnClicked()
     if (countTimer->isActive()) {
         countTimer->stop();
     }
-    if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0)) {
         m_pCamErrItem->hide();
     }
     if (m_fWgtCountdown->isVisible()) {
@@ -846,7 +882,7 @@ void videowidget::onTakePic(bool bTrue)
         if (countTimer->isActive()) {
             countTimer->stop();
         }
-        if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+        if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0)) {
             m_pCamErrItem->hide();
         }
         if (m_fWgtCountdown->isVisible()) {

@@ -42,6 +42,7 @@ extern QSet<int> g_setIndex;
 extern QMap<int, ImageItem *> g_indexImage;
 extern int g_indexNow;
 bool g_bMultiSlt = false; //是否多选
+int g_videoCount;//缩略图的视频个数
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -68,8 +69,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 qDebug() << "generateThumbnail failed";
             }
         }
-
+        g_videoCount ++;
         QString strTime = "";
+        if (m_nDuration < 0) {
+            m_nDuration = 0;
+        }
         int nDuration = static_cast<int>(m_nDuration / 1000000);
         int nHour = nDuration / 3600;
         if (nHour == 0) {
@@ -193,7 +197,15 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             //奇怪，这里不能直接使用strFolder调replace函数
             strtmp.replace(0, 1, QDir::homePath());
         }
-        Dtk::Widget::DDesktopServices::showFolder(strtmp);
+
+        if (g_setIndex.size() <= 1) {
+            QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+            Dtk::Widget::DDesktopServices::showFileItem(url);
+        } else {
+            //多选待定义,先打开文件夹吧，可以用showFileItems都选中
+            //https://pms.uniontech.com/zentao/bug-view-41745.html
+            Dtk::Widget::DDesktopServices::showFolder(strtmp);
+        }
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();
@@ -210,6 +222,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
 ImageItem::~ImageItem()
 {
+    QFileInfo fileInfo(m_path);
+    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+        g_videoCount --;
+    }
     //    m_menu->deleteLater();
     //    m_actCopy->deleteLater();
     //    m_actDel->deleteLater();
@@ -258,7 +274,11 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_setIndex.clear();
     }
     update();
-    emit showDuration(m_strDuratuion);
+    if (g_setIndex.size() <= 1) {
+        emit showDuration(m_strDuratuion);
+    } else {
+        emit showDuration("... ...");
+    }
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {

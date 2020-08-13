@@ -48,6 +48,7 @@ extern bool g_bMultiSlt; //是否多选
 extern QSet<int> g_setIndex;
 extern int g_indexNow;
 extern QString g_strFileName;
+extern int g_videoCount;
 
 QString CMainWindow::m_lastfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
@@ -370,12 +371,14 @@ void CMainWindow::slotPopupSettingsDialog()
         //当前分辨率下标
         int defres = 0;
         if (format_index >= 0 && resolu_index >= 0) {//format_index = -1 &&resolu_index = -1 表示设备被占用或者不存在
-            for (int i = 0 ; i < list_stream_formats[format_index].list_stream_cap[resolu_index].numb_frates; i++) {
+            for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
 
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
                         && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
                         (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320)) {
+                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
+                        ((list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
+                         && (list_stream_formats[format_index].list_stream_cap[i].height % 16) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
                     resolutionDatabase.append(res_str);
@@ -811,9 +814,16 @@ void CMainWindow::onFitToolBar()
         int n = m_thumbnail->getItemCount();
         int nWidth = 0;
         if (n <= 0) {
-            nWidth = LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
+            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
+            m_thumbnail->m_showVdTime->hide();
         } else {
-            nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
+            if (g_videoCount <= 0) {
+                m_thumbnail->m_showVdTime->hide();
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
+            } else {
+                m_thumbnail->m_showVdTime->show();
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
+            }
         }
 
         m_thumbnail->resize(qMin(this->width(), nWidth), THUMBNAIL_HEIGHT + 30);
@@ -994,28 +1004,14 @@ void CMainWindow::onTakePicDone()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
-        if (!file.exists())
-        {
-            usleep(200000);
-        }
-        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
-    });
-
+    QString strPath = m_videoPre->m_imgPrcThread->m_strPath;
+    m_thumbnail->addFile(strPath);
 }
 
 void CMainWindow::onTakePicOnce()
 {
     qDebug() << "onTakePicOnce";
-    QTimer::singleShot(200, this, [ = ] {
-        QFile file(m_videoPre->m_imgPrcThread->m_strPath);
-        if (!file.exists())
-        {
-            usleep(200000);
-        }
-        m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
-    });
+    m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
 }
 
 void CMainWindow::onTakePicCancel()

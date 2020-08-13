@@ -431,6 +431,10 @@ int v4l2core_get_this_device_index(v4l2_dev_t *vd);
  */
 void v4l2core_disable_libv4l2();
 
+int get_my_width(void);
+
+int get_my_height(void);
+
 /*
  * enable libv4l2 calls (default)
  * args:
@@ -777,6 +781,19 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd);
  */
 void v4l2core_prepare_new_resolution(v4l2_dev_t *vd,
                                      int new_width, int new_height);
+
+/*
+ * update the old format (pixelformat, width and height)
+ * args:
+ *    vd - pointer to v4l2 device handler
+ *
+ * asserts:
+ *    vd is not null
+ *
+ * returns:
+ *    error code
+ */
+int v4l2core_update_old_format(v4l2_dev_t *vd, int width, int height, int pixelformat);
 
 /*
  * update the current format (pixelformat, width and height)

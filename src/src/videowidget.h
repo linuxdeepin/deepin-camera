@@ -41,6 +41,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
 
+#define FLASH_TIME 500//拍照闪光时间，500毫秒
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
@@ -102,7 +103,7 @@ public slots:
 
 
 private slots:
-    void ReceiveMajorImage(QPixmap image, int result);
+    void ReceiveMajorImage(QImage *image, int result);
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);

@@ -81,12 +81,23 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     ft.setPixelSize(12);
     ft.setWeight(QFont::Normal);
     m_showVdTime->setFont(ft);
-    QPalette pltLabel = m_showVdTime->palette();
-    pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
-    m_showVdTime->setPalette(pltLabel);
+
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+    [ = ](DGuiApplicationHelper::ColorType type) {
+        QPalette pltLabel = m_showVdTime->palette();
+        if (DGuiApplicationHelper::LightType == type) {
+            pltLabel.setColor(QPalette::WindowText, QColor(0,26,46));
+        } else {
+            pltLabel.setColor(QPalette::WindowText, QColor(255,229,209));
+        }
+
+        m_showVdTime->setPalette(pltLabel);
+    });
+
+    m_showVdTime->setAlignment(Qt::AlignCenter);
 
     m_lastButton = new DPushButton(this);
-//    m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
+    //m_lastButton->setStyleSheet("border:2px groove gray;border-radius:10px;padding:2px 4px;");
     //m_lastButton->setStyleSheet("border-radius:8px;");
     m_lastButton->setFixedWidth(LAST_BUTTON_WIDTH);
     m_lastButton->setFixedHeight(LAST_BUTTON_HEIGHT);
@@ -130,7 +141,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
-        tmp->deleteLater();
+        //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
         //setParent为NULL，防止删除之后界面不消失
@@ -276,8 +287,8 @@ void ThumbnailsBar::onShortcutDel()
         return;
     }
     m_lastDelTime = timeNow;
-
     onTrashFile();
+
 }
 
 void ThumbnailsBar::onTrashFile()
@@ -287,6 +298,14 @@ void ThumbnailsBar::onTrashFile()
             return;
         }
         ImageItem *tmp = g_indexImage.value(g_indexNow);
+        if (tmp == nullptr) {
+            qDebug() << "ImageItem not exist !";
+            qDebug() << "g_indexNow=" << g_indexNow;
+
+            ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+            g_indexNow = itemNow->getIndex();
+            return;
+        }
         QString strPath = tmp->getPath();
         QFile file(strPath);
         if (!file.exists()) {
@@ -298,7 +317,7 @@ void ThumbnailsBar::onTrashFile()
         delFile(strPath);
     } else {//边删边加会乱掉，先删完再加
         //获取最大的set值
-        if (m_hBOx->isEmpty()) {
+        if (g_indexImage.isEmpty()) {
             return;
         }
         ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
@@ -319,7 +338,8 @@ void ThumbnailsBar::onTrashFile()
                 ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
                 if (itemNow->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
                     m_hBOx->removeWidget(itemNow);
-                    itemNow->deleteLater();
+                    //itemNow->deleteLater();
+                    delete itemNow;
                     itemNow = nullptr;
                     break;
                 }
@@ -331,7 +351,7 @@ void ThumbnailsBar::onTrashFile()
             if (m_fileInfoLst.isEmpty()) {
                 m_nItemCount = m_hBOx->count();
                 emit fitToolBar();
-                if (m_hBOx->isEmpty()) {
+                if (g_indexImage.isEmpty()) {
                     g_indexNow = 0;
                     m_showVdTime->setText("");
                 } else {
@@ -363,7 +383,7 @@ void ThumbnailsBar::onTrashFile()
         //g_indexImage里边的数据是已经删掉了的
     }
     g_setIndex.clear();
-    if (m_hBOx->isEmpty()) {
+    if (g_indexImage.isEmpty()) {//这里判断Layout是否为空是不正确的，可能删的太快导致Layout为空
         g_indexNow = 0;
         m_showVdTime->setText("");
         return;
@@ -377,6 +397,7 @@ void ThumbnailsBar::onTrashFile()
             qDebug() << "path : " << itemNow->getPath();
         }
     }
+    //qDebug() << "g_indexNow=" << g_indexNow;
 }
 
 void ThumbnailsBar::onShowVdTime(QString str)
@@ -464,7 +485,9 @@ void ThumbnailsBar::addFile(QString strFile)
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
         m_hBOx->removeWidget(tmp);
-        tmp->deleteLater();
+        //tmp->deleteLater();
+        delete tmp;
+        tmp = nullptr;
     }
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";
@@ -525,7 +548,8 @@ void ThumbnailsBar::delFile(QString strFile)
         if (itemNow->getPath().compare(strFile) == 0) {
             g_indexImage.remove(g_indexNow);
             m_hBOx->removeWidget(itemNow);
-            itemNow->deleteLater();
+            //itemNow->deleteLater();
+            delete itemNow;
             itemNow = nullptr;
             bRemoved = true;
             break;
@@ -555,7 +579,7 @@ void ThumbnailsBar::delFile(QString strFile)
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBOx->insertWidget(m_hBOx->count(), pLabel);
 
-    emit fitToolBar();
+    //emit fitToolBar();
 }
 
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理

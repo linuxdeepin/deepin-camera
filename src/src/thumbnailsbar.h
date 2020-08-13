@@ -44,7 +44,7 @@ DWIDGET_USE_NAMESPACE
 #define LAST_BUTTON_HEIGHT 50
 #define LAST_BUTTON_SPACE 14//按钮与窗体的间隔
 #define ITEM_SPACE 2//控件间距
-#define VIDEO_TIME_WIDTH 80//视频时长显示的宽度
+#define VIDEO_TIME_WIDTH 72//视频时长显示的宽度
 
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
@@ -70,6 +70,7 @@ public:
     QHBoxLayout *m_hBOx;
     int m_nMaxItem;
     int m_nStatus; //当前状态
+    DLabel *m_showVdTime;//缩略图显示视频时长
 private:
     int m_nItemCount;//可显示的缩略图个数
 
@@ -77,9 +78,7 @@ private:
 
     QStringList m_strlstFolders;//存放文件夹路径
 
-    DPushButton *m_lastButton {nullptr};//缩略图最后的按钮，可实现拍照/取消拍照/录制。
-
-    DLabel *m_showVdTime;//缩略图显示视频时长
+    DPushButton *m_lastButton {nullptr};//缩略图最后的按钮，可实现拍照/取消拍照/录制。   
 
     QTime m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
 

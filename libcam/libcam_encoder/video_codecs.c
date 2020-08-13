@@ -136,7 +136,7 @@ static video_codec_t listSupCodecs[] =
 		.me_method    = 0,
 		.mpeg_quant   = 0,
 		.max_b_frames = 0,
-        .num_threads  = 4,
+        .num_threads  = 0,
 		.flags        = 0
 	},
 	{
@@ -932,7 +932,7 @@ int get_video_codec_list_index(int codec_id)
  */
 int encoder_get_webm_video_codec_index()
 {
-    return get_video_codec_list_index(AV_CODEC_ID_NONE);
+    return get_video_codec_list_index(AV_CODEC_ID_VP8);
 }
 
 /*

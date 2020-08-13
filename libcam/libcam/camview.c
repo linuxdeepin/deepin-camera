@@ -278,7 +278,7 @@ void video_capture_save_video(int value)
     save_video = value;
 
     if(debug_level > 1)
-        printf("CHEESE: save video flag changed to %i\n", save_video);
+        printf("deepin-camera: save video flag changed to %i\n", save_video);
 }
 
 /*
@@ -564,7 +564,7 @@ audio_context_t *create_audio_context(int api, int device)
     my_audio_ctx = audio_init(api, device);
 
     if(my_audio_ctx == NULL)
-        fprintf(stderr, "CHEESE: couldn't allocate audio context\n");
+        fprintf(stderr, "deepin-camera: couldn't allocate audio context\n");
 
     return my_audio_ctx;
 }
@@ -624,13 +624,13 @@ static void *audio_processing_loop(void *data)
     encoder_context_t *encoder_ctx = (encoder_context_t *) data;
 
     if(debug_level > 1)
-        printf("CHEESE: audio thread (tid: %u)\n",
+        printf("deepin-camera: audio thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     audio_context_t *audio_ctx = get_audio_context();
     if(!audio_ctx)
     {
-        fprintf(stderr, "CHEESE: no audio context: skiping audio processing\n");
+        fprintf(stderr, "deepin-camera: no audio context: skiping audio processing\n");
         return ((void *) -1);
     }
     audio_buff_t *audio_buff = NULL;
@@ -747,7 +747,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
     my_encoder_status = 1;
 
     if(debug_level > 1)
-        printf("CHEESE: encoder thread (tid: %u)\n",
+        printf("deepin-camera: encoder thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     /*get the audio context*/
@@ -765,7 +765,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
     }
 
     if(debug_level > 0)
-        printf("CHEESE: audio [channels= %i; samprate= %i] \n",
+        printf("deepin-camera: audio [channels= %i; samprate= %i] \n",
             channels, samprate);
 
     /*create the encoder context*/
@@ -789,14 +789,14 @@ static void *encoder_loop(__attribute__((unused))void *data)
         v4l2core_h264_request_idr(my_vd);
 
         if(debug_level > 0)
-            printf("CHEESE: storing external pps and sps data in encoder context\n");
+            printf("deepin-camera: storing external pps and sps data in encoder context\n");
         encoder_ctx->h264_pps_size = v4l2core_get_h264_pps_size(my_vd);
         if(encoder_ctx->h264_pps_size > 0)
         {
             encoder_ctx->h264_pps = calloc(encoder_ctx->h264_pps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_pps == NULL)
             {
-                fprintf(stderr,"CHEESE: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_pps, v4l2core_get_h264_pps(my_vd), encoder_ctx->h264_pps_size);
@@ -808,7 +808,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
             encoder_ctx->h264_sps = calloc(encoder_ctx->h264_sps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_sps == NULL)
             {
-                fprintf(stderr,"CHEESE: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_sps, v4l2core_get_h264_sps(my_vd), encoder_ctx->h264_sps_size);
@@ -857,14 +857,14 @@ static void *encoder_loop(__attribute__((unused))void *data)
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("CHEESE: starting encoder audio thread\n");
+            printf("deepin-camera: starting encoder audio thread\n");
 
         int ret = __THREAD_CREATE(&encoder_audio_thread, audio_processing_loop, (void *) encoder_ctx);
 
         if(ret)
-            fprintf(stderr, "CHEESE: encoder audio thread creation failed (%i)\n", ret);
+            fprintf(stderr, "deepin-camera: encoder audio thread creation failed (%i)\n", ret);
         else if(debug_level > 2)
-            printf("CHEESE: created audio encoder thread with tid: %u\n",
+            printf("deepin-camera: created audio encoder thread with tid: %u\n",
                 (unsigned int) encoder_audio_thread);
     }
 
@@ -902,17 +902,17 @@ static void *encoder_loop(__attribute__((unused))void *data)
     }
 
     if(debug_level > 1)
-        printf("CHEESE: video capture terminated - flushing video buffers\n");
+        printf("deepin-camera: video capture terminated - flushing video buffers\n");
     /*flush the video buffer*/
     encoder_flush_video_buffer(encoder_ctx);
     if(debug_level > 1)
-        printf("CHEESE: flushing video buffers - done\n");
+        printf("deepin-camera: flushing video buffers - done\n");
 
     /*make sure the audio processing thread has stopped*/
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("CHEESE: join encoder audio thread\n");
+            printf("deepin-camera: join encoder audio thread\n");
         __THREAD_JOIN(encoder_audio_thread);
     }
 
@@ -981,7 +981,7 @@ void *capture_loop(void *data)
     quit = 0;
 
     if(debug_level > 1)
-        printf("CHEESE: capture thread (tid: %u)\n",
+        printf("deepin-camera: capture thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     int ret = 0;
@@ -1051,8 +1051,8 @@ void *capture_loop(void *data)
             /*try to set the video stream format on the device*/
             if(ret != E_OK)
             {
-                fprintf(stderr, "GUCVIEW: could not set the defined stream format\n");
-                fprintf(stderr, "GUCVIEW: trying first listed stream format\n");
+                fprintf(stderr, "deepin-camera: could not set the defined stream format\n");
+                fprintf(stderr, "deepin-camera: trying first listed stream format\n");
 
                 v4l2core_prepare_valid_format(my_vd);
                 v4l2core_prepare_valid_resolution(my_vd);
@@ -1060,9 +1060,9 @@ void *capture_loop(void *data)
 
                 if(ret != E_OK)
                 {
-                    fprintf(stderr, "GUCVIEW: also could not set the first listed stream format\n");
+                    fprintf(stderr, "deepin-camera: also could not set the first listed stream format\n");
 
-                    //gui_error("Guvcview error", "could not start a video stream in the device", 1);
+                    //gui_error("Deepin-camera error", "could not start a video stream in the device", 1);
 
                     return ((void *) -1);
                 }
@@ -1072,7 +1072,7 @@ void *capture_loop(void *data)
                 current_height != v4l2core_get_frame_height(my_vd))
             {
                 if(debug_level > 1)
-                    printf("CHEESE: resolution changed, reseting render\n");
+                    printf("deepin-camera: resolution changed, reseting render\n");
 
                 /*close render*/
                 render_close();
@@ -1089,7 +1089,7 @@ void *capture_loop(void *data)
             }
 
             if(debug_level > 0)
-                printf("CHEESE: reset to pixelformat=%x width=%i and height=%i\n",
+                printf("deepin-camera: reset to pixelformat=%x width=%i and height=%i\n",
                     v4l2core_get_requested_frame_format(my_vd),
                     v4l2core_get_frame_width(my_vd),
                     v4l2core_get_frame_height(my_vd));
@@ -1167,7 +1167,7 @@ void *capture_loop(void *data)
                     img_filename = smart_cat(path, 0, name);
 
                 //if(debug_level > 1)
-                //	printf("CHEESE: saving image to %s\n", img_filename);
+                //	printf("deepin-camera: saving image to %s\n", img_filename);
 
                 snprintf(status_message, 79, _("saving image to %s"), img_filename);
                 //gui_status_message(status_message);
@@ -1244,7 +1244,7 @@ void *capture_loop(void *data)
             render_frame_osd(frame->yuv_frame);
 
             /* finally render the frame */
-            snprintf(render_caption, 29, "Guvcview  (%2.2f fps)",
+            snprintf(render_caption, 29, "Deepin-camera  (%2.2f fps)",
                 v4l2core_get_realfps(my_vd));
             render_set_caption(render_caption);
             render_frame(frame->yuv_frame);
@@ -1280,9 +1280,9 @@ int start_encoder_thread(void *data)
     int ret = __THREAD_CREATE(&encoder_thread, encoder_loop, data);
 
     if(ret)
-        fprintf(stderr, "CHEESE: encoder thread creation failed (%i)\n", ret);
+        fprintf(stderr, "deepin-camera: encoder thread creation failed (%i)\n", ret);
     else if(debug_level > 2)
-        printf("CHEESE: created encoder thread with tid: %u\n",
+        printf("deepin-camera: created encoder thread with tid: %u\n",
             (unsigned int) encoder_thread);
 
     return ret;
@@ -1307,7 +1307,7 @@ int stop_encoder_thread()
     __THREAD_JOIN(encoder_thread);
 
     if(debug_level > 1)
-        printf("CHEESE: encoder thread terminated and joined\n");
+        printf("deepin-camera: encoder thread terminated and joined\n");
 
     return 0;
 }

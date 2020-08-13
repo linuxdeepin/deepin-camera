@@ -620,8 +620,8 @@ int mkv_write_header(mkv_context_t *mkv_ctx)
 
     segment_info = mkv_start_ebml_master(mkv_ctx, MATROSKA_ID_INFO, 0);
     mkv_put_ebml_uint(mkv_ctx, MATROSKA_ID_TIMECODESCALE, mkv_ctx->timescale);
-    mkv_put_ebml_string(mkv_ctx, MATROSKA_ID_MUXINGAPP , "Guvcview Muxer-2014.04");
-    mkv_put_ebml_string(mkv_ctx, MATROSKA_ID_WRITINGAPP, "Guvcview");
+    mkv_put_ebml_string(mkv_ctx, MATROSKA_ID_MUXINGAPP , "Deepin-camera Muxer-2014.04");
+    mkv_put_ebml_string(mkv_ctx, MATROSKA_ID_WRITINGAPP, "Deepin-camera");
 	
 	int32_t seg_uid[4] = {0,0,0,0};
 	/*generate seg uid - 16 byte random int*/
@@ -813,21 +813,20 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
     }
 
     mkv_ctx->duration = MAX(mkv_ctx->duration, (int64_t)ts /*+ duration*/);
-    if(stream_index == 0){
-        double strsa = (double) mkv_ctx->duration/1000;
+    double strsa = (double) mkv_ctx->duration/1000;
 
-        if((int)(strsa*100) > (100*MAX_REC_TIME+30))
-        {
-            stop_encoder_thread();
-            reset_video_timer();
-        }
-        //    update duration
-        int64_t currentpos = io_get_offset(mkv_ctx->writer);
-        io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
-
-        mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
-        io_seek(mkv_ctx->writer, currentpos);
+    if((int)(strsa*100) > (100*MAX_REC_TIME+30))
+    {
+        stop_encoder_thread();
+        reset_video_timer();
     }
+    //    update duration
+    int64_t currentpos = io_get_offset(mkv_ctx->writer);
+    io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
+
+    mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
+    io_seek(mkv_ctx->writer, currentpos);
+
     return 0;
 }
 
