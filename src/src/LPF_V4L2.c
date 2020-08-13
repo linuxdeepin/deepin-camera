@@ -266,6 +266,7 @@ int camInit(const char* devicename)
 
         my_config->width = get_my_width();
         my_config->height = get_my_height();
+        my_config->format = (uint)my_vd->format.fmt.pix.pixelformat;
 //        my_config->width =
         config_save(config_file);
         if(config_file)
