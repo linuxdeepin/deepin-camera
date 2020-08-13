@@ -209,7 +209,7 @@ static opt_values_t opt_values[] =
 static options_t my_options =
 {
 	.verbosity = 0,
-	.device = "/dev/video0",
+    .device = "",
 	.width = 0,
 	.height = 0,
 	.control_panel = 0,
