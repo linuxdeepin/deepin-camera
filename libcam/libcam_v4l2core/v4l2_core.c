@@ -150,6 +150,8 @@ void __attribute__ ((destructor)) v4l2core_fini()
 	v4l2core_close_v4l2_device_list();
 }
 
+
+
 /*
  * Query video device capabilities and supported formats
  * args:
@@ -1073,6 +1075,15 @@ static int get_next_ready_frame(v4l2_dev_t *vd)
 	return -1;
 }
 
+int get_my_width()
+{
+    return my_width;
+}
+
+int get_my_height()
+{
+    return my_height;
+}
 /*
  * process input buffer
  * args:
