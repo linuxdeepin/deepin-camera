@@ -186,7 +186,7 @@ void videowidget::init()
     m_flashLabel->hide();
 
     //启动视频
-    int ret =  camInit("/dev/video0");
+    int ret =  camInit("");
     if (ret == E_OK) {
         g_devStatus = CAM_CANUSE;
 

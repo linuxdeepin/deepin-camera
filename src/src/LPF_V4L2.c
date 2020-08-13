@@ -59,7 +59,7 @@ int camInit(const char* devicename)
     char* config_path = smart_cat(getenv("HOME"),'/',".config/deepin-camera");
     mkdir(config_path, 0777);
     char *device_name = get_file_basename(my_options->device);
-    char *config_file = smart_cat(config_path, '/', device_name);
+    char *config_file = smart_cat(config_path, '/', "deepin-camera");
     /*释放字符串内存*/
     free(config_path);
     free(device_name);
@@ -86,9 +86,15 @@ int camInit(const char* devicename)
     v4l2core_set_verbosity(debug_level);
 
     /*得到v4l2的句柄*/
+    if(!my_config->device_location)
+        my_config->device_location = strdup("");
 
-
-    v4l2_dev_t *my_vd = create_v4l2_device_handler(devicename);
+    v4l2_dev_t *my_vd;
+    if(strcmp(devicename, "") == 0){
+        my_vd = create_v4l2_device_handler(my_config->device_location);
+    }else {
+        my_vd = create_v4l2_device_handler(devicename);
+    }
     if(my_vd == NULL){
         int i;
         v4l2_device_list_t* devlist = get_device_list();
@@ -198,17 +204,15 @@ int camInit(const char* devicename)
 
     if(!my_config->device_name)
         my_config->device_name = strdup("");
-    if(!my_config->device_location)
-        my_config->device_location = strdup(my_vd->videodevice);
 
-    if(!my_config->device_location)
-            my_config->device_location = strdup(my_vd->videodevice);
+
 
     /*设置音频接口debug等级*/
     audio_set_verbosity(debug_level);
 
     /*初始化音频context*/
     audio_context_t* audio_ctx = create_audio_context(audio, my_config->audio_device);
+
     if(audio_ctx != NULL)
     {
         my_config->audio_device = audio_get_device_index(audio_ctx);
@@ -219,10 +223,6 @@ int camInit(const char* devicename)
 
     encoder_set_verbosity(debug_level);
 
-    config_save(config_file);
-    if(config_file)
-        free(config_file);
-
     if(!my_options->control_panel){
         int ret = E_NO_DATA;
         v4l2_device_list_t* devlist = get_device_list();
@@ -230,6 +230,7 @@ int camInit(const char* devicename)
         {
             return E_NO_DEVICE_ERR;
         }
+
         //v4l2core_prepare_new_format(my_vd, my_config->format);
         //v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
         //v4l2core_load_control_profile(my_vd,NULL);
@@ -239,7 +240,7 @@ int camInit(const char* devicename)
 
         if((strcmp(my_config->device_name, devlist->list_devices[my_vd->this_device].name) == 0) && (strcmp(my_config->device_location, my_vd->videodevice) == 0))
         {
-            ret =v4l2core_update_old_format(my_vd,my_config->width, my_config->height, (int)my_config->format);
+            ret =v4l2core_update_old_format(my_vd,my_config->width, my_config->height, v4l2core_get_requested_frame_format(my_vd));
         }
         else {
             ret = v4l2core_update_current_format(my_vd);
@@ -255,6 +256,16 @@ int camInit(const char* devicename)
                 fprintf(stderr, "cheese: Video capture failed\n");
             }
         }
+
+        my_config->device_name = strdup(get_device_list()->list_devices[my_vd->this_device].name);
+
+    //    if(!my_config->device_location)
+        my_config->device_location = strdup(my_vd->videodevice);
+
+        my_config->format = (unsigned int)v4l2core_get_requested_frame_format(my_vd);
+        config_save(config_file);
+        if(config_file)
+            free(config_file);
         return ret;
     }
 //    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
