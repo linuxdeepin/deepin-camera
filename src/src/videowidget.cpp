@@ -166,7 +166,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
 videowidget::~videowidget()
 {
-    m_imgPrcThread->deleteLater();
+    m_imgPrcThread->stop();
+    m_imgPrcThread->wait();
+    delete m_imgPrcThread;
 }
 
 void videowidget::init()
@@ -214,8 +216,8 @@ void videowidget::init()
         qDebug() << "No webcam found" << endl;
     }
 
-    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QPixmap *, int)),
-            this, SLOT(ReceiveMajorImage(QPixmap *, int)));
+    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
+            this, SLOT(ReceiveMajorImage(QImage *, int)));
 
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -427,7 +429,7 @@ void videowidget::showCamUsed()
     }
 }
 
-void videowidget::ReceiveMajorImage(QPixmap *image, int result)
+void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
     if (!image->isNull()) {
         switch (result) {
@@ -436,7 +438,7 @@ void videowidget::ReceiveMajorImage(QPixmap *image, int result)
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            m_pixmap = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            m_pixmap = QPixmap::fromImage(image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
@@ -764,7 +766,7 @@ void videowidget::endBtnClicked()
     if (countTimer->isActive()) {
         countTimer->stop();
     }
-    if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0)) {
         m_pCamErrItem->hide();
     }
     if (m_fWgtCountdown->isVisible()) {
@@ -880,7 +882,7 @@ void videowidget::onTakePic(bool bTrue)
         if (countTimer->isActive()) {
             countTimer->stop();
         }
-        if (m_pCamErrItem->isVisible() && !m_imgPrcThread->getStatus()) {
+        if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0)) {
             m_pCamErrItem->hide();
         }
         if (m_fWgtCountdown->isVisible()) {

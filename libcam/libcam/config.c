@@ -52,7 +52,7 @@ static config_t my_config =
 	.gui = "qt5",
 	.audio = "port",
 	.capture = "mmap",
-    .video_codec = "mpeg",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
+    .video_codec = "mjpg",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
     .audio_codec = "aac",
 	.profile_name = NULL,
 	.profile_path = NULL,
@@ -286,30 +286,30 @@ int config_load(const char *filename)
 //			my_config.profile_path = strdup(value);
 //            set_profile_path(value);
 //		}
-//		else if(strcmp(token, "video_name") == 0  && strlen(value) > 2)
-//		{
-//			if(my_config.video_name)
-//				free(my_config.video_name);
-//			my_config.video_name = strdup(value);
-//		}
-//		else if(strcmp(token, "video_path") == 0)
-//		{
-//			if(my_config.video_path)
-//				free(my_config.video_path);
-//			my_config.video_path = strdup(value);
-//		}
-//		else if(strcmp(token, "photo_name") == 0  && strlen(value) > 2)
-//		{
-//			if(my_config.photo_name)
-//				free(my_config.photo_name);
-//			my_config.photo_name = strdup(value);
-//		}
-//		else if(strcmp(token, "photo_path") == 0)
-//		{
-//			if(my_config.photo_path)
-//				free(my_config.photo_path);
-//			my_config.photo_path = strdup(value);
-//		}
+        else if(strcmp(token, "video_name") == 0  && strlen(value) > 2)
+        {
+            if(my_config.video_name)
+                free(my_config.video_name);
+            my_config.video_name = strdup(value);
+        }
+        else if(strcmp(token, "video_path") == 0)
+        {
+            if(my_config.video_path)
+                free(my_config.video_path);
+            my_config.video_path = strdup(value);
+        }
+        else if(strcmp(token, "photo_name") == 0  && strlen(value) > 2)
+        {
+            if(my_config.photo_name)
+                free(my_config.photo_name);
+            my_config.photo_name = strdup(value);
+        }
+        else if(strcmp(token, "photo_path") == 0)
+        {
+            if(my_config.photo_path)
+                free(my_config.photo_path);
+            my_config.photo_path = strdup(value);
+        }
 //		else if(strcmp(token, "video_sufix") == 0)
 //		{
 //			my_config.video_sufix = (int) strtoul(value, NULL, 10);

@@ -35,10 +35,10 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
     }
     vd1 = get_v4l2_device_handler();
     if (vd1 != nullptr) {
-        if(frame != nullptr){
+        if (frame != nullptr) {
             v4l2core_release_frame(vd1, frame);
         }
-        stopped = true;
+        stopped = 1;
         if (video_capture_get_save_video() > 0) {
             qDebug() << "stop_encoder_thread";
             stop_encoder_thread();
@@ -51,14 +51,14 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
 
 void MajorImageProcessingThread::stop()
 {
-    stopped = true;
+    stopped = 1;
 }
 
 void MajorImageProcessingThread::init()
 {
-    stopped = false;
+    stopped = 0;
     majorindex = -1;
-    m_img = new QPixmap();
+    m_img = new QImage();
     frame = nullptr;
 }
 
@@ -67,7 +67,7 @@ void MajorImageProcessingThread::run()
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;
-    while (!stopped) {
+    while (stopped == 0) {
         if (get_resolution_status()) {
 //            int current_width = v4l2core_get_frame_width(vd1);
 //            int current_height = v4l2core_get_frame_height(vd1);
@@ -112,7 +112,7 @@ void MajorImageProcessingThread::run()
         }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
-        m_rwMtxImg.lock();
+
 //        if (frame->width == 752 && frame->height == 423) {
 //            v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
 //        }
@@ -120,7 +120,7 @@ void MajorImageProcessingThread::run()
         if (frame == nullptr) {
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
-                stopped = true;
+                stopped = 1;
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
                 close_v4l2_device_handler();
@@ -129,10 +129,14 @@ void MajorImageProcessingThread::run()
         }
         result = 0;
         framedely = 0;
-        if (frame->raw_frame != nullptr) {
-            if (m_img->loadFromData(frame->raw_frame, static_cast<uint>(frame->raw_frame_size)) == true) {
+        m_rwMtxImg.lock();
+        if (frame->raw_frame != nullptr && (stopped == 0)) {
+//            qDebug() << "frame->raw_frame_size:" << frame->raw_frame_size;
+            if (m_img->loadFromData(frame->raw_frame, static_cast<uint>(frame->raw_frame_size))) {
+
                 emit SendMajorImageProcessing(m_img, result);
             }
+            malloc_trim(0);
         }
         m_rwMtxImg.unlock();
 
@@ -191,7 +195,7 @@ void MajorImageProcessingThread::run()
             }
         }
         if (m_bTake) {
-            int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+            int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_RAW);
             if (nRet < 0) {
                 qDebug() << "保存照片失败";
             }
