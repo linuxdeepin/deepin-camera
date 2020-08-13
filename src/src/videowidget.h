@@ -103,7 +103,7 @@ public slots:
 
 
 private slots:
-    void ReceiveMajorImage(QPixmap *image, int result);
+    void ReceiveMajorImage(QImage *image, int result);
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);

@@ -808,7 +808,7 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 				return (ret);
 			}
             //1、yuv_frame没有使用，转换浪费CPU；2、某些摄像头切换到特定分辨率下，该函数导致崩溃
-//            ret = jpeg_decode(frame->yuv_frame, frame->raw_frame,(int) frame->raw_frame_size);
+            ret = jpeg_decode(frame->yuv_frame, frame->raw_frame,(int) frame->raw_frame_size);
 
 			//memcpy(frame->tmp_buffer, frame->raw_frame, frame->raw_frame_size);
 			//ret = jpeg_decode(&frame->yuv_frame, frame->tmp_buffer, width, height);
@@ -817,9 +817,9 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 			//	fprintf(stderr, "V4L2_CORE: jpeg decoder exit with error (%i) (res: %ix%i - %x)\n", ret, width, height, vd->format.fmt.pix.pixelformat);
 			//	return E_DECODE_ERR;
 			//}
-//			if(verbosity > 3)
-//				fprintf(stderr, "V4L2_CORE: (jpeg decoder) decode frame of size %i\n", ret);
-//			ret = E_OK;
+            if(verbosity > 3)
+                fprintf(stderr, "V4L2_CORE: (jpeg decoder) decode frame of size %i\n", ret);
+            ret = E_OK;
 			break;
 
 		case V4L2_PIX_FMT_UYVY:

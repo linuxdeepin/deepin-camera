@@ -184,10 +184,8 @@ int camInit(const char* devicename)
 
     /*设置视频文件地址*/
     if(!my_config->video_name)
-        my_config->video_name = strdup(get_video_name());
+        set_video_name(get_video_name());
     if(!my_config->video_path)
-        my_config->video_path = strdup(get_video_path());
-    set_video_name(my_config->video_name);
     set_video_path(my_config->video_path);
 
     /*设置照片文件保存地址*/
@@ -197,6 +195,14 @@ int camInit(const char* devicename)
         my_config->photo_path = strdup(get_photo_path());
     set_photo_name(my_config->photo_name);
     set_photo_path(my_config->photo_path);
+
+    if(!my_config->device_name)
+        my_config->device_name = strdup("");
+    if(!my_config->device_location)
+        my_config->device_location = strdup(my_vd->videodevice);
+
+    if(!my_config->device_location)
+            my_config->device_location = strdup(my_vd->videodevice);
 
     /*设置音频接口debug等级*/
     audio_set_verbosity(debug_level);
@@ -213,7 +219,9 @@ int camInit(const char* devicename)
 
     encoder_set_verbosity(debug_level);
 
-
+    config_save(config_file);
+    if(config_file)
+        free(config_file);
 
     if(!my_options->control_panel){
         int ret = E_NO_DATA;
@@ -250,10 +258,7 @@ int camInit(const char* devicename)
         return ret;
     }
 //    set_video_timer(MAX_REC_TIME);//设置最大录像定时器
-    my_config->device_location = strdup(my_vd->videodevice);
-    config_save(config_file);
-    if(config_file)
-        free(config_file);
+
     return E_OK;
 }
 #ifdef __cplusplus

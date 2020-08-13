@@ -435,7 +435,7 @@ void set_video_muxer(int muxer)
 char *get_video_name()
 {
 	if(!video_name)
-        video_name = strdup("my_video.mp4");
+        video_name = strdup("");
 
 	return video_name;
 }

@@ -53,13 +53,13 @@ public:
     void init();
 
 public:
-    QPixmap *m_img;
+    QImage *m_img;
     QMutex m_rwMtxImg;
     QString m_strPath;
     QMutex m_rwMtxPath;
     bool m_bTake; //是否拍照
 
-    bool getStatus()
+    QAtomicInt getStatus()
     {
         return stopped;
     }
@@ -68,13 +68,13 @@ protected:
 
 private:
     volatile int majorindex;
-    volatile bool stopped;
+    QAtomicInt stopped;
     v4l2_dev_t *vd1;
     v4l2_frame_buff_t *frame;
     int result;
 
 signals:
-    void SendMajorImageProcessing(QPixmap *image, int result);
+    void SendMajorImageProcessing(QImage *image, int result);
     void reachMaxDelayedFrames();
 
 };
