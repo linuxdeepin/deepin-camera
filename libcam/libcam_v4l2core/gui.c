@@ -268,10 +268,18 @@ void set_device_name(const char *name)
     if(device_name != NULL)
         free(device_name);
 
-    device_name = strdup(name);
+
 
     /* update the config */
     config_t *my_config = config_get();
+
+    if(name == NULL)
+    {
+        device_name = strdup(my_config->device_name);
+    }
+    else {
+        device_name = strdup(name);
+    }
 
     /*this can be the function arg 'name'*/
     if(my_config->device_name)
