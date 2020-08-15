@@ -862,7 +862,7 @@ static void *encoder_loop(__attribute__((unused))void *data)
     /*start video capture*/
     video_capture_save_video(1);
 
-    int treshold = 2048; /*100 Mbytes*/
+    int treshold = 358400; /*100 Mbytes*/
     int64_t last_check_pts = 0; /*last pts when disk supervisor called*/
 
     /*start audio processing thread*/
