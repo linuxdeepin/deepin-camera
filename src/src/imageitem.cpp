@@ -281,7 +281,19 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
     if (g_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
     } else {
-        emit showDuration("... ...");
+        QSet<int>::iterator it;
+        bool bHaveVideo = false;
+        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            if (g_indexImage.value(*it)->getIsVideo()) {
+                bHaveVideo = true;
+                break;
+            }
+        }
+        if (bHaveVideo) {
+            emit showDuration("... ...");
+        } else {
+            emit showDuration("");
+        }
     }
 }
 void ImageItem::paintEvent(QPaintEvent *event)

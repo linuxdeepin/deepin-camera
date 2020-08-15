@@ -65,6 +65,10 @@ public:
         return m_strDuratuion;
     }
     bool parseFromFile(const QFileInfo &fi);
+    bool getIsVideo()
+    {
+        return m_bVideo;
+    }
 signals:
     void imageItemclicked(int index, int indexNow);
     void trashFile();
