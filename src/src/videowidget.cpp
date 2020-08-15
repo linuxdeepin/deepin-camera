@@ -506,6 +506,8 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         }
         m_fWgtCountdown->hide();
         if (!get_capture_pause()) {//判断是否是暂停状态
+            if ((m_nCount > 2) && (m_nCount % 3 == 0))
+                m_nCount = static_cast<int>(get_video_time_capture());
             QString strTime = "";
             int nHour = m_nCount / 3600;
             if (nHour == 0) {
@@ -780,8 +782,10 @@ void videowidget::endBtnClicked()
 
     if (getCapstatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
-        if (video_capture_get_save_video() == 1)
+        if (video_capture_get_save_video() == 1) {
+            set_video_time_capture(0);
             stop_encoder_thread();
+        }
         setCapstatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
@@ -950,6 +954,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     }
     if (m_nInterval > 0) { //倒计时期间的处理
         m_nInterval = 0; //下次可开启
+        set_video_time_capture(0);
         emit takeVdCancel(); //用于恢复缩略图
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }

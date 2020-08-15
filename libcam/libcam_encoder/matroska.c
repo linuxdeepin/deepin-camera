@@ -814,6 +814,7 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
 
     mkv_ctx->duration = MAX(mkv_ctx->duration, (int64_t)ts /*+ duration*/);
     double strsa = (double) mkv_ctx->duration/1000;
+    set_video_time_capture(strsa);
 
     if((int)(strsa*100) > (100*MAX_REC_TIME+30))
     {
@@ -1025,6 +1026,9 @@ int mkv_close(mkv_context_t* mkv_ctx)
     fprintf(stderr,"ENCODER: (matroska) end duration = %" PRIu64 " (%f) \n", mkv_ctx->duration, (double) mkv_ctx->duration);
     currentpos = io_get_offset(mkv_ctx->writer);
     io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
+
+    double strsa = (double) mkv_ctx->duration/1000;
+    set_video_time_capture(strsa);
 
     mkv_put_ebml_float(mkv_ctx, MATROSKA_ID_DURATION, (double) mkv_ctx->duration);
 	io_seek(mkv_ctx->writer, currentpos);
