@@ -188,20 +188,23 @@ void videowidget::init()
     //启动视频
     int ret =  camInit("");
     if (ret == E_OK) {
-        g_devStatus = CAM_CANUSE;
-
         m_pCamErrItem->hide();
+//        m_imgPrcThread->init();
         m_imgPrcThread->start();
+        g_devStatus = CAM_CANUSE;
     } else if (ret == E_FORMAT_ERR) {
-        g_devStatus = CAM_CANNOT_USE;
+
         //启动失败
-//        v4l2_dev_t *vd = get_v4l2_device_handler();
-//        //如果不为空，则关闭vd
-//        if (vd != nullptr) {
-//            close_v4l2_device_handler();
-//            vd = nullptr;
-//        }
-        showCamUsed();
+        v4l2_dev_t *vd = get_v4l2_device_handler();
+        //如果不为空，则关闭vd
+        if (vd != nullptr) {
+            close_v4l2_device_handler();
+            vd = nullptr;
+        }
+        if (g_devStatus != CAM_CANNOT_USE)
+            showCamUsed();
+        g_devStatus = CAM_CANNOT_USE;
+//
         qDebug() << "cam in use" << endl;
     } else if (ret == E_NO_DEVICE_ERR) {
         g_devStatus = NOCAM;
@@ -463,14 +466,14 @@ void videowidget::onReachMaxDelayedFrames()
     if (vd != nullptr) {
         close_v4l2_device_handler();
     }
-    if (get_device_list()->num_devices < 1) {
-        g_devStatus = NOCAM;
-        stopEverything();
-        showNocam();
-    } else {
-        g_devStatus = CAM_CANNOT_USE;
-        showCamUsed();
-    }
+//    if (get_device_list()->num_devices < 1) {
+    g_devStatus = NOCAM;
+    stopEverything();
+    showNocam();
+//    } else {
+//        g_devStatus = CAM_CANNOT_USE;
+//        showCamUsed();
+//    }
     emit setBtnStatues(false);
 }
 
@@ -814,14 +817,20 @@ void videowidget::changeDev()
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
-                if (camInit(devlist->list_devices[i].device) == E_OK) {
-                    g_devStatus = CAM_CANUSE;
+                int ret = camInit(devlist->list_devices[i].device);
+                if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-                } else {
+                    g_devStatus = CAM_CANUSE;
+                } else if (ret == E_FORMAT_ERR) {
                     qDebug() << "camInit failed";
+                    if (g_devStatus != CAM_CANNOT_USE)
+                        showCamUsed();
                     g_devStatus = CAM_CANNOT_USE;
-                    showCamUsed();
+
+                } else if (ret == E_NO_DEVICE_ERR) {
+                    g_devStatus = NOCAM;
+                    showNocam();
                 }
                 break;
             }
@@ -831,38 +840,53 @@ void videowidget::changeDev()
             QString str1 = QString(devlist->list_devices[i].device);
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
-                    if (camInit(devlist->list_devices[0].device) == E_OK) {
+                    int ret = camInit(devlist->list_devices[0].device);
+                    if ( ret == E_OK) {
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_devStatus = CAM_CANUSE;
-                    } else {
+                    } else if (ret == E_FORMAT_ERR) {
                         qDebug() << "camInit failed";
+                        if (g_devStatus != CAM_CANNOT_USE)
+                            showCamUsed();
                         g_devStatus = CAM_CANNOT_USE;
-                        showCamUsed();
+
+                    } else if (ret == E_NO_DEVICE_ERR) {
+                        g_devStatus = NOCAM;
+                        showNocam();
                     }
                     break;
                 } else {
-                    if (camInit(devlist->list_devices[i + 1].device) == E_OK) {
+                    int ret = camInit(devlist->list_devices[i + 1].device);
+                    if (ret == E_OK) {
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         g_devStatus = CAM_CANUSE;
-                    } else {
+                    } else if (ret == E_FORMAT_ERR) {
                         qDebug() << "camInit failed";
                         g_devStatus = CAM_CANNOT_USE;
                         showCamUsed();
+                    } else if (ret == E_NO_DEVICE_ERR) {
+                        g_devStatus = NOCAM;
+                        showNocam();
                     }
                     break;
                 }
             }
             if (str.isEmpty() == true) {
-                if (camInit(devlist->list_devices[0].device) == E_OK) {
+                int ret = camInit(devlist->list_devices[0].device);
+                if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     g_devStatus = CAM_CANUSE;
-                } else {
+                } else if (ret == E_FORMAT_ERR) {
                     qDebug() << "camInit failed";
+                    if (g_devStatus != CAM_CANNOT_USE)
+                        showCamUsed();
                     g_devStatus = CAM_CANNOT_USE;
-                    showCamUsed();
+                } else if (ret == E_NO_DEVICE_ERR) {
+                    g_devStatus = NOCAM;
+                    showNocam();
                 }
                 break;
             }
