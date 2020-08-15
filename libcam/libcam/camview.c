@@ -85,6 +85,8 @@ static int64_t audio_timestamp_tmp = 0;
 /*音频的暂停总时间*/
 static int64_t audio_pause_timestamp = 0;
 
+static double video_time_capture = 0;
+
 /*continues focus*/
 static int do_soft_autofocus = 0;
 /*single time focus (can happen during continues focus)*/
@@ -102,6 +104,16 @@ static int my_encoder_status = 0;
 
 static char status_message[80];
 
+
+void set_video_time_capture(double video_time)
+{
+    video_time_capture = video_time;
+}
+
+double get_video_time_capture()
+{
+    return video_time_capture;
+}
 
 /*
  * set pause times
@@ -1301,6 +1313,8 @@ int start_encoder_thread(void *data)
 int stop_encoder_thread()
 {
     video_capture_save_video(0);
+    if(0 != (int)(get_video_time_capture()))
+        set_video_time_capture(0);
 
     //usleep(2000);
 
