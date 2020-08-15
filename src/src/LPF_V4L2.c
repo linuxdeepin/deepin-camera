@@ -114,7 +114,6 @@ int camInit(const char* devicename)
         if(my_vd == NULL){
             char message[150];
             sprintf(message, "no video device (%s) found", my_options->device);
-            options_clean();
             return E_NO_DEVICE_ERR;
         }
     }
@@ -258,16 +257,11 @@ int camInit(const char* devicename)
         }
 
         my_config->device_name = strdup(get_device_list()->list_devices[my_vd->this_device].name);
-
-    //    if(!my_config->device_location)
         my_config->device_location = strdup(my_vd->videodevice);
-
         my_config->format = (unsigned int)v4l2core_get_requested_frame_format(my_vd);
-
         my_config->width = get_my_width();
         my_config->height = get_my_height();
-        my_config->format = (uint)my_vd->format.fmt.pix.pixelformat;
-//        my_config->width =
+        //保存到文件
         config_save(config_file);
         if(config_file)
             free(config_file);
