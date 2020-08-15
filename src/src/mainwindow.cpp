@@ -1074,6 +1074,7 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
+        qDebug() << "shift pressed";
         g_bMultiSlt = true;
         g_setIndex.insert(g_indexNow);
     }
@@ -1082,6 +1083,7 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
+        qDebug() << "shift released";
         g_bMultiSlt = false;
         //g_setIndex.clear();
         //g_setIndex.insert(g_indexNow);
