@@ -377,8 +377,8 @@ void CMainWindow::slotPopupSettingsDialog()
                         && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
                         (list_stream_formats[format_index].list_stream_cap[i].width < 7680
                          && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
-                        ((list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
-                         && (list_stream_formats[format_index].list_stream_cap[i].height % 16) ==  0)) {
+                        ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+                         && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
                     resolutionDatabase.append(res_str);
@@ -1074,6 +1074,7 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
+        qDebug() << "shift pressed";
         g_bMultiSlt = true;
         g_setIndex.insert(g_indexNow);
     }
@@ -1082,6 +1083,7 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
+        qDebug() << "shift released";
         g_bMultiSlt = false;
         //g_setIndex.clear();
         //g_setIndex.insert(g_indexNow);

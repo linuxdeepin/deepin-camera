@@ -39,6 +39,11 @@ typedef struct _capture_loop_data_t {
     void *device;
 } capture_loop_data_t;
 
+
+void set_video_time_capture(double video_time);
+
+double get_video_time_capture(void);
+
 /*
  * set pause times
  * args:

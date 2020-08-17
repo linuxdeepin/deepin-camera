@@ -258,16 +258,20 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
-    g_indexNow = m_index;
     if (g_bMultiSlt) {
         if (g_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
                 g_setIndex.remove(m_index);
+                if (g_setIndex.size() > 0) {
+                    g_indexNow = g_indexImage.value(*g_setIndex.begin())->getIndex();
+                }
             }
         } else {
+            g_indexNow = m_index;
             g_setIndex.insert(m_index);
         }
     } else {
+        g_indexNow = m_index;
         if (ev->button() == Qt::RightButton) {
             return;
         }
@@ -277,7 +281,19 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
     if (g_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
     } else {
-        emit showDuration("... ...");
+        QSet<int>::iterator it;
+        bool bHaveVideo = false;
+        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            if (g_indexImage.value(*it)->getIsVideo()) {
+                bHaveVideo = true;
+                break;
+            }
+        }
+        if (bHaveVideo) {
+            emit showDuration("... ...");
+        } else {
+            emit showDuration("");
+        }
     }
 }
 void ImageItem::paintEvent(QPaintEvent *event)
