@@ -801,7 +801,10 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
+//    qDebug() << this->windowState() << endl;
     if (this->windowState() == Qt::WindowMinimized) {
+        set_capture_pause(1);
+    } else if (this->windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
         set_capture_pause(1);
     } else if (this->isVisible() == true) {
         set_capture_pause(0);
