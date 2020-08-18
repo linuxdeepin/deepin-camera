@@ -157,7 +157,8 @@ int64_t get_video_timestamptmp(void)
  */
 void set_capture_pause(int bvalue)
 {
-    capture_pause = bvalue;
+    if(capture_pause != bvalue)
+        capture_pause = bvalue;
     printf("capture_pause = %d\n", bvalue);
 }
 

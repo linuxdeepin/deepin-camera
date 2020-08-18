@@ -655,6 +655,7 @@ void CMainWindow::initTitleBar()
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
+    pSelectBtn->hide();
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
