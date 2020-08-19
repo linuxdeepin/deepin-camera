@@ -121,7 +121,9 @@ Settings::Settings()
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
-                    resolutionDatabase.append(res_str);
+                    //去重
+                    if (resolutionDatabase.contains(res_str) == false)
+                        resolutionDatabase.append(res_str);
                 }
             }
             int tempostion = 0;
@@ -224,7 +226,9 @@ void Settings::setNewResolutionList()
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
-                    resolutionDatabase.append(res_str);
+                    //去重
+                    if (resolutionDatabase.contains(res_str) == false)
+                        resolutionDatabase.append(res_str);
                 }
             }
             int tempostion = 0;
