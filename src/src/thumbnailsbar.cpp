@@ -54,7 +54,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     //this->setFramRadius(18);
     QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
-    QShortcut *shortcutDel = new QShortcut(QKeySequence(Qt::Key_Delete), this);
+    //https://pms.uniontech.com/zentao/bug-view-43037.html//Qt::Key_Delete长时间运行后失效
+    QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
 
     m_nStatus = STATNULL;
@@ -282,6 +283,7 @@ void ThumbnailsBar::onShortcutCopy()
 
 void ThumbnailsBar::onShortcutDel()
 {
+    qDebug() << "onShortcutDel";
     QTime timeNow = QTime::currentTime();
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
         return;
@@ -293,6 +295,7 @@ void ThumbnailsBar::onShortcutDel()
 
 void ThumbnailsBar::onTrashFile()
 {
+    qDebug() << "onTrashFile";
     if (g_setIndex.isEmpty()) { //删除
         if (g_indexImage.size() <= 0) {
             return;
@@ -313,7 +316,11 @@ void ThumbnailsBar::onTrashFile()
             qDebug() << g_indexNow << " " << strPath;
         }
 
-        DDesktopServices::trash(strPath);
+        bool bTrashed = DDesktopServices::trash(strPath);
+        if (!bTrashed) {
+            qDebug() << "trash failed!";
+            qDebug() << "path is " << strPath;
+        }
         delFile(strPath);
     } else {//边删边加会乱掉，先删完再加
         //获取最大的set值
@@ -333,7 +340,11 @@ void ThumbnailsBar::onTrashFile()
         int nCount = g_setIndex.size();
         QSet<int>::iterator it;
         for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
-            DDesktopServices::trash(g_indexImage.value(*it)->getPath());
+            bool bTrashed = DDesktopServices::trash(g_indexImage.value(*it)->getPath());
+            if (!bTrashed) {
+                qDebug() << "trash failed!";
+                qDebug() << "path is " << g_indexImage.value(*it)->getPath();
+            }
             for (int i = 0; i < m_hBOx->count(); i ++) {
                 ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
                 if (itemNow->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {

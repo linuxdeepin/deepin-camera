@@ -128,6 +128,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
 
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
+    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(manualClicked()));
 
     m_endBtn->setToolTip(tr("Stop taking video"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
@@ -791,7 +792,12 @@ void videowidget::endBtnClicked()
         emit updateBlockSystem(false);
     }
     emit takeVdDone();
-//    g_strFileName = nullptr;
+    //    g_strFileName = nullptr;
+}
+
+void videowidget::manualClicked()
+{
+    qDebug() << "manual clicked endbtn";
 }
 
 void videowidget::restartDevices()
