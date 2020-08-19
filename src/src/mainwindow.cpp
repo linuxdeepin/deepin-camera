@@ -381,7 +381,9 @@ void CMainWindow::slotPopupSettingsDialog()
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
-                    resolutionDatabase.append(res_str);
+                    //去重
+                    if (resolutionDatabase.contains(res_str) == false)
+                        resolutionDatabase.append(res_str);
                 }
             }
             int tempostion = 0;
@@ -655,6 +657,7 @@ void CMainWindow::initTitleBar()
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
+    pSelectBtn->hide();
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
@@ -801,7 +804,10 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
+//    qDebug() << this->windowState() << endl;
     if (this->windowState() == Qt::WindowMinimized) {
+        set_capture_pause(1);
+    } else if (this->windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
         set_capture_pause(1);
     } else if (this->isVisible() == true) {
         set_capture_pause(0);

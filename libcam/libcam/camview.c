@@ -157,7 +157,8 @@ int64_t get_video_timestamptmp(void)
  */
 void set_capture_pause(int bvalue)
 {
-    capture_pause = bvalue;
+    if(capture_pause != bvalue)
+        capture_pause = bvalue;
     printf("capture_pause = %d\n", bvalue);
 }
 
@@ -862,8 +863,8 @@ static void *encoder_loop(__attribute__((unused))void *data)
     /*start video capture*/
     video_capture_save_video(1);
 
-    int treshold = 358400; /*100 Mbytes*/
-    int64_t last_check_pts = 0; /*last pts when disk supervisor called*/
+//    int treshold = 358400; /*100 Mbytes*/
+//    int64_t last_check_pts = 0; /*last pts when disk supervisor called*/
 
     /*start audio processing thread*/
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
@@ -897,20 +898,20 @@ static void *encoder_loop(__attribute__((unused))void *data)
         }
 
         /*disk supervisor*/
-        if(encoder_ctx->enc_video_ctx->pts - last_check_pts > 2 * NSEC_PER_SEC)
-        {
-            last_check_pts = encoder_ctx->enc_video_ctx->pts;
+//        if(encoder_ctx->enc_video_ctx->pts - last_check_pts > 2 * NSEC_PER_SEC)
+//        {
+//            last_check_pts = encoder_ctx->enc_video_ctx->pts;
 
-            if(!encoder_disk_supervisor(treshold, path))
-            {
-                /*stop capture*/
-                if((save_image || save_video) == 1)
-                {
-                    save_image = 0;
-                    save_video = 0;
-                }
-            }
-        }
+//            if(!encoder_disk_supervisor(treshold, path))
+//            {
+//                /*stop capture*/
+//                if((save_image || save_video) == 1)
+//                {
+//                    save_image = 0;
+//                    save_video = 0;
+//                }
+//            }
+//        }
     }
 
     if(debug_level > 1)
