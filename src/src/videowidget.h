@@ -99,6 +99,7 @@ public slots:
     void showCountdown();
     void changeDev();
     void endBtnClicked();
+    void manualClicked();
     void restartDevices();
 
 

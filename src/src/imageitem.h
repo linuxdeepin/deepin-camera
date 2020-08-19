@@ -71,7 +71,7 @@ public:
     }
 signals:
     void imageItemclicked(int index, int indexNow);
-    void trashFile();
+    void trashFile();//右键删除
     void showDuration(QString strDuration);
 protected:
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
