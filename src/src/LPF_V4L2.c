@@ -235,13 +235,15 @@ int camInit(const char* devicename)
         //v4l2core_load_control_profile(my_vd,NULL);
 
         v4l2core_prepare_new_format(my_vd, (int)my_config->format);
-        v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
+
 
         if((strcmp(my_config->device_name, devlist->list_devices[my_vd->this_device].name) == 0) && (strcmp(my_config->device_location, my_vd->videodevice) == 0))
         {
+            v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
             ret =v4l2core_update_old_format(my_vd,my_config->width, my_config->height, v4l2core_get_requested_frame_format(my_vd));
         }
         else {
+            v4l2core_prepare_valid_resolution(my_vd);
             ret = v4l2core_update_current_format(my_vd);
         }
 
