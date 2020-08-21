@@ -346,12 +346,12 @@ void ThumbnailsBar::onTrashFile()
                 qDebug() << "path is " << g_indexImage.value(*it)->getPath();
             }
             for (int i = 0; i < m_hBOx->count(); i ++) {
-                ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-                if (itemNow->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
-                    m_hBOx->removeWidget(itemNow);
+                ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+                if (itemDel->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
+                    m_hBOx->removeWidget(itemDel);
                     //itemNow->deleteLater();
-                    delete itemNow;
-                    itemNow = nullptr;
+                    delete itemDel;
+                    itemDel = nullptr;
                     break;
                 }
             }
@@ -366,10 +366,10 @@ void ThumbnailsBar::onTrashFile()
                     g_indexNow = 0;
                     m_showVdTime->setText("");
                 } else {
-                    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
-                    g_indexNow = itemNow->getIndex();
-                    m_showVdTime->setText(itemNow->getDuration());
-                    QFile file1(itemNow->getPath());
+                    ImageItem *itemExist = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+                    g_indexNow = itemExist->getIndex();
+                    m_showVdTime->setText(itemExist->getDuration());
+                    QFile file1(itemExist->getPath());
                     if (!file1.exists()) {
                         qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
                     }
@@ -555,13 +555,13 @@ void ThumbnailsBar::delFile(QString strFile)
     //4、读取下一个fileinfolist数据，写到set和图元
     bool bRemoved = false;
     for (int i = 0; i < m_hBOx->count(); i ++) {
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
-        if (itemNow->getPath().compare(strFile) == 0) {
+        ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+        if (itemDel->getPath().compare(strFile) == 0) {
             g_indexImage.remove(g_indexNow);
-            m_hBOx->removeWidget(itemNow);
+            m_hBOx->removeWidget(itemDel);
             //itemNow->deleteLater();
-            delete itemNow;
-            itemNow = nullptr;
+            delete itemDel;
+            itemDel = nullptr;
             bRemoved = true;
             break;
         }
