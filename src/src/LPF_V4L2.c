@@ -56,7 +56,7 @@ int camInit(const char* devicename)
 
     bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
     options_t *my_options = options_get();
-    char* config_path = smart_cat(getenv("HOME"),'/',".config/deepin-camera");
+    char* config_path = smart_cat(getenv("HOME"),'/',".config/deepin/deepin-camera");
     mkdir(config_path, 0777);
     char *device_name = get_file_basename(my_options->device);
     char *config_file = smart_cat(config_path, '/', "deepin-camera");

@@ -928,7 +928,6 @@ void videowidget::onTakePic(bool bTrue)
         countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
     } else {
         emit takePicCancel();
-        m_nInterval = m_nMaxInterval;
         m_curTakePicTime = m_nMaxContinuous;
         m_nInterval = 0; //下次可开启
         m_curTakePicTime = 0; //结束当前拍照
