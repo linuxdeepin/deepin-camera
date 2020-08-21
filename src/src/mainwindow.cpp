@@ -331,6 +331,9 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     initUI();
     initTitleBar();
     initConnection();
+    QDir dir;
+    QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
+    dir.mkpath(strCache);
 }
 
 CMainWindow::~CMainWindow()

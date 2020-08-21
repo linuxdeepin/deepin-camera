@@ -20,8 +20,9 @@
 */
 
 #include "majorimageprocessingthread.h"
-
-
+#include <QFile>
+#include <QDate>
+#include <QDir>
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
@@ -67,6 +68,7 @@ void MajorImageProcessingThread::run()
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;
+    int nID = 0;
     while (stopped == 0) {
         if (get_resolution_status()) {
 //            int current_width = v4l2core_get_frame_width(vd1);
@@ -98,7 +100,7 @@ void MajorImageProcessingThread::run()
 
 //            options_t *my_options = options_get();
 //            char *device_name = get_file_basename(my_options->device);
-            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin-camera/") + QString("deepin-camera");
+            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin/deepin-camera/") + QString("deepin-camera");
 //            free(device_name);
             config_load(config_file.toLatin1().data());
 
@@ -141,9 +143,27 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (frame->raw_frame != nullptr && (stopped == 0)) {
-            if (m_img->loadFromData(frame->raw_frame, static_cast<uint>(frame->raw_frame_size))) {
-
+            if (m_img->loadFromData(frame->raw_frame, static_cast<int>(frame->raw_frame_size))) {
                 emit SendMajorImageProcessing(m_img, result);
+            } else {
+                qDebug() << "loadFromData error";
+                if (nID%30 == 0) {//1s记录一个就行
+                    QString strFile = QString(getenv("HOME")) + QString("/") +
+                            QString(".cache/deepin/deepin-camera/") +
+                            QDateTime::currentDateTime().toString("yyyyMMddHHmmss") +
+                            "_" + QString::number(nID) + "_" +
+                            QString::number(static_cast<int>(frame->raw_frame_size)) + ".dat";
+
+                    QFile file(strFile);
+                    if (!(file.open(QIODevice::WriteOnly | QIODevice::Truncate))) {
+                        qDebug() << "save file open false";
+                    }
+                    QDataStream aStream(&file);
+                    aStream.setVersion(QDataStream::Qt_5_11);
+                    aStream.writeRawData((char*)frame->raw_frame,static_cast<int>(frame->raw_frame_size));
+                    file.close();
+                }
+                nID ++;
             }
             malloc_trim(0);
         }
