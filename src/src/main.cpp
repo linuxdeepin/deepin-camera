@@ -36,23 +36,15 @@ bool CheckWayland()
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
 
-    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive))
+    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
         return true;
-    else {
+    } else {
         return false;
     }
 }
 int main(int argc, char *argv[])
 {
-    if (CheckWayland()) {
-        //wayland相关环境变量kwayland-shell   xdg-shell   xdg-shell-v6
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
-        qputenv("_d_disableDBusFileDialog", "true");
-        //opengl使用
-//        QSurfaceFormat format;
-//        format.setRenderableType(QSurfaceFormat::OpenGLES);
-//        format.setDefaultFormat(format);
-    } else {
+    if (!CheckWayland()) {
         CApplication::loadDXcbPlugin();
     }
 
