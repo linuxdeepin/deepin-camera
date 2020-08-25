@@ -53,7 +53,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     flashTimer = new QTimer(this);
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
 //    this->setFixedSize(1000, 1000);
-    m_pNormalView = new QGraphicsView(this);
+
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
     m_fWgtCountdown = new DFloatingWidget(this);
@@ -135,6 +135,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->hide();
 
     m_pNormalScene = new QGraphicsScene;
+    m_pNormalView = new QGraphicsView(this);
+    m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
 
@@ -155,13 +157,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    //m_pNormalScene->addItem(m_pTimeItem);
-//    m_pNormalScene->setSceneRect(this->rect());
-//    m_pNormalItem->setPos(0, 0);
-//    m_pNormalScene->addRect(-100, -75, 200, 150, QPen(Qt::red));
-    qDebug() << "this widget--height:" << this->height() << "--width:" << this->width() << endl;
-    qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
-    qDebug() << "this widget--height:" << m_pNormalScene->height() << "--width:" << m_pNormalScene->width() << endl;
     init();
 }
 
@@ -571,7 +566,7 @@ void videowidget::hideTimeLabel()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
-    m_pNormalView->resize(m_pNormalView->parentWidget()->size());
+    //m_pNormalView->resize(m_pNormalView->parentWidget()->size());
     if (m_flashLabel->isVisible() == true) {
         m_flashLabel->resize(parentWidget()->size());
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));

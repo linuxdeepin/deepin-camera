@@ -40,7 +40,6 @@
 #include <DMessageBox>
 #include <DComboBox>
 #include <dsettingswidgetfactory.h>
-
 #include "v4l2_core.h"
 
 using namespace dc;
@@ -509,19 +508,16 @@ void CMainWindow::onNoCam()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    //m_thumbnail->onFoldersChanged(""); //恢复缩略图
     m_thumbnail->show();
-
 }
 
 void CMainWindow::initUI()
 {
-//    this->setWindowFlag(Qt::FramelessWindowHint);
     m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
-//    DWidget *wget = new DWidget;
-//    QHBoxLayout *hboxlayout = new QHBoxLayout(this);
     this->resize(MinWindowWidth, MinWindowHeight);
     m_videoPre = new videowidget(this);
+
+    this->setCentralWidget(m_videoPre);
 
     QPalette paletteTime = m_videoPre->palette();
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
@@ -540,8 +536,6 @@ void CMainWindow::initUI()
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     }
-    this->setCentralWidget(m_videoPre);
-
 
     setupTitlebar();
 
@@ -582,9 +576,7 @@ void CMainWindow::initUI()
     m_thumbnail->setVisible(true);
     m_thumbnail->show();
 
-    //m_thumbnail->setMaximumWidth(1200);
     m_thumbnail->m_nMaxItem = MinWindowWidth;
-
 
     QString test = CMainWindow::m_lastfilename;
 
@@ -655,7 +647,6 @@ void CMainWindow::initTitleBar()
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
-
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
     pSelectBtn->setFixedSize(QSize(37, 37));
@@ -839,10 +830,6 @@ void CMainWindow::onFitToolBar()
 
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
-
-        //qDebug() << "nCount " << n << " nWidth " << nWidth << " winWidth " << this->width();
-
-        //m_thumbnail->update();
     }
 }
 
