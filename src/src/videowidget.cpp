@@ -53,7 +53,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     flashTimer = new QTimer(this);
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
 //    this->setFixedSize(1000, 1000);
-
+    m_pNormalView = new QGraphicsView(this);
+    m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
     m_fWgtCountdown = new DFloatingWidget(this);
@@ -135,8 +136,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->hide();
 
     m_pNormalScene = new QGraphicsScene;
-    m_pNormalView = new QGraphicsView(this);
-    m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
 
