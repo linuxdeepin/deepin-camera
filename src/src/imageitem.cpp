@@ -35,6 +35,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
 #include <libavutil/avutil.h>
+#include "malloc.h"
 }
 using namespace ffmpegthumbnailer;
 
@@ -64,7 +65,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
 
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
+                img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
                 pix = QPixmap::fromImage(img);
+                malloc_trim(0);
             } catch (...) {
                 qDebug() << "generateThumbnail failed";
             }
@@ -120,7 +123,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 //        painter1.end();
     } else if (fileInfo.suffix() == "jpg") {
         m_strDuratuion = "";
-        pix = QPixmap::fromImage(QImage(path));
+        QImage img(path);
+        img = img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+        pix = QPixmap::fromImage(img);
+        malloc_trim(0);
     } else {
         m_strDuratuion = "";
         //continue; //其他格式不管

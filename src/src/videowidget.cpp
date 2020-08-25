@@ -437,13 +437,17 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            m_pixmap = QPixmap::fromImage(image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        {
+            QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            m_pixmap = QPixmap::fromImage(img);
+        }
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
             if (get_encoder_status() == 0 && getCapstatus() == true) {
                 endBtnClicked();
             }
+            malloc_trim(0);
             break;
         default:
             break;
