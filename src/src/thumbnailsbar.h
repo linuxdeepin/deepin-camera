@@ -80,7 +80,7 @@ private:
 
     DPushButton *m_lastButton {nullptr};//缩略图最后的按钮，可实现拍照/取消拍照/录制。   
 
-    QTime m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
+    QDateTime m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
 
     int m_lastItemCount;//最近一次可显示的缩略图个数
 

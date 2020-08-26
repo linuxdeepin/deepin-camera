@@ -54,7 +54,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     //this->setFramRadius(18);
     QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
     connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
-    //https://pms.uniontech.com/zentao/bug-view-43037.html//Qt::Key_Delete长时间运行后失效
+    //也可以用Qt::Key_Delete
     QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
 
@@ -121,7 +121,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_lastDelTime = QTime::currentTime();
+    m_lastDelTime = QDateTime::currentDateTime();
     m_lastItemCount = 0;
 }
 
@@ -284,8 +284,12 @@ void ThumbnailsBar::onShortcutCopy()
 void ThumbnailsBar::onShortcutDel()
 {
     qDebug() << "onShortcutDel";
-    QTime timeNow = QTime::currentTime();
+    //改用datetime，避免跨天之后判断错误
+    QDateTime timeNow = QDateTime::currentDateTime();
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
+        qDebug() << "del too fast";
+        qDebug() << timeNow;
+        qDebug() << m_lastDelTime;
         return;
     }
     m_lastDelTime = timeNow;
