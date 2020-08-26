@@ -542,6 +542,7 @@ void CMainWindow::initUI()
     m_thumbnail = new ThumbnailsBar(this);
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
+    m_videoPre->setthumbnail(m_thumbnail);
 
     //添加右键打开文件夹功能
     QMenu *menu = new QMenu();
@@ -621,8 +622,11 @@ void CMainWindow::initTitleBar()
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
 
+
+
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(26, 26));
+    m_pTitlePicBtn->setFocusPolicy(Qt::NoFocus);
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
