@@ -54,6 +54,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
+    m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
     m_fWgtCountdown = new DFloatingWidget(this);
@@ -155,13 +156,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    //m_pNormalScene->addItem(m_pTimeItem);
-//    m_pNormalScene->setSceneRect(this->rect());
-//    m_pNormalItem->setPos(0, 0);
-//    m_pNormalScene->addRect(-100, -75, 200, 150, QPen(Qt::red));
-    qDebug() << "this widget--height:" << this->height() << "--width:" << this->width() << endl;
-    qDebug() << "this widget--height:" << m_pNormalView->height() << "--width:" << m_pNormalView->width() << endl;
-    qDebug() << "this widget--height:" << m_pNormalScene->height() << "--width:" << m_pNormalScene->width() << endl;
     init();
 }
 
@@ -442,13 +436,17 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            m_pixmap = QPixmap::fromImage(image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        {
+            QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            m_pixmap = QPixmap::fromImage(img);
+        }
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
             if (get_encoder_status() == 0 && getCapstatus() == true) {
                 endBtnClicked();
             }
+            malloc_trim(0);
             break;
         default:
             break;
@@ -571,7 +569,7 @@ void videowidget::hideTimeLabel()
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
-    m_pNormalView->resize(m_pNormalView->parentWidget()->size());
+    //m_pNormalView->resize(m_pNormalView->parentWidget()->size());
     if (m_flashLabel->isVisible() == true) {
         m_flashLabel->resize(parentWidget()->size());
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
