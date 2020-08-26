@@ -67,6 +67,7 @@ public:
     static QString lastOpenedPath();
     DSettings *getDsetMber();
 
+
     ~CMainWindow() override;
 private:
     void initUI();
