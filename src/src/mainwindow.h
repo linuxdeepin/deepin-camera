@@ -120,7 +120,6 @@ private:
     ThumbnailsBar              *m_thumbnail;
     DMenu                     *menu;
     videowidget                  *m_videoPre;
-    CloseDialog                  *m_closeDlg;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;
     QVector<videowidget *>       m_VEffectPreview;

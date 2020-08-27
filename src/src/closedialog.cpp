@@ -36,17 +36,21 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
     widet = new DWidget(this);
     addContent(widet);
     m_vlayout = new QVBoxLayout(widet);
-    m_hlayout = new QHBoxLayout();
-    m_edtlayout = new QHBoxLayout();
     m_vlayout->setContentsMargins(2, 0, 2, 1);
     m_vlayout->addStretch();
     addButton(btnName1);
     addButton(btnName2);
+
+    QAbstractButton *tmpBtn = getButton(1);
+    QPalette plt = tmpBtn->palette();
+    QColor clr(255,87,54);
+    plt.setColor(QPalette::ButtonText,clr);
+    tmpBtn->setPalette(plt);
+
     labtitle = new QLbtoDLabel();
     labtitle->setText(strText);
     labtitle->setAlignment(Qt::AlignCenter);
     m_vlayout->addWidget(labtitle);
     m_vlayout->addStretch();
-    m_vlayout->addLayout(m_hlayout);
     widet->setLayout(m_vlayout);
 }

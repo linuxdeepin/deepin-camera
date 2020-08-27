@@ -513,7 +513,6 @@ void CMainWindow::onNoCam()
 
 void CMainWindow::initUI()
 {
-    m_closeDlg = new CloseDialog(this, tr("Video recording is in progress. Close the window?"));
     this->resize(MinWindowWidth, MinWindowHeight);
     m_videoPre = new videowidget(this);
 
@@ -671,13 +670,13 @@ void CMainWindow::initConnection()
     connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
         if (m_videoPre->getCapstatus())
         {
-            int ret = m_closeDlg->exec();
+            CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+            int ret = closeDlg.exec();
             if (ret == 1) {
                 m_videoPre->endBtnClicked();
                 dApp->quit();
             }
-        } else
-        {
+        } else {
             dApp->quit();
         }
     });
@@ -783,7 +782,8 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 void CMainWindow::closeEvent(QCloseEvent *event)
 {
     if (m_videoPre->getCapstatus()) {
-        int ret = m_closeDlg->exec();
+        CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+        int ret = closeDlg.exec();
         switch (ret) {
         case 0:
             event->ignore();
@@ -796,7 +796,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         }
-    }
+    }    
 }
 
 void CMainWindow::changeEvent(QEvent *event)

@@ -40,8 +40,6 @@ public:
 
 private:
     QVBoxLayout *m_vlayout;
-    QHBoxLayout *m_hlayout;
-    QHBoxLayout *m_edtlayout;
     DWidget *widet;
     QLbtoDLabel *labtitle;
 };
