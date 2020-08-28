@@ -2,7 +2,7 @@
 Categories=Video;
 Comment=Camera is a tool of taking photos and videos.
 Comment[zh_CN]=相机是一款拍照、摄像的工具。
-Exec=/usr/bin/deepin-turbo-invoker  --type=dtkwidget deepin-camera %U
+Exec=deepin-camera
 GenericName=Deepin-Camera
 GenericName[zh_CN]=相机
 Icon=deepin-camera
