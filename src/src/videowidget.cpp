@@ -22,6 +22,7 @@
 #include "videowidget.h"
 #include "camview.h"
 #include "gui.h"
+#include "mainwindow.h"
 #include <QPixmap>
 #include <QTimer>
 #include <QGraphicsView>
@@ -114,7 +115,6 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setPalette(pa_cb);
 
 
-
     QFont ft("SourceHanSansSC");
     ft.setWeight(QFont::Normal);
     ft.setPixelSize(14);
@@ -174,7 +174,8 @@ void videowidget::init()
     m_imgPrcThread->m_bTake = false;
 
 
-    m_flashLabel->setWindowFlag(Qt::WindowType::ToolTip);
+//    m_flashLabel->setWindowFlag(Qt::WindowType::WindowStaysOnTopHint);
+//    m_flashLabel->setWindowFlags()
     QPalette pltLabel = m_flashLabel->palette();
     pltLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltLabel);
@@ -199,7 +200,7 @@ void videowidget::init()
         if (g_devStatus != CAM_CANNOT_USE)
             showCamUsed();
         g_devStatus = CAM_CANNOT_USE;
-//
+
         qDebug() << "cam in use" << endl;
     } else if (ret == E_NO_DEVICE_ERR) {
         g_devStatus = NOCAM;
@@ -373,6 +374,13 @@ void videowidget::showNocam()
     }
 }
 
+void videowidget::setthumbnail(ThumbnailsBar *thumb)
+{
+    if (thumb != nullptr) {
+        m_thumbnail = thumb;
+    }
+}
+
 //显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
@@ -436,10 +444,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-        {
-            QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            m_pixmap = QPixmap::fromImage(img);
-        }
+            {
+                QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                m_pixmap = QPixmap::fromImage(img);
+            }
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
@@ -474,6 +482,7 @@ void videowidget::onReachMaxDelayedFrames()
 //        showCamUsed();
 //    }
     emit setBtnStatues(false);
+
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_STATE state)
@@ -653,7 +662,10 @@ void videowidget::showCountdown()
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
                 qDebug() << "m_flashLabel->show();";
+
                 m_flashLabel->show();
+                m_pNormalView->hide();
+                m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
             countTimer->stop();
@@ -733,13 +745,19 @@ void videowidget::flash()
     if (m_flashLabel->isVisible()) {
         //隐藏闪光窗口
         qDebug() << "m_flashLabel->hide();";
+        m_pNormalView->show();
+        m_thumbnail->show();
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
         flashTimer->stop();
     } else {
         m_flashLabel->resize(this->size());
         m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
         qDebug() << "m_flashLabel->show();";
+        if (m_fWgtCountdown->isVisible())
+            m_fWgtCountdown->hide();
         m_flashLabel->show();
+        m_pNormalView->hide();
+        m_thumbnail->hide();
         if (flashTimer->isActive()) { //连续点击拍照
             flashTimer->stop();
         }
@@ -831,12 +849,20 @@ void videowidget::changeDev()
                     m_imgPrcThread->start();
                     g_devStatus = CAM_CANUSE;
                 } else if (ret == E_FORMAT_ERR) {
-                    qDebug() << "camInit failed";
-                    if (g_devStatus != CAM_CANNOT_USE)
+                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+                    if (vd != nullptr) {
+                        close_v4l2_device_handler();
+                    }
+                    if (g_devStatus != CAM_CANNOT_USE) {
                         showCamUsed();
+                    }
                     g_devStatus = CAM_CANNOT_USE;
 
                 } else if (ret == E_NO_DEVICE_ERR) {
+                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+                    if (vd != nullptr) {
+                        close_v4l2_device_handler();
+                    }
                     g_devStatus = NOCAM;
                     showNocam();
                 }
@@ -854,12 +880,19 @@ void videowidget::changeDev()
                         m_imgPrcThread->start();
                         g_devStatus = CAM_CANUSE;
                     } else if (ret == E_FORMAT_ERR) {
-                        qDebug() << "camInit failed";
+                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+                        if (vd != nullptr) {
+                            close_v4l2_device_handler();
+                        }
                         if (g_devStatus != CAM_CANNOT_USE)
                             showCamUsed();
                         g_devStatus = CAM_CANNOT_USE;
 
                     } else if (ret == E_NO_DEVICE_ERR) {
+                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+                        if (vd != nullptr) {
+                            close_v4l2_device_handler();
+                        }
                         g_devStatus = NOCAM;
                         showNocam();
                     }
@@ -871,10 +904,18 @@ void videowidget::changeDev()
                         m_imgPrcThread->start();
                         g_devStatus = CAM_CANUSE;
                     } else if (ret == E_FORMAT_ERR) {
-                        qDebug() << "camInit failed";
+                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+                        if (vd != nullptr) {
+                            close_v4l2_device_handler();
+                        }
+                        if (g_devStatus != CAM_CANNOT_USE)
+                            showCamUsed();
                         g_devStatus = CAM_CANNOT_USE;
-                        showCamUsed();
                     } else if (ret == E_NO_DEVICE_ERR) {
+                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+                        if (vd != nullptr) {
+                            close_v4l2_device_handler();
+                        }
                         g_devStatus = NOCAM;
                         showNocam();
                     }
@@ -888,11 +929,19 @@ void videowidget::changeDev()
                     m_imgPrcThread->start();
                     g_devStatus = CAM_CANUSE;
                 } else if (ret == E_FORMAT_ERR) {
+                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+                    if (vd != nullptr) {
+                        close_v4l2_device_handler();
+                    }
                     qDebug() << "camInit failed";
                     if (g_devStatus != CAM_CANNOT_USE)
                         showCamUsed();
                     g_devStatus = CAM_CANNOT_USE;
                 } else if (ret == E_NO_DEVICE_ERR) {
+                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+                    if (vd != nullptr) {
+                        close_v4l2_device_handler();
+                    }
                     g_devStatus = NOCAM;
                     showNocam();
                 }

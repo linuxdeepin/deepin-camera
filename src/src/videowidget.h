@@ -30,6 +30,7 @@
 #include <DPushButton>
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
+#include "thumbnailsbar.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -93,6 +94,8 @@ public:
     {
         return m_bActive;
     }
+
+    void setthumbnail(ThumbnailsBar *thumb);
 public slots:
     void onTakePic(bool bTrue);
     void onTakeVideo();
@@ -167,7 +170,7 @@ private:
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = NORMALVIDEO;
-
+    ThumbnailsBar         *m_thumbnail;
     QPixmap               m_pixmap;
     int                     m_nFileID;
     QString                 m_strFolder;
