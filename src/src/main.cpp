@@ -82,8 +82,9 @@ int main(int argc, char *argv[])
 
     DApplicationSettings saveTheme;
 
-    //仅允许打开一个相机
-    QSharedMemory shared_memory("deepincamera");
+    //一个用户仅允许打开一个相机
+    QString userpath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QSharedMemory shared_memory(userpath + "deepincamera");
 
     if (shared_memory.attach()) {
         shared_memory.detach();
