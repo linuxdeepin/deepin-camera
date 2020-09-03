@@ -131,7 +131,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(manualClicked()));
 
-    m_endBtn->setToolTip(tr("Stop taking video"));
+    m_endBtn->setToolTip(tr("Stop recording"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
     m_endBtn->hide();
 

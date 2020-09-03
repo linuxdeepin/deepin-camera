@@ -1,15 +1,19 @@
 [Desktop Entry]
 Categories=Video;
-Comment=Camera is a tool of taking photos and videos.
-Comment[zh_CN]=相机是一款拍照、摄像的工具。
+Comment=Camera is a tool for taking photos and videos.
+
 Exec=deepin-camera
-GenericName=Deepin-Camera
-GenericName[zh_CN]=相机
+GenericName=Camera
 Icon=deepin-camera
 Name=Deepin Camera
-Name[zh_CN]=相机
 StartupNotify=false
 Terminal=false
 Type=Application
 X-Deepin-Vendor=user-custom
 X-MultipleArgs=false
+
+Comment[zh_CN]=相机是一款拍照、摄像的工具。
+
+GenericName[zh_CN]=相机
+
+Name[zh_CN]=相机
