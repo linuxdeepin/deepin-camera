@@ -242,19 +242,18 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     Q_UNUSED(ev);
     QFileInfo fileInfo(m_path);
+    QString program;
     if (fileInfo.suffix() == "jpg") {
-        QString program = "deepin-image-viewer"; //用看图打开
-        QStringList arguments;
-        arguments << m_path;
-        QProcess *myProcess = new QProcess(this);
-        myProcess->startDetached(program, arguments);
+        program = "deepin-image-viewer"; //用看图打开
     } else {
-        QString program = "deepin-movie"; //用影院打开
-        QStringList arguments;
-        arguments << m_path;
-        QProcess *myProcess = new QProcess(this);
-        myProcess->startDetached(program, arguments);
+        program = "deepin-movie"; //用影院打开
     }
+    QStringList arguments;
+    //表示本地文件
+    arguments << QUrl::fromLocalFile(m_path).toString();
+    qDebug() << QUrl::fromLocalFile(m_path).toString();
+    QProcess *myProcess = new QProcess(this);
+    myProcess->startDetached(program, arguments);
 }
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
