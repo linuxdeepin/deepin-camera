@@ -277,12 +277,9 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         }
     } else {
         g_indexNow = m_index;
-        if (ev->button() == Qt::RightButton) {
-            return;
-        }
         g_setIndex.clear();
     }
-    update();
+    //update();
     if (g_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
     } else {
