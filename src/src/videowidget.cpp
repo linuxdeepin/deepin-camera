@@ -848,6 +848,7 @@ void videowidget::changeDev()
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     g_devStatus = CAM_CANUSE;
+                    break;
                 } else if (ret == E_FORMAT_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
                     if (vd != nullptr) {
@@ -865,8 +866,7 @@ void videowidget::changeDev()
                     }
                     g_devStatus = NOCAM;
                     showNocam();
-                }
-                break;
+                }                
             }
         }
     } else {
