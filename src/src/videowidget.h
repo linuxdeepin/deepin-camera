@@ -100,6 +100,8 @@ public slots:
     void onTakePic(bool bTrue);
     void onTakeVideo();
     void showCountdown();
+    //录制3秒后，每200ms读取时间并显示
+    void showRecTime();
     void changeDev();
     void endBtnClicked();
     void manualClicked();
@@ -165,7 +167,7 @@ private:
 
     QTimer                  *countTimer;
     QTimer                  *flashTimer;
-
+    QTimer                  *recordingTimer;//录制3秒后，每200ms设置一次时间
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 

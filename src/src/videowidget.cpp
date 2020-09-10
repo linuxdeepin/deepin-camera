@@ -53,6 +53,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
 
     flashTimer = new QTimer(this);
     connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
+
+    recordingTimer = new QTimer(this);
+    connect(recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
@@ -514,8 +517,6 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
         }
         m_fWgtCountdown->hide();
         if (!get_capture_pause()) {//判断是否是暂停状态
-            if ((m_nCount > 2) && (m_nCount % 3 == 0))
-                m_nCount = static_cast<int>(get_video_time_capture());
             QString strTime = "";
             int nHour = m_nCount / 3600;
             if (nHour == 0) {
@@ -549,6 +550,12 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
             }
 
             m_btnVdTime->setText(strTime);
+            if ((m_nCount >= 3)/* && (m_nCount % 3 == 0)*/) {
+                //开启多线程，每100ms读取时间并显示
+                countTimer->stop();
+                recordingTimer->start(200);
+                return;
+            }
             m_nCount++;
         }
 
@@ -740,6 +747,53 @@ void videowidget::showCountdown()
     }
 }
 
+void videowidget::showRecTime()
+{
+    //获取写video的时间
+    m_nCount = static_cast<int>(get_video_time_capture());
+    //过滤不正常的时间
+    if (m_nCount <= 3) {
+        qDebug() << "error time" << m_nCount;
+        return;
+    }
+    QString strTime = "";
+    //计算小时数
+    int nHour = m_nCount / 3600;
+    if (nHour == 0) {
+        strTime.append("00");
+    } else if (nHour < 10) {
+        strTime.append("0");
+        strTime.append(QString::number(nHour));
+    } else {
+        strTime.append(QString::number(nHour));
+    }
+    strTime.append(":");
+    //计算分钟数
+    int nOutHour = m_nCount % 3600;
+    int nMins = nOutHour / 60;
+    if (nMins == 0) {
+        strTime.append("00");
+    } else if (nMins < 10) {
+        strTime.append("0");
+        strTime.append(QString::number(nMins));
+    } else {
+        strTime.append(QString::number(nMins));
+    }
+    strTime.append(":");
+    //计算秒钟数
+    int nSecs = nOutHour % 60;
+    if (nSecs == 0) {
+        strTime.append("00");
+    } else if (nSecs < 10) {
+        strTime.append("0");
+        strTime.append(QString::number(nSecs));
+    } else {
+        strTime.append(QString::number(nSecs));
+    }
+
+    m_btnVdTime->setText(strTime);
+}
+
 void videowidget::flash()
 {
     if (m_flashLabel->isVisible()) {
@@ -787,6 +841,9 @@ void videowidget::endBtnClicked()
 {
     if (countTimer->isActive()) {
         countTimer->stop();
+    }
+    if (recordingTimer->isActive()) {
+        recordingTimer->stop();
     }
     if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0)) {
         m_pCamErrItem->hide();
