@@ -69,6 +69,7 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     int nID = 0;
+    int64_t timespausestamp = 0;
     while (stopped == 0) {
         if (get_resolution_status()) {
 //            int current_width = v4l2core_get_frame_width(vd1);
@@ -195,12 +196,17 @@ void MajorImageProcessingThread::run()
             }
             /*把帧加入编码队列*/
             if (!get_capture_pause()) {
+                //设置时间戳
                 set_video_timestamptmp(static_cast<int64_t>(frame->timestamp));
                 encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
             } else {
                 //设置暂停时长
-                int64_t timespausestamp = get_video_timestamptmp();
-                set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
+                timespausestamp = get_video_timestamptmp();
+                if(timespausestamp == 0){
+                    set_video_pause_timestamp(0);
+                }else {
+                    set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
+                }
             }
             /*
              * exponencial scheduler
@@ -231,7 +237,7 @@ void MajorImageProcessingThread::run()
             m_bTake = false;
         }
         v4l2core_release_frame(vd1, frame);
-        msleep(33);//1000 / 30
+       msleep(33);//1000 / 30
     }
     v4l2core_stop_stream(vd1);
 }

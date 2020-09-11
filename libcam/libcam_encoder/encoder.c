@@ -49,6 +49,7 @@
 #include "encoder.h"
 #include "stream_io.h"
 #include "gview.h"
+#include "camview.h"
 
 
 #if LIBAVUTIL_VER_AT_LEAST(52,2)
@@ -1936,6 +1937,8 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	free(encoder_ctx);
 
 	/*reset static data*/
+    set_video_pause_timestamp(0);
+    set_video_timestamptmp(0);
 	last_video_pts = 0;
 	last_audio_pts = 0;
 	reference_pts  = 0;
