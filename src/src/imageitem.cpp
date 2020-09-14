@@ -22,6 +22,7 @@
 #include <DGuiApplicationHelper>
 #include <QFileInfo>
 #include <libffmpegthumbnailer/videothumbnailer.h>
+#include <QPainterPath>
 #include <QProcess>
 #include <QMouseEvent>
 #include <QDebug>
