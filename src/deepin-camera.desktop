@@ -17,3 +17,28 @@ Comment[zh_CN]=相机是一款拍照、摄像的工具。
 GenericName[zh_CN]=相机
 
 Name[zh_CN]=相机
+[Desktop Entry]
+Categories=Video;
+Comment=Camera is an image and video capture utility using your PC camera or webcam.
+
+Exec=deepin-camera
+GenericName=Camera
+Icon=deepin-camera
+Name=Deepin Camera
+StartupNotify=false
+Terminal=false
+Type=Application
+X-Deepin-Vendor=deepin
+X-MultipleArgs=false
+
+Comment[zh_CN]=相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。
+Comment[zh_HK]=相機是一款簡單易用的鏡頭應用工具，可實現拍照、錄製影片等功能。
+Comment[zh_TW]=相機是一款簡單易用的攝影機應用工具，可實現拍照、錄製影片等功能。
+
+GenericName[zh_CN]=相机
+GenericName[zh_HK]=相機
+GenericName[zh_TW]=相機
+
+Name[zh_CN]=深度相机
+Name[zh_HK]=Deepin 相機
+Name[zh_TW]=Deepin 相機
