@@ -1038,9 +1038,10 @@ void videowidget::onTakePic(bool bTrue)
         if (countTimer->isActive()) {
             countTimer->stop();
         }
-        if (flashTimer->isActive()) {
-            flashTimer->stop();
-        }
+        //强制关闭导致白屏，去掉强制关闭，倒计时500ms后自动关
+//        if (flashTimer->isActive()) {
+//            flashTimer->stop();//
+//        }
         if (m_fWgtCountdown->isVisible()) {
             m_fWgtCountdown->hide();
         }
