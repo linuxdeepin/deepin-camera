@@ -661,7 +661,7 @@ void CMainWindow::initTitleBar()
         pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
     }
 
-    titlebar()->setIcon(QIcon::fromTheme(":/images/logo/deepin-camera-32px.svg"));// /usr/share/icons/bloom/apps/96 //preferences-system
+    titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
 }
 

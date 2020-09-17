@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     QString t_date = QDate::currentDate().toString("MMdd");
     // Version Time
     a.setApplicationVersion(DApplication::buildVersion(t_date));
-    a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
+    a.setWindowIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
     //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
     a.setProductName(QObject::tr("Camera"));
