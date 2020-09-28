@@ -73,6 +73,7 @@ private:
     v4l2_frame_buff_t *frame;
     int result;
 
+
 signals:
     void SendMajorImageProcessing(QImage *image, int result);
     void reachMaxDelayedFrames();

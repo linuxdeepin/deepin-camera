@@ -140,11 +140,40 @@ void MajorImageProcessingThread::run()
 //            msleep(33);//1000 / 30
 //            continue;
 //        }
+        jpeg_encoder_ctx_t *jpeg_ctx;
+        uint8_t *jpeg;
+
+            jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
+
+        if (jpeg_ctx == nullptr) {
+            fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
+            jpeg_ctx = nullptr;
+            v4l2core_release_frame(vd1, frame);
+            continue;
+        }
+        if(jpeg == nullptr){
+            jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
+
+        }
+        if (jpeg == nullptr) {
+            fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
+            free(jpeg_ctx);
+            jpeg_ctx = nullptr;
+            jpeg = nullptr;
+            v4l2core_release_frame(vd1, frame);
+            continue;
+        }
+
+        initialization (jpeg_ctx, frame->width, frame->height);
+        initialize_quantization_tables (jpeg_ctx);
+
+        int jpeg_size = encode_jpeg(frame->yuv_frame, jpeg, jpeg_ctx, 1);
+
         result = 0;
         framedely = 0;
         m_rwMtxImg.lock();
-        if (frame->raw_frame != nullptr && (stopped == 0)) {
-            if (m_img->loadFromData(frame->raw_frame, static_cast<int>(frame->raw_frame_size))) {
+        if (frame->yuv_frame != nullptr && (stopped == 0)) {
+            if (m_img->loadFromData(jpeg, jpeg_size)) {
                 emit SendMajorImageProcessing(m_img, result);
             } else {
                 qDebug() << "loadFromData error";
@@ -236,9 +265,15 @@ void MajorImageProcessingThread::run()
             }
             m_bTake = false;
         }
+        free(jpeg);
+        free(jpeg_ctx);
+        jpeg = nullptr;
+        jpeg_ctx = nullptr;
+
         v4l2core_release_frame(vd1, frame);
-       msleep(33);//1000 / 30
+        msleep(33);//1000 / 30
     }
+
     v4l2core_stop_stream(vd1);
 }
 

@@ -259,7 +259,7 @@ int config_load(const char *filename)
             set_device_location(value);
         }
         else if(strcmp(token, "v4l2_format") == 0)
-            my_config.format = (uint32_t) strtoul(value, NULL, 10);
+            my_config.format = (uint32_t) strtoul("V4L2_PIX_FMT_MJPEG", NULL, 10);
 //		else if(strcmp(token, "capture") == 0)
 //			strncpy(my_config.capture, value, 4);
 //		else if(strcmp(token, "audio") == 0)
