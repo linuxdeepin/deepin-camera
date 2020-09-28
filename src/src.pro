@@ -14,7 +14,9 @@ QT += dtkwidget dtkgui
 DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
-
+QMAKE_CXX += -Wl,--as-need
+QMAKE_CXXFLAGS += -Wl,--as-need -fPIE
+QMAKE_LFLAGS+=-Wl,--as-needed -pie
 include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \

@@ -141,7 +141,7 @@ void MajorImageProcessingThread::run()
 //            continue;
 //        }
         jpeg_encoder_ctx_t *jpeg_ctx;
-        uint8_t *jpeg;
+        ;
 
             jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
 
@@ -151,10 +151,9 @@ void MajorImageProcessingThread::run()
             v4l2core_release_frame(vd1, frame);
             continue;
         }
-        if(jpeg == nullptr){
-            jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
 
-        }
+        uint8_t *jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
+
         if (jpeg == nullptr) {
             fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
             free(jpeg_ctx);
