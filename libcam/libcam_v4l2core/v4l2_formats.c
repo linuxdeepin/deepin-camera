@@ -569,9 +569,9 @@ int enum_frame_formats(v4l2_dev_t *vd)
 		fmt.index++;
 		if(verbosity > 0)
 		{
-			if((fmt.pixelformat & (1<<31)) != 0)
+            if((fmt.pixelformat & (1U<<31)) != 0)
 			{
-				pix_format &= ~(1<<31);//need to fix fourcc string
+                pix_format &= ~(1U<<31);//need to fix fourcc string
 				printf("{ pixelformat = '%c%c%c%c'(BE), description = '%s' }\n",
 					pix_format & 0xFF, (pix_format >> 8) & 0xFF,
 					(pix_format >> 16) & 0xFF, (pix_format >> 24) & 0xFF,
@@ -600,8 +600,8 @@ int enum_frame_formats(v4l2_dev_t *vd)
 
 		vd->list_stream_formats[fmtind-1].dec_support = dec_support;
 		vd->list_stream_formats[fmtind-1].format = fmt.pixelformat;
-		if((fmt.pixelformat & (1<<31)) != 0) //be format flag
-			pix_format &= ~(1<<31); //need to fix fourcc string
+        if((fmt.pixelformat & (1U<<31)) != 0) //be format flag
+            pix_format &= ~(1U<<31); //need to fix fourcc string
 		snprintf(vd->list_stream_formats[fmtind-1].fourcc, 5, "%c%c%c%c",
 				pix_format & 0xFF, (pix_format >> 8) & 0xFF,
 				(pix_format >> 16) & 0xFF, (pix_format >> 24) & 0xFF);
