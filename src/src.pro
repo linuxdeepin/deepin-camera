@@ -14,9 +14,7 @@ QT += dtkwidget dtkgui
 DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
-QMAKE_CXX += -Wl,--as-need
-QMAKE_CXXFLAGS += -Wl,--as-need -fPIE
-QMAKE_LFLAGS+=-Wl,--as-needed -pie
+
 include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
@@ -118,7 +116,7 @@ isEmpty(PREFIX){
 #DESTDIR = ./app
 
 target.path = $$INSTROOT$$BINDIR
-icon_files.path = $$PREFIX/share/icons/hicolor/scalable/apps/
+icon_files.path = $$INSTROOT$$PREFIX/share/icons/hicolor/scalable/apps/
 icon_files.files = $$PWD/resource/deepin-camera.svg
 
 desktop.path = $$INSTROOT$$APPDIR
@@ -200,11 +198,5 @@ INSTALLS = target desktop dbus_service icon_files manual translations
 #    com.deepin.Camera.service
 
 #DISTFILES +=
-
-host_mips64:{
-   QMAKE_CXXFLAGS += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,as-need -fPIE
-   QMAKE_LFLAGS += -pie
-}
-
 
 
