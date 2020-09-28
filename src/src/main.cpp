@@ -44,7 +44,8 @@ bool CheckWayland()
 }
 int main(int argc, char *argv[])
 {
-    if (!CheckWayland()) {
+    bool bWayland = CheckWayland();
+    if (!bWayland) {
         CApplication::loadDXcbPlugin();
     } else {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
@@ -99,7 +100,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
-
+    w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
 

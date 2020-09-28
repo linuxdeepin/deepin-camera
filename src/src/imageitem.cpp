@@ -254,7 +254,10 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     arguments << QUrl::fromLocalFile(m_path).toString();
     qDebug() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
-    myProcess->startDetached(program, arguments);
+    bool bOK = myProcess->startDetached(program, arguments);
+    if (!bOK) {
+        qDebug() << "QProcess startDetached error";
+    }
 }
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item
