@@ -514,12 +514,16 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, __attribut
     length  = (uint16_t)((uint16_t) spl[0] << 8);
 	length |= (uint16_t) spl[1];
 
-	header = spl + 2;
+    if (spl) {
+        header = spl + 2;
+    }
 	/*in litle endian*/
 	uint16_t header_length = header[2];
 	header_length |= header[3] << 8;
 
-	spl = header + header_length;
+    if (header) {
+        spl = header + header_length;
+    }
 	/*in litle endian*/
 	uint32_t payload_size = 0;
 	payload_size =  ((uint32_t) spl[0]) << 0;
@@ -527,8 +531,10 @@ static int demux_uvcH264(uint8_t *h264_data, uint8_t *buff, int size, __attribut
 	payload_size |= ((uint32_t) spl[2]) << 16;
 	payload_size |= ((uint32_t) spl[3]) << 24;
 
-	spl += 4; /*start of payload*/
-	epl = spl + payload_size; /*end of payload*/
+    if (spl) {
+        spl += 4; /*start of payload*/
+        epl = spl + payload_size; /*end of payload*/
+    }
 
 	if(epl > buff + size)
 	{

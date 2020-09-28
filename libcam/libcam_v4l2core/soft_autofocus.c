@@ -428,7 +428,7 @@ static int checkFocus()
 
 	if (focus_ctx->step <= focus_ctx->i_step)
 	{
-		if (abs((focus_ctx->sharpLeft-focus_ctx->focus_sharpness)<(focus_ctx->focus_sharpness/TH)) &&
+        if ((abs(focus_ctx->sharpLeft-focus_ctx->focus_sharpness)<(focus_ctx->focus_sharpness/TH)) &&
 			(abs(focus_ctx->sharpRight-focus_ctx->focus_sharpness)<(focus_ctx->focus_sharpness/TH)))
 		{
 			return (FLAT);
