@@ -135,7 +135,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     }
     updatePic(pix);
 
-    QMenu *menu = new QMenu();
+    QMenu *menu = new QMenu(this);
     QAction *actCopy = new QAction(this);
     actCopy->setText(tr("Copy"));
 
