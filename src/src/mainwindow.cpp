@@ -301,6 +301,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         auto pi = ElideText(value.toString(), {285, fm.height()}, QTextOption::WrapAnywhere,
                             le->font(), Qt::ElideMiddle, fm.height(), 285);
         le->setText(pi);
+        Settings::get().settings()->setOption("base.general.last_open_path",pi);
         le->update();
     });
 
