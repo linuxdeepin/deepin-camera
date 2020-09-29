@@ -45,9 +45,7 @@ bool CheckWayland()
 int main(int argc, char *argv[])
 {
     bool bWayland = CheckWayland();
-    if (!bWayland) {
-        CApplication::loadDXcbPlugin();
-    } else {
+    if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
