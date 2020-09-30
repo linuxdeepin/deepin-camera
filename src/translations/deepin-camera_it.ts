@@ -1,25 +1,27 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="it">
 <context>
     <name>CMainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="430"/>
-        <location filename="../src/mainwindow.cpp" line="441"/>
+        <location filename="../src/mainwindow.cpp" line="433"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>None</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="549"/>
+        <location filename="../src/mainwindow.cpp" line="595"/>
         <source>Open folder</source>
         <translation>Apri cartella</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="673"/>
-        <location filename="../src/mainwindow.cpp" line="785"/>
+        <location filename="../src/mainwindow.cpp" line="719"/>
+        <location filename="../src/mainwindow.cpp" line="831"/>
         <source>Video recording is in progress. Close the window?</source>
         <translation>Registrazione in corso, terminarla?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="752"/>
+        <location filename="../src/mainwindow.cpp" line="798"/>
         <source>Settings</source>
         <translation>Impostazioni</translation>
     </message>
@@ -27,30 +29,28 @@
 <context>
     <name>CloseDialog</name>
     <message>
-        <location filename="../src/closedialog.h" line="39"/>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation type="vanished">Annulla</translation>
     </message>
     <message>
-        <location filename="../src/closedialog.h" line="39"/>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation type="vanished">Chiudi</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
-        <location filename="../src/imageitem.cpp" line="139"/>
+        <location filename="../src/imageitem.cpp" line="140"/>
         <source>Copy</source>
         <translation>Copia</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="142"/>
+        <location filename="../src/imageitem.cpp" line="143"/>
         <source>Delete</source>
         <translation>Elimina</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="144"/>
+        <location filename="../src/imageitem.cpp" line="145"/>
         <source>Open folder</source>
         <translation>Apri cartella</translation>
     </message>
@@ -58,13 +58,13 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="75"/>
-        <location filename="../src/main.cpp" line="83"/>
+        <location filename="../src/main.cpp" line="74"/>
+        <location filename="../src/main.cpp" line="82"/>
         <source>Camera</source>
         <translation>Camera</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="84"/>
+        <location filename="../src/main.cpp" line="83"/>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
         <translation>Camera è un&apos;app di acquisizione immagini e video che sfrutta la camera integrata nel tuo dispositivo.
 Localizzazione italiana a cura di Massimo A. Carofano.</translation>
@@ -90,7 +90,8 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
         <translation>Apri cartella</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="473"/>
+        <location filename="../src/mainwindow.cpp" line="476"/>
+        <location filename="../src/mainwindow.cpp" line="507"/>
         <source>File not saved</source>
         <translation>File non salvato</translation>
     </message>
@@ -210,21 +211,21 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
 <context>
     <name>videowidget</name>
     <message>
-        <location filename="../src/videowidget.cpp" line="134"/>
+        <location filename="../src/videowidget.cpp" line="137"/>
         <source>Stop recording</source>
         <translation>Interrompi video</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="269"/>
-        <location filename="../src/videowidget.cpp" line="294"/>
-        <location filename="../src/videowidget.cpp" line="332"/>
+        <location filename="../src/videowidget.cpp" line="272"/>
+        <location filename="../src/videowidget.cpp" line="297"/>
+        <location filename="../src/videowidget.cpp" line="335"/>
         <source>No webcam found</source>
         <translation>Nessuna camera rilevata</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="274"/>
-        <location filename="../src/videowidget.cpp" line="299"/>
-        <location filename="../src/videowidget.cpp" line="388"/>
+        <location filename="../src/videowidget.cpp" line="277"/>
+        <location filename="../src/videowidget.cpp" line="302"/>
+        <location filename="../src/videowidget.cpp" line="391"/>
         <source>The webcam is in use</source>
         <translation>Questa camera è in uso</translation>
     </message>

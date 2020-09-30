@@ -1,25 +1,27 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="cs">
 <context>
     <name>CMainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="430"/>
-        <location filename="../src/mainwindow.cpp" line="441"/>
+        <location filename="../src/mainwindow.cpp" line="433"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>None</source>
         <translation>Žádné</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="549"/>
+        <location filename="../src/mainwindow.cpp" line="595"/>
         <source>Open folder</source>
         <translation>Otevřít složku</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="673"/>
-        <location filename="../src/mainwindow.cpp" line="785"/>
+        <location filename="../src/mainwindow.cpp" line="719"/>
+        <location filename="../src/mainwindow.cpp" line="831"/>
         <source>Video recording is in progress. Close the window?</source>
         <translation>Probíhá zaznamenávání videa. Zavřít okno?</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="752"/>
+        <location filename="../src/mainwindow.cpp" line="798"/>
         <source>Settings</source>
         <translation>Nastavení</translation>
     </message>
@@ -27,30 +29,28 @@
 <context>
     <name>CloseDialog</name>
     <message>
-        <location filename="../src/closedialog.h" line="39"/>
         <source>Cancel</source>
-        <translation>Zrušit</translation>
+        <translation type="vanished">Zrušit</translation>
     </message>
     <message>
-        <location filename="../src/closedialog.h" line="39"/>
         <source>Close</source>
-        <translation>Zavřít</translation>
+        <translation type="vanished">Zavřít</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
-        <location filename="../src/imageitem.cpp" line="139"/>
+        <location filename="../src/imageitem.cpp" line="140"/>
         <source>Copy</source>
         <translation>Zkopírovat</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="142"/>
+        <location filename="../src/imageitem.cpp" line="143"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../src/imageitem.cpp" line="144"/>
+        <location filename="../src/imageitem.cpp" line="145"/>
         <source>Open folder</source>
         <translation>Otevřít složku</translation>
     </message>
@@ -58,13 +58,13 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/main.cpp" line="75"/>
-        <location filename="../src/main.cpp" line="83"/>
+        <location filename="../src/main.cpp" line="74"/>
+        <location filename="../src/main.cpp" line="82"/>
         <source>Camera</source>
         <translation>Kamera</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="84"/>
+        <location filename="../src/main.cpp" line="83"/>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
         <translation>Kamera je nástroj pro zachytávání obrazu a videa pomocí kamery počítače.</translation>
     </message>
@@ -89,7 +89,8 @@
         <translation>Otevřít složku</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="473"/>
+        <location filename="../src/mainwindow.cpp" line="476"/>
+        <location filename="../src/mainwindow.cpp" line="507"/>
         <source>File not saved</source>
         <translation>Soubor neuložen</translation>
     </message>
@@ -209,21 +210,21 @@
 <context>
     <name>videowidget</name>
     <message>
-        <location filename="../src/videowidget.cpp" line="134"/>
+        <location filename="../src/videowidget.cpp" line="137"/>
         <source>Stop recording</source>
         <translation>Zastavit zaznamenávání</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="269"/>
-        <location filename="../src/videowidget.cpp" line="294"/>
-        <location filename="../src/videowidget.cpp" line="332"/>
+        <location filename="../src/videowidget.cpp" line="272"/>
+        <location filename="../src/videowidget.cpp" line="297"/>
+        <location filename="../src/videowidget.cpp" line="335"/>
         <source>No webcam found</source>
         <translation>Nenalezena žádná webová kamera</translation>
     </message>
     <message>
-        <location filename="../src/videowidget.cpp" line="274"/>
-        <location filename="../src/videowidget.cpp" line="299"/>
-        <location filename="../src/videowidget.cpp" line="388"/>
+        <location filename="../src/videowidget.cpp" line="277"/>
+        <location filename="../src/videowidget.cpp" line="302"/>
+        <location filename="../src/videowidget.cpp" line="391"/>
         <source>The webcam is in use</source>
         <translation>Webová kamera je používána</translation>
     </message>

@@ -33,7 +33,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     /usr/include/SDL2
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets Network DBus LinguistTools)
+set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})
@@ -52,23 +52,6 @@ file (GLOB_RECURSE HEADERS  ./*.h
 
 file (GLOB_RECURSE RESOURCES  ./resource/resources.qrc)
 
-file(GLOB TS LIST_DIRECTORIES false translations/${CMD_NAME}*.ts)
-##file(GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/deepin-image-viewer_zh_CN.ts)
-
-set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION translations)
-
-qt5_create_translation(QM ${SOURCES}  ${GLOB})
-
-#if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-#    qt5_create_translation(QM ${SRCS} ${TS})
-#endif ()
-
-# 设置不删除生成的文件夹内容文件
-set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
-
-
-add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES} ${QM})
-
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkgui
         libv4l2
@@ -85,9 +68,36 @@ pkg_check_modules(3rd_lib REQUIRED
         )
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
+file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}*.ts)
+#message(STATUS "qm")
+#message(STATUS ${PROJECT_SOURCE_DIR})
+
+#file(GLOB files LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${CMD_NAME}*.ts)
+#foreach(file IN LISTS files)
+#    message(STATUS ${cur})
+#endforeach(file)
+
+
+set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
+
+qt5_create_translation(QM ${SOURCES} ${TS})
+
+#message(STATUS "ts")
+#message(STATUS ${TS})
+
+if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
+    qt5_create_translation(QM ${SOURCES} ${TS})
+endif ()
+
+# 设置不删除生成的文件夹内容文件
+set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
+
+
+add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES} ${QM} )
+
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
+target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     portaudio
     asound
@@ -97,7 +107,8 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
     )
 
 # 将工程与Qt模块链接起来
-qt5_use_modules(${PROJECT_NAME} ${QtModule})
+qt5_use_modules(${TARGET_NAME} ${QtModule})
+
 
 #application
 install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
