@@ -44,9 +44,8 @@ bool CheckWayland()
 }
 int main(int argc, char *argv[])
 {
-    if (!CheckWayland()) {
-        CApplication::loadDXcbPlugin();
-    } else {
+    bool bWayland = CheckWayland();
+    if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
     }
@@ -99,7 +98,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
-
+    w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
 

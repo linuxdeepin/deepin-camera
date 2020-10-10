@@ -301,6 +301,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         auto pi = ElideText(value.toString(), {285, fm.height()}, QTextOption::WrapAnywhere,
                             le->font(), Qt::ElideMiddle, fm.height(), 285);
         le->setText(pi);
+        Settings::get().settings()->setOption("base.general.last_open_path",pi);
         le->update();
     });
 
@@ -324,6 +325,7 @@ QString CMainWindow::lastOpenedPath()
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
+    m_bWayland = false;
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
     m_nActTpye = ActTakePic;
@@ -483,8 +485,38 @@ void CMainWindow::initBlockShutdown()
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
         //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-        qDebug() << "Nublock shutdown.";
+        qDebug() << "init Nublock shutdown.";
     }
+}
+
+void CMainWindow::initBlockSleep()
+{
+    if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
+         qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+         return;
+     }
+
+     m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
+                                          "/org/freedesktop/login1",
+                                          "org.freedesktop.login1.Manager",
+                                          QDBusConnection::systemBus());
+
+     m_argSleep << QString("sleep")             // what
+           << qApp->productName()           // who
+           << QObject::tr("File not saved")          // why
+           << QString("block");                        // mode
+
+     //int fd = -1;
+     m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+     if (m_replySleep.isValid()) {
+         /*fd = */(void)m_replySleep.value().fileDescriptor();
+     }
+     //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
+     if (m_replySleep.isValid()) {
+         QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+         qDebug() << "init Nublock sleep.";
+     }
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)
@@ -499,6 +531,19 @@ void CMainWindow::updateBlockSystem(bool bTrue)
         //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
         qDebug() << "Nublock shutdown.";
     }
+
+    if (m_bWayland) {
+         initBlockSleep();
+
+         if (bTrue) {
+             m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+         } else {
+             QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+             m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+             //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+             qDebug() << "Nublock sleep.";
+         }
+     }
 }
 
 void CMainWindow::onNoCam()
@@ -507,7 +552,7 @@ void CMainWindow::onNoCam()
     onEnableTitleBar(4); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
-    m_thumbnail->setBtntooltip();
+    //m_thumbnail->setBtntooltip();
     m_thumbnail->show();
 }
 
@@ -710,7 +755,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
     //录制取消 （倒计时3秒内的）
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
-    //录制关机阻塞
+    //录制关机/休眠阻塞
     connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
     //没有相机了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));

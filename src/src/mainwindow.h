@@ -66,7 +66,7 @@ public:
     void newNinePreview();
     static QString lastOpenedPath();
     DSettings *getDsetMber();
-
+    void setWayland(bool bTrue){m_bWayland = bTrue;}
 
     ~CMainWindow() override;
 private:
@@ -87,6 +87,10 @@ private:
      */
     void initBlockShutdown();
 
+    /**
+     * @brief initBlockSleep 阻塞睡眠
+     */
+    void initBlockSleep();
 
 private slots:
     void setSelBtnHide();
@@ -135,6 +139,12 @@ private:
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
     QDBusInterface *m_pLoginManager = nullptr;
     QList<QVariant> m_arg;
+
+    QDBusReply<QDBusUnixFileDescriptor> m_replySleep;
+    QDBusInterface *m_pLoginMgrSleep = nullptr;
+    QList<QVariant> m_argSleep;
+
+    bool                        m_bWayland;
 };
 
 #endif // MAINWINDOW_H
