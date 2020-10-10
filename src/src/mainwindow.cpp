@@ -553,7 +553,7 @@ void CMainWindow::onNoCam()
     onEnableTitleBar(4); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
-    m_thumbnail->setBtntooltip();
+    //m_thumbnail->setBtntooltip();
     m_thumbnail->show();
 }
 

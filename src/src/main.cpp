@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 //    a.installTranslator(translator);
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
-
+    DLogManager::setlogFilePath(QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/") + QString("deepin-camera.log"));
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
