@@ -61,6 +61,9 @@ void MajorImageProcessingThread::init()
     majorindex = -1;
     m_img = new QImage();
     frame = nullptr;
+    m_bTake = false;
+    vd1 = nullptr;
+    result = -1;
 }
 
 void MajorImageProcessingThread::run()

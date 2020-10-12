@@ -32,6 +32,7 @@ extern "C"
 DevNumMonitor::DevNumMonitor()
 {
     m_pTimer = nullptr;
+    devlist = nullptr;
 }
 void DevNumMonitor::stop()
 {

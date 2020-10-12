@@ -151,7 +151,7 @@ void mp4_destroy_context(AVFormatContext *mp4_ctx)
     if(mp4_ctx != NULL)
     {
         avformat_free_context(mp4_ctx);
-        mp4_ctx = NULL;
+        //mp4_ctx = NULL;
     }
 }
 

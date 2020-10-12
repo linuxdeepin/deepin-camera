@@ -957,7 +957,7 @@ void get_v4l2_control_values (v4l2_dev_t *vd)
 						if(len > max_len)
 						{
 							ctrl->string[max_len + 1] = 0; //Null terminated
-							fprintf(stderr, "V4L2_CORE: control (0x%08x) returned string size of %d when max is %d\n",
+                            fprintf(stderr, "V4L2_CORE: control (0x%08x) returned string size of %u when max is %u\n",
 								ctrl->control.id, len, max_len);
 						}
 
@@ -1003,9 +1003,6 @@ v4l2_ctrl_t *get_control_by_id(v4l2_dev_t *vd, int id)
 	v4l2_ctrl_t *current = vd->list_device_controls;
     for(; current != NULL; current = current->next)
     {
-		if(current == NULL)
-			break;
-
         if(current->control.id == (__u32)id)
             return (current);
     }
@@ -1166,7 +1163,7 @@ void set_v4l2_control_values (v4l2_dev_t *vd)
 					}
 					clist[count].string = strncpy(clist[count].string, current->string, max_len);
 					clist[count].string[max_len + 1] = 0; /*NULL terminated*/
-					fprintf(stderr, "V4L2_CORE: control (0x%08x) trying to set string size of %d when max is %d (clip)\n",
+                    fprintf(stderr, "V4L2_CORE: control (0x%08x) trying to set string size of %u when max is %u (clip)\n",
 						current->control.id, len, max_len);
 				}
 				else
@@ -1387,7 +1384,7 @@ int set_control_value_by_id(v4l2_dev_t *vd, int id)
 					}
 					ctrl.string = strncpy(ctrl.string, control->string, max_len);
 					ctrl.string[max_len + 1] = 0; /*NULL terminated*/
-					fprintf(stderr, "V4L2_CORE: control (0x%08x) trying to set string size of %d when max is %d (clip)\n",
+                    fprintf(stderr, "V4L2_CORE: control (0x%08x) trying to set string size of %u when max is %u (clip)\n",
 						control->control.id, len, max_len);
 				}
 				else

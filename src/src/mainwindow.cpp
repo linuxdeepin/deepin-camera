@@ -804,23 +804,12 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     int width = this->width();
-    //int height = this->height();
-    m_thumbnail->m_nMaxItem = width;
-//    if (nOldWidth > width) {//画面缩小了，要重新调整；
-//        m_thumbnail->onFoldersChanged("");
-//    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
-//        m_thumbnail->hide();
-//        QTimer::singleShot(200, this, [=]
-//        {
-//            m_thumbnail->onFoldersChanged("");
-//            m_thumbnail->show();
-//        });
-//    }
-    //m_thumbnail->onFoldersChanged("");
+
     if (m_thumbnail) {
+        m_thumbnail->m_nMaxItem = width;
         onFitToolBar();
     }
-    //m_videoPre->resize(this->size());
+
     m_videoPre->update();
 }
 

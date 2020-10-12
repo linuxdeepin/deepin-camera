@@ -108,8 +108,8 @@ static void print_probe_commit_data(uvcx_video_config_probe_commit_t *data)
 	assert(data != NULL);
 
 	printf("uvcx_video_config_probe_commit:\n");
-	printf("\tFrameInterval: %i\n", data->dwFrameInterval);
-	printf("\tBitRate: %i\n", data->dwBitRate);
+    printf("\tFrameInterval: %u\n", data->dwFrameInterval);
+    printf("\tBitRate: %u\n", data->dwBitRate);
 	printf("\tHints: 0x%X\n", data->bmHints);
 	printf("\tConfigurationIndex: %i\n", data->wConfigurationIndex);
 	printf("\tWidth: %i\n", data->wWidth);
@@ -117,8 +117,8 @@ static void print_probe_commit_data(uvcx_video_config_probe_commit_t *data)
 	printf("\tSliceUnits: %i\n", data->wSliceUnits);
 	printf("\tSliceMode: %i\n", data->wSliceMode);
 	printf("\tProfile: %i\n", data->wProfile);
-	printf("\tIFramePeriod: %i\n", data->wIFramePeriod);
-	printf("\tEstimatedVideoDelay: %i\n",data->wEstimatedVideoDelay);
+    printf("\tIFramePeriod: %u\n", data->wIFramePeriod);
+    printf("\tEstimatedVideoDelay: %u\n",data->wEstimatedVideoDelay);
 	printf("\tEstimatedMaxConfigDelay: %i\n",data->wEstimatedMaxConfigDelay);
 	printf("\tUsageType: %i\n",data->bUsageType);
 	printf("\tRateControlMode: %i\n",data->bRateControlMode);
@@ -488,7 +488,7 @@ void set_h264_muxed_format(v4l2_dev_t *vd)
 	}
 	if(config_probe_req->dwFrameInterval != frame_interval)
 	{
-		fprintf(stderr, "V4L2_CORE: H264 config probe: requested frame interval %i but got %i\n",
+        fprintf(stderr, "V4L2_CORE: H264 config probe: requested frame interval %u but got %u\n",
 			frame_interval, config_probe_req->dwFrameInterval);
 	}
 	/*commit the format*/
