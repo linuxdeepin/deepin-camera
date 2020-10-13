@@ -329,6 +329,9 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->start();
     m_nActTpye = ActTakePic;
+
+    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
+                                 "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
     initUI();
     initTitleBar();
     initConnection();
@@ -556,6 +559,15 @@ void CMainWindow::onNoCam()
     m_thumbnail->show();
 }
 
+void CMainWindow::onSleepWhenTaking(bool)
+{
+    if (m_bWayland) {
+        qDebug() << "onSleepWhenTaking(bool)";
+        m_videoPre->endBtnClicked();
+        qDebug() << "onSleepWhenTaking(over)";
+    }
+}
+
 void CMainWindow::initUI()
 {
     this->resize(MinWindowWidth, MinWindowHeight);
@@ -757,6 +769,8 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //录制关机/休眠阻塞
     connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
+    //接收休眠信号，仅wayland使用
+    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
     //没有相机了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制

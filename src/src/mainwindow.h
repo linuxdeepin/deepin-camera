@@ -117,6 +117,8 @@ private slots:
      * @brief onNoCam 找不到设备恢复按钮和状态
      */
     void onNoCam();
+
+    void onSleepWhenTaking(bool);
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
@@ -145,6 +147,8 @@ private:
     QList<QVariant> m_argSleep;
 
     bool                        m_bWayland;
+
+    QDBusInterface              *m_pDBus = nullptr;//接收休眠信号，仅wayland使用
 };
 
 #endif // MAINWINDOW_H
