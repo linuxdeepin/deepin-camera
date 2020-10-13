@@ -267,6 +267,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
+    g_indexImage.value(g_indexNow)->update();
     if (g_bMultiSlt) {
         if (g_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
@@ -283,7 +284,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_indexNow = m_index;
         g_setIndex.clear();
     }
-    //update();
+    update();
     if (g_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
     } else {

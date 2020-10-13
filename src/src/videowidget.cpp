@@ -1160,9 +1160,11 @@ void videowidget::stopEverything()
 {
     //关闭相关动作，倒计时、闪光灯、计时器、等等
     //countTimer flashTimer m_flashLabel
-    if (flashTimer->isActive()) {
-        flashTimer->stop();
-    }
+
+    //不能关闭flashTimer，不确定处于什么状态，可能是正在执行定时关闭m_flashLabel
+//    if (flashTimer->isActive()) {
+//        flashTimer->stop();
+//    }
     if (countTimer->isActive()) {
         countTimer->stop();
     }
