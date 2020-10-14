@@ -124,7 +124,7 @@ __attribute__((unused))	void *outputBuffer,
 		}
 
 		if(verbosity > 1)
-			printf("AUDIO: compensate overflow with %i silence samples\n", n_samples);
+            printf("AUDIO: compensate overflow with %u silence samples\n", n_samples);
 	}
 	if(statusFlags & paInputUnderflow)
 		fprintf( stderr, "AUDIO: portaudio buffer underflow\n" );

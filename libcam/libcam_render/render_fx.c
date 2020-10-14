@@ -431,9 +431,9 @@ static void fx_yu12_pieces(uint8_t* frame, int width, int height, int piece_size
 				}
 			}
 
-			ppy = piece;
-			ppu = piece + (piece_size * piece_size);
-			ppv = ppu + ((piece_size * piece_size) / 4);
+//			ppy = piece;
+//			ppu = piece + (piece_size * piece_size);
+//			ppv = ppu + ((piece_size * piece_size) / 4);
 
 			/*rotate piece and copy it to frame*/
 			//rotation is random

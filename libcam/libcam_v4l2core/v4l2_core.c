@@ -303,7 +303,7 @@ static int map_buff(v4l2_dev_t *vd)
 			return E_MMAP_ERR;
 		}
 		if(verbosity > 1)
-			printf("V4L2_CORE: mapped buffer[%i] with length %i to pos %p\n",
+            printf("V4L2_CORE: mapped buffer[%i] with length %u to pos %p\n",
 				i,
 				vd->buff_length[i],
 				vd->mem[i]);

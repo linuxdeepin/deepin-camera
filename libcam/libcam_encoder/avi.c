@@ -692,7 +692,7 @@ static int avi_write_counters(avi_context_t *avi_ctx, __attribute__((unused))avi
 			{
                 uint32_t rate =(uint32_t) FRAME_RATE_SCALE * (uint32_t)lrintf((float)avi_ctx->fps);
 				if(verbosity > 0)
-					fprintf(stderr,"ENCODER: (avi) storing rate(%i)\n",rate);
+                    fprintf(stderr,"ENCODER: (avi) storing rate(%u)\n",rate);
 				io_write_wl32(avi_ctx->writer, rate);
 			}
 		}
