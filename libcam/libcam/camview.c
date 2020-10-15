@@ -102,6 +102,8 @@ static __THREAD_TYPE encoder_thread;
 
 static int my_encoder_status = 0;
 
+static int is_wayland = 0;
+
 static char status_message[80];
 
 
@@ -1325,4 +1327,14 @@ int stop_encoder_thread()
         printf("deepin-camera: encoder thread terminated and joined\n");
 
     return 0;
+}
+
+void set_wayland_status(int status)
+{
+    is_wayland = status;
+}
+
+int get_wayland_status()
+{
+    return is_wayland;
 }

@@ -39,6 +39,8 @@ extern "C" {
 #include "stdio.h"
 #include "math.h"
 #include "save_image.h"
+#include "colorspaces.h"
+#include "render.h"
 #ifdef __cplusplus
 }
 #endif
@@ -53,7 +55,6 @@ public:
     void init();
 
 public:
-    QImage *m_img;
     QMutex m_rwMtxImg;
     QString m_strPath;
     QMutex m_rwMtxPath;
@@ -72,7 +73,6 @@ private:
     v4l2_dev_t *vd1;
     v4l2_frame_buff_t *frame;
     int result;
-
 
 signals:
     void SendMajorImageProcessing(QImage *image, int result);

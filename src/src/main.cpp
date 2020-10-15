@@ -28,7 +28,10 @@
 #include <DLog>
 #include <DApplicationSettings>
 #include <stdio.h>
-
+extern "C"
+{
+#include "camview.h"
+}
 DWIDGET_USE_NAMESPACE
 bool CheckWayland()
 {
@@ -48,6 +51,7 @@ int main(int argc, char *argv[])
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+        set_wayland_status(1);
     }
 
     CApplication a(argc, argv);
