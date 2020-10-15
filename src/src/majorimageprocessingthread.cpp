@@ -31,9 +31,6 @@ MajorImageProcessingThread::MajorImageProcessingThread()
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
-    if (m_img) {
-        delete m_img;
-    }
     vd1 = get_v4l2_device_handler();
     if (vd1 != nullptr) {
         if (frame != nullptr) {
@@ -59,7 +56,6 @@ void MajorImageProcessingThread::init()
 {
     stopped = 0;
     majorindex = -1;
-    m_img = new QImage();
     frame = nullptr;
     m_bTake = false;
     vd1 = nullptr;
@@ -68,26 +64,24 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::run()
 {
+    QImage tmpImg;
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;
-    int nID = 0;
     int64_t timespausestamp = 0;
     while (stopped == 0) {
         if (get_resolution_status()) {
-//            int current_width = v4l2core_get_frame_width(vd1);
-//            int current_height = v4l2core_get_frame_height(vd1);
             request_format_update(0); /*reset*/
             v4l2core_stop_stream(vd1);
             m_rwMtxImg.lock();
             v4l2core_clean_buffers(vd1);
-//            framedely = -11;
+
             m_rwMtxImg.unlock();
-            /*try new format (values prepared by the request callback)*/
+
             int ret = v4l2core_update_current_format(vd1);
 
 
-            /*try to set the video stream format on the device*/
+
             if (ret != E_OK) {
                 fprintf(stderr, "camera: could not set the defined stream format\n");
                 fprintf(stderr, "camera: trying first listed stream format\n");
@@ -102,10 +96,9 @@ void MajorImageProcessingThread::run()
                 }
             }
 
-//            options_t *my_options = options_get();
-//            char *device_name = get_file_basename(my_options->device);
+
             QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin/deepin-camera/") + QString("deepin-camera");
-//            free(device_name);
+
             config_load(config_file.toLatin1().data());
 
             config_t *my_config = config_get();
@@ -116,15 +109,11 @@ void MajorImageProcessingThread::run()
             v4l2_device_list_t *devlist = get_device_list();
             set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
             config_save(config_file.toLatin1().data());
-//            msleep(1000);//1000 / 30
+
             v4l2core_start_stream(vd1);
         }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
-
-//        if (frame->width == 752 && frame->height == 423) {
-//            v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-//        }
 
         if (frame == nullptr) {
             framedely++;
@@ -136,8 +125,15 @@ void MajorImageProcessingThread::run()
             }
             continue;
         }
+        if(get_wayland_status() == 1 && QString::compare(QString(vd1->videodevice),"/dev/video0") == 0)
+        {
+            render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
+        }
 
+        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
+        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
 
+        /*录像*/
         if (video_capture_get_save_video()) {
             if (get_myvideo_bebin_timer() == 0) {
                 set_myvideo_begin_timer(v4l2core_time_get_timestamp());
@@ -197,6 +193,7 @@ void MajorImageProcessingThread::run()
                 }
             }
         }
+        /*拍照*/
         if (m_bTake) {
             int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
@@ -205,101 +202,19 @@ void MajorImageProcessingThread::run()
             m_bTake = false;
         }
 
-        if(vd1->requested_fmt!=V4L2_PIX_FMT_MJPEG){
-            jpeg_encoder_ctx_t *jpeg_ctx;
 
-                jpeg_ctx = static_cast<jpeg_encoder_ctx_t *>(calloc(1, sizeof(jpeg_encoder_ctx_t)));
-
-            if (jpeg_ctx == nullptr) {
-                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
-                jpeg_ctx = nullptr;
-                v4l2core_release_frame(vd1, frame);
-                continue;
-            }
-
-            uint8_t *jpeg = static_cast<uint8_t *>(calloc(static_cast<size_t>(frame->width * frame->height) >> 1, sizeof(uint8_t)));
-
-            if (jpeg == nullptr) {
-                fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (save_image_jpeg): %s\n", strerror(errno));
-                free(jpeg_ctx);
-                jpeg_ctx = nullptr;
-                jpeg = nullptr;
-                v4l2core_release_frame(vd1, frame);
-                continue;
-            }
-
-            initialization (jpeg_ctx, frame->width, frame->height);
-            initialize_quantization_tables (jpeg_ctx);
-
-            int jpeg_size = encode_jpeg(frame->yuv_frame, jpeg, jpeg_ctx, 1);
-
-            result = 0;
-            framedely = 0;
-            m_rwMtxImg.lock();
-            if (frame->yuv_frame != nullptr && (stopped == 0)) {
-                if (m_img->loadFromData(jpeg, jpeg_size)) {
-                    emit SendMajorImageProcessing(m_img, result);
-                } else {
-                    qDebug() << "loadFromData error";
-                    if (nID%30 == 0) {//1s记录一个就行
-                        QString strFile = QString(getenv("HOME")) + QString("/") +
-                                QString(".cache/deepin/deepin-camera/") +
-                                QDateTime::currentDateTime().toString("yyyyMMddHHmmss") +
-                                "_" + QString::number(nID) + "_" +
-                                QString::number(static_cast<int>(frame->raw_frame_size)) + ".dat";
-
-                        QFile file(strFile);
-                        if (!(file.open(QIODevice::WriteOnly | QIODevice::Truncate))) {
-                            qDebug() << "save file open false";
-                        }
-                        QDataStream aStream(&file);
-                        aStream.setVersion(QDataStream::Qt_5_11);
-                        aStream.writeRawData((char*)frame->raw_frame,static_cast<int>(frame->raw_frame_size));
-                        file.close();
-                    }
-                    nID ++;
-                }
-                malloc_trim(0);
-            }
-            m_rwMtxImg.unlock();
-
-
-            free(jpeg);
-            free(jpeg_ctx);
-            jpeg = nullptr;
-            jpeg_ctx = nullptr;
+        result = 0;
+        framedely = 0;
+        m_rwMtxImg.lock();
+        if (frame->yuv_frame != nullptr && (stopped == 0)) {
+            QImage imgTmp(rgb,frame->width,frame->height,QImage::Format_RGB888);
+            tmpImg = imgTmp.copy();
+            emit SendMajorImageProcessing(&tmpImg, result);
+            malloc_trim(0);
         }
-        else {
-            result = 0;
-            framedely = 0;
-            m_rwMtxImg.lock();
-            if (frame->yuv_frame != nullptr && (stopped == 0)) {
-                if (m_img->loadFromData(frame->raw_frame, static_cast<int>(frame->raw_frame_size))) {
-                    emit SendMajorImageProcessing(m_img, result);
-                } else {
-                    qDebug() << "loadFromData error";
-                    if (nID%30 == 0) {//1s记录一个就行
-                        QString strFile = QString(getenv("HOME")) + QString("/") +
-                                QString(".cache/deepin/deepin-camera/") +
-                                QDateTime::currentDateTime().toString("yyyyMMddHHmmss") +
-                                "_" + QString::number(nID) + "_" +
-                                QString::number(static_cast<int>(frame->raw_frame_size)) + ".dat";
+        m_rwMtxImg.unlock();
 
-                        QFile file(strFile);
-                        if (!(file.open(QIODevice::WriteOnly | QIODevice::Truncate))) {
-                            qDebug() << "save file open false";
-                        }
-                        QDataStream aStream(&file);
-                        aStream.setVersion(QDataStream::Qt_5_11);
-                        aStream.writeRawData((char*)frame->raw_frame,static_cast<int>(frame->raw_frame_size));
-                        file.close();
-                    }
-                    nID ++;
-                }
-                malloc_trim(0);
-            }
-            m_rwMtxImg.unlock();
-        }
+        free(rgb);
         v4l2core_release_frame(vd1, frame);
         msleep(33);//1000 / 30
     }

@@ -422,6 +422,11 @@ extern int stop_encoder_thread(void);
  */
 extern void *capture_loop(void *data);
 
+void set_wayland_status(int status);
+
+int get_wayland_status(void);
+
+
 #ifdef __cplusplus
 }
 #endif
