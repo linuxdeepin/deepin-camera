@@ -216,7 +216,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();
-    });
+    },Qt::QueuedConnection);
     //右键菜单先进入aboutToHide再进入QAction::triggered，因此该功能挪到customContextMenuRequested
 //    connect(menu,&QMenu::aboutToHide,this, [ = ] {
 //        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
