@@ -560,9 +560,9 @@ void CMainWindow::onNoCam()
     m_thumbnail->show();
 }
 
-void CMainWindow::onSleepWhenTaking(bool)
+void CMainWindow::onSleepWhenTaking(bool bTrue)
 {
-    if (m_bWayland) {
+    if (m_bWayland && bTrue) {
         qDebug() << "onSleepWhenTaking(bool)";
         m_videoPre->endBtnClicked();
         qDebug() << "onSleepWhenTaking(over)";
