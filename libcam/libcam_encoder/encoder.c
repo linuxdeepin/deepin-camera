@@ -524,20 +524,34 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
     {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
     }
-
-	if(video_defaults->codec_id == AV_CODEC_ID_H264)
-	{
-	   video_codec_data->codec_context->me_range = 16;
-	   //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
-	   av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
-	}
-
-	if(video_defaults->codec_id == AV_CODEC_ID_HEVC)
-	{
-	   video_codec_data->codec_context->me_range = 16;
-	   av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
-	   av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
-	}
+    switch (video_defaults->codec_id)
+    {
+        case AV_CODEC_ID_H264:
+        {
+           video_codec_data->codec_context->me_range = 16;
+           //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
+           av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
+           av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+           av_dict_set(&video_codec_data->private_options,"tune", "zerolatency", 0);
+        }
+        break;
+    case AV_CODEC_ID_HEVC:
+        {
+           video_codec_data->codec_context->me_range = 16;
+           av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
+           av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+        }
+        break;
+    case AV_CODEC_ID_VP8:
+        {
+            av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
+            av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
+            av_dict_set(&video_codec_data->private_options, "speed","10",0);
+        }
+        break;
+    default:
+        break;
+    }
 
 	int ret = 0;
 	/* open codec*/
