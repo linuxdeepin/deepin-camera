@@ -679,7 +679,9 @@ void videowidget::showCountdown()
             if (QDir(m_strFolder).exists() == false) {
                 m_strFolder = QDir::homePath() + QString("/Videos");
             }
-            m_imgPrcThread->m_strPath = m_strFolder + "/UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
+            QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
+            emit filename(strFileName);
+            m_imgPrcThread->m_strPath = m_strFolder + "/" + strFileName;
             m_imgPrcThread->m_bTake = true; //保存图片标志
 
             m_nFileID++;
@@ -1111,6 +1113,7 @@ void videowidget::startTakeVideo()
         if (g_devStatus == CAM_CANUSE) {
             qDebug() << "start takeVideo";
             g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            emit filename(g_strFileName);
             m_nFileID ++;
             QString str = m_strFolder;
             if (QDir(m_strFolder).exists() == false) {

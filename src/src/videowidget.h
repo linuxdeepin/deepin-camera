@@ -67,6 +67,7 @@ signals:
     void updateBlockSystem(bool bTrue);
     void noCam();
     void noCamAvailable();
+    void filename(QString strFilename);
 public:
     QString getFolder()
     {

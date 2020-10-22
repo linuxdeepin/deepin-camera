@@ -88,6 +88,9 @@ private:
 
     int m_curFileIndex;//当前读取到的文件位置
 
+    QString m_strFileName;//当前拍照或录制视频的文件名
+
+    int m_nDelTimes;//删除次数，用于屏蔽文件监控获取到的更新，提升ui性能
 private:
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
@@ -104,6 +107,7 @@ public slots:
     void onShortcutDel();
     void onTrashFile();
     void onShowVdTime(QString str);
+    void onFileName(QString strfilename);
 };
 
 #endif // THUMBNAILSBAR_H
