@@ -68,6 +68,7 @@ public:
     DSettings *getDsetMber();
     void setWayland(bool bTrue){m_bWayland = bTrue;}
 
+
     ~CMainWindow() override;
 private:
     void initUI();
@@ -107,7 +108,6 @@ private slots:
     void onTakeVdDone();
     void onTakeVdCancel();
     void onThemeChange(DGuiApplicationHelper::ColorType type);
-
 
     /**
      * @brief updateBlockSystem 更新阻塞关机

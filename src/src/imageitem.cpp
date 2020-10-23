@@ -135,7 +135,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     }
     updatePic(pix);
 
-    QMenu *menu = new QMenu();
+    QMenu *menu = new QMenu(this);
     QAction *actCopy = new QAction(this);
     actCopy->setText(tr("Copy"));
 
@@ -216,7 +216,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     });
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();
-    });
+    },Qt::QueuedConnection);
     //右键菜单先进入aboutToHide再进入QAction::triggered，因此该功能挪到customContextMenuRequested
 //    connect(menu,&QMenu::aboutToHide,this, [ = ] {
 //        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
@@ -254,7 +254,10 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     arguments << QUrl::fromLocalFile(m_path).toString();
     qDebug() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
-    myProcess->startDetached(program, arguments);
+    bool bOK = myProcess->startDetached(program, arguments);
+    if (!bOK) {
+        qDebug() << "QProcess startDetached error";
+    }
 }
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载，然后set到indexnow，现在的方法只是重绘了这一个item

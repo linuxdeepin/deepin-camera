@@ -24,7 +24,7 @@
 #include <DApplication>
 #include <DGuiApplicationHelper>
 
-#include "qtsingleapplication.h"
+#include "qtsingleapplication/qtsingleapplication.h"
 
 class CApplication;
 

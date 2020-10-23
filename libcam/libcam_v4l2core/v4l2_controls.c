@@ -1003,6 +1003,9 @@ v4l2_ctrl_t *get_control_by_id(v4l2_dev_t *vd, int id)
 	v4l2_ctrl_t *current = vd->list_device_controls;
     for(; current != NULL; current = current->next)
     {
+//		if(current == NULL)
+//			break;
+
         if(current->control.id == (__u32)id)
             return (current);
     }

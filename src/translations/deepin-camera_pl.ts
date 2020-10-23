@@ -1,170 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.1" language="pl">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"></translation>
+        <translation>Trwa nagrywanie wideo. Zamknij okno?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Otwórz folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation>Brak</translation>
+    </message>
+</context>
+<context>
+    <name>CloseDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Anuluj</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">Zamknij</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiuj</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Usuń</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Otwórz folder</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie masz uprawnień do obsługi tego folderu</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Zamknij</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieprawidłowy folder</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Otwórz folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustawienia</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>Podstawowy</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokalizacja pliku</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrób zdjęcie</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb zdjęć seryjnych</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation type="unfinished"></translation>
+        <translation>Opóźnienie samowyzwalacza</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Wynik</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation type="unfinished"></translation>
+        <translation>Format wyjściowy</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation type="unfinished"></translation>
+        <translation>4 sztuki</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation type="unfinished"></translation>
+        <translation>10 sztuk</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation>Brak</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą kamery komputera lub kamery internetowej.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Plik nie został zapisany</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zapisz do:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zdjęcie:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wideo:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustawienia rozdzielczości</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozdzielczość:</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrobić zdjęcie</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="unfinished"></translation>
+        <translation>Nagraj wideo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="unfinished"></translation>
+        <translation>Przestań robić zdjęcia</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation>Brak</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie znaleziono kamery internetowej</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation type="unfinished"></translation>
+        <translation>Kamera internetowa jest używana</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Zatrzymaj nagrywanie</translation>
     </message>
 </context>
 </TS>

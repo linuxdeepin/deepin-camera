@@ -117,8 +117,8 @@ static void print_probe_commit_data(uvcx_video_config_probe_commit_t *data)
 	printf("\tSliceUnits: %i\n", data->wSliceUnits);
 	printf("\tSliceMode: %i\n", data->wSliceMode);
 	printf("\tProfile: %i\n", data->wProfile);
-    printf("\tIFramePeriod: %u\n", data->wIFramePeriod);
-    printf("\tEstimatedVideoDelay: %u\n",data->wEstimatedVideoDelay);
+	printf("\tIFramePeriod: %i\n", data->wIFramePeriod);
+	printf("\tEstimatedVideoDelay: %i\n",data->wEstimatedVideoDelay);
 	printf("\tEstimatedMaxConfigDelay: %i\n",data->wEstimatedMaxConfigDelay);
 	printf("\tUsageType: %i\n",data->bUsageType);
 	printf("\tRateControlMode: %i\n",data->bRateControlMode);

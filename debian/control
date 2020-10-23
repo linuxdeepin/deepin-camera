@@ -3,9 +3,9 @@ Section: utils
 Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends:
- debhelper (>=9),
+ debhelper (>=9),cmake,
  pkg-config,qtbase5-dev,libdtkgui-dev,libdtkwidget-dev,
- libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,
+ libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,qttools5-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,

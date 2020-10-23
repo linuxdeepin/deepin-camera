@@ -48,6 +48,8 @@ extern int g_devStatus;
 
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
+    m_nDelTimes = 0;
+    m_strFileName = "";
     //this->grabKeyboard(); //获取键盘事件的关键处理
     setFocus(Qt::OtherFocusReason);
     setFocusPolicy(Qt::StrongFocus);
@@ -133,6 +135,11 @@ void ThumbnailsBar::setBtntooltip()
 
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
+    if (m_nDelTimes > 0) {
+        m_nDelTimes--;
+        qDebug() << "FoldersChanged but return case del";
+        return;
+    }
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     QString strShowTime = "";
@@ -168,7 +175,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
             m_fileInfoLst += dir.entryInfoList();
         }
     }
-
+    QString strFileName = "";
     while (m_fileInfoLst.size() > 0) {
         if (nLetAddCount <= m_nItemCount) {
             m_curFileIndex = m_nItemCount;
@@ -177,9 +184,13 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
         QFileInfo fileInfo = m_fileInfoLst.at(0);
         m_fileInfoLst.removeAt(0);
-        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
-            QString strFileName = fileInfo.fileName();
+        strFileName = fileInfo.fileName();
+        if (!m_strFileName.isEmpty() &&fileInfo.fileName().compare(m_strFileName) == 0) {
+            continue;
         }
+//        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+//            QString strFileName = fileInfo.fileName();
+//        }
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
@@ -192,10 +203,15 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         }
         m_nItemCount++;
     }
+    if (!g_indexImage.isEmpty()) {
+        g_indexNow = g_indexImage.begin().value()->getIndex();
+    }
+
     if (m_lastItemCount != m_nItemCount) {
-        emit fitToolBar();
+
         m_lastItemCount = m_nItemCount;
     }
+    emit fitToolBar();
     m_showVdTime->setText(strShowTime);
 }
 
@@ -420,6 +436,11 @@ void ThumbnailsBar::onShowVdTime(QString str)
     m_showVdTime->setText(str);
 }
 
+void ThumbnailsBar::onFileName(QString strfilename)
+{
+    m_strFileName = strfilename;
+}
+
 void ThumbnailsBar::ChangeActType(int nType)
 {
     if (m_nActTpye == nType) {
@@ -537,10 +558,12 @@ void ThumbnailsBar::addFile(QString strFile)
     }
     qDebug() << "m_nItemCount " << m_nItemCount;
     emit fitToolBar();
+    m_strFileName = "";
 }
 
 void ThumbnailsBar::delFile(QString strFile)
 {
+    m_nDelTimes ++;
     //获取最大的set值
     if (m_hBOx->isEmpty()) {
         return;
@@ -574,6 +597,9 @@ void ThumbnailsBar::delFile(QString strFile)
         qDebug() << "warning: item didn't removed!!!";
     }
 
+    if (!g_indexImage.isEmpty()) {
+        g_indexNow = g_indexImage.begin().value()->getIndex();
+    }
     //g_indexImage里边的数据是已经删掉了的
     if (m_fileInfoLst.isEmpty()) {
         m_nItemCount = m_hBOx->count();

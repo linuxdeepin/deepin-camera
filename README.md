@@ -62,7 +62,7 @@ Deepin Camera is licensed under [GPLv3](LICENSE) with [OpenSSL exception](https:
 
 ## Include Third Libraries Source Codes
 
-Deepin Camera  is based on Guvcview which is a excellent software use USB-camera to take photos & videos.
+Deepin Camera  is based on Guvcview which is a excellent software uses USB-camera to take photos & videos.
 
 Reference documents include：
 

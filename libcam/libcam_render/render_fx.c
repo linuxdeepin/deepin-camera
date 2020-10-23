@@ -460,9 +460,9 @@ static void fx_yu12_pieces(uint8_t* frame, int width, int height, int piece_size
 					break;
 			}
 
-            ppy = piece;
-            ppu = piece + (piece_size * piece_size);
-            ppv = ppu + ((piece_size * piece_size) / 4);
+			ppy = piece;
+			ppu = piece + (piece_size * piece_size);
+			ppv = ppu + ((piece_size * piece_size) / 4);
 
 			for(i = 0; i < piece_size; ++i)
 			{

@@ -331,7 +331,8 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_nActTpye = ActTakePic;
 
     m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                 "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+                                     "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+
     initUI();
     initTitleBar();
     initConnection();
@@ -495,31 +496,31 @@ void CMainWindow::initBlockShutdown()
 void CMainWindow::initBlockSleep()
 {
     if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
-         qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
-         return;
-     }
+        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+        return;
+    }
 
-     m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
-                                          "/org/freedesktop/login1",
-                                          "org.freedesktop.login1.Manager",
-                                          QDBusConnection::systemBus());
+    m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
+                                         "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager",
+                                         QDBusConnection::systemBus());
 
-     m_argSleep << QString("sleep")             // what
-           << qApp->productName()           // who
-           << QObject::tr("File not saved")          // why
-           << QString("block");                        // mode
+    m_argSleep << QString("sleep")             // what
+          << qApp->productName()           // who
+          << QObject::tr("File not saved")          // why
+          << QString("block");                        // mode
 
-     //int fd = -1;
-     m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
-     if (m_replySleep.isValid()) {
-         /*fd = */(void)m_replySleep.value().fileDescriptor();
-     }
-     //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
-     if (m_replySleep.isValid()) {
-         QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
-         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-         qDebug() << "init Nublock sleep.";
-     }
+    //int fd = -1;
+    m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+    if (m_replySleep.isValid()) {
+        /*fd = */(void)m_replySleep.value().fileDescriptor();
+    }
+    //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
+    if (m_replySleep.isValid()) {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+        m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+        qDebug() << "init Nublock sleep.";
+    }
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)
@@ -536,17 +537,17 @@ void CMainWindow::updateBlockSystem(bool bTrue)
     }
 
     if (m_bWayland) {
-         initBlockSleep();
+        initBlockSleep();
 
-         if (bTrue) {
-             m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
-         } else {
-             QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
-             m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-             //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-             qDebug() << "Nublock sleep.";
-         }
-     }
+        if (bTrue) {
+            m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+        } else {
+            QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+            m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+            //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+            qDebug() << "Nublock sleep.";
+        }
+    }
 }
 
 void CMainWindow::onNoCam()
@@ -739,7 +740,7 @@ void CMainWindow::initConnection()
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
-//    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //系统文件变化信号
     connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
     //增删文件修改界面
@@ -775,6 +776,8 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
+    //传递文件名，在拍照录制开始的时候，创建的文件不用于更新缩略图
+    connect(m_videoPre, SIGNAL(filename(QString)), m_thumbnail, SLOT(onFileName(QString)));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
 
@@ -818,12 +821,24 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
 
     int width = this->width();
+    //int height = this->height();
 
+//    if (nOldWidth > width) {//画面缩小了，要重新调整；
+//        m_thumbnail->onFoldersChanged("");
+//    } else {//放大时也调整，不使用延迟屏幕闪烁比较严重，解决此问题需要重新实现缩略图部分功能
+//        m_thumbnail->hide();
+//        QTimer::singleShot(200, this, [=]
+//        {
+//            m_thumbnail->onFoldersChanged("");
+//            m_thumbnail->show();
+//        });
+//    }
+    //m_thumbnail->onFoldersChanged("");
     if (m_thumbnail) {
         m_thumbnail->m_nMaxItem = width;
         onFitToolBar();
     }
-
+    //m_videoPre->resize(this->size());
     m_videoPre->update();
 }
 
