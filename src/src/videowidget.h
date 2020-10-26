@@ -22,12 +22,14 @@
 #ifndef VIDEOWIDGET_H
 #define VIDEOWIDGET_H
 
+#include <QtMultimedia/QSound>
 #include <DWidget>
 #include <QDateTime>
 #include <DFloatingWidget>
 #include <DLabel>
 #include <DFontSizeManager>
 #include <DPushButton>
+
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "thumbnailsbar.h"
@@ -41,6 +43,7 @@ class QGridLayout;
 class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
+class QSound;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
@@ -150,14 +153,16 @@ public:
 private:
     bool m_bActive;//是否录制中
 
-    DLabel               *m_flashLabel;
+    DLabel                  *m_flashLabel;
 
-    QGraphicsView        *m_pNormalView;
-    QGraphicsScene       *m_pNormalScene;
-    QGraphicsPixmapItem *m_pNormalItem;
-    QGraphicsTextItem    *m_pCamErrItem; //摄像头异常提示
+    QGraphicsView           *m_pNormalView;
+    QGraphicsScene          *m_pNormalScene;
+    QGraphicsPixmapItem     *m_pNormalItem;
+    QGraphicsTextItem       *m_pCamErrItem; //摄像头异常提示
 
-    QGridLayout          *m_pGridLayout;
+    QSound                  *m_takePicSound;
+
+    QGridLayout             *m_pGridLayout;
 
     DFloatingWidget         *m_fWgtCountdown; //显示倒计时
     //浮动窗口添加磨砂窗口和结束按钮

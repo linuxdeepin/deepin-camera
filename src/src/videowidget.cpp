@@ -48,6 +48,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
+    m_takePicSound = new QSound(":/resource/Camera.wav");
+
     countTimer = new QTimer(this);
     connect(countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
 
@@ -801,6 +803,7 @@ void videowidget::flash()
     if (m_flashLabel->isVisible()) {
         //隐藏闪光窗口
         qDebug() << "m_flashLabel->hide();";
+        m_takePicSound->play();
         m_pNormalView->show();
         m_thumbnail->show();
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
