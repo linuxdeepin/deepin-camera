@@ -128,7 +128,7 @@ private:
     videowidget                  *m_videoPre;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;
-    QVector<videowidget *>       m_VEffectPreview;
+//    QVector<videowidget *>       m_VEffectPreview;
     DButtonBox                  *pDButtonBox;
     DButtonBoxButton            *m_pTitlePicBtn;
     DButtonBoxButton            *m_pTitleVdBtn;

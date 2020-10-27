@@ -130,6 +130,8 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->setFlat(true);
     m_endBtn->setFixedSize(QSize(56, 51));
 
+    m_endBtn->setFocusPolicy(Qt::NoFocus);
+
     m_endBtn->setIconSize(QSize(56, 51));
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
 

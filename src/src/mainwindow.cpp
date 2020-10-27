@@ -575,6 +575,7 @@ void CMainWindow::initUI()
     m_videoPre = new videowidget(this);
 
     this->setCentralWidget(m_videoPre);
+    m_videoPre->setFocusPolicy(Qt::NoFocus);
 
     QPalette paletteTime = m_videoPre->palette();
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
@@ -683,7 +684,7 @@ void CMainWindow::initTitleBar()
 
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(26, 26));
-    m_pTitlePicBtn->setFocusPolicy(Qt::NoFocus);
+    m_pTitlePicBtn->setFocusPolicy(Qt::TabFocus);
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -700,7 +701,7 @@ void CMainWindow::initTitleBar()
         iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
 
     m_pTitleVdBtn = new DButtonBoxButton(nullptr);
-    m_pTitleVdBtn->setFocusPolicy(Qt::NoFocus);
+    m_pTitleVdBtn->setFocusPolicy(Qt::TabFocus);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 26));
 
@@ -708,11 +709,13 @@ void CMainWindow::initTitleBar()
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
+    pDButtonBox->setFocusPolicy(Qt::NoFocus);
 
     pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
     pSelectBtn->hide();
+    pSelectBtn->setFocusPolicy(Qt::NoFocus);
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
@@ -814,6 +817,7 @@ void CMainWindow::setupTitlebar()
     m_actionSettings = new QAction(tr("Settings"), this);
     menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
+    titlebar()->setFocusPolicy(Qt::NoFocus);
 }
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
