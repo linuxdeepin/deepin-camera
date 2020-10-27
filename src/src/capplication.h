@@ -23,6 +23,7 @@
 
 #include <DApplication>
 #include <DGuiApplicationHelper>
+#include "mainwindow.h"
 
 #include "qtsingleapplication/qtsingleapplication.h"
 
@@ -40,11 +41,14 @@ class CApplication : public QtSingleApplication
     Q_OBJECT
 public:
     CApplication(int &argc, char **argv);
-
+    void setMainWindow(CMainWindow *window);
+    CMainWindow *getMainWindow();
 signals:
     void popupConfirmDialog();
 
 protected:
     void handleQuitAction() override;
+private:
+    CMainWindow* m_mainwindow = nullptr;
 };
 #endif // CAPPLICATION_H

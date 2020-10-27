@@ -68,6 +68,28 @@ public:
     DSettings *getDsetMber();
     void setWayland(bool bTrue){m_bWayland = bTrue;}
 
+    DButtonBoxButton* getPicBoxBtn()
+    {
+        return m_pTitlePicBtn;
+    }
+    DButtonBoxButton* getVdBoxBtn()
+    {
+        return m_pTitleVdBtn;
+    }
+    DPushButton* getThubBtn()
+    {
+        return m_thumbnail->getPushbtn();
+    }
+
+    DIconButton* getChangeCam()
+    {
+        return pSelectBtn;
+    }
+
+    DPushButton* getEndBtn()
+    {
+        return m_videoPre->getEndBtn();
+    }
 
     ~CMainWindow() override;
 private:

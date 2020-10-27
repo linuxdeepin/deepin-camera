@@ -12,6 +12,50 @@
 
 DWIDGET_USE_NAMESPACE
 
+class QTestMain : public QObject
+{
+    Q_OBJECT
+
+public:
+    QTestMain();
+    ~QTestMain();
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testGTest();
+};
+
+QTestMain::QTestMain()
+{
+
+}
+
+QTestMain::~QTestMain()
+{
+
+}
+
+void QTestMain::initTestCase()
+{
+    qDebug() << "=====start test=====";
+}
+
+void QTestMain::cleanupTestCase()
+{
+    qDebug() << "=====stop test=====";
+}
+
+void QTestMain::testGTest()
+{
+    testing::InitGoogleTest();
+    int ret = RUN_ALL_TESTS();
+    Q_UNUSED(ret)
+
+    QTimer::singleShot(10000,[=]{ exit(0); });
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -28,7 +72,7 @@ int main(int argc, char *argv[])
 //    }
 
 //    a.installTranslator(translator);
-
+    //设置属性
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     DLogManager::registerConsoleAppender();
@@ -47,7 +91,7 @@ int main(int argc, char *argv[])
 
     DApplicationSettings saveTheme;
 
-    //仅允许打开一个相机
+    //仅允许打开一个相机，设置共享内存段
     QSharedMemory shared_memory("deepincamera");
 
     if (shared_memory.attach()) {
@@ -59,16 +103,20 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-//    CMainWindow w;
+    CMainWindow w;
 
-//    w.setMinimumSize(MinWindowWidth, MinWindowHeight);
-//    w.show();
+    w.setMinimumSize(MinWindowWidth, MinWindowHeight);
+    w.show();
+    //将界面移至屏幕中央
+    Dtk::Widget::moveToCenter(&w);
 
-//    Dtk::Widget::moveToCenter(&w);
 
-
-    int RUN_ALL_TESTS_RES = RUN_ALL_TESTS();
-    Q_UNUSED(RUN_ALL_TESTS_RES);
-    return RUN_ALL_TESTS();
-//    return a.exec();
+    QTestMain testMain;
+//    CMainWindow *pMainWindow = new CMainWindow();
+//    MovieConfiguration::get().init();
+    a.setMainWindow(&w);
+    QTest::qExec(&testMain, argc, argv);
+    return a.exec();
 }
+
+#include "main.moc"

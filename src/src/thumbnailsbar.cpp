@@ -46,6 +46,11 @@ QSet<int> g_setIndex;
 //extern QString g_strFileName;
 extern int g_devStatus;
 
+QMap<int, ImageItem *> get_imageitem()
+{
+    return g_indexImage;
+}
+
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
     m_nDelTimes = 0;

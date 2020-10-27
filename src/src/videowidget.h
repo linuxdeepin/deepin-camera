@@ -99,6 +99,11 @@ public:
         return m_bActive;
     }
 
+    DPushButton* getEndBtn()
+    {
+        return m_endBtn;
+    }
+
     void setthumbnail(ThumbnailsBar *thumb);
 public slots:
     void onTakePic(bool bTrue);

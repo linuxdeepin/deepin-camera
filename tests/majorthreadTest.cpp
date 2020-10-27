@@ -1,12 +1,12 @@
-#include "majorthreadTest.h"
+//#include "majorthreadTest.h"
 
-MajorthreadTest::MajorthreadTest()
-{
-        mThread = new MajorImageProcessingThread();
-}
+//MajorthreadTest::MajorthreadTest()
+//{
+//        mThread = new MajorImageProcessingThread();
+//}
 
-TEST_F(MajorthreadTest, pause)
-{
-    camInit("dev/video2");
-    mThread->start();
-}
+//TEST_F(MajorthreadTest, pause)
+//{
+//    camInit("dev/video2");
+//    mThread->start();
+//}
