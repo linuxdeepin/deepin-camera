@@ -69,6 +69,19 @@
                             "default": 0
                         }
                     ]
+                },
+                {
+                    "key": "audiosetting",
+                    "name": "Audio Setting",
+                    "options": [
+                        {
+                            "key": "soundreminder",
+                            "name": "Sound Reminder",
+                            "type":"checkbox",
+                            "text": "Sound tips for taking pictures",
+                            "default": true
+                        }
+                    ]
                 }
             ]
         },

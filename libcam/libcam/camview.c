@@ -102,7 +102,9 @@ static __THREAD_TYPE encoder_thread;
 
 static int my_encoder_status = 0;
 
-static int is_wayland = 0;
+static int is_wayland = 0; //是否是wayland的窗口管理器
+
+static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
 
@@ -1337,4 +1339,14 @@ void set_wayland_status(int status)
 int get_wayland_status()
 {
     return is_wayland;
+}
+
+void set_takeing_photo_sound(uint8_t status)
+{
+    soundTakePhoto = status;
+}
+
+int get_sound_of_takeing_photo()
+{
+    return soundTakePhoto;
 }

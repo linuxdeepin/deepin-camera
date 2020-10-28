@@ -426,6 +426,10 @@ void set_wayland_status(int status);
 
 int get_wayland_status(void);
 
+void set_takeing_photo_sound(uint8_t status);
+
+int get_sound_of_takeing_photo(void);
+
 
 #ifdef __cplusplus
 }

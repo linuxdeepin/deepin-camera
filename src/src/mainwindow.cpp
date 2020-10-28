@@ -642,6 +642,7 @@ void CMainWindow::initUI()
     m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
+    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundreminder").toBool();
     switch (nContinuous) {
     case 1:
         nContinuous = 4;
@@ -663,6 +664,13 @@ void CMainWindow::initUI()
     default:
         nDelayTime = 0;
         break;
+    }
+    if(soundphoto == true)
+    {
+        set_takeing_photo_sound(1);
+    }
+    else {
+        set_takeing_photo_sound(0);
     }
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
@@ -1030,6 +1038,7 @@ void CMainWindow::onSettingsDlgClose()
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
+    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundreminder").toBool();
 
 
     /**********************************************/
@@ -1054,6 +1063,13 @@ void CMainWindow::onSettingsDlgClose()
     default:
         nDelayTime = 0;
         break;
+    }
+    if(soundphoto == true)
+    {
+        set_takeing_photo_sound(1);
+    }
+    else {
+        set_takeing_photo_sound(0);
     }
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
