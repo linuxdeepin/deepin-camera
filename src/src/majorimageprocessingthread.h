@@ -75,7 +75,7 @@ private:
     int result;
 
 signals:
-    void SendMajorImageProcessing(QImage *image, int result);
+    void sigYUVFrame(uchar* yuv,uint width,uint height);
     void reachMaxDelayedFrames();
 
 };

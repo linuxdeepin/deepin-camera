@@ -29,12 +29,17 @@
 #include <DLabel>
 #include <DFontSizeManager>
 #include <DPushButton>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include <QOpenGLBuffer>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "thumbnailsbar.h"
 
 DWIDGET_USE_NAMESPACE
+QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
+QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
 
 class QGraphicsScene;
 class QGraphicsPixmapItem;
@@ -49,7 +54,7 @@ class QSound;
 enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
-class videowidget : public DWidget
+class videowidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
@@ -71,6 +76,7 @@ signals:
     void noCam();
     void noCamAvailable();
     void filename(QString strFilename);
+
 public:
     QString getFolder()
     {
@@ -122,6 +128,19 @@ private slots:
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);
+
+    /*
+     * openGL override
+     * start
+     */
+    void slotShowYuv(uchar *ptr,uint width,uint height); //显示一帧Yuv图像
+protected:
+    void initializeGL() Q_DECL_OVERRIDE;
+    void paintGL() Q_DECL_OVERRIDE;
+    /*
+     * openGL overriede
+     * end
+     */
 
 private:
     void init();
@@ -192,6 +211,15 @@ private:
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     int                     m_nCount; //录制计时
+
+private:
+    QOpenGLShaderProgram *program;
+    QOpenGLBuffer vbo;
+    GLuint textureUniformY,textureUniformU,textureUniformV; //opengl中y、u、v分量位置
+    QOpenGLTexture *textureY = nullptr,*textureU = nullptr,*textureV = nullptr;
+    GLuint idY,idU,idV; //自己创建的纹理对象ID，创建错误返回0
+    uint videoW,videoH;
+    uchar *yuvPtr = nullptr;
 };
 
 #endif // VIDEOWIDGET_H

@@ -31,7 +31,8 @@ extern "C" {
 #include "gviewv4l2core.h"
 #include "encoder.h"
 
-
+#define VERTEXIN 0
+#define TEXTUREIN 1
 
 typedef struct _capture_loop_data_t {
     void *options;
