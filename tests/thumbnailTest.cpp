@@ -1,19 +1,19 @@
-//#include "thumbnailTest.h"
+#include "thumbnailTest.h"
 
-//ThumbnailTest::ThumbnailTest()
-//{
-//        thumbar = new ThumbnailsBar();
-//}
+ThumbnailTest::ThumbnailTest()
+{
+    thumbar = new ThumbnailsBar();
+}
 
-//TEST_F(ThumbnailTest, getItemCount)
-//{
-//    thumbar->getItemCount();
-//}
+TEST_F(ThumbnailTest, getItemCount)
+{
+    thumbar->getItemCount();
+}
 
-//TEST_F(ThumbnailTest, setBtntooltip)
-//{
-//    thumbar->setBtntooltip();
-//}
+TEST_F(ThumbnailTest, setBtntooltip)
+{
+    thumbar->setBtntooltip();
+}
 
 //TEST_F(ThumbnailTest, ChangeActType)
 //{
@@ -21,15 +21,15 @@
 //    thumbar->ChangeActType(ActTakeVideo);
 //}
 
-//TEST_F(ThumbnailTest, addPath)
-//{
-//    thumbar->addPath(QString("/home/zhangcheng/"));
-//}
+TEST_F(ThumbnailTest, addPath)
+{
+    thumbar->addPath(QString("/data/home/zhangcheng/my_work/picture_video/"));
+}
 
-//TEST_F(ThumbnailTest, onFoldersChanged)
-//{
-//    thumbar->onFoldersChanged(QString("/home/"));
-//}
+TEST_F(ThumbnailTest, onFoldersChanged)
+{
+    thumbar->onFoldersChanged(QString("/home/"));
+}
 
 //TEST_F(ThumbnailTest, onBtnClick)
 //{

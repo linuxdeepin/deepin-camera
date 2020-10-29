@@ -2,7 +2,7 @@
 
 //VideowidgetTest::VideowidgetTest()
 //{
-//        videowgt = new videowidget();
+//    videowgt = new videowidget();
 //}
 
 //TEST_F(VideowidgetTest, shownocam)
@@ -25,7 +25,7 @@
 //}
 //TEST_F(VideowidgetTest, setContinuous)
 //{
-//    videowgt->setContinuous(5);
+//    videowgt->setContinuous(4);
 //}
 //TEST_F(VideowidgetTest, setCapstatus)
 //{

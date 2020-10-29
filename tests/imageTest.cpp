@@ -1,14 +1,14 @@
-//#include "imageTest.h"
+#include "imageTest.h"
 
-//ImageTest::ImageTest()
-//{
-//        ImageItemtest = new ImageItem();
-//}
+ImageTest::ImageTest()
+{
+      ImageItemtest = new ImageItem();
+}
 
-//TEST_F(ImageTest, imageitemshow)
-//{
-//    ImageItemtest->show();
-//}
+TEST_F(ImageTest, imageitemshow)
+{
+    ImageItemtest->show();
+}
 
 //TEST_F(ImageTest, setpic)
 //{
@@ -27,20 +27,20 @@
 //    ImageItemtest->setIndex(1);
 //}
 
-//TEST_F(ImageTest, setpath)
-//{
-//    ImageItemtest->SetPath("");
-//}
+TEST_F(ImageTest, setpath)
+{
+    ImageItemtest->SetPath("");
+}
 
-//TEST_F(ImageTest, getpath)
-//{
-//    ImageItemtest->getPath();
-//}
+TEST_F(ImageTest, getpath)
+{
+    ImageItemtest->getPath();
+}
 
-//TEST_F(ImageTest, getindex)
-//{
-//    ImageItemtest->getIndex();
-//}
+TEST_F(ImageTest, getindex)
+{
+    ImageItemtest->getIndex();
+}
 
 //TEST_F(ImageTest, parsefromfile)
 //{
