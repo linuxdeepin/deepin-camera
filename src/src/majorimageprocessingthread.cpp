@@ -130,8 +130,8 @@ void MajorImageProcessingThread::run()
             render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
         }
 
-        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
-        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
+//        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
+//        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
 
         /*录像*/
         if (video_capture_get_save_video()) {
@@ -207,14 +207,10 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
-            QImage imgTmp(rgb,frame->width,frame->height,QImage::Format_RGB888);
-            tmpImg = imgTmp.copy();
-            emit SendMajorImageProcessing(&tmpImg, result);
+            emit sigYUVFrame(frame->yuv_frame,frame->width,frame->height);
             malloc_trim(0);
         }
         m_rwMtxImg.unlock();
-
-        free(rgb);
         v4l2core_release_frame(vd1, frame);
         //msleep(33);//1000 / 30
     }

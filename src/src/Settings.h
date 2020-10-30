@@ -60,12 +60,6 @@ public:
 
     QVariant getOption(const QString &opt);
 
-    // user override for mpv opengl interop
-    // disable interop at all
-
-    // convient helpers
-    //    QString screenshotNameTemplate();
-    //    QString screenshotNameSeqTemplate();
 public slots:
     void setNewResolutionList();
 

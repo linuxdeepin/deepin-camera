@@ -2,9 +2,8 @@
 
 QtlocalpeerTest::QtlocalpeerTest()
 {
-        qlp = new QtLocalPeer();
+    qlp = new QtLocalPeer();
 }
-
 TEST_F(QtlocalpeerTest, isClient)
 {
     qlp->isClient();
@@ -17,3 +16,4 @@ TEST_F(QtlocalpeerTest, setting)
 {
     qlp->applicationId();
 }
+

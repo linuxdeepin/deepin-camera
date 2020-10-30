@@ -33,7 +33,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     /usr/include/SDL2
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools)
+set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools Multimedia)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})

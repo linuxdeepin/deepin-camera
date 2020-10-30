@@ -13,6 +13,8 @@
 #include <DApplicationSettings>
 #include "../src/src/mainwindow.h"
 #include "../src/src/capplication.h"
+#include "../src/src/Settings.h"
+#include "../src/src/videowidget.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -27,10 +29,9 @@ public:
 
     virtual void TearDown()
     {
-        delete mw;
+
     }
 protected:
-    CMainWindow  *mw;
 };
 
 #endif // MAINWINDOWTEST_H

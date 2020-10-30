@@ -26,7 +26,20 @@ CApplication::CApplication(int &argc, char **argv)
 
 }
 
+void CApplication::setMainWindow(CMainWindow *window)
+{
+        if (nullptr != window) {
+            m_mainwindow = window;
+        }
+}
+
+CMainWindow *CApplication::getMainWindow()
+{
+    return m_mainwindow;
+}
+
 void CApplication::handleQuitAction()
 {
     emit popupConfirmDialog();
 }
+

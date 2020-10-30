@@ -26,5 +26,7 @@
         <file>images/icons/dark/button/Switch camera_dark.svg</file>
         <file>images/icons/dark/play_dark.svg</file>
         <file>images/icons/light/play.svg</file>
+        <file>resource/Camera.wav</file>
+        <file>resource/Countdown.wav</file>
     </qresource>
 </RCC>

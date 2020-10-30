@@ -46,6 +46,11 @@ QSet<int> g_setIndex;
 //extern QString g_strFileName;
 extern int g_devStatus;
 
+QMap<int, ImageItem *> get_imageitem()
+{
+    return g_indexImage;
+}
+
 ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 {
     m_nDelTimes = 0;
@@ -107,6 +112,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(33, 33));
+    m_lastButton->setFocusPolicy(Qt::NoFocus);
 
     DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");

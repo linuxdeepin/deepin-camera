@@ -2,10 +2,14 @@
 
 DevmonitorTest::DevmonitorTest()
 {
-        devmon = new DevNumMonitor();
-        devmon->init();
+    devmon = new DevNumMonitor();
+    devmon->init();
 }
-TEST_F(DevmonitorTest, stop)
+TEST_F(DevmonitorTest, start)
 {
     devmon->start();
 }
+//TEST_F(DevmonitorTest, stop)
+//{
+//    devmon->stop();
+//}

@@ -5,7 +5,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = deepin-camera
 TEMPLATE = app
 CONFIG += c++11 link_pkgconfig
-QT += dtkwidget dtkgui
+QT += dtkwidget dtkgui multimedia
 #PKGCONFIG += dframeworkdbus
 # The following define makes your compiler warn you if you use any
 # feature of Qt which has been marked as deprecated (the exact warnings
