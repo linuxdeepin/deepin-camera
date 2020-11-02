@@ -29,7 +29,8 @@ SOURCES += \
     src/imageitem.cpp\
     src/closedialog.cpp \
     src/settings_translation.cpp \
-    src/capplication.cpp
+    src/capplication.cpp \
+    src/dbus_adpator.cpp
 
 HEADERS += \
     src/mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     src/imageitem.h \
     src/Settings.h \
     src/closedialog.h \
-    src/capplication.h
+    src/capplication.h \
+    src/dbus_adpator.h
 
 
 

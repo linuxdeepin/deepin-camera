@@ -28,6 +28,7 @@
 #include <DLog>
 #include <DApplicationSettings>
 #include <stdio.h>
+#include "dbus_adpator.h"
 extern "C"
 {
 #include "camview.h"
@@ -85,7 +86,6 @@ int main(int argc, char *argv[])
     //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
     a.setProductName(QObject::tr("Camera"));
     a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
-
     DApplicationSettings saveTheme;
 
     //一个用户仅允许打开一个相机
@@ -98,6 +98,11 @@ int main(int argc, char *argv[])
 
     if (!shared_memory.create(1)) {
         qDebug() << "another deepin camera instance has started";
+        QDBusInterface iface("com.deepin.camera", "/", "com.deepin.camera");
+        if (iface.isValid()) {
+             qWarning() << "deepin-camera raise";
+            iface.asyncCall("Raise");
+        }
         exit(0);
     }
 
@@ -105,6 +110,10 @@ int main(int argc, char *argv[])
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
+
+    ApplicationAdaptor adaptor(&w);
+    QDBusConnection::sessionBus().registerService("com.deepin.camera");
+    QDBusConnection::sessionBus().registerObject("/", &w);
 
     Dtk::Widget::moveToCenter(&w);
 
