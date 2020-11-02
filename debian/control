@@ -10,7 +10,7 @@ Build-Depends:
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,
  libx11-dev,libva-dev
-Standards-Version: 1.0.0
+Standards-Version: 4.1.2
 Homepage: http://www.deepin.org
 
 Package: deepin-camera
@@ -19,5 +19,5 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  dde-api
-Description: deepin-camera software for  UOS
+Description:this package software for  UOS
  deepin-camera is a tool to view camera, and also a smart take photo and video in life.
