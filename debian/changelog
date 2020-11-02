@@ -1,5 +1,5 @@
-deepin-camera (1.0.0-1) unstable; urgency=medium
+deepin-camera (1.0.0.8) unstable; urgency=low
 
   * Initial release 
 
- -- Deepin Packages Builder <packages@linuxdeepin.com>  Wed, 24 Feb 2016 14:15:54 +0800
+ -- Cetu Shi <shicetu@uniontech.com>  Wed, 24 Feb 2016 14:15:54 +0800
