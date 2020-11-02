@@ -58,6 +58,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
+
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
@@ -139,6 +140,11 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->hide();
 
     m_pNormalScene = new QGraphicsScene;
+
+    if(get_wayland_status() == true)//wayland设置背景为黑色
+    {
+        m_pNormalScene->setBackgroundBrush(QBrush(Qt::black));
+    }
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
 
@@ -447,10 +453,28 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_pCamErrItem->isVisible() == true) {
                 m_pCamErrItem->hide();
             }
-            {
-                QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        {
+            int widgetwidth = this->width();
+
+            int widgetheight = this->height();
+            qDebug()<<"widgetwidth :" << this->width() << " widgetheight: " << this->height() << endl;
+            if(get_wayland_status() == true){
+                if((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight))
+                {
+                    QImage img = image->scaled(widgetwidth, widgetwidth *image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    m_pixmap = QPixmap::fromImage(img);
+                }
+                else
+                {
+                    QImage img = image->scaled(widgetheight* image->width() / image->height(), widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    m_pixmap = QPixmap::fromImage(img);
+                }
+            }
+            else {
+                QImage img = image->scaled(widgetwidth, widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                 m_pixmap = QPixmap::fromImage(img);
             }
+
             m_pNormalScene->setSceneRect(m_pixmap.rect());
             m_pNormalItem->setPixmap(m_pixmap);
             m_imgPrcThread->m_rwMtxImg.unlock();
@@ -458,6 +482,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
                 endBtnClicked();
             }
             malloc_trim(0);
+        }
             break;
         default:
             break;
