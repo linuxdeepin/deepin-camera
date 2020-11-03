@@ -62,21 +62,59 @@ class videowidget : public QOpenGLWidget, protected QOpenGLFunctions
 public:
     explicit videowidget(DWidget *parent = nullptr);
     ~videowidget();
-    //未发现摄像头
+    /**
+    * @brief showNocam　未发现摄像头
+    */
     void showNocam();
 
 signals:
+    /**
+    * @brief sigDeviceChange　相机改变信号
+    */
     void sigDeviceChange();
+
     void sigFlash();
+    /**
+    * @brief takePicCancel　取消拍照
+    */
     void takePicCancel();
-    void takePicDone();//拍照结束信号
-    void takePicOnce();//多连拍时，除最后一次，每次提交一个信号
-    void takeVdCancel(); //录制倒计时期间取消了
+    /**
+    * @brief takePicDone　拍照结束信号
+    */
+    void takePicDone();
+    /**
+    * @brief takePicOnce　多连拍时，除最后一次，每次提交一个信号
+    */
+    void takePicOnce();
+    /**
+    * @brief takeVdCancel　录制倒计时期间取消
+    */
+    void takeVdCancel();
+    /**
+    * @brief takeVdDone　录制完成
+    */
     void takeVdDone();
+    /**
+    * @brief setBtnStatues　设置按钮状态
+    */
     void setBtnStatues(bool status);
+    /**
+    * @brief updateBlockSystem　阻塞更新
+    * @param bTrue
+    */
     void updateBlockSystem(bool bTrue);
+    /**
+    * @brief noCam　无相机
+    */
     void noCam();
+    /**
+    * @brief noCamAvailable　无相机可获取
+    */
     void noCamAvailable();
+    /**
+    * @brief filename　文件名
+    * @param bTrue
+    */
     void filename(QString strFilename);
 
 public:
@@ -117,10 +155,15 @@ public slots:
     void onTakePic(bool bTrue);
     void onTakeVideo();
     void showCountdown();
-    //录制3秒后，每200ms读取时间并显示
+    /**
+    * @brief showRecTime　录制3秒后，每200ms读取时间并显示
+    */
     void showRecTime();
     void changeDev();
     void endBtnClicked();
+    /**
+    * @brief manualClicked　手动点击endbutton
+    */
     void manualClicked();
     void restartDevices();
 
@@ -131,11 +174,13 @@ private slots:
     void flash();
     void slotresolutionchanged(const QString &);
 
-    /*
-     * openGL override
-     * start
-     */
-    void slotShowYuv(uchar *ptr,uint width,uint height); //显示一帧Yuv图像
+    /**
+    * @brief slotShowYuv　显示一帧Yuv图像
+    * @param ptr
+    * @param width
+    * @param height
+    */
+    void slotShowYuv(uchar *ptr,uint width,uint height);
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
     void paintGL() Q_DECL_OVERRIDE;
@@ -153,25 +198,41 @@ private:
     void hideCountDownLabel();
     void hideTimeLabel();
 
-    //关闭滚轮显示区域
+    /**
+    * @brief forbidScrollBar　关闭滚轮显示区域
+    * @param view
+    */
     void forbidScrollBar(QGraphicsView *view);
 
-    //新建view
+    /**
+    * @brief newPreViewByState　新建view
+    * @param state
+    */
     void newPreViewByState(PRIVIEW_STATE state);
 
-    //显示录制和拍照倒计时
+    /**
+    * @brief showCountDownLabel　显示录制和拍照倒计时
+    */
     void showCountDownLabel();
 
-    //摄像头被占用
+    /**
+    * @brief showCountDownLabel　摄像头被占用
+    */
     void showCamUsed();
 
-    //开始录像
+    /**
+    * @brief startTakeVideo　开始录像
+    */
     void startTakeVideo();
 
-    //item位置处理
+    /**
+    * @brief itemPosChange　item位置处理
+    */
     void itemPosChange();
 
-    //结束所有操作
+    /**
+    * @brief itemPosChange　结束所有操作
+    */
     void stopEverything();
 public:
     MajorImageProcessingThread *m_imgPrcThread;

@@ -33,17 +33,17 @@ extern "C" {
 #include <assert.h>
 #include <signal.h>
 #include <unistd.h>
+#include <locale.h>
+#include <fcntl.h>
+
 #include <sys/syscall.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
-#include <locale.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
-#include <fcntl.h>
-
 #include <sys/mman.h>
+
 #include <linux/videodev2.h>
 
 #include "gviewaudio.h"

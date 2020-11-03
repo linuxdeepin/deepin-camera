@@ -49,14 +49,29 @@ public:
     void init();
 
 signals:
+    /**
+    * @brief seltBtnStateEnable 相机选择按钮可用信号
+    */
     void seltBtnStateEnable();
+    /**
+    * @brief seltBtnStateDisable 相机选择按钮不可用信号
+    */
     void seltBtnStateDisable();
+    /**
+    * @brief noDeviceFound 无相机设备信号
+    */
     void noDeviceFound();
+    /**
+    * @brief existDevice 存在相机设备信号
+    */
     void existDevice();
 protected:
     void run();
 
 private slots:
+    /**
+    * @brief timeOutSlot 设置相机切换按钮状态
+    */
     void timeOutSlot();
 
 public:

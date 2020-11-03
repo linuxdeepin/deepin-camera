@@ -60,6 +60,9 @@ class ThumbnailsBar : public DFloatingWidget
 public:
 
     explicit ThumbnailsBar(DWidget *parent = nullptr);
+    /**
+    * @brief getItemCount　获取图元数目
+    */
     int getItemCount()
     {
         return m_nItemCount;
@@ -69,7 +72,9 @@ public:
     void addPath(QString strPath);
     void addFile(QString strFile);
     void delFile(QString strFile);
-
+    /**
+    * @brief getPushbtn　获取录像/拍照按钮
+    */
     DPushButton* getPushbtn()
     {
         return m_lastButton;
@@ -105,18 +110,56 @@ private:
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
 signals:
-    void fitToolBar();//调整工具栏
-    void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
+    /**
+    * @brief fitToolBar　调整工具栏
+    */
+    void fitToolBar();
+    /**
+    * @brief enableTitleBar　1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
+    */
+    void enableTitleBar(int nType);
+    /**
+    * @brief takePic　拍照信号
+    */
     void takePic(bool bTrue);
+    /**
+    * @brief takeVd　录像信号
+    */
     void takeVd();
+    /**
+    * @brief enableSettings　开启设置功能
+    */
     void enableSettings(bool bTrue);
 public slots:
+    /**
+    * @brief onFoldersChanged　文件夹改变
+    * @param strDirectory　直接路径
+    */
     void onFoldersChanged(const QString &strDirectory);
+    /**
+    * @brief onBtnClick　拍照或录像按钮按下
+    */
     void onBtnClick();
+    /**
+    * @brief onShortcutCopy　ctrl+C按下
+    */
     void onShortcutCopy();
+    /**
+    * @brief onShortcutDel　delete按下
+    */
     void onShortcutDel();
+    /**
+    * @brief onTrashFile　删除
+    */
     void onTrashFile();
+    /**
+    * @brief onShowVdTime　录像时间
+    */
     void onShowVdTime(QString str);
+    /**
+    * @brief onFileName　设置文件名
+    * @param strfilename　文件名
+    */
     void onFileName(QString strfilename);
 };
 

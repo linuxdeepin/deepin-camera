@@ -23,12 +23,14 @@
 
 #include <DDialog>
 #include <DWidget>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <DLabel>
 #include <DLineEdit>
 #include <DPushButton>
 #include <DSuggestButton>
-#include <DLabel>
+
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
 DWIDGET_USE_NAMESPACE
 
 typedef DLabel QLbtoDLabel;
@@ -36,6 +38,13 @@ class CloseDialog : public DDialog
 {
     Q_OBJECT
 public:
+    /**
+    * @brief settingsTriggered 关闭窗口设置
+    * @param parent
+    * @param strText
+    * @param btnName1
+    * @param btnName2
+    */
     CloseDialog(QWidget *parent = nullptr, QString strText = "", QString btnName1 = tr("Cancel"), QString btnName2 = tr("Close"));
 
 private:

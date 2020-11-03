@@ -26,6 +26,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileInfo>
+
 DWIDGET_USE_NAMESPACE
 #define THUMBNAIL_WIDTH 30
 #define THUMBNAIL_HEIGHT 40
@@ -108,6 +109,9 @@ signals:
      * @brief trashFile 右键删除
      */
     void trashFile();//右键删除
+    /**
+     * @brief showDuration 录像时长信号
+     */
     void showDuration(QString strDuration);
 protected:
     /**
@@ -142,8 +146,8 @@ private:
     QAction *m_actDel;
     QAction *m_actOpenFolder;
 
-    int64_t m_nDuration = 0; //视频文件时长
-    QString m_strDuratuion;
+    int64_t m_nDuration = 0; //视频文件时长,int形式时间
+    QString m_strDuratuion;//视频文件时长,形式为00：00：00
     bool m_bVideo;//是否视频
 };
 

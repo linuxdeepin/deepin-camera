@@ -99,11 +99,11 @@ TEST_F(MainwindowTest, mwshow)
     QTest::mouseMove(imgit,QPoint(0,0),1000);
     QTest::mousePress(imgit,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
     QTest::mouseRelease(imgit,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
-    //点击鼠标右键
-    QTest::qWait(1000);
-    QTest::mouseMove(imgit,QPoint(0,0),1000);
-    QTest::mousePress(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),500);
-    QTest::mouseRelease(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),0);
+//    //点击鼠标右键
+//    QTest::qWait(1000);
+//    QTest::mouseMove(imgit,QPoint(0,0),1000);
+//    QTest::mousePress(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),500);
+//    QTest::mouseRelease(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),0);
     //键盘按下shift
     QTest::qWait(1000);
     QTest::keyPress(imgit, Qt::Key_Shift, Qt::NoModifier,500);
@@ -117,9 +117,9 @@ TEST_F(MainwindowTest, mwshow)
         QTest::keyPress(imgit, Qt::Key_Delete, Qt::NoModifier,1000);
         QTest::keyRelease(imgit, Qt::Key_Delete, Qt::NoModifier,1000);
     }
-    QTest::qWait(1000);
+    QTest::qWait(2000);
 
-    //while(mw->getVdBoxBtn()->isEnabled() == false);
+    while(mw->getVdBoxBtn()->isEnabled() == false);
     //切换到录像按钮
     DButtonBoxButton* iconVdBtn =  mw->getVdBoxBtn();
     QTest::mouseMove(iconVdBtn,QPoint(0,0),1000);
