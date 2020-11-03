@@ -126,6 +126,14 @@ private:
     */
     void initConnection();
     /**
+    * @brief initThumbnails　初始化缩略图
+    */
+    void initThumbnails();
+    /**
+    * @brief initThumbnailsConn　初始化缩略图信号槽
+    */
+    void initThumbnailsConn();
+    /**
     * @brief setupTitlebar　装载标题栏
     */
     void setupTitlebar();
@@ -250,7 +258,7 @@ protected:
      */
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
-    ThumbnailsBar              *m_thumbnail;
+    ThumbnailsBar              *m_thumbnail = nullptr;
     DMenu                     *menu;
     videowidget                  *m_videoPre;
     QFileSystemWatcher           m_fileWatcher;

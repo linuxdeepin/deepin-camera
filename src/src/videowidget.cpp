@@ -167,7 +167,10 @@ videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    init();
+    //延迟加载
+    QTimer::singleShot(500, this, [ = ] {
+        init();
+    });
 
 }
 

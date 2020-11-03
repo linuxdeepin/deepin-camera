@@ -328,12 +328,8 @@ QString CMainWindow::lastOpenedPath()
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_bWayland = false;
-    m_devnumMonitor = new DevNumMonitor();
-    m_devnumMonitor->start();
-    m_nActTpye = ActTakePic;
 
-    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                     "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+    m_nActTpye = ActTakePic;
 
     initUI();
     initTitleBar();
@@ -341,6 +337,27 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     QDir dir;
     QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
     dir.mkpath(strCache);
+
+    //延迟加载
+    QTimer::singleShot(500, this, [ = ] {
+        m_devnumMonitor = new DevNumMonitor();
+        m_devnumMonitor->start();
+        initThumbnails();
+        initThumbnailsConn();
+        connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
+        //多设备信号
+        connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
+
+        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
+
+        m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+
+        //接收休眠信号，仅wayland使用
+        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+
+        m_thumbnail->addPath(CMainWindow::m_lastfilename);
+    });
 }
 
 CMainWindow::~CMainWindow()
@@ -557,9 +574,11 @@ void CMainWindow::onNoCam()
     onEnableTitleBar(3); //恢复按钮状态
     onEnableTitleBar(4); //恢复按钮状态
     onEnableSettings(true);
-    m_thumbnail->m_nStatus = STATNULL;
-    //m_thumbnail->setBtntooltip();
-    m_thumbnail->show();
+    if (m_thumbnail) {
+        m_thumbnail->m_nStatus = STATNULL;
+        //m_thumbnail->setBtntooltip();
+        m_thumbnail->show();
+    }
 }
 
 void CMainWindow::onSleepWhenTaking(bool bTrue)
@@ -590,7 +609,6 @@ void CMainWindow::initUI()
     }
     if (!QDir(CMainWindow::m_lastfilename).exists())
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
-    QString test1 = CMainWindow::m_lastfilename;
 
     m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
@@ -598,48 +616,7 @@ void CMainWindow::initUI()
     }
 
     setupTitlebar();
-
-    m_thumbnail = new ThumbnailsBar(this);
-    m_thumbnail->move(0, height() - 10);
-    m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
-    m_videoPre->setthumbnail(m_thumbnail);
-
-    //添加右键打开文件夹功能
-    QMenu *menu = new QMenu();
-    QAction *actOpen = new QAction(this);
-    actOpen->setText(tr("Open folder"));
-    menu->addAction(actOpen);
-    m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
-        Q_UNUSED(pos);
-        menu->exec(QCursor::pos());
-    });
-    connect(actOpen, &QAction::triggered, this, [ = ] {
-        QString save_path = Settings::get().generalOption("last_open_path").toString();
-        if (save_path.isEmpty())
-        {
-            save_path = Settings::get().getOption("base.save.datapath").toString();
-        }
-        if (save_path.size() && save_path[0] == '~')
-        {
-            save_path.replace(0, 1, QDir::homePath());
-        }
-
-        if (!QFileInfo(save_path).exists())
-        {
-            QDir d;
-            d.mkpath(save_path);
-        }
-        Dtk::Widget::DDesktopServices::showFolder(save_path);
-    });
-
-    m_thumbnail->show();
-    m_thumbnail->setVisible(true);
-    m_thumbnail->show();
-
-    m_thumbnail->m_nMaxItem = MinWindowWidth;
-
-    QString test = CMainWindow::m_lastfilename;
+    //缩略图延后加载
 
     m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
@@ -677,7 +654,6 @@ void CMainWindow::initUI()
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     this->resize(MinWindowWidth, MinWindowHeight);
-    m_thumbnail->addPath(CMainWindow::m_lastfilename);
 }
 
 void CMainWindow::initTitleBar()
@@ -752,23 +728,9 @@ void CMainWindow::initConnection()
         }
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
-    //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
-    //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
-    //增删文件修改界面
-    connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
 
-    //修改标题栏按钮状态
-    connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
-    //录像信号
-    connect(m_thumbnail, SIGNAL(takeVd()), m_videoPre, SLOT(onTakeVideo()));
     //设置按钮信号
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
-    //禁用设置
-    connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
-    //拍照信号--显示倒计时
-    connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
 
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
 
@@ -783,22 +745,14 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //录制关机/休眠阻塞
     connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
-    //接收休眠信号，仅wayland使用
-    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+
     //没有相机了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
-    //传递文件名，在拍照录制开始的时候，创建的文件不用于更新缩略图
-    connect(m_videoPre, SIGNAL(filename(QString)), m_thumbnail, SLOT(onFileName(QString)));
+
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
-
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
-    //多设备信号
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
-
-    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
 
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
 
@@ -810,6 +764,71 @@ void CMainWindow::initConnection()
 
     //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
+}
+
+void CMainWindow::initThumbnails()
+{
+    m_thumbnail = new ThumbnailsBar(this);
+    m_thumbnail->move(0, height() - 10);
+    m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
+    m_videoPre->setthumbnail(m_thumbnail);
+
+    //添加右键打开文件夹功能
+    QMenu *menu = new QMenu();
+    QAction *actOpen = new QAction(this);
+    actOpen->setText(tr("Open folder"));
+    menu->addAction(actOpen);
+    m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+        Q_UNUSED(pos);
+        menu->exec(QCursor::pos());
+    });
+    connect(actOpen, &QAction::triggered, this, [ = ] {
+        QString save_path = Settings::get().generalOption("last_open_path").toString();
+        if (save_path.isEmpty())
+        {
+            save_path = Settings::get().getOption("base.save.datapath").toString();
+        }
+        if (save_path.size() && save_path[0] == '~')
+        {
+            save_path.replace(0, 1, QDir::homePath());
+        }
+
+        if (!QFileInfo(save_path).exists())
+        {
+            QDir d;
+            d.mkpath(save_path);
+        }
+        Dtk::Widget::DDesktopServices::showFolder(save_path);
+    });
+
+    //m_thumbnail->show();
+    m_thumbnail->setVisible(true);
+    m_thumbnail->show();
+
+    m_thumbnail->m_nMaxItem = MinWindowWidth;
+
+}
+
+void CMainWindow::initThumbnailsConn()
+{
+    //系统文件夹变化信号
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+    //系统文件变化信号
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));//待测试
+    //增删文件修改界面
+    connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
+
+    //修改标题栏按钮状态
+    connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
+    //录像信号
+    connect(m_thumbnail, SIGNAL(takeVd()), m_videoPre, SLOT(onTakeVideo()));
+    //禁用设置
+    connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
+    //拍照信号--显示倒计时
+    connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
+    //传递文件名，在拍照录制开始的时候，创建的文件不用于更新缩略图
+    connect(m_videoPre, SIGNAL(filename(QString)), m_thumbnail, SLOT(onFileName(QString)));
 }
 void CMainWindow::setSelBtnHide()
 {

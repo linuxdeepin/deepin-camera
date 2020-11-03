@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "../libcam/libcam/camview.h"
+#include "camview.h"
 #include "LPF_V4L2.h"
 #include "gviewaudio.h"
 #include "gviewv4l2core.h"

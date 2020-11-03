@@ -15,7 +15,7 @@ DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
 
-include(qtsingleapplication/qtsingleapplication.pri)
+#include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
     src/main.cpp \

@@ -37,7 +37,7 @@
 #include "jpeg_decoder.h"
 #include "colorspaces.h"
 #include "config.h"
-
+#include "load_libs.h"
 extern int verbosity;
 
 /*
@@ -1054,14 +1054,14 @@ int libav_decode(AVCodecContext *avctx, AVFrame *frame, int *got_frame, AVPacket
 
 	if (pkt)
 	{
-			ret = avcodec_send_packet(avctx, pkt);
+            ret = getLoadLibsInstance()->m_avcodec_send_packet(avctx, pkt);
 			// In particular, we don't expect AVERROR(EAGAIN), because we read all
 			// decoded frames with avcodec_receive_frame() until done.
 			if (ret < 0)
 					return ret == AVERROR_EOF ? 0 : ret;
 	}
 
-	ret = avcodec_receive_frame(avctx, frame);
+    ret = getLoadLibsInstance()->m_avcodec_receive_frame(avctx, frame);
 	if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR_EOF)
 			return ret;
 	if (ret >= 0)
@@ -1071,7 +1071,7 @@ int libav_decode(AVCodecContext *avctx, AVFrame *frame, int *got_frame, AVPacket
 
 #else
 
-	return avcodec_decode_video2(avctx, frame, got_frame, pkt);
+    return getLoadLibsInstance()->m_avcodec_decode_video2(avctx, frame, got_frame, pkt);
 
 #endif
 }

@@ -34,7 +34,7 @@
 #include "gview.h"
 #include "encoder.h"
 #include "gviewencoder.h"
-
+#include "load_libs.h"
 extern int verbosity;
 
 /*if not defined don't set any bits but prevent build error*/
@@ -974,7 +974,7 @@ int encoder_set_valid_video_codec_list ()
 	int num_codecs = 1; /*raw codec (no encoding) is always valid*/
 	for ( ind = 1; ind < encoder_get_video_codec_list_size(); ++ind)
 	{
-		AVCodec *codec = avcodec_find_encoder(listSupCodecs[ind].codec_id);
+        AVCodec *codec = getLoadLibsInstance()->m_avcodec_find_encoder(listSupCodecs[ind].codec_id);
 		if (!codec)
 		{
 			printf("ENCODER: no video codec detected for %s\n", listSupCodecs[ind].description);

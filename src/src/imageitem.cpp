@@ -40,6 +40,7 @@ extern "C" {
 #include <libavutil/dict.h>
 #include <libavutil/avutil.h>
 #include "malloc.h"
+#include "load_libs.h"
 }
 using namespace ffmpegthumbnailer;
 
@@ -440,12 +441,12 @@ static int open_codec_context(int *stream_idx,
     st = fmt_ctx->streams[stream_index];
     *dec_par = st->codecpar;
 #if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
-    avcodec_find_decoder((*dec_par)->codec_id);
+    getLoadLibsInstance()->m_avcodec_find_decoder((*dec_par)->codec_id);
 #else
     /* find decoder for the stream */
     //*dec_ctx = st->codecpar;
     AVCodec *dec = nullptr;
-    dec = avcodec_find_decoder(st->codecpar->codec_id);
+    dec = getLoadLibsInstance()->m_avcodec_find_decoder(st->codecpar->codec_id);
 
     if (!dec) {
         fprintf(stderr, "Failed to find %s codec\n",
@@ -453,29 +454,29 @@ static int open_codec_context(int *stream_idx,
         return AVERROR(EINVAL);
     }
     /* Allocate a codec context for the decoder */
-    AVCodecContext *dec_ctx = avcodec_alloc_context3(dec);
-    //*dec_par = avcodec_parameters_alloc();
+    AVCodecContext *dec_ctx = getLoadLibsInstance()->m_avcodec_alloc_context3(dec);
+    //*dec_par = getLoadLibsInstance()->m_avcodec_parameters_alloc();
     if (!dec_ctx) {
         fprintf(stderr, "Failed to allocate the %s codec context\n",
                 av_get_media_type_string(type));
         return AVERROR(ENOMEM);
     }
-    if (avcodec_open2(dec_ctx, dec, nullptr) < 0) {
+    if (getLoadLibsInstance()->m_avcodec_open2(dec_ctx, dec, nullptr) < 0) {
         fprintf(stderr, "Could not open the codec\n");
     }
     /* Copy codec parameters from input stream to output codec context */
-    if ((ret = avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
+    if ((ret = getLoadLibsInstance()->m_avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
         fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
                 av_get_media_type_string(type));
         return ret;
     }
-    ret = avcodec_parameters_from_context(*dec_par, dec_ctx);
+    ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(*dec_par, dec_ctx);
     if (ret < 0) {
         fprintf(stderr, "Could not copy the stream parameters\n");
-        avcodec_free_context(&dec_ctx);
+        getLoadLibsInstance()->m_avcodec_free_context(&dec_ctx);
         exit(1);
     }
-    avcodec_free_context(&dec_ctx);
+    getLoadLibsInstance()->m_avcodec_free_context(&dec_ctx);
 #endif
 
     *stream_idx = stream_index;

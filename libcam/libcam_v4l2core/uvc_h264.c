@@ -40,6 +40,8 @@
 #include "v4l2_formats.h"
 //LMH++
 #include <libavutil/imgutils.h>
+
+#include "load_libs.h"
 // GUID of the UVC H.264 extension unit: {A29E7641-DE04-47E3-8B2B-F4341AFF003B}
 #define GUID_UVCX_H264_XU {0x41, 0x76, 0x9E, 0xA2, 0x04, 0xDE, 0xE3, 0x47, 0x8B, 0x2B, 0xF4, 0x34, 0x1A, 0xFF, 0x00, 0x3B}
 
@@ -974,26 +976,26 @@ int h264_probe_config_probe_req(
 int h264_init_decoder(int width, int height)
 {
 #if !LIBAVCODEC_VER_AT_LEAST(53,34)
-	avcodec_init();
+    getLoadLibsInstance()->m_avcodec_init();
 #endif
 #if !LIBAVCODEC_VER_AT_LEAST(58,9)
 	/*
 	 * register all the codecs (we can also register only the codec
 	 * we wish to have smaller code)
 	 */
-	avcodec_register_all();
+    getLoadLibsInstance()->m_avcodec_register_all();
 #endif
 	if(h264_ctx != NULL)
-		h264_close_decoder();
+        h264_close_decoder();
 
 	h264_ctx = calloc(1, sizeof(h264_decoder_context_t));
 	if(h264_ctx == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (h264_init_decoder): %s\n", strerror(errno));
 		exit(-1);
-	}
+    }
 
-	h264_ctx->codec = avcodec_find_decoder(AV_CODEC_ID_H264);
+    h264_ctx->codec = getLoadLibsInstance()->m_avcodec_find_decoder(AV_CODEC_ID_H264);
 	if(!h264_ctx->codec)
 	{
 		fprintf(stderr, "V4L2_CORE: (H264 decoder) codec not found (please install libavcodec-extra for H264 support)\n");
@@ -1003,11 +1005,11 @@ int h264_init_decoder(int width, int height)
 	}
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
-	h264_ctx->context = avcodec_alloc_context3(h264_ctx->codec);
-	avcodec_get_context_defaults3 (h264_ctx->context, h264_ctx->codec);
+    h264_ctx->context = getLoadLibsInstance()->m_avcodec_alloc_context3(h264_ctx->codec);
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (h264_ctx->context, h264_ctx->codec);
 #else
-	h264_ctx->context = avcodec_alloc_context();
-	avcodec_get_context_defaults(h264_ctx->context);
+    h264_ctx->context = getLoadLibsInstance()->m_avcodec_alloc_context();
+    getLoadLibsInstance()->m_avcodec_get_context_defaults(h264_ctx->context);
 #endif
 	if(h264_ctx->context == NULL)
 	{
@@ -1025,13 +1027,13 @@ int h264_init_decoder(int width, int height)
 	//h264_ctx->context->dsp_mask = (FF_MM_MMX | FF_MM_MMXEXT | FF_MM_SSE);
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
-	if (avcodec_open2(h264_ctx->context, h264_ctx->codec, NULL) < 0)
+    if (getLoadLibsInstance()->m_avcodec_open2(h264_ctx->context, h264_ctx->codec, NULL) < 0)
 #else
-	if (avcodec_open(h264_ctx->context, h264_ctx->codec) < 0)
+    if (getLoadLibsInstance()->m_avcodec_open(h264_ctx->context, h264_ctx->codec) < 0)
 #endif
 	{
 		fprintf(stderr, "V4L2_CORE: (H264 decoder) couldn't open codec\n");
-		avcodec_close(h264_ctx->context);
+        getLoadLibsInstance()->m_avcodec_close(h264_ctx->context);
 		free(h264_ctx->context);
 		free(h264_ctx);
 		h264_ctx = NULL;
@@ -1042,8 +1044,8 @@ int h264_init_decoder(int width, int height)
 	h264_ctx->picture = av_frame_alloc();
 	av_frame_unref(h264_ctx->picture);
 #else
-	h264_ctx->picture = avcodec_alloc_frame();
-	avcodec_get_frame_defaults(h264_ctx->picture);
+    h264_ctx->picture = getLoadLibsInstance()->m_avcodec_alloc_frame();
+    getLoadLibsInstance()->m_avcodec_get_frame_defaults(h264_ctx->picture);
 #endif
 
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
@@ -1080,7 +1082,7 @@ int h264_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 
 	AVPacket avpkt;
 
-	av_init_packet(&avpkt);
+    getLoadLibsInstance()->m_av_init_packet(&avpkt);
 
 	avpkt.size = size;
 	avpkt.data = in_buf;
@@ -1126,7 +1128,7 @@ void h264_close_decoder()
 	if(h264_ctx == NULL)
 		return;
 
-	avcodec_close(h264_ctx->context);
+    getLoadLibsInstance()->m_avcodec_close(h264_ctx->context);
 
 	free(h264_ctx->context);
 
@@ -1134,7 +1136,7 @@ void h264_close_decoder()
 	av_frame_free(&h264_ctx->picture);
 #else
 	#if LIBAVCODEC_VER_AT_LEAST(54,28)
-			avcodec_free_frame(&h264_ctx->picture);
+            getLoadLibsInstance()->m_avcodec_free_frame(&h264_ctx->picture);
 	#else
 			av_freep(&h264_ctx->picture);
 	#endif

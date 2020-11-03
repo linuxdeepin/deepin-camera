@@ -61,7 +61,7 @@
 #include "avi.h"
 #include "mp4.h"
 #include "gview.h"
-
+#include "load_libs.h"
 
 extern int verbosity;
 
@@ -357,7 +357,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                 mp4_ctx,
                 video_codec_data,
                 mp4_video_stream);
-            int ret = avcodec_parameters_from_context(mp4_video_stream->st->codecpar, mp4_video_stream->enc);
+            int ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(mp4_video_stream->st->codecpar, mp4_video_stream->enc);
                 if (ret < 0) {
                     fprintf(stderr, "Could not copy the stream parameters\n");
                     exit(1);
@@ -377,7 +377,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                  if(!video_codec_data->private_options)
                     av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
 
-                 int ret = avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
+                 int ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
                      if (ret < 0) {
                          fprintf(stderr, "Could not copy the stream parameters\n");
                          exit(1);
