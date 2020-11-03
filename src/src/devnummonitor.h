@@ -22,7 +22,7 @@
 #define DEVNUMMONITOR_H
 
 #include <QThread>
-#include<QTimer>
+#include <QTimer>
 #include <QMutex>
 
 #ifdef __cplusplus

@@ -20,9 +20,11 @@
 */
 
 #include "videowidget.h"
-#include "camview.h"
-#include "gui.h"
 #include "mainwindow.h"
+
+#include <DGuiApplicationHelper>
+#include <DApplicationHelper>
+
 #include <QPixmap>
 #include <QTimer>
 #include <QGraphicsView>
@@ -31,13 +33,14 @@
 #include <QVBoxLayout>
 #include <QThread>
 #include <QScrollBar>
-#include <DGuiApplicationHelper>
-#include <DApplicationHelper>
 #include <QGraphicsBlurEffect>
 #include <QKeyEvent>
 #include <QDir>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+
+#include "camview.h"
+#include "gui.h"
 
 static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
 QString g_strFileName = nullptr;

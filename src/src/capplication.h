@@ -21,9 +21,10 @@
 #ifndef CAPPLICATION_H
 #define CAPPLICATION_H
 
+#include "mainwindow.h"
+
 #include <DApplication>
 #include <DGuiApplicationHelper>
-#include "mainwindow.h"
 
 #include "qtsingleapplication/qtsingleapplication.h"
 

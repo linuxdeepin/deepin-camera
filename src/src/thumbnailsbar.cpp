@@ -21,15 +21,19 @@
 
 #include "thumbnailsbar.h"
 #include "camview.h"
+
 #include <sys/time.h>
-#include <QCollator>
+
 #include <DLabel>
+#include <DDesktopServices>
+#include <DGuiApplicationHelper>
+
+#include <QCollator>
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
-#include <DDesktopServices>
 #include <QDateTime>
 #include <QApplication>
 #include <QMimeData>
@@ -37,7 +41,7 @@
 #include <QKeyEvent>
 #include <QShortcut>
 #include <QThread>
-#include <DGuiApplicationHelper>
+
 
 //QMap<QString, QPixmap> m_imagemap;
 QMap<int, ImageItem *> g_indexImage;

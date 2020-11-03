@@ -19,10 +19,11 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "closedialog.h"
-#include <DMessageBox>
-#include <QRegExp>
 
+#include <DMessageBox>
 #include <DLabel>
+
+#include <QRegExp>
 #include <QDebug>
 
 DWIDGET_USE_NAMESPACE

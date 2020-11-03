@@ -21,10 +21,10 @@ TEST_F(ThumbnailTest, setBtntooltip)
 //    thumbar->ChangeActType(ActTakeVideo);
 //}
 
-TEST_F(ThumbnailTest, addPath)
-{
-    thumbar->addPath(QString("/data/home/zhangcheng/my_work/picture_video/"));
-}
+//TEST_F(ThumbnailTest, addPath)
+//{
+//    thumbar->addPath(QString("/data/home/zhangcheng/my_work/picture_video/"));
+//}
 
 TEST_F(ThumbnailTest, onFoldersChanged)
 {

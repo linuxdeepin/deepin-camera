@@ -21,21 +21,23 @@
 
 #ifndef VIDEOWIDGET_H
 #define VIDEOWIDGET_H
+#include "thumbnailsbar.h"
 
-#include <QtMultimedia/QSound>
 #include <DWidget>
-#include <QDateTime>
 #include <DFloatingWidget>
 #include <DLabel>
 #include <DFontSizeManager>
 #include <DPushButton>
+
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
+#include <QtMultimedia/QSound>
+#include <QDateTime>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
-#include "thumbnailsbar.h"
+
 
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)

@@ -19,9 +19,11 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "imageitem.h"
+
 #include <DGuiApplicationHelper>
+#include <DDesktopServices>
+
 #include <QFileInfo>
-#include <libffmpegthumbnailer/videothumbnailer.h>
 #include <QPainterPath>
 #include <QProcess>
 #include <QMouseEvent>
@@ -29,9 +31,10 @@
 #include <QMimeData>
 #include <QClipboard>
 #include <QDir>
-#include <DDesktopServices>
 #include <QTime>
 #include <QThread>
+
+#include <libffmpegthumbnailer/videothumbnailer.h>
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>

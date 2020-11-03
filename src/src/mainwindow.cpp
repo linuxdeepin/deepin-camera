@@ -21,13 +21,6 @@
 
 #include "mainwindow.h"
 #include "capplication.h"
-#include <QListWidgetItem>
-#include <QTextLayout>
-#include <QStyleFactory>
-#include <QFileDialog>
-#include <QStandardPaths>
-#include <QFormLayout>
-#include <qsettingbackend.h>
 
 #include <DLabel>
 #include <DSettingsDialog>
@@ -39,6 +32,15 @@
 #include <DDesktopServices>
 #include <DMessageBox>
 #include <DComboBox>
+
+#include <QListWidgetItem>
+#include <QTextLayout>
+#include <QStyleFactory>
+#include <QFileDialog>
+#include <QStandardPaths>
+#include <QFormLayout>
+
+#include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
 #include "v4l2_core.h"
 

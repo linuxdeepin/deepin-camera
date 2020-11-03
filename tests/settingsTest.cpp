@@ -1,4 +1,5 @@
 #include "settingsTest.h"
+#include "dsettings.h"
 
 SettingTest::SettingTest()
 {

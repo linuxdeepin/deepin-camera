@@ -20,19 +20,23 @@
 */
 
 #include "mainwindow.h"
-//#include <DApplication>
 #include "capplication.h"
+
 #include <DMainWindow>
 #include <DWidgetUtil>
-#include <QSharedMemory>
 #include <DLog>
 #include <DApplicationSettings>
+
+#include <QSharedMemory>
+
 #include <stdio.h>
+
 extern "C"
 {
 #include "camview.h"
 }
 DWIDGET_USE_NAMESPACE
+//判断是否采用wayland显示服务器
 bool CheckWayland()
 {
     auto e = QProcessEnvironment::systemEnvironment();

@@ -21,7 +21,16 @@
 
 #ifndef THUMBNAILSBAR_H
 #define THUMBNAILSBAR_H
+#include "imageitem.h"
+
 #include <DWidget>
+#include <DButtonBox>
+#include <DFloatingWidget>
+#include <DIconButton>
+#include <DLabel>
+#include <DSpinner>
+
+#include <QTimer>
 #include <QDateTime>
 #include <QObject>
 #include <QDebug>
@@ -31,13 +40,7 @@
 #include <QHBoxLayout>
 #include <QFileSystemWatcher>
 #include <QPushButton>
-#include <DButtonBox>
-#include <DFloatingWidget>
-#include <DIconButton>
-#include <QTimer>
-#include <DLabel>
-#include <DSpinner>
-#include "imageitem.h"
+
 DWIDGET_USE_NAMESPACE
 #define IMAGE_HEIGHT_DEFAULT 40
 #define LAST_BUTTON_WIDTH 64
