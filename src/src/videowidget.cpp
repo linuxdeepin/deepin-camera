@@ -457,7 +457,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             int widgetwidth = this->width();
 
             int widgetheight = this->height();
-            qDebug()<<"widgetwidth :" << this->width() << " widgetheight: " << this->height() << endl;
+            //qDebug()<<"widgetwidth :" << this->width() << " widgetheight: " << this->height() << endl;
             if(get_wayland_status() == true){
                 if((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight))
                 {
@@ -888,8 +888,9 @@ void videowidget::endBtnClicked()
         setCapstatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
+        //避免没有录制的情况产生空白缩略图
+        emit takeVdDone();
     }
-    emit takeVdDone();
     //    g_strFileName = nullptr;
 }
 

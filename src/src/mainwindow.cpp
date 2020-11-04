@@ -323,15 +323,38 @@ QString CMainWindow::lastOpenedPath()
     return lastPath;
 }
 
+void CMainWindow::setWayland(bool bTrue)
+{
+    m_bWayland = bTrue;
+    m_devnumMonitor = new DevNumMonitor();
+    m_devnumMonitor->start();
+
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
+    //多设备信号
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
+
+    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
+
+    if (bTrue) {
+        m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+
+        m_pDBusLockFront = new QDBusInterface("com.deepin.dde.lockFront","/com/deepin/dde/lockFront",
+                                              "com.deepin.dde.lockFront",QDBusConnection::sessionBus());
+
+        //接收休眠信号，仅wayland使用
+        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+
+        connect(m_pDBusLockFront, SIGNAL(Visible(bool)), this, SLOT(onVisible(bool)));
+    }
+}
+
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_bWayland = false;
-    m_devnumMonitor = new DevNumMonitor();
-    m_devnumMonitor->start();
+
     m_nActTpye = ActTakePic;
 
-    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                 "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
     initUI();
     initTitleBar();
     initConnection();
@@ -495,31 +518,31 @@ void CMainWindow::initBlockShutdown()
 void CMainWindow::initBlockSleep()
 {
     if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
-         qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
-         return;
-     }
+        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+        return;
+    }
 
-     m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
+    m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
                                           "/org/freedesktop/login1",
                                           "org.freedesktop.login1.Manager",
                                           QDBusConnection::systemBus());
 
-     m_argSleep << QString("sleep")             // what
-           << qApp->productName()           // who
-           << QObject::tr("File not saved")          // why
-           << QString("block");                        // mode
+    m_argSleep << QString("sleep")             // what
+               << qApp->productName()           // who
+               << QObject::tr("File not saved")          // why
+               << QString("block");                        // mode
 
-     //int fd = -1;
-     m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
-     if (m_replySleep.isValid()) {
-         /*fd = */(void)m_replySleep.value().fileDescriptor();
-     }
-     //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
-     if (m_replySleep.isValid()) {
-         QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
-         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-         qDebug() << "init Nublock sleep.";
-     }
+    //int fd = -1;
+    m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+    if (m_replySleep.isValid()) {
+        /*fd = */(void)m_replySleep.value().fileDescriptor();
+    }
+    //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
+    if (m_replySleep.isValid()) {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+        m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+        qDebug() << "init Nublock sleep.";
+    }
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)
@@ -536,17 +559,17 @@ void CMainWindow::updateBlockSystem(bool bTrue)
     }
 
     if (m_bWayland) {
-         initBlockSleep();
+        initBlockSleep();
 
-         if (bTrue) {
-             m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
-         } else {
-             QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
-             m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-             //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-             qDebug() << "Nublock sleep.";
-         }
-     }
+        if (bTrue) {
+            m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+        } else {
+            QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+            m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+            //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+            qDebug() << "Nublock sleep.";
+        }
+    }
 }
 
 void CMainWindow::onNoCam()
@@ -565,6 +588,26 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
         qDebug() << "onSleepWhenTaking(bool)";
         m_videoPre->endBtnClicked();
         qDebug() << "onSleepWhenTaking(over)";
+    }
+}
+
+void CMainWindow::onVisible(bool bTrue)
+{
+    qDebug() << "onVisible " << bTrue;
+    if (bTrue) {
+        qDebug() << "locked";
+        if (m_videoPre->getCapstatus()) {
+            m_videoPre->endBtnClicked();
+        }
+        m_videoPre->m_imgPrcThread->stop();
+        m_bLocked = true;
+        qDebug() << "lock end";
+    }
+    if (!bTrue && m_bLocked) {
+        qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+        //打开摄像头
+        m_videoPre->changeDev();
+        qDebug() << "v4l2core_start_stream OK";
     }
 }
 
@@ -739,9 +782,7 @@ void CMainWindow::initConnection()
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
     //系统文件夹变化信号
-//    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
-    //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFileChanged(const QString &)));
+    //    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
 
@@ -765,24 +806,17 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(takePicDone()), this, SLOT(onTakePicDone()));
     //录制结束
     connect(m_videoPre, SIGNAL(takeVdDone()), this, SLOT(onTakeVdDone()));
-    //录制取消 （倒计时3秒内的）
+    //录制取消 (倒计时3秒内的)
     connect(m_videoPre, SIGNAL(takeVdCancel()), this, SLOT(onTakeVdCancel()));
     //录制关机/休眠阻塞
     connect(m_videoPre, SIGNAL(updateBlockSystem(bool)), this, SLOT(updateBlockSystem(bool)));
-    //接收休眠信号，仅wayland使用
-    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+
     //没有相机了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     //设备切换信号
     connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
-
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
-    //多设备信号
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
-
-    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
 
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
 
@@ -844,13 +878,13 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         }
-    }    
+    }
 }
 
 void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
-//    qDebug() << this->windowState() << endl;
+    //    qDebug() << this->windowState() << endl;
     if (this->windowState() == Qt::WindowMinimized) {
         set_capture_pause(1);
     } else if (this->windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
@@ -1004,7 +1038,7 @@ void CMainWindow::onSettingsDlgClose()
         CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
     }
 
-//    QString test = CMainWindow::m_lastfilename;
+    //    QString test = CMainWindow::m_lastfilename;
     m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);

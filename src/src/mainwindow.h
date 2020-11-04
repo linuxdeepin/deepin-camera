@@ -66,7 +66,7 @@ public:
     void newNinePreview();
     static QString lastOpenedPath();
     DSettings *getDsetMber();
-    void setWayland(bool bTrue){m_bWayland = bTrue;}
+    void setWayland(bool bTrue);
 
     ~CMainWindow() override;
 private:
@@ -119,6 +119,8 @@ private slots:
     void onNoCam();
 
     void onSleepWhenTaking(bool);
+
+    void onVisible(bool);
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
@@ -147,8 +149,10 @@ private:
     QList<QVariant> m_argSleep;
 
     bool                        m_bWayland;
-
+    bool                        m_bLocked = false;
     QDBusInterface              *m_pDBus = nullptr;//接收休眠信号，仅wayland使用
+    QDBusInterface              *m_pDBusLockFront = nullptr;//锁屏恢复
+    
 };
 
 #endif // MAINWINDOW_H
