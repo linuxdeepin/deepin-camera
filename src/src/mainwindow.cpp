@@ -339,13 +339,20 @@ void CMainWindow::setWayland(bool bTrue)
         m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
                                      "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
 
-        m_pDBusLockFront = new QDBusInterface("com.deepin.dde.lockFront","/com/deepin/dde/lockFront",
-                                              "com.deepin.dde.lockFront",QDBusConnection::sessionBus());
+//        m_pDBusLockFront = new QDBusInterface("com.deepin.dde.lockFront","/com/deepin/dde/lockFront",
+//                                              "com.deepin.dde.lockFront",QDBusConnection::sessionBus());
 
+        m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager","/com/deepin/SessionManager",
+                                              "com.deepin.SessionManager",QDBusConnection::sessionBus());
+
+        m_pLockTimer = new QTimer;
+        m_pLockTimer->setInterval(300);
+        connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
+        m_pLockTimer->start();
         //接收休眠信号，仅wayland使用
         connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
 
-        connect(m_pDBusLockFront, SIGNAL(Visible(bool)), this, SLOT(onVisible(bool)));
+//        connect(m_pDBusLockFront, SIGNAL(Visible(bool)), this, SLOT(onVisible(bool)));
     }
 }
 
@@ -608,6 +615,30 @@ void CMainWindow::onVisible(bool bTrue)
         //打开摄像头
         m_videoPre->changeDev();
         qDebug() << "v4l2core_start_stream OK";
+    }
+}
+
+void CMainWindow::onTimeoutLock()
+{
+    if (m_pDBusSessionMgr) {
+        if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
+            qDebug() << "locked";
+            if (m_videoPre->getCapstatus()) {
+                m_videoPre->endBtnClicked();
+            }
+            m_videoPre->m_imgPrcThread->stop();
+            m_bLocked = true;
+            qDebug() << "lock end";
+        } else {
+            if (m_bLocked) {
+                qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+                //打开摄像头
+                m_videoPre->changeDev();
+                qDebug() << "v4l2core_start_stream OK";
+                m_bLocked = false;
+            }
+        }
+
     }
 }
 

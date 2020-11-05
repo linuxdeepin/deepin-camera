@@ -121,6 +121,8 @@ private slots:
     void onSleepWhenTaking(bool);
 
     void onVisible(bool);
+
+    void onTimeoutLock();
 protected:
     void keyPressEvent(QKeyEvent *e) override;
     void keyReleaseEvent(QKeyEvent *e) override;
@@ -151,7 +153,9 @@ private:
     bool                        m_bWayland;
     bool                        m_bLocked = false;
     QDBusInterface              *m_pDBus = nullptr;//接收休眠信号，仅wayland使用
-    QDBusInterface              *m_pDBusLockFront = nullptr;//锁屏恢复
+    //QDBusInterface              *m_pDBusLockFront = nullptr;//锁屏恢复//lockFront不一定会运行
+    QDBusInterface              *m_pDBusSessionMgr = nullptr;//锁屏恢复
+    QTimer                      *m_pLockTimer = nullptr;//定时检测锁屏属性
     
 };
 
