@@ -33,7 +33,7 @@ TEST_F(MainwindowTest, mwshow)
     qDebug()<<"************OK OK OK***************"<<__LINE__;
     QTest::qWait(1000);
     //分辨率
-    dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 1);
+    dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
 
     //设置主题
 
@@ -94,6 +94,10 @@ TEST_F(MainwindowTest, mwshow)
     ImageItem* imgit;
     imgit = it.value(0);
     qDebug()<<"**********************************"<<it.isEmpty()<<"****************************************";
+    //键盘按下shift
+    QTest::qWait(1000);
+    QTest::keyPress(imgit, Qt::Key_Shift, Qt::NoModifier,500);
+    QTest::keyRelease(imgit, Qt::Key_Shift, Qt::NoModifier,500);
     //点击鼠标左键
     QTest::qWait(1000);
     QTest::mouseMove(imgit,QPoint(0,0),1000);
@@ -104,10 +108,7 @@ TEST_F(MainwindowTest, mwshow)
 //    QTest::mouseMove(imgit,QPoint(0,0),1000);
 //    QTest::mousePress(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),500);
 //    QTest::mouseRelease(imgit,Qt::RightButton,Qt::NoModifier,QPoint(0,0),0);
-    //键盘按下shift
-    QTest::qWait(1000);
-    QTest::keyPress(imgit, Qt::Key_Shift, Qt::NoModifier,500);
-    QTest::keyRelease(imgit, Qt::Key_Shift, Qt::NoModifier,500);
+
     QTest::qWait(1000);
     qDebug()<<"***************size:"<<it.size()<<"*************count:"<<it.count()<<"****************"<<__LINE__;
     if(!it.isEmpty()){
@@ -146,7 +147,7 @@ TEST_F(MainwindowTest, mwshow)
     QTest::mousePress(EndBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
     QTest::mouseRelease(EndBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
     //关闭窗口
-    QTest::qWait(3000);
+    QTest::qWait(1000);
 
 
 }
