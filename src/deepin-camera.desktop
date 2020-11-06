@@ -10,6 +10,7 @@ Terminal=false
 Type=Application
 X-Deepin-Vendor=deepin
 X-MultipleArgs=false
+X-Deepin-TurboType=dtkwidget
 
 
 Comment[am_ET]=

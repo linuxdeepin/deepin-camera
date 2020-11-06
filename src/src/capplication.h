@@ -21,19 +21,23 @@
 #ifndef CAPPLICATION_H
 #define CAPPLICATION_H
 
-#include <DApplication>
+#include <DVtableHook>
+#include <QObject>
 #include <DGuiApplicationHelper>
-
-#include "qtsingleapplication.h"
+#include "mainwindow.h"
+#include <qtsingleapplication/qtsingleapplication.h>
 
 class CApplication;
 
 #if  defined(dApp)
 #undef dApp
 #endif
-#define dApp (static_cast<CApplication *>(QCoreApplication::instance()))
+#define cApp (static_cast<CApplication *>(QCoreApplication::instance()))
+#define CamApp (CApplication::CamApplication())
 
 DWIDGET_USE_NAMESPACE
+
+bool get_application(int &argc, char **argv);
 
 class CApplication : public QtSingleApplication
 {
@@ -41,10 +45,25 @@ class CApplication : public QtSingleApplication
 public:
     CApplication(int &argc, char **argv);
 
+    /**
+     * @brief Application 返回顶层topToolbar
+     * @return 返回程序的指针
+     */
+    static CApplication *CamApplication();
+    void setMainWindow(CMainWindow *window);
+    CMainWindow *getMainWindow();
+    void QuitAction();
 signals:
     void popupConfirmDialog();
 
+private:
+    static bool createAppInstance(int &argc, char **argv);
+
+
 protected:
-    void handleQuitAction() override;
+
+private:
+    CMainWindow* m_mainwindow = nullptr;
+    static CApplication *m_cameracore;
 };
 #endif // CAPPLICATION_H

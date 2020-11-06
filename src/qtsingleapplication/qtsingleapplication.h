@@ -41,7 +41,10 @@
 #ifndef QTSINGLEAPPLICATION_H
 #define QTSINGLEAPPLICATION_H
 
+//#include <DApplication>
+#define protected public
 #include <DApplication>
+#undef protected
 
 DWIDGET_USE_NAMESPACE
 class QtLocalPeer;
@@ -62,13 +65,13 @@ class QtLocalPeer;
 #  define QT_QTSINGLEAPPLICATION_EXPORT
 #endif
 
-class QT_QTSINGLEAPPLICATION_EXPORT QtSingleApplication : public DApplication
+class QT_QTSINGLEAPPLICATION_EXPORT QtSingleApplication : public QObject
 {
     Q_OBJECT
 
 public:
-    QtSingleApplication(int &argc, char **argv, bool GUIenabled = true);
-    QtSingleApplication(const QString &id, int &argc, char **argv);
+    QtSingleApplication(int &argc, char **argv);
+    ~QtSingleApplication();
 #if QT_VERSION < 0x050000
     QtSingleApplication(int &argc, char **argv, Type type);
 #  if defined(Q_WS_X11)
@@ -90,6 +93,7 @@ public:
         isRunning();
         Q_UNUSED(dummy)
     }
+    DApplication *dApplication();
 
 public Q_SLOTS:
     bool sendMessage(const QString &message, int timeout = 5000);
@@ -104,6 +108,7 @@ private:
     void sysInit(const QString &appId = QString());
     QtLocalPeer *peer;
     QWidget *actWin;
+    DApplication* _app = nullptr;
 };
 
 #endif // QTSINGLEAPPLICATION_H

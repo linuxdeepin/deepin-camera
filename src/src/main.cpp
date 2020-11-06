@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     CApplication a(argc, argv);
     //加载翻译
-    a.loadTranslator(QList<QLocale>() << QLocale::system());
+    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
 
 //    QTranslator *translator = new QTranslator;
 
@@ -68,24 +68,24 @@ int main(int argc, char *argv[])
 
 //    a.installTranslator(translator);
 
-    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
 
-    a.setOrganizationName("deepin");
-    a.setApplicationName("deepin-camera");
-    a.setApplicationDisplayName(QObject::tr("Camera"));
+    qApp->setOrganizationName("deepin");
+    qApp->setApplicationName("deepin-camera");
+    qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(QDate::currentDate()).replace("  ", " 0"), "MMM dd yyyy");
     QString t_date = QDate::currentDate().toString("MMdd");
     // Version Time
-    a.setApplicationVersion(DApplication::buildVersion(t_date));
-    a.setWindowIcon(QIcon::fromTheme("deepin-camera"));
-    a.setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
+    qApp->setApplicationVersion(DApplication::buildVersion(t_date));
+    qApp->setWindowIcon(QIcon::fromTheme("deepin-camera"));
+    qApp->setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
     //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
-    a.setProductName(QObject::tr("Camera"));
-    a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
+    qApp->setProductName(QObject::tr("Camera"));
+    qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
     DApplicationSettings saveTheme;
 
     //一个用户仅允许打开一个相机
@@ -117,5 +117,5 @@ int main(int argc, char *argv[])
 
     Dtk::Widget::moveToCenter(&w);
 
-    return a.exec();
+    return qApp->exec();
 }

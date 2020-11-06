@@ -798,17 +798,17 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
-    connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
+    connect(CamApp, &CApplication::popupConfirmDialog, this, [ = ] {
         if (m_videoPre->getCapstatus())
         {
             CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
             int ret = closeDlg.exec();
             if (ret == 1) {
                 m_videoPre->endBtnClicked();
-                dApp->quit();
+                qApp->quit();
             }
         } else {
-            dApp->quit();
+            qApp->quit();
         }
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));

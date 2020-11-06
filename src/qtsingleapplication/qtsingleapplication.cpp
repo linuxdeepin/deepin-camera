@@ -151,10 +151,14 @@ void QtSingleApplication::sysInit(const QString &appId)
     QtSingleCoreApplication instead.
 */
 
-QtSingleApplication::QtSingleApplication(int &argc, char **argv, bool GUIenabled)
-    : DApplication(argc, argv)
+QtSingleApplication::QtSingleApplication(int &argc, char **argv)
+    :  QObject(nullptr)
 {
-    Q_UNUSED(GUIenabled);
+#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+    _app = new DApplication(argc, argv);
+#else
+    _app = DApplication::globalApplication(argc, argv);
+#endif
     sysInit();
 }
 
@@ -165,11 +169,11 @@ QtSingleApplication::QtSingleApplication(int &argc, char **argv, bool GUIenabled
     QAppliation constructor.
 */
 
-QtSingleApplication::QtSingleApplication(const QString &appId, int &argc, char **argv)
-    : DApplication(argc, argv)
-{
-    sysInit(appId);
-}
+//QtSingleApplication::QtSingleApplication(const QString &appId, int &argc, char **argv)
+//    : DApplication(argc, argv)
+//{
+//    sysInit(appId);
+//}
 
 #if QT_VERSION < 0x050000
 
@@ -331,6 +335,19 @@ void QtSingleApplication::activateWindow()
 }
 
 
+DApplication *QtSingleApplication::dApplication()
+{
+    return _app;
+}
+
+
+QtSingleApplication::~QtSingleApplication()
+{
+    if (_app != nullptr) {
+        _app->deleteLater();
+        _app = nullptr;
+    }
+}
 /*!
     \fn void QtSingleApplication::messageReceived(const QString& message)
 
