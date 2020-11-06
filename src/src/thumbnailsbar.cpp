@@ -454,10 +454,6 @@ void ThumbnailsBar::onFileName(QString strfilename)
     m_strFileName = strfilename;
 }
 
-void ThumbnailsBar::onFileName(QString strfilename)
-{
-    m_strFileName = strfilename;
-}
 
 void ThumbnailsBar::ChangeActType(int nType)
 {
