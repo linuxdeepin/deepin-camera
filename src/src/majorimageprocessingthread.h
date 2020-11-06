@@ -76,6 +76,7 @@ private:
 
 signals:
     void sigYUVFrame(uchar* yuv,uint width,uint height);
+    void sigRenderYuv(bool);
     void reachMaxDelayedFrames();
 
 };

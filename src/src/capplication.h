@@ -21,12 +21,11 @@
 #ifndef CAPPLICATION_H
 #define CAPPLICATION_H
 
-#include "mainwindow.h"
-
 #include <DApplication>
 #include <DGuiApplicationHelper>
+#include "mainwindow.h"
 
-#include "../src/qtsingleapplication/qtsingleapplication.h"
+#include "../qtsingleapplication/qtsingleapplication.h"
 
 class CApplication;
 
@@ -45,15 +44,9 @@ public:
     void setMainWindow(CMainWindow *window);
     CMainWindow *getMainWindow();
 signals:
-    /**
-    * @brief popupConfirmDialog 窗口关闭信号
-    */
     void popupConfirmDialog();
 
 protected:
-    /**
-    * @brief handleQuitAction 退出事件处理
-    */
     void handleQuitAction() override;
 private:
     CMainWindow* m_mainwindow = nullptr;

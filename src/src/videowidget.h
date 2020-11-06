@@ -37,6 +37,8 @@
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
+#include "thumbnailsbar.h"
+#include "previewopenglwidget.h"
 
 
 DWIDGET_USE_NAMESPACE
@@ -53,10 +55,10 @@ class QSpacerItem;
 class QSound;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
-enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
+enum PRIVIEW_STATE {PICTRUE, NODEVICE, VIDEO};
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
-class videowidget : public QOpenGLWidget, protected QOpenGLFunctions
+class videowidget : public DWidget
 {
     Q_OBJECT
 public:
@@ -118,6 +120,16 @@ signals:
     void filename(QString strFilename);
 
 public:
+    void setCapstatus(bool status)
+    {
+        m_bActive = status;
+    }
+
+    bool getCapstatus()
+    {
+        return m_bActive;
+    }
+
     QString getFolder()
     {
         return m_strFolder;
@@ -133,16 +145,6 @@ public:
     void setContinuous(int nContinuous)
     {
         m_nMaxContinuous = m_curTakePicTime = nContinuous;
-    }
-
-    void setCapstatus(bool status)
-    {
-        m_bActive = status;
-    }
-
-    bool getCapstatus()
-    {
-        return m_bActive;
     }
 
     DPushButton* getEndBtn()
@@ -169,25 +171,10 @@ public slots:
 
 
 private slots:
-    void ReceiveMajorImage(QImage *image, int result);
+    void ReceiveOpenGLstatus(bool);
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);
-
-    /**
-    * @brief slotShowYuv　显示一帧Yuv图像
-    * @param ptr
-    * @param width
-    * @param height
-    */
-    void slotShowYuv(uchar *ptr,uint width,uint height);
-protected:
-    void initializeGL() Q_DECL_OVERRIDE;
-    void paintGL() Q_DECL_OVERRIDE;
-    /*
-     * openGL overriede
-     * end
-     */
 
 private:
     void init();
@@ -240,6 +227,8 @@ public:
 private:
     bool m_bActive;//是否录制中
 
+    PreviewOpenglWidget     *m_openglwidget;//opengl渲染窗口
+
     DLabel                  *m_flashLabel;
 
     QGraphicsView           *m_pNormalView;
@@ -256,33 +245,24 @@ private:
     DLabel                  *m_dLabel;
     DPushButton             *m_btnVdTime; //录制屏显时长
 
-    DPushButton             *m_endBtn;
+    DPushButton             *m_endBtn;      //结束按钮
 
-    QTimer                  *countTimer;
-    QTimer                  *flashTimer;
+    QTimer                  *countTimer;     //倒计时定时器
+    QTimer                  *flashTimer;     //闪光灯定时器
     QTimer                  *recordingTimer;//录制3秒后，每200ms设置一次时间
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
-    PRIVIEW_STATE STATE = NORMALVIDEO;
-    ThumbnailsBar         *m_thumbnail;
+    PRIVIEW_STATE STATE = PICTRUE;
+    ThumbnailsBar         *m_thumbnail;       //缩略图
     QPixmap               m_pixmap;
-    int                     m_nFileID;
-    QString                 m_strFolder;
+    int                     m_nFileID;        //文件id
+    QString                 m_strFolder;      //文件路径
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     int                     m_nCount; //录制计时
-
-private:
-    QOpenGLShaderProgram *program;
-    QOpenGLBuffer vbo;
-    GLuint textureUniformY,textureUniformU,textureUniformV; //opengl中y、u、v分量位置
-    QOpenGLTexture *textureY = nullptr,*textureU = nullptr,*textureV = nullptr;
-    GLuint idY,idU,idV; //自己创建的纹理对象ID，创建错误返回0
-    uint videoW,videoH;
-    uchar *yuvPtr = nullptr;
 };
 
 #endif // VIDEOWIDGET_H

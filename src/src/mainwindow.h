@@ -246,6 +246,7 @@ private slots:
      * @param bTrue
      */
     void onSleepWhenTaking(bool);
+
 protected:
     /**
      * @brief onSleepWhenTaking 键盘按下事件
@@ -271,7 +272,7 @@ private:
     QString                      m_strCfgPath;
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
-    static QString                m_lastfilename;
+    static QString               m_lastfilename;
 
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
     QDBusInterface *m_pLoginManager = nullptr;

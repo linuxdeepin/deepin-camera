@@ -21,8 +21,10 @@
 
 #include "mainwindow.h"
 #include "capplication.h"
+#include "v4l2_core.h"
 
 #include <DLabel>
+#include <DApplication>
 #include <DSettingsDialog>
 #include <DSettingsOption>
 #include <DSettings>
@@ -42,7 +44,7 @@
 
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
-#include "v4l2_core.h"
+
 
 using namespace dc;
 extern bool g_bMultiSlt; //是否多选
@@ -719,12 +721,15 @@ void CMainWindow::initConnection()
         {
             CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
             int ret = closeDlg.exec();
-            if (ret == 1) {
+            if (ret == 1)
+            {
                 m_videoPre->endBtnClicked();
-                dApp->quit();
+                qApp->quit();
             }
-        } else {
-            dApp->quit();
+        }
+        else
+        {
+            qApp->quit();
         }
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
@@ -847,6 +852,7 @@ void CMainWindow::setupTitlebar()
     menu->addAction(m_actionSettings);
     titlebar()->setMenu(menu);
     titlebar()->setFocusPolicy(Qt::NoFocus);
+    titlebar()->setParent(this);
 }
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
@@ -1193,3 +1199,4 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
         //g_setIndex.insert(g_indexNow);
     }
 }
+

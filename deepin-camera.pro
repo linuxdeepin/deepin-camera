@@ -28,6 +28,7 @@ include(libcam/libcam.pri)
 include(src/qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
+    $$PWD/src/src/capplication.cpp \
     $$PWD/src/src/main.cpp \
     $$PWD/src/src/mainwindow.cpp \
     $$PWD/src/src/videowidget.cpp \
@@ -39,12 +40,12 @@ SOURCES += \
     $$PWD/src/src/imageitem.cpp\
     $$PWD/src/src/closedialog.cpp \
     $$PWD/src/src/settings_translation.cpp \
-    $$PWD/src/src/capplication.cpp \
-    $$PWD/src/src/dbus_adpator.cpp
+    $$PWD/src/src/dbus_adpator.cpp \
+    $$PWD/src/src/previewopenglwidget.cpp
 
 HEADERS += \
     $$PWD/src/src/mainwindow.h \
-    $$PWD/src/src/thumbnailsbar.h \##
+    $$PWD/src/src/thumbnailsbar.h \
     $$PWD/src/src/majorimageprocessingthread.h \
     $$PWD/src/src/LPF_V4L2.h \
     $$PWD/src/src/videowidget.h \
@@ -53,7 +54,8 @@ HEADERS += \
     $$PWD/src/src/Settings.h \
     $$PWD/src/src/closedialog.h \
     $$PWD/src/src/capplication.h \
-    $$PWD/src/src/dbus_adpator.h
+    $$PWD/src/src/dbus_adpator.h \
+    $$PWD/src/src/previewopenglwidget.h
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include/SDL2\

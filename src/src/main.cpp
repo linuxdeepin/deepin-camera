@@ -19,9 +19,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+extern "C"
+{
+#include "camview.h"
+}
 #include "mainwindow.h"
 #include "capplication.h"
 #include "dbus_adpator.h"
+#include <stdio.h>
 
 #include <DMainWindow>
 #include <DWidgetUtil>
@@ -30,12 +35,9 @@
 
 #include <QSharedMemory>
 
-#include <stdio.h>
 
-extern "C"
-{
-#include "camview.h"
-}
+
+
 DWIDGET_USE_NAMESPACE
 //判断是否采用wayland显示服务器
 bool CheckWayland()
@@ -52,25 +54,29 @@ bool CheckWayland()
 }
 int main(int argc, char *argv[])
 {
+
     bool bWayland = CheckWayland();
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
         set_wayland_status(1);
     }
+//    MyObject obj(argc,argv);
+
+//    DApplication *app = MyObject::getDtkInstance();
+//    app->installEventFilter(&obj);
 
     CApplication a(argc, argv);
+
+    a.setObjectName("deepin-camera");
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // overwrite DApplication default value
+    a.setAttribute(Qt::AA_ForceRasterWidgets, false);
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
-
-//    QTranslator *translator = new QTranslator;
-
-//    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
-//    if (!bLoaded) {
-//        qDebug() << "load transfile error";
-//    }
-
-//    a.installTranslator(translator);
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     DLogManager::setlogFilePath(QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/") + QString("deepin-camera.log"));
@@ -112,6 +118,12 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
+
+//    DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction, w, &CMainWindow::handleQuitAction);
+//    bool is = DVtableHook::getDestructFunIndex(&app,&CMainWindow::handleQuitAction);
+//    if(is){
+//        quintptr *obj = DVtableHook::getVtableOfObject(app);
+//    }
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
