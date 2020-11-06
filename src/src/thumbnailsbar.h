@@ -72,6 +72,7 @@ public:
     void addPath(QString strPath);
     void addFile(QString strFile);
     void delFile(QString strFile);
+    void widthChanged();
     /**
     * @brief getPushbtn　获取录像/拍照按钮
     */

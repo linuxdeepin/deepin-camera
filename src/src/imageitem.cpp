@@ -306,6 +306,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             emit showDuration("");
         }
     }
+    emit needFit();
 }
 void ImageItem::paintEvent(QPaintEvent *event)
 {
@@ -358,7 +359,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
             QIcon icon(m_pixmapstring);
             icon.paint(&painter, pixmapRect);
         }
-        this->setFixedSize(58, 58);
+        this->setFixedSize(SELECTED_WIDTH, SELECTED_WIDTH);
     } else {
         pixmapRect.setX(backgroundRect.x() + 1);
         pixmapRect.setY(backgroundRect.y() + 0);

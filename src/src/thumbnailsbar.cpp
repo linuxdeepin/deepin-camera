@@ -154,7 +154,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     m_nItemCount = 0;
     QString strShowTime = "";
     qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
@@ -202,6 +202,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 //            QString strFileName = fileInfo.fileName();
 //        }
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
+        connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
         g_indexImage.insert(tIndex, pLabel);
@@ -415,6 +416,7 @@ void ThumbnailsBar::onTrashFile()
             if (pLabel == nullptr) {
                 qDebug() << "error! imageitem is null!!";
             }
+            connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
             connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
             g_indexImage.insert(nIndexMax + 1 + i, pLabel);
@@ -444,6 +446,7 @@ void ThumbnailsBar::onTrashFile()
 void ThumbnailsBar::onShowVdTime(QString str)
 {
     m_showVdTime->setText(str);
+
 }
 
 void ThumbnailsBar::onFileName(QString strfilename)
@@ -508,6 +511,17 @@ void ThumbnailsBar::addFile(QString strFile)
         }
     }
     ************/
+    //先删除多余的，保证全选情况下缩略图大小正确
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
+    if (m_hBOx->count() >= nLetAddCount) {
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+        g_indexImage.remove(tmp->getIndex());
+        m_hBOx->removeWidget(tmp);
+        //tmp->deleteLater();
+        delete tmp;
+        tmp = nullptr;
+    }
+
     int nIndexMax = -1;
     bool bSelectedFirst = false;
     if (!m_hBOx->isEmpty()) {
@@ -521,20 +535,13 @@ void ThumbnailsBar::addFile(QString strFile)
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
+    connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH- VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
-    if (m_hBOx->count() >= nLetAddCount) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
-        g_indexImage.remove(tmp->getIndex());
-        m_hBOx->removeWidget(tmp);
-        //tmp->deleteLater();
-        delete tmp;
-        tmp = nullptr;
-    }
+
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";
     }
@@ -625,12 +632,27 @@ void ThumbnailsBar::delFile(QString strFile)
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";
     }
+    connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBOx->insertWidget(m_hBOx->count(), pLabel);
 
     //emit fitToolBar();
+}
+
+void ThumbnailsBar::widthChanged()
+{
+    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
+    while (m_hBOx->count() > nLetAddCount) {
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+        g_indexImage.remove(tmp->getIndex());
+        m_hBOx->removeWidget(tmp);
+        //tmp->deleteLater();
+        delete tmp;
+        tmp = nullptr;
+        m_nItemCount --;
+    }
 }
 
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理

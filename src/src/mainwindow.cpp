@@ -875,6 +875,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     //m_thumbnail->onFoldersChanged("");
     if (m_thumbnail) {
         m_thumbnail->m_nMaxItem = width;
+        m_thumbnail->widthChanged();
         onFitToolBar();
     }
     //m_videoPre->resize(this->size());
@@ -925,15 +926,20 @@ void CMainWindow::onFitToolBar()
         } else {
             if (g_videoCount <= 0) {
                 m_thumbnail->m_showVdTime->hide();
-                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + 8;//4是选中边框宽度
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH;
             } else {
                 m_thumbnail->m_showVdTime->show();
-                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + 8 + 4 + VIDEO_TIME_WIDTH;//4是选中边框宽度
+                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
+            }
+            if (g_setIndex.size() >= 1) {
+                nWidth += g_setIndex.size() * (SELECTED_WIDTH - THUMBNAIL_WIDTH);
+            } else {
+                nWidth += SELECTED_WIDTH - THUMBNAIL_WIDTH;
             }
         }
-
-        m_thumbnail->resize(qMin(this->width(), nWidth), THUMBNAIL_HEIGHT + 30);
-
+        qDebug() << "onFitToolBar" << nWidth;
+        m_thumbnail->resize(/*qMin(this->width(), nWidth)*/nWidth, THUMBNAIL_HEIGHT + 30);
+        m_thumbnail->m_hBOx->setSpacing(ITEM_SPACE);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
     }

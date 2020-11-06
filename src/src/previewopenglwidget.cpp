@@ -145,7 +145,8 @@ void PreviewOpenglWidget::initializeGL()
 
 void PreviewOpenglWidget::resizeGL(int w, int h)
 {
-
+    Q_UNUSED(w);
+    Q_UNUSED(h);
 }
 
 void PreviewOpenglWidget::paintGL()

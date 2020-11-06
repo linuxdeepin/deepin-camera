@@ -30,6 +30,7 @@
 DWIDGET_USE_NAMESPACE
 #define THUMBNAIL_WIDTH 30
 #define THUMBNAIL_HEIGHT 40
+#define SELECTED_WIDTH 58
 
 class ImageItem : public DLabel
 {
@@ -113,6 +114,8 @@ signals:
      * @brief showDuration 录像时长信号
      */
     void showDuration(QString strDuration);
+
+    void needFit();
 protected:
     /**
      * @brief mouseDoubleClickEvent 鼠标双击事件
