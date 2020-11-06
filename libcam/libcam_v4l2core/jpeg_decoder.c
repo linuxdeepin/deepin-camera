@@ -46,6 +46,8 @@
 
 //LMH0613++
 #include <libavutil/imgutils.h>
+
+#include "load_libs.h"
 extern int verbosity;
 
 /* default Huffman table*/
@@ -1373,14 +1375,14 @@ typedef struct _codec_data_t
 int jpeg_init_decoder(int width, int height)
 {
 #if !LIBAVCODEC_VER_AT_LEAST(53,34)
-	avcodec_init();
+    getLoadLibsInstance()->m_avcodec_init();
 #endif
 #if !LIBAVCODEC_VER_AT_LEAST(58,9)
 	/*
 	 * register all the codecs (we can also register only the codec
 	 * we wish to have smaller code)
 	 */
-	avcodec_register_all();
+    getLoadLibsInstance()->m_avcodec_register_all();
 #endif
 	av_log_set_level(AV_LOG_PANIC);
 
@@ -1401,7 +1403,7 @@ int jpeg_init_decoder(int width, int height)
 		exit(-1);
 	}
 
-	codec_data->codec = avcodec_find_decoder(AV_CODEC_ID_MJPEG);
+    codec_data->codec = getLoadLibsInstance()->m_avcodec_find_decoder(AV_CODEC_ID_MJPEG);
 	if(!codec_data->codec)
 	{
 		fprintf(stderr, "V4L2_CORE: (mjpeg decoder) codec not found\n");
@@ -1412,11 +1414,11 @@ int jpeg_init_decoder(int width, int height)
 	}
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
-	codec_data->context = avcodec_alloc_context3(codec_data->codec);
-	avcodec_get_context_defaults3 (codec_data->context, codec_data->codec);
+    codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context3(codec_data->codec);
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (codec_data->context, codec_data->codec);
 #else
-	codec_data->context = avcodec_alloc_context();
-	avcodec_get_context_defaults(codec_data->context);
+    codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context();
+    getLoadLibsInstance()->m_avcodec_get_context_defaults(codec_data->context);
 #endif
 	if(codec_data->context == NULL)
 	{
@@ -1430,13 +1432,13 @@ int jpeg_init_decoder(int width, int height)
 	//jpeg_ctx->context->dsp_mask = (FF_MM_MMX | FF_MM_MMXEXT | FF_MM_SSE);
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
-	if (avcodec_open2(codec_data->context, codec_data->codec, NULL) < 0)
+    if (getLoadLibsInstance()->m_avcodec_open2(codec_data->context, codec_data->codec, NULL) < 0)
 #else
-	if (avcodec_open(codec_data->context, codec_data->codec) < 0)
+    if (getLoadLibsInstance()->m_avcodec_open(codec_data->context, codec_data->codec) < 0)
 #endif
 	{
 		fprintf(stderr, "V4L2_CORE: (mjpeg decoder) couldn't open codec\n");
-		avcodec_close(codec_data->context);
+        getLoadLibsInstance()->m_avcodec_close(codec_data->context);
 		free(codec_data->context);
 		free(codec_data);
 		free(jpeg_ctx);
@@ -1448,8 +1450,8 @@ int jpeg_init_decoder(int width, int height)
 	codec_data->picture = av_frame_alloc();
 	av_frame_unref(codec_data->picture);
 #else
-	codec_data->picture = avcodec_alloc_frame();
-	avcodec_get_frame_defaults(codec_data->picture);
+    codec_data->picture = getLoadLibsInstance()->m_avcodec_alloc_frame();
+    getLoadLibsInstance()->m_avcodec_get_frame_defaults(codec_data->picture);
 #endif
 
 	/*alloc temp buffer*/
@@ -1494,7 +1496,7 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 
 	AVPacket avpkt;
 
-	av_init_packet(&avpkt);
+    getLoadLibsInstance()->m_av_init_packet(&avpkt);
 
 	avpkt.size = size;
 	avpkt.data = in_buf;
@@ -1547,7 +1549,7 @@ void jpeg_close_decoder()
 
 	codec_data_t *codec_data = (codec_data_t *) jpeg_ctx->codec_data;
 
-	avcodec_close(codec_data->context);
+    getLoadLibsInstance()->m_avcodec_close(codec_data->context);
 
 	free(codec_data->context);
 
@@ -1555,7 +1557,7 @@ void jpeg_close_decoder()
 	av_frame_free(&codec_data->picture);
 #else
 	#if LIBAVCODEC_VER_AT_LEAST(54,28)
-			avcodec_free_frame(&codec_data->picture);
+            getLoadLibsInstance()->m_avcodec_free_frame(&codec_data->picture);
 	#else
 			av_freep(&codec_data->picture);
 	#endif

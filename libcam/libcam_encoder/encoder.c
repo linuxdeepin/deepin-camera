@@ -50,7 +50,7 @@
 #include "stream_io.h"
 #include "gview.h"
 #include "camview.h"
-
+#include "load_libs.h"
 
 #if LIBAVUTIL_VER_AT_LEAST(52,2)
 #include <libavutil/channel_layout.h>
@@ -417,10 +417,10 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 	 * find the video encoder
 	 *   try specific codec (by name)
 	 */
-	video_codec_data->codec = avcodec_find_encoder_by_name(video_defaults->codec_name);
+    video_codec_data->codec = getLoadLibsInstance()->m_avcodec_find_encoder_by_name(video_defaults->codec_name);
 	/*if it fails try any codec with matching AV_CODEC_ID*/
 	if(!video_codec_data->codec)
-		video_codec_data->codec = avcodec_find_encoder(video_defaults->codec_id);
+        video_codec_data->codec = getLoadLibsInstance()->m_avcodec_find_encoder(video_defaults->codec_id);
 
 	if(!video_codec_data->codec)
 	{
@@ -445,9 +445,9 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 		return (enc_video_ctx);
 	}
 
-	video_codec_data->codec_context = avcodec_alloc_context3(video_codec_data->codec);
+    video_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(video_codec_data->codec);
 
-	avcodec_get_context_defaults3 (
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (
 			video_codec_data->codec_context,
 			video_codec_data->codec);
 
@@ -555,7 +555,7 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 	int ret = 0;
 	/* open codec*/
-	if ((ret = avcodec_open2(
+    if ((ret = getLoadLibsInstance()->m_avcodec_open2(
 		video_codec_data->codec_context,
 		video_codec_data->codec,
 		&video_codec_data->private_options)) < 0)
@@ -593,7 +593,7 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 	}
 	video_codec_data->frame->pts = 0;
 
-	video_codec_data->outpkt = av_packet_alloc();
+    video_codec_data->outpkt = getLoadLibsInstance()->m_av_packet_alloc();
 
 	if(video_codec_data->outpkt == NULL)
 	{
@@ -699,10 +699,10 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 	 * find the audio encoder
 	 *   try specific codec (by name)
 	 */
-	audio_codec_data->codec = avcodec_find_encoder_by_name(audio_defaults->codec_name);
+    audio_codec_data->codec = getLoadLibsInstance()->m_avcodec_find_encoder_by_name(audio_defaults->codec_name);
 	/*if it fails try any codec with matching AV_CODEC_ID*/
 	if(!audio_codec_data->codec)
-		audio_codec_data->codec = avcodec_find_encoder(audio_defaults->codec_id);
+        audio_codec_data->codec = getLoadLibsInstance()->m_avcodec_find_encoder(audio_defaults->codec_id);
 
 	if(!audio_codec_data->codec)
 	{
@@ -713,8 +713,8 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 		return NULL;
 	}
 
-	audio_codec_data->codec_context = avcodec_alloc_context3(audio_codec_data->codec);
-	avcodec_get_context_defaults3 (audio_codec_data->codec_context, audio_codec_data->codec);
+    audio_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(audio_codec_data->codec);
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 (audio_codec_data->codec_context, audio_codec_data->codec);
 
 	if(audio_codec_data->codec_context == NULL)
 	{
@@ -837,7 +837,7 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 	audio_codec_data->codec_context->sample_fmt = audio_defaults->sample_format;
 
 	/* open codec*/
-	if (avcodec_open2(
+    if (getLoadLibsInstance()->m_avcodec_open2(
 		audio_codec_data->codec_context,
 		audio_codec_data->codec, NULL) < 0)
 	{
@@ -880,7 +880,7 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 
 	av_frame_unref(audio_codec_data->frame);
 
-	audio_codec_data->outpkt = av_packet_alloc();
+    audio_codec_data->outpkt = getLoadLibsInstance()->m_av_packet_alloc();
 
 	if(audio_codec_data->outpkt == NULL)
 	{
@@ -1499,12 +1499,12 @@ static int libav_encode(AVCodecContext *avctx, AVPacket *pkt, AVFrame *frame, in
 
 	if(frame)
     {
-		ret = avcodec_send_frame(avctx, frame);
+        ret = getLoadLibsInstance()->m_avcodec_send_frame(avctx, frame);
         if (ret < 0)
             return ret; //if (ret == AVERROR(EAGAIN)) //input buffer is full
     }
 
-  ret = avcodec_receive_packet(avctx, pkt);
+  ret = getLoadLibsInstance()->m_avcodec_receive_packet(avctx, pkt);
   char str[50];
   sprintf(str,"avcode_receive_packet of ret=%d",ret);
   //cheese_print_log(str);
@@ -1608,7 +1608,7 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
 	{
 		if(!enc_video_ctx->flushed_buffers)
 		{
-			avcodec_flush_buffers(video_codec_data->codec_context);
+            getLoadLibsInstance()->m_avcodec_flush_buffers(video_codec_data->codec_context);
 			enc_video_ctx->flushed_buffers = 1;
 		}
  	}
@@ -1670,7 +1670,7 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
     	}
     	outsize = pkt->size;
 
-			av_packet_unref(pkt);
+            getLoadLibsInstance()->m_av_packet_unref(pkt);
     }
 
 	if(enc_video_ctx->flush_delayed_frames && ((outsize == 0) || !got_packet))
@@ -1728,7 +1728,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 		if(!enc_audio_ctx->flushed_buffers)
 		{
 			if(audio_codec_data)
-				avcodec_flush_buffers(audio_codec_data->codec_context);
+                getLoadLibsInstance()->m_avcodec_flush_buffers(audio_codec_data->codec_context);
 			enc_audio_ctx->flushed_buffers = 1;
 		}
  	}
@@ -1767,7 +1767,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 
 
 		/*set the data pointers in frame*/
-		ret = avcodec_fill_audio_frame(
+        ret = getLoadLibsInstance()->m_avcodec_fill_audio_frame(
 			audio_codec_data->frame,
 			audio_codec_data->codec_context->channels,
 			audio_codec_data->codec_context->sample_fmt,
@@ -1840,7 +1840,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 
 		outsize = pkt->size;
 		
-		av_packet_unref(pkt);
+        getLoadLibsInstance()->m_av_packet_unref(pkt);
 	}
 
 	last_audio_pts = enc_audio_ctx->pts;
@@ -1890,11 +1890,11 @@ void encoder_close(encoder_context_t *encoder_ctx)
 		{
 			if(!(enc_video_ctx->flushed_buffers))
 			{
-				avcodec_flush_buffers(video_codec_data->codec_context);
+                getLoadLibsInstance()->m_avcodec_flush_buffers(video_codec_data->codec_context);
 				enc_video_ctx->flushed_buffers = 1;
 			}
 
-            avcodec_close(video_codec_data->codec_context);
+            getLoadLibsInstance()->m_avcodec_close(video_codec_data->codec_context);
                 free(video_codec_data->codec_context);
 
 			av_dict_free(&(video_codec_data->private_options));
@@ -1903,7 +1903,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
 				av_frame_free(&video_codec_data->frame);
 
 			if(video_codec_data->outpkt)
-				av_packet_free(&video_codec_data->outpkt);
+                getLoadLibsInstance()->m_av_packet_free(&video_codec_data->outpkt);
 
 			free(video_codec_data);
 		}
@@ -1926,16 +1926,16 @@ void encoder_close(encoder_context_t *encoder_ctx)
 		audio_codec_data = (encoder_codec_data_t *) enc_audio_ctx->codec_data;
 		if(audio_codec_data)
 		{
-			avcodec_flush_buffers(audio_codec_data->codec_context);
+            getLoadLibsInstance()->m_avcodec_flush_buffers(audio_codec_data->codec_context);
 
-			avcodec_close(audio_codec_data->codec_context);
+            getLoadLibsInstance()->m_avcodec_close(audio_codec_data->codec_context);
 			free(audio_codec_data->codec_context);
 
 			if(audio_codec_data->frame)
 				av_frame_free(&audio_codec_data->frame);
 
 			if(audio_codec_data->outpkt)
-				av_packet_free(&audio_codec_data->outpkt);
+                getLoadLibsInstance()->m_av_packet_free(&audio_codec_data->outpkt);
 
 			free(audio_codec_data);
 		}

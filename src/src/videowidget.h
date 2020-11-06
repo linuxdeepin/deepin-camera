@@ -21,21 +21,25 @@
 
 #ifndef VIDEOWIDGET_H
 #define VIDEOWIDGET_H
+#include "thumbnailsbar.h"
 
-#include <QtMultimedia/QSound>
 #include <DWidget>
-#include <QDateTime>
 #include <DFloatingWidget>
 #include <DLabel>
 #include <DFontSizeManager>
 #include <DPushButton>
+
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
+#include <QtMultimedia/QSound>
+#include <QDateTime>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "thumbnailsbar.h"
+#include "previewopenglwidget.h"
+
 
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -51,33 +55,81 @@ class QSpacerItem;
 class QSound;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
-enum PRIVIEW_STATE {NORMALVIDEO, NODEVICE, AUDIO};
+enum PRIVIEW_STATE {PICTRUE, NODEVICE, VIDEO};
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
-class videowidget : public QOpenGLWidget, protected QOpenGLFunctions
+class videowidget : public DWidget
 {
     Q_OBJECT
 public:
     explicit videowidget(DWidget *parent = nullptr);
     ~videowidget();
-    //未发现摄像头
+    /**
+    * @brief showNocam　未发现摄像头
+    */
     void showNocam();
 
 signals:
+    /**
+    * @brief sigDeviceChange　相机改变信号
+    */
     void sigDeviceChange();
+
     void sigFlash();
+    /**
+    * @brief takePicCancel　取消拍照
+    */
     void takePicCancel();
-    void takePicDone();//拍照结束信号
-    void takePicOnce();//多连拍时，除最后一次，每次提交一个信号
-    void takeVdCancel(); //录制倒计时期间取消了
+    /**
+    * @brief takePicDone　拍照结束信号
+    */
+    void takePicDone();
+    /**
+    * @brief takePicOnce　多连拍时，除最后一次，每次提交一个信号
+    */
+    void takePicOnce();
+    /**
+    * @brief takeVdCancel　录制倒计时期间取消
+    */
+    void takeVdCancel();
+    /**
+    * @brief takeVdDone　录制完成
+    */
     void takeVdDone();
+    /**
+    * @brief setBtnStatues　设置按钮状态
+    */
     void setBtnStatues(bool status);
+    /**
+    * @brief updateBlockSystem　阻塞更新
+    * @param bTrue
+    */
     void updateBlockSystem(bool bTrue);
+    /**
+    * @brief noCam　无相机
+    */
     void noCam();
+    /**
+    * @brief noCamAvailable　无相机可获取
+    */
     void noCamAvailable();
+    /**
+    * @brief filename　文件名
+    * @param bTrue
+    */
     void filename(QString strFilename);
 
 public:
+    void setCapstatus(bool status)
+    {
+        m_bActive = status;
+    }
+
+    bool getCapstatus()
+    {
+        return m_bActive;
+    }
+
     QString getFolder()
     {
         return m_strFolder;
@@ -95,16 +147,6 @@ public:
         m_nMaxContinuous = m_curTakePicTime = nContinuous;
     }
 
-    void setCapstatus(bool status)
-    {
-        m_bActive = status;
-    }
-
-    bool getCapstatus()
-    {
-        return m_bActive;
-    }
-
     DPushButton* getEndBtn()
     {
         return m_endBtn;
@@ -115,32 +157,24 @@ public slots:
     void onTakePic(bool bTrue);
     void onTakeVideo();
     void showCountdown();
-    //录制3秒后，每200ms读取时间并显示
+    /**
+    * @brief showRecTime　录制3秒后，每200ms读取时间并显示
+    */
     void showRecTime();
     void changeDev();
     void endBtnClicked();
+    /**
+    * @brief manualClicked　手动点击endbutton
+    */
     void manualClicked();
     void restartDevices();
 
 
 private slots:
-    void ReceiveMajorImage(QImage *image, int result);
+    void ReceiveOpenGLstatus(bool);
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);
-
-    /*
-     * openGL override
-     * start
-     */
-    void slotShowYuv(uchar *ptr,uint width,uint height); //显示一帧Yuv图像
-protected:
-    void initializeGL() Q_DECL_OVERRIDE;
-    void paintGL() Q_DECL_OVERRIDE;
-    /*
-     * openGL overriede
-     * end
-     */
 
 private:
     void init();
@@ -151,31 +185,49 @@ private:
     void hideCountDownLabel();
     void hideTimeLabel();
 
-    //关闭滚轮显示区域
+    /**
+    * @brief forbidScrollBar　关闭滚轮显示区域
+    * @param view
+    */
     void forbidScrollBar(QGraphicsView *view);
 
-    //新建view
+    /**
+    * @brief newPreViewByState　新建view
+    * @param state
+    */
     void newPreViewByState(PRIVIEW_STATE state);
 
-    //显示录制和拍照倒计时
+    /**
+    * @brief showCountDownLabel　显示录制和拍照倒计时
+    */
     void showCountDownLabel();
 
-    //摄像头被占用
+    /**
+    * @brief showCountDownLabel　摄像头被占用
+    */
     void showCamUsed();
 
-    //开始录像
+    /**
+    * @brief startTakeVideo　开始录像
+    */
     void startTakeVideo();
 
-    //item位置处理
+    /**
+    * @brief itemPosChange　item位置处理
+    */
     void itemPosChange();
 
-    //结束所有操作
+    /**
+    * @brief itemPosChange　结束所有操作
+    */
     void stopEverything();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 
 private:
     bool m_bActive;//是否录制中
+
+    PreviewOpenglWidget     *m_openglwidget;//opengl渲染窗口
 
     DLabel                  *m_flashLabel;
 
@@ -193,33 +245,24 @@ private:
     DLabel                  *m_dLabel;
     DPushButton             *m_btnVdTime; //录制屏显时长
 
-    DPushButton             *m_endBtn;
+    DPushButton             *m_endBtn;      //结束按钮
 
-    QTimer                  *countTimer;
-    QTimer                  *flashTimer;
+    QTimer                  *countTimer;     //倒计时定时器
+    QTimer                  *flashTimer;     //闪光灯定时器
     QTimer                  *recordingTimer;//录制3秒后，每200ms设置一次时间
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
-    PRIVIEW_STATE STATE = NORMALVIDEO;
-    ThumbnailsBar         *m_thumbnail;
+    PRIVIEW_STATE STATE = PICTRUE;
+    ThumbnailsBar         *m_thumbnail;       //缩略图
     QPixmap               m_pixmap;
-    int                     m_nFileID;
-    QString                 m_strFolder;
+    int                     m_nFileID;        //文件id
+    QString                 m_strFolder;      //文件路径
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     int                     m_nCount; //录制计时
-
-private:
-    QOpenGLShaderProgram *program;
-    QOpenGLBuffer vbo;
-    GLuint textureUniformY,textureUniformU,textureUniformV; //opengl中y、u、v分量位置
-    QOpenGLTexture *textureY = nullptr,*textureU = nullptr,*textureV = nullptr;
-    GLuint idY,idU,idV; //自己创建的纹理对象ID，创建错误返回0
-    uint videoW,videoH;
-    uchar *yuvPtr = nullptr;
 };
 
 #endif // VIDEOWIDGET_H

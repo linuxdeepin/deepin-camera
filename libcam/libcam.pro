@@ -109,7 +109,8 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
                 ./libcam_render \
                 ./libcam_encoder \
                 ./libcam_audio \
-                ./libcam
+                ./libcam \
+                ../basepub/
 
 isEmpty(PREFIX){
     PREFIX = /usr
@@ -119,6 +120,9 @@ BUILD_DIST = ../src/libs
 ARCH = $$QMAKE_HOST.arch
 
 DESTDIR = $$BUILD_DIST
+
+LIBS += ../src/load_libs.o \
+        -ldl
 
 unix {
     target.path = /usr/lib

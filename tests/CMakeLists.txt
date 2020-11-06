@@ -21,6 +21,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     ../libcam/libcam_encoder
     ../libcam/libcam_audio
     ../libcam/libcam
+    ../basepub
     /usr/include
     /usr/include/libusb-1.0
     /usr/include/SDL2
@@ -35,6 +36,7 @@ find_package(PkgConfig REQUIRED)
 file (GLOB_RECURSE SOURCES  ./*.cpp
     ../src/*.c
     ../libcam/*.c
+    ../basepub/*.c
     ../src/closedialog.cpp
     ../src/devnummonitor.cpp
     ../src/mainwindow.cpp
@@ -49,9 +51,11 @@ file (GLOB_RECURSE SOURCES  ./*.cpp
     ../src/qtsingleapplication/qtlocalpeer.cpp
     )
 file (GLOB_RECURSE HEADERS
+    ../basepub/*.h
     ../libcam/*.h
     ../src/*.h
     ../tests/*.h
+
     )
 file (GLOB_RECURSE RESOURCES  ../src/resource/resources.qrc
     )
@@ -86,6 +90,7 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
     pthread
     z
     Qt5Test
+    dl
     )
 
 # 将工程与Qt模块链接起来

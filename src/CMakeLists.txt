@@ -28,6 +28,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     ../libcam/libcam_encoder
     ../libcam/libcam_audio
     ../libcam/libcam
+    ../basepub
     /usr/include
     /usr/include/libusb-1.0
     /usr/include/SDL2
@@ -42,12 +43,14 @@ find_package(PkgConfig REQUIRED)
 file (GLOB_RECURSE SOURCES  ./src/*.cpp
     ./*.c
     ../libcam/*.c
+    ../basepub/*.c
     ./qtsingleapplication/qtsingleapplication.cpp
     ./qtsingleapplication/qtlocalpeer.cpp
     )
 
 file (GLOB_RECURSE HEADERS  ./*.h
     ../libcam/*.h
+    ../basepub/*.h
     )
 
 file (GLOB_RECURSE RESOURCES  ./resource/resources.qrc)
@@ -65,7 +68,9 @@ pkg_check_modules(3rd_lib REQUIRED
         sdl2
         libpulse
         libswresample
+
         )
+
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
 file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET_NAME}*.ts)
@@ -104,6 +109,7 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     z
     ffmpegthumbnailer
     Qt5Network
+    dl
     )
 
 # 将工程与Qt模块链接起来

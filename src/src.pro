@@ -15,7 +15,7 @@ DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
 
-include(qtsingleapplication/qtsingleapplication.pri)
+#include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
     src/main.cpp \
@@ -29,7 +29,8 @@ SOURCES += \
     src/imageitem.cpp\
     src/closedialog.cpp \
     src/settings_translation.cpp \
-    src/capplication.cpp
+    src/previewopenglwidget.cpp \
+    src/myobject.cpp
 
 HEADERS += \
     src/mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     src/imageitem.h \
     src/Settings.h \
     src/closedialog.h \
-    src/capplication.h
+    src/previewopenglwidget.h \
+    src/myobject.h
 
 
 

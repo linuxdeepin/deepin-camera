@@ -208,11 +208,12 @@ void MajorImageProcessingThread::run()
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
             emit sigYUVFrame(frame->yuv_frame,frame->width,frame->height);
+            emit sigRenderYuv(true);
             malloc_trim(0);
         }
         m_rwMtxImg.unlock();
         v4l2core_release_frame(vd1, frame);
-        //msleep(33);//1000 / 30
+//        msleep(33);//1000 / 30
     }
 
     v4l2core_stop_stream(vd1);

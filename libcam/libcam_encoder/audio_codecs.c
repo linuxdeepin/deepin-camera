@@ -34,6 +34,7 @@
 #include "gviewencoder.h"
 #include "gview.h"
 #include "encoder.h"
+#include "load_libs.h"
 
 extern int verbosity;
 
@@ -417,7 +418,7 @@ int encoder_set_valid_audio_codec_list ()
 	int num_codecs = 0;
 	for ( ind = 0; ind < encoder_get_audio_codec_list_size(); ++ind)
 	{
-		AVCodec *codec = avcodec_find_encoder(listSupCodecs[ind].codec_id);
+        AVCodec *codec = getLoadLibsInstance()->m_avcodec_find_encoder(listSupCodecs[ind].codec_id);
 		if (!codec)
 		{
 			printf("ENCODER: no audio codec detected for %s\n", listSupCodecs[ind].description);

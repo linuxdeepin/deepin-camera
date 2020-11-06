@@ -19,20 +19,27 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mainwindow.h"
-//#include <DApplication>
-#include "capplication.h"
-#include <DMainWindow>
-#include <DWidgetUtil>
-#include <QSharedMemory>
-#include <DLog>
-#include <DApplicationSettings>
-#include <stdio.h>
 extern "C"
 {
 #include "camview.h"
 }
+#include "mainwindow.h"
+#include "capplication.h"
+#include "dbus_adpator.h"
+#include <stdio.h>
+
+#include <DMainWindow>
+#include <DWidgetUtil>
+#include <DLog>
+#include <DApplicationSettings>
+
+#include <QSharedMemory>
+
+
+
+
 DWIDGET_USE_NAMESPACE
+//判断是否采用wayland显示服务器
 bool CheckWayland()
 {
     auto e = QProcessEnvironment::systemEnvironment();
@@ -47,25 +54,29 @@ bool CheckWayland()
 }
 int main(int argc, char *argv[])
 {
+
     bool bWayland = CheckWayland();
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
         set_wayland_status(1);
     }
+//    MyObject obj(argc,argv);
+
+//    DApplication *app = MyObject::getDtkInstance();
+//    app->installEventFilter(&obj);
 
     CApplication a(argc, argv);
+
+    a.setObjectName("deepin-camera");
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // overwrite DApplication default value
+    a.setAttribute(Qt::AA_ForceRasterWidgets, false);
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
-
-//    QTranslator *translator = new QTranslator;
-
-//    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
-//    if (!bLoaded) {
-//        qDebug() << "load transfile error";
-//    }
-
-//    a.installTranslator(translator);
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     DLogManager::setlogFilePath(QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/") + QString("deepin-camera.log"));
@@ -98,13 +109,28 @@ int main(int argc, char *argv[])
 
     if (!shared_memory.create(1)) {
         qDebug() << "another deepin camera instance has started";
+        QDBusInterface iface("com.deepin.camera", "/", "com.deepin.camera");
+                if (iface.isValid()) {
+                     qWarning() << "deepin-camera raise";
+                    iface.asyncCall("Raise");
+                }
         exit(0);
     }
 
     CMainWindow w;
+
+//    DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction, w, &CMainWindow::handleQuitAction);
+//    bool is = DVtableHook::getDestructFunIndex(&app,&CMainWindow::handleQuitAction);
+//    if(is){
+//        quintptr *obj = DVtableHook::getVtableOfObject(app);
+//    }
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
+
+    ApplicationAdaptor adaptor(&w);
+    QDBusConnection::sessionBus().registerService("com.deepin.camera");
+    QDBusConnection::sessionBus().registerObject("/", &w);
 
     Dtk::Widget::moveToCenter(&w);
 

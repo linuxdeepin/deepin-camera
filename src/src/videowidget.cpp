@@ -20,9 +20,11 @@
 */
 
 #include "videowidget.h"
-#include "camview.h"
-#include "gui.h"
 #include "mainwindow.h"
+
+#include <DGuiApplicationHelper>
+#include <DApplicationHelper>
+
 #include <QPixmap>
 #include <QTimer>
 #include <QGraphicsView>
@@ -31,19 +33,23 @@
 #include <QVBoxLayout>
 #include <QThread>
 #include <QScrollBar>
-#include <DGuiApplicationHelper>
-#include <DApplicationHelper>
 #include <QGraphicsBlurEffect>
 #include <QKeyEvent>
 #include <QDir>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLTexture>
+#include <QGraphicsProxyWidget>
 
-static PRIVIEW_STATE VIDEO_STATE = NORMALVIDEO;
+
+static PRIVIEW_STATE VIDEO_STATE = PICTRUE;
 QString g_strFileName = nullptr;
 volatile int g_devStatus = NOCAM;
-videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
+
+videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
+    m_openglwidget = new PreviewOpenglWidget(this);
+    m_openglwidget->setFocusPolicy(Qt::NoFocus);
+
+//    m_openglwidget->show();
+
     m_btnClickTime = QDateTime::currentDateTime();
     m_strFolder = "";
     m_nFileID = 0;
@@ -61,8 +67,10 @@ videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
     connect(recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
+    m_pNormalView->show();
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_flashLabel  = new DLabel(this);
+
     m_btnVdTime = new DPushButton(this);
     m_fWgtCountdown = new DFloatingWidget(this);
     m_fWgtCountdown->hide(); //先隐藏
@@ -139,6 +147,7 @@ videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(endBtnClicked()));
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(manualClicked()));
 
+
     m_endBtn->setToolTip(tr("Stop recording"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
     m_endBtn->hide();
@@ -146,6 +155,9 @@ videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
+//    QGraphicsProxyWidget *openglwidgetProxy = m_pNormalScene->addWidget(&m_openglwidget);
+//    openglwidgetProxy->show();
+
 
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
 
@@ -164,7 +176,10 @@ videowidget::videowidget(DWidget *parent) : QOpenGLWidget(parent)
 
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    init();
+    //延迟加载
+    QTimer::singleShot(500, this, [ = ] {
+        init();
+    });
 
 }
 
@@ -173,12 +188,7 @@ videowidget::~videowidget()
     m_imgPrcThread->stop();
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
-    makeCurrent();
-    vbo.destroy();
-    textureY->destroy();
-    textureU->destroy();
-    textureV->destroy();
-        doneCurrent();
+
 }
 
 
@@ -188,6 +198,7 @@ void videowidget::init()
 
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->m_bTake = false;
+    connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
 
 
 //    m_flashLabel->setWindowFlag(Qt::WindowType::WindowStaysOnTopHint);
@@ -232,7 +243,7 @@ void videowidget::init()
     }
 
     connect(m_imgPrcThread,SIGNAL(sigYUVFrame(uchar*,uint,uint)),
-            this,SLOT(slotShowYuv(uchar*,uint,uint)));
+            m_openglwidget,SLOT(slotShowYuv(uchar*,uint,uint)));
 
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -344,6 +355,11 @@ void videowidget::init()
 //显示没有设备的图片的槽函数
 void videowidget::showNocam()
 {
+    if(m_pNormalView->isVisible() == false)
+    {
+        m_pNormalView->show();
+    }
+    m_openglwidget->hide();
     emit sigDeviceChange();
     QString str(tr("No webcam found"));//未连接摄像头
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
@@ -351,7 +367,6 @@ void videowidget::showNocam()
         m_pixmap = QPixmap::fromImage(img);
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
-        m_pNormalView->show();
         m_pCamErrItem->setDefaultTextColor(clr);
 
         QColor clrBase(0, 0, 0);
@@ -401,6 +416,11 @@ void videowidget::setthumbnail(ThumbnailsBar *thumb)
 //显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
+    if(m_pNormalView->isVisible() == false)
+    {
+        m_pNormalView->show();
+    }
+    m_openglwidget->hide();
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
@@ -409,7 +429,6 @@ void videowidget::showCamUsed()
 
         QColor clrText(Qt::white);
         clrText.setAlphaF(0.8);
-        m_pNormalView->show();
         m_pCamErrItem->setDefaultTextColor(clrText);//浅色主题文字和图片是白色，特殊处理
 
         m_pCamErrItem->setPlainText(str);
@@ -453,30 +472,32 @@ void videowidget::showCamUsed()
     }
 }
 
-void videowidget::ReceiveMajorImage(QImage *image, int result)
+void videowidget::ReceiveOpenGLstatus(bool result)
 {
-    if (!image->isNull()) {
-        switch (result) {
-        case 0:     //Success
-            m_imgPrcThread->m_rwMtxImg.lock();
-            if (m_pCamErrItem->isVisible() == true) {
-                m_pCamErrItem->hide();
-            }
-            {
-                QImage img = image->scaled(this->parentWidget()->width(), this->parentWidget()->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                m_pixmap = QPixmap::fromImage(img);
-            }
-            m_pNormalScene->setSceneRect(m_pixmap.rect());
-            m_pNormalItem->setPixmap(m_pixmap);
-            m_imgPrcThread->m_rwMtxImg.unlock();
-            if (get_encoder_status() == 0 && getCapstatus() == true) {
-                endBtnClicked();
-            }
-            malloc_trim(0);
-            break;
-        default:
-            break;
+    if(result) {
+    //Success
+        m_imgPrcThread->m_rwMtxImg.lock();
+        if (m_pCamErrItem->isVisible() == true) {
+            m_pCamErrItem->hide();
         }
+        if(m_openglwidget == nullptr)
+        {
+            m_openglwidget = new PreviewOpenglWidget(this);
+            m_openglwidget->resize(this->width(),this->height());
+            m_openglwidget->show();
+            connect(m_imgPrcThread,SIGNAL(sigYUVFrame(uchar*,uint,uint)),
+                    m_openglwidget,SLOT(slotShowYuv(uchar*,uint,uint)));
+
+        }
+//        if(m_openglwidget->isVisible() == false)
+//            m_openglwidget->show();
+        m_pNormalView->hide();
+        m_pNormalScene->update();
+        if (get_encoder_status() == 0 && getCapstatus() == true) {
+            endBtnClicked();
+        }
+        malloc_trim(0);
+        m_imgPrcThread->m_rwMtxImg.unlock();
     }
 }
 
@@ -495,7 +516,13 @@ void videowidget::onReachMaxDelayedFrames()
     g_devStatus = NOCAM;
     stopEverything();
     showNocam();
-//    } else {
+
+    if(m_openglwidget)
+    {
+        delete m_openglwidget;
+        m_openglwidget = nullptr;
+    }
+    //    } else {
 //        g_devStatus = CAM_CANNOT_USE;
 //        showCamUsed();
 //    }
@@ -508,7 +535,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
 
     QString str;
     switch (state) {
-    case NORMALVIDEO:
+    case PICTRUE:
         //no device found
 
         m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
@@ -525,7 +552,7 @@ void videowidget::showCountDownLabel(PRIVIEW_STATE state)
                            (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
         m_dLabel->setText(QString::number(m_nInterval));
         break;
-    case AUDIO:
+    case VIDEO:
         m_pCamErrItem->hide();
         if (m_nCount > MAX_REC_TIME) {
             endBtnClicked(); //结束录制
@@ -634,6 +661,8 @@ void videowidget::resizeEvent(QResizeEvent *size)
         itemPosChange();
         m_pCamErrItem->hide();
     }
+
+    m_openglwidget->resize(width(),height());
 }
 
 void videowidget::showCountdown()
@@ -645,14 +674,14 @@ void videowidget::showCountdown()
         if (countTimer->isActive()) {
             countTimer->stop();
         }
-        if (VIDEO_STATE == AUDIO) {
+        if (VIDEO_STATE == VIDEO) {
             if (getCapstatus()) {//录制中
                 endBtnClicked();
             } else {
                 emit takeVdCancel();
             }
         }
-        if (VIDEO_STATE == NORMALVIDEO) {
+        if (VIDEO_STATE == PICTRUE) {
             emit takePicCancel();
         }
         //hideCountDownLabel();
@@ -661,7 +690,7 @@ void videowidget::showCountdown()
     }
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0) {
-        if (VIDEO_STATE == AUDIO) {
+        if (VIDEO_STATE == VIDEO) {
             if (!getCapstatus()) {
                 /*m_bActive录制状态判断
                 *false：非录制状态
@@ -673,7 +702,7 @@ void videowidget::showCountdown()
             //显示录制时长
             showCountDownLabel(VIDEO_STATE);
         }
-        if (VIDEO_STATE == NORMALVIDEO) {
+        if (VIDEO_STATE == PICTRUE) {
             if (m_nMaxInterval == 0) {
                 if (flashTimer->isActive()) {
                     flashTimer->stop();
@@ -686,7 +715,8 @@ void videowidget::showCountdown()
                 qDebug() << "m_flashLabel->show();";
 
                 m_flashLabel->show();
-                m_pNormalView->hide();
+                m_openglwidget->hide();
+                m_pNormalView->show();
                 m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
@@ -749,8 +779,8 @@ void videowidget::showCountdown()
 
     } else {
         if (countTimer->isActive()) {
-            showCountDownLabel(NORMALVIDEO); //拍照录像都要显示倒计时
-            if (VIDEO_STATE == NORMALVIDEO) {
+            showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
+            if (VIDEO_STATE == PICTRUE) {
                 if (m_nInterval % m_nMaxInterval == 1) {
                     if (flashTimer->isActive()) {
                         flashTimer->stop();
@@ -813,28 +843,31 @@ void videowidget::showRecTime()
 
 void videowidget::flash()
 {
-    if (m_flashLabel->isVisible()) {
+    if (m_flashLabel->isVisible()){
         //隐藏闪光窗口
         qDebug() << "m_flashLabel->hide();";
         if(get_sound_of_takeing_photo())
         {
             m_takePicSound->play();
         }
-        m_pNormalView->show();
+
         m_thumbnail->show();
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
+        if(m_openglwidget->isVisible() == false)
+            m_openglwidget->show();
         flashTimer->stop();
     } else {
         m_flashLabel->resize(this->size());
         m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-        qDebug() << "m_flashLabel->show();";
+
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
         m_flashLabel->show();
-        m_pNormalView->hide();
+        m_openglwidget->hide();
         m_thumbnail->hide();
         if (flashTimer->isActive()) { //连续点击拍照
             flashTimer->stop();
+            m_flashLabel->show();
         }
         flashTimer->start(FLASH_TIME);
     }
@@ -856,150 +889,6 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
     request_format_update(1);
 
-}
-
-void videowidget::slotShowYuv(uchar *ptr, uint width, uint height)
-{
-        m_imgPrcThread->m_rwMtxImg.lock();
-        if (m_pNormalView->isVisible() == true) {
-            m_pNormalView->hide();
-        }
-        if(ptr != nullptr){
-            yuvPtr = ptr;
-            videoW = width;
-            videoH = height;
-            update();
-        }
-        m_imgPrcThread->m_rwMtxImg.unlock();
-        if (get_encoder_status() == 0 && getCapstatus() == true) {
-            endBtnClicked();
-        }
-        malloc_trim(0);
-}
-
-void videowidget::initializeGL()
-{
-    initializeOpenGLFunctions();
-        glEnable(GL_DEPTH_TEST);
-
-        static const GLfloat vertices[]{
-            //顶点坐标
-            -1.0f,-1.0f,
-            -1.0f,+1.0f,
-            +1.0f,+1.0f,
-            +1.0f,-1.0f,
-            //纹理坐标
-            0.0f,1.0f,
-            0.0f,0.0f,
-            1.0f,0.0f,
-            1.0f,1.0f,
-        };
-
-
-        vbo.create();
-        vbo.bind();
-        vbo.allocate(vertices,sizeof(vertices));
-
-        QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex,this);
-        const char *vsrc =
-       "attribute vec4 vertexIn; \
-        attribute vec2 textureIn; \
-        varying vec2 textureOut;  \
-        void main(void)           \
-        {                         \
-            gl_Position = vertexIn; \
-            textureOut = textureIn; \
-        }";
-        vshader->compileSourceCode(vsrc);
-
-        QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment,this);
-        const char *fsrc = "varying vec2 textureOut; \
-        uniform sampler2D tex_y; \
-        uniform sampler2D tex_u; \
-        uniform sampler2D tex_v; \
-        void main(void) \
-        { \
-            vec3 yuv; \
-            vec3 rgb; \
-            yuv.x = texture2D(tex_y, textureOut).r; \
-            yuv.y = texture2D(tex_u, textureOut).r - 0.5; \
-            yuv.z = texture2D(tex_v, textureOut).r - 0.5; \
-            rgb = mat3( 1,       1,         1, \
-                        0,       -0.39465,  2.03211, \
-                        1.13983, -0.58060,  0) * yuv; \
-            gl_FragColor = vec4(rgb, 1); \
-        }";
-        fshader->compileSourceCode(fsrc);
-
-        program = new QOpenGLShaderProgram(this);
-        program->addShader(vshader);
-        program->addShader(fshader);
-        program->bindAttributeLocation("vertexIn",VERTEXIN);
-        program->bindAttributeLocation("textureIn",TEXTUREIN);
-        program->link();
-        program->bind();
-        program->enableAttributeArray(VERTEXIN);
-        program->enableAttributeArray(TEXTUREIN);
-        program->setAttributeBuffer(VERTEXIN,GL_FLOAT,0,2,2*sizeof(GLfloat));
-        program->setAttributeBuffer(TEXTUREIN,GL_FLOAT,8*sizeof(GLfloat),2,2*sizeof(GLfloat));
-
-        textureUniformY = program->uniformLocation("tex_y");
-        textureUniformU = program->uniformLocation("tex_u");
-        textureUniformV = program->uniformLocation("tex_v");
-        textureY = new QOpenGLTexture(QOpenGLTexture::Target2D);
-        textureU = new QOpenGLTexture(QOpenGLTexture::Target2D);
-        textureV = new QOpenGLTexture(QOpenGLTexture::Target2D);
-        textureY->create();
-        textureU->create();
-        textureV->create();
-        idY = textureY->textureId();
-        idU = textureU->textureId();
-        idV = textureV->textureId();
-        glClearColor(0.0,0.0,0.0,0.0);
-}
-
-void videowidget::paintGL()
-{
-    //    QMatrix4x4 m;
-    //    m.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f );//透视矩阵随距离的变化，图形跟着变化。屏幕平面中心就是视点（摄像头）,需要将图形移向屏幕里面一定距离。
-    //    m.ortho(-2,+2,-2,+2,-10,10);//近裁剪平面是一个矩形,矩形左下角点三维空间坐标是（left,bottom,-near）,右上角点是（right,top,-near）所以此处为负，表示z轴最大为10；
-                                    //远裁剪平面也是一个矩形,左下角点空间坐标是（left,bottom,-far）,右上角点是（right,top,-far）所以此处为正，表示z轴最小为-10；
-                                    //此时坐标中心还是在屏幕水平面中间，只是前后左右的距离已限制。
-        glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
-        glBindTexture(GL_TEXTURE_2D,idY); //绑定y分量纹理对象id到激活的纹理单元
-        //使用内存中的数据创建真正的y分量纹理数据
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RED,videoW,videoH,0,GL_RED,GL_UNSIGNED_BYTE,yuvPtr);
-        //https://blog.csdn.net/xipiaoyouzi/article/details/53584798 纹理参数解析
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glActiveTexture(GL_TEXTURE1); //激活纹理单元GL_TEXTURE1
-        glBindTexture(GL_TEXTURE_2D,idU);
-        //使用内存中的数据创建真正的u分量纹理数据
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RED,videoW >> 1, videoH >> 1,0,GL_RED,GL_UNSIGNED_BYTE,yuvPtr + videoW * videoH);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glActiveTexture(GL_TEXTURE2); //激活纹理单元GL_TEXTURE2
-        glBindTexture(GL_TEXTURE_2D,idV);
-        //使用内存中的数据创建真正的v分量纹理数据
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, videoW >> 1, videoH >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, yuvPtr+videoW*videoH*5/4);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        //指定y纹理要使用新值
-        glUniform1i(textureUniformY, 0);
-        //指定u纹理要使用新值
-        glUniform1i(textureUniformU, 1);
-        //指定v纹理要使用新值
-        glUniform1i(textureUniformV, 2);
-        //使用顶点数组方式绘制图形
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 void videowidget::endBtnClicked()
@@ -1175,7 +1064,7 @@ void videowidget::changeDev()
 
 void videowidget::onTakePic(bool bTrue)
 {
-    VIDEO_STATE = NORMALVIDEO;
+    VIDEO_STATE = PICTRUE;
     if (bTrue) {
         if (m_fWgtCountdown) {
             m_fWgtCountdown->move((this->width() - m_fWgtCountdown->width()) / 2,
@@ -1242,7 +1131,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         return;
     }
 
-    VIDEO_STATE = AUDIO;
+    VIDEO_STATE = VIDEO;
 
     if (m_nMaxInterval == 0) {
         //直接录制

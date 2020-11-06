@@ -21,6 +21,7 @@
 
 #include "mp4.h"
 #include <libavutil/mathematics.h>
+#include "load_libs.h"
 
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
@@ -113,7 +114,7 @@ int mp4_write_packet(
         AVRational video_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
 
-        av_packet_rescale_ts(outpacket, time_base, video_time);
+        getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
         av_write_frame(mp4_ctx, outpacket);
 
         video_pts++;
@@ -127,7 +128,7 @@ int mp4_write_packet(
         AVRational audio_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
 
-        av_packet_rescale_ts(outpacket, time_base, audio_time);
+        getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, audio_time);
         av_write_frame(mp4_ctx, outpacket);
 
         //AAC音频标准是1024
@@ -138,7 +139,7 @@ int mp4_write_packet(
     if(outpacket->data){
         free(outpacket->data);
         outpacket->data = NULL;
-        av_packet_unref(outpacket);
+        getLoadLibsInstance()->m_av_packet_unref(outpacket);
     }
     return 0;
 }

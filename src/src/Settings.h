@@ -7,6 +7,7 @@
 #include <DSettingsOption>
 #include <DSettingsGroup>
 #include <DSettings>
+
 #include "videowidget.h"
 
 namespace dc {
@@ -26,17 +27,27 @@ public:
         PauseOnMinimize,
         HWAccel,
     };
-
+    /**
+    * @brief get　获取设置对象
+    */
     static Settings &get();
+    /**
+    * @brief configPath　获取设置路径
+    */
     QString configPath() const
     {
         return _configPath;
     }
+    /**
+    * @brief settings　获取DSettings对象
+    */
     QPointer<DSettings> settings()
     {
         return _settings;
     }
-
+    /**
+    * @brief group
+    */
     QPointer<DSettingsGroup> group(const QString &name)
     {
         return settings()->group(name);
