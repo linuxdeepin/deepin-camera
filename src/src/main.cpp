@@ -35,9 +35,6 @@ extern "C"
 
 #include <QSharedMemory>
 
-
-
-
 DWIDGET_USE_NAMESPACE
 //判断是否采用wayland显示服务器
 bool CheckWayland()
