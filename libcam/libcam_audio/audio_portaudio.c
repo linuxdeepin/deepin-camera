@@ -141,14 +141,14 @@ __attribute__((unused))	void *outputBuffer,
     {
         capture_buff[sample_index] = inputBuffer ? *rptr++ : 0;
         sample_index++;
-
-		/*store peak value*/
-		if(audio_ctx->capture_buff_level[chan] < capture_buff[sample_index])
-			audio_ctx->capture_buff_level[chan] = capture_buff[sample_index];
-		chan++;
-		if(chan >= audio_ctx->channels)
-			chan = 0;
-
+        if(sample_index < audio_ctx->capture_buff_size){
+            /*store peak value*/
+            if(audio_ctx->capture_buff_level[chan] < capture_buff[sample_index])
+                audio_ctx->capture_buff_level[chan] = capture_buff[sample_index];
+            chan++;
+            if(chan >= audio_ctx->channels)
+                chan = 0;
+        }
         if(sample_index >= audio_ctx->capture_buff_size)
 		{
 			buff_ts = ts + ( i / audio_ctx->channels ) * frame_length;
