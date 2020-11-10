@@ -201,7 +201,7 @@ INSTALLS = target desktop dbus_service icon_files manual translations
 
 #DISTFILES +=
 
-QMAKE_CXXFLAGS += -Wl,-as-need -fPIE
+QMAKE_CXXFLAGS += -Wl,-as-need -Wl,-E -fPIE
 QMAKE_LFLAGS+=-pie
 
 host_sw_64: {
