@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
 
     CApplication a(argc, argv);
     //加载翻译
-    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
 
 //    QTranslator *translator = new QTranslator;
 
@@ -85,6 +84,7 @@ int main(int argc, char *argv[])
     qApp->setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
     //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
     qApp->setProductName(QObject::tr("Camera"));
+    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
     qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
     DApplicationSettings saveTheme;
 
