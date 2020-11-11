@@ -60,9 +60,9 @@ pkg_check_modules(3rd_lib REQUIRED
         libv4l2
         libudev
         libusb-1.0
-        libavcodec
+#        libavcodec
         libavutil
-        libavformat
+#        libavformat
         libswscale
         libpng
         sdl2
@@ -105,8 +105,8 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     portaudio
-    asound
-    z
+#    asound
+#    z
     ffmpegthumbnailer
     Qt5Network
     dl

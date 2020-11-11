@@ -163,6 +163,9 @@ void PreviewOpenglWidget::resizeGL(int w, int h)
 
 void PreviewOpenglWidget::paintGL()
 {
+    if (yuvPtr == nullptr) {
+        return;
+    }
     //    QMatrix4x4 m;
     //    m.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f );//透视矩阵随距离的变化，图形跟着变化。屏幕平面中心就是视点（摄像头）,需要将图形移向屏幕里面一定距离。
     //    m.ortho(-2,+2,-2,+2,-10,10);//近裁剪平面是一个矩形,矩形左下角点三维空间坐标是（left,bottom,-near）,右上角点是（right,top,-near）所以此处为负，表示z轴最大为10；

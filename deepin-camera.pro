@@ -68,21 +68,16 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
                 ./basepub
 
 LIBS += -L/lib/x86_64-linux-gnu\
-        -lasound\
         -ludev\
         -lusb-1.0\
         -lv4l2\
-        -lavformat\
         -lavutil\
         -lswscale\
         -lpng\
-        -lz\
-        -lSDL2\
-#        -lavcodec\
+        -lSDL2\#1.2M
         -lportaudio\
         -lswresample \
         -ldl
-        #-lpulse
 
 LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
 

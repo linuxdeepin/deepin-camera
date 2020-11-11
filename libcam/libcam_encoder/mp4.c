@@ -30,11 +30,11 @@ AVFormatContext *mp4_create_context(const char *filename)
 {
     AVFormatContext *mp4_ctx;
 
-    avformat_alloc_output_context2(&mp4_ctx, NULL, NULL, filename);
+    getLoadLibsInstance()->m_avformat_alloc_output_context2(&mp4_ctx, NULL, NULL, filename);
 
     if (!mp4_ctx) {
         printf("Could not deduce output format from file extension: using MPEG.\n");
-        avformat_alloc_output_context2(&mp4_ctx, NULL, "mpeg", filename);
+        getLoadLibsInstance()->m_avformat_alloc_output_context2(&mp4_ctx, NULL, "mpeg", filename);
     }
 
     if (!mp4_ctx)
@@ -51,7 +51,7 @@ void mp4_add_video_stream(
         encoder_codec_data_t *video_codec_data,
         OutputStream *video_stream)
 {
-    video_stream->st = avformat_new_stream(mp4_ctx, video_codec_data->codec);
+    video_stream->st = getLoadLibsInstance()->m_avformat_new_stream(mp4_ctx, video_codec_data->codec);
 
     if(!video_stream->st)
     {
@@ -75,7 +75,7 @@ void mp4_add_audio_stream(
         OutputStream *audio_stream)
 {
 
-    audio_stream->st = avformat_new_stream(mp4_ctx,audio_codec_data->codec);
+    audio_stream->st = getLoadLibsInstance()->m_avformat_new_stream(mp4_ctx,audio_codec_data->codec);
     if(!audio_stream->st)
     {
         fprintf(stderr,"Could not allocate stream\n");
@@ -115,7 +115,7 @@ int mp4_write_packet(
         AVRational time_base = codec_data->codec_context->time_base;
 
         getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
-        av_write_frame(mp4_ctx, outpacket);
+        getLoadLibsInstance()->m_av_write_frame(mp4_ctx, outpacket);
 
         video_pts++;
     }
@@ -129,7 +129,7 @@ int mp4_write_packet(
         AVRational time_base = codec_data->codec_context->time_base;
 
         getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, audio_time);
-        av_write_frame(mp4_ctx, outpacket);
+        getLoadLibsInstance()->m_av_write_frame(mp4_ctx, outpacket);
 
         //AAC音频标准是1024
         //MP3音频标准是1152
@@ -151,7 +151,7 @@ void mp4_destroy_context(AVFormatContext *mp4_ctx)
     audio_pts = 0;
     if(mp4_ctx != NULL)
     {
-        avformat_free_context(mp4_ctx);
+        getLoadLibsInstance()->m_avformat_free_context(mp4_ctx);
         //mp4_ctx = NULL;
     }
 }

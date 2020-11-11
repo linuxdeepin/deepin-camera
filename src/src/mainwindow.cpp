@@ -334,14 +334,15 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_nActTpye = ActTakePic;
 
     initUI();
-    initTitleBar();
-    initConnection();
-    QDir dir;
-    QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
-    dir.mkpath(strCache);
 
     //延迟加载
-    QTimer::singleShot(500, this, [ = ] {
+    QTimer::singleShot(200, this, [ = ] {
+        initTitleBar();
+        initConnection();
+        QDir dir;
+        QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
+        dir.mkpath(strCache);
+
         m_devnumMonitor = new DevNumMonitor();
         m_devnumMonitor->start();
         initThumbnails();
@@ -599,7 +600,6 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 
 void CMainWindow::initUI()
 {
-    this->resize(MinWindowWidth, MinWindowHeight);
     m_videoPre = new videowidget(this);
 
     this->setCentralWidget(m_videoPre);

@@ -172,7 +172,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     m_curFileIndex = 0;
     //获取所选文件类型过滤器
     QStringList filters;
-    filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
+    filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
     int tIndex = 0;
     QString strFolder;
     for (int i = m_strlstFolders.size(); i >= 1; i--) {
