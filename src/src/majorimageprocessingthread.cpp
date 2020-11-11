@@ -44,6 +44,8 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
         qDebug() << "close_v4l2_device_handler";
         close_v4l2_device_handler();
     }
+
+    config_clean();
     qDebug() << "~MajorImageProcessingThread";
 }
 

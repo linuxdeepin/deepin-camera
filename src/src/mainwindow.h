@@ -260,7 +260,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
     ThumbnailsBar              *m_thumbnail = nullptr;
-    DMenu                     *menu;
+    DMenu                      *m_titlemenu;
+    QMenu                      *m_rightbtnmenu;
+    QAction                     *actOpenfolder;
     videowidget                  *m_videoPre;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;

@@ -364,6 +364,11 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 
 CMainWindow::~CMainWindow()
 {
+    if(m_rightbtnmenu)
+        {
+            delete m_rightbtnmenu;
+            m_rightbtnmenu = nullptr;
+        }
     qDebug() << "stop_encoder_thread";
 }
 
@@ -779,16 +784,16 @@ void CMainWindow::initThumbnails()
     m_videoPre->setthumbnail(m_thumbnail);
 
     //添加右键打开文件夹功能
-    QMenu *menu = new QMenu();
-    QAction *actOpen = new QAction(this);
-    actOpen->setText(tr("Open folder"));
-    menu->addAction(actOpen);
+    m_rightbtnmenu = new QMenu();
+    actOpenfolder = new QAction(this);
+    actOpenfolder->setText(tr("Open folder"));
+    m_rightbtnmenu->addAction(actOpenfolder);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
-        menu->exec(QCursor::pos());
+        m_rightbtnmenu->exec(QCursor::pos());
     });
-    connect(actOpen, &QAction::triggered, this, [ = ] {
+    connect(actOpenfolder, &QAction::triggered, this, [ = ] {
         QString save_path = Settings::get().generalOption("last_open_path").toString();
         if (save_path.isEmpty())
         {
@@ -847,10 +852,10 @@ void CMainWindow::setSelBtnShow()
 
 void CMainWindow::setupTitlebar()
 {
-    menu = new DMenu();
+    m_titlemenu = new DMenu();
     m_actionSettings = new QAction(tr("Settings"), this);
-    menu->addAction(m_actionSettings);
-    titlebar()->setMenu(menu);
+    m_titlemenu->addAction(m_actionSettings);
+    titlebar()->setMenu(m_titlemenu);
     titlebar()->setFocusPolicy(Qt::NoFocus);
     titlebar()->setParent(this);
 }

@@ -1084,6 +1084,8 @@ void mkv_destroy_context(mkv_context_t *mkv_ctx)
 
 	mkv_ctx->pkt_buffer_list = NULL;
 	mkv_ctx->pkt_buffer_list_size = 0;
+    free(mkv_ctx);
+    mkv_ctx = NULL;
 
 }
 

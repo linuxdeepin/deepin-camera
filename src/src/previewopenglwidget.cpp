@@ -15,12 +15,24 @@ PreviewOpenglWidget::~PreviewOpenglWidget()
     //makeCurrent();
     vbo.destroy();
     if(textureY)
-        textureY->destroy();
-    if(textureU)
-        textureU->destroy();
-    if(textureV)
-        textureV->destroy();
-    doneCurrent();
+        {
+            textureY->destroy();
+            delete textureY;
+            textureY = nullptr;
+        }
+        if(textureU)
+        {
+            textureU->destroy();
+            delete textureU;
+            textureU = nullptr;
+        }
+        if(textureV)
+        {
+            textureV->destroy();
+            delete textureV;
+            textureV = nullptr;
+        }
+        doneCurrent();
 }
 
 void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)

@@ -163,6 +163,8 @@ void io_destroy_writer(io_writer_t *writer)
 
 	/*clean the mem buffer*/
 	free(writer->buffer);
+    free(writer);
+    writer = NULL;
 }
 
 /*

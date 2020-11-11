@@ -189,6 +189,47 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
+    delete m_openglwidget;
+    m_openglwidget = nullptr;
+
+    delete m_flashLabel;
+    m_flashLabel = nullptr;
+
+    delete m_pNormalView;
+    m_pNormalView = nullptr;
+
+    delete m_pNormalScene;
+    m_pNormalScene = nullptr;
+
+    delete m_takePicSound;
+    m_takePicSound = nullptr;
+
+    delete m_pGridLayout;
+    m_pGridLayout = nullptr;
+
+    delete m_fWgtCountdown;
+    m_fWgtCountdown = nullptr;
+
+    delete m_btnVdTime;
+    m_btnVdTime = nullptr;
+
+    delete m_endBtn;
+    m_endBtn = nullptr;
+
+    delete countTimer;
+    countTimer = nullptr;
+
+    delete flashTimer;
+    flashTimer = nullptr;
+
+    delete recordingTimer;
+    recordingTimer = nullptr;
+
+    delete m_thumbnail;
+    m_thumbnail = nullptr;
+
+    delete m_endBtn;
+    m_endBtn = nullptr;
 }
 
 
