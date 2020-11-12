@@ -516,10 +516,13 @@ void ThumbnailsBar::addFile(QString strFile)
     if (m_hBOx->count() >= nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
+        QString strPath = tmp->getPath();
         m_hBOx->removeWidget(tmp);
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
+        QFileInfo fileinfo(strPath);
+        m_fileInfoLst += fileinfo;
     }
 
     int nIndexMax = -1;
@@ -646,12 +649,16 @@ void ThumbnailsBar::widthChanged()
     int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
     while (m_hBOx->count() > nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+        QString strPath = tmp->getPath();
         g_indexImage.remove(tmp->getIndex());
         m_hBOx->removeWidget(tmp);
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
-        m_nItemCount --;
+        m_nItemCount --;        
+
+        QFileInfo fileinfo(strPath);
+        m_fileInfoLst += fileinfo;
     }
 }
 
