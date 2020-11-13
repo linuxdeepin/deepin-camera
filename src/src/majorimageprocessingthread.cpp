@@ -63,8 +63,7 @@ void MajorImageProcessingThread::init()
 }
 
 void MajorImageProcessingThread::run()
-{
-    QImage tmpImg;
+{    
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;
@@ -208,8 +207,11 @@ void MajorImageProcessingThread::run()
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
             QImage imgTmp(rgb,frame->width,frame->height,QImage::Format_RGB888);
-            tmpImg = imgTmp.copy();
-            emit SendMajorImageProcessing(&tmpImg, result);
+            if (!imgTmp.isNull()) {
+                m_Img = imgTmp.copy();
+                emit SendMajorImageProcessing(&m_Img, result);
+            }
+
             malloc_trim(0);
         }
         m_rwMtxImg.unlock();
