@@ -763,7 +763,7 @@ void videowidget::showCountdown()
             //发送就结束信号处理按钮状态
             countTimer->stop();
             if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QDir::homePath() + QString("/Videos");
+                m_strFolder = QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera");
             }
             QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
@@ -1210,7 +1210,7 @@ void videowidget::startTakeVideo()
             m_nFileID ++;
             QString str = m_strFolder;
             if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QDir::homePath() + QString("/Videos");
+                m_strFolder = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
             }
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(g_strFileName.toStdString().c_str());

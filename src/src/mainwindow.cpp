@@ -45,7 +45,6 @@
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
 
-
 using namespace dc;
 extern bool g_bMultiSlt; //是否多选
 extern QSet<int> g_setIndex;
@@ -274,6 +273,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         auto nmls = ElideText(nameLast, {285, fm.height()}, QTextOption::WrapAnywhere,
                               le->font(), Qt::ElideMiddle, fm.height(), 285);
 
+      
         if (!validate(le->text(), false)) {
             QFileInfo fn(dir.path());
             if ((!fn.isReadable() || !fn.isWritable()) && !name.isEmpty()) {
@@ -288,9 +288,9 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             } else if (pn == pe) {
                 le->setText(pe);
             } else {
-                option->setValue(QVariant("~/Videos"));//设置为默认路径
-                le->setText(QString("~/Videos"));
-                option->setValue(QVariant("~/Videos"));
+                option->setValue(QVariant(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera")));//设置为默认路径
+                le->setText(QString(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera")));
+                option->setValue(QVariant(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera")));
                 le->setText(nmls);
             }
         }
@@ -614,18 +614,26 @@ void CMainWindow::initUI()
         QString str = QDir::homePath();
         CMainWindow::m_lastfilename.replace(0, 1, str);
     }
-    if (!QDir(CMainWindow::m_lastfilename).exists())
-        CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
-
-    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
-    if (QFileInfo(CMainWindow::m_lastfilename).exists()) {
+    QDir dir;
+    if (QDir(QString(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"))).exists() == false){
+       dir.mkdir(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
+    }
+    if (QDir(QString(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"))).exists() == false){
+       dir.mkdir(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
+    }
+    bool exist=false;
+    if (QDir(CMainWindow::m_lastfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastfilename);
+        exist=true;
     }
 
     setupTitlebar();
     //缩略图延后加载
-
-    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+    if(exist){
+        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+    }else{
+        m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
+    }
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
     bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundreminder").toBool();
@@ -1014,6 +1022,7 @@ void CMainWindow::onTitlePicBtn()
         m_pTitleVdBtn->setIcon(iconVd);
     }
     m_thumbnail->ChangeActType(m_nActTpye);
+    SettingPathsave();
 }
 
 void CMainWindow::onTitleVdBtn()
@@ -1050,13 +1059,14 @@ void CMainWindow::onTitleVdBtn()
         m_pTitlePicBtn->setIcon(iconPic);
     }
     m_thumbnail->ChangeActType(m_nActTpye);
+    SettingPathsave();
 }
 
 void CMainWindow::onSettingsDlgClose()
 {
     /**********************************************/
     if (QDir(Settings::get().getOption("base.save.datapath").toString()).exists() == false) {
-        CMainWindow::m_lastfilename = QString("~") + QString("/Videos");
+        CMainWindow::m_lastfilename = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
         Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
     }
 
@@ -1066,11 +1076,15 @@ void CMainWindow::onSettingsDlgClose()
 
     CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
     if (QDir(CMainWindow::m_lastfilename).exists() == false) {
-        CMainWindow::m_lastfilename = QDir::homePath() + QString("/Videos");
+        if(m_nActTpye == ActTakeVideo){
+            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
+        }else{
+            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
+        }
+    }else{
+        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     }
 
-//    QString test = CMainWindow::m_lastfilename;
-    m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
     m_fileWatcher.addPath(CMainWindow::m_lastfilename);
     m_thumbnail->addPath(CMainWindow::m_lastfilename);
 
@@ -1210,4 +1224,15 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
         //g_setIndex.insert(g_indexNow);
     }
 }
-
+void CMainWindow::SettingPathsave(){
+    QDir dir;
+    if(QDir(CMainWindow::m_lastfilename).exists()==false){
+        if(m_nActTpye == ActTakeVideo){
+            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
+        }else{
+            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
+        }
+    }else{
+        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+    }
+}

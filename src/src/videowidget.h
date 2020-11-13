@@ -197,6 +197,7 @@ private:
     */
     void newPreViewByState(PRIVIEW_STATE state);
 
+
     /**
     * @brief showCountDownLabel　显示录制和拍照倒计时
     */
@@ -257,7 +258,7 @@ private:
     ThumbnailsBar         *m_thumbnail;       //缩略图
     QPixmap               m_pixmap;
     int                     m_nFileID;        //文件id
-    QString                 m_strFolder;      //文件路径
+    QString                 m_strFolder;      //文件路径（视频,图片）
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
