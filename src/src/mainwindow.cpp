@@ -21,6 +21,7 @@
 
 #include "mainwindow.h"
 #include "capplication.h"
+#include "v4l2_core.h"
 #include <QListWidgetItem>
 #include <QTextLayout>
 #include <QStyleFactory>
@@ -40,7 +41,6 @@
 #include <DMessageBox>
 #include <DComboBox>
 #include <dsettingswidgetfactory.h>
-#include "v4l2_core.h"
 
 using namespace dc;
 extern bool g_bMultiSlt; //是否多选
