@@ -477,6 +477,11 @@ void ThumbnailsBar::addFile(QString strFile)
         }
     }
     ************/
+    //避免出现空白图片
+    QFileInfo fileinfo(strFile);
+    if (!fileinfo.exists()) {
+        return;
+    }
     int nIndexMax = -1;
     bool bSelectedFirst = false;
     if (!m_hBOx->isEmpty()) {
@@ -498,11 +503,15 @@ void ThumbnailsBar::addFile(QString strFile)
     int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH- VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
     if (m_hBOx->count() >= nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+        QString strPath = tmp->getPath();
         g_indexImage.remove(tmp->getIndex());
         m_hBOx->removeWidget(tmp);
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
+        //ui上删掉的得加回来，否则删除文件的时候，总会剩一个文件
+        QFileInfo fileinfotmp(strPath);
+        m_fileInfoLst += fileinfotmp;
     }
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";

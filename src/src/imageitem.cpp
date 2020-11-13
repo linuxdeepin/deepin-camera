@@ -264,6 +264,13 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
+    //当图片铺满缩略图，选中最后一张，拍照；此时缩略图选中的框消失，选择缩略图的某一个图元，程序崩溃
+    //根本问题在于缩略图铺满是，继续添加图元，没有正确维护g_indexNow
+    if (!g_indexImage.contains(g_indexNow)) {
+        g_setIndex.clear();
+        g_indexNow = g_indexImage.begin().value()->getIndex();
+    }
+
     g_indexImage.value(g_indexNow)->update();
     if (g_bMultiSlt) {
         if (g_setIndex.contains(m_index)) {
