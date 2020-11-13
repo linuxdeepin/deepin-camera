@@ -21,7 +21,6 @@
 
 #ifndef VIDEOWIDGET_H
 #define VIDEOWIDGET_H
-#include "thumbnailsbar.h"
 
 #include <DWidget>
 #include <DFloatingWidget>

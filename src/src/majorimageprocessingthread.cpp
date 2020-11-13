@@ -66,7 +66,6 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::run()
 {
-    QImage tmpImg;
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;

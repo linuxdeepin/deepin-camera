@@ -19,7 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "imageitem.h"
-
+#include "printhelper.h"
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
 
@@ -145,10 +145,34 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QAction *actDel = new QAction(this);
     actDel->setText(tr("Delete"));
+
     QAction *actOpenFolder = new QAction(this);
     actOpenFolder->setText(tr("Open folder"));
+
     menu->addAction(actCopy);
     menu->addAction(actDel);
+
+    if (!m_bVideo) {
+        actPrint = new QAction(this);
+        actPrint->setText(tr("Print"));
+        menu->addAction(actPrint);
+        connect(actPrint, &QAction::triggered, this, [ = ] {
+            QStringList paths;
+            if (g_setIndex.isEmpty())
+            {
+                paths = QStringList(path);
+                qDebug() << "sigle print";
+            } else {
+                QSet<int>::iterator it;
+                for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+                    paths << g_indexImage.value(*it)->getPath();
+                    qDebug() << g_indexImage.value(*it)->getPath();
+                }
+            }
+            PrintHelper::showPrintDialog(QStringList(paths), this);
+        });
+    }
+
     menu->addAction(actOpenFolder);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -165,8 +189,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         {
             paths = QStringList(path);
             qDebug() << "sigle way";
-        } else
-        {
+        } else {
             QSet<int>::iterator it;
             for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
                 paths << g_indexImage.value(*it)->getPath();
@@ -218,6 +241,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             Dtk::Widget::DDesktopServices::showFolder(strtmp);
         }
     });
+
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();
     },Qt::QueuedConnection);
@@ -271,8 +295,16 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
-    g_indexImage.value(g_indexNow)->update();
-    if (g_bMultiSlt) {
+    if (g_indexNow != -1) {
+        if (!g_indexImage.contains(g_indexNow)) {
+            g_setIndex.clear();
+            g_indexNow = g_indexImage.begin().value()->getIndex();
+        }
+        g_indexImage.value(g_indexNow)->update();
+    }
+    //当按下shift键，多选，鼠标右键弹出右键菜单后松开shift键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
+    //此处补充获取shift键盘状态，以避免继续选择图元，应用处于多选状态的问题
+    if (g_bMultiSlt /*&& QGuiApplication::keyboardModifiers() == Qt::ShiftModifier*/){
         if (g_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
                 g_setIndex.remove(m_index);
@@ -287,10 +319,15 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
     } else {
         g_indexNow = m_index;
         g_setIndex.clear();
+        g_setIndex.insert(m_index);
     }
     update();
     if (g_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
+        if (!m_bVideo) {
+            emit showDuration("");
+            actPrint->setVisible(true);
+        }
     } else {
         QSet<int>::iterator it;
         bool bHaveVideo = false;
@@ -302,8 +339,12 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         }
         if (bHaveVideo) {
             emit showDuration("... ...");
+            if (!m_bVideo) {//当前为视频是不会new actPrint的
+                actPrint->setVisible(false);
+            }
         } else {
             emit showDuration("");
+            actPrint->setVisible(true);
         }
     }
     emit needFit();

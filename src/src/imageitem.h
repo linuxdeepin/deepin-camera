@@ -152,6 +152,7 @@ private:
     int64_t m_nDuration = 0; //视频文件时长,int形式时间
     QString m_strDuratuion;//视频文件时长,形式为00：00：00
     bool m_bVideo;//是否视频
+    QAction *actPrint = nullptr;
 };
 
 #endif // IMAGEITEM_H

@@ -330,7 +330,7 @@ QString CMainWindow::lastOpenedPath()
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_bWayland = false;
-
+    this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     m_nActTpye = ActTakePic;
 
     initUI();
