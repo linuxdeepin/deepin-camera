@@ -189,6 +189,47 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
+    delete m_openglwidget;
+    m_openglwidget = nullptr;
+
+    delete m_flashLabel;
+    m_flashLabel = nullptr;
+
+    delete m_pNormalView;
+    m_pNormalView = nullptr;
+
+    delete m_pNormalScene;
+    m_pNormalScene = nullptr;
+
+    delete m_takePicSound;
+    m_takePicSound = nullptr;
+
+    delete m_pGridLayout;
+    m_pGridLayout = nullptr;
+
+    delete m_fWgtCountdown;
+    m_fWgtCountdown = nullptr;
+
+    delete m_btnVdTime;
+    m_btnVdTime = nullptr;
+
+    delete m_endBtn;
+    m_endBtn = nullptr;
+
+    delete countTimer;
+    countTimer = nullptr;
+
+    delete flashTimer;
+    flashTimer = nullptr;
+
+    delete recordingTimer;
+    recordingTimer = nullptr;
+
+    delete m_thumbnail;
+    m_thumbnail = nullptr;
+
+    delete m_endBtn;
+    m_endBtn = nullptr;
 }
 
 
@@ -722,7 +763,7 @@ void videowidget::showCountdown()
             //发送就结束信号处理按钮状态
             countTimer->stop();
             if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QDir::homePath() + QString("/Videos");
+                m_strFolder = QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera");
             }
             QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
@@ -1169,7 +1210,7 @@ void videowidget::startTakeVideo()
             m_nFileID ++;
             QString str = m_strFolder;
             if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QDir::homePath() + QString("/Videos");
+                m_strFolder = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
             }
             set_video_path(m_strFolder.toStdString().c_str());
             set_video_name(g_strFileName.toStdString().c_str());

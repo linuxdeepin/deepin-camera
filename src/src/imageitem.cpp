@@ -60,7 +60,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     QPixmap pix;
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    if (/*fileInfo.suffix() == "mp4" || */fileInfo.suffix() == "webm") {
         m_bVideo = true;
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
@@ -234,7 +234,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 ImageItem::~ImageItem()
 {
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    if (/*fileInfo.suffix() == "mp4" || */fileInfo.suffix() == "webm") {
         g_videoCount --;
     }
     //    m_menu->deleteLater();
@@ -431,7 +431,7 @@ static int open_codec_context(int *stream_idx,
 
 
     //AVDictionary *opts = nullptr;
-    ret = av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
+    ret = getLoadLibsInstance()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
     if (ret < 0) {
         qWarning() << "Could not find " << av_get_media_type_string(type)
                    << " stream in input file";
@@ -494,13 +494,13 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
         return mi;
     }
 
-    auto ret = avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
+    auto ret = getLoadLibsInstance()->m_avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
     if (ret < 0) {
         qWarning() << "avformat: could not open input";
         return mi;
     }
 
-    if (avformat_find_stream_info(av_ctx, nullptr) < 0) {
+    if (getLoadLibsInstance()->m_avformat_find_stream_info(av_ctx, nullptr) < 0) {
         qWarning() << "av_find_stream_info failed";
         return mi;
     }
@@ -516,7 +516,7 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
     if (m_nDuration < 0) {
         return mi;
     }
-    avformat_close_input(&av_ctx);
+    getLoadLibsInstance()->m_avformat_close_input(&av_ctx);
 
     return true;
 }

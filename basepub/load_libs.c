@@ -194,23 +194,95 @@ static LoadLibs *newClass(void)
         fprintf (stderr, "%s ", error);
     }
 
+    //libavformat
     void *handle1 = dlopen("libavformat.so",RTLD_LAZY);
     if (!handle1) {
         fprintf (stderr, "%s ", dlerror());
     }
-    dlsym(handle1, "cos");
+    instance->m_avformat_open_input = (uos_avformat_open_input)dlsym(handle1, "avformat_open_input");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_find_stream_info = (uos_avformat_find_stream_info)dlsym(handle1, "avformat_find_stream_info");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_find_best_stream = (uos_av_find_best_stream)dlsym(handle1, "av_find_best_stream");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_dump_format = (uos_av_dump_format)dlsym(handle1, "av_dump_format");//目前未使用
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_close_input = (uos_avformat_close_input)dlsym(handle1, "avformat_close_input");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_alloc_output_context2 = (uos_avformat_alloc_output_context2)dlsym(handle1, "avformat_alloc_output_context2");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_new_stream = (uos_avformat_new_stream)dlsym(handle1, "avformat_new_stream");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_free_context = (uos_avformat_free_context)dlsym(handle1, "avformat_free_context");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avformat_write_header = (uos_avformat_write_header)dlsym(handle1, "avformat_write_header");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avio_open = (uos_avio_open)dlsym(handle1, "avio_open");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_write_frame = (uos_av_write_frame)dlsym(handle1, "av_write_frame");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_write_trailer = (uos_av_write_trailer)dlsym(handle1, "av_write_trailer");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_avio_closep = (uos_avio_closep)dlsym(handle1, "avio_closep");
     if ((error = dlerror()) != NULL)  {
         fprintf (stderr, "%s ", error);
     }
 
-    void *handle2 = dlopen("libavutil.so",RTLD_LAZY);
-    if (!handle2) {
-        fprintf (stderr, "%s ", dlerror());
-    }
-    dlsym(handle2, "cos");
-    if ((error = dlerror()) != NULL)  {
-        fprintf (stderr, "%s ", error);
-    }
+    //libavutil
+//    void *handle2 = dlopen("libavutil.so",RTLD_LAZY);
+//    if (!handle2) {
+//        fprintf (stderr, "%s ", dlerror());
+//    }
+//    instance->m_av_dict_get = (uos_av_dict_get)dlsym(handle2, "av_dict_get");//目前未使用
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+//    instance->m_av_strerror = (uos_av_strerror)dlsym(handle2, "av_strerror");
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+
+//    instance->m_av_dict_copy = (uos_av_dict_copy)dlsym(handle2, "av_dict_copy");
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+//    instance->m_av_dict_free = (uos_av_dict_free)dlsym(handle2, "av_dict_free");
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+//    instance->m_av_dict_set = (uos_av_dict_set)dlsym(handle2, "av_dict_set");
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+//    instance->m_av_dict_set_int = (uos_av_dict_set_int)dlsym(handle2, "av_dict_set_int");
+//    if ((error = dlerror()) != NULL)  {
+//        fprintf (stderr, "%s ", error);
+//    }
+
     assert(instance != NULL);
     return instance;
 }

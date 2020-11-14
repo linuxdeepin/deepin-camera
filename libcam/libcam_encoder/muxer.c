@@ -375,7 +375,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                     mp4_audio_stream);
                 }
                  if(!video_codec_data->private_options)
-                    av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+                    /*getLoadLibsInstance()->m_*/av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
 
                  int ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
                      if (ret < 0) {
@@ -386,12 +386,12 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                     //av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
             }
 
-            ret = avio_open(&mp4_ctx->pb, filename, AVIO_FLAG_WRITE);
+            ret = getLoadLibsInstance()->m_avio_open(&mp4_ctx->pb, filename, AVIO_FLAG_WRITE);
             if (ret < 0) {
                 fprintf(stderr, "Could not open '%s': %s\n", filename,
                         av_err2str(ret));
             }
-            ret= avformat_write_header(mp4_ctx, opt);
+            ret= getLoadLibsInstance()->m_avformat_write_header(mp4_ctx, opt);
             if(ret < 0)
             {
                 fprintf(stderr, "Error occurred when opening output file: %s\n",
@@ -511,8 +511,8 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
         case ENCODER_MUX_MP4:
             if(mp4_ctx)
             {
-                av_write_trailer(mp4_ctx);
-                avio_closep(&mp4_ctx->pb);
+                getLoadLibsInstance()->m_av_write_trailer(mp4_ctx);
+                getLoadLibsInstance()->m_avio_closep(&mp4_ctx->pb);
 
 //                if(!!mp4_video_stream->enc)
 //                    avcodec_free_context(&mp4_video_stream->enc);

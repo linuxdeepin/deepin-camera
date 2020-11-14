@@ -248,7 +248,7 @@ void set_device_location(const char *name)
         free(my_config->device_location);
 
     /*so here we use the dup string*/
-    my_config->device_location = strdup(device_location);
+    my_config->device_location = device_location/*strdup(device_location)*/;
 }
 
 
@@ -286,7 +286,7 @@ void set_device_name(const char *name)
         free(my_config->device_name);
 
     /*so here we use the dup string*/
-    my_config->device_name = strdup(device_name);
+    my_config->device_name = device_name /*strdup(device_name)*/;
 }
 
 char* get_device_name(void)

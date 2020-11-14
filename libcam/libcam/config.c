@@ -486,6 +486,14 @@ void config_clean()
 
 	if(my_config.photo_path != NULL)
 		free(my_config.photo_path);
+    if(my_config.device_name != NULL)
+        {
+            free(my_config.device_name);
+        }
+    if(my_config.device_location != NULL)
+        {
+            free(my_config.device_location);
+        }
 }
 
 /*

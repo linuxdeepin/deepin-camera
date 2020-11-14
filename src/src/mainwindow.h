@@ -110,7 +110,10 @@ public:
     {
         return m_actionSettings;
     }
-
+    /**
+    * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
+    */
+    void SettingPathsave();
     ~CMainWindow() override;
 private:
     /**
@@ -260,7 +263,9 @@ protected:
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
     ThumbnailsBar              *m_thumbnail = nullptr;
-    DMenu                     *menu;
+    DMenu                      *m_titlemenu;
+    QMenu                      *m_rightbtnmenu;
+    QAction                     *actOpenfolder;
     videowidget                  *m_videoPre;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;

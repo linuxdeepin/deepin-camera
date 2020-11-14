@@ -175,9 +175,9 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 		case V4L2_PIX_FMT_GREY:
 		case V4L2_PIX_FMT_Y10BPACK:
 	    case V4L2_PIX_FMT_Y16:
-#ifdef V4L2_PIX_FMT_Y16_BE
-		case V4L2_PIX_FMT_Y16_BE:
-#endif
+//#ifdef V4L2_PIX_FMT_Y16_BE
+//		case V4L2_PIX_FMT_Y16_BE:
+//#endif
 #ifdef V4L2_PIX_FMT_ABGR32
 		case V4L2_PIX_FMT_ABGR32:
 		case V4L2_PIX_FMT_XBGR32:
@@ -194,10 +194,10 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 		case V4L2_PIX_FMT_ARGB555:
 		case V4L2_PIX_FMT_XRGB555:
 #endif
-#ifdef V4L2_PIX_FMT_ARGB555X
-		case V4L2_PIX_FMT_ARGB555X:
-		case V4L2_PIX_FMT_XRGB555X:
-#endif
+//#ifdef V4L2_PIX_FMT_ARGB555X
+//		case V4L2_PIX_FMT_ARGB555X:
+//		case V4L2_PIX_FMT_XRGB555X:
+//#endif
             framebuf_size =(size_t)  framesizeIn;
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
@@ -913,11 +913,11 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 	    case V4L2_PIX_FMT_Y16:
 			y16_to_yu12(frame->yuv_frame, frame->raw_frame, width, height);
 			break;
-#ifdef V4L2_PIX_FMT_Y16_BE
-		case V4L2_PIX_FMT_Y16_BE:
-			y16x_to_yu12(frame->yuv_frame, frame->raw_frame, width, height);
-			break;
-#endif
+//#ifdef V4L2_PIX_FMT_Y16_BE
+//		case V4L2_PIX_FMT_Y16_BE:
+//			y16x_to_yu12(frame->yuv_frame, frame->raw_frame, width, height);
+//			break;
+//#endif
 		case V4L2_PIX_FMT_SPCA501:
 			s501_to_yu12(frame->yuv_frame, frame->raw_frame, width, height);
 			break;
