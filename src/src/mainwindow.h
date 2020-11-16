@@ -277,7 +277,8 @@ private:
     QString                      m_strCfgPath;
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
-    static QString               m_lastfilename;
+    static QString               m_lastVdfilename;
+    static QString               m_lastPicfilename;
 
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
     QDBusInterface *m_pLoginManager = nullptr;

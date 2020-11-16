@@ -52,7 +52,8 @@ extern int g_indexNow;
 extern QString g_strFileName;
 extern int g_videoCount;
 
-QString CMainWindow::m_lastfilename = {""};
+QString CMainWindow::m_lastVdfilename = {""};
+QString CMainWindow::m_lastPicfilename = {""};
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
     parent->setStyle(QStyleFactory::create(theme));
@@ -359,7 +360,8 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
         //接收休眠信号，仅wayland使用
         connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
 
-        m_thumbnail->addPath(CMainWindow::m_lastfilename);
+        m_thumbnail->addPath(CMainWindow::m_lastVdfilename);
+        m_thumbnail->addPath(CMainWindow::m_lastPicfilename);
     });
 }
 
@@ -609,10 +611,15 @@ void CMainWindow::initUI()
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
 
-    CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
+    CMainWindow::m_lastVdfilename = Settings::get().getOption("base.save.vddatapath").toString();
+    CMainWindow::m_lastPicfilename = Settings::get().getOption("base.save.picdatapath").toString();
+    if (CMainWindow::m_lastVdfilename.size() && CMainWindow::m_lastVdfilename[0] == '~') {
         QString str = QDir::homePath();
-        CMainWindow::m_lastfilename.replace(0, 1, str);
+        CMainWindow::m_lastVdfilename.replace(0, 1, str);
+    }
+    if (CMainWindow::m_lastPicfilename.size() && CMainWindow::m_lastPicfilename[0] == '~') {
+        QString str = QDir::homePath();
+        CMainWindow::m_lastPicfilename.replace(0, 1, str);
     }
     QDir dir;
     if (QDir(QString(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"))).exists() == false){
@@ -621,16 +628,21 @@ void CMainWindow::initUI()
     if (QDir(QString(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"))).exists() == false){
        dir.mkdir(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
     }
-    bool exist=false;
-    if (QDir(CMainWindow::m_lastfilename).exists()) {
-        m_fileWatcher.addPath(CMainWindow::m_lastfilename);
-        exist=true;
+    bool videopathexist=false;
+    bool picturepathexist=false;
+    if (QDir(CMainWindow::m_lastVdfilename).exists()) {
+        m_fileWatcher.addPath(CMainWindow::m_lastVdfilename);
+        videopathexist=true;
+    }
+    if (QDir(CMainWindow::m_lastPicfilename).exists()) {
+        m_fileWatcher.addPath(CMainWindow::m_lastPicfilename);
+        picturepathexist=true;
     }
 
     setupTitlebar();
     //缩略图延后加载
-    if(exist){
-        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+    if(picturepathexist){
+        m_videoPre->setSaveFolder(CMainWindow::m_lastPicfilename);
     }else{
         m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
     }
@@ -1065,28 +1077,34 @@ void CMainWindow::onTitleVdBtn()
 void CMainWindow::onSettingsDlgClose()
 {
     /**********************************************/
-    if (QDir(Settings::get().getOption("base.save.datapath").toString()).exists() == false) {
-        CMainWindow::m_lastfilename = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
-        Settings::get().setPathOption("datapath", QVariant(CMainWindow::m_lastfilename));
+    if (QDir(Settings::get().getOption("base.save.vddatapath").toString()).exists() == false) {
+        CMainWindow::m_lastVdfilename = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
+        Settings::get().setPathOption("vddatapath", QVariant(CMainWindow::m_lastVdfilename));
+    }
+    if (QDir(Settings::get().getOption("base.save.picdatapath").toString()).exists() == false) {
+        CMainWindow::m_lastPicfilename = QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera");
+        Settings::get().setPathOption("picdatapath", QVariant(CMainWindow::m_lastPicfilename));
     }
 
-    if (CMainWindow::m_lastfilename.size() && CMainWindow::m_lastfilename[0] == '~') {
-        CMainWindow::m_lastfilename.replace(0, 1, QDir::homePath());
+    if (CMainWindow::m_lastVdfilename.size() && CMainWindow::m_lastVdfilename[0] == '~') {
+        CMainWindow::m_lastVdfilename.replace(0, 1, QDir::homePath());
+    }
+    if (CMainWindow::m_lastPicfilename.size() && CMainWindow::m_lastPicfilename[0] == '~') {
+        CMainWindow::m_lastPicfilename.replace(0, 1, QDir::homePath());
     }
 
-    CMainWindow::m_lastfilename = Settings::get().getOption("base.save.datapath").toString();
-    if (QDir(CMainWindow::m_lastfilename).exists() == false) {
-        if(m_nActTpye == ActTakeVideo){
-            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
-        }else{
-            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
-        }
+    CMainWindow::m_lastVdfilename=Settings::get().getOption("base.save.vddatapath").toString();
+    CMainWindow::m_lastPicfilename=Settings::get().getOption("base.save.picdatapath").toString();
+    if(m_nActTpye == ActTakeVideo){
+        m_videoPre->setSaveFolder(CMainWindow::m_lastVdfilename);
     }else{
-        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+        m_videoPre->setSaveFolder(CMainWindow::m_lastPicfilename);
     }
-
-    m_fileWatcher.addPath(CMainWindow::m_lastfilename);
-    m_thumbnail->addPath(CMainWindow::m_lastfilename);
+    //关闭设置时，添加保存路径下图片和视频的缩略图
+    m_fileWatcher.addPath(CMainWindow::m_lastVdfilename);
+    m_thumbnail->addPath(CMainWindow::m_lastVdfilename);
+    m_fileWatcher.addPath(CMainWindow::m_lastPicfilename);
+    m_thumbnail->addPath(CMainWindow::m_lastPicfilename);
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -1225,14 +1243,9 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
     }
 }
 void CMainWindow::SettingPathsave(){
-    QDir dir;
-    if(QDir(CMainWindow::m_lastfilename).exists()==false){
-        if(m_nActTpye == ActTakeVideo){
-            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
-        }else{
-            m_videoPre->setSaveFolder(QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera"));
-        }
+    if(m_nActTpye == ActTakeVideo){
+        m_videoPre->setSaveFolder(CMainWindow::m_lastVdfilename);
     }else{
-        m_videoPre->setSaveFolder(CMainWindow::m_lastfilename);
+        m_videoPre->setSaveFolder(CMainWindow::m_lastPicfilename);
     }
 }
