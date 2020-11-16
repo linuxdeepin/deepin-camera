@@ -28,6 +28,7 @@
 DWIDGET_USE_NAMESPACE
 #define THUMBNAIL_WIDTH 30
 #define THUMBNAIL_HEIGHT 40
+#define THUMBNAIL_PIXMAP_SIZE 200
 
 class ImageItem : public DLabel
 {

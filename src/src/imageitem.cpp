@@ -66,7 +66,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
 
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
-                img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+                img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
@@ -125,7 +125,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     } else if (fileInfo.suffix() == "jpg") {
         m_strDuratuion = "";
         QImage img(path);
-        img = img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+        //修改缩略图缩放比例https://pms.uniontech.com/zentao/task-view-45804.html
+        img = img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
