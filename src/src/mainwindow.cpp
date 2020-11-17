@@ -707,7 +707,7 @@ void CMainWindow::initUI()
     m_thumbnail->setVisible(true);
     m_thumbnail->show();
 
-    m_thumbnail->m_nMaxItem = MinWindowWidth;
+    m_thumbnail->m_nMaxWidth = MinWindowWidth;
 
     QString test = CMainWindow::m_lastfilename;
 
@@ -885,7 +885,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     int width = this->width();
 
     if (m_thumbnail) {
-        m_thumbnail->m_nMaxItem = width;
+        m_thumbnail->fitSize(width);
         onFitToolBar();
     }
 

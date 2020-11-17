@@ -59,16 +59,18 @@ public:
     {
         return m_nItemCount;
     }
+    void setItemCount(int nCount) {m_nItemCount = nCount;}
     void setBtntooltip();
     void ChangeActType(int nType);
     void addPath(QString strPath);
     void addFile(QString strFile);
     void delFile(QString strFile);
+    void fitSize(int nWidth);
 
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
-    int m_nMaxItem;
+    int m_nMaxWidth;
     int m_nStatus; //当前状态
     DLabel *m_showVdTime;//缩略图显示视频时长
 private:
