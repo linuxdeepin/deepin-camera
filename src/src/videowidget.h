@@ -140,6 +140,7 @@ public:
     void setInterval(int nInterval)
     {
         m_nMaxInterval = nInterval;
+        m_Maxinterval = nInterval;
     }
     void setContinuous(int nContinuous)
     {
@@ -181,6 +182,7 @@ private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
     void showCountDownLabel(PRIVIEW_STATE state);
+
     void hideCountDownLabel();
     void hideTimeLabel();
 
@@ -254,12 +256,13 @@ private:
     int                     m_nFastClick; //快速点击次数，小于200ms计入
 
     PRIVIEW_STATE STATE = PICTRUE;
-    ThumbnailsBar         *m_thumbnail;       //缩略图
-    QPixmap               m_pixmap;
+    ThumbnailsBar           *m_thumbnail;       //缩略图
+    QPixmap                 m_pixmap;
     int                     m_nFileID;        //文件id
     QString                 m_strFolder;      //文件路径（视频,图片）
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
+    int                     m_Maxinterval;     //最大间隔
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     int                     m_nCount; //录制计时

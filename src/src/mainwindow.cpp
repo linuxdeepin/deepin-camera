@@ -377,11 +377,17 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::slotPopupSettingsDialog()
 {
-    auto dsd = new DSettingsDialog(this);
-    dsd->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
-    dsd->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
+    if(!m_SetDialog){
+        m_SetDialog = new DSettingsDialog(this);
+        m_SetDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+        m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
 
-    connect(dsd, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
+        connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
+    }
+    else {
+        m_SetDialog->exec();
+        return ;
+    }
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
@@ -459,11 +465,11 @@ void CMainWindow::slotPopupSettingsDialog()
             resolutionmodeFamily->setData("items", resolutionDatabase);
 
             //设置当前分辨率的索引
+            resolutionDatabase.append(QString(tr("None")));
+            Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
-            resolutionDatabase.append(QString(tr("None")));
-            Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             resolutionmodeFamily->setData("items", resolutionDatabase);
         }
     } else {
@@ -478,17 +484,15 @@ void CMainWindow::slotPopupSettingsDialog()
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
 
-    dsd->setProperty("_d_QSSThemename", "dark");
-    dsd->setProperty("_d_QSSFilename", "DSettingsDialog");
-    dsd->updateSettings(Settings::get().settings());
+    m_SetDialog->setProperty("_d_QSSThemename", "dark");
+    m_SetDialog->setProperty("_d_QSSFilename", "DSettingsDialog");
+    m_SetDialog->updateSettings(Settings::get().settings());
 
-    auto reset = dsd->findChild<QPushButton *>("SettingsContentReset");
+    auto reset = m_SetDialog->findChild<QPushButton *>("SettingsContentReset");
     reset->setDefault(false);
     reset->setAutoDefault(false);
 
-    dsd->exec();
-    delete dsd;
-    Settings::get().settings()->sync();
+    m_SetDialog->exec();
 }
 
 void CMainWindow::initBlockShutdown()
@@ -931,11 +935,11 @@ void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
 //    qDebug() << this->windowState() << endl;
-    if (this->windowState() == Qt::WindowMinimized) {
+    if (windowState() == Qt::WindowMinimized) {
         set_capture_pause(1);
-    } else if (this->windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
+    } else if (windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
         set_capture_pause(1);
-    } else if (this->isVisible() == true) {
+    } else if (isVisible()) {
         set_capture_pause(0);
     }
 }
@@ -1143,6 +1147,8 @@ void CMainWindow::onSettingsDlgClose()
     }
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
+
+    Settings::get().settings()->sync();
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)

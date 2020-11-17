@@ -262,6 +262,7 @@ protected:
      */
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
+    DSettingsDialog            *m_SetDialog = nullptr;
     ThumbnailsBar              *m_thumbnail = nullptr;
     DMenu                      *m_titlemenu;
     QMenu                      *m_rightbtnmenu;
