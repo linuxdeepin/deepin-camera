@@ -784,7 +784,8 @@ void videowidget::showCountdown()
             countTimer->stop();
             if (QDir(m_strFolder).exists() == false)
             {
-                m_strFolder = QDir::homePath() + QString("/Videos");
+                m_strFolder = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
+;
             }
             QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
