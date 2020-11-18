@@ -21,6 +21,7 @@
 
 #include "videowidget.h"
 #include "mainwindow.h"
+#include "datamanager.h"
 
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
@@ -40,8 +41,7 @@
 
 
 static PRIVIEW_STATE VIDEO_STATE = PICTRUE;
-QString g_strFileName = nullptr;
-volatile int g_devStatus = NOCAM;
+
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
@@ -67,6 +67,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     connect(recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
 //    this->setFixedSize(1000, 1000);
     m_pNormalView = new QGraphicsView(this);
+    m_pNormalView->show();
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_flashLabel  = new DLabel(this);
 
@@ -257,7 +258,7 @@ void videowidget::init()
         m_pCamErrItem->hide();
 //        m_imgPrcThread->init();
         m_imgPrcThread->start();
-        g_devStatus = CAM_CANUSE;
+        DataManager::instance()->setdevStatus(CAM_CANUSE);
     } else if (ret == E_FORMAT_ERR) {
 
         //启动失败
@@ -267,13 +268,13 @@ void videowidget::init()
             close_v4l2_device_handler();
             vd = nullptr;
         }
-        if (g_devStatus != CAM_CANNOT_USE)
+        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
             showCamUsed();
-        g_devStatus = CAM_CANNOT_USE;
+        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
         qDebug() << "cam in use" << endl;
     } else if (ret == E_NO_DEVICE_ERR) {
-        g_devStatus = NOCAM;
+        DataManager::instance()->setdevStatus(NOCAM);
         //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
         //如果不为空，则关闭vd
@@ -332,7 +333,7 @@ void videowidget::init()
         if (m_pCamErrItem->isVisible()) {
             QString str;
             if (type == DGuiApplicationHelper::LightType) {
-                if (g_devStatus == NOCAM) {
+                if (DataManager::instance()->getdevStatus() == NOCAM) {
                     qDebug() << "changed theme 1";
                     QImage img(":/images/icons/light/Not connected.svg");
                     m_pixmap = QPixmap::fromImage(img);
@@ -357,7 +358,7 @@ void videowidget::init()
 
 
             } else if (type == DGuiApplicationHelper::DarkType) {
-                if (g_devStatus == NOCAM) {
+                if (DataManager::instance()->getdevStatus() == NOCAM) {
                     qDebug() << "changed theme 3";
                     QImage img(":/images/icons/dark/Not connected_dark.svg");
                     m_pixmap = QPixmap::fromImage(img);
@@ -567,12 +568,11 @@ void videowidget::onReachMaxDelayedFrames()
         close_v4l2_device_handler();
     }
 
-    g_devStatus = NOCAM;
+    DataManager::instance()->setdevStatus(NOCAM);
     stopEverything();
     showNocam();
 
     m_openglwidget->hide();//隐藏opengl窗口
-
     emit setBtnStatues(false);
 
 }
@@ -715,7 +715,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 void videowidget::showCountdown()
 {
-    if(g_devStatus == NOCAM)
+    if(DataManager::instance()->getdevStatus() == NOCAM)
     {
         if (flashTimer->isActive()) {
             flashTimer->stop();
@@ -733,7 +733,7 @@ void videowidget::showCountdown()
         }
     }
     //显示倒数，m_nMaxInterval秒后结束，并拍照
-    if (m_nInterval == 0 && g_devStatus == CAM_CANUSE)
+    if (m_nInterval == 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE)
     {
         if (VIDEO_STATE == VIDEO)
         {
@@ -814,11 +814,8 @@ void videowidget::showCountdown()
                     QThread::currentThread()->quit();
                 });
                 thread->start();
-            }
-            else
-            {
-                QThread *thread = QThread::create([ = ]()
-                {
+            } else {
+                QThread *thread = QThread::create([ = ]() {
                     int nCount = 0;
                     while (true) {
                         if (nCount > 50) {
@@ -835,14 +832,15 @@ void videowidget::showCountdown()
                     QThread::currentThread()->quit();
                 });
                 thread->start();
+
             }
 
-            if (m_curTakePicTime > 0 && g_devStatus == CAM_CANUSE)
-            {
+            if (m_curTakePicTime > 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE) {
                 countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
             }
             hideCountDownLabel();
         }
+
     }
     else
     {
@@ -851,136 +849,6 @@ void videowidget::showCountdown()
         qDebug() << "m_nInterval:"<<m_nInterval;
     }
 }
-
-
-//void videowidget::showCountdown()
-//{
-//    if (m_imgPrcThread->getStatus()) {//拍照拍摄时拔出摄像头的异常处理
-//        if (flashTimer->isActive() && !m_flashLabel->isVisible()) {
-//            flashTimer->stop();
-//        }
-//        if (countTimer->isActive()) {
-//            countTimer->stop();
-//        }
-//        if (VIDEO_STATE == VIDEO) {
-//            if (getCapstatus()) {//录制中
-//                endBtnClicked();
-//            } else {
-//                emit takeVdCancel();
-//            }
-//        }
-//        if (VIDEO_STATE == PICTRUE) {
-//            emit takePicCancel();
-//        }
-//        //hideCountDownLabel();
-//        m_fWgtCountdown->hide();
-//        return;
-//    }
-//    //显示倒数，m_nMaxInterval秒后结束，并拍照
-//    if (m_nInterval == 0) {
-//        if (VIDEO_STATE == VIDEO) {
-//            if (!getCapstatus()) {
-//                /*m_bActive录制状态判断
-//                *false：非录制状态
-//                *true：录制状态
-//                */
-//                startTakeVideo();
-//            }
-
-//            //显示录制时长
-//            showCountDownLabel(VIDEO_STATE);
-//        }
-//        if (VIDEO_STATE == PICTRUE) {
-//            if (m_nMaxInterval == 0) {
-//                if (flashTimer->isActive()) {
-//                    flashTimer->stop();
-//                }
-//                //立即闪光，500ms后关闭
-//                flashTimer->start(FLASH_TIME);
-
-//                m_flashLabel->resize(this->size());
-//                m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-//                qDebug() << "m_flashLabel->show();";
-
-//                m_flashLabel->show();
-//                m_openglwidget->hide();
-//                m_pNormalView->hide();
-//                m_thumbnail->hide();
-//            }
-//            //发送就结束信号处理按钮状态
-//            countTimer->stop();
-//            if (QDir(m_strFolder).exists() == false) {
-//                m_strFolder = QDir::homePath()+QDir::separator()+"Pictures"+QDir::separator()+QObject::tr("Camera");
-//            }
-//            QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
-//            emit filename(strFileName);
-//            m_imgPrcThread->m_strPath = m_strFolder + "/" + strFileName;
-//            m_imgPrcThread->m_bTake = true; //保存图片标志
-
-//            m_nFileID++;
-//            if (--m_curTakePicTime == 0) {
-//                //拍照结束，恢复按钮状态和缩略图标志位
-//                QThread *thread = QThread::create([ = ]() {
-//                    int nCount = 0;
-//                    while (true) {
-//                        if (nCount > 50) {
-//                            qDebug() << "too long to emit takePicDone";
-//                            break;
-//                        }
-//                        if (!m_imgPrcThread->m_bTake) {
-//                            break;
-//                        }
-//                        nCount ++;
-//                        QThread::msleep(100);
-//                    }
-//                    emit takePicDone();
-//                    QThread::currentThread()->quit();
-//                });
-//                thread->start();
-//            } else {
-//                QThread *thread = QThread::create([ = ]() {
-//                    int nCount = 0;
-//                    while (true) {
-//                        if (nCount > 50) {
-//                            qDebug() << "too long to emit takePicOnce";
-//                            break;
-//                        }
-//                        if (!m_imgPrcThread->m_bTake) {
-//                            break;
-//                        }
-//                        nCount ++;
-//                        QThread::msleep(100);
-//                    }
-//                    emit takePicOnce();
-//                    QThread::currentThread()->quit();
-//                });
-//                thread->start();
-
-//            }
-
-//            if (m_curTakePicTime > 0 && g_devStatus == CAM_CANUSE) {
-//                countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
-//                m_nInterval = m_nMaxInterval; //改到开始的时候设置
-//            }
-//            hideCountDownLabel();
-//        }
-
-//    } else {
-//        if (countTimer->isActive()) {
-//            showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
-//            if (VIDEO_STATE == PICTRUE) {
-//                if (m_nInterval % m_nMaxInterval == 1) {
-//                    if (flashTimer->isActive()) {
-//                        flashTimer->stop();
-//                    }
-//                    //等500ms后闪光，内部关闭
-//                    flashTimer->start(FLASH_TIME);
-//                }
-//            }
-//            m_nInterval--;
-//        }
-//    }
-//}
 
 void videowidget::showRecTime()
 {
@@ -1029,38 +897,6 @@ void videowidget::showRecTime()
     m_btnVdTime->setText(strTime);
 }
 
-//void videowidget::flash()
-//{
-//    if (m_flashLabel->isVisible()){
-//        //隐藏闪光窗口
-//        qDebug() << "m_flashLabel->hide();";
-//        if(get_sound_of_takeing_photo())
-//        {
-//            m_takePicSound->play();
-//        }
-
-//        m_thumbnail->show();
-//        m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
-//        if(m_openglwidget->isVisible() == false)
-//            m_openglwidget->show();
-//        flashTimer->stop();
-//    } else {
-//        m_flashLabel->resize(this->size());
-//        m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-
-//        if (m_fWgtCountdown->isVisible())
-//            m_fWgtCountdown->hide();
-//        m_flashLabel->show();
-//        m_openglwidget->hide();
-//        m_thumbnail->hide();
-//        if (flashTimer->isActive()) { //连续点击拍照
-//            flashTimer->stop();
-//            m_flashLabel->show();
-//        }
-//        flashTimer->start(FLASH_TIME);
-//    }
-//}
-
 void videowidget::flash()
 {
     if (m_flashLabel->isVisible()){
@@ -1083,10 +919,9 @@ void videowidget::flash()
         qDebug() << "m_flashLabel->hide();";
     }
 }
-
 void videowidget::slotresolutionchanged(const QString &resolution)
 {
-    if (g_devStatus != CAM_CANUSE) {
+    if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
         return ;
     }
     QStringList ResStr = resolution.split("x");
@@ -1103,6 +938,7 @@ void videowidget::slotresolutionchanged(const QString &resolution)
         v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
         request_format_update(1);
     }
+
 }
 
 void videowidget::endBtnClicked()
@@ -1133,7 +969,6 @@ void videowidget::endBtnClicked()
         emit updateBlockSystem(false);
     }
     emit takeVdDone();
-    //    g_strFileName = nullptr;
 }
 
 void videowidget::manualClicked()
@@ -1143,9 +978,9 @@ void videowidget::manualClicked()
 
 void videowidget::restartDevices()
 {
-    if (g_devStatus != CAM_CANUSE) {
+    if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
         changeDev();
-        if (g_devStatus == CAM_CANUSE) {
+        if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             emit sigDeviceChange();
             QPalette plt = this->palette();
             plt.setColor(QPalette::Window, Qt::white);
@@ -1174,24 +1009,24 @@ void videowidget::changeDev()
                 if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-                    g_devStatus = CAM_CANUSE;
+                    DataManager::instance()->setdevStatus(CAM_CANUSE);
                     break;
                 } else if (ret == E_FORMAT_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
                     if (vd != nullptr) {
                         close_v4l2_device_handler();
                     }
-                    if (g_devStatus != CAM_CANNOT_USE) {
+                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE) {
                         showCamUsed();
                     }
-                    g_devStatus = CAM_CANNOT_USE;
+                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
                 } else if (ret == E_NO_DEVICE_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
                     if (vd != nullptr) {
                         close_v4l2_device_handler();
                     }
-                    g_devStatus = NOCAM;
+                    DataManager::instance()->setdevStatus(NOCAM);
                     showNocam();
                 }                
             }
@@ -1205,22 +1040,22 @@ void videowidget::changeDev()
                     if ( ret == E_OK) {
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
-                        g_devStatus = CAM_CANUSE;
+                        DataManager::instance()->setdevStatus(CAM_CANUSE);
                     } else if (ret == E_FORMAT_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
                         if (vd != nullptr) {
                             close_v4l2_device_handler();
                         }
-                        if (g_devStatus != CAM_CANNOT_USE)
+                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
                             showCamUsed();
-                        g_devStatus = CAM_CANNOT_USE;
+                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
                     } else if (ret == E_NO_DEVICE_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
                         if (vd != nullptr) {
                             close_v4l2_device_handler();
                         }
-                        g_devStatus = NOCAM;
+                        DataManager::instance()->setdevStatus(NOCAM);
                         showNocam();
                     }
                     break;
@@ -1229,21 +1064,21 @@ void videowidget::changeDev()
                     if (ret == E_OK) {
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
-                        g_devStatus = CAM_CANUSE;
+                        DataManager::instance()->setdevStatus(CAM_CANUSE);
                     } else if (ret == E_FORMAT_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
                         if (vd != nullptr) {
                             close_v4l2_device_handler();
                         }
-                        if (g_devStatus != CAM_CANNOT_USE)
+                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
                             showCamUsed();
-                        g_devStatus = CAM_CANNOT_USE;
+                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
                     } else if (ret == E_NO_DEVICE_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
                         if (vd != nullptr) {
                             close_v4l2_device_handler();
                         }
-                        g_devStatus = NOCAM;
+                        DataManager::instance()->setdevStatus(NOCAM);
                         showNocam();
                     }
                     break;
@@ -1254,22 +1089,22 @@ void videowidget::changeDev()
                 if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
-                    g_devStatus = CAM_CANUSE;
+                    DataManager::instance()->setdevStatus(CAM_CANUSE);
                 } else if (ret == E_FORMAT_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
                     if (vd != nullptr) {
                         close_v4l2_device_handler();
                     }
                     qDebug() << "camInit failed";
-                    if (g_devStatus != CAM_CANNOT_USE)
+                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
                         showCamUsed();
-                    g_devStatus = CAM_CANNOT_USE;
+                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
                 } else if (ret == E_NO_DEVICE_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
                     if (vd != nullptr) {
                         close_v4l2_device_handler();
                     }
-                    g_devStatus = NOCAM;
+                    DataManager::instance()->setdevStatus(NOCAM);
                     showNocam();
                 }
                 break;
@@ -1307,14 +1142,16 @@ void videowidget::onTakePic(bool bTrue)
         if (countTimer->isActive()) {
             countTimer->stop();
         }
-
+        //强制关闭导致白屏，去掉强制关闭，倒计时500ms后自动关
+//        if (flashTimer->isActive()) {
+//            flashTimer->stop();//
+//        }
         if (m_fWgtCountdown->isVisible()) {
             m_fWgtCountdown->hide();
         }
         if (m_flashLabel->isVisible()) {
             m_flashLabel->hide();
         }
-
         QEventLoop eventloop;
         QTimer::singleShot(300, &eventloop, SLOT(quit()));
         eventloop.exec();
@@ -1387,17 +1224,17 @@ void videowidget::startTakeVideo()
         reset_video_timer();
         emit updateBlockSystem(false);
     } else {
-        if (g_devStatus == CAM_CANUSE) {
+        if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start takeVideo";
-            g_strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
-            emit filename(g_strFileName);
+            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
             QString str = m_strFolder;
             if (QDir(m_strFolder).exists() == false) {
                 m_strFolder = QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera");
             }
             set_video_path(m_strFolder.toStdString().c_str());
-            set_video_name(g_strFileName.toStdString().c_str());
+            set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
 
             start_encoder_thread();
             emit updateBlockSystem(true);

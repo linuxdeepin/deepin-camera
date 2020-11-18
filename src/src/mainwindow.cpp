@@ -22,6 +22,7 @@
 #include "mainwindow.h"
 #include "capplication.h"
 #include "v4l2_core.h"
+#include "datamanager.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -46,14 +47,10 @@
 #include <dsettingswidgetfactory.h>
 
 using namespace dc;
-extern bool g_bMultiSlt; //是否多选
-extern QSet<int> g_setIndex;
-extern int g_indexNow;
-extern QString g_strFileName;
-extern int g_videoCount;
 
 QString CMainWindow::m_lastVdfilename = {""};
 QString CMainWindow::m_lastPicfilename = {""};
+
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
     parent->setStyle(QStyleFactory::create(theme));
@@ -389,6 +386,7 @@ void CMainWindow::slotPopupSettingsDialog()
         return ;
     }
 
+
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
     if (get_v4l2_device_handler() != nullptr) {
@@ -493,6 +491,7 @@ void CMainWindow::slotPopupSettingsDialog()
     reset->setAutoDefault(false);
 
     m_SetDialog->exec();
+
 }
 
 void CMainWindow::initBlockShutdown()
@@ -632,11 +631,9 @@ void CMainWindow::initUI()
     if (QDir(QString(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"))).exists() == false){
        dir.mkdir(QDir::homePath()+QDir::separator()+"Videos"+QDir::separator()+QObject::tr("Camera"));
     }
-    bool videopathexist=false;
     bool picturepathexist=false;
     if (QDir(CMainWindow::m_lastVdfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastVdfilename);
-        videopathexist=true;
     }
     if (QDir(CMainWindow::m_lastPicfilename).exists()) {
         m_fileWatcher.addPath(CMainWindow::m_lastPicfilename);
@@ -953,15 +950,15 @@ void CMainWindow::onFitToolBar()
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
             m_thumbnail->m_showVdTime->hide();
         } else {
-            if (g_videoCount <= 0) {
+            if (DataManager::instance()->getvideoCount() <= 0) {
                 m_thumbnail->m_showVdTime->hide();
                 nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH;
             } else {
                 m_thumbnail->m_showVdTime->show();
                 nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
             }
-            if (g_setIndex.size() >= 1) {
-                nWidth += g_setIndex.size() * (SELECTED_WIDTH - THUMBNAIL_WIDTH);
+            if (DataManager::instance()->m_setIndex.size() >= 1) {
+                nWidth += DataManager::instance()->m_setIndex.size() * (SELECTED_WIDTH - THUMBNAIL_WIDTH);
             } else {
                 nWidth += SELECTED_WIDTH - THUMBNAIL_WIDTH;
             }
@@ -1147,7 +1144,6 @@ void CMainWindow::onSettingsDlgClose()
     }
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
-
     Settings::get().settings()->sync();
 }
 
@@ -1189,7 +1185,7 @@ void CMainWindow::onTakeVdDone()
     m_thumbnail->show();
     onEnableSettings(true);
     QTimer::singleShot(200, this, [ = ] {
-        QString strFileName = m_videoPre->getFolder() + "/" + g_strFileName;
+        QString strFileName = m_videoPre->getFolder() + "/" + DataManager::instance()->getstrFileName();
         QFile file(strFileName);
         if (!file.exists())
         {
@@ -1234,8 +1230,8 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift pressed";
-        g_bMultiSlt = true;
-        g_setIndex.insert(g_indexNow);
+        DataManager::instance()->setbMultiSlt(true);
+        DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
     }
 }
 
@@ -1243,9 +1239,7 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift released";
-        g_bMultiSlt = false;
-        //g_setIndex.clear();
-        //g_setIndex.insert(g_indexNow);
+        DataManager::instance()->setbMultiSlt(false);
     }
 }
 void CMainWindow::SettingPathsave(){
