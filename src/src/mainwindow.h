@@ -114,6 +114,11 @@ public:
     * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
     */
     void SettingPathsave();
+
+    void settingDialog();
+
+    void settingDialogDel();
+
     ~CMainWindow() override;
 private:
     /**
@@ -175,6 +180,8 @@ private:
      * @brief initBlockSleep 阻塞睡眠
      */
     void initBlockSleep();
+
+
 
 private slots:
     /**
@@ -262,6 +269,7 @@ protected:
      */
     void keyReleaseEvent(QKeyEvent *e) override;
 private:
+    DSettingsDialog            *m_SetDialog = nullptr;
     ThumbnailsBar              *m_thumbnail = nullptr;
     DMenu                      *m_titlemenu;
     QMenu                      *m_rightbtnmenu;
@@ -277,7 +285,8 @@ private:
     QString                      m_strCfgPath;
     QAction                     *m_actionSettings;
     int                          m_nActTpye;
-    static QString               m_lastfilename;
+    static QString               m_lastVdfilename;
+    static QString               m_lastPicfilename;
 
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
     QDBusInterface *m_pLoginManager = nullptr;

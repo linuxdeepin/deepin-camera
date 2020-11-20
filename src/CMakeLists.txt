@@ -34,7 +34,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     /usr/include/SDL2
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools Multimedia)
+set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools Multimedia PrintSupport)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})
@@ -44,11 +44,12 @@ file (GLOB_RECURSE SOURCES  ./src/*.cpp
     ./*.c
     ../libcam/*.c
     ../basepub/*.c
+    ../basepub/*.cpp
     ./qtsingleapplication/qtsingleapplication.cpp
     ./qtsingleapplication/qtlocalpeer.cpp
     )
 
-file (GLOB_RECURSE HEADERS  ./*.h
+file (GLOB_RECURSE HEADERS  ./src/*.h
     ../libcam/*.h
     ../basepub/*.h
     )
@@ -105,8 +106,6 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     portaudio
-#    asound
-#    z
     ffmpegthumbnailer
     Qt5Network
     dl

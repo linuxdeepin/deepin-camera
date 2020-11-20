@@ -18,7 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "imageitem.h"
+
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
@@ -33,22 +33,22 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
-
 #include <libffmpegthumbnailer/videothumbnailer.h>
+
+#include "printhelper.h"
+#include "datamanager.h"
+#include "imageitem.h"
+
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
 #include <libavutil/avutil.h>
 #include "malloc.h"
 #include "load_libs.h"
-}
-using namespace ffmpegthumbnailer;
 
-extern QSet<int> g_setIndex;
+}
 extern QMap<int, ImageItem *> g_indexImage;
-extern int g_indexNow;
-bool g_bMultiSlt = false; //是否多选
-int g_videoCount;//缩略图的视频个数
+using namespace ffmpegthumbnailer;
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -77,7 +77,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 qDebug() << "generateThumbnail failed";
             }
         }
-        g_videoCount ++;
+        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount()+1);
         QString strTime = "";
         if (m_nDuration < 0) {
             m_nDuration = 0;
@@ -141,14 +141,38 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QMenu *menu = new QMenu(this);
     QAction *actCopy = new QAction(this);
+    actCopy->setObjectName("CopyAction");
     actCopy->setText(tr("Copy"));
 
     QAction *actDel = new QAction(this);
+    actDel->setObjectName("DelAction");
     actDel->setText(tr("Delete"));
     QAction *actOpenFolder = new QAction(this);
+    actOpenFolder->setObjectName("OpenFolderAction");
     actOpenFolder->setText(tr("Open folder"));
     menu->addAction(actCopy);
     menu->addAction(actDel);
+    if (!m_bVideo) {
+        actPrint = new QAction(this);
+        actPrint->setText(tr("Print"));
+        actPrint->setObjectName("PrinterAction");
+        menu->addAction(actPrint);
+        connect(actPrint, &QAction::triggered, this, [ = ] {
+            QStringList paths;
+            if (DataManager::instance()->m_setIndex.isEmpty())
+            {
+                paths = QStringList(path);
+                qDebug() << "sigle print";
+            } else {
+                QSet<int>::iterator it;
+                for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
+                    paths << g_indexImage.value(*it)->getPath();
+                    qDebug() << g_indexImage.value(*it)->getPath();
+                }
+            }
+            PrintHelper::showPrintDialog(QStringList(paths), this);
+        });
+    }
     menu->addAction(actOpenFolder);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
@@ -156,19 +180,24 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         menu->exec(QCursor::pos());
-        g_setIndex.clear();
-        g_bMultiSlt = false;
+        DataManager::instance()->m_setIndex.clear();
+        DataManager::instance()->setbMultiSlt(false);
     });
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
-        if (g_setIndex.isEmpty())
+        if (DataManager::instance()->m_setIndex.isEmpty())
         {
             paths = QStringList(path);
             qDebug() << "sigle way";
         } else
         {
+//            QSet<int> tmp = DataManager::instance()->m_setIndex;
+//            for (it = tmp.begin(); it != tmp.end(); ++it) {
+//                paths << g_indexImage.value(*it)->getPath();
+//                qDebug() << g_indexImage.value(*it)->getPath();
+//            }
             QSet<int>::iterator it;
-            for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
                 paths << g_indexImage.value(*it)->getPath();
                 qDebug() << g_indexImage.value(*it)->getPath();
             }
@@ -209,7 +238,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             strtmp.replace(0, 1, QDir::homePath());
         }
 
-        if (g_setIndex.size() <= 1) {
+        if (DataManager::instance()->m_setIndex.size() <= 1) {
             QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
             Dtk::Widget::DDesktopServices::showFileItem(url);
         } else {
@@ -224,8 +253,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     //右键菜单先进入aboutToHide再进入QAction::triggered，因此该功能挪到customContextMenuRequested
 //    connect(menu,&QMenu::aboutToHide,this, [ = ] {
 //        //1、判断shift是否按下，如果按下，不处理，如果未按下，将按下标志置false
-//        g_setIndex.clear();
-//        g_bMultiSlt = false;//此时shift键焦点已丢失，且暂时还无法获取到是否按下的信息，因此置false，需要多选重新按下即可
+//        DataManager::instance()->m_setIndex.clear();
+//        DataManager::instance()->getbMultiSlt() = false;//此时shift键焦点已丢失，且暂时还无法获取到是否按下的信息，因此置false，需要多选重新按下即可
 //    });
 
     pix.scaled(this->size(), Qt::KeepAspectRatio);
@@ -235,7 +264,7 @@ ImageItem::~ImageItem()
 {
     QFileInfo fileInfo(m_path);
     if (/*fileInfo.suffix() == "mp4" || */fileInfo.suffix() == "webm") {
-        g_videoCount --;
+        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount()-1);
     }
     //    m_menu->deleteLater();
     //    m_actCopy->deleteLater();
@@ -271,30 +300,43 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev) //改到缩略图里边重载
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
-    g_indexImage.value(g_indexNow)->update();
-    if (g_bMultiSlt) {
-        if (g_setIndex.contains(m_index)) {
+    if (DataManager::instance()->getindexNow() != -1) {
+        if (!g_indexImage.contains(DataManager::instance()->getindexNow())) {
+            DataManager::instance()->m_setIndex.clear();
+            DataManager::instance()->setindexNow(g_indexImage.begin().value()->getIndex());
+        }
+        g_indexImage.value(DataManager::instance()->getindexNow())->update();
+    }
+    //当按下shift键，多选，鼠标右键弹出右键菜单后松开shift键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
+    //此处补充获取shift键盘状态，以避免继续选择图元，应用处于多选状态的问题
+    if (DataManager::instance()->getbMultiSlt() /*&& QGuiApplication::keyboardModifiers() == Qt::ShiftModifier*/){
+        if (DataManager::instance()->m_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
-                g_setIndex.remove(m_index);
-                if (g_setIndex.size() > 0) {
-                    g_indexNow = g_indexImage.value(*g_setIndex.begin())->getIndex();
+                DataManager::instance()->m_setIndex.remove(m_index);
+                if (DataManager::instance()->m_setIndex.size() > 0) {
+                    DataManager::instance()->setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
                 }
             }
         } else {
-            g_indexNow = m_index;
-            g_setIndex.insert(m_index);
+            DataManager::instance()->setindexNow(m_index);
+            DataManager::instance()->m_setIndex.insert(m_index);
         }
     } else {
-        g_indexNow = m_index;
-        g_setIndex.clear();
+        DataManager::instance()->setindexNow(m_index);
+        DataManager::instance()->m_setIndex.clear();
+        DataManager::instance()->m_setIndex.insert(m_index);
     }
     update();
-    if (g_setIndex.size() <= 1) {
+    if (DataManager::instance()->m_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
+        if (!m_bVideo) {
+            emit showDuration("");
+            actPrint->setVisible(true);
+        }
     } else {
         QSet<int>::iterator it;
         bool bHaveVideo = false;
-        for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
+        for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
             if (g_indexImage.value(*it)->getIsVideo()) {
                 bHaveVideo = true;
                 break;
@@ -302,8 +344,12 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         }
         if (bHaveVideo) {
             emit showDuration("... ...");
+            if (!m_bVideo) {//当前为视频是不会new actPrint的
+                actPrint->setVisible(false);
+            }
         } else {
             emit showDuration("");
+            actPrint->setVisible(true);
         }
     }
     emit needFit();
@@ -320,7 +366,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     QRect pixmapRect;
     QFileInfo fileinfo(m_path);
     QString str = fileinfo.suffix();
-    if (g_setIndex.contains(m_index) || (g_setIndex.isEmpty() && m_index == g_indexNow)) {
+    if (DataManager::instance()->m_setIndex.contains(m_index) || (DataManager::instance()->m_setIndex.isEmpty() && m_index == DataManager::instance()->getindexNow())) {
         QPainterPath backgroundBp;
         QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
                                  backgroundRect.width() - 2, backgroundRect.height() - 2);

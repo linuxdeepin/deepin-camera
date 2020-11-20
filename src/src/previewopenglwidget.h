@@ -50,7 +50,7 @@ private:
     uint videoW;
     uint videoH;
 
-    uchar *yuvPtr = nullptr;
+    uchar *m_yuvPtr = nullptr;
 };
 
 #endif // PREVIEWOPENGLWIDGET_H

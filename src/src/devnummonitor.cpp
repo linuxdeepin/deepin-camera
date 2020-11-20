@@ -63,8 +63,6 @@ void DevNumMonitor::run()
 
 void DevNumMonitor::timeOutSlot()
 {
-    QMutexLocker locker(&mutex);
-
     check_device_list_events(get_v4l2_device_handler());
     devlist = get_device_list();
     if (devlist->num_devices <= 1) {

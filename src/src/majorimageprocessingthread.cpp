@@ -66,7 +66,6 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::run()
 {
-    QImage tmpImg;
     vd1 = get_v4l2_device_handler();
     v4l2core_start_stream(vd1);
     int framedely = 0;
@@ -98,7 +97,9 @@ void MajorImageProcessingThread::run()
                 }
             }
 
+            v4l2core_start_stream(vd1);
 
+            //保存新的分辨率
             QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin/deepin-camera/") + QString("deepin-camera");
 
             config_load(config_file.toLatin1().data());
@@ -112,7 +113,6 @@ void MajorImageProcessingThread::run()
             set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
             config_save(config_file.toLatin1().data());
 
-            v4l2core_start_stream(vd1);
         }
         result = -1;
         frame = v4l2core_get_decoded_frame(vd1);
@@ -209,9 +209,13 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
-            emit sigYUVFrame(frame->yuv_frame,frame->width,frame->height);
             emit sigRenderYuv(true);
+            emit sigYUVFrame(frame->yuv_frame,frame->width,frame->height);
             malloc_trim(0);
+        }
+        if(frame->yuv_frame == nullptr)
+        {
+            emit sigRenderYuv(false);
         }
         m_rwMtxImg.unlock();
         v4l2core_release_frame(vd1, frame);
