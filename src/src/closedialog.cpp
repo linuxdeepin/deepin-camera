@@ -42,11 +42,16 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
     addButton(btnName1);
     addButton(btnName2);
 
-    QAbstractButton *tmpBtn = getButton(1);
-    QPalette plt = tmpBtn->palette();
+    QAbstractButton *CancelBtn = getButton(0);
+    CancelBtn->setObjectName("CancelBtn");
+
+    QAbstractButton *closeBtn = getButton(1);
+    closeBtn->setObjectName("CloseBtn");
+
+    QPalette plt = closeBtn->palette();
     QColor clr(255,87,54);
     plt.setColor(QPalette::ButtonText,clr);
-    tmpBtn->setPalette(plt);
+    closeBtn->setPalette(plt);
 
     labtitle = new QLbtoDLabel();
     labtitle->setText(strText);

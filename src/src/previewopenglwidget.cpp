@@ -44,6 +44,9 @@ void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)
 {
     m_Rendermutex.lock();
 
+//    videoW = static_cast<uint>(v4l2core_get_frame_width(get_v4l2_device_handler()));
+//    videoH = static_cast<uint>(v4l2core_get_frame_height(get_v4l2_device_handler()));
+
     uint yuvsize = width * height * 3 / 2;
      if(videoW != width && videoH != height)
      {

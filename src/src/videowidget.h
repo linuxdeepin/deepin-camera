@@ -55,7 +55,7 @@ class QSound;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 enum PRIVIEW_STATE {PICTRUE, NODEVICE, VIDEO};
-enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
+//enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE}; // 定义枚举类型设备状态，无摄像头、有无法使用的摄像头、有可用摄像头
 
 class videowidget : public DWidget
 {

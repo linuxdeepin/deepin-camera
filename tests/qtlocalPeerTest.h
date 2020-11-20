@@ -5,21 +5,21 @@
 #include <gmock/gmock-matchers.h>
 #include "../src/qtsingleapplication/qtlocalpeer.h"
 
-class QtlocalpeerTest : public ::testing::Test
-{
-public:
-    QtlocalpeerTest();
-    virtual void SetUp()
-    {
+//class QtlocalpeerTest : public ::testing::Test
+//{
+//public:
+//    QtlocalpeerTest();
+//    virtual void SetUp()
+//    {
 
-    }
+//    }
 
-    virtual void TearDown()
-    {
-        delete qlp;
-    }
-protected:
-    QtLocalPeer  *qlp;
-};
+//    virtual void TearDown()
+//    {
+//        delete qlp;
+//    }
+//protected:
+//    QtLocalPeer  *qlp;
+//};
 
 #endif // QTLOCALPEERTEST_H

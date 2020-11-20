@@ -114,6 +114,11 @@ public:
     * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
     */
     void SettingPathsave();
+
+    void settingDialog();
+
+    void settingDialogDel();
+
     ~CMainWindow() override;
 private:
     /**
@@ -175,6 +180,8 @@ private:
      * @brief initBlockSleep 阻塞睡眠
      */
     void initBlockSleep();
+
+
 
 private slots:
     /**

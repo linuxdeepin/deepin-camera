@@ -52,6 +52,8 @@ DWIDGET_USE_NAMESPACE
 enum ActType {ActTakePic, ActTakeVideo}; // 定义枚举类型ActType
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; // 定义枚举类型CamStatus
 
+QMap<int, ImageItem *> get_imageitem();
+
 
 class ThumbnailsBar : public DFloatingWidget
 {

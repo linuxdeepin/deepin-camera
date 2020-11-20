@@ -25,6 +25,7 @@ private slots:
     void cleanupTestCase();
 
     void testGTest();
+    int runtest();
 };
 
 QTestMain::QTestMain()
@@ -50,10 +51,13 @@ void QTestMain::cleanupTestCase()
 void QTestMain::testGTest()
 {
     testing::InitGoogleTest();
-    int ret = RUN_ALL_TESTS();
-    Q_UNUSED(ret)
+    runtest();
+    exit(0);
+}
 
-    QTimer::singleShot(20000,[=]{ exit(0); });
+int QTestMain::runtest()
+{
+    return RUN_ALL_TESTS();
 }
 
 int main(int argc, char *argv[])
@@ -104,17 +108,15 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
-
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
+
+    a.setMainWindow(&w);
+
     w.show();
     //将界面移至屏幕中央
     Dtk::Widget::moveToCenter(&w);
 
-
     QTestMain testMain;
-//    CMainWindow *pMainWindow = new CMainWindow();
-//    MovieConfiguration::get().init();
-    a.setMainWindow(&w);
     QTest::qExec(&testMain, argc, argv);
     return a.exec();
 }

@@ -18,9 +18,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "imageitem.h"
-#include "printhelper.h"
-#include "datamanager.h"
+
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
@@ -35,14 +33,19 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
-
 #include <libffmpegthumbnailer/videothumbnailer.h>
+
+#include "printhelper.h"
+#include "datamanager.h"
+#include "imageitem.h"
+
 extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
 #include <libavutil/avutil.h>
 #include "malloc.h"
 #include "load_libs.h"
+
 }
 extern QMap<int, ImageItem *> g_indexImage;
 using namespace ffmpegthumbnailer;
@@ -138,17 +141,21 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
     QMenu *menu = new QMenu(this);
     QAction *actCopy = new QAction(this);
+    actCopy->setObjectName("CopyAction");
     actCopy->setText(tr("Copy"));
 
     QAction *actDel = new QAction(this);
+    actDel->setObjectName("DelAction");
     actDel->setText(tr("Delete"));
     QAction *actOpenFolder = new QAction(this);
+    actOpenFolder->setObjectName("OpenFolderAction");
     actOpenFolder->setText(tr("Open folder"));
     menu->addAction(actCopy);
     menu->addAction(actDel);
     if (!m_bVideo) {
         actPrint = new QAction(this);
         actPrint->setText(tr("Print"));
+        actPrint->setObjectName("PrinterAction");
         menu->addAction(actPrint);
         connect(actPrint, &QAction::triggered, this, [ = ] {
             QStringList paths;

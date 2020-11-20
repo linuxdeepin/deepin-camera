@@ -17,16 +17,6 @@ class Settings: public QObject
 {
     Q_OBJECT
 public:
-    enum Flag {
-        ClearWhenQuit,
-        ShowThumbnailMode,
-        ResumeFromLast,
-        AutoSearchSimilar,
-        PreviewOnMouseover,
-        MultipleInstance,
-        PauseOnMinimize,
-        HWAccel,
-    };
     /**
     * @brief get　获取设置对象
     */
@@ -52,17 +42,9 @@ public:
     {
         return settings()->group(name);
     }
-    QPointer<DSettingsGroup> shortcuts()
-    {
-        return group("shortcuts");
-    }
     QPointer<DSettingsGroup> base()
     {
         return group("base");
-    }
-    QPointer<DSettingsGroup> subtitle()
-    {
-        return group("subtitle");
     }
 
     QVariant generalOption(const QString &opt);
@@ -75,11 +57,8 @@ public slots:
     void setNewResolutionList();
 
 signals:
-    void shortcutsChanged(const QString &, const QVariant &);
-    void baseChanged(const QString &, const QVariant &);
-    void subtitleChanged(const QString &, const QVariant &);
     void resolutionchanged(const QString &);//分辨率信号
-    void baseMuteChanged(const QString &, const QVariant &);
+
 
 private:
     Settings();

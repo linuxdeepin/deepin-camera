@@ -117,7 +117,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     auto option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
     auto *lab = new DLabel();
-    auto *main = new DWidget;
+    auto *main = new DWidget();
     auto *layout = new QHBoxLayout;
 
     main->setLayout(layout);
@@ -259,8 +259,6 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         }
     });
 
-
-
     option->connect(le, &DLineEdit::editingFinished, option, [ = ]() {
 
         QString name = le->text();
@@ -333,15 +331,16 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 
     initUI();
 
+
     //延迟加载
     QTimer::singleShot(200, this, [ = ] {
+        m_devnumMonitor = new DevNumMonitor();
+        m_devnumMonitor->init();
         initTitleBar();
         initConnection();
         QDir dir;
         QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
         dir.mkpath(strCache);
-
-        m_devnumMonitor = new DevNumMonitor();
         m_devnumMonitor->start();
         initThumbnails();
         initThumbnailsConn();
@@ -374,18 +373,79 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::slotPopupSettingsDialog()
 {
-    if(!m_SetDialog){
-        m_SetDialog = new DSettingsDialog(this);
-        m_SetDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
-        m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
+    settingDialog();
+    m_SetDialog->exec();
+    settingDialogDel();
+}
 
-        connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
-    }
-    else {
-        m_SetDialog->exec();
-        return ;
+void CMainWindow::initBlockShutdown()
+{
+    if (!m_arg.isEmpty() || m_reply.value().isValid()) {
+        qDebug() << "m_reply.value().isValid():" << m_reply.value().isValid();
+        return;
     }
 
+    m_pLoginManager = new QDBusInterface("org.freedesktop.login1",
+                                         "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager",
+                                         QDBusConnection::systemBus());
+
+    m_arg << QString("shutdown")             // what
+          << qApp->productName()           // who
+          << QObject::tr("File not saved")          // why
+          << QString("block");                        // mode
+
+    //int fd = -1;
+    m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
+    if (m_reply.isValid()) {
+        /*fd = */(void)m_reply.value().fileDescriptor();
+    }
+    //如果for结束则表示没有发现未保存的tab项，则放开阻塞关机
+    if (m_reply.isValid()) {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
+        m_reply = QDBusReply<QDBusUnixFileDescriptor>();
+        //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
+        qDebug() << "init Nublock shutdown.";
+    }
+}
+
+void CMainWindow::initBlockSleep()
+{
+    if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
+        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+        return;
+    }
+
+    m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
+                                         "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager",
+                                         QDBusConnection::systemBus());
+
+    m_argSleep << QString("sleep")             // what
+          << qApp->productName()           // who
+          << QObject::tr("File not saved")          // why
+          << QString("block");                        // mode
+
+    //int fd = -1;
+    m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
+    if (m_replySleep.isValid()) {
+        /*fd = */(void)m_replySleep.value().fileDescriptor();
+    }
+    //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
+    if (m_replySleep.isValid()) {
+        QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
+        m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
+        qDebug() << "init Nublock sleep.";
+    }
+}
+
+void CMainWindow::settingDialog()
+{
+    m_SetDialog = new DSettingsDialog(this);
+    m_SetDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+    m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
+    m_SetDialog->setObjectName("SettingDialog");
+    connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
@@ -489,69 +549,13 @@ void CMainWindow::slotPopupSettingsDialog()
     auto reset = m_SetDialog->findChild<QPushButton *>("SettingsContentReset");
     reset->setDefault(false);
     reset->setAutoDefault(false);
-
-    m_SetDialog->exec();
-
 }
 
-void CMainWindow::initBlockShutdown()
+void CMainWindow::settingDialogDel()
 {
-    if (!m_arg.isEmpty() || m_reply.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_reply.value().isValid();
-        return;
-    }
-
-    m_pLoginManager = new QDBusInterface("org.freedesktop.login1",
-                                         "/org/freedesktop/login1",
-                                         "org.freedesktop.login1.Manager",
-                                         QDBusConnection::systemBus());
-
-    m_arg << QString("shutdown")             // what
-          << qApp->productName()           // who
-          << QObject::tr("File not saved")          // why
-          << QString("block");                        // mode
-
-    //int fd = -1;
-    m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
-    if (m_reply.isValid()) {
-        /*fd = */(void)m_reply.value().fileDescriptor();
-    }
-    //如果for结束则表示没有发现未保存的tab项，则放开阻塞关机
-    if (m_reply.isValid()) {
-        QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
-        m_reply = QDBusReply<QDBusUnixFileDescriptor>();
-        //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-        qDebug() << "init Nublock shutdown.";
-    }
-}
-
-void CMainWindow::initBlockSleep()
-{
-    if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
-        return;
-    }
-
-    m_pLoginMgrSleep = new QDBusInterface("org.freedesktop.login1",
-                                         "/org/freedesktop/login1",
-                                         "org.freedesktop.login1.Manager",
-                                         QDBusConnection::systemBus());
-
-    m_argSleep << QString("sleep")             // what
-          << qApp->productName()           // who
-          << QObject::tr("File not saved")          // why
-          << QString("block");                        // mode
-
-    //int fd = -1;
-    m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
-    if (m_replySleep.isValid()) {
-        /*fd = */(void)m_replySleep.value().fileDescriptor();
-    }
-    //如果for结束则表示没有发现未保存的tab项，则放开阻塞睡眠
-    if (m_replySleep.isValid()) {
-        QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
-        m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-        qDebug() << "init Nublock sleep.";
+    if(m_SetDialog){
+        delete m_SetDialog;
+        m_SetDialog = nullptr;
     }
 }
 
@@ -687,15 +691,14 @@ void CMainWindow::initUI()
 void CMainWindow::initTitleBar()
 {
     DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
-    pDButtonBox = new DButtonBox();
+    pDButtonBox = new DButtonBox(this);
+    pDButtonBox->setObjectName("myButtonBox");
     pDButtonBox->setFixedWidth(120);
     pDButtonBox->setFixedHeight(36);
     QList<DButtonBoxButton *> listButtonBox;
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
-    m_pTitlePicBtn = new DButtonBoxButton(nullptr/*iconPic*/);
-
-
-
+    m_pTitlePicBtn = new DButtonBoxButton(QString(""),this);
+    m_pTitlePicBtn->setObjectName("pTitlePicBtn");
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(26, 26));
     m_pTitlePicBtn->setFocusPolicy(Qt::TabFocus);
@@ -714,7 +717,9 @@ void CMainWindow::initTitleBar()
     else
         iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
 
-    m_pTitleVdBtn = new DButtonBoxButton(nullptr);
+    m_pTitleVdBtn = new DButtonBoxButton(QString(""),this);
+    m_pTitleVdBtn->setObjectName("pTitleVdBtn");
+
     m_pTitleVdBtn->setFocusPolicy(Qt::TabFocus);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 26));
@@ -725,7 +730,8 @@ void CMainWindow::initTitleBar()
     titlebar()->addWidget(pDButtonBox);
     pDButtonBox->setFocusPolicy(Qt::NoFocus);
 
-    pSelectBtn = new DIconButton(nullptr/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
+    pSelectBtn->setObjectName("SelectBtn");
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
     pSelectBtn->hide();
@@ -800,6 +806,8 @@ void CMainWindow::initConnection()
 void CMainWindow::initThumbnails()
 {
     m_thumbnail = new ThumbnailsBar(this);
+    m_thumbnail->setObjectName("thumbnail");
+
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
     m_videoPre->setthumbnail(m_thumbnail);
@@ -873,8 +881,11 @@ void CMainWindow::setSelBtnShow()
 
 void CMainWindow::setupTitlebar()
 {
-    m_titlemenu = new DMenu();
+    titlebar()->setObjectName("TitleBar");
+    m_titlemenu = new DMenu(this);
+    m_titlemenu->setObjectName("TitleMenu");
     m_actionSettings = new QAction(tr("Settings"), this);
+    m_actionSettings->setObjectName("SettingAction");
     m_titlemenu->addAction(m_actionSettings);
     titlebar()->setMenu(m_titlemenu);
     titlebar()->setFocusPolicy(Qt::NoFocus);
@@ -912,6 +923,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 {
     if (m_videoPre->getCapstatus()) {
         CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+        closeDlg.setObjectName("closeDlg");
         int ret = closeDlg.exec();
         switch (ret) {
         case 0:

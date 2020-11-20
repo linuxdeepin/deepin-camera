@@ -177,9 +177,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
     //延迟加载
-    QTimer::singleShot(500, this, [ = ] {
+//    QTimer::singleShot(500, this, [ = ] {
         init();
-    });
+//    });
 
 }
 
@@ -471,6 +471,14 @@ void videowidget::showCamUsed()
     if(m_pNormalView->isVisible() == false)
     {
         m_pNormalView->show();
+    }
+    if(m_pNormalItem->isVisible() == false)
+    {
+        m_pNormalItem->show();
+    }
+    if(m_pCamErrItem->isVisible() == false)
+    {
+        m_pCamErrItem->show();
     }
     m_openglwidget->hide();
     emit sigDeviceChange();
@@ -984,6 +992,9 @@ void videowidget::restartDevices()
             emit sigDeviceChange();
             QPalette plt = this->palette();
             plt.setColor(QPalette::Window, Qt::white);
+            m_pNormalView->hide();
+            m_openglwidget->show();
+
         }
     }
 }

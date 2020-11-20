@@ -49,7 +49,7 @@ file (GLOB_RECURSE SOURCES  ./src/*.cpp
     ./qtsingleapplication/qtlocalpeer.cpp
     )
 
-file (GLOB_RECURSE HEADERS  ./*.h
+file (GLOB_RECURSE HEADERS  ./src/*.h
     ../libcam/*.h
     ../basepub/*.h
     )
@@ -106,8 +106,6 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     portaudio
-#    asound
-#    z
     ffmpegthumbnailer
     Qt5Network
     dl

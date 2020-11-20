@@ -1,14 +1,17 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
-//#include "src/src/imageitem.h"
-
 #include <QObject>
 #include <QSet>
+
+enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
 
 class DataManager: public QObject
 {
 public:
+
+    static DataManager *instance();
+
     QSet<int> m_setIndex;
     Q_DISABLE_COPY(DataManager)
     /**
@@ -65,11 +68,11 @@ public:
     /**
      * @brief getdevStatus 获得设备状态
      */
-    int getdevStatus();
+    enum DeviceStatus getdevStatus();
     /**
      * @brief setdevStatus 设置设备状态
      */
-    void setdevStatus(int devStatus);
+    void setdevStatus(enum DeviceStatus devStatus);
 //    /**
 //     * @brief getindexImage 获得图片索引
 //     */
@@ -79,7 +82,7 @@ public:
 //     */
 //    void setindexImage(int tIndex,ImageItem * pLabel);
 
-    static DataManager *instance();
+
 
 private:
     DataManager();
@@ -89,6 +92,6 @@ private:
 //    QMap<int, ImageItem *> m_indexImage;
     QString m_strFileName;
     int m_videoCount;
-    volatile int m_devStatus;
+    volatile enum DeviceStatus m_devStatus;
 };
 #endif // DATAMANAGER_H

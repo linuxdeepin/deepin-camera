@@ -61,12 +61,12 @@ void DataManager::setvideoCount(int videoCount)
     m_videoCount=videoCount;
 }
 
-int DataManager::getdevStatus()
+enum DeviceStatus DataManager::getdevStatus()
 {
     return m_devStatus;
 }
 
-void DataManager::setdevStatus(int devStatus)
+void DataManager::setdevStatus(enum DeviceStatus devStatus)
 {
     m_devStatus=devStatus;
 }
