@@ -50,7 +50,7 @@ TEST_F(MainwindowTest, ImageItemContinuousChoose)
     QAction* copyact = mainwindow->findChild<QAction*>("CopyAction");
     copyact->trigger();
 
-    QACtion* printer = mainwindow->findChild<QAction*>()
+    QAction* printer = mainwindow->findChild<QAction*>();
 
     QAction* delact = mainwindow->findChild<QAction*>("DelAction");
     delact->trigger();

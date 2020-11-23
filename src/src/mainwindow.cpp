@@ -524,7 +524,6 @@ void CMainWindow::settingDialog()
 
             //设置当前分辨率的索引
             resolutionDatabase.append(QString(tr("None")));
-            Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
@@ -676,7 +675,7 @@ void CMainWindow::initUI()
         nDelayTime = 0;
         break;
     }
-    if(soundphoto == true)
+    if(soundphoto)
     {
         set_takeing_photo_sound(1);
     }
@@ -845,7 +844,7 @@ void CMainWindow::initThumbnails()
     m_thumbnail->setVisible(true);
     m_thumbnail->show();
 
-    m_thumbnail->m_nMaxItem = MinWindowWidth;
+    m_thumbnail->m_nMaxWidth = MinWindowWidth;
 
 }
 
@@ -911,7 +910,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 //    }
     //m_thumbnail->onFoldersChanged("");
     if (m_thumbnail) {
-        m_thumbnail->m_nMaxItem = width;
+        m_thumbnail->m_nMaxWidth = width;
         m_thumbnail->widthChanged();
         onFitToolBar();
     }
@@ -1147,7 +1146,7 @@ void CMainWindow::onSettingsDlgClose()
         nDelayTime = 0;
         break;
     }
-    if(soundphoto == true)
+    if(soundphoto)
     {
         set_takeing_photo_sound(1);
     }

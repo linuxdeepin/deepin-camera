@@ -85,7 +85,7 @@ public:
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
-    int m_nMaxItem;
+    int m_nMaxWidth;
     int m_nStatus; //当前状态
     DLabel *m_showVdTime;//缩略图显示视频时长
 private:

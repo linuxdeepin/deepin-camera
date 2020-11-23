@@ -73,7 +73,9 @@ private:
     v4l2_dev_t *vd1;
     v4l2_frame_buff_t *frame;
     int result;
-
+    uint m_nVdWidth;
+    uint m_nVdHeight;
+    uchar *m_yuvPtr = nullptr;
 signals:
     void sigYUVFrame(uchar* yuv,uint width,uint height);
     void sigRenderYuv(bool);

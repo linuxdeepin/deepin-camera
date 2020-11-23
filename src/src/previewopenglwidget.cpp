@@ -32,11 +32,7 @@ PreviewOpenglWidget::~PreviewOpenglWidget()
             delete textureV;
             textureV = nullptr;
         }
-        if(m_yuvPtr)
-        {
-            delete [] m_yuvPtr;
-            m_yuvPtr = nullptr;
-        }
+
         doneCurrent();
 }
 
@@ -44,26 +40,13 @@ void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)
 {
     m_Rendermutex.lock();
 
-//    videoW = static_cast<uint>(v4l2core_get_frame_width(get_v4l2_device_handler()));
-//    videoH = static_cast<uint>(v4l2core_get_frame_height(get_v4l2_device_handler()));
-
-    uint yuvsize = width * height * 3 / 2;
-     if(videoW != width && videoH != height)
-     {
-         videoW = width;
-         videoH = height;
-         if(m_yuvPtr != nullptr)
-         {
-             delete [] m_yuvPtr;
-             m_yuvPtr = nullptr;
-         }
-         m_yuvPtr = new uchar[yuvsize];
-     }
-     memcpy(m_yuvPtr,ptr, yuvsize);
-     if(m_yuvPtr)
-     {
-         update();
-     }
+    videoW = width;
+    videoH = height;
+    m_yuvPtr = ptr;//数据拷贝挪到major类
+    if(m_yuvPtr)
+    {
+        update();
+    }
 
     m_Rendermutex.unlock();
 }
