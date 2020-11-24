@@ -69,7 +69,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
-    m_nMaxItem = 0;
+    m_nMaxWidth = 0;
     m_hBOx = new QHBoxLayout();
     m_hBOx->setSpacing(ITEM_SPACE);
     m_mainLayout = new QHBoxLayout();
@@ -149,8 +149,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     QString strShowTime = "";
-    qDebug() << m_nMaxItem;
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
+    qDebug() << m_nMaxWidth;
+    int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
 
     QLayoutItem *child;
     while ((child = m_hBOx->takeAt(0)) != nullptr) {
@@ -509,8 +509,13 @@ void ThumbnailsBar::addFile(QString strFile)
         }
     }
     ************/
+    //避免出现空白图片
+    QFileInfo fileinfo(strFile);
+    if (!fileinfo.exists()) {
+        return;
+    }
     //先删除多余的，保证全选情况下缩略图大小正确
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
     if (m_hBOx->count() >= nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
@@ -519,6 +524,7 @@ void ThumbnailsBar::addFile(QString strFile)
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
+        //ui上删掉的得加回来，否则删除文件的时候，总会剩一个文件
         QFileInfo fileinfo(strPath);
         m_fileInfoLst += fileinfo;
     }
@@ -644,7 +650,7 @@ void ThumbnailsBar::delFile(QString strFile)
 
 void ThumbnailsBar::widthChanged()
 {
-    int nLetAddCount = (m_nMaxItem - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
+    int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
     while (m_hBOx->count() > nLetAddCount) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
         QString strPath = tmp->getPath();

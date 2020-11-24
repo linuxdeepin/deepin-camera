@@ -1,3 +1,24 @@
+/*
+* Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+*
+* Author:     shicetu <shicetu@uniontech.com>
+*             hujianbo <hujianbo@uniontech.com>
+* Maintainer: shicetu <shicetu@uniontech.com>
+*             hujianbo <hujianbo@uniontech.com>
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include "previewopenglwidget.h"
 
 #include <malloc.h>
@@ -32,11 +53,7 @@ PreviewOpenglWidget::~PreviewOpenglWidget()
             delete textureV;
             textureV = nullptr;
         }
-        if(m_yuvPtr)
-        {
-            delete [] m_yuvPtr;
-            m_yuvPtr = nullptr;
-        }
+
         doneCurrent();
 }
 
@@ -44,26 +61,13 @@ void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)
 {
     m_Rendermutex.lock();
 
-//    videoW = static_cast<uint>(v4l2core_get_frame_width(get_v4l2_device_handler()));
-//    videoH = static_cast<uint>(v4l2core_get_frame_height(get_v4l2_device_handler()));
-
-    uint yuvsize = width * height * 3 / 2;
-     if(videoW != width && videoH != height)
-     {
-         videoW = width;
-         videoH = height;
-         if(m_yuvPtr != nullptr)
-         {
-             delete [] m_yuvPtr;
-             m_yuvPtr = nullptr;
-         }
-         m_yuvPtr = new uchar[yuvsize];
-     }
-     memcpy(m_yuvPtr,ptr, yuvsize);
-     if(m_yuvPtr)
-     {
-         update();
-     }
+    videoW = width;
+    videoH = height;
+    m_yuvPtr = ptr;//数据拷贝挪到major类
+    if(m_yuvPtr)
+    {
+        update();
+    }
 
     m_Rendermutex.unlock();
 }

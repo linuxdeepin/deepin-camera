@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     hujianbo <hujianbo@uniontech.com>
-*
+*             shicetu <shicetu@uniontech.com>
 * Maintainer: hujianbo <hujianbo@uniontech.com>
-*
+*             shicetu <shicetu@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -85,7 +85,7 @@ public:
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
-    int m_nMaxItem;
+    int m_nMaxWidth;
     int m_nStatus; //当前状态
     DLabel *m_showVdTime;//缩略图显示视频时长
 private:

@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * Maintainer: shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -44,7 +44,11 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
         qDebug() << "close_v4l2_device_handler";
         close_v4l2_device_handler();
     }
-
+    if(m_yuvPtr)
+    {
+        delete [] m_yuvPtr;
+        m_yuvPtr = nullptr;
+    }
     config_clean();
     qDebug() << "~MajorImageProcessingThread";
 }
@@ -70,6 +74,7 @@ void MajorImageProcessingThread::run()
     v4l2core_start_stream(vd1);
     int framedely = 0;
     int64_t timespausestamp = 0;
+    uint yuvsize = 0;
     while (stopped == 0) {
         if (get_resolution_status()) {
             request_format_update(0); /*reset*/
@@ -210,7 +215,21 @@ void MajorImageProcessingThread::run()
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
             emit sigRenderYuv(true);
-            emit sigYUVFrame(frame->yuv_frame,frame->width,frame->height);
+            //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
+            if(m_nVdWidth != static_cast<unsigned int>(frame->width)&& m_nVdHeight != static_cast<unsigned int>(frame->height))
+            {
+                m_nVdWidth = static_cast<unsigned int>(frame->width);
+                m_nVdHeight = static_cast<unsigned int>(frame->height);
+                if(m_yuvPtr != nullptr)
+                {
+                    delete [] m_yuvPtr;
+                    m_yuvPtr = nullptr;
+                }
+                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+                m_yuvPtr = new uchar[yuvsize];
+            }
+            memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
+            emit sigYUVFrame(m_yuvPtr,m_nVdWidth,m_nVdHeight);
             malloc_trim(0);
         }
         if(frame->yuv_frame == nullptr)

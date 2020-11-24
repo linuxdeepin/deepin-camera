@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * Maintainer: shicetu <shicetu@uniontech.com>
-*
+*             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -73,7 +73,9 @@ private:
     v4l2_dev_t *vd1;
     v4l2_frame_buff_t *frame;
     int result;
-
+    uint m_nVdWidth;
+    uint m_nVdHeight;
+    uchar *m_yuvPtr = nullptr;
 signals:
     void sigYUVFrame(uchar* yuv,uint width,uint height);
     void sigRenderYuv(bool);

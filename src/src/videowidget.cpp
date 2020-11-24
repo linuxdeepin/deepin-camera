@@ -3,7 +3,7 @@
 *
 * Author:     shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
-* Maintainer:  shicetu <shicetu@uniontech.com>
+* Maintainer: shicetu <shicetu@uniontech.com>
 *             hujianbo <hujianbo@uniontech.com>
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -551,7 +551,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
         }
         m_pNormalScene->update();
 
-        if (get_encoder_status() == 0 && getCapstatus() == true)
+        if (get_encoder_status() == 0 && getCapstatus())
         {
             endBtnClicked();
         }
@@ -1095,7 +1095,7 @@ void videowidget::changeDev()
                     break;
                 }
             }
-            if (str.isEmpty() == true) {
+            if (str.isEmpty()) {
                 int ret = camInit(devlist->list_devices[0].device);
                 if (ret == E_OK) {
                     m_imgPrcThread->init();
