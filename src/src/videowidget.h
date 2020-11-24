@@ -63,10 +63,6 @@ class videowidget : public DWidget
 public:
     explicit videowidget(DWidget *parent = nullptr);
     ~videowidget();
-    /**
-    * @brief showNocam　未发现摄像头
-    */
-    void showNocam();
 
 signals:
     /**
@@ -147,11 +143,6 @@ public:
         m_nMaxContinuous = m_curTakePicTime = nContinuous;
     }
 
-    DPushButton* getEndBtn()
-    {
-        return m_endBtn;
-    }
-
     void setthumbnail(ThumbnailsBar *thumb);
 public slots:
     void onTakePic(bool bTrue);
@@ -208,6 +199,11 @@ private:
     * @brief showCountDownLabel　摄像头被占用
     */
     void showCamUsed();
+
+    /**
+    * @brief showNocam　未发现摄像头
+    */
+    void showNocam();
 
     /**
     * @brief startTakeVideo　开始录像

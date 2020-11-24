@@ -168,8 +168,9 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     static QString nameLast = nullptr;
 
     main->setLayout(layout);
-    auto *icon = new DPushButton;
+    auto *icon = new DPushButton(main);
     icon->setAutoDefault(false);
+    icon->setObjectName("OptionLineEditBtn");
     le->setFixedHeight(30);
     le->setObjectName("OptionSelectableLineEdit");
     le->setText(option->value().toString());
@@ -335,6 +336,8 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     //延迟加载
     QTimer::singleShot(200, this, [ = ] {
         m_devnumMonitor = new DevNumMonitor();
+        m_devnumMonitor->setParent(this);
+        m_devnumMonitor->setObjectName("DevMonitorThread");
         m_devnumMonitor->init();
         initTitleBar();
         initConnection();
@@ -368,6 +371,17 @@ CMainWindow::~CMainWindow()
             delete m_rightbtnmenu;
             m_rightbtnmenu = nullptr;
         }
+    if(m_devnumMonitor)
+    {
+        m_devnumMonitor->stop();
+        m_devnumMonitor->deleteLater();
+        m_devnumMonitor = nullptr;
+    }
+    if(m_videoPre)
+    {
+        m_videoPre->deleteLater();
+        m_videoPre = nullptr;
+    }
     qDebug() << "stop_encoder_thread";
 }
 
@@ -812,7 +826,8 @@ void CMainWindow::initThumbnails()
     m_videoPre->setthumbnail(m_thumbnail);
 
     //添加右键打开文件夹功能
-    m_rightbtnmenu = new QMenu();
+    m_rightbtnmenu = new QMenu(this);
+    m_rightbtnmenu->setObjectName("rightbtnmenu");
     actOpenfolder = new QAction(this);
     actOpenfolder->setText(tr("Open folder"));
     m_rightbtnmenu->addAction(actOpenfolder);

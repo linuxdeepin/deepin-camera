@@ -41,7 +41,6 @@ void DevNumMonitor::stop()
         m_pTimer->deleteLater();
     }
     m_pTimer = nullptr;
-    v4l2core_close_v4l2_device_list();
     this->exit();
 }
 

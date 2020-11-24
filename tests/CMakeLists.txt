@@ -10,6 +10,9 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+option (UNITTEST "Use UNITTEST" ON)
+add_definitions(-DUNITTEST)
+
 execute_process(COMMAND uname -m OUTPUT_VARIABLE MACH
     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
@@ -135,6 +138,7 @@ add_custom_command(TARGET test
     '*/usr/include/*'
     '*/tests/*'
     '*/src/qtsingleapplication/*'
+    '*/basepub/printoptionspage.cpp'
     '/usr/local/*'
     -o ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
     COMMAND echo " =================== do filter end ==================== "

@@ -27,6 +27,15 @@ CApplication::CApplication(int &argc, char **argv)
 
 }
 
+CApplication::~CApplication()
+{
+    if(m_mainwindow)
+    {
+        m_mainwindow->deleteLater();
+        m_mainwindow = nullptr;
+    }
+}
+
 void CApplication::setMainWindow(CMainWindow *window)
 {
         if (nullptr != window) {

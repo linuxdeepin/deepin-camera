@@ -68,48 +68,7 @@ public:
     static QString lastOpenedPath();
     DSettings *getDsetMber();
     void setWayland(bool bTrue){m_bWayland = bTrue;}
-    /**
-    * @brief getPicBoxBtn　获取标题拍照按钮
-    */
-    DButtonBoxButton* getPicBoxBtn()
-    {
-        return m_pTitlePicBtn;
-    }
-    /**
-    * @brief getVdBoxBtn　获取标题录像按钮
-    */
-    DButtonBoxButton* getVdBoxBtn()
-    {
-        return m_pTitleVdBtn;
-    }
-    /**
-    * @brief getThubBtn　获取缩略图后面的拍照/录像按钮，由标题栏确定类型
-    */
-    DPushButton* getThubBtn()
-    {
-        return m_thumbnail->getPushbtn();
-    }
-    /**
-    * @brief getChangeCam　获取相机切换按钮，当有多个相机连接时，按钮可进行相机切换；若没有相机连接或只有一个相机时，按钮隐藏
-    */
-    DIconButton* getChangeCam()
-    {
-        return pSelectBtn;
-    }
-    /**
-    * @brief getEndBtn　获取结束录制视频按钮
-    */
-    DPushButton* getEndBtn()
-    {
-        return m_videoPre->getEndBtn();
-    }
-    /**
-    * @brief getActionsSettings　获取设置按钮
-    */
-    QAction *getActionsSettings()
-    {
-        return m_actionSettings;
-    }
+
     /**
     * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
     */

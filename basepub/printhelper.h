@@ -22,8 +22,10 @@
 #ifndef PRINTHELPER_H
 #define PRINTHELPER_H
 
+#include <DPrintPreviewDialog>
 #include <QObject>
 #include "printoptionspage.h"
+
 
 class PrintHelper : public QObject
 {

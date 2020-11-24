@@ -42,6 +42,7 @@ class CApplication : public QtSingleApplication
     Q_OBJECT
 public:
     CApplication(int &argc, char **argv);
+    ~CApplication() override;
     void setMainWindow(CMainWindow *window);
     CMainWindow *getMainWindow();
 signals:

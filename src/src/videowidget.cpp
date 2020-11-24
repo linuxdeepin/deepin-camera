@@ -136,6 +136,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_btnVdTime->setText(QString("00:00:00"));
 
     m_endBtn = new DPushButton(this);
+    m_endBtn->setObjectName("TakeVdEndBtn");
     m_endBtn->setFlat(true);
     m_endBtn->setFixedSize(QSize(56, 51));
 
@@ -241,6 +242,8 @@ void videowidget::init()
     setCapstatus(false);
 
     m_imgPrcThread = new MajorImageProcessingThread;
+    m_imgPrcThread->setParent(this);
+    m_imgPrcThread->setObjectName("MajorImageThread");
     m_imgPrcThread->m_bTake = false;
     connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
 
