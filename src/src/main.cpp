@@ -69,14 +69,15 @@ int main(int argc, char *argv[])
 
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
+    qApp->setOrganizationName("deepin");
+    qApp->setApplicationName("deepin-camera");
+    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
+  
+    qApp->setProductName(QObject::tr("Camera"));
+  
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
-
-    qApp->setOrganizationName("deepin");
-    qApp->setApplicationName("deepin-camera");
-
-    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
 
     qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(QDate::currentDate()).replace("  ", " 0"), "MMM dd yyyy");
@@ -86,7 +87,7 @@ int main(int argc, char *argv[])
     qApp->setWindowIcon(QIcon::fromTheme("deepin-camera"));
     qApp->setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
     //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
-    qApp->setProductName(QObject::tr("Camera"));
+
 
     qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
     DApplicationSettings saveTheme;
