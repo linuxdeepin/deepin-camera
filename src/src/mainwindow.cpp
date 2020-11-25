@@ -382,6 +382,11 @@ CMainWindow::~CMainWindow()
         m_videoPre->deleteLater();
         m_videoPre = nullptr;
     }
+    if(m_thumbnail)
+    {
+        m_thumbnail->deleteLater();
+        m_thumbnail = nullptr;
+    }
     qDebug() << "stop_encoder_thread";
 }
 
@@ -623,7 +628,7 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
-
+    m_videoPre->setObjectName("VideoPreviewWidget");
     this->setCentralWidget(m_videoPre);
     m_videoPre->setFocusPolicy(Qt::NoFocus);
 

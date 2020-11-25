@@ -27,20 +27,28 @@ CApplication::CApplication(int &argc, char **argv)
 
 }
 
-CApplication::~CApplication()
+void CApplication::setMainWindow(CMainWindow *window)
 {
-    if(m_mainwindow)
+        if (!m_mainwindow) {
+            m_mainwindow = window;
+        }
+}
+
+void CApplication::setprocess(QList<QProcess*>&process)
+{
+    m_camprocesslist.clear();
+    if(m_camprocesslist.isEmpty())
     {
-        m_mainwindow->deleteLater();
-        m_mainwindow = nullptr;
+        for(QList<QProcess*>::iterator i = process.begin(); i != process.end(); ++i)
+        {
+            m_camprocesslist.append(*i);
+        }
     }
 }
 
-void CApplication::setMainWindow(CMainWindow *window)
+QList<QProcess*> CApplication::getprocess()
 {
-        if (nullptr != window) {
-            m_mainwindow = window;
-        }
+    return m_camprocesslist;
 }
 
 CMainWindow *CApplication::getMainWindow()

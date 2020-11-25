@@ -24,6 +24,7 @@
 
 #include <DApplication>
 #include <DGuiApplicationHelper>
+#include <QProcess>
 #include "mainwindow.h"
 
 #include "../qtsingleapplication/qtsingleapplication.h"
@@ -42,8 +43,9 @@ class CApplication : public QtSingleApplication
     Q_OBJECT
 public:
     CApplication(int &argc, char **argv);
-    ~CApplication() override;
     void setMainWindow(CMainWindow *window);
+    void setprocess(QList<QProcess*> &process);
+    QList<QProcess*> getprocess();
     CMainWindow *getMainWindow();
 signals:
     void popupConfirmDialog();
@@ -52,5 +54,6 @@ protected:
     void handleQuitAction() override;
 private:
     CMainWindow* m_mainwindow = nullptr;
+    QList<QProcess*> m_camprocesslist;
 };
 #endif // CAPPLICATION_H

@@ -242,10 +242,16 @@ void videowidget::init()
     setCapstatus(false);
 
     m_imgPrcThread = new MajorImageProcessingThread;
-    m_imgPrcThread->setParent(this);
     m_imgPrcThread->setObjectName("MajorImageThread");
     m_imgPrcThread->m_bTake = false;
     connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
+    connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar*,uint,uint)),
+            m_openglwidget, SLOT(slotShowYuv(uchar*,uint,uint)));
+
+    connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
+            this, SLOT(onReachMaxDelayedFrames()));
+
+    connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
 
 //    m_flashLabel->setWindowFlag(Qt::WindowType::WindowStaysOnTopHint);
@@ -262,7 +268,8 @@ void videowidget::init()
 //        m_imgPrcThread->init();
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
-    } else if (ret == E_FORMAT_ERR) {
+    }
+    else if (ret == E_FORMAT_ERR) {
 
         //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
@@ -276,26 +283,21 @@ void videowidget::init()
         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
         qDebug() << "cam in use" << endl;
-    } else if (ret == E_NO_DEVICE_ERR) {
-        DataManager::instance()->setdevStatus(NOCAM);
-        //启动失败
-        v4l2_dev_t *vd = get_v4l2_device_handler();
-        //如果不为空，则关闭vd
-        if (vd != nullptr) {
-            close_v4l2_device_handler();
-            vd = nullptr;
-        }
-        showNocam();
-        qDebug() << "No webcam found" << endl;
     }
-
-    connect(m_imgPrcThread,SIGNAL(sigYUVFrame(uchar*,uint,uint)),
-            m_openglwidget,SLOT(slotShowYuv(uchar*,uint,uint)));
-
-    connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
-            this, SLOT(onReachMaxDelayedFrames()));
-
-    connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
+    else if (ret == E_NO_DEVICE_ERR) {
+        if (DataManager::instance()->getdevStatus() != NOCAM){
+            DataManager::instance()->setdevStatus(NOCAM);
+            //启动失败
+            v4l2_dev_t *vd = get_v4l2_device_handler();
+            //如果不为空，则关闭vd
+            if (vd != nullptr) {
+                close_v4l2_device_handler();
+                vd = nullptr;
+            }
+            showNocam();
+            qDebug() << "No webcam found" << endl;
+        }
+    }
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
@@ -399,22 +401,27 @@ void videowidget::init()
     });
 }
 
-//显示没有设备的图片的槽函数
+     //显示没有设备的图片的槽函数
+
+
 void videowidget::showNocam()
 {
-    if(m_pNormalView->isVisible() == false)
+    if(!m_pNormalView->isVisible())
     {
         m_pNormalView->show();
     }
-    if(m_pNormalItem->isVisible() == false)
-     {
-         m_pNormalItem->show();
-     }
-     if(m_pCamErrItem->isVisible() == false)
-     {
-         m_pCamErrItem->show();
-     }
-    m_openglwidget->hide();
+    if(!m_pNormalItem->isVisible())
+    {
+        m_pNormalItem->show();
+    }
+    if(!m_pCamErrItem->isVisible())
+    {
+        m_pCamErrItem->show();
+    }
+    if(m_openglwidget->isVisible())
+    {
+        m_openglwidget->hide();
+    }
     emit sigDeviceChange();
     QString str(tr("No webcam found"));//未连接摄像头
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
@@ -471,6 +478,7 @@ void videowidget::setthumbnail(ThumbnailsBar *thumb)
 //显示设备被占用或者拔掉的图片的槽函数
 void videowidget::showCamUsed()
 {
+    qDebug() << "show camUsed" << endl;
     if(m_pNormalView->isVisible() == false)
     {
         m_pNormalView->show();
@@ -583,7 +591,8 @@ void videowidget::onReachMaxDelayedFrames()
     stopEverything();
     showNocam();
 
-    m_openglwidget->hide();//隐藏opengl窗口
+    if(m_openglwidget->isVisible())
+        m_openglwidget->hide();//隐藏opengl窗口
     emit setBtnStatues(false);
 
 }

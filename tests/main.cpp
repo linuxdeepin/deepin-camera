@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     CApplication a(argc, argv);
     testing::InitGoogleTest(&argc, argv);
     //加载翻译
-    a.loadTranslator(QList<QLocale>() << QLocale::system());
+
 
 //    QTranslator *translator = new QTranslator;
 
@@ -79,18 +79,19 @@ int main(int argc, char *argv[])
     //设置属性
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
-
     a.setOrganizationName("deepin");
     a.setApplicationName("deepin-camera");
     a.setApplicationDisplayName("Camera");
+    a.setProductName("Camera");
+    a.loadTranslator(QList<QLocale>() << QLocale::system());
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
+    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
     a.setApplicationVersion("1.0");
     a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
-    a.setProductName("Camera");
+
     a.setApplicationDescription("This is camera.");
 
     DApplicationSettings saveTheme;
@@ -106,15 +107,27 @@ int main(int argc, char *argv[])
         qDebug() << "another deepin camera instance has started";
         exit(0);
     }
+    QList<QProcess*> Processlist;
+    Processlist.clear();
+    QProcess* myProcess = new QProcess;
 
-    CMainWindow w;
-    w.setMinimumSize(MinWindowWidth, MinWindowHeight);
+    QProcess* myProcess1 = new QProcess;
+//    myProcess1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
 
-    a.setMainWindow(&w);
+    QTest::qWait(3000);
 
-    w.show();
+    Processlist.append(myProcess);
+    Processlist.append(myProcess1);
+
+    CMainWindow* w = new CMainWindow;
+    w->setMinimumSize(MinWindowWidth, MinWindowHeight);
+
+    a.setMainWindow(w);
+    a.setprocess(Processlist);
+
+    w->show();
     //将界面移至屏幕中央
-    Dtk::Widget::moveToCenter(&w);
+    Dtk::Widget::moveToCenter(w);
 
     QTestMain testMain;
     QTest::qExec(&testMain, argc, argv);
