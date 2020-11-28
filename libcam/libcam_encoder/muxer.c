@@ -36,7 +36,7 @@
 #include <fcntl.h>
 #include <linux/videodev2.h>
 #include <string.h>
-#include <errno.h>
+//#include <errno.h>
 #include <assert.h>
 #include <sys/statfs.h>
 #include <libavformat/avformat.h>
@@ -375,7 +375,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
                     mp4_audio_stream);
                 }
                  if(!video_codec_data->private_options)
-                    /*getLoadLibsInstance()->m_*/av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+                    getLoadLibsInstance()->m_av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
 
                  int ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
                      if (ret < 0) {
@@ -388,14 +388,14 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 
             ret = getLoadLibsInstance()->m_avio_open(&mp4_ctx->pb, filename, AVIO_FLAG_WRITE);
             if (ret < 0) {
-                fprintf(stderr, "Could not open '%s': %s\n", filename,
-                        av_err2str(ret));
+                //fprintf(stderr, "Could not open '%s': %s\n", filename,
+                        //av_err2str(ret));
             }
             ret= getLoadLibsInstance()->m_avformat_write_header(mp4_ctx, opt);
             if(ret < 0)
             {
-                fprintf(stderr, "Error occurred when opening output file: %s\n",
-                                av_err2str(ret));
+//                fprintf(stderr, "Error occurred when opening output file: %s\n",
+//                                av_err2str(ret));
             }
             break;
 
@@ -517,13 +517,13 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
 //                if(!!mp4_video_stream->enc)
 //                    avcodec_free_context(&mp4_video_stream->enc);
                 if(!!mp4_video_stream->frame)
-                    av_frame_free(&mp4_video_stream->frame);
+                    getLoadLibsInstance()->m_av_frame_free(&mp4_video_stream->frame);
                 if(!!mp4_video_stream->tmp_frame)
-                    av_frame_free(&mp4_video_stream->tmp_frame);
+                    getLoadLibsInstance()->m_av_frame_free(&mp4_video_stream->tmp_frame);
                 if(!!mp4_video_stream->sws_ctx)
-                    sws_freeContext(mp4_video_stream->sws_ctx);
+                    getLoadLibsInstance()->m_sws_freeContext(mp4_video_stream->sws_ctx);
                 if(!!mp4_video_stream->swr_ctx)
-                    swr_free(&mp4_video_stream->swr_ctx);
+                    getLoadLibsInstance()->m_swr_free(&mp4_video_stream->swr_ctx);
                 if(!!mp4_video_stream)
                 {
                     free(mp4_video_stream);
@@ -533,13 +533,13 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
                 //if(!!mp4_audio_stream->enc)
                     //avcodec_free_context(&mp4_audio_stream->enc);
                 if(!!mp4_audio_stream->frame)
-                    av_frame_free(&mp4_audio_stream->frame);
+                    getLoadLibsInstance()->m_av_frame_free(&mp4_audio_stream->frame);
                 if(!!mp4_audio_stream->tmp_frame)
-                    av_frame_free(&mp4_audio_stream->tmp_frame);
+                    getLoadLibsInstance()->m_av_frame_free(&mp4_audio_stream->tmp_frame);
                 if(!!mp4_audio_stream->sws_ctx)
-                    sws_freeContext(mp4_audio_stream->sws_ctx);
+                    getLoadLibsInstance()->m_sws_freeContext(mp4_audio_stream->sws_ctx);
                 if(!!mp4_audio_stream->swr_ctx)
-                    swr_free(&mp4_audio_stream->swr_ctx);
+                    getLoadLibsInstance()->m_swr_free(&mp4_audio_stream->swr_ctx);
                 if(!!mp4_audio_stream)
                 {
                     free(mp4_audio_stream);

@@ -43,6 +43,7 @@
 #include "file_io.h"
 #include "avi.h"
 #include "gview.h"
+#include "load_libs.h"
 
 #ifndef O_BINARY
 /* win32 wants a binary flag to open(); this sets it to null
@@ -495,7 +496,7 @@ static void clean_indexes(avi_context_t *avi_ctx)
 		avi_index_t *indexes = (avi_index_t *) stream->indexes;
 		for (j=0; j<indexes->ents_allocated/AVI_INDEX_CLUSTER_SIZE; j++)
              free(indexes->cluster[j]);
-        av_freep(&indexes->cluster);
+        getLoadLibsInstance()->m_av_freep(&indexes->cluster);
         indexes->ents_allocated = indexes->entry = 0;
     }
 }

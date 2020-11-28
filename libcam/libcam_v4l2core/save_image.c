@@ -106,11 +106,11 @@ int save_frame_image(v4l2_frame_buff_t *frame, const char *filename, int format)
 			ret = save_image_bmp(frame, filename);
 			break;
 
-		case IMG_FMT_PNG:
-			if(verbosity > 0)
-				printf("V4L2_CORE: saving png frame to %s\n", filename);
-			ret = save_image_png(frame, filename);
-			break;
+//		case IMG_FMT_PNG:
+//			if(verbosity > 0)
+//				printf("V4L2_CORE: saving png frame to %s\n", filename);
+//			ret = save_image_png(frame, filename);
+//			break;
 
 		default:
 			fprintf(stderr, "V4L2_CORE: (save_image) Image format %i not supported\n", format);

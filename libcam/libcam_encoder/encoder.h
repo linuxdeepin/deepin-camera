@@ -145,6 +145,7 @@ void set_video_pause_timestamp(int64_t timestamp);
  *
  * returns: pause timestamp
  */
+void /*__attribute__ ((constructor)) */gviewencoder_init();
 int64_t get_video_pause_timestamp(void);
 
 

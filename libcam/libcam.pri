@@ -28,7 +28,6 @@ HEADERS += \
     $$PWD/libcam_render/gview.h \
     $$PWD/libcam_render/gviewrender.h \
     $$PWD/libcam_render/render.h \
-    $$PWD/libcam_render/render_sdl2.h \
     $$PWD/libcam_audio/audio.h \
     $$PWD/libcam_audio/audio_portaudio.h \
     #$$PWD/libcam_audio/audio_pulseaudio.h \
@@ -48,7 +47,7 @@ SOURCES += \
     $$PWD/libcam_v4l2core/save_image.c \
     $$PWD/libcam_v4l2core/save_image_bmp.c \
     $$PWD/libcam_v4l2core/save_image_jpeg.c \
-    $$PWD/libcam_v4l2core/save_image_png.c \
+#    $$PWD/libcam_v4l2core/save_image_png.c \
     $$PWD/libcam_v4l2core/soft_autofocus.c \
     $$PWD/libcam_v4l2core/uvc_h264.c \
     $$PWD/libcam_v4l2core/v4l2_controls.c \
@@ -72,7 +71,6 @@ SOURCES += \
     $$PWD/libcam_render/render_fx.c \
     $$PWD/libcam_render/render_osd_crosshair.c \
     $$PWD/libcam_render/render_osd_vu_meter.c \
-    $$PWD/libcam_render/render_sdl2.c \
     $$PWD/libcam_audio/audio.c \
     $$PWD/libcam_audio/audio_fx.c \
     $$PWD/libcam_audio/audio_portaudio.c \

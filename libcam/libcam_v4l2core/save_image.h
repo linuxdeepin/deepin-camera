@@ -118,7 +118,7 @@ int save_image_bmp(v4l2_frame_buff_t *frame, const char *filename);
  *
  * returns: error code
  */
-int save_image_png(v4l2_frame_buff_t *frame, const char *filename);
+//int save_image_png(v4l2_frame_buff_t *frame, const char *filename);
 
 /*
  * encode jpeg

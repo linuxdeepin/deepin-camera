@@ -144,6 +144,7 @@ public:
     }
 
     void setthumbnail(ThumbnailsBar *thumb);
+    void delayInit();
 public slots:
     void onTakePic(bool bTrue);
     void onTakeVideo();
@@ -168,7 +169,7 @@ private slots:
     void slotresolutionchanged(const QString &);
 
 private:
-    void init();
+
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 

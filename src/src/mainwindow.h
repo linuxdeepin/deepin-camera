@@ -78,6 +78,8 @@ public:
 
     void settingDialogDel();
 
+    void loadAfterShow();
+
     ~CMainWindow() override;
 private:
     /**

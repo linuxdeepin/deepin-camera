@@ -45,6 +45,9 @@
 
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
+extern "C" {
+#include "encoder.h"
+}
 
 using namespace dc;
 
@@ -331,36 +334,8 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_nActTpye = ActTakePic;
 
     initUI();
-
-
-    //延迟加载
     QTimer::singleShot(200, this, [ = ] {
-        m_devnumMonitor = new DevNumMonitor();
-        m_devnumMonitor->setParent(this);
-        m_devnumMonitor->setObjectName("DevMonitorThread");
-        m_devnumMonitor->init();
-        initTitleBar();
-        initConnection();
-        QDir dir;
-        QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
-        dir.mkpath(strCache);
-        m_devnumMonitor->start();
-        initThumbnails();
-        initThumbnailsConn();
-        connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
-        //多设备信号
-        connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
-
-        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
-
-        m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                         "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
-
-        //接收休眠信号，仅wayland使用
-        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
-
-        m_thumbnail->addPath(CMainWindow::m_lastVdfilename);
-        m_thumbnail->addPath(CMainWindow::m_lastPicfilename);
+        loadAfterShow();
     });
 }
 
@@ -575,6 +550,39 @@ void CMainWindow::settingDialogDel()
         delete m_SetDialog;
         m_SetDialog = nullptr;
     }
+}
+
+void CMainWindow::loadAfterShow()
+{
+    gviewencoder_init();
+    v4l2core_init();
+    m_devnumMonitor = new DevNumMonitor();
+    m_devnumMonitor->setParent(this);
+    m_devnumMonitor->setObjectName("DevMonitorThread");
+    m_devnumMonitor->init();
+    initTitleBar();
+    initConnection();
+    QDir dir;
+    QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
+    dir.mkpath(strCache);
+    m_devnumMonitor->start();
+    initThumbnails();
+    initThumbnailsConn();
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
+    //多设备信号
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
+
+    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
+
+    m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+
+    //接收休眠信号，仅wayland使用
+    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+
+    m_thumbnail->addPath(CMainWindow::m_lastVdfilename);
+    m_thumbnail->addPath(CMainWindow::m_lastPicfilename);
+    m_videoPre->delayInit();
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)

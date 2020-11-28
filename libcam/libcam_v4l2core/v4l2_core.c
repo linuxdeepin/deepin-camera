@@ -121,7 +121,7 @@ int xioctl(int fd, int IOCTL_X, void *arg)
  *
  * returns: none
  */
-void __attribute__ ((constructor)) v4l2core_init()
+void /*__attribute__ ((constructor))*/ v4l2core_init()
 {
 	//initialize device list (with udev monitoring)
 	v4l2core_init_device_list();

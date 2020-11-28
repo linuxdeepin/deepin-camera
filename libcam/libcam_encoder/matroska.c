@@ -52,7 +52,7 @@
 #include "gview.h"
 #include "gui.h"
 #include "camview.h"
-
+#include "load_libs.h"
 /*
  * default size of pkt ring buffer 
  * for caching audio frames
@@ -1034,8 +1034,8 @@ int mkv_close(mkv_context_t* mkv_ctx)
 	io_seek(mkv_ctx->writer, currentpos);
 
     mkv_end_ebml_master(mkv_ctx, mkv_ctx->segment);
-    av_freep(&mkv_ctx->cues->entries);
-    av_freep(&mkv_ctx->cues);
+    getLoadLibsInstance()->m_av_freep(&mkv_ctx->cues->entries);
+    getLoadLibsInstance()->m_av_freep(&mkv_ctx->cues);
 
     return 0;
 }

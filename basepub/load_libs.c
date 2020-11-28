@@ -273,36 +273,123 @@ static LoadLibs *newClass(void)
         fprintf (stderr, "%s ", error);
     }
 
-    //libavutil
-//    void *handle2 = dlopen("libavutil.so",RTLD_LAZY);
-//    if (!handle2) {
-//        fprintf (stderr, "%s ", dlerror());
-//    }
-//    instance->m_av_dict_get = (uos_av_dict_get)dlsym(handle2, "av_dict_get");//目前未使用
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
-//    instance->m_av_strerror = (uos_av_strerror)dlsym(handle2, "av_strerror");
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
 
-//    instance->m_av_dict_copy = (uos_av_dict_copy)dlsym(handle2, "av_dict_copy");
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
-//    instance->m_av_dict_free = (uos_av_dict_free)dlsym(handle2, "av_dict_free");
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
-//    instance->m_av_dict_set = (uos_av_dict_set)dlsym(handle2, "av_dict_set");
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
-//    instance->m_av_dict_set_int = (uos_av_dict_set_int)dlsym(handle2, "av_dict_set_int");
-//    if ((error = dlerror()) != NULL)  {
-//        fprintf (stderr, "%s ", error);
-//    }
+    //libffmpegthumbnailer
+    void *handle2 = dlopen("libffmpegthumbnailer.so",RTLD_LAZY);
+    if (!handle2) {
+        fprintf (stderr, "%s ", dlerror());
+    }
+    instance->m_video_thumbnailer = (uos_video_thumbnailer)dlsym(handle2, "video_thumbnailer_create");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_video_thumbnailer_destroy = (uos_video_thumbnailer_destroy)dlsym(handle2, "video_thumbnailer_destroy");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_video_thumbnailer_create_image_data = (uos_video_thumbnailer_create_image_data)dlsym(handle2, "video_thumbnailer_create_image_data");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_video_thumbnailer_destroy_image_data = (uos_video_thumbnailer_destroy_image_data)dlsym(handle2, "video_thumbnailer_destroy_image_data");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_video_thumbnailer_generate_thumbnail_to_buffer = (uos_video_thumbnailer_generate_thumbnail_to_buffer)dlsym(handle2, "video_thumbnailer_generate_thumbnail_to_buffer");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+
+    void *handle3 = dlopen("libswresample.so",RTLD_LAZY);
+    if (!handle3) {
+        fprintf (stderr, "%s ", dlerror());
+    }
+    instance->m_swr_free = (uos_swr_free)dlsym(handle3, "swr_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+
+
+    void *handle4 = dlopen("libswscale.so",RTLD_LAZY);
+    if (!handle4) {
+        fprintf (stderr, "%s ", dlerror());
+    }
+    instance->m_sws_freeContext = (uos_sws_freeContext)dlsym(handle4, "sws_freeContext");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+
+    //libavutil
+    void *handle5 = dlopen("libavutil.so",RTLD_LAZY);
+    if (!handle5) {
+        fprintf (stderr, "%s ", dlerror());
+    }
+    instance->m_av_dict_get = (uos_av_dict_get)dlsym(handle5, "av_dict_get");//目前未使用
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_strerror = (uos_av_strerror)dlsym(handle5, "av_strerror");//目前未使用
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+
+    instance->m_av_dict_copy = (uos_av_dict_copy)dlsym(handle5, "av_dict_copy");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_dict_free = (uos_av_dict_free)dlsym(handle5, "av_dict_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_dict_set = (uos_av_dict_set)dlsym(handle5, "av_dict_set");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_dict_set_int = (uos_av_dict_set_int)dlsym(handle5, "av_dict_set_int");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_log_set_level = (uos_av_log_set_level)dlsym(handle5, "av_log_set_level");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_image_copy_to_buffer = (uos_av_image_copy_to_buffer)dlsym(handle5, "av_image_copy_to_buffer");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_frame_free = (uos_av_frame_free)dlsym(handle5, "av_frame_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_frame_alloc = (uos_av_frame_alloc)dlsym(handle5, "av_frame_alloc");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_freep = (uos_av_freep)dlsym(handle5, "av_freep");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_frame_unref = (uos_av_frame_unref)dlsym(handle5, "av_frame_unref");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_free = (uos_av_free)dlsym(handle5, "av_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_free");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+    instance->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
+    if ((error = dlerror()) != NULL)  {
+        fprintf (stderr, "%s ", error);
+    }
+ ;
 
     assert(instance != NULL);
     return instance;

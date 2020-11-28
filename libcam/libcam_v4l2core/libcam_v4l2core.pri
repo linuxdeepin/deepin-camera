@@ -30,7 +30,7 @@ SOURCES += \
     $$PWD/save_image_bmp.c \
     $$PWD/save_image.c \
     $$PWD/save_image_jpeg.c \
-    $$PWD/save_image_png.c \
+#    $$PWD/save_image_png.c \
     $$PWD/soft_autofocus.c \
     $$PWD/uvc_h264.c \
     $$PWD/v4l2_controls.c \

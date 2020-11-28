@@ -31,10 +31,9 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     ../basepub
     /usr/include
     /usr/include/libusb-1.0
-    /usr/include/SDL2
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools Multimedia PrintSupport)
+set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})
@@ -62,13 +61,13 @@ pkg_check_modules(3rd_lib REQUIRED
         libudev
         libusb-1.0
 #        libavcodec
-        libavutil
+#        libavutil
 #        libavformat
-        libswscale
-        libpng
-        sdl2
-        libpulse
-        libswresample
+#        libswscale
+#        libpng
+#        sdl2
+#        libpulse
+#        libswresample
 
         )
 
@@ -106,8 +105,6 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     portaudio
-    ffmpegthumbnailer
-    Qt5Network
     dl
     )
 

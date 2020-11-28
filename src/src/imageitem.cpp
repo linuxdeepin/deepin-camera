@@ -32,7 +32,7 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
-#include <libffmpegthumbnailer/videothumbnailer.h>
+#include <libffmpegthumbnailer/videothumbnailerc.h>
 
 #include "printhelper.h"
 #include "datamanager.h"
@@ -47,7 +47,6 @@ extern "C" {
 
 }
 extern QMap<int, ImageItem *> g_indexImage;
-using namespace ffmpegthumbnailer;
 
 ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
@@ -61,14 +60,18 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     QFileInfo fileInfo(m_path);
     if (/*fileInfo.suffix() == "mp4" || */fileInfo.suffix() == "webm") {
         m_bVideo = true;
-        VideoThumbnailer thumber;
-        thumber.setThumbnailSize(100);
-        std::vector<uint8_t> buf;
+//        VideoThumbnailer thumber;
+//        thumber.setThumbnailSize(100);
+
+        video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
+        image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
+//        std::vector<uint8_t> buf;
         if (parseFromFile(fileInfo)) {
             try {
-                thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
-
-                QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
+                //thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
+                getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer,m_path.toUtf8().data(), m_image_data);
+                auto img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
+                //QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
                 img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
@@ -158,8 +161,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         menu->addAction(actPrint);
         connect(actPrint, &QAction::triggered, this, [ = ] {
             QStringList paths;
-            if (DataManager::instance()->m_setIndex.isEmpty())
-            {
+            if (DataManager::instance()->m_setIndex.isEmpty()) {
                 paths = QStringList(path);
                 qDebug() << "sigle print";
             } else {
@@ -184,12 +186,10 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     });
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
-        if (DataManager::instance()->m_setIndex.isEmpty())
-        {
+        if (DataManager::instance()->m_setIndex.isEmpty()) {
             paths = QStringList(path);
             qDebug() << "sigle way";
-        } else
-        {
+        } else {
 //            QSet<int> tmp = DataManager::instance()->m_setIndex;
 //            for (it = tmp.begin(); it != tmp.end(); ++it) {
 //                paths << g_indexImage.value(*it)->getPath();
@@ -480,7 +480,7 @@ static int open_codec_context(int *stream_idx,
     //AVDictionary *opts = nullptr;
     ret = getLoadLibsInstance()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
     if (ret < 0) {
-        qWarning() << "Could not find " << av_get_media_type_string(type)
+        qWarning() << "Could not find " << getLoadLibsInstance()->m_av_get_media_type_string(type)
                    << " stream in input file";
         return ret;
     }

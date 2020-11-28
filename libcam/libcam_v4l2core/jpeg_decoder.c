@@ -1384,7 +1384,7 @@ int jpeg_init_decoder(int width, int height)
 	 */
     getLoadLibsInstance()->m_avcodec_register_all();
 #endif
-	av_log_set_level(AV_LOG_PANIC);
+    getLoadLibsInstance()->m_av_log_set_level(AV_LOG_PANIC);
 
 	if(jpeg_ctx != NULL)
 		jpeg_close_decoder();
@@ -1447,8 +1447,8 @@ int jpeg_init_decoder(int width, int height)
 	}
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
-	codec_data->picture = av_frame_alloc();
-	av_frame_unref(codec_data->picture);
+    codec_data->picture = getLoadLibsInstance()->m_av_frame_alloc();
+    getLoadLibsInstance()->m_av_frame_unref(codec_data->picture);
 #else
     codec_data->picture = getLoadLibsInstance()->m_avcodec_alloc_frame();
     getLoadLibsInstance()->m_avcodec_get_frame_defaults(codec_data->picture);
@@ -1462,7 +1462,7 @@ int jpeg_init_decoder(int width, int height)
 		exit(-1);
 	}
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-	jpeg_ctx->pic_size = av_image_get_buffer_size(codec_data->context->pix_fmt, width, height, 1);
+    jpeg_ctx->pic_size = getLoadLibsInstance()->m_av_image_get_buffer_size(codec_data->context->pix_fmt, width, height, 1);
 #else
 	jpeg_ctx->pic_size = avpicture_get_size(codec_data->context->pix_fmt, width, height);
 #endif
@@ -1515,7 +1515,7 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 	if(got_frame)
 	{
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-        av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+        getLoadLibsInstance()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
                              (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
                              codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
 #else
@@ -1554,7 +1554,7 @@ void jpeg_close_decoder()
 	free(codec_data->context);
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
-	av_frame_free(&codec_data->picture);
+    getLoadLibsInstance()->m_av_frame_free(&codec_data->picture);
 #else
 	#if LIBAVCODEC_VER_AT_LEAST(54,28)
             getLoadLibsInstance()->m_avcodec_free_frame(&codec_data->picture);

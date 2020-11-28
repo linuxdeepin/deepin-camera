@@ -179,7 +179,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalScene->addItem(m_pCamErrItem);
     //延迟加载
 //    QTimer::singleShot(500, this, [ = ] {
-        init();
+        //delayInit();
 //    });
 
 }
@@ -237,7 +237,7 @@ videowidget::~videowidget()
 }
 
 
-void videowidget::init()
+void videowidget::delayInit()
 {
     setCapstatus(false);
 

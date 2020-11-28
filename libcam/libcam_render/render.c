@@ -45,9 +45,9 @@
 #include "render.h"
 #include "config.h"
 
-#if ENABLE_SDL2
-	#include "render_sdl2.h"
-#endif
+//#if ENABLE_SDL2
+//	#include "render_sdl2.h"
+//#endif
 
 
 extern int verbosity;
@@ -281,11 +281,11 @@ int render_init(int render, int width, int height, int flags, int win_w, int win
 		case RENDER_NONE:
 			break;
 
-		#if ENABLE_SDL2
-		case RENDER_SDL:
-			ret = init_render_sdl2(my_width, my_height, flags, win_w, win_h);
-			break;
-		#endif
+//		#if ENABLE_SDL2
+//		case RENDER_SDL:
+//			ret = init_render_sdl2(my_width, my_height, flags, win_w, win_h);
+//			break;
+//		#endif
 
 		default:
 			render_api = RENDER_NONE;
@@ -362,12 +362,12 @@ int render_frame(uint8_t *frame)
 		case RENDER_NONE:
 			break;
 
-		#if ENABLE_SDL2
-		case RENDER_SDL:
-			ret = render_sdl2_frame(frame, my_width, my_height);
-			render_sdl2_dispatch_events();
-			break;
-		#endif
+//		#if ENABLE_SDL2
+//		case RENDER_SDL:
+//			ret = render_sdl2_frame(frame, my_width, my_height);
+//			render_sdl2_dispatch_events();
+//			break;
+//		#endif
 
 		default:
 			break;
@@ -393,11 +393,11 @@ void render_set_caption(const char* caption)
 		case RENDER_NONE:
 			break;
 
-		#if ENABLE_SDL2
-		case RENDER_SDL:
-			set_render_sdl2_caption(caption);
-			break;
-		#endif
+//		#if ENABLE_SDL2
+//		case RENDER_SDL:
+//			set_render_sdl2_caption(caption);
+//			break;
+//		#endif
 
 		default:
 			break;
@@ -421,11 +421,11 @@ void render_close()
 		case RENDER_NONE:
 			break;
 
-		#if ENABLE_SDL2
-		case RENDER_SDL:
-			render_sdl2_clean();
-			break;
-		#endif
+//		#if ENABLE_SDL2
+//		case RENDER_SDL:
+//			render_sdl2_clean();
+//			break;
+//		#endif
 
 		default:
 			break;

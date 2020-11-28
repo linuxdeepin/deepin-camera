@@ -1,4 +1,4 @@
-QT += core gui  printsupport svg dbus concurrent dtkwidget dtkgui multimedia
+QT += core gui printsupport svg dbus concurrent dtkwidget dtkgui multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
   qtHaveModule(opengl): QT += opengl
@@ -58,7 +58,6 @@ HEADERS += \
     $$PWD/src/src/previewopenglwidget.h
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
-                /usr/include/SDL2\
                 /usr/include \
                 ./libcam/libcam_v4l2core\
                 ./libcam/libcam_render\
@@ -71,15 +70,15 @@ LIBS += -L/lib/x86_64-linux-gnu\
         -ludev\
         -lusb-1.0\
         -lv4l2\
-        -lavutil\
-        -lswscale\
-        -lpng\
-        -lSDL2\#1.2M
+#        -lavutil\
+#        -lswscale\
+#        -lpng\
+#        -lSDL2\
         -lportaudio\
-        -lswresample \
+#        -lswresample \
         -ldl
 
-LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
+LIBS += -LSYSTEMLIBDIR
 
 RESOURCES += \
     $$PWD/src/resource/resources.qrc
