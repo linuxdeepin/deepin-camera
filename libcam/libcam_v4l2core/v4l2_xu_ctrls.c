@@ -30,6 +30,7 @@
 #include "gview.h"
 #include "v4l2_devices.h"
 #include "v4l2_xu_ctrls.h"
+#include "load_libs.h"
 
 extern int verbosity;
 
@@ -232,25 +233,25 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 	uint8_t unit_id = 0;/*reset it*/
 
     if (usb_ctx == NULL)
-      libusb_init (&usb_ctx);
+      getUSB()->m_libusb_init (&usb_ctx);
 
-    cnt = libusb_get_device_list (usb_ctx, &device_list);
+    cnt = getUSB()->m_libusb_get_device_list (usb_ctx, &device_list);
     for (i = 0; i < cnt; i++)
     {
-		uint64_t dev_busnum = libusb_get_bus_number (device_list[i]);
-		uint64_t dev_devnum = libusb_get_device_address (device_list[i]);
+        uint64_t dev_busnum = getUSB()->m_libusb_get_bus_number (device_list[i]);
+        uint64_t dev_devnum = getUSB()->m_libusb_get_device_address (device_list[i]);
 
 		if(verbosity > 2)
 			printf("V4L2_CORE: (libusb) checking bus(%" PRId64 ") dev(%" PRId64 ") for device\n", dev_busnum, dev_devnum);
 
 		if (busnum == dev_busnum &&	devnum == dev_devnum)
 		{
-			device = libusb_ref_device (device_list[i]);
+            device = getUSB()->m_libusb_ref_device (device_list[i]);
 			break;
 		}
 	}
 
-	libusb_free_device_list (device_list, 1);
+    getUSB()->m_libusb_free_device_list (device_list, 1);
 
 	if (device)
 	{
@@ -258,13 +259,13 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 			printf("V4L2_CORE: (libusb) checking for GUID unit id\n");
 		struct libusb_device_descriptor desc;
 
-		 if (libusb_get_device_descriptor (device, &desc) == 0)
+         if (getUSB()->m_libusb_get_device_descriptor (device, &desc) == 0)
 		 {
 			for (i = 0; i < desc.bNumConfigurations; ++i)
 			{
 				struct libusb_config_descriptor *config = NULL;
 
-                if (libusb_get_config_descriptor (device, (uint8_t)i, &config) == 0)
+                if (getUSB()->m_libusb_get_config_descriptor (device, (uint8_t)i, &config) == 0)
 				{
 					int j = 0;
 					for (j = 0; j < config->bNumInterfaces; j++)
@@ -291,7 +292,7 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 								{
                                     unit_id = (uint8_t)desc->bUnitID;
 
-									libusb_unref_device (device);
+                                    getUSB()->m_libusb_unref_device (device);
 									/*it's a match*/
 									if(verbosity > 1)
 										printf("V4L2_CORE: (libusb) found GUID unit id %i\n", unit_id);
@@ -308,7 +309,7 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 		}
 		else
 			fprintf(stderr, "V4L2_CORE: (libusb) couldn't get device descriptor\n");
-		libusb_unref_device (device);
+        getUSB()->m_libusb_unref_device (device);
 	}
 	else
 		fprintf(stderr, "V4L2_CORE: (libusb) couldn't get device\n");

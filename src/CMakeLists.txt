@@ -58,8 +58,8 @@ file (GLOB_RECURSE RESOURCES  ./resource/resources.qrc)
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkgui
         libv4l2
-        libudev
-        libusb-1.0
+#        libudev
+#        libusb-1.0
 #        libavcodec
 #        libavutil
 #        libavformat

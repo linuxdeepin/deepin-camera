@@ -67,8 +67,8 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
                 ./basepub
 
 LIBS += -L/lib/x86_64-linux-gnu\
-        -ludev\
-        -lusb-1.0\
+#        -ludev\
+#        -lusb-1.0\
         -lv4l2\
 #        -lavutil\
 #        -lswscale\

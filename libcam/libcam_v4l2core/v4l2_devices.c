@@ -31,6 +31,7 @@
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
 #include "config.h"
+#include "load_libs.h"
 
 extern int verbosity;
 
@@ -152,10 +153,10 @@ int enum_v4l2_devices()
 	}
 
     /* Create a list of the devices in the 'v4l2' subsystem. */
-    enumerate = udev_enumerate_new(my_device_list.udev);
-    udev_enumerate_add_match_subsystem(enumerate, "video4linux");
-    udev_enumerate_scan_devices(enumerate);
-    devices = udev_enumerate_get_list_entry(enumerate);
+    enumerate = getUdev()->m_udev_enumerate_new(my_device_list.udev);
+    getUdev()->m_udev_enumerate_add_match_subsystem(enumerate, "video4linux");
+    getUdev()->m_udev_enumerate_scan_devices(enumerate);
+    devices = getUdev()->m_udev_enumerate_get_list_entry(enumerate);
     /*
      * For each item enumerated, print out its information.
      * udev_list_entry_foreach is a macro which expands to
@@ -163,7 +164,12 @@ int enum_v4l2_devices()
      * devices, setting dev_list_entry to a list entry
      * which contains the device's path in /sys.
      */
-    udev_list_entry_foreach(dev_list_entry, devices)
+//#define udev_list_entry_foreach(list_entry, first_entry) \
+//        for (list_entry = first_entry; \
+//             list_entry; \
+//             list_entry = udev_list_entry_get_next(list_entry))
+    //udev_list_entry_foreach(dev_list_entry, devices)
+    for (dev_list_entry = devices;dev_list_entry;dev_list_entry = getUdev()->m_udev_list_entry_get_next(dev_list_entry))
     {
         const char *path;
 
@@ -171,12 +177,12 @@ int enum_v4l2_devices()
          * Get the filename of the /sys entry for the device
          * and create a udev_device object (dev) representing it
          */
-        path = udev_list_entry_get_name(dev_list_entry);
-        struct udev_device *dev = udev_device_new_from_syspath(my_device_list.udev, path);
+        path = getUdev()->m_udev_list_entry_get_name(dev_list_entry);
+        struct udev_device *dev = getUdev()->m_udev_device_new_from_syspath(my_device_list.udev, path);
 
         /* usb_device_get_devnode() returns the path to the device node
             itself in /dev. */
-        const char *v4l2_device = udev_device_get_devnode(dev);
+        const char *v4l2_device = getUdev()->m_udev_device_get_devnode(dev);
         if (verbosity > 0)
             printf("V4L2_CORE: Device Node Path: %s\n", v4l2_device);
 
@@ -238,7 +244,7 @@ int enum_v4l2_devices()
             subsystem/devtype pair of "usb"/"usb_device". This will
             be several levels up the tree, but the function will find
             it.*/
-        dev = udev_device_get_parent_with_subsystem_devtype(
+        dev = getUdev()->m_udev_device_get_parent_with_subsystem_devtype(
                 dev,
                 "usb",
                 "usb_device");
@@ -258,28 +264,28 @@ int enum_v4l2_devices()
         if (verbosity > 0)
         {
             printf("  VID/PID: %s %s\n",
-                udev_device_get_sysattr_value(dev,"idVendor"),
-                udev_device_get_sysattr_value(dev, "idProduct"));
+                getUdev()->m_udev_device_get_sysattr_value(dev,"idVendor"),
+                getUdev()->m_udev_device_get_sysattr_value(dev, "idProduct"));
             printf("  %s\n  %s\n",
-                udev_device_get_sysattr_value(dev,"manufacturer"),
-                udev_device_get_sysattr_value(dev,"product"));
+                getUdev()->m_udev_device_get_sysattr_value(dev,"manufacturer"),
+                getUdev()->m_udev_device_get_sysattr_value(dev,"product"));
             printf("  serial: %s\n",
-                udev_device_get_sysattr_value(dev, "serial"));
+                getUdev()->m_udev_device_get_sysattr_value(dev, "serial"));
             printf("  busnum: %s\n",
-                udev_device_get_sysattr_value(dev, "busnum"));
+                getUdev()->m_udev_device_get_sysattr_value(dev, "busnum"));
             printf("  devnum: %s\n",
-                udev_device_get_sysattr_value(dev, "devnum"));
+                getUdev()->m_udev_device_get_sysattr_value(dev, "devnum"));
         }
 
-        my_device_list.list_devices[num_dev-1].vendor = strtoull(udev_device_get_sysattr_value(dev,"idVendor"), NULL, 16);
-        my_device_list.list_devices[num_dev-1].product = strtoull(udev_device_get_sysattr_value(dev, "idProduct"), NULL, 16);
-        my_device_list.list_devices[num_dev-1].busnum = strtoull(udev_device_get_sysattr_value(dev, "busnum"), NULL, 10);
-		my_device_list.list_devices[num_dev-1].devnum = strtoull(udev_device_get_sysattr_value(dev, "devnum"), NULL, 10);
+        my_device_list.list_devices[num_dev-1].vendor = strtoull(getUdev()->m_udev_device_get_sysattr_value(dev,"idVendor"), NULL, 16);
+        my_device_list.list_devices[num_dev-1].product = strtoull(getUdev()->m_udev_device_get_sysattr_value(dev, "idProduct"), NULL, 16);
+        my_device_list.list_devices[num_dev-1].busnum = strtoull(getUdev()->m_udev_device_get_sysattr_value(dev, "busnum"), NULL, 10);
+        my_device_list.list_devices[num_dev-1].devnum = strtoull(getUdev()->m_udev_device_get_sysattr_value(dev, "devnum"), NULL, 10);
 
-        udev_device_unref(dev);
+        getUdev()->m_udev_device_unref(dev);
     }
     /* Free the enumerator object */
-    udev_enumerate_unref(enumerate);
+    getUdev()->m_udev_enumerate_unref(enumerate);
 
     my_device_list.num_devices = num_dev;
 
@@ -299,18 +305,18 @@ int enum_v4l2_devices()
 void v4l2core_init_device_list()
 {
 	/* Create a udev object */
-	my_device_list.udev = udev_new();
+    my_device_list.udev = getUdev()->m_udev_new();
 	/*start udev device monitoring*/
 	/* Set up a monitor to monitor v4l2 devices */
 	if(my_device_list.udev)
 	{
-		my_device_list.udev_mon = udev_monitor_new_from_netlink(my_device_list.udev, "udev");
-		udev_monitor_filter_add_match_subsystem_devtype(my_device_list.udev_mon, "video4linux", NULL);
-		udev_monitor_enable_receiving(my_device_list.udev_mon);
+        my_device_list.udev_mon = getUdev()->m_udev_monitor_new_from_netlink(my_device_list.udev, "udev");
+        getUdev()->m_udev_monitor_filter_add_match_subsystem_devtype(my_device_list.udev_mon, "video4linux", NULL);
+        getUdev()->m_udev_monitor_enable_receiving(my_device_list.udev_mon);
 		/* Get the file descriptor (fd) for the monitor */
-		my_device_list.udev_fd = udev_monitor_get_fd(my_device_list.udev_mon);
+        my_device_list.udev_fd = getUdev()->m_udev_monitor_get_fd(my_device_list.udev_mon);
 
-		enum_v4l2_devices();
+        enum_v4l2_devices();
 	}
 } 
 
@@ -381,16 +387,16 @@ int check_device_list_events(v4l2_dev_t *vd)
          * Make the call to receive the device.
          *   select() ensured that this will not block.
          */
-        struct udev_device *dev = udev_monitor_receive_device(my_device_list.udev_mon);
+        struct udev_device *dev = getUdev()->m_udev_monitor_receive_device(my_device_list.udev_mon);
         if (dev)
         {
             if (verbosity > 0)
             {
                 printf("V4L2_CORE: Got Device event\n");
-                printf("          Node: %s\n", udev_device_get_devnode(dev));
-                printf("     Subsystem: %s\n", udev_device_get_subsystem(dev));
-                printf("       Devtype: %s\n", udev_device_get_devtype(dev));
-                printf("        Action: %s\n", udev_device_get_action(dev));
+                printf("          Node: %s\n", getUdev()->m_udev_device_get_devnode(dev));
+                printf("     Subsystem: %s\n", getUdev()->m_udev_device_get_subsystem(dev));
+                printf("       Devtype: %s\n", getUdev()->m_udev_device_get_devtype(dev));
+                printf("        Action: %s\n", getUdev()->m_udev_device_get_action(dev));
             }
 
             /*update device list*/
@@ -409,7 +415,7 @@ int check_device_list_events(v4l2_dev_t *vd)
 					my_device_list.list_devices[vd->this_device].current = 1;
 			}
 			
-            udev_device_unref(dev);
+            getUdev()->m_udev_device_unref(dev);
 
             return(1);
         }
@@ -435,5 +441,5 @@ void v4l2core_close_v4l2_device_list()
 	free_device_list();
 	
 	if (my_device_list.udev)
-		udev_unref(my_device_list.udev);
+        getUdev()->m_udev_unref(my_device_list.udev);
 }
