@@ -6,8 +6,6 @@
 #include <DWindowCloseButton>
 
 #include "MainwindowTest.h"
-#include "thumbnailTest.h"
-#include "imageTest.h"
 #include "DButtonBox"
 #include "datamanager.h"
 #include "printhelper.h"
@@ -23,6 +21,7 @@ MainwindowTest::MainwindowTest()
         mainwindow->show();
         mainwindow->activateWindow();
     }
+
     QTest::qWait(2000);
 }
 
@@ -31,15 +30,18 @@ MainwindowTest::MainwindowTest()
  */
 TEST_F(MainwindowTest, CamUsed)
 {
+    QString str = mainwindow->lastOpenedPath();
+
     QList<QProcess*> proclist = dApp->getprocess();
 
     QProcess* proc1 = proclist[0];
     QProcess* proc2 = proclist[1];
-    proc1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video2");
-    proc2->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
-    DIconButton* selectBtn = mainwindow->findChild<DIconButton*>("SelectBtn");
-    int n = 0;
-    while(n<5){
+
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+    QTest::qWait(1000);
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
+    int n = 3;
+    while(n){
         if(proc1->state() == QProcess::NotRunning)
         {
             proc1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video2");
@@ -48,12 +50,7 @@ TEST_F(MainwindowTest, CamUsed)
         {
             proc2->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
         }
-        if(selectBtn->isVisible())
-        {
-            QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 200);
-        }
-        QTest::qWait(500);
-        n++;
+        n--;
     }
     if(proc1)
     {
@@ -65,6 +62,33 @@ TEST_F(MainwindowTest, CamUsed)
         delete proc2;
         proc2 = nullptr;
     }
+}
+
+
+/**
+ *  @brief 主题切换
+ */
+TEST_F(MainwindowTest, Themechange)
+{
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
+    QTest::qWait(1000);
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+
+    iconVdBtn =  mainwindow->findChild<DButtonBoxButton*>("pTitleVdBtn");
+
+    QTest::mouseMove(iconVdBtn,QPoint(0,0),1000);
+    QTest::mousePress(iconVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(iconVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+    QTest::qWait(1000);
+
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton*>("pTitlePicBtn");
+    QTest::mouseMove(iconpixBtn,QPoint(0,0),1000);
+    QTest::mousePress(iconpixBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(iconpixBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+
+    QTest::qWait(1000);
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
+    QTest::qWait(1000);
 }
 
 /**
@@ -184,7 +208,7 @@ TEST_F(MainwindowTest, ContinuousShootingCancel)
 {
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 2);
-    dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
+    dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 1);
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
@@ -198,12 +222,32 @@ TEST_F(MainwindowTest, ContinuousShootingCancel)
     QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
     QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
 
-    QTest::qWait(300);
+    QTest::qWait(2000);
     QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
     QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
     QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
 
-    QTest::qWait(10000);
+    QTest::qWait(500);
+    QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
+    QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+    QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+
+    QTest::qWait(4500);
+
+    while(1)
+    {
+        if(iconpixBtn->isEnabled()){
+            QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
+            QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+            QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),0);
+            break;
+        }
+        else
+        {
+            continue;
+        }
+    }
+    QTest::qWait(500);
 
 }
 
@@ -265,7 +309,6 @@ TEST_F(MainwindowTest, rightbtn)
     rightMouseMenu->hide();
 }
 
-
 /**
  *  @brief 缩略图多选和复制，删除
  */
@@ -312,6 +355,11 @@ TEST_F(MainwindowTest, printdialog)
     QAction* print = mainwindow->findChild<QAction*>("PrinterAction");
     print->trigger();
     QTest::qWait(1000);
+
+    PrintHelper* printHelper = new PrintHelper;
+    QTest::qWait(1000);
+    delete printHelper;
+    printHelper = nullptr;
 }
 
 /**
@@ -342,11 +390,30 @@ TEST_F(MainwindowTest, TakeVideo1)
     QTest::mouseClick(windowMinBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 200);
     QTest::qWait(3000);
     if (mainwindow->isMinimized())
+    {
         mainwindow->showNormal();
         mainwindow->show();
         mainwindow->activateWindow();
+    }
+    QTest::qWait(2000);
+    QTest::mouseClick(windowMinBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 200);
+    QTest::qWait(1500);
+    if (mainwindow->isMinimized())
+    {
+        mainwindow->showNormal();
+        mainwindow->show();
+        mainwindow->activateWindow();
+    }
 
-    QTest::qWait(4400);
+    QTest::qWait(2000);
+    QTest::mouseClick(windowMinBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 200);
+    QTest::qWait(1500);
+    if (mainwindow->isMinimized())
+    {
+        mainwindow->showNormal();
+        mainwindow->show();
+        mainwindow->activateWindow();
+    }
 
     EndBtn = mainwindow->findChild<DPushButton*>("TakeVdEndBtn");
 
@@ -355,7 +422,6 @@ TEST_F(MainwindowTest, TakeVideo1)
     QTest::mouseRelease(EndBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
 
 }
-
 
 /**
  *  @brief 延迟录像
@@ -381,15 +447,56 @@ TEST_F(MainwindowTest, TakeVideoDelay)
     QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
     QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
     QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::qWait(4500);
 
-    QTest::qWait(10000);
+    //窗口按钮退出
+    DWindowCloseButton* windowcloseBtn = mainwindow->findChild<DWindowCloseButton*>("DTitlebarDWindowCloseButton");
+    QTest::mouseMove(windowcloseBtn, QPoint(0,0), 1000);
+    QTest::mousePress(windowcloseBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 500);
+    QTest::mouseRelease(windowcloseBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 500);
 
+    QTest::qWait(1000);
+
+    //菜单键退出
+    QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
+    QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::qWait(6000);
+    dApp->popupConfirmDialog();
+
+    QTest::qWait(1000);
+
+    //结束录制
+    QTest::mouseMove(PixVdBtn,QPoint(0,0),1000);
+    QTest::mousePress(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(PixVdBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::qWait(6000);
     EndBtn = mainwindow->findChild<DPushButton*>("TakeVdEndBtn");
 
     QTest::mouseMove(EndBtn,QPoint(0,0),1000);
     QTest::mousePress(EndBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
     QTest::mouseRelease(EndBtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
 
+
+}
+
+/**
+ *  @brief 重置设置页面
+ */
+TEST_F(MainwindowTest, SettingDialogReset)
+{
+    mainwindow->settingDialog();
+    DSettingsDialog* dialog = mainwindow->findChild<DSettingsDialog* >("SettingDialog");
+    dialog->show();
+
+    auto reset = dialog->findChild<QPushButton *>("SettingsContentReset");
+
+    QTest::mouseMove(reset,QPoint(0,0),1000);
+    QTest::mousePress(reset,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(reset,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::qWait(2000);
+    dialog->hide();
+    mainwindow->settingDialogDel();
 }
 
 /**
@@ -404,13 +511,28 @@ TEST_F(MainwindowTest, SettingDialogShow)
     dc::Settings::get().settings()->sync();
     DSettingsDialog* dialog = mainwindow->findChild<DSettingsDialog* >("SettingDialog");
     dialog->show();
+
+    DPushButton* openfilebtn = dialog->findChild<DPushButton*>("OptionLineEditBtn");
+    DDialog* invaliddlg = dialog->findChild<DDialog*>("OptionInvalidDialog");
+    DLineEdit* lineedit = dialog->findChild<DLineEdit*>("OptionSelectableLineEdit");
+
+    lineedit->clear();
+    lineedit->setText(QDir::homePath() + "/Musics/");
+    emit lineedit->editingFinished();
+
+    QTest::mouseMove(openfilebtn,QPoint(0,0),1000);
+    QTest::mousePress(openfilebtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    QTest::mouseRelease(openfilebtn,Qt::LeftButton,Qt::NoModifier,QPoint(0,0),500);
+    emit invaliddlg->close();
     QTest::qWait(2000);
     dialog->hide();
     mainwindow->settingDialogDel();
 }
 
 
-
+/**
+ *  @brief 删除单张缩略图
+ */
 TEST_F(MainwindowTest, ImageItemDel)
 {
 
@@ -457,6 +579,7 @@ TEST_F(MainwindowTest, ChangeResolution)
 
     mainwindow->settingDialogDel();
 }
+
 /**
  *  @brief 无摄像头
  */
@@ -465,12 +588,29 @@ TEST_F(MainwindowTest, NoCam)
     DIconButton* selectBtn = mainwindow->findChild<DIconButton*>("SelectBtn");
 
     system("echo '123'|sudo -S rm -rf /dev/video*");
-    QTest::qWait(2000);
+    QTest::qWait(4000);
     if(selectBtn->isVisible())
     {
         QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0,0), 200);
     }
-    QTest::qWait(2000);
+    QTest::qWait(1000);
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+    QTest::qWait(1000);
+}
+
+/**
+ *  @brief 打开摄像头设置页面
+ */
+TEST_F(MainwindowTest, SettingDialogOpen)
+{
+    mainwindow->settingDialog();
+    DSettingsDialog* dialog = mainwindow->findChild<DSettingsDialog* >("SettingDialog");
+    dialog->show();
+
+    QTest::qWait(3000);
+
+    dialog->hide();
+    mainwindow->settingDialogDel();
 }
 
 /**
@@ -480,5 +620,4 @@ TEST_F(MainwindowTest, quitmainwindow)
 {
     delete mainwindow;
     mainwindow=nullptr;
-
 }

@@ -74,16 +74,8 @@ public:
     void addFile(QString strFile);
     void delFile(QString strFile);
     void widthChanged();
-    /**
-    * @brief getPushbtn　获取录像/拍照按钮
-    */
-    DPushButton* getPushbtn()
-    {
-        return m_lastButton;
-    }
 
     QHBoxLayout *m_mainLayout;
-    DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
     int m_nMaxWidth;
     int m_nStatus; //当前状态

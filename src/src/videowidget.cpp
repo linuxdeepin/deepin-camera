@@ -424,9 +424,10 @@ void videowidget::showNocam()
     }
     emit sigDeviceChange();
     QString str(tr("No webcam found"));//未连接摄像头
+    QImage imgnocam;
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        QImage img(":/images/icons/light/Not connected.svg");
-        m_pixmap = QPixmap::fromImage(img);
+        imgnocam = QImage(":/images/icons/light/Not connected.svg");
+//        m_pixmap = QPixmap::fromImage(img);
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -437,8 +438,8 @@ void videowidget::showNocam()
         plt.setColor(QPalette::Base, clrBase);
         this->setPalette(plt);
     } else {
-        QImage img(":/images/icons/dark/Not connected_dark.svg");
-        m_pixmap = QPixmap::fromImage(img);
+         imgnocam = QImage(":/images/icons/dark/Not connected_dark.svg");
+//        m_pixmap = QPixmap::fromImage(imgtmp);
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -454,8 +455,8 @@ void videowidget::showNocam()
     ft.setPixelSize(17);
     m_pCamErrItem->setFont(ft);
     m_pCamErrItem->setPlainText(str);
-    m_pNormalScene->setSceneRect(m_pixmap.rect());
-    m_pNormalItem->setPixmap(m_pixmap);
+    m_pNormalScene->setSceneRect(QPixmap::fromImage(imgnocam).rect());
+    m_pNormalItem->setPixmap(QPixmap::fromImage(imgnocam));
     if (m_flashLabel->isVisible()) {
         m_flashLabel->hide();
     }
@@ -494,9 +495,10 @@ void videowidget::showCamUsed()
     m_openglwidget->hide();
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
+    QImage imgcamused;
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        QImage img(":/images/icons/light/Take up.svg");
-        m_pixmap = QPixmap::fromImage(img);
+        imgcamused = QImage(":/images/icons/light/Take up.svg");
+//        m_pixmap = QPixmap::fromImage(img);
 
         QColor clrText(Qt::white);
         clrText.setAlphaF(0.8);
@@ -510,8 +512,8 @@ void videowidget::showCamUsed()
         plt.setColor(QPalette::Base, clrBackGRD);
         this->setPalette(plt);
     } else {
-        QImage img(":/images/icons/dark/Take up_dark.svg");
-        m_pixmap = QPixmap::fromImage(img);
+        imgcamused = QImage(":/images/icons/dark/Take up_dark.svg");
+//        m_pixmap = QPixmap::fromImage(img);
 
         QColor clrText(Qt::black);
         clrText.setAlphaF(0.8);
@@ -529,8 +531,8 @@ void videowidget::showCamUsed()
     ft.setWeight(QFont::DemiBold);
     ft.setPixelSize(17);
     m_pCamErrItem->setFont(ft);
-    m_pNormalScene->setSceneRect(m_pixmap.rect());
-    m_pNormalItem->setPixmap(m_pixmap);
+    m_pNormalScene->setSceneRect(QPixmap::fromImage(imgcamused).rect());
+    m_pNormalItem->setPixmap(QPixmap::fromImage(imgcamused));
     if (m_flashLabel->isVisible()) {
         m_flashLabel->hide();
     }

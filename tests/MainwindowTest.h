@@ -3,25 +3,29 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
+
 #include <QtTest/QTest>
+#include <QSharedMemory>
+
 #include <DApplication>
 #include <DMainWindow>
 #include <DWidgetUtil>
-#include <QSharedMemory>
 #include <DWindowOptionButton>
 #include <DMenu>
 #include <DLog>
 #include <DApplicationSettings>
-#include "../src/src/mainwindow.h"
-#include "../src/src/capplication.h"
-#include "../src/src/Settings.h"
-#include "../src/src/videowidget.h"
-#include "../src/src/imageitem.h"
-#include "../src/src/Settings.h"
-#include "../src/src/thumbnailsbar.h"
-#include "../libcam/libcam_v4l2core/v4l2_devices.h"
-#include "../src/src/LPF_V4L2.h"
-#include "../src/src/majorimageprocessingthread.h"
+
+#include "src/mainwindow.h"
+#include "src/capplication.h"
+#include "src/Settings.h"
+#include "src/videowidget.h"
+#include "src/imageitem.h"
+#include "src/Settings.h"
+#include "src/thumbnailsbar.h"
+#include "v4l2_devices.h"
+#include "src/LPF_V4L2.h"
+#include "src/majorimageprocessingthread.h"
+#include "printhelper.h"
 
 DWIDGET_USE_NAMESPACE
 

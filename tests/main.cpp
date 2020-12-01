@@ -67,15 +67,6 @@ int main(int argc, char *argv[])
     testing::InitGoogleTest(&argc, argv);
     //加载翻译
 
-
-//    QTranslator *translator = new QTranslator;
-
-//    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
-//    if (!bLoaded) {
-//        qDebug() << "load transfile error";
-//    }
-
-//    a.installTranslator(translator);
     //设置属性
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 
@@ -107,13 +98,14 @@ int main(int argc, char *argv[])
         qDebug() << "another deepin camera instance has started";
         exit(0);
     }
+
     QList<QProcess*> Processlist;
     Processlist.clear();
     QProcess* myProcess = new QProcess;
 
     QProcess* myProcess1 = new QProcess;
-//    myProcess1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
-
+    myProcess->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video2");
+    myProcess1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
     QTest::qWait(3000);
 
     Processlist.append(myProcess);

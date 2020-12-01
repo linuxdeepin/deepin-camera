@@ -209,6 +209,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     workaround_updateStyle(optionWidget, "light");
 
     DDialog *prompt = new DDialog(optionWidget);
+    prompt->setObjectName("OptionInvalidDialog");
     prompt->setIcon(QIcon(":/images/icons/warning.svg"));
     //prompt->setTitle(QObject::tr("Permissions prompt"));
     prompt->setMessage(QObject::tr("You don't have permission to operate this folder"));
@@ -250,9 +251,14 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     };
 
     option->connect(icon, &DPushButton::clicked, [ = ]() {
+#ifdef UNITTEST
+        QString name = "~/Videos/";
+#else
         QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                          CMainWindow::lastOpenedPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+#endif
+
         if (validate(name, false)) {
             option->setValue(name);
             nameLast = name;
@@ -775,16 +781,27 @@ void CMainWindow::initConnection()
         if (m_videoPre->getCapstatus())
         {
             CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+#ifdef UNITTEST
+            closeDlg.show();
+            int ret = 1;
+#else
             int ret = closeDlg.exec();
+#endif
             if (ret == 1)
             {
                 m_videoPre->endBtnClicked();
+#ifdef UNITTEST
+                closeDlg.close();
+#else
                 qApp->quit();
+#endif
             }
         }
         else
         {
+#ifndef UNITTEST
             qApp->quit();
+#endif
         }
     });
     //connect(this, SIGNAL(windowstatechanged(Qt::WindowState windowState)), this, SLOT(onCapturepause(Qt::WindowState windowState)));
@@ -948,7 +965,13 @@ void CMainWindow::closeEvent(QCloseEvent *event)
     if (m_videoPre->getCapstatus()) {
         CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
         closeDlg.setObjectName("closeDlg");
+#ifdef UNITTEST
+        closeDlg.show();
+        event->ignore();
+        closeDlg.close();
+#else
         int ret = closeDlg.exec();
+
         switch (ret) {
         case 0:
             event->ignore();
@@ -961,6 +984,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         }
+#endif
     }    
 }
 

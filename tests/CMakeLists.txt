@@ -36,7 +36,7 @@ set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
     ${PROJECT_SOURCE_DIR}/googletest/include
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets Network DBus Concurrent LinguistTools Multimedia PrintSupport)
+set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})
@@ -57,6 +57,7 @@ file (GLOB_RECURSE SOURCES  ./*.cpp
     ../src/imageitem.cpp
     ../src/Settings.cpp
     ../src/capplication.cpp
+    ../src/dbus_adpator.cpp
     ../src/settings_translation.cpp
     ../src/qtsingleapplication/qtsingleapplication.cpp
     ../src/qtsingleapplication/qtlocalpeer.cpp
@@ -95,12 +96,12 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
     gtest
-#    portaudio
-#    asound
     pthread
-    z
     Qt5Test
     dl
+#    portaudio
+#    asound
+#    z
     )
 
 # 将工程与Qt模块链接起来
@@ -139,6 +140,8 @@ add_custom_command(TARGET test
     '*/tests/*'
     '*/src/qtsingleapplication/*'
     '*/basepub/printoptionspage.cpp'
+    '*/src/src/dbus_adpator.cpp'
+    '*/src/src/settings_translation.cpp'
     '/usr/local/*'
     -o ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
     COMMAND echo " =================== do filter end ==================== "
