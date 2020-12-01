@@ -76,22 +76,27 @@ int main(int argc, char *argv[])
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     a.setOrganizationName("deepin");
+    //设置应用名称
     a.setApplicationName("deepin-camera");
     //加载翻译
     a.loadTranslator(QList<QLocale>() << QLocale::system());
+    //设置程序名称
     a.setApplicationDisplayName(QObject::tr("Camera"));
+    //设置产品名称
     a.setProductName(QObject::tr("Camera"));
+
+    //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
 
+    //版本
     QString t_date = QDate::currentDate().toString("MMdd");
-    // Version Time
     a.setApplicationVersion(DApplication::buildVersion(t_date));
     a.setWindowIcon(QIcon::fromTheme("deepin-camera"));
     a.setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
-    //a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
 
+    //应用描述
     a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     DApplicationSettings saveTheme;
@@ -116,11 +121,6 @@ int main(int argc, char *argv[])
 
     CMainWindow w;
 
-//    DVtableHook::overrideVfptrFun(app, &DApplication::handleQuitAction, w, &CMainWindow::handleQuitAction);
-//    bool is = DVtableHook::getDestructFunIndex(&app,&CMainWindow::handleQuitAction);
-//    if(is){
-//        quintptr *obj = DVtableHook::getVtableOfObject(app);
-//    }
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();

@@ -72,7 +72,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer,m_path.toUtf8().data(), m_image_data);
                 auto img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
                 //QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
-                img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+                img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
@@ -131,7 +131,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     } else if (fileInfo.suffix() == "jpg") {
         m_strDuratuion = "";
         QImage img(path);
-        img = img.scaled(THUMBNAIL_WIDTH,THUMBNAIL_HEIGHT);
+        img = img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
