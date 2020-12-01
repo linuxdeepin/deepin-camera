@@ -27,8 +27,13 @@
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 //#include <libavutil/dict.h>
+#include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 #include <libusb.h>
+#include <portaudio.h>
+#include <libv4l2.h>
+#include <libudev.h>
 
 //AVCodec *avcodec_find_encoder(enum AVCodecID id);
 typedef AVCodec *(*uos_avcodec_find_encoder)(enum AVCodecID id);
@@ -68,6 +73,66 @@ typedef void (*uos_av_init_packet)(AVPacket *pkt);
 //AVPacket *av_packet_alloc(void);
 typedef AVPacket *(*uos_av_packet_alloc)(void);
 
+
+typedef video_thumbnailer *(*uos_video_thumbnailer)();
+typedef void (*uos_video_thumbnailer_destroy)(video_thumbnailer *thumbnailer);
+/* create image_data structure */
+typedef image_data *(*uos_video_thumbnailer_create_image_data)(void);
+/* destroy image_data structure */
+typedef void (*uos_video_thumbnailer_destroy_image_data)(image_data *data);
+typedef int (*uos_video_thumbnailer_generate_thumbnail_to_buffer)(video_thumbnailer *thumbnailer, const char *movie_filename, image_data *generated_image_data);
+
+//lswresample
+//void swr_free(struct SwrContext **s);
+typedef void (*uos_swr_free)(struct SwrContext **s);
+
+//lswscale
+//void sws_freeContext(struct SwsContext *swsContext);
+typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
+
+
+
+
+typedef struct _LoadLibs
+{
+    uos_avcodec_find_encoder m_avcodec_find_encoder;
+    uos_avcodec_find_decoder m_avcodec_find_decoder;
+    uos_avcodec_find_encoder_by_name m_avcodec_find_encoder_by_name;
+    uos_avcodec_alloc_context m_avcodec_alloc_context;
+    uos_avcodec_alloc_context3 m_avcodec_alloc_context3;
+    uos_avcodec_get_context_defaults3 m_avcodec_get_context_defaults3;
+    uos_avcodec_open2 m_avcodec_open2;
+    uos_avcodec_flush_buffers m_avcodec_flush_buffers;
+    uos_avcodec_close m_avcodec_close;
+    uos_avcodec_parameters_from_context m_avcodec_parameters_from_context;
+    uos_avcodec_send_packet m_avcodec_send_packet;
+    uos_avcodec_receive_frame m_avcodec_receive_frame;
+    uos_avcodec_receive_packet m_avcodec_receive_packet;
+    uos_av_packet_free m_av_packet_free;
+    uos_avcodec_fill_audio_frame m_avcodec_fill_audio_frame;
+    uos_av_packet_unref m_av_packet_unref;
+    uos_avcodec_send_frame m_avcodec_send_frame;
+    uos_av_packet_rescale_ts m_av_packet_rescale_ts;
+    uos_av_init_packet m_av_init_packet;
+    uos_av_packet_alloc m_av_packet_alloc;
+
+
+    uos_video_thumbnailer m_video_thumbnailer;
+    uos_video_thumbnailer_destroy m_video_thumbnailer_destroy;
+    uos_video_thumbnailer_create_image_data m_video_thumbnailer_create_image_data;
+    uos_video_thumbnailer_destroy_image_data m_video_thumbnailer_destroy_image_data;
+    uos_video_thumbnailer_generate_thumbnail_to_buffer m_video_thumbnailer_generate_thumbnail_to_buffer;
+
+
+    uos_swr_free m_swr_free;
+
+    uos_sws_freeContext m_sws_freeContext;
+
+} LoadLibs;
+
+LoadLibs *getLoadLibsInstance();//饿汉式不支持延迟加载
+
+
 typedef int (*uos_avformat_open_input)(AVFormatContext **ps, const char *url, AVInputFormat *fmt, AVDictionary **options);
 typedef int (*uos_avformat_find_stream_info)(AVFormatContext *ic, AVDictionary **options);
 typedef int (*uos_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType type, int wanted_stream_nb, int related_stream, AVCodec **decoder_ret, int flags);
@@ -90,22 +155,23 @@ typedef int (*uos_av_write_trailer)(AVFormatContext *s);
 //int avio_closep(AVIOContext **s);
 typedef int (*uos_avio_closep)(AVIOContext **s);
 
-
-typedef video_thumbnailer *(*uos_video_thumbnailer)();
-typedef void (*uos_video_thumbnailer_destroy)(video_thumbnailer *thumbnailer);
-/* create image_data structure */
-typedef image_data *(*uos_video_thumbnailer_create_image_data)(void);
-/* destroy image_data structure */
-typedef void (*uos_video_thumbnailer_destroy_image_data)(image_data *data);
-typedef int (*uos_video_thumbnailer_generate_thumbnail_to_buffer)(video_thumbnailer *thumbnailer, const char *movie_filename, image_data *generated_image_data);
-
-//lswresample
-//void swr_free(struct SwrContext **s);
-typedef void (*uos_swr_free)(struct SwrContext **s);
-
-//lswscale
-//void sws_freeContext(struct SwsContext *swsContext);
-typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
+typedef struct _LoadAvformat
+{
+    uos_avformat_open_input m_avformat_open_input;
+    uos_avformat_find_stream_info m_avformat_find_stream_info;
+    uos_av_find_best_stream m_av_find_best_stream;
+    uos_av_dump_format m_av_dump_format;
+    uos_avformat_close_input m_avformat_close_input;
+    uos_avformat_alloc_output_context2 m_avformat_alloc_output_context2;
+    uos_avformat_new_stream m_avformat_new_stream;
+    uos_avformat_free_context m_avformat_free_context;
+    uos_avformat_write_header m_avformat_write_header;
+    uos_avio_open m_avio_open;
+    uos_av_write_frame m_av_write_frame;
+    uos_av_write_trailer m_av_write_trailer;
+    uos_avio_closep m_avio_closep;
+}LoadAvformat;
+LoadAvformat *getAvformat();
 
 //libavutil不到1M
 typedef AVDictionaryEntry *(*uos_av_dict_get)(const AVDictionary *m, const char *key, const AVDictionaryEntry *prev, int flags);
@@ -145,58 +211,8 @@ typedef int (*uos_av_samples_get_buffer_size)(int *linesize, int nb_channels, in
 typedef const char *(*uos_av_get_media_type_string)(enum AVMediaType media_type);
 //int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align);
 typedef int (*uos_av_image_get_buffer_size)(enum AVPixelFormat pix_fmt, int width, int height, int align);
-
-
-typedef struct _LoadLibs
+typedef struct _LoadAvutil
 {
-    uos_avcodec_find_encoder m_avcodec_find_encoder;
-    uos_avcodec_find_decoder m_avcodec_find_decoder;
-    uos_avcodec_find_encoder_by_name m_avcodec_find_encoder_by_name;
-    uos_avcodec_alloc_context m_avcodec_alloc_context;
-    uos_avcodec_alloc_context3 m_avcodec_alloc_context3;
-    uos_avcodec_get_context_defaults3 m_avcodec_get_context_defaults3;
-    uos_avcodec_open2 m_avcodec_open2;
-    uos_avcodec_flush_buffers m_avcodec_flush_buffers;
-    uos_avcodec_close m_avcodec_close;
-    uos_avcodec_parameters_from_context m_avcodec_parameters_from_context;
-    uos_avcodec_send_packet m_avcodec_send_packet;
-    uos_avcodec_receive_frame m_avcodec_receive_frame;
-    uos_avcodec_receive_packet m_avcodec_receive_packet;
-    uos_av_packet_free m_av_packet_free;
-    uos_avcodec_fill_audio_frame m_avcodec_fill_audio_frame;
-    uos_av_packet_unref m_av_packet_unref;
-    uos_avcodec_send_frame m_avcodec_send_frame;
-    uos_av_packet_rescale_ts m_av_packet_rescale_ts;
-    uos_av_init_packet m_av_init_packet;
-    uos_av_packet_alloc m_av_packet_alloc;
-
-    uos_avformat_open_input m_avformat_open_input;
-    uos_avformat_find_stream_info m_avformat_find_stream_info;
-    uos_av_find_best_stream m_av_find_best_stream;
-    uos_av_dump_format m_av_dump_format;
-    uos_avformat_close_input m_avformat_close_input;
-    uos_avformat_alloc_output_context2 m_avformat_alloc_output_context2;
-    uos_avformat_new_stream m_avformat_new_stream;
-    uos_avformat_free_context m_avformat_free_context;
-    uos_avformat_write_header m_avformat_write_header;
-    uos_avio_open m_avio_open;
-    uos_av_write_frame m_av_write_frame;
-    uos_av_write_trailer m_av_write_trailer;
-    uos_avio_closep m_avio_closep;
-
-
-    uos_video_thumbnailer m_video_thumbnailer;
-    uos_video_thumbnailer_destroy m_video_thumbnailer_destroy;
-    uos_video_thumbnailer_create_image_data m_video_thumbnailer_create_image_data;
-    uos_video_thumbnailer_destroy_image_data m_video_thumbnailer_destroy_image_data;
-    uos_video_thumbnailer_generate_thumbnail_to_buffer m_video_thumbnailer_generate_thumbnail_to_buffer;
-
-
-    uos_swr_free m_swr_free;
-
-    uos_sws_freeContext m_sws_freeContext;
-
-
     uos_av_dict_get m_av_dict_get;
     uos_av_strerror m_av_strerror;
     uos_av_dict_copy m_av_dict_copy;
@@ -213,10 +229,8 @@ typedef struct _LoadLibs
     uos_av_samples_get_buffer_size m_av_samples_get_buffer_size;
     uos_av_get_media_type_string m_av_get_media_type_string;//
     uos_av_image_get_buffer_size m_av_image_get_buffer_size;
-} LoadLibs;
-
-LoadLibs *getLoadLibsInstance();//饿汉式不支持延迟加载
-
+}LoadAvutil;
+LoadAvutil *getAvutil();
 
 //struct udev_enumerate *udev_enumerate_new(struct udev *udev);
 typedef struct udev_enumerate *(*uos_udev_enumerate_new)(struct udev *udev);
@@ -338,4 +352,98 @@ typedef struct _LoadUSB{
 
 LoadUSB *getUSB();
 
+//PaDeviceIndex Pa_GetDeviceCount( void );
+typedef PaDeviceIndex (*uos_Pa_GetDeviceCount)( void );
+//PaError Pa_IsStreamStopped( PaStream *stream );
+typedef PaError (*uos_Pa_IsStreamStopped)( PaStream *stream );
+//const PaDeviceInfo* Pa_GetDeviceInfo( PaDeviceIndex device );
+typedef const PaDeviceInfo* (*uos_Pa_GetDeviceInfo)( PaDeviceIndex device );
+//PaError Pa_Initialize( void );
+typedef PaError (*uos_Pa_Initialize)( void );
+//PaError Pa_IsStreamActive( PaStream *stream );
+typedef PaError (*uos_Pa_IsStreamActive)( PaStream *stream );
+//PaError Pa_Terminate( void );
+typedef PaError (*uos_Pa_Terminate)( void );
+//PaError Pa_AbortStream( PaStream *stream );
+typedef PaError (*uos_Pa_AbortStream)( PaStream *stream );
+//PaError Pa_StopStream( PaStream *stream );
+typedef PaError (*uos_Pa_StopStream)( PaStream *stream );
+//PaError Pa_CloseStream( PaStream *stream );
+typedef PaError (*uos_Pa_CloseStream)( PaStream *stream );
+//PaDeviceIndex Pa_GetDefaultInputDevice( void );
+typedef PaDeviceIndex (*uos_Pa_GetDefaultInputDevice)( void );
+//const PaHostApiInfo * Pa_GetHostApiInfo( PaHostApiIndex hostApi );
+typedef const PaHostApiInfo * (*uos_Pa_GetHostApiInfo)( PaHostApiIndex hostApi );
+//PaDeviceIndex Pa_GetDefaultOutputDevice( void );
+typedef PaDeviceIndex (*uos_Pa_GetDefaultOutputDevice)( void );
+/*PaError Pa_OpenStream( PaStream** stream,
+                       const PaStreamParameters *inputParameters,
+                       const PaStreamParameters *outputParameters,
+                       double sampleRate,
+                       unsigned long framesPerBuffer,
+                       PaStreamFlags streamFlags,
+                       PaStreamCallback *streamCallback,
+                       void *userData );*/
+typedef PaError (*uos_Pa_OpenStream)( PaStream** stream,
+                       const PaStreamParameters *inputParameters,
+                       const PaStreamParameters *outputParameters,
+                       double sampleRate,
+                       unsigned long framesPerBuffer,
+                       PaStreamFlags streamFlags,
+                       PaStreamCallback *streamCallback,
+                       void *userData );
+//PaError Pa_StartStream( PaStream *stream );
+typedef PaError (*uos_Pa_StartStream)( PaStream *stream );
+//const PaStreamInfo* Pa_GetStreamInfo( PaStream *stream );
+typedef const PaStreamInfo* (*uos_Pa_GetStreamInfo)( PaStream *stream );
+//const char *Pa_GetErrorText( PaError errorCode );
+typedef const char *(*uos_Pa_GetErrorText)( PaError errorCode );
+
+typedef struct _LoadPortAudio{
+    uos_Pa_GetDeviceCount m_Pa_GetDeviceCount;
+    uos_Pa_IsStreamStopped m_Pa_IsStreamStopped;
+    uos_Pa_GetDeviceInfo m_Pa_GetDeviceInfo;
+    uos_Pa_Initialize m_Pa_Initialize;
+    uos_Pa_IsStreamActive m_Pa_IsStreamActive;
+    uos_Pa_Terminate m_Pa_Terminate;
+    uos_Pa_AbortStream m_Pa_AbortStream;
+    uos_Pa_StopStream m_Pa_StopStream;
+    uos_Pa_CloseStream m_Pa_CloseStream;
+    uos_Pa_GetDefaultInputDevice m_Pa_GetDefaultInputDevice;
+    uos_Pa_GetHostApiInfo m_Pa_GetHostApiInfo;
+    uos_Pa_GetDefaultOutputDevice m_Pa_GetDefaultOutputDevice;
+    uos_Pa_OpenStream m_Pa_OpenStream;
+    uos_Pa_StartStream m_Pa_StartStream;
+    uos_Pa_GetStreamInfo m_Pa_GetStreamInfo;
+    uos_Pa_GetErrorText m_Pa_GetErrorText;
+}LoadPortAudio;
+
+LoadPortAudio *getPortAudio();
+
+
+//LIBV4L_PUBLIC int v4l2_ioctl(int fd, unsigned long int request, ...);
+typedef LIBV4L_PUBLIC int (*uos_v4l2_ioctl)(int fd, unsigned long int request, ...);
+//LIBV4L_PUBLIC int v4l2_munmap(void *_start, size_t length);
+typedef LIBV4L_PUBLIC int (*uos_v4l2_munmap)(void *_start, size_t length);
+/*LIBV4L_PUBLIC void *v4l2_mmap(void *start, size_t length, int prot, int flags,
+int fd, int64_t offset);*/
+typedef LIBV4L_PUBLIC void *(*uos_v4l2_mmap)(void *start, size_t length, int prot, int flags,
+        int fd, int64_t offset);
+//LIBV4L_PUBLIC ssize_t v4l2_read(int fd, void *buffer, size_t n);
+typedef LIBV4L_PUBLIC ssize_t (*uos_v4l2_read)(int fd, void *buffer, size_t n);
+//LIBV4L_PUBLIC int v4l2_close(int fd);
+typedef LIBV4L_PUBLIC int (*uos_v4l2_close)(int fd);
+//LIBV4L_PUBLIC int v4l2_open(const char *file, int oflag, ...);
+typedef LIBV4L_PUBLIC int (*uos_v4l2_open)(const char *file, int oflag, ...);
+
+typedef struct _LoadV4l2{
+    uos_v4l2_ioctl m_v4l2_ioctl;
+    uos_v4l2_munmap m_v4l2_munmap;
+    uos_v4l2_mmap m_v4l2_mmap;
+    uos_v4l2_read m_v4l2_read;
+    uos_v4l2_close m_v4l2_close;
+    uos_v4l2_open m_v4l2_open;
+}LoadV4l2;
+
+LoadV4l2 *getV4l2();
 #endif//LOAD_LIBS_H

@@ -37,6 +37,7 @@
 #include "v4l2_controls.h"
 #include "v4l2_xu_ctrls.h"
 #include "config.h"
+#include "load_libs.h"
 
 #ifndef V4L2_CTRL_ID2CLASS
 #define V4L2_CTRL_ID2CLASS(id)    ((id) & 0x0fff0000UL)
@@ -143,7 +144,7 @@ static int query_ioctl(v4l2_dev_t *vd, int current_ctrl, struct v4l2_queryctrl* 
     {
         if(ret)
             ctrl->id = (__u32)current_ctrl | V4L2_CTRL_FLAG_NEXT_CTRL;
-        ret = v4l2_ioctl(vd->fd, VIDIOC_QUERYCTRL, ctrl);
+        ret = getV4l2()->m_v4l2_ioctl(vd->fd, VIDIOC_QUERYCTRL, ctrl);
     }
     while (ret && tries-- &&
         ((errno == EIO || errno == EPIPE || errno == ETIMEDOUT)));

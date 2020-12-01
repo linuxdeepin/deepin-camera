@@ -479,9 +479,9 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 	if( video_defaults->codec_id == AV_CODEC_ID_H264 && video_defaults->me_method > 4)
 		video_defaults->me_method = X264_ME_HEX;
 
-    getLoadLibsInstance()->m_av_dict_set_int(&video_codec_data->private_options, "motion-est", video_defaults->me_method, 0);
-    getLoadLibsInstance()->m_av_dict_set_int(&video_codec_data->private_options, "mpeg_quant", video_defaults->mpeg_quant, 0);
-    getLoadLibsInstance()->m_av_dict_set_int(&video_codec_data->private_options, "mepre", video_defaults->pre_me, 0);
+    getAvutil()->m_av_dict_set_int(&video_codec_data->private_options, "motion-est", video_defaults->me_method, 0);
+    getAvutil()->m_av_dict_set_int(&video_codec_data->private_options, "mpeg_quant", video_defaults->mpeg_quant, 0);
+    getAvutil()->m_av_dict_set_int(&video_codec_data->private_options, "mepre", video_defaults->pre_me, 0);
 
 
 	video_codec_data->codec_context->dia_size = video_defaults->dia;
@@ -530,23 +530,23 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
         {
            video_codec_data->codec_context->me_range = 16;
            //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
-           getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
-           getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
-           getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options,"tune", "zerolatency", 0);
+           getAvutil()->m_av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
+           getAvutil()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+           getAvutil()->m_av_dict_set(&video_codec_data->private_options,"tune", "zerolatency", 0);
         }
         break;
     case AV_CODEC_ID_HEVC:
         {
            video_codec_data->codec_context->me_range = 16;
-           getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
-           getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+           getAvutil()->m_av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
+           getAvutil()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
         }
         break;
     case AV_CODEC_ID_VP8:
         {
-            getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
-            getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
-            getLoadLibsInstance()->m_av_dict_set(&video_codec_data->private_options, "speed","10",0);
+            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
+            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
+            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "speed","10",0);
         }
         break;
     default:
@@ -584,7 +584,7 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 		return (enc_video_ctx);
 	}
 
-    video_codec_data->frame = getLoadLibsInstance()->m_av_frame_alloc();
+    video_codec_data->frame = getAvutil()->m_av_frame_alloc();
 
 	if(video_codec_data->frame == NULL)
 	{
@@ -870,7 +870,7 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 		exit(-1);
 	}
 
-    audio_codec_data->frame = getLoadLibsInstance()->m_av_frame_alloc();
+    audio_codec_data->frame = getAvutil()->m_av_frame_alloc();
 
 	if(audio_codec_data->frame == NULL)
 	{
@@ -878,7 +878,7 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
 		exit(-1);
 	}
 
-    getLoadLibsInstance()->m_av_frame_unref(audio_codec_data->frame);
+    getAvutil()->m_av_frame_unref(audio_codec_data->frame);
 
     audio_codec_data->outpkt = getLoadLibsInstance()->m_av_packet_alloc();
 
@@ -1664,8 +1664,8 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
     	{
     		int i;
         	for (i = 0; i < pkt->side_data_elems; i++)
-                getLoadLibsInstance()->m_av_free(pkt->side_data[i].data);
-            getLoadLibsInstance()->m_av_freep(&pkt->side_data);
+                getAvutil()->m_av_free(pkt->side_data[i].data);
+            getAvutil()->m_av_freep(&pkt->side_data);
         	pkt->side_data_elems = 0;
     	}
     	outsize = pkt->size;
@@ -1747,7 +1747,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 
 		int align = 0;
 
-        int buffer_size = getLoadLibsInstance()->m_av_samples_get_buffer_size(
+        int buffer_size = getAvutil()->m_av_samples_get_buffer_size(
 			NULL,
 			audio_codec_data->codec_context->channels,
 			audio_codec_data->frame->nb_samples,
@@ -1836,7 +1836,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 		//ff_packet_free_side_data(&pkt);
 		if (audio_codec_data->frame &&
 			audio_codec_data->frame->extended_data != audio_codec_data->frame->data)
-            getLoadLibsInstance()->m_av_freep(audio_codec_data->frame->extended_data);
+            getAvutil()->m_av_freep(audio_codec_data->frame->extended_data);
 
 		outsize = pkt->size;
 		
@@ -1897,10 +1897,10 @@ void encoder_close(encoder_context_t *encoder_ctx)
             getLoadLibsInstance()->m_avcodec_close(video_codec_data->codec_context);
                 free(video_codec_data->codec_context);
 
-            getLoadLibsInstance()->m_av_dict_free(&(video_codec_data->private_options));
+            getAvutil()->m_av_dict_free(&(video_codec_data->private_options));
 
 			if(video_codec_data->frame)
-                getLoadLibsInstance()->m_av_frame_free(&video_codec_data->frame);
+                getAvutil()->m_av_frame_free(&video_codec_data->frame);
 
 			if(video_codec_data->outpkt)
                 getLoadLibsInstance()->m_av_packet_free(&video_codec_data->outpkt);
@@ -1932,7 +1932,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
 			free(audio_codec_data->codec_context);
 
 			if(audio_codec_data->frame)
-                getLoadLibsInstance()->m_av_frame_free(&audio_codec_data->frame);
+                getAvutil()->m_av_frame_free(&audio_codec_data->frame);
 
 			if(audio_codec_data->outpkt)
                 getLoadLibsInstance()->m_av_packet_free(&audio_codec_data->outpkt);

@@ -496,7 +496,7 @@ static void clean_indexes(avi_context_t *avi_ctx)
 		avi_index_t *indexes = (avi_index_t *) stream->indexes;
 		for (j=0; j<indexes->ents_allocated/AVI_INDEX_CLUSTER_SIZE; j++)
              free(indexes->cluster[j]);
-        getLoadLibsInstance()->m_av_freep(&indexes->cluster);
+        getAvutil()->m_av_freep(&indexes->cluster);
         indexes->ents_allocated = indexes->entry = 0;
     }
 }

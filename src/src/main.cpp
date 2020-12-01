@@ -124,8 +124,9 @@ int main(int argc, char *argv[])
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
-    //w.loadAfterShow();//lead to unit test crash
+    w.loadAfterShow();
 
+    //最小化后双击桌面恢复画面
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
     QDBusConnection::sessionBus().registerObject("/", &w);

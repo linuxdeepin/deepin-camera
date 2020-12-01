@@ -188,10 +188,10 @@ int enum_v4l2_devices()
 
 		int fd = 0;
         /* open the device and query the capabilities */
-        if ((fd = v4l2_open(v4l2_device, O_RDWR | O_NONBLOCK, 0)) < 0)
+        if ((fd = getV4l2()->m_v4l2_open(v4l2_device, O_RDWR | O_NONBLOCK, 0)) < 0)
         {
             fprintf(stderr, "V4L2_CORE: ERROR opening V4L2 interface for %s\n", v4l2_device);
-            v4l2_close(fd);
+            getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
 
@@ -199,14 +199,14 @@ int enum_v4l2_devices()
         {
             fprintf(stderr, "V4L2_CORE: VIDIOC_QUERYCAP error: %s\n", strerror(errno));
             fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
-            v4l2_close(fd);
+            getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
         if(v4l2_cap.capabilities&V4L2_CAP_VBI_CAPTURE && v4l2_cap.capabilities&V4L2_CAP_STREAMING)
         {
             fprintf(stderr, "V4L2_CORE: V4L2_CAP_VBI_CAPTURE or V4L2_CAP_STREAMING error: %s\n", strerror(errno));
             fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
-            v4l2_close(fd);
+            getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
 
@@ -217,11 +217,11 @@ int enum_v4l2_devices()
         {
             fprintf(stderr, "V4L2_CORE: VIDIOC_ENUM_FMT error: %s\n", strerror(errno));
             fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
-            v4l2_close(fd);
+            getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
 
-        v4l2_close(fd);
+        getV4l2()->m_v4l2_close(fd);
 
         num_dev++;
         /* Update the device list*/

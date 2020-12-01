@@ -478,9 +478,9 @@ static int open_codec_context(int *stream_idx,
 
 
     //AVDictionary *opts = nullptr;
-    ret = getLoadLibsInstance()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
+    ret = getAvformat()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
     if (ret < 0) {
-        qWarning() << "Could not find " << getLoadLibsInstance()->m_av_get_media_type_string(type)
+        qWarning() << "Could not find " << getAvutil()->m_av_get_media_type_string(type)
                    << " stream in input file";
         return ret;
     }
@@ -541,13 +541,13 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
         return mi;
     }
 
-    auto ret = getLoadLibsInstance()->m_avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
+    auto ret = getAvformat()->m_avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
     if (ret < 0) {
         qWarning() << "avformat: could not open input";
         return mi;
     }
 
-    if (getLoadLibsInstance()->m_avformat_find_stream_info(av_ctx, nullptr) < 0) {
+    if (getAvformat()->m_avformat_find_stream_info(av_ctx, nullptr) < 0) {
         qWarning() << "av_find_stream_info failed";
         return mi;
     }
@@ -563,7 +563,7 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
     if (m_nDuration < 0) {
         return mi;
     }
-    getLoadLibsInstance()->m_avformat_close_input(&av_ctx);
+    getAvformat()->m_avformat_close_input(&av_ctx);
 
     return true;
 }

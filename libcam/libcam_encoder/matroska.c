@@ -1034,8 +1034,8 @@ int mkv_close(mkv_context_t* mkv_ctx)
 	io_seek(mkv_ctx->writer, currentpos);
 
     mkv_end_ebml_master(mkv_ctx, mkv_ctx->segment);
-    getLoadLibsInstance()->m_av_freep(&mkv_ctx->cues->entries);
-    getLoadLibsInstance()->m_av_freep(&mkv_ctx->cues);
+    getAvutil()->m_av_freep(&mkv_ctx->cues->entries);
+    getAvutil()->m_av_freep(&mkv_ctx->cues);
 
     return 0;
 }

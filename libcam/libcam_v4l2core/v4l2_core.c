@@ -56,6 +56,7 @@
 #include "v4l2_devices.h"
 #include "config.h"
 #include "./config.h"
+#include "load_libs.h"
 
 #ifndef GETTEXT_PACKAGE_V4L2CORE
 #define GETTEXT_PACKAGE_V4L2CORE "gview_v4l2core"
@@ -99,7 +100,7 @@ int xioctl(int fd, int IOCTL_X, void *arg)
 	do
 	{
 		if(!disable_libv4l2)
-            ret = v4l2_ioctl(fd, (unsigned long int)IOCTL_X, arg);
+            ret = getV4l2()->m_v4l2_ioctl(fd, (unsigned long int)IOCTL_X, arg);
 		else
             ret = ioctl(fd, (unsigned long int)IOCTL_X, arg);
 	}
@@ -260,7 +261,7 @@ static int unmap_buff(v4l2_dev_t *vd)
 			{
 				// unmap old buffer
 				if((vd->mem[i] != MAP_FAILED) && vd->buff_length[i])
-					if((ret=v4l2_munmap(vd->mem[i], vd->buff_length[i]))<0)
+                    if((ret=getV4l2()->m_v4l2_munmap(vd->mem[i], vd->buff_length[i]))<0)
 					{
 						fprintf(stderr, "V4L2_CORE: couldn't unmap buff: %s\n", strerror(errno));
 					}
@@ -291,7 +292,7 @@ static int map_buff(v4l2_dev_t *vd)
 	// map new buffer
 	for (i = 0; i < NB_BUFFER; i++)
 	{
-		vd->mem[i] = v4l2_mmap( NULL, // start anywhere
+        vd->mem[i] = getV4l2()->m_v4l2_mmap( NULL, // start anywhere
 			vd->buff_length[i],
 			PROT_READ | PROT_WRITE,
 			MAP_SHARED,
@@ -1181,7 +1182,7 @@ v4l2_frame_buff_t *v4l2core_get_frame(v4l2_dev_t *vd)
 			__LOCK_MUTEX( __PMUTEX );
 			if(vd->streaming == STRM_OK)
 			{
-                vd->buf.bytesused = (__u32)v4l2_read (vd->fd, vd->mem[vd->buf.index], vd->buf.length);
+                vd->buf.bytesused = (__u32)getV4l2()->m_v4l2_read (vd->fd, vd->mem[vd->buf.index], vd->buf.length);
                 bytes_used = (int)vd->buf.bytesused;
 
 				if(bytes_used > 0)
@@ -1766,7 +1767,7 @@ static void clean_v4l2_dev(v4l2_dev_t *vd)
 
 	/*close descriptor*/
 	if(vd->fd > 0)
-		v4l2_close(vd->fd);
+        getV4l2()->m_v4l2_close(vd->fd);
 
 	vd->fd = 0;
 
@@ -1838,7 +1839,7 @@ v4l2_dev_t* v4l2core_init_dev(const char *device)
 	vd->tilt_step = 128;
 
 	/*open device*/
-	if ((vd->fd = v4l2_open(vd->videodevice, O_RDWR | O_NONBLOCK, 0)) < 0)
+    if ((vd->fd = getV4l2()->m_v4l2_open(vd->videodevice, O_RDWR | O_NONBLOCK, 0)) < 0)
 	{
 		fprintf(stderr, "V4L2_CORE: ERROR opening V4L interface: %s\n", strerror(errno));
 		clean_v4l2_dev(vd);

@@ -334,9 +334,6 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_nActTpye = ActTakePic;
 
     initUI();
-    QTimer::singleShot(200, this, [ = ] {
-        loadAfterShow();
-    });
 }
 
 CMainWindow::~CMainWindow()

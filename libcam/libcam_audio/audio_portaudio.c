@@ -40,6 +40,7 @@
 #include "audio.h"
 #include "core_time.h"
 #include "gviewaudio.h"
+#include "load_libs.h"
 
 extern int verbosity;
 
@@ -191,7 +192,7 @@ static int audio_portaudio_list_devices(audio_context_t *audio_ctx)
 	//reset device count
 	audio_ctx->num_input_dev = 0;
 
-	numDevices = Pa_GetDeviceCount();
+    numDevices = getPortAudio()->m_Pa_GetDeviceCount();
 	if( numDevices < 0 )
 	{
 		printf( "AUDIO: Audio disabled: Pa_CountDevices returned %i\n", numDevices );
@@ -203,29 +204,29 @@ static int audio_portaudio_list_devices(audio_context_t *audio_ctx)
 		int it = 0;
 		for( it=0; it < numDevices; it++ )
 		{
-			deviceInfo = Pa_GetDeviceInfo( it );
+            deviceInfo = getPortAudio()->m_Pa_GetDeviceInfo( it );
 			if (verbosity > 0)
 				printf( "--------------------------------------- device #%d\n", it );
 			/* Mark audio_ctx and API specific default devices*/
 			int defaultDisplayed = 0;
 
 			/* with pulse, ALSA is now listed first and doesn't set a API default- 11-2009*/
-			if( it == Pa_GetDefaultInputDevice() )
+            if( it == getPortAudio()->m_Pa_GetDefaultInputDevice() )
 			{
 				if (verbosity > 0)
 					printf( "[ Default Input" );
 				defaultDisplayed = 1;
 				audio_ctx->device = audio_ctx->num_input_dev;/*default index in array of input devs*/
 			}
-			else if( it == Pa_GetHostApiInfo( deviceInfo->hostApi )->defaultInputDevice )
+            else if( it == getPortAudio()->m_Pa_GetHostApiInfo( deviceInfo->hostApi )->defaultInputDevice )
 			{
-				const PaHostApiInfo *hostInfo = Pa_GetHostApiInfo( deviceInfo->hostApi );
+                const PaHostApiInfo *hostInfo = getPortAudio()->m_Pa_GetHostApiInfo( deviceInfo->hostApi );
 				if (verbosity > 0)
 					printf( "[ Default %s Input", hostInfo->name );
 				defaultDisplayed = 2;
 			}
 			/* OUTPUT device doesn't matter for capture*/
-			if( it == Pa_GetDefaultOutputDevice() )
+            if( it == getPortAudio()->m_Pa_GetDefaultOutputDevice() )
 			{
 			 	if (verbosity > 0)
 				{
@@ -234,9 +235,9 @@ static int audio_portaudio_list_devices(audio_context_t *audio_ctx)
 				}
 				defaultDisplayed = 3;
 			}
-			else if( it == Pa_GetHostApiInfo( deviceInfo->hostApi )->defaultOutputDevice )
+            else if( it == getPortAudio()->m_Pa_GetHostApiInfo( deviceInfo->hostApi )->defaultOutputDevice )
 			{
-				const PaHostApiInfo *hostInfo = Pa_GetHostApiInfo( deviceInfo->hostApi );
+                const PaHostApiInfo *hostInfo = getPortAudio()->m_Pa_GetHostApiInfo( deviceInfo->hostApi );
 				if (verbosity > 0)
 				{
 					printf( (defaultDisplayed ? "," : "[") );
@@ -253,7 +254,7 @@ static int audio_portaudio_list_devices(audio_context_t *audio_ctx)
 			if (verbosity > 0)
 			{
 				printf( "Name                     = %s\n", deviceInfo->name );
-				printf( "Host API                 = %s\n",  Pa_GetHostApiInfo( deviceInfo->hostApi )->name );
+                printf( "Host API                 = %s\n",  getPortAudio()->m_Pa_GetHostApiInfo( deviceInfo->hostApi )->name );
 				printf( "Max inputs = %d", deviceInfo->maxInputChannels  );
 			}
 			/* INPUT devices (if it has input channels it's a capture device)*/
@@ -314,7 +315,7 @@ int audio_init_portaudio(audio_context_t* audio_ctx)
 	/*assertions*/
 	assert(audio_ctx != NULL);
 	
-	int pa_error = Pa_Initialize();
+    int pa_error = getPortAudio()->m_Pa_Initialize();
 
 	if(pa_error != paNoError)
 	{
@@ -385,10 +386,10 @@ int audio_start_portaudio(audio_context_t *audio_ctx)
 
 	if(stream)
 	{
-		if( !(Pa_IsStreamStopped( stream )))
+        if( !(getPortAudio()->m_Pa_IsStreamStopped( stream )))
 		{
-			Pa_AbortStream( stream );
-			Pa_CloseStream( stream );
+            getPortAudio()->m_Pa_AbortStream( stream );
+            getPortAudio()->m_Pa_CloseStream( stream );
 			audio_ctx->stream = NULL;
 			stream = audio_ctx->stream;
 		}
@@ -409,7 +410,7 @@ int audio_start_portaudio(audio_context_t *audio_ctx)
 
 	audio_ctx->stream_flag = AUDIO_STRM_ON;
 
-	err = Pa_OpenStream(
+    err = getPortAudio()->m_Pa_OpenStream(
 		&stream,                     /* stream */
 		&inputParameters,            /* inputParameters    */
 		NULL,                        /* outputParameters   */
@@ -421,7 +422,7 @@ int audio_start_portaudio(audio_context_t *audio_ctx)
 
 	if( err == paNoError )
 	{
-		err = Pa_StartStream( stream );
+        err = getPortAudio()->m_Pa_StartStream( stream );
 		audio_ctx->stream = (void *) stream; /* store stream pointer*/
 	}
 
@@ -429,15 +430,15 @@ int audio_start_portaudio(audio_context_t *audio_ctx)
 	{
 		fprintf(stderr, "AUDIO: An error occured while starting the portaudio API\n" );
 		fprintf(stderr, "       Error number: %d\n", err );
-		fprintf(stderr, "       Error message: %s\n", Pa_GetErrorText( err ) );
+        fprintf(stderr, "       Error message: %s\n", getPortAudio()->m_Pa_GetErrorText( err ) );
 
-		if(stream) Pa_AbortStream( stream );
+        if(stream) getPortAudio()->m_Pa_AbortStream( stream );
 		audio_ctx->stream_flag = AUDIO_STRM_OFF;
 
 		return(-1);
 	}
 
-	const PaStreamInfo* stream_info = Pa_GetStreamInfo (stream);
+    const PaStreamInfo* stream_info = getPortAudio()->m_Pa_GetStreamInfo (stream);
 	if(verbosity > 1)
 		printf("AUDIO: latency of %8.3f msec\n", 1000 * stream_info->inputLatency);
 
@@ -468,33 +469,33 @@ int audio_stop_portaudio(audio_context_t *audio_ctx)
 	/*stops and closes the audio stream*/
 	if(stream)
 	{
-		if(Pa_IsStreamActive( stream ) > 0)
+        if(getPortAudio()->m_Pa_IsStreamActive( stream ) > 0)
 		{
 			printf("AUDIO: (portaudio) Aborting audio stream\n");
-			err = Pa_AbortStream( stream );
+            err = getPortAudio()->m_Pa_AbortStream( stream );
 		}
 		else
 		{
 			printf("AUDIO: (portaudio) Stoping audio stream\n");
-			err = Pa_StopStream( stream );
+            err = getPortAudio()->m_Pa_StopStream( stream );
 		}
 
 		if( err != paNoError )
 		{
 			fprintf(stderr, "AUDIO: (portaudio) An error occured while stoping the audio stream\n" );
 			fprintf(stderr, "       Error number: %d\n", err );
-			fprintf(stderr, "       Error message: %s\n", Pa_GetErrorText( err ) );
+            fprintf(stderr, "       Error message: %s\n", getPortAudio()->m_Pa_GetErrorText( err ) );
 			ret = -1;
 		}
 
 		printf("AUDIO: Closing audio stream...\n");
-		err = Pa_CloseStream( stream );
+        err = getPortAudio()->m_Pa_CloseStream( stream );
 
 		if( err != paNoError )
 		{
 			fprintf(stderr, "AUDIO: (portaudio) An error occured while closing the audio stream\n" );
 			fprintf(stderr, "       Error number: %d\n", err );
-			fprintf(stderr, "       Error message: %s\n", Pa_GetErrorText( err ) );
+            fprintf(stderr, "       Error message: %s\n", getPortAudio()->m_Pa_GetErrorText( err ) );
 			ret = -1;
 		}
 	}
@@ -521,7 +522,7 @@ int audio_stop_portaudio(audio_context_t *audio_ctx)
  */
 void audio_close_portaudio(audio_context_t *audio_ctx)
 {
-	Pa_Terminate();
+    getPortAudio()->m_Pa_Terminate();
 
 	if(audio_ctx == NULL)
 		return;

@@ -126,6 +126,7 @@ int main(int argc, char *argv[])
     a.setprocess(Processlist);
 
     w->show();
+    w->loadAfterShow();
     //将界面移至屏幕中央
     Dtk::Widget::moveToCenter(w);
 

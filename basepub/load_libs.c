@@ -26,7 +26,7 @@
 #include "load_libs.h"
 #include <encoder.h>
 #include <libavformat/avformat.h>
-static LoadLibs *pLibs = NULL;
+
 void PrintError(){
     char *error;
     if ((error = dlerror()) != NULL)  {
@@ -34,6 +34,7 @@ void PrintError(){
     }
 }
 
+static LoadLibs *pLibs = NULL;
 static LoadLibs *newClass(void)
 {
     pLibs = (LoadLibs *)malloc(sizeof(LoadLibs));
@@ -151,39 +152,6 @@ static LoadLibs *newClass(void)
     pLibs->m_av_packet_alloc = (uos_av_packet_alloc)dlsym(handle, "av_packet_alloc");
     PrintError();
 
-    //libavformat
-    void *handle1 = dlopen("libavformat.so",RTLD_LAZY);
-    if (!handle1) {
-        PrintError();
-    }
-    pLibs->m_avformat_open_input = (uos_avformat_open_input)dlsym(handle1, "avformat_open_input");
-    PrintError();
-    pLibs->m_avformat_find_stream_info = (uos_avformat_find_stream_info)dlsym(handle1, "avformat_find_stream_info");
-    PrintError();
-    pLibs->m_av_find_best_stream = (uos_av_find_best_stream)dlsym(handle1, "av_find_best_stream");
-    PrintError();
-    pLibs->m_av_dump_format = (uos_av_dump_format)dlsym(handle1, "av_dump_format");//目前未使用
-    PrintError();
-    pLibs->m_avformat_close_input = (uos_avformat_close_input)dlsym(handle1, "avformat_close_input");
-    PrintError();
-    pLibs->m_avformat_alloc_output_context2 = (uos_avformat_alloc_output_context2)dlsym(handle1, "avformat_alloc_output_context2");
-    PrintError();
-    pLibs->m_avformat_new_stream = (uos_avformat_new_stream)dlsym(handle1, "avformat_new_stream");
-    PrintError();
-    pLibs->m_avformat_free_context = (uos_avformat_free_context)dlsym(handle1, "avformat_free_context");
-    PrintError();
-    pLibs->m_avformat_write_header = (uos_avformat_write_header)dlsym(handle1, "avformat_write_header");
-    PrintError();
-    pLibs->m_avio_open = (uos_avio_open)dlsym(handle1, "avio_open");
-    PrintError();
-    pLibs->m_av_write_frame = (uos_av_write_frame)dlsym(handle1, "av_write_frame");
-    PrintError();
-    pLibs->m_av_write_trailer = (uos_av_write_trailer)dlsym(handle1, "av_write_trailer");
-    PrintError();
-    pLibs->m_avio_closep = (uos_avio_closep)dlsym(handle1, "avio_closep");
-    PrintError();
-
-
     //libffmpegthumbnailer
     void *handle2 = dlopen("libffmpegthumbnailer.so",RTLD_LAZY);
     if (!handle2) {
@@ -214,46 +182,6 @@ static LoadLibs *newClass(void)
     }
     pLibs->m_sws_freeContext = (uos_sws_freeContext)dlsym(handle4, "sws_freeContext");
     PrintError();
-
-    //libavutil
-    void *handle5 = dlopen("libavutil.so",RTLD_LAZY);
-    if (!handle5) {
-        PrintError();
-    }
-    pLibs->m_av_dict_get = (uos_av_dict_get)dlsym(handle5, "av_dict_get");//目前未使用
-    PrintError();
-    pLibs->m_av_strerror = (uos_av_strerror)dlsym(handle5, "av_strerror");//目前未使用
-    PrintError();
-
-    pLibs->m_av_dict_copy = (uos_av_dict_copy)dlsym(handle5, "av_dict_copy");
-    PrintError();
-    pLibs->m_av_dict_free = (uos_av_dict_free)dlsym(handle5, "av_dict_free");
-    PrintError();
-    pLibs->m_av_dict_set = (uos_av_dict_set)dlsym(handle5, "av_dict_set");
-    PrintError();
-    pLibs->m_av_dict_set_int = (uos_av_dict_set_int)dlsym(handle5, "av_dict_set_int");
-    PrintError();
-    pLibs->m_av_log_set_level = (uos_av_log_set_level)dlsym(handle5, "av_log_set_level");
-    PrintError();
-    pLibs->m_av_image_copy_to_buffer = (uos_av_image_copy_to_buffer)dlsym(handle5, "av_image_copy_to_buffer");
-    PrintError();
-    pLibs->m_av_frame_free = (uos_av_frame_free)dlsym(handle5, "av_frame_free");
-    PrintError();
-    pLibs->m_av_frame_alloc = (uos_av_frame_alloc)dlsym(handle5, "av_frame_alloc");
-    PrintError();
-    pLibs->m_av_freep = (uos_av_freep)dlsym(handle5, "av_freep");
-    PrintError();
-    pLibs->m_av_frame_unref = (uos_av_frame_unref)dlsym(handle5, "av_frame_unref");
-    PrintError();
-    pLibs->m_av_free = (uos_av_free)dlsym(handle5, "av_free");
-    PrintError();
-    pLibs->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_free");
-    PrintError();
-    pLibs->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_free");
-    PrintError();
-    pLibs->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
-    PrintError();
-
     assert(pLibs != NULL);
     return pLibs;
 }
@@ -279,6 +207,173 @@ LoadLibs *getLoadLibsInstance()
     }
 
     return pLibs;
+}
+
+static LoadAvformat *pAvformat = NULL;
+static LoadAvformat *newAvformat(void)
+{
+    pAvformat = (LoadAvformat *)malloc(sizeof(LoadAvformat));
+//    RTLD_NOW：在dlopen返回前，解析出全部没有定义的符号，解析不出来返回NULL。
+//    RTLD_LAZY：暂缓决定，等有需要时再解出符号
+    //libavformat
+    void *handle1 = dlopen("libavformat.so",RTLD_LAZY);
+    if (!handle1) {
+        PrintError();
+    }
+    pAvformat->m_avformat_open_input = (uos_avformat_open_input)dlsym(handle1, "avformat_open_input");
+    PrintError();
+    pAvformat->m_avformat_find_stream_info = (uos_avformat_find_stream_info)dlsym(handle1, "avformat_find_stream_info");
+    PrintError();
+    pAvformat->m_av_find_best_stream = (uos_av_find_best_stream)dlsym(handle1, "av_find_best_stream");
+    PrintError();
+    pAvformat->m_av_dump_format = (uos_av_dump_format)dlsym(handle1, "av_dump_format");//目前未使用
+    PrintError();
+    pAvformat->m_avformat_close_input = (uos_avformat_close_input)dlsym(handle1, "avformat_close_input");
+    PrintError();
+    pAvformat->m_avformat_alloc_output_context2 = (uos_avformat_alloc_output_context2)dlsym(handle1, "avformat_alloc_output_context2");
+    PrintError();
+    pAvformat->m_avformat_new_stream = (uos_avformat_new_stream)dlsym(handle1, "avformat_new_stream");
+    PrintError();
+    pAvformat->m_avformat_free_context = (uos_avformat_free_context)dlsym(handle1, "avformat_free_context");
+    PrintError();
+    pAvformat->m_avformat_write_header = (uos_avformat_write_header)dlsym(handle1, "avformat_write_header");
+    PrintError();
+    pAvformat->m_avio_open = (uos_avio_open)dlsym(handle1, "avio_open");
+    PrintError();
+    pAvformat->m_av_write_frame = (uos_av_write_frame)dlsym(handle1, "av_write_frame");
+    PrintError();
+    pAvformat->m_av_write_trailer = (uos_av_write_trailer)dlsym(handle1, "av_write_trailer");
+    PrintError();
+    pAvformat->m_avio_closep = (uos_avio_closep)dlsym(handle1, "avio_closep");
+    PrintError();
+
+
+//    //libffmpegthumbnailer
+//    void *handle2 = dlopen("libffmpegthumbnailer.so",RTLD_LAZY);
+//    if (!handle2) {
+//        PrintError();
+//    }
+//    pLibs->m_video_thumbnailer = (uos_video_thumbnailer)dlsym(handle2, "video_thumbnailer_create");
+//    PrintError();
+//    pLibs->m_video_thumbnailer_destroy = (uos_video_thumbnailer_destroy)dlsym(handle2, "video_thumbnailer_destroy");
+//    PrintError();
+//    pLibs->m_video_thumbnailer_create_image_data = (uos_video_thumbnailer_create_image_data)dlsym(handle2, "video_thumbnailer_create_image_data");
+//    PrintError();
+//    pLibs->m_video_thumbnailer_destroy_image_data = (uos_video_thumbnailer_destroy_image_data)dlsym(handle2, "video_thumbnailer_destroy_image_data");
+//    PrintError();
+//    pLibs->m_video_thumbnailer_generate_thumbnail_to_buffer = (uos_video_thumbnailer_generate_thumbnail_to_buffer)dlsym(handle2, "video_thumbnailer_generate_thumbnail_to_buffer");
+//    PrintError();
+
+//    void *handle3 = dlopen("libswresample.so",RTLD_LAZY);
+//    if (!handle3) {
+//        PrintError();
+//    }
+//    pLibs->m_swr_free = (uos_swr_free)dlsym(handle3, "swr_free");
+//    PrintError();
+
+
+//    void *handle4 = dlopen("libswscale.so",RTLD_LAZY);
+//    if (!handle4) {
+//        PrintError();
+//    }
+//    pLibs->m_sws_freeContext = (uos_sws_freeContext)dlsym(handle4, "sws_freeContext");
+//    PrintError();
+    assert(pAvformat != NULL);
+    return pAvformat;
+}
+
+/**
+ * 饿汉式
+ * 支持延迟加载，但是为了多线程安全，性能有所降低
+ * 注意：方法内部要加锁，防止多线程多次创建
+ * */
+LoadAvformat *getAvformat()
+{
+    static pthread_mutex_t mutexAvformat;
+    //双检锁
+    if (pAvformat == NULL) {
+        // 这里要对pLibs加锁
+        pthread_mutex_lock(&mutexAvformat);
+        if (pAvformat == NULL)
+        {
+            pAvformat = newAvformat();
+        }
+        //退出时解锁
+        pthread_mutex_unlock(&mutexAvformat);
+    }
+
+    return pAvformat;
+}
+
+
+static LoadAvutil *Avutil = NULL;
+static LoadAvutil *newAvutil(void)
+{
+    Avutil = (LoadAvutil *)malloc(sizeof(LoadAvutil));
+    //libavutil
+    void *handle5 = dlopen("libavutil.so",RTLD_LAZY);
+    if (!handle5) {
+        PrintError();
+    }
+    Avutil->m_av_dict_get = (uos_av_dict_get)dlsym(handle5, "av_dict_get");//目前未使用
+    PrintError();
+    Avutil->m_av_strerror = (uos_av_strerror)dlsym(handle5, "av_strerror");//目前未使用
+    PrintError();
+
+    Avutil->m_av_dict_copy = (uos_av_dict_copy)dlsym(handle5, "av_dict_copy");
+    PrintError();
+    Avutil->m_av_dict_free = (uos_av_dict_free)dlsym(handle5, "av_dict_free");
+    PrintError();
+    Avutil->m_av_dict_set = (uos_av_dict_set)dlsym(handle5, "av_dict_set");
+    PrintError();
+    Avutil->m_av_dict_set_int = (uos_av_dict_set_int)dlsym(handle5, "av_dict_set_int");
+    PrintError();
+    Avutil->m_av_log_set_level = (uos_av_log_set_level)dlsym(handle5, "av_log_set_level");
+    PrintError();
+    Avutil->m_av_image_copy_to_buffer = (uos_av_image_copy_to_buffer)dlsym(handle5, "av_image_copy_to_buffer");
+    PrintError();
+    Avutil->m_av_frame_free = (uos_av_frame_free)dlsym(handle5, "av_frame_free");
+    PrintError();
+    Avutil->m_av_frame_alloc = (uos_av_frame_alloc)dlsym(handle5, "av_frame_alloc");
+    PrintError();
+    Avutil->m_av_freep = (uos_av_freep)dlsym(handle5, "av_freep");
+    PrintError();
+    Avutil->m_av_frame_unref = (uos_av_frame_unref)dlsym(handle5, "av_frame_unref");
+    PrintError();
+    Avutil->m_av_free = (uos_av_free)dlsym(handle5, "av_free");
+    PrintError();
+    Avutil->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_free");
+    PrintError();
+    Avutil->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_free");
+    PrintError();
+    Avutil->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
+    PrintError();
+
+    assert(Avutil != NULL);
+    return Avutil;
+}
+
+/**
+ * 饿汉式
+ * 支持延迟加载，但是为了多线程安全，性能有所降低
+ * 注意：方法内部要加锁，防止多线程多次创建
+ * */
+LoadAvutil *getAvutil()
+{
+    static pthread_mutex_t mutexAvutil;
+    //双检锁
+    if (Avutil == NULL) {
+        // 这里要对pLibs加锁
+        pthread_mutex_lock(&mutexAvutil);
+        if (Avutil == NULL)
+        {
+            Avutil = newAvutil();
+        }
+        //退出时解锁
+        pthread_mutex_unlock(&mutexAvutil);
+    }
+
+    return Avutil;
 }
 
 static LoadUdev *pUdev = NULL;
@@ -362,7 +457,7 @@ static LoadUSB *newUSB(void)
 {
     pUSB = (LoadUSB *)malloc(sizeof(LoadUSB));
     //libusb
-    void *handle = dlopen("libusb.so",RTLD_LAZY);
+    void *handle = dlopen("libusb-1.0.so",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -405,4 +500,111 @@ LoadUSB *getUSB()
     }
 
     return pUSB;
+}
+
+static LoadPortAudio *pPortAudio = NULL;
+static LoadPortAudio *newPortAudio(void)
+{
+    pPortAudio = (LoadPortAudio *)malloc(sizeof(LoadPortAudio));
+    //libportaudio
+    void *handle = dlopen("libportaudio.so",RTLD_LAZY);
+    if (!handle) {
+        PrintError();
+    }
+    pPortAudio->m_Pa_GetDeviceCount = (uos_Pa_GetDeviceCount)dlsym(handle, "Pa_GetDeviceCount");
+    PrintError();
+    pPortAudio->m_Pa_IsStreamStopped = (uos_Pa_IsStreamStopped)dlsym(handle, "Pa_IsStreamStopped");
+    PrintError();
+    pPortAudio->m_Pa_GetDeviceInfo = (uos_Pa_GetDeviceInfo)dlsym(handle, "Pa_GetDeviceInfo");
+    PrintError();
+    pPortAudio->m_Pa_Initialize = (uos_Pa_Initialize)dlsym(handle, "Pa_Initialize");
+    PrintError();
+    pPortAudio->m_Pa_IsStreamActive = (uos_Pa_IsStreamActive)dlsym(handle, "Pa_IsStreamActive");
+    PrintError();
+    pPortAudio->m_Pa_Terminate = (uos_Pa_Terminate)dlsym(handle, "Pa_Terminate");
+    PrintError();
+    pPortAudio->m_Pa_AbortStream = (uos_Pa_AbortStream)dlsym(handle, "Pa_AbortStream");
+    PrintError();
+    pPortAudio->m_Pa_StopStream = (uos_Pa_StopStream)dlsym(handle, "Pa_StopStream");
+    PrintError();
+    pPortAudio->m_Pa_CloseStream = (uos_Pa_CloseStream)dlsym(handle, "Pa_CloseStream");
+    PrintError();
+    pPortAudio->m_Pa_GetDefaultInputDevice = (uos_Pa_GetDefaultInputDevice)dlsym(handle, "Pa_GetDefaultInputDevice");
+    PrintError();
+    pPortAudio->m_Pa_GetHostApiInfo = (uos_Pa_GetHostApiInfo)dlsym(handle, "Pa_GetHostApiInfo");
+    PrintError();
+    pPortAudio->m_Pa_GetDefaultOutputDevice = (uos_Pa_GetDefaultOutputDevice)dlsym(handle, "Pa_GetDefaultOutputDevice");
+    PrintError();
+    pPortAudio->m_Pa_OpenStream = (uos_Pa_OpenStream)dlsym(handle, "Pa_OpenStream");
+    PrintError();
+    pPortAudio->m_Pa_StartStream = (uos_Pa_StartStream)dlsym(handle, "Pa_StartStream");
+    PrintError();
+    pPortAudio->m_Pa_GetStreamInfo = (uos_Pa_GetStreamInfo)dlsym(handle, "Pa_GetStreamInfo");
+    PrintError();
+    pPortAudio->m_Pa_GetErrorText = (uos_Pa_GetErrorText)dlsym(handle, "Pa_GetErrorText");
+    PrintError();
+    assert(pPortAudio != NULL);
+    return pPortAudio;
+}
+
+LoadPortAudio *getPortAudio()
+{
+    static pthread_mutex_t mutexPortAudio;
+    //双检锁
+    if (pPortAudio == NULL) {
+        // 这里要对pUSB加锁
+        pthread_mutex_lock(&mutexPortAudio);
+        if (pPortAudio == NULL)
+        {
+            pPortAudio = newPortAudio();
+        }
+        //退出时解锁
+        pthread_mutex_unlock(&mutexPortAudio);
+    }
+
+    return pPortAudio;
+}
+
+static LoadV4l2 *pV4l2 = NULL;
+static LoadV4l2 *newV4l2(void)
+{
+    pV4l2 = (LoadV4l2 *)malloc(sizeof(LoadV4l2));
+    void *handle = dlopen("libv4l2.so",RTLD_LAZY);
+    if (!handle) {
+        PrintError();
+    }
+
+    pV4l2->m_v4l2_ioctl = (uos_v4l2_ioctl)dlsym(handle, "v4l2_ioctl");
+    PrintError();
+    pV4l2->m_v4l2_munmap = (uos_v4l2_munmap)dlsym(handle, "v4l2_munmap");
+    PrintError();
+    pV4l2->m_v4l2_mmap = (uos_v4l2_mmap)dlsym(handle, "v4l2_mmap");
+    PrintError();
+    pV4l2->m_v4l2_read = (uos_v4l2_read)dlsym(handle, "v4l2_read");
+    PrintError();
+    pV4l2->m_v4l2_close = (uos_v4l2_close)dlsym(handle, "v4l2_close");
+    PrintError();
+    pV4l2->m_v4l2_open = (uos_v4l2_open)dlsym(handle, "v4l2_open");
+    PrintError();
+
+    assert(pV4l2 != NULL);
+    return pV4l2;
+}
+
+LoadV4l2 *getV4l2()
+{
+    static pthread_mutex_t mutexV4l2;
+    //双检锁
+    if (pV4l2 == NULL) {
+        // 这里要对pUSB加锁
+        pthread_mutex_lock(&mutexV4l2);
+        if (pV4l2 == NULL)
+        {
+            pV4l2 = newV4l2();
+        }
+        //退出时解锁
+        pthread_mutex_unlock(&mutexV4l2);
+    }
+
+    return pV4l2;
 }

@@ -1041,15 +1041,15 @@ int h264_init_decoder(int width, int height)
 	}
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
-    h264_ctx->picture = getLoadLibsInstance()->m_av_frame_alloc();
-    getLoadLibsInstance()->m_av_frame_unref(h264_ctx->picture);
+    h264_ctx->picture = getAvutil()->m_av_frame_alloc();
+    getAvutil()->m_av_frame_unref(h264_ctx->picture);
 #else
     h264_ctx->picture = getLoadLibsInstance()->m_avcodec_alloc_frame();
     getLoadLibsInstance()->m_avcodec_get_frame_defaults(h264_ctx->picture);
 #endif
 
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-    h264_ctx->pic_size = getLoadLibsInstance()->m_av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
+    h264_ctx->pic_size = getAvutil()->m_av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
 #else
 	h264_ctx->pic_size = avpicture_get_size(h264_ctx->context->pix_fmt, width, height);
 #endif
@@ -1099,7 +1099,7 @@ int h264_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 	if(got_frame)
 	{
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-        getLoadLibsInstance()->m_av_image_copy_to_buffer(out_buf, h264_ctx->pic_size,
+        getAvutil()->m_av_image_copy_to_buffer(out_buf, h264_ctx->pic_size,
                              (const unsigned char * const*) h264_ctx->picture->data, h264_ctx->picture->linesize,
                              h264_ctx->context->pix_fmt, h264_ctx->width, h264_ctx->height, 1);
 #else
@@ -1133,7 +1133,7 @@ void h264_close_decoder()
 	free(h264_ctx->context);
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
-    getLoadLibsInstance()->m_av_frame_free(&h264_ctx->picture);
+    getAvutil()->m_av_frame_free(&h264_ctx->picture);
 #else
 	#if LIBAVCODEC_VER_AT_LEAST(54,28)
             getLoadLibsInstance()->m_avcodec_free_frame(&h264_ctx->picture);

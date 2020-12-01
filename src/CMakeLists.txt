@@ -56,8 +56,8 @@ file (GLOB_RECURSE HEADERS  ./src/*.h
 file (GLOB_RECURSE RESOURCES  ./resource/resources.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkgui
-        libv4l2
+        dtkwidget dtkcore
+#        libv4l2
 #        libudev
 #        libusb-1.0
 #        libavcodec
@@ -104,7 +104,7 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
-    portaudio
+#    portaudio
     dl
     )
 

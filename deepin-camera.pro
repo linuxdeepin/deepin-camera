@@ -1,4 +1,4 @@
-QT += core gui printsupport svg dbus concurrent dtkwidget dtkgui multimedia
+QT += core gui printsupport svg dbus concurrent dtkwidget multimedia
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
   qtHaveModule(opengl): QT += opengl
@@ -69,12 +69,12 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
 LIBS += -L/lib/x86_64-linux-gnu\
 #        -ludev\
 #        -lusb-1.0\
-        -lv4l2\
+#        -lv4l2\
 #        -lavutil\
 #        -lswscale\
 #        -lpng\
 #        -lSDL2\
-        -lportaudio\
+#        -lportaudio\
 #        -lswresample \
         -ldl
 
