@@ -46,7 +46,7 @@ static PRIVIEW_STATE VIDEO_STATE = PICTRUE;
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
     m_openglwidget = new PreviewOpenglWidget(this);
-    m_openglwidget->setFocusPolicy(Qt::NoFocus);
+    m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 
 //    m_openglwidget->show();
 
@@ -69,13 +69,16 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalView = new QGraphicsView(this);
     m_pNormalView->show();
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
+    m_pNormalView->setFocusPolicy(Qt::ClickFocus);
     m_flashLabel  = new DLabel(this);
+    m_flashLabel->setFocusPolicy(Qt::ClickFocus);
 
     m_btnVdTime = new DPushButton(this);
     m_fWgtCountdown = new DFloatingWidget(this);
     m_fWgtCountdown->hide(); //先隐藏
     m_fWgtCountdown->setFixedSize(160, 144);
     m_fWgtCountdown->setBlurBackgroundEnabled(true);
+    m_fWgtCountdown->setFocusPolicy(Qt::ClickFocus);
     m_dLabel = new DLabel(m_fWgtCountdown);
 
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
@@ -88,6 +91,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     int nType = DGuiApplicationHelper::instance()->themeType();
 
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
+    m_dLabel->setFocusPolicy(Qt::ClickFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
     QFont ftLabel("SourceHanSansSC-ExtraLight");
     ftLabel.setWeight(QFont::Thin);//最小就是50,更小的设置不进去，也是bug？
@@ -140,7 +144,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->setFlat(true);
     m_endBtn->setFixedSize(QSize(56, 51));
 
-    m_endBtn->setFocusPolicy(Qt::NoFocus);
+    m_endBtn->setFocusPolicy(Qt::ClickFocus);
 
     m_endBtn->setIconSize(QSize(56, 51));
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
@@ -260,6 +264,7 @@ void videowidget::delayInit()
     pltLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltLabel);
     m_flashLabel->hide();
+    m_flashLabel->setFocusPolicy(Qt::ClickFocus);
 
     //启动视频
     int ret =  camInit("");

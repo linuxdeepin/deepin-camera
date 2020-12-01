@@ -112,7 +112,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(33, 33));
-    m_lastButton->setFocusPolicy(Qt::NoFocus);
+    m_lastButton->setFocusPolicy(Qt::TabFocus);
 
     DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");

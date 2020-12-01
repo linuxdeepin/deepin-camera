@@ -42,6 +42,10 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QFormLayout>
+#include <DWindowMinButton>
+#include <DWindowCloseButton>
+#include <DWindowMaxButton>
+#include <DWindowOptionButton>
 
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
@@ -338,6 +342,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     m_bWayland = false;
     this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     m_nActTpye = ActTakePic;
+    //this->setFocusPolicy(Qt::NoFocus);
 
     initUI();
 }
@@ -434,6 +439,36 @@ void CMainWindow::initBlockSleep()
         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
         qDebug() << "init Nublock sleep.";
     }
+}
+
+void CMainWindow::initTabOrder()
+{
+    /*
+     * 完成主窗口tab循序切换
+    */
+    DWindowMinButton* windowMinBtn = titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
+    DWindowOptionButton* windowoptionButton = titlebar()->findChild<DWindowOptionButton*>("DTitlebarDWindowOptionButton");
+    DWindowMaxButton* windowMaxBtn = titlebar()->findChild<DWindowMaxButton*>("DTitlebarDWindowMaxButton");
+    DWindowCloseButton* windowCloseBtn = titlebar()->findChild<DWindowCloseButton*>("DTitlebarDWindowCloseButton");
+    //设置鼠标tab同时切换策略，有一个问题鼠标点击时也会出现一个tab选择框
+    /*
+    m_pTitlePicBtn->setFocusPolicy(Qt::StrongFocus);
+    m_pTitleVdBtn->setFocusPolicy(Qt::StrongFocus);
+    windowoptionButton->setFocusPolicy(Qt::StrongFocus);
+    windowMinBtn->setFocusPolicy(Qt::StrongFocus);
+    windowMaxBtn->setFocusPolicy(Qt::StrongFocus);
+    windowCloseBtn->setFocusPolicy(Qt::StrongFocus);
+    m_thumbnail->findChild<DPushButton*>("PicVdBtn")->setFocusPolicy(Qt::StrongFocus);
+    pSelectBtn->setFocusPolicy(Qt::StrongFocus);
+    */
+    setTabOrder(m_pTitlePicBtn,m_pTitleVdBtn);
+    setTabOrder(m_pTitleVdBtn,windowoptionButton);
+    setTabOrder(windowoptionButton,windowMinBtn);
+    setTabOrder(windowMinBtn,windowMaxBtn);
+    setTabOrder(windowMaxBtn,windowCloseBtn);
+    setTabOrder(windowCloseBtn,m_thumbnail->findChild<DPushButton*>("PicVdBtn"));
+    setTabOrder(m_thumbnail->findChild<DPushButton*>("PicVdBtn"),pSelectBtn);
+    titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 
 void CMainWindow::settingDialog()
@@ -571,6 +606,7 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor->start();
     initThumbnails();
     initThumbnailsConn();
+    initTabOrder();
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));
     //多设备信号
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));
@@ -641,7 +677,7 @@ void CMainWindow::initUI()
     m_videoPre = new videowidget(this);
     m_videoPre->setObjectName("VideoPreviewWidget");
     this->setCentralWidget(m_videoPre);
-    m_videoPre->setFocusPolicy(Qt::NoFocus);
+//    m_videoPre->setFocusPolicy(Qt::NoFocus);
 
     QPalette paletteTime = m_videoPre->palette();
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
@@ -730,7 +766,7 @@ void CMainWindow::initTitleBar()
     m_pTitlePicBtn->setObjectName("pTitlePicBtn");
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(26, 26));
-    m_pTitlePicBtn->setFocusPolicy(Qt::TabFocus);
+ //   m_pTitlePicBtn->setFocusPolicy(Qt::TabFocus);
 
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -749,7 +785,7 @@ void CMainWindow::initTitleBar()
     m_pTitleVdBtn = new DButtonBoxButton(QString(""),this);
     m_pTitleVdBtn->setObjectName("pTitleVdBtn");
 
-    m_pTitleVdBtn->setFocusPolicy(Qt::TabFocus);
+//    m_pTitleVdBtn->setFocusPolicy(Qt::TabFocus);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 26));
 
@@ -757,14 +793,15 @@ void CMainWindow::initTitleBar()
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
     titlebar()->addWidget(pDButtonBox);
-    pDButtonBox->setFocusPolicy(Qt::NoFocus);
+//    pDButtonBox->setFocusPolicy(Qt::NoFocus);
 
     pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
     pSelectBtn->setObjectName("SelectBtn");
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
     pSelectBtn->hide();
-    pSelectBtn->setFocusPolicy(Qt::NoFocus);
+    pSelectBtn->setFocusPolicy(Qt::ClickFocus);
+//    pSelectBtn->setFocusPolicy(Qt::NoFocus);
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
@@ -913,11 +950,13 @@ void CMainWindow::initThumbnailsConn()
 void CMainWindow::setSelBtnHide()
 {
     pSelectBtn->hide();
+    pSelectBtn->setFocusPolicy(Qt::ClickFocus);
 }
 
 void CMainWindow::setSelBtnShow()
 {
     pSelectBtn->show();
+    pSelectBtn->setFocusPolicy(Qt::TabFocus);
 }
 
 void CMainWindow::setupTitlebar()
@@ -929,7 +968,7 @@ void CMainWindow::setupTitlebar()
     m_actionSettings->setObjectName("SettingAction");
     m_titlemenu->addAction(m_actionSettings);
     titlebar()->setMenu(m_titlemenu);
-    titlebar()->setFocusPolicy(Qt::NoFocus);
+//    titlebar()->setFocusPolicy(Qt::NoFocus);
     titlebar()->setParent(this);
 }
 

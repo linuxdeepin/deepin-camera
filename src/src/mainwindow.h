@@ -103,6 +103,19 @@ private:
     */
     void initThumbnailsConn();
     /**
+     * @brief initBlockShutdown 阻塞关机
+     */
+    void initBlockShutdown();
+    /**
+     * @brief initBlockSleep 阻塞睡眠
+     */
+    void initBlockSleep();
+    /**
+     * @brief initTabOrder
+     * 设置住窗口tab顺序
+     */
+    void initTabOrder();
+    /**
     * @brief setupTitlebar　装载标题栏
     */
     void setupTitlebar();
@@ -133,16 +146,6 @@ private:
     * @brief slotPopupSettingsDialog 设置界面初始化
     */
     void slotPopupSettingsDialog();
-    /**
-     * @brief initBlockShutdown 阻塞关机
-     */
-    void initBlockShutdown();
-    /**
-     * @brief initBlockSleep 阻塞睡眠
-     */
-    void initBlockSleep();
-
-
 
 private slots:
     /**
