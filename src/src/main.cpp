@@ -69,10 +69,11 @@ int main(int argc, char *argv[])
     CApplication a(argc, argv);
 
     a.setObjectName("deepin-camera");
+#ifndef __mips__
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     // overwrite DApplication default value
     a.setAttribute(Qt::AA_ForceRasterWidgets, false);
-
+#endif
 
     a.setAttribute(Qt::AA_UseHighDpiPixmaps);
     a.setOrganizationName("deepin");
@@ -93,8 +94,9 @@ int main(int argc, char *argv[])
     //版本
     QString t_date = QDate::currentDate().toString("MMdd");
     a.setApplicationVersion(DApplication::buildVersion(t_date));
-    a.setWindowIcon(QIcon::fromTheme("deepin-camera"));
-    a.setProductIcon(QIcon::fromTheme("deepin-camera"));//08月21获悉已添加到系统，故更改为从系统获取
+    QIcon myIcon = QIcon::fromTheme("deepin-camera");
+    a.setWindowIcon(myIcon);
+    a.setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
 
     //应用描述
     a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));

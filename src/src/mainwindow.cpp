@@ -341,13 +341,8 @@ QString CMainWindow::lastOpenedPath()
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
-    m_bWayland = false;
-    this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
+    m_bWayland = false;    
     m_nActTpye = ActTakePic;
-    //this->setFocusPolicy(Qt::NoFocus);
-
-    initUI();
-    initShortcut();
 }
 
 CMainWindow::~CMainWindow()
@@ -619,6 +614,9 @@ void CMainWindow::settingDialogDel()
 
 void CMainWindow::loadAfterShow()
 {
+    this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
+    initUI();
+    initShortcut();
     gviewencoder_init();
     v4l2core_init();
     m_devnumMonitor = new DevNumMonitor();
@@ -1023,7 +1021,9 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
         onFitToolBar();
     }
     //m_videoPre->resize(this->size());
-    m_videoPre->update();
+    if (m_videoPre) {
+        m_videoPre->update();
+    }
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)

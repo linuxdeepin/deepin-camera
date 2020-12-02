@@ -239,7 +239,7 @@ private:
     DMenu                      *m_titlemenu;
     QMenu                      *m_rightbtnmenu;
     QAction                     *actOpenfolder;
-    videowidget                  *m_videoPre;
+    videowidget                  *m_videoPre = nullptr;
     QFileSystemWatcher           m_fileWatcher;
     DevNumMonitor              *m_devnumMonitor;
 //    QVector<videowidget *>       m_VEffectPreview;
