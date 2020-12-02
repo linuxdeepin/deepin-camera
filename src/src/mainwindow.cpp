@@ -23,6 +23,7 @@
 #include "capplication.h"
 #include "v4l2_core.h"
 #include "datamanager.h"
+#include "shortcut.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -49,6 +50,7 @@
 
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
+#include <QShortcut>
 extern "C" {
 #include "encoder.h"
 }
@@ -345,6 +347,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
     //this->setFocusPolicy(Qt::NoFocus);
 
     initUI();
+    initShortcut();
 }
 
 CMainWindow::~CMainWindow()
@@ -469,6 +472,30 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowCloseBtn,m_thumbnail->findChild<DPushButton*>("PicVdBtn"));
     setTabOrder(m_thumbnail->findChild<DPushButton*>("PicVdBtn"),pSelectBtn);
     titlebar()->setFocusPolicy(Qt::ClickFocus);
+}
+
+void CMainWindow::initShortcut()
+{
+    QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
+    connect(scViewShortcut, &QShortcut::activated, this, [ = ] {
+        qDebug() << "receive Ctrl+Shift+/";
+        QRect rect = window()->geometry();
+        QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
+        Shortcut sc;
+        QStringList shortcutString;
+        QString param1 = "-j=" + sc.toStr();
+        QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
+        shortcutString <<"-b" << param1 << param2;
+        QProcess::startDetached("deepin-shortcut-viewer", shortcutString);
+    });
+    QShortcut *scSpaceShortcut = new QShortcut(QKeySequence("space"), this);
+    connect(scSpaceShortcut, &QShortcut::activated, this, [ = ] {
+        DPushButton* tabkevdent =  m_videoPre->findChild<DPushButton*>("TakeVdEndBtn");
+        if(tabkevdent->isVisible())
+            tabkevdent->click();
+        else
+            m_thumbnail->findChild<DPushButton*>("PicVdBtn")->click();
+    });
 }
 
 void CMainWindow::settingDialog()

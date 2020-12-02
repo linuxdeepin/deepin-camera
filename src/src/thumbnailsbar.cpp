@@ -22,6 +22,7 @@
 #include "thumbnailsbar.h"
 #include "camview.h"
 #include "datamanager.h"
+#include "Settings.h"
 
 #include <sys/time.h>
 
@@ -42,8 +43,11 @@
 #include <QKeyEvent>
 #include <QShortcut>
 #include <QThread>
+#include <DSettingsDialog>
+#include <DSettingsOption>
+#include <DSettings>
 
-
+using namespace dc;
 QMap<int, ImageItem *> g_indexImage;
 
 QMap<int, ImageItem *> get_imageitem()
@@ -59,13 +63,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     //this->grabKeyboard(); //获取键盘事件的关键处理
     setFocus(Qt::OtherFocusReason);
     setFocusPolicy(Qt::StrongFocus);
-    //this->setFramRadius(18);
-    QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
-    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
-    //也可以用Qt::Key_Delete
-    QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
-    connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
-
+    this->setFramRadius(18);
+    initShortcut();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
@@ -131,6 +130,24 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     m_lastDelTime = QDateTime::currentDateTime();
     m_lastItemCount = 0;
+}
+
+void ThumbnailsBar::initShortcut()
+{
+    QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
+    //也可以用Qt::Key_Delete
+    QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
+    connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
+    //唤起右键菜单
+    QShortcut *shortcutmenu = new QShortcut(QKeySequence("Alt+M"), this);
+    connect(shortcutmenu, SIGNAL(activated()), this, SLOT(onCallMenu()));
+    //打开文件夹
+    QShortcut *shortcutopenfolder = new QShortcut(QKeySequence("Ctrl+O"), this);
+    connect(shortcutopenfolder, SIGNAL(activated()), this, SLOT(onOpenFolder()));
+    //打印
+    QShortcut *shortcutprint = new QShortcut(QKeySequence("Ctrl+P"), this);
+    connect(shortcutprint, SIGNAL(activated()), this, SLOT(OnPrint()));
 }
 
 void ThumbnailsBar::setBtntooltip()
@@ -449,6 +466,38 @@ void ThumbnailsBar::onShowVdTime(QString str)
 void ThumbnailsBar::onFileName(QString strfilename)
 {
     m_strFileName = strfilename;
+}
+
+void ThumbnailsBar::onCallMenu()
+{
+    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
+    tmp->showMenu();
+}
+
+void ThumbnailsBar::onOpenFolder()
+{
+    QString save_path = Settings::get().generalOption("last_open_path").toString();
+    if (save_path.isEmpty())
+    {
+        save_path = Settings::get().getOption("base.save.datapath").toString();
+    }
+    if (save_path.size() && save_path[0] == '~')
+    {
+        save_path.replace(0, 1, QDir::homePath());
+    }
+
+    if (!QFileInfo(save_path).exists())
+    {
+        QDir d;
+        d.mkpath(save_path);
+    }
+    Dtk::Widget::DDesktopServices::showFolder(save_path);
+}
+
+void ThumbnailsBar::OnPrint()
+{
+    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
+    tmp->onPrint();
 }
 
 

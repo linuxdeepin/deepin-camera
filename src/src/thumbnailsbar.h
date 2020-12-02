@@ -62,6 +62,11 @@ public:
 
     explicit ThumbnailsBar(DWidget *parent = nullptr);
     /**
+     * @brief initShortcut
+     * 初始化快捷键
+     */
+    void initShortcut();
+    /**
     * @brief getItemCount　获取图元数目
     */
     int getItemCount()
@@ -155,6 +160,15 @@ public slots:
     * @param strfilename　文件名
     */
     void onFileName(QString strfilename);
+    /**
+     * @brief onCallMenu
+     * 唤起右键菜单
+     */
+    void onCallMenu();
+
+    void onOpenFolder();
+
+    void OnPrint();
 };
 
 #endif // THUMBNAILSBAR_H

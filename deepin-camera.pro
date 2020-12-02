@@ -41,7 +41,8 @@ SOURCES += \
     $$PWD/src/src/closedialog.cpp \
     $$PWD/src/src/settings_translation.cpp \
     $$PWD/src/src/dbus_adpator.cpp \
-    $$PWD/src/src/previewopenglwidget.cpp
+    $$PWD/src/src/previewopenglwidget.cpp \
+    $$PWD/src/src/shortcut.cpp
 
 HEADERS += \
     $$PWD/src/src/mainwindow.h \
@@ -55,7 +56,8 @@ HEADERS += \
     $$PWD/src/src/closedialog.h \
     $$PWD/src/src/capplication.h \
     $$PWD/src/src/dbus_adpator.h \
-    $$PWD/src/src/previewopenglwidget.h
+    $$PWD/src/src/previewopenglwidget.h \
+    $$PWD/src/src/shortcut.h
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include \

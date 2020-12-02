@@ -141,7 +141,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     }
     updatePic(pix);
 
-    QMenu *menu = new QMenu(this);
+    m_menu = new QMenu(this);
     QAction *actCopy = new QAction(this);
     actCopy->setObjectName("CopyAction");
     actCopy->setText(tr("Copy"));
@@ -152,35 +152,22 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     QAction *actOpenFolder = new QAction(this);
     actOpenFolder->setObjectName("OpenFolderAction");
     actOpenFolder->setText(tr("Open folder"));
-    menu->addAction(actCopy);
-    menu->addAction(actDel);
+    m_menu->addAction(actCopy);
+    m_menu->addAction(actDel);
     if (!m_bVideo) {
         actPrint = new QAction(this);
         actPrint->setText(tr("Print"));
         actPrint->setObjectName("PrinterAction");
-        menu->addAction(actPrint);
-        connect(actPrint, &QAction::triggered, this, [ = ] {
-            QStringList paths;
-            if (DataManager::instance()->m_setIndex.isEmpty()) {
-                paths = QStringList(path);
-                qDebug() << "sigle print";
-            } else {
-                QSet<int>::iterator it;
-                for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
-                    paths << g_indexImage.value(*it)->getPath();
-                    qDebug() << g_indexImage.value(*it)->getPath();
-                }
-            }
-            PrintHelper::showPrintDialog(QStringList(paths), this);
-        });
+        m_menu->addAction(actPrint);
+        connect(actPrint, &QAction::triggered, this, &ImageItem::onPrint);
     }
-    menu->addAction(actOpenFolder);
+    m_menu->addAction(actOpenFolder);
 
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
-        menu->exec(QCursor::pos());
+        m_menu->exec(QCursor::pos());
         DataManager::instance()->m_setIndex.clear();
         DataManager::instance()->setbMultiSlt(false);
     });
@@ -468,6 +455,32 @@ void ImageItem::paintEvent(QPaintEvent *event)
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+}
+
+void ImageItem::showMenu()
+{
+    QPoint centerpos(width()/2,height()/2);
+    QPoint screen_centerpos = mapToGlobal(centerpos);
+    m_menu->exec(screen_centerpos);
+}
+
+void ImageItem::onPrint()
+{
+    if (!m_bVideo)
+    {
+        QStringList paths;
+        if (DataManager::instance()->m_setIndex.isEmpty()) {
+            paths = QStringList(m_path);
+            qDebug() << "sigle print";
+        } else {
+            QSet<int>::iterator it;
+            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
+                paths << g_indexImage.value(*it)->getPath();
+                qDebug() << g_indexImage.value(*it)->getPath();
+            }
+        }
+        PrintHelper::showPrintDialog(QStringList(paths), this);
+    }
 }
 
 static int open_codec_context(int *stream_idx,

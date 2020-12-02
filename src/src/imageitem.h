@@ -102,6 +102,8 @@ public:
     {
         return m_bVideo;
     }
+
+    void showMenu();
 signals:
     /**
      * @brief imageItemclicked 图片点击事件
@@ -117,6 +119,8 @@ signals:
     void showDuration(QString strDuration);
 
     void needFit();
+public slots:
+     void onPrint();
 protected:
     /**
      * @brief mouseDoubleClickEvent 鼠标双击事件

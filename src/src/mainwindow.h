@@ -115,6 +115,7 @@ private:
      * 设置住窗口tab顺序
      */
     void initTabOrder();
+    void initShortcut();
     /**
     * @brief setupTitlebar　装载标题栏
     */
