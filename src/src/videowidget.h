@@ -163,7 +163,11 @@ public slots:
 
 
 private slots:
+#ifdef __mips__
+    void ReceiveMajorImage(QImage *image, int result);
+#else
     void ReceiveOpenGLstatus(bool);
+#endif
     void onReachMaxDelayedFrames();
     void flash();
     void slotresolutionchanged(const QString &);
@@ -225,9 +229,9 @@ public:
 
 private:
     bool m_bActive = false;//是否录制中
-
+#ifndef __mips__
     PreviewOpenglWidget     *m_openglwidget;//opengl渲染窗口
-
+#endif
     DLabel                  *m_flashLabel;
 
     QGraphicsView           *m_pNormalView;

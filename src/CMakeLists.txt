@@ -7,6 +7,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
+#option (__mips__ "Use UNITTEST" ON)
+#add_definitions(-D__mips__)
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")

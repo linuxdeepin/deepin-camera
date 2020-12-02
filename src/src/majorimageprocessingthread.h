@@ -76,9 +76,18 @@ private:
     uint m_nVdWidth;
     uint m_nVdHeight;
     uchar *m_yuvPtr = nullptr;
-signals:
+
+#ifdef __mips__
+    QImage m_Img;
+#endif
+
+signals: 
+#ifdef __mips__
+    void SendMajorImageProcessing(QImage *image, int result);
+#else
     void sigYUVFrame(uchar* yuv,uint width,uint height);
     void sigRenderYuv(bool);
+#endif
     void reachMaxDelayedFrames();
 
 };

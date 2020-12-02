@@ -123,10 +123,10 @@ void MajorImageProcessingThread::run()
         {
             render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
         }
-
-//        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
-//        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
-
+#ifdef __mips__
+        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
+        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
+#endif
         /*录像*/
         if (video_capture_get_save_video()) {
             if (get_myvideo_bebin_timer() == 0) {
@@ -201,6 +201,13 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (frame->yuv_frame != nullptr && (stopped == 0)) {
+#ifdef __mips__
+            QImage imgTmp(rgb,frame->width,frame->height,QImage::Format_RGB888);
+            if (!imgTmp.isNull()) {
+                m_Img = imgTmp.copy();
+                emit SendMajorImageProcessing(&m_Img, result);
+            }
+#else
             emit sigRenderYuv(true);
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
             if(m_nVdWidth != static_cast<unsigned int>(frame->width)&& m_nVdHeight != static_cast<unsigned int>(frame->height))
@@ -217,13 +224,20 @@ void MajorImageProcessingThread::run()
             }
             memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
             emit sigYUVFrame(m_yuvPtr,m_nVdWidth,m_nVdHeight);
+#endif
             malloc_trim(0);
         }
+#ifndef __mips__
         if(frame->yuv_frame == nullptr)
         {
             emit sigRenderYuv(false);
         }
+#endif
         m_rwMtxImg.unlock();
+
+#ifdef __mips__
+        free(rgb);
+#endif
         v4l2core_release_frame(vd1, frame);
 //        msleep(33);//1000 / 30
     }

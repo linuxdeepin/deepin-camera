@@ -45,10 +45,10 @@ static PRIVIEW_STATE VIDEO_STATE = PICTRUE;
 
 videowidget::videowidget(DWidget *parent) : DWidget(parent)
 {
+#ifndef __mips__
     m_openglwidget = new PreviewOpenglWidget(this);
     m_openglwidget->setFocusPolicy(Qt::ClickFocus);
-
-//    m_openglwidget->show();
+#endif
 
     m_btnClickTime = QDateTime::currentDateTime();
     m_strFolder = "";
@@ -160,9 +160,10 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_pNormalScene = new QGraphicsScene;
     //禁用滚动条
     forbidScrollBar(m_pNormalView);
-//    QGraphicsProxyWidget *openglwidgetProxy = m_pNormalScene->addWidget(&m_openglwidget);
-//    openglwidgetProxy->show();
 
+#ifdef __mips__
+    m_pNormalView->show();
+#endif
 
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
 
@@ -194,11 +195,13 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
+#ifndef __mips__
     if(m_openglwidget)
     {
         delete m_openglwidget;
         m_openglwidget = nullptr;
     }
+#endif
 
     delete m_flashLabel;
     m_flashLabel = nullptr;
@@ -248,10 +251,14 @@ void videowidget::delayInit()
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->setObjectName("MajorImageThread");
     m_imgPrcThread->m_bTake = false;
+#ifdef __mips__
+    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
+            this, SLOT(ReceiveMajorImage(QImage *, int)));
+#else
     connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
     connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar*,uint,uint)),
             m_openglwidget, SLOT(slotShowYuv(uchar*,uint,uint)));
-
+#endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
 
@@ -423,16 +430,18 @@ void videowidget::showNocam()
     {
         m_pCamErrItem->show();
     }
+#ifndef __mips__
     if(m_openglwidget->isVisible())
     {
         m_openglwidget->hide();
     }
+#endif
     emit sigDeviceChange();
     QString str(tr("No webcam found"));//未连接摄像头
-    QImage imgnocam;
+
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        imgnocam = QImage(":/images/icons/light/Not connected.svg");
-//        m_pixmap = QPixmap::fromImage(img);
+        QImage imgnocam = QImage(":/images/icons/light/Not connected.svg");
+        m_pixmap = QPixmap::fromImage(imgnocam);
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -443,8 +452,8 @@ void videowidget::showNocam()
         plt.setColor(QPalette::Base, clrBase);
         this->setPalette(plt);
     } else {
-         imgnocam = QImage(":/images/icons/dark/Not connected_dark.svg");
-//        m_pixmap = QPixmap::fromImage(imgtmp);
+        QImage imgnocam = QImage(":/images/icons/dark/Not connected_dark.svg");
+        m_pixmap = QPixmap::fromImage(imgnocam);
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -460,8 +469,8 @@ void videowidget::showNocam()
     ft.setPixelSize(17);
     m_pCamErrItem->setFont(ft);
     m_pCamErrItem->setPlainText(str);
-    m_pNormalScene->setSceneRect(QPixmap::fromImage(imgnocam).rect());
-    m_pNormalItem->setPixmap(QPixmap::fromImage(imgnocam));
+    m_pNormalScene->setSceneRect(m_pixmap.rect());
+    m_pNormalItem->setPixmap(m_pixmap);
     if (m_flashLabel->isVisible()) {
         m_flashLabel->hide();
     }
@@ -497,13 +506,15 @@ void videowidget::showCamUsed()
     {
         m_pCamErrItem->show();
     }
+#ifndef __mips__
     m_openglwidget->hide();
+#endif
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
-    QImage imgcamused;
+
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType() ) {
-        imgcamused = QImage(":/images/icons/light/Take up.svg");
-//        m_pixmap = QPixmap::fromImage(img);
+        QImage imgcamused = QImage(":/images/icons/light/Take up.svg");
+        m_pixmap = QPixmap::fromImage(imgcamused);
 
         QColor clrText(Qt::white);
         clrText.setAlphaF(0.8);
@@ -517,8 +528,8 @@ void videowidget::showCamUsed()
         plt.setColor(QPalette::Base, clrBackGRD);
         this->setPalette(plt);
     } else {
-        imgcamused = QImage(":/images/icons/dark/Take up_dark.svg");
-//        m_pixmap = QPixmap::fromImage(img);
+        QImage imgcamused = QImage(":/images/icons/dark/Take up_dark.svg");
+        m_pixmap = QPixmap::fromImage(imgcamused);
 
         QColor clrText(Qt::black);
         clrText.setAlphaF(0.8);
@@ -536,8 +547,8 @@ void videowidget::showCamUsed()
     ft.setWeight(QFont::DemiBold);
     ft.setPixelSize(17);
     m_pCamErrItem->setFont(ft);
-    m_pNormalScene->setSceneRect(QPixmap::fromImage(imgcamused).rect());
-    m_pNormalItem->setPixmap(QPixmap::fromImage(imgcamused));
+    m_pNormalScene->setSceneRect(m_pixmap.rect());
+    m_pNormalItem->setPixmap(m_pixmap);
     if (m_flashLabel->isVisible()) {
         m_flashLabel->hide();
     }
@@ -549,7 +560,7 @@ void videowidget::showCamUsed()
         endBtnClicked();
     }
 }
-
+#ifndef __mips__
 void videowidget::ReceiveOpenGLstatus(bool result)
 {
     if(result)
@@ -577,6 +588,59 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
     }
 }
+#endif
+
+#ifdef __mips__
+void videowidget::ReceiveMajorImage(QImage *image, int result)
+{
+    if (!image->isNull()) {
+        switch (result) {
+        case 0:     //Success
+            m_imgPrcThread->m_rwMtxImg.lock();
+            if (m_pCamErrItem->isVisible() == true) {
+                m_pCamErrItem->hide();
+            }
+            if(!m_pNormalView->isVisible())
+            {
+                m_pNormalView->show();
+            }
+        {
+            int widgetwidth = this->width();
+
+            int widgetheight = this->height();
+            //qDebug()<<"widgetwidth :" << this->width() << " widgetheight: " << this->height() << endl;
+            if(get_wayland_status() == true){
+                if((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight))
+                {
+                    QImage img = image->scaled(widgetwidth, widgetwidth *image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    m_pixmap = QPixmap::fromImage(img);
+                }
+                else
+                {
+                    QImage img = image->scaled(widgetheight* image->width() / image->height(), widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    m_pixmap = QPixmap::fromImage(img);
+                }
+            }
+            else {
+                QImage img = image->scaled(widgetwidth, widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                m_pixmap = QPixmap::fromImage(img);
+            }
+
+            m_pNormalScene->setSceneRect(m_pixmap.rect());
+            m_pNormalItem->setPixmap(m_pixmap);
+            m_imgPrcThread->m_rwMtxImg.unlock();
+            if (get_encoder_status() == 0 && getCapstatus() == true) {
+                endBtnClicked();
+            }
+            malloc_trim(0);
+        }
+            break;
+        default:
+            break;
+        }
+    }
+}
+#endif
 
 void videowidget::onReachMaxDelayedFrames()
 {
@@ -597,9 +661,10 @@ void videowidget::onReachMaxDelayedFrames()
     DataManager::instance()->setdevStatus(NOCAM);
     stopEverything();
     showNocam();
-
+#ifndef __mips__
     if(m_openglwidget->isVisible())
         m_openglwidget->hide();//隐藏opengl窗口
+#endif
     emit setBtnStatues(false);
 
 }
@@ -736,8 +801,9 @@ void videowidget::resizeEvent(QResizeEvent *size)
         itemPosChange();
         m_pCamErrItem->hide();
     }
-
+#ifndef __mips__
     m_openglwidget->resize(width(),height());
+#endif
 }
 
 void videowidget::showCountdown()
@@ -790,8 +856,9 @@ void videowidget::showCountdown()
 //                eventloop.exec();
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
-
+#ifndef __mips__
                 m_openglwidget->hide();
+#endif
                 m_thumbnail->hide();
 
             }
@@ -804,7 +871,9 @@ void videowidget::showCountdown()
                 m_flashLabel->resize(this->size());
                 m_flashLabel->move(this->mapToGlobal(QPoint(0, 0)));
 
+#ifndef __mips__
                 m_openglwidget->hide();
+#endif
                 m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
@@ -933,9 +1002,10 @@ void videowidget::flash()
         {
             m_takePicSound->play();
         }
-
+#ifndef __mips__
         if(m_openglwidget->isVisible() == false)
             m_openglwidget->show();
+#endif
         m_thumbnail->show();
 
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
@@ -1012,8 +1082,9 @@ void videowidget::restartDevices()
             QPalette plt = this->palette();
             plt.setColor(QPalette::Window, Qt::white);
             m_pNormalView->hide();
+#ifndef __mips__
             m_openglwidget->show();
-
+#endif
         }
     }
 }
@@ -1185,11 +1256,12 @@ void videowidget::onTakePic(bool bTrue)
         QEventLoop eventloop;
         QTimer::singleShot(300, &eventloop, SLOT(quit()));
         eventloop.exec();
-
+#ifndef __mips__
         if(!m_openglwidget->isVisible())
         {
             m_openglwidget->show();
         }
+#endif
         if(!m_thumbnail->isVisible())
         {
             m_thumbnail->show();
@@ -1321,11 +1393,15 @@ void videowidget::stopEverything()
     if (m_pCamErrItem->isVisible()) {
         m_pCamErrItem->hide();
     }
+
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->hide();
     }
+
+#ifndef __mips__
     if(!m_openglwidget->isVisible())
     {
         m_openglwidget->show();
     }
+#endif
 }
