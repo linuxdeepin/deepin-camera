@@ -52,6 +52,7 @@ file (GLOB_RECURSE SOURCES  ./*.cpp
     ../src/mainwindow.cpp
     ../src/majorimageprocessingthread.cpp
     ../src/previewopenglwidget.cpp
+    ../src/shortcut.cpp
     ../src/thumbnailsbar.cpp
     ../src/videowidget.cpp
     ../src/imageitem.cpp

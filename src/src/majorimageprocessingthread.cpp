@@ -221,8 +221,13 @@ void MajorImageProcessingThread::run()
                 }
                 yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                 m_yuvPtr = new uchar[yuvsize];
+                memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
             }
-            memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
+            else
+            {
+                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+                memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
+            }
             emit sigYUVFrame(m_yuvPtr,m_nVdWidth,m_nVdHeight);
 #endif
             malloc_trim(0);
