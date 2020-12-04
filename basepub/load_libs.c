@@ -40,7 +40,7 @@ static LoadLibs *newClass(void)
     pLibs = (LoadLibs *)malloc(sizeof(LoadLibs));
 //    RTLD_NOW：在dlopen返回前，解析出全部没有定义的符号，解析不出来返回NULL。
 //    RTLD_LAZY：暂缓决定，等有需要时再解出符号
-    void *handle = dlopen("libavcodec.so",RTLD_LAZY);
+    void *handle = dlopen("libavcodec.so.58",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -153,7 +153,7 @@ static LoadLibs *newClass(void)
     PrintError();
 
     //libffmpegthumbnailer
-    void *handle2 = dlopen("libffmpegthumbnailer.so",RTLD_LAZY);
+    void *handle2 = dlopen("libffmpegthumbnailer.so.4",RTLD_LAZY);
     if (!handle2) {
         PrintError();
     }
@@ -168,7 +168,7 @@ static LoadLibs *newClass(void)
     pLibs->m_video_thumbnailer_generate_thumbnail_to_buffer = (uos_video_thumbnailer_generate_thumbnail_to_buffer)dlsym(handle2, "video_thumbnailer_generate_thumbnail_to_buffer");
     PrintError();
 
-    void *handle3 = dlopen("libswresample.so",RTLD_LAZY);
+    void *handle3 = dlopen("libswresample.so.3",RTLD_LAZY);
     if (!handle3) {
         PrintError();
     }
@@ -176,7 +176,7 @@ static LoadLibs *newClass(void)
     PrintError();
 
 
-    void *handle4 = dlopen("libswscale.so",RTLD_LAZY);
+    void *handle4 = dlopen("libswscale.so.5",RTLD_LAZY);
     if (!handle4) {
         PrintError();
     }
@@ -216,7 +216,7 @@ static LoadAvformat *newAvformat(void)
 //    RTLD_NOW：在dlopen返回前，解析出全部没有定义的符号，解析不出来返回NULL。
 //    RTLD_LAZY：暂缓决定，等有需要时再解出符号
     //libavformat
-    void *handle1 = dlopen("libavformat.so",RTLD_LAZY);
+    void *handle1 = dlopen("libavformat.so.58",RTLD_LAZY);
     if (!handle1) {
         PrintError();
     }
@@ -311,7 +311,7 @@ static LoadAvutil *newAvutil(void)
 {
     Avutil = (LoadAvutil *)malloc(sizeof(LoadAvutil));
     //libavutil
-    void *handle5 = dlopen("libavutil.so",RTLD_LAZY);
+    void *handle5 = dlopen("libavutil.so.56",RTLD_LAZY);
     if (!handle5) {
         PrintError();
     }
@@ -381,7 +381,7 @@ static LoadUdev *newUdev(void)
 {
     pUdev = (LoadUdev *)malloc(sizeof(LoadUdev));
     //libudev
-    void *handle = dlopen("libudev.so",RTLD_LAZY);
+    void *handle = dlopen("libudev.so.1",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -457,7 +457,7 @@ static LoadUSB *newUSB(void)
 {
     pUSB = (LoadUSB *)malloc(sizeof(LoadUSB));
     //libusb
-    void *handle = dlopen("libusb-1.0.so",RTLD_LAZY);
+    void *handle = dlopen("libusb-1.0.so.0",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -507,7 +507,7 @@ static LoadPortAudio *newPortAudio(void)
 {
     pPortAudio = (LoadPortAudio *)malloc(sizeof(LoadPortAudio));
     //libportaudio
-    void *handle = dlopen("libportaudio.so",RTLD_LAZY);
+    void *handle = dlopen("libportaudio.so.2",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -569,7 +569,7 @@ static LoadV4l2 *pV4l2 = NULL;
 static LoadV4l2 *newV4l2(void)
 {
     pV4l2 = (LoadV4l2 *)malloc(sizeof(LoadV4l2));
-    void *handle = dlopen("libv4l2.so",RTLD_LAZY);
+    void *handle = dlopen("libv4l2.so.0",RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
