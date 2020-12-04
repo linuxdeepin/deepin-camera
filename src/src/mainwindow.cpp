@@ -343,6 +343,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 {
     m_bWayland = false;    
     m_nActTpye = ActTakePic;
+    setupTitlebar();
 }
 
 CMainWindow::~CMainWindow()
@@ -734,7 +735,6 @@ void CMainWindow::initUI()
         picturepathexist=true;
     }
 
-    setupTitlebar();
     //缩略图延后加载
     if(picturepathexist){
         m_videoPre->setSaveFolder(CMainWindow::m_lastPicfilename);

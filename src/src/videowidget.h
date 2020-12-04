@@ -177,6 +177,9 @@ private:
 
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
+    /**
+    * @brief showCountDownLabel　显示录制和拍照倒计时
+    */
     void showCountDownLabel(PRIVIEW_STATE state);
 
     void hideCountDownLabel();
@@ -193,12 +196,6 @@ private:
     * @param state
     */
     void newPreViewByState(PRIVIEW_STATE state);
-
-
-    /**
-    * @brief showCountDownLabel　显示录制和拍照倒计时
-    */
-    void showCountDownLabel();
 
     /**
     * @brief showCountDownLabel　摄像头被占用

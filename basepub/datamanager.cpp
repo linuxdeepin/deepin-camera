@@ -113,6 +113,6 @@ DataManager *DataManager::instance()
 
 DataManager::DataManager()
 {
-
+    m_videoCount = 0;
 }
 
