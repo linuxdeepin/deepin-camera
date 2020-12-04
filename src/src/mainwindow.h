@@ -148,6 +148,7 @@ private:
     */
     void slotPopupSettingsDialog();
 
+    void getLibPath();
 private slots:
     /**
      * @brief setSelBtnHide 设置切换相机按钮隐藏
@@ -264,6 +265,7 @@ private:
     bool                        m_bWayland;
 
     QDBusInterface              *m_pDBus = nullptr;//接收休眠信号，仅wayland使用
+    QString libPath(const QString &strlib);
 };
 
 #endif // MAINWINDOW_H

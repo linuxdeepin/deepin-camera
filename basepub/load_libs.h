@@ -90,8 +90,21 @@ typedef void (*uos_swr_free)(struct SwrContext **s);
 //void sws_freeContext(struct SwsContext *swsContext);
 typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
 
+typedef struct _LoadLibNames
+{
+    char *chAvcodec;
+    char *chFfmpegthumbnailer;
+    char *chSwresample;
+    char *chSwscale;
+    char *chAvformat;
+    char *chAvutil;
+    char *chUdev;
+    char *chUsb;
+    char *chPortaudio;
+    char *chV4l2;
+}LoadLibNames;
 
-
+void setLibNames(LoadLibNames tmp);
 
 typedef struct _LoadLibs
 {

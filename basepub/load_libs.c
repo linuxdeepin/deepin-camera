@@ -33,18 +33,17 @@ void PrintError(){
         fprintf (stderr, "%s ", error);
     }
 }
-
+static LoadLibNames g_ldnames;
 static LoadLibs *pLibs = NULL;
 static LoadLibs *newClass(void)
 {
     pLibs = (LoadLibs *)malloc(sizeof(LoadLibs));
 //    RTLD_NOW：在dlopen返回前，解析出全部没有定义的符号，解析不出来返回NULL。
 //    RTLD_LAZY：暂缓决定，等有需要时再解出符号
-    void *handle = dlopen("libavcodec.so.58",RTLD_LAZY);
+    void *handle = dlopen(g_ldnames.chAvcodec/*"libavcodec.so.58"*/,RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
-
 
 #if !LIBAVCODEC_VER_AT_LEAST(58,9)
     dlsym(handle, "avcodec_register_all");
@@ -153,7 +152,7 @@ static LoadLibs *newClass(void)
     PrintError();
 
     //libffmpegthumbnailer
-    void *handle2 = dlopen("libffmpegthumbnailer.so.4",RTLD_LAZY);
+    void *handle2 = dlopen(g_ldnames.chFfmpegthumbnailer/*"libffmpegthumbnailer.so.4"*/,RTLD_LAZY);
     if (!handle2) {
         PrintError();
     }
@@ -168,18 +167,20 @@ static LoadLibs *newClass(void)
     pLibs->m_video_thumbnailer_generate_thumbnail_to_buffer = (uos_video_thumbnailer_generate_thumbnail_to_buffer)dlsym(handle2, "video_thumbnailer_generate_thumbnail_to_buffer");
     PrintError();
 
-    void *handle3 = dlopen("libswresample.so.3",RTLD_LAZY);
+    //libswresample
+    void *handle3 = dlopen(g_ldnames.chSwresample/*"libswresample.so.3"*/,RTLD_LAZY);
     if (!handle3) {
         PrintError();
     }
     pLibs->m_swr_free = (uos_swr_free)dlsym(handle3, "swr_free");
     PrintError();
 
-
-    void *handle4 = dlopen("libswscale.so.5",RTLD_LAZY);
+    //libswscale
+    void *handle4 = dlopen(g_ldnames.chSwscale/*"libswscale.so.5"*/,RTLD_LAZY);
     if (!handle4) {
         PrintError();
     }
+
     pLibs->m_sws_freeContext = (uos_sws_freeContext)dlsym(handle4, "sws_freeContext");
     PrintError();
     assert(pLibs != NULL);
@@ -216,10 +217,11 @@ static LoadAvformat *newAvformat(void)
 //    RTLD_NOW：在dlopen返回前，解析出全部没有定义的符号，解析不出来返回NULL。
 //    RTLD_LAZY：暂缓决定，等有需要时再解出符号
     //libavformat
-    void *handle1 = dlopen("libavformat.so.58",RTLD_LAZY);
+    void *handle1 = dlopen(g_ldnames.chAvformat/*"libavformat.so.58"*/,RTLD_LAZY);
     if (!handle1) {
         PrintError();
     }
+
     pAvformat->m_avformat_open_input = (uos_avformat_open_input)dlsym(handle1, "avformat_open_input");
     PrintError();
     pAvformat->m_avformat_find_stream_info = (uos_avformat_find_stream_info)dlsym(handle1, "avformat_find_stream_info");
@@ -311,7 +313,7 @@ static LoadAvutil *newAvutil(void)
 {
     Avutil = (LoadAvutil *)malloc(sizeof(LoadAvutil));
     //libavutil
-    void *handle5 = dlopen("libavutil.so.56",RTLD_LAZY);
+    void *handle5 = dlopen(g_ldnames.chAvutil/*"libavutil.so.56"*/,RTLD_LAZY);
     if (!handle5) {
         PrintError();
     }
@@ -381,7 +383,7 @@ static LoadUdev *newUdev(void)
 {
     pUdev = (LoadUdev *)malloc(sizeof(LoadUdev));
     //libudev
-    void *handle = dlopen("libudev.so.1",RTLD_LAZY);
+    void *handle = dlopen(g_ldnames.chUdev/*"libudev.so.1"*/,RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -457,7 +459,7 @@ static LoadUSB *newUSB(void)
 {
     pUSB = (LoadUSB *)malloc(sizeof(LoadUSB));
     //libusb
-    void *handle = dlopen("libusb-1.0.so.0",RTLD_LAZY);
+    void *handle = dlopen(g_ldnames.chUsb/*"libusb-1.0.so.0"*/,RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -507,7 +509,7 @@ static LoadPortAudio *newPortAudio(void)
 {
     pPortAudio = (LoadPortAudio *)malloc(sizeof(LoadPortAudio));
     //libportaudio
-    void *handle = dlopen("libportaudio.so.2",RTLD_LAZY);
+    void *handle = dlopen(g_ldnames.chPortaudio/*"libportaudio.so.2"*/,RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -569,7 +571,8 @@ static LoadV4l2 *pV4l2 = NULL;
 static LoadV4l2 *newV4l2(void)
 {
     pV4l2 = (LoadV4l2 *)malloc(sizeof(LoadV4l2));
-    void *handle = dlopen("libv4l2.so.0",RTLD_LAZY);
+    //libv4l2
+    void *handle = dlopen(g_ldnames.chV4l2/*"libv4l2.so.0"*/,RTLD_LAZY);
     if (!handle) {
         PrintError();
     }
@@ -607,4 +610,47 @@ LoadV4l2 *getV4l2()
     }
 
     return pV4l2;
+}
+
+void setLibNames(LoadLibNames tmp)
+{
+    g_ldnames.chAvcodec = ( char*)malloc(strlen(tmp.chAvcodec)+1);
+   // memset(g_ldnames.chAvcodec,strlen(tmp.chAvcodec),0);
+    strcpy(g_ldnames.chAvcodec,tmp.chAvcodec);
+
+    g_ldnames.chFfmpegthumbnailer = ( char*)malloc(strlen(tmp.chFfmpegthumbnailer)+1);
+   // memset(g_ldnames.chFfmpegthumbnailer,strlen(tmp.chFfmpegthumbnailer),0);
+    strcpy(g_ldnames.chFfmpegthumbnailer,tmp.chFfmpegthumbnailer);
+
+    g_ldnames.chSwresample = ( char*)malloc(strlen(tmp.chSwresample)+1);
+   // memset(g_ldnames.chSwresample,strlen(tmp.chSwresample),0);
+    strcpy(g_ldnames.chSwresample,tmp.chSwresample);
+
+    g_ldnames.chSwscale = ( char*)malloc(strlen(tmp.chSwscale)+1);
+   // memset(g_ldnames.chSwscale,strlen(tmp.chSwscale),0);
+    strcpy(g_ldnames.chSwscale,tmp.chSwscale);
+
+    g_ldnames.chAvformat = ( char*)malloc(strlen(tmp.chAvformat)+1);
+   // memset(g_ldnames.chAvformat,strlen(tmp.chAvformat),0);
+    strcpy(g_ldnames.chAvformat,tmp.chAvformat);
+
+    g_ldnames.chAvutil = ( char*)malloc(strlen(tmp.chAvutil)+1);
+   // memset(g_ldnames.chAvutil,strlen(tmp.chAvutil),0);
+    strcpy(g_ldnames.chAvutil,tmp.chAvutil);
+
+    g_ldnames.chUdev = ( char*)malloc(strlen(tmp.chUdev)+1);
+   // memset(g_ldnames.chUdev,strlen(tmp.chUdev),0);
+    strcpy(g_ldnames.chUdev,tmp.chUdev);
+
+    g_ldnames.chUsb = ( char*)malloc(strlen(tmp.chUsb)+1);
+   // memset(g_ldnames.chUsb,strlen(tmp.chUsb),0);
+    strcpy(g_ldnames.chUsb,tmp.chUsb);
+
+    g_ldnames.chPortaudio = ( char*)malloc(strlen(tmp.chPortaudio)+1);
+   // memset(g_ldnames.chPortaudio,strlen(tmp.chPortaudio),0);
+    strcpy(g_ldnames.chPortaudio,tmp.chPortaudio);
+
+    g_ldnames.chV4l2 = ( char*)malloc(strlen(tmp.chV4l2)+1);
+   // memset(g_ldnames.chV4l2,strlen(tmp.chV4l2),0);
+    strcpy(g_ldnames.chV4l2,tmp.chV4l2);
 }

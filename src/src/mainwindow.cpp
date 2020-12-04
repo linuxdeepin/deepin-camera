@@ -51,8 +51,10 @@
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
 #include <QShortcut>
+#include <QLibraryInfo>
 extern "C" {
 #include "encoder.h"
+#include "load_libs.h"
 }
 
 using namespace dc;
@@ -379,6 +381,49 @@ void CMainWindow::slotPopupSettingsDialog()
     settingDialogDel();
 }
 
+QString CMainWindow::libPath(const QString &strlib)
+{
+    QDir  dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    if (list.contains(strlib)) {
+        return strlib;
+    } else {
+        list.sort();
+    }
+
+    Q_ASSERT(list.size() > 0);
+    return list.last();
+}
+
+
+void CMainWindow::getLibPath()
+{
+    LoadLibNames tmp;
+    QByteArray avcodec = libPath("libavcodec.so").toLatin1();
+    tmp.chAvcodec = avcodec.data();
+    QByteArray avformat = libPath("libavformat.so").toLatin1();
+    tmp.chAvformat = avformat.data();
+    QByteArray avutil = libPath("libavutil.so").toLatin1();
+    tmp.chAvutil = avutil.data();
+    QByteArray udev = libPath("libudev.so").toLatin1();
+    tmp.chUdev = udev.data();
+    QByteArray usb = libPath("libusb-1.0.so").toLatin1();
+    tmp.chUsb = usb.data();
+    QByteArray portaudio = libPath("libportaudio.so").toLatin1();
+    tmp.chPortaudio = portaudio.data();
+    QByteArray v4l2 = libPath("libv4l2.so").toLatin1();
+    tmp.chV4l2 = v4l2.data();
+    QByteArray ffmpegthumbnailer = libPath("libffmpegthumbnailer.so").toLatin1();
+    tmp.chFfmpegthumbnailer = ffmpegthumbnailer.data();
+    QByteArray swscale = libPath("libswscale.so").toLatin1();
+    tmp.chSwscale = swscale.data();
+    QByteArray swresample = libPath("libswresample.so").toLatin1();
+    tmp.chSwresample = swresample.data();
+    setLibNames(tmp);
+}
+
 void CMainWindow::initBlockShutdown()
 {
     if (!m_arg.isEmpty() || m_reply.value().isValid()) {
@@ -615,6 +660,7 @@ void CMainWindow::settingDialogDel()
 
 void CMainWindow::loadAfterShow()
 {
+    getLibPath();
     this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     initUI();
     initShortcut();
