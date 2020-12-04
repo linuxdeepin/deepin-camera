@@ -297,7 +297,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
     }
     //当按下shift键，多选，鼠标右键弹出右键菜单后松开shift键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
     //此处补充获取shift键盘状态，以避免继续选择图元，应用处于多选状态的问题
-    if (DataManager::instance()->getbMultiSlt() /*&& QGuiApplication::keyboardModifiers() == Qt::ShiftModifier*/){
+    if (DataManager::instance()->getbMultiSlt() && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier){
         if (DataManager::instance()->m_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
                 DataManager::instance()->m_setIndex.remove(m_index);

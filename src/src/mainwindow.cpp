@@ -661,7 +661,8 @@ void CMainWindow::settingDialogDel()
 void CMainWindow::loadAfterShow()
 {
     getLibPath();
-    this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
+    //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
+    //this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     initUI();
     initShortcut();
     gviewencoder_init();
