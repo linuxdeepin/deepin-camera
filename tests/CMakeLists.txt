@@ -42,7 +42,11 @@ set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupp
 find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
-file (GLOB_RECURSE SOURCES  ./*.cpp
+file (GLOB_RECURSE SOURCES
+    ./main.cpp
+    ./MainwindowTest.cpp
+    ./ClosedialogTest.cpp
+#    ./*.cpp
     ../src/*.c
     ../libcam/*.c
     ../basepub/*.c
@@ -124,13 +128,13 @@ set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/objects)
 
 add_custom_target(test
     COMMAND mkdir -p coverageResult
-    COMMAND mkdir -p tests/test
+    COMMAND mkdir -p report
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_custom_command(TARGET test
     COMMAND echo " ===================CREAT LCOV REPROT==================== "
     COMMAND lcov --directory ./CMakeFiles/${PROJECT_NAME}.dir --zerocounters
-    COMMAND ./tests/${PROJECT_NAME}
+    COMMAND ./tests/${PROJECT_NAME} --gtest_output=xml:./report/report.xml
     COMMAND lcov --directory . --capture --output-file ./coverageResult/${PROJECT_NAME}_Coverage.info
 
     COMMAND echo " =================== do filter begin ==================== "

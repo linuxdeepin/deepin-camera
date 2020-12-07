@@ -7,6 +7,7 @@
 #include <QSharedMemory>
 #include <DLog>
 #include <DApplicationSettings>
+#include <QCameraInfo>
 #include "../src/src/mainwindow.h"
 #include "../src/src/capplication.h"
 
@@ -99,17 +100,33 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
+    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
+    QStringList cameralist;
+    QString command("ffplay -f v4l2 -video_size 1920x1080 -i ");
+    for(QList<QCameraInfo>::Iterator it = cameras.begin(); it != cameras.end(); ++it)
+    {
+        QString tmp = command + it->deviceName();
+        cameralist.append(tmp);
+    }
+
+
     QList<QProcess*> Processlist;
     Processlist.clear();
-    QProcess* myProcess = new QProcess;
+    int n = 0;
+    for(QStringList::Iterator str = cameralist.begin(); str != cameralist.end(); ++str)
+    {
+        Processlist.append(new QProcess);
+        Processlist.at(n)->start(*str);
+        n++;
+    }
 
-    QProcess* myProcess1 = new QProcess;
-    myProcess->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video2");
-    myProcess1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
-    QTest::qWait(3000);
-
-    Processlist.append(myProcess);
-    Processlist.append(myProcess1);
+    while(n > 0)
+    {
+        if(Processlist.at(n - 1)->state() == QProcess::Starting)
+        {
+            n--;
+        }
+    }
 
     CMainWindow* w = new CMainWindow;
     w->setMinimumSize(MinWindowWidth, MinWindowHeight);
