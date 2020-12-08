@@ -1117,7 +1117,7 @@ void CMainWindow::changeEvent(QEvent *event)
 void CMainWindow::onFitToolBar()
 {
     if (m_thumbnail) {
-        int n = m_thumbnail->getItemCount();
+        int n = m_thumbnail->m_hBox->count();
         int nWidth = 0;
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
@@ -1138,7 +1138,7 @@ void CMainWindow::onFitToolBar()
         }
         qDebug() << "onFitToolBar" << nWidth;
         m_thumbnail->resize(/*qMin(this->width(), nWidth)*/nWidth, THUMBNAIL_HEIGHT + 30);
-        m_thumbnail->m_hBOx->setSpacing(ITEM_SPACE);
+        m_thumbnail->m_hBox->setSpacing(ITEM_SPACE);
         m_thumbnail->move((this->width() - m_thumbnail->width()) / 2,
                           this->height() - m_thumbnail->height() - 5);
     }

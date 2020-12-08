@@ -42,9 +42,8 @@
 #include <QPushButton>
 
 DWIDGET_USE_NAMESPACE
-#define IMAGE_HEIGHT_DEFAULT 40
-#define LAST_BUTTON_WIDTH 64
-#define LAST_BUTTON_HEIGHT 50
+#define LAST_BUTTON_WIDTH 64//拍照/录制按钮宽度
+#define LAST_BUTTON_HEIGHT 50//拍照/录制按钮高度
 #define LAST_BUTTON_SPACE 14//按钮与窗体的间隔
 #define ITEM_SPACE 2//控件间距
 #define VIDEO_TIME_WIDTH 72//视频时长显示的宽度
@@ -66,13 +65,6 @@ public:
      * 初始化快捷键
      */
     void initShortcut();
-    /**
-    * @brief getItemCount　获取图元数目
-    */
-    int getItemCount()
-    {
-        return m_nItemCount;
-    }
     void setBtntooltip();
     void ChangeActType(int nType);
     void addPath(QString strPath);
@@ -81,13 +73,11 @@ public:
     void widthChanged();
 
     QHBoxLayout *m_mainLayout;
-    QHBoxLayout *m_hBOx;
+    QHBoxLayout *m_hBox;
     int m_nMaxWidth;
     int m_nStatus; //当前状态
     DLabel *m_showVdTime;//缩略图显示视频时长
 private:
-    int m_nItemCount;//可显示的缩略图个数
-
     int m_nActTpye;//拍照或者视频模式，默认拍照
 
     QStringList m_strlstFolders;//存放文件夹路径
@@ -96,11 +86,7 @@ private:
 
     QDateTime m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
 
-    int m_lastItemCount;//最近一次可显示的缩略图个数
-
     QFileInfoList m_fileInfoLst;//所有文件信息，界面每加载一个，对应删除一个
-
-    int m_curFileIndex;//当前读取到的文件位置
 
     QString m_strFileName;//当前拍照或录制视频的文件名
 

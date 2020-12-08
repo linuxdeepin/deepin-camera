@@ -67,10 +67,9 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     initShortcut();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
-    m_nItemCount = 0;
     m_nMaxWidth = 0;
-    m_hBOx = new QHBoxLayout();
-    m_hBOx->setSpacing(ITEM_SPACE);
+    m_hBox = new QHBoxLayout();
+    m_hBox->setSpacing(ITEM_SPACE);
     m_mainLayout = new QHBoxLayout();
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -80,7 +79,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
 
-    m_mainLayout->addLayout(m_hBOx, Qt::AlignLeft);
+    m_mainLayout->addLayout(m_hBox, Qt::AlignLeft);
 
     m_showVdTime = new DLabel(this);
     m_mainLayout->addWidget(m_showVdTime, Qt::AlignRight);
@@ -129,7 +128,6 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     m_lastDelTime = QDateTime::currentDateTime();
-    m_lastItemCount = 0;
 }
 
 void ThumbnailsBar::initShortcut()
@@ -164,13 +162,12 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         return;
     }
     Q_UNUSED(strDirectory);
-    m_nItemCount = 0;
     QString strShowTime = "";
     qDebug() << m_nMaxWidth;
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
 
     QLayoutItem *child;
-    while ((child = m_hBOx->takeAt(0)) != nullptr) {
+    while ((child = m_hBox->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
         //tmp->deleteLater();
         delete tmp;
@@ -182,7 +179,6 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     }
     g_indexImage.clear();
     m_fileInfoLst.clear();
-    m_curFileIndex = 0;
     //获取所选文件类型过滤器
     QStringList filters;
     filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
@@ -200,8 +196,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     }
     QString strFileName = "";
     while (m_fileInfoLst.size() > 0) {
-        if (nLetAddCount <= m_nItemCount) {
-            m_curFileIndex = m_nItemCount;
+        if (nLetAddCount <= m_hBox->count()) {
             break;
         }
 
@@ -222,20 +217,16 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         //g_indexImage.insert(tIndex, pLabel);
         tIndex++;
 
-        m_hBOx->addWidget(pLabel);
-        if (m_nItemCount == 0) {
+        m_hBox->addWidget(pLabel);
+        if (m_hBox->count() == 1) {
             strShowTime = pLabel->getDuration();
         }
-        m_nItemCount++;
     }
+
     if (!g_indexImage.isEmpty()) {
         DataManager::instance()->setindexNow(g_indexImage.begin().value()->getIndex());
     }
 
-    if (m_lastItemCount != m_nItemCount) {
-
-        m_lastItemCount = m_nItemCount;
-    }
     emit fitToolBar();
     m_showVdTime->setText(strShowTime);
 }
@@ -350,7 +341,7 @@ void ThumbnailsBar::onTrashFile()
             qDebug() << "ImageItem not exist !";
             qDebug() << "DataManager::instance()->getindexNow()=" << DataManager::instance()->getindexNow();
 
-            ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+            ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(itemNow->getIndex());
             return;
         }
@@ -372,9 +363,9 @@ void ThumbnailsBar::onTrashFile()
         if (g_indexImage.isEmpty()) {
             return;
         }
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
         int nIndex0 = itemNow->getIndex();
-        itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
+        itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1)->widget());
         int nIndex1 = itemNow->getIndex();
         int nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
 
@@ -390,10 +381,10 @@ void ThumbnailsBar::onTrashFile()
                 qDebug() << "trash failed!";
                 qDebug() << "path is " << g_indexImage.value(*it)->getPath();
             }
-            for (int i = 0; i < m_hBOx->count(); i ++) {
-                ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+            for (int i = 0; i < m_hBox->count(); i ++) {
+                ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBox->itemAt(i)->widget());
                 if (itemDel->getPath().compare(g_indexImage.value(*it)->getPath()) == 0) {
-                    m_hBOx->removeWidget(itemDel);
+                    m_hBox->removeWidget(itemDel);
                     //itemNow->deleteLater();
                     delete itemDel;
                     itemDel = nullptr;
@@ -405,13 +396,12 @@ void ThumbnailsBar::onTrashFile()
 
         for (int i = 0; i < nCount; i ++) {
             if (m_fileInfoLst.isEmpty()) {
-                m_nItemCount = m_hBOx->count();
                 emit fitToolBar();
                 if (g_indexImage.isEmpty()) {
                     DataManager::instance()->setindexNow(0);
                     m_showVdTime->setText("");
                 } else {
-                    ImageItem *itemExist = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+                    ImageItem *itemExist = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
                     DataManager::instance()->setindexNow(itemExist->getIndex());
                     m_showVdTime->setText(itemExist->getDuration());
                     QFile file1(itemExist->getPath());
@@ -434,7 +424,7 @@ void ThumbnailsBar::onTrashFile()
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
             connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
             g_indexImage.insert(nIndexMax + 1 + i, pLabel);
-            m_hBOx->insertWidget(m_hBOx->count(), pLabel);
+            m_hBox->insertWidget(m_hBox->count(), pLabel);
         }
         emit fitToolBar();
         //g_indexImage里边的数据是已经删掉了的
@@ -445,7 +435,7 @@ void ThumbnailsBar::onTrashFile()
         m_showVdTime->setText("");
         return;
     } else {
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
         DataManager::instance()->setindexNow(itemNow->getIndex());
         m_showVdTime->setText(itemNow->getDuration());
         QFile file2(itemNow->getPath());
@@ -565,11 +555,12 @@ void ThumbnailsBar::addFile(QString strFile)
     }
     //先删除多余的，保证全选情况下缩略图大小正确
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
-    if (m_hBOx->count() >= nLetAddCount) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+    int nCount = m_hBox->count();
+    if (nCount >= nLetAddCount) {
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(nCount - 1)->widget());
         g_indexImage.remove(tmp->getIndex());
         QString strPath = tmp->getPath();
-        m_hBOx->removeWidget(tmp);
+        m_hBox->removeWidget(tmp);
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
@@ -580,13 +571,13 @@ void ThumbnailsBar::addFile(QString strFile)
 
     int nIndexMax = -1;
     bool bSelectedFirst = false;
-    if (!m_hBOx->isEmpty()) {
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    if (!m_hBox->isEmpty()) {
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
         int nIndex0 = itemNow->getIndex();
         if (nIndex0 == DataManager::instance()->getindexNow()) {
             bSelectedFirst = true;
         }
-        itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
+        itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1)->widget());
         int nIndex1 = itemNow->getIndex();
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
@@ -601,10 +592,7 @@ void ThumbnailsBar::addFile(QString strFile)
     if (pLabel == nullptr) {
         qDebug() << "error! imageitem is null!!";
     }
-    m_hBOx->insertWidget(0, pLabel);
-
-    m_nItemCount = m_hBOx->count();
-
+    m_hBox->insertWidget(0, pLabel);
     /**************方式1
     //找到对应的widget，然后把选中的item改到对应的DataManager::instance()->getindexNow()
     if (nIndex >= 0) {
@@ -613,13 +601,13 @@ void ThumbnailsBar::addFile(QString strFile)
     }
     **************/
 
-    if (m_nItemCount <= 1) {//除非最开始没有图元，否则后续根据最开始的图像移动，图像在哪，选中的框在哪儿
-        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    if (m_hBox->count() <= 1) {//除非最开始没有图元，否则后续根据最开始的图像移动，图像在哪，选中的框在哪儿
+        ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
         DataManager::instance()->setindexNow(itemNow->getIndex());
         m_showVdTime->setText(itemNow->getDuration());
     } else {
         if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
-            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+            ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(tmp->getIndex());
             m_showVdTime->setText(tmp->getDuration());
             QFile file(tmp->getPath());
@@ -629,7 +617,6 @@ void ThumbnailsBar::addFile(QString strFile)
         }
 
     }
-    qDebug() << "m_nItemCount " << m_nItemCount;
     emit fitToolBar();
     m_strFileName = "";
 }
@@ -638,14 +625,14 @@ void ThumbnailsBar::delFile(QString strFile)
 {
     m_nDelTimes ++;
     //获取最大的set值
-    if (m_hBOx->isEmpty()) {
+    if (m_hBox->isEmpty()) {
         return;
     }
 
     //最值始终出现在第一个或者最后一个
-    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
+    ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
     int nIndex0 = itemNow->getIndex();
-    itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_hBOx->count() - 1)->widget());
+    itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1)->widget());
     int nIndex1 = itemNow->getIndex();
     int nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
 
@@ -654,11 +641,11 @@ void ThumbnailsBar::delFile(QString strFile)
     //3、找到set里边对应数据，删除
     //4、读取下一个fileinfolist数据，写到set和图元
     bool bRemoved = false;
-    for (int i = 0; i < m_hBOx->count(); i ++) {
-        ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
+    for (int i = 0; i < m_hBox->count(); i ++) {
+        ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBox->itemAt(i)->widget());
         if (itemDel->getPath().compare(strFile) == 0) {
             g_indexImage.remove(DataManager::instance()->getindexNow());
-            m_hBOx->removeWidget(itemDel);
+            m_hBox->removeWidget(itemDel);
             //itemNow->deleteLater();
             delete itemDel;
             itemDel = nullptr;
@@ -675,7 +662,6 @@ void ThumbnailsBar::delFile(QString strFile)
     }
     //g_indexImage里边的数据是已经删掉了的
     if (m_fileInfoLst.isEmpty()) {
-        m_nItemCount = m_hBOx->count();
         emit fitToolBar();
         return;
     }
@@ -692,7 +678,7 @@ void ThumbnailsBar::delFile(QString strFile)
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     g_indexImage.insert(nIndexMax + 1, pLabel);
-    m_hBOx->insertWidget(m_hBOx->count(), pLabel);
+    m_hBox->insertWidget(m_hBox->count(), pLabel);
 
     //emit fitToolBar();
 }
@@ -700,15 +686,14 @@ void ThumbnailsBar::delFile(QString strFile)
 void ThumbnailsBar::widthChanged()
 {
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
-    while (m_hBOx->count() > nLetAddCount) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBOx->itemAt(m_nItemCount - 1)->widget());
+    while (m_hBox->count() > nLetAddCount) {
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1));
         QString strPath = tmp->getPath();
         g_indexImage.remove(tmp->getIndex());
-        m_hBOx->removeWidget(tmp);
+        m_hBox->removeWidget(tmp);
         //tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
-        m_nItemCount --;        
 
         QFileInfo fileinfo(strPath);
         m_fileInfoLst += fileinfo;

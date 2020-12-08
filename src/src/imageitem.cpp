@@ -33,8 +33,7 @@
 #include <QTime>
 #include <QThread>
 #include <libffmpegthumbnailer/videothumbnailerc.h>
-
-#include "printhelper.h"
+#include <DPrintPreviewDialog>
 #include "datamanager.h"
 #include "imageitem.h"
 
@@ -155,11 +154,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     m_menu->addAction(actCopy);
     m_menu->addAction(actDel);
     if (!m_bVideo) {
-        actPrint = new QAction(this);
-        actPrint->setText(tr("Print"));
-        actPrint->setObjectName("PrinterAction");
-        m_menu->addAction(actPrint);
-        connect(actPrint, &QAction::triggered, this, &ImageItem::onPrint);
+        m_actPrint = new QAction(this);
+        m_actPrint->setText(tr("Print"));
+        m_actPrint->setObjectName("PrinterAction");
+        m_menu->addAction(m_actPrint);
+        connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
     }
     m_menu->addAction(actOpenFolder);
 
@@ -319,7 +318,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         emit showDuration(m_strDuratuion);
         if (!m_bVideo) {
             emit showDuration("");
-            actPrint->setVisible(true);
+            m_actPrint->setVisible(true);
         }
     } else {
         QSet<int>::iterator it;
@@ -333,11 +332,11 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         if (bHaveVideo) {
             emit showDuration("... ...");
             if (!m_bVideo) {//当前为视频是不会new actPrint的
-                actPrint->setVisible(false);
+                m_actPrint->setVisible(false);
             }
         } else {
             emit showDuration("");
-            actPrint->setVisible(true);
+            m_actPrint->setVisible(true);
         }
     }
     emit needFit();
@@ -479,8 +478,55 @@ void ImageItem::onPrint()
                 qDebug() << g_indexImage.value(*it)->getPath();
             }
         }
-        PrintHelper::showPrintDialog(QStringList(paths), this);
+        showPrintDialog(QStringList(paths), this);
     }
+}
+
+void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
+{
+    QList<QImage> imgs;
+
+    for (const QString &path : paths) {
+        QImage img(path);
+
+        if (!img.isNull()) {
+            imgs << img;
+        }
+    }
+    DPrintPreviewDialog printDialog(parent);
+    printDialog.setObjectName("PrintDialog");
+    QObject::connect(&printDialog, &DPrintPreviewDialog::paintRequested, parent, [ = ](DPrinter * _printer) {
+        QPainter painter(_printer);
+        for (QImage img : imgs) {
+            if (!img.isNull()) {
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setRenderHint(QPainter::SmoothPixmapTransform);
+                QRect wRect  = _printer->pageRect();
+                QImage tmpMap;
+                if (img.width() > wRect.width() || img.height() > wRect.height()) {
+                    tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                } else {
+                    tmpMap = img;
+                }
+                QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
+                                          qreal(wRect.height() - tmpMap.height()) / 2,
+                                          tmpMap.width(), tmpMap.height());
+                painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
+                                         tmpMap.height()), tmpMap);
+            }
+            if (img != imgs.last()) {
+                _printer->newPage();
+                qDebug() << "painter newPage!    File:" << __FILE__ << "    Line:" << __LINE__;
+            }
+        }
+        painter.end();
+    });
+
+#ifdef UNITTEST
+    printDialog.show();
+#else
+    printDialog.exec();
+#endif
 }
 
 static int open_codec_context(int *stream_idx,

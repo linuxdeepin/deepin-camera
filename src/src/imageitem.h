@@ -28,10 +28,10 @@
 #include <QFileInfo>
 
 DWIDGET_USE_NAMESPACE
-#define THUMBNAIL_WIDTH 30
-#define THUMBNAIL_HEIGHT 40
-#define THUMBNAIL_PIXMAP_SIZE 200
-#define SELECTED_WIDTH 58
+#define THUMBNAIL_WIDTH 30//缩略图图元宽度
+#define THUMBNAIL_HEIGHT 40//缩略图图元高度
+#define THUMBNAIL_PIXMAP_SIZE 200//缩略图图像缩放前尺寸,考虑了内存占用和清晰度两方面情况的取值
+#define SELECTED_WIDTH 58//选中的缩略图图元宽高
 
 class ImageItem : public DLabel
 {
@@ -143,12 +143,15 @@ protected:
      */
     void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
 
+    /**
+     * @brief showPrintDialog 显示打印窗口
+     */
+    void showPrintDialog(const QStringList &paths, QWidget *parent);
 private:
     int m_index;
     QString m_path;
     QPixmap m_pixmap;
     QString m_pixmapstring;
-    bool bFirstUpdate = true;
     QMenu *m_menu;
     QAction *m_actCopy;
     QAction *m_actDel;
@@ -157,7 +160,8 @@ private:
     int64_t m_nDuration = 0; //视频文件时长,int形式时间
     QString m_strDuratuion;//视频文件时长,形式为00：00：00
     bool m_bVideo;//是否视频
-    QAction *actPrint = nullptr;
+    QAction *m_actPrint = nullptr;//打印
+
 };
 
 #endif // IMAGEITEM_H
