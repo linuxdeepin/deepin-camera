@@ -243,7 +243,7 @@ videowidget::~videowidget()
     m_endBtn = nullptr;
 }
 
-
+//延迟加载
 void videowidget::delayInit()
 {
     setCapstatus(false);
@@ -261,12 +261,8 @@ void videowidget::delayInit()
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
-
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
-
-//    m_flashLabel->setWindowFlag(Qt::WindowType::WindowStaysOnTopHint);
-//    m_flashLabel->setWindowFlags()
     QPalette pltLabel = m_flashLabel->palette();
     pltLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltLabel);
@@ -275,40 +271,48 @@ void videowidget::delayInit()
 
     //启动视频
     int ret =  camInit("");
+
     if (ret == E_OK) {
-        m_pCamErrItem->hide();
-//        m_imgPrcThread->init();
+        m_pCamErrItem->hide();;
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
     }
-    else if (ret == E_FORMAT_ERR) {
 
+    //设备被占用
+    else if (ret == E_FORMAT_ERR) {
         //启动失败
         v4l2_dev_t *vd = get_v4l2_device_handler();
+
         //如果不为空，则关闭vd
         if (vd != nullptr) {
             close_v4l2_device_handler();
             vd = nullptr;
         }
-        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-            showCamUsed();
-        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
+        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE){
+            DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+        }
+        
+	showCamUsed();
         qDebug() << "cam in use" << endl;
     }
+
+    //设备不存在
     else if (ret == E_NO_DEVICE_ERR) {
+
         if (DataManager::instance()->getdevStatus() != NOCAM){
             DataManager::instance()->setdevStatus(NOCAM);
             //启动失败
             v4l2_dev_t *vd = get_v4l2_device_handler();
+
             //如果不为空，则关闭vd
             if (vd != nullptr) {
                 close_v4l2_device_handler();
                 vd = nullptr;
             }
-            showNocam();
-            qDebug() << "No webcam found" << endl;
         }
+        showNocam();
+        qDebug() << "No webcam found" << endl;
     }
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
