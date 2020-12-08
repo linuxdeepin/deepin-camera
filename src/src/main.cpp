@@ -123,6 +123,7 @@ int main(int argc, char *argv[])
 
     CMainWindow w;
 
+    Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
     w.setMinimumSize(MinWindowWidth, MinWindowHeight);
     w.show();
@@ -132,8 +133,6 @@ int main(int argc, char *argv[])
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
     QDBusConnection::sessionBus().registerObject("/", &w);
-
-    Dtk::Widget::moveToCenter(&w);
 
     return a.exec();
 }
