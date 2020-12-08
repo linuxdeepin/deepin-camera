@@ -306,7 +306,6 @@ private:
     QTimer                  *recordingTimer;//录制3秒后，每200ms设置一次时间
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
-    PRIVIEW_ENUM_STATE      m_priview_state = PICTRUE;//当前预览状态
     ThumbnailsBar           *m_thumbnail;       //缩略图
     QPixmap                 m_pixmap;         //
     int                     m_nFileID;        //文件id
