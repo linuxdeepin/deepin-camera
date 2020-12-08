@@ -63,7 +63,7 @@ class CMainWindow : public DMainWindow
     Q_OBJECT
 public:
     CMainWindow(DWidget *w = nullptr);
-    void newPreViewByState(PRIVIEW_STATE state);
+    void newPreViewByState(PRIVIEW_ENUM_STATE state);
     void newNinePreview();
     static QString lastOpenedPath();
     DSettings *getDsetMber();

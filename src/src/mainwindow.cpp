@@ -740,7 +740,7 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 {
     if (m_bWayland && bTrue) {
         qDebug() << "onSleepWhenTaking(bool)";
-        m_videoPre->endBtnClicked();
+        m_videoPre->onEndBtnClicked();
         qDebug() << "onSleepWhenTaking(over)";
     }
 }
@@ -887,9 +887,9 @@ void CMainWindow::initTitleBar()
 void CMainWindow::initConnection()
 {
     connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
-        if (m_videoPre->getCapstatus())
+        if (m_videoPre->getCapStatus())
         {
-            CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+            CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
             int ret = 1;
@@ -898,7 +898,7 @@ void CMainWindow::initConnection()
 #endif
             if (ret == 1)
             {
-                m_videoPre->endBtnClicked();
+                m_videoPre->onEndBtnClicked();
 #ifdef UNITTEST
                 closeDlg.close();
 #else
@@ -959,7 +959,7 @@ void CMainWindow::initThumbnails()
 
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
-    m_videoPre->setthumbnail(m_thumbnail);
+    m_videoPre->setThumbnail(m_thumbnail);
 
     //添加右键打开文件夹功能
     m_rightbtnmenu = new QMenu(this);
@@ -1075,8 +1075,8 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
 void CMainWindow::closeEvent(QCloseEvent *event)
 {
-    if (m_videoPre->getCapstatus()) {
-        CloseDialog closeDlg (this, tr("Video recording is in progress. Close the window?"));
+    if (m_videoPre->getCapStatus()) {
+        CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
         closeDlg.setObjectName("closeDlg");
 #ifdef UNITTEST
         closeDlg.show();
@@ -1090,7 +1090,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
             event->ignore();
             break;
         case 1:
-            m_videoPre->endBtnClicked();
+            m_videoPre->onEndBtnClicked();
             event->accept();
             break;
         default:
