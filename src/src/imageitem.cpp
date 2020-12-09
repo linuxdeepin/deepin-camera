@@ -495,6 +495,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
     }
     DPrintPreviewDialog printDialog(parent);
     printDialog.setObjectName("PrintDialog");
+#ifndef UNITTEST
     QObject::connect(&printDialog, &DPrintPreviewDialog::paintRequested, parent, [ = ](DPrinter * _printer) {
         QPainter painter(_printer);
         for (QImage img : imgs) {
@@ -521,11 +522,9 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
         }
         painter.end();
     });
-
-#ifdef UNITTEST
-    printDialog.show();
-#else
     printDialog.exec();
+#else
+    printDialog.show();
 #endif
 }
 

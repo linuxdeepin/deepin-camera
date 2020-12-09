@@ -25,7 +25,6 @@
 #include "v4l2_devices.h"
 #include "src/LPF_V4L2.h"
 #include "src/majorimageprocessingthread.h"
-#include "printhelper.h"
 
 DWIDGET_USE_NAMESPACE
 

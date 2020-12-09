@@ -1,15 +1,15 @@
 #include <QComboBox>
 #include <QAction>
 #include <QProcess>
+
 #include <DWindowMaxButton>
 #include <DWindowMinButton>
 #include <DWindowCloseButton>
+#include <DPrintPreviewDialog>
 
 #include "MainwindowTest.h"
 #include "DButtonBox"
 #include "datamanager.h"
-#include "printhelper.h"
-
 
 using namespace Dtk::Core;
 MainwindowTest::MainwindowTest()
@@ -30,38 +30,25 @@ MainwindowTest::MainwindowTest()
  */
 TEST_F(MainwindowTest, CamUsed)
 {
-    QString str = mainwindow->lastOpenedPath();
-
-    QList<QProcess*> proclist = dApp->getprocess();
-
-    QProcess* proc1 = proclist[0];
-    QProcess* proc2 = proclist[1];
+    QList<QProcess *> proclist = dApp->getprocess();
 
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
     QTest::qWait(1000);
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
-    int n = 3;
-    while(n){
-        if(proc1->state() == QProcess::NotRunning)
-        {
-            proc1->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video2");
+    int n = proclist.count();
+
+    while (n) {
+        if (proclist.at(n - 1)->state() == QProcess::Running) {
+            proclist.at(n - 1)->start();
+            n--;
         }
-        if(proc2->state() == QProcess::NotRunning)
-        {
-            proc2->start("ffplay -f v4l2 -video_size 1920x1080 -i /dev/video0");
-        }
-        n--;
     }
-    if(proc1)
-    {
-        delete proc1;
-        proc1 = nullptr;
+
+    for (int i = 0; i < proclist.count(); i++) {
+        proclist.at(i)->close();
     }
-    if(proc2)
-    {
-        delete proc2;
-        proc2 = nullptr;
-    }
+
+    proclist.clear();
 }
 
 
@@ -355,11 +342,6 @@ TEST_F(MainwindowTest, printdialog)
     QAction* print = mainwindow->findChild<QAction*>("PrinterAction");
     print->trigger();
     QTest::qWait(1000);
-
-    PrintHelper* printHelper = new PrintHelper;
-    QTest::qWait(1000);
-    delete printHelper;
-    printHelper = nullptr;
 }
 
 /**
