@@ -47,9 +47,9 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_openglwidget = new PreviewOpenglWidget(this);
 #endif
     m_takePicSound = new QSound(":/resource/Camera.wav");
-    countTimer = new QTimer(this);
-    flashTimer = new QTimer(this);
-    recordingTimer = new QTimer(this);
+    m_countTimer = new QTimer(this);
+    m_flashTimer = new QTimer(this);
+    m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsView(this);
     m_flashLabel  = new DLabel(this);
     m_btnVdTime = new DPushButton(this);
@@ -140,10 +140,10 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_endBtn->setToolTipDuration(500); //0.5s消失
     m_endBtn->hide();
 
-    connect(countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
-    connect(flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//默认
-    connect(recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
-    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(OnEndBtnClicked()));
+    connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
+    connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
+    connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
+    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(onEndBtnClicked()));
 }
 
 videowidget::~videowidget()
@@ -186,14 +186,14 @@ videowidget::~videowidget()
     delete m_endBtn;
     m_endBtn = nullptr;
 
-    delete countTimer;
-    countTimer = nullptr;
+    delete m_countTimer;
+    m_countTimer = nullptr;
 
-    delete flashTimer;
-    flashTimer = nullptr;
+    delete m_flashTimer;
+    m_flashTimer = nullptr;
 
-    delete recordingTimer;
-    recordingTimer = nullptr;
+    delete m_recordingTimer;
+    m_recordingTimer = nullptr;
 
     delete m_thumbnail;
     m_thumbnail = nullptr;
@@ -427,9 +427,8 @@ void videowidget::showNocam()
     m_pCamErrItem->show();
     emit noCam();
 
-    if (getCapStatus()) { //录制完成处理
+    if (getCapStatus())  //录制完成处理
         onEndBtnClicked();
-    }
 }
 
 void videowidget::setThumbnail(ThumbnailsBar *thumb)
@@ -675,8 +674,8 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 
             if ((m_nCount >= 3)) {
                 //开启多线程，每100ms读取时间并显示
-                countTimer->stop();
-                recordingTimer->start(200);
+                m_countTimer->stop();
+                m_recordingTimer->start(200);
                 return;
             }
 
@@ -737,11 +736,11 @@ void videowidget::showCountdown()
 {
     if (DataManager::instance()->getdevStatus() == NOCAM) {
 
-        if (flashTimer->isActive())
-            flashTimer->stop();
+        if (m_flashTimer->isActive())
+            m_flashTimer->stop();
 
-        if (countTimer->isActive())
-            countTimer->stop();
+        if (m_countTimer->isActive())
+            m_countTimer->stop();
 
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
@@ -770,7 +769,7 @@ void videowidget::showCountdown()
                 m_flashLabel->show();
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
-                flashTimer->start(500);
+                m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
                 m_flashLabel->resize(size());
                 m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
@@ -784,7 +783,7 @@ void videowidget::showCountdown()
                 m_flashLabel->show();
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
-                flashTimer->start(500);
+                m_flashTimer->start(500);
                 m_flashLabel->resize(size());
                 m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
 #ifndef __mips__
@@ -793,7 +792,7 @@ void videowidget::showCountdown()
                 m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
-            countTimer->stop();
+            m_countTimer->stop();
 
             if (QDir(m_strFolder).exists() == false) {
                 m_strFolder = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
@@ -847,7 +846,7 @@ void videowidget::showCountdown()
             }
 
             if (m_curTakePicTime > 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE) {
-                countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
+                m_countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
             }
             m_pCamErrItem->hide();
             m_fWgtCountdown->hide();
@@ -951,11 +950,11 @@ void videowidget::slotresolutionchanged(const QString &resolution)
 
 void videowidget::onEndBtnClicked()
 {
-    if (countTimer->isActive())
-        countTimer->stop();
+    if (m_countTimer->isActive())
+        m_countTimer->stop();
 
-    if (recordingTimer->isActive())
-        recordingTimer->stop();
+    if (m_recordingTimer->isActive())
+        m_recordingTimer->stop();
 
     if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
         m_pCamErrItem->hide();
@@ -1150,8 +1149,8 @@ void videowidget::onTakePic(bool bTrue)
                                   (height() - m_fWgtCountdown->height()) / 2);
         }
         //1、重置状态
-        if (countTimer->isActive())
-            countTimer->stop();
+        if (m_countTimer->isActive())
+            m_countTimer->stop();
 
         if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pCamErrItem->hide();
@@ -1162,13 +1161,13 @@ void videowidget::onTakePic(bool bTrue)
 
         m_nInterval = m_nMaxInterval = m_Maxinterval;
         m_curTakePicTime = m_nMaxContinuous;
-        countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
+        m_countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
     } else {
         emit takePicCancel();
         m_nInterval = 0; //下次可开启
         m_curTakePicTime = 0; //结束当前拍照
-        if (countTimer->isActive())
-            countTimer->stop();
+        if (m_countTimer->isActive())
+            m_countTimer->stop();
 
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
@@ -1192,8 +1191,8 @@ void videowidget::onTakePic(bool bTrue)
 
 void videowidget::onTakeVideo() //点一次开，再点一次关
 {
-    if (countTimer->isActive())
-        countTimer->stop();
+    if (m_countTimer->isActive())
+        m_countTimer->stop();
 
     if (m_pCamErrItem->isVisible())
         m_pCamErrItem->hide();
@@ -1224,7 +1223,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         showCountdown();
     } else {
         m_nInterval = m_Maxinterval;
-        countTimer->start(1000);
+        m_countTimer->start(1000);
     }
 }
 
@@ -1263,11 +1262,11 @@ void videowidget::startTakeVideo()
             emit updateBlockSystem(true);
             setCapStatus(true);
             //begin_time = QDateTime::currentDateTime();
-            countTimer->stop();
-            countTimer->start(1000); //重新计时，否则时间与显示时间
+            m_countTimer->stop();
+            m_countTimer->start(1000); //重新计时，否则时间与显示时间
         } else {
             reset_video_timer();//重置底层定时器
-            countTimer->stop();
+            m_countTimer->stop();
             //countTimer->start(1000);
             setCapStatus(false);
         }
@@ -1294,8 +1293,8 @@ void videowidget::itemPosChange()
 
 void videowidget::stopEverything()
 {
-    if (countTimer->isActive())
-        countTimer->stop();
+    if (m_countTimer->isActive())
+        m_countTimer->stop();
 
 
     if (m_flashLabel->isVisible())

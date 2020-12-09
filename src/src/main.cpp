@@ -114,10 +114,10 @@ int main(int argc, char *argv[])
     if (!shared_memory.create(1)) {
         qDebug() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", "/", "com.deepin.camera");
-                if (iface.isValid()) {
-                     qWarning() << "deepin-camera raise";
-                    iface.asyncCall("Raise");
-                }
+        if (iface.isValid()) {
+            qWarning() << "deepin-camera raise";
+            iface.asyncCall("Raise");
+        }
         exit(0);
     }
 
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
-    w.setMinimumSize(MinWindowWidth, MinWindowHeight);
+    w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     w.show();
     w.loadAfterShow();
 

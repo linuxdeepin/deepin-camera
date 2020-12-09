@@ -129,8 +129,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow* w = new CMainWindow;
-    w->setMinimumSize(MinWindowWidth, MinWindowHeight);
-
+    w->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(w);
     a.setprocess(Processlist);
 

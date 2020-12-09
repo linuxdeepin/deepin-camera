@@ -39,7 +39,6 @@
 #include "thumbnailsbar.h"
 #include "previewopenglwidget.h"
 
-
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
@@ -69,53 +68,68 @@ signals:
     */
     void sigDeviceChange();
 
+    /**
+    * @brief sigFlash　闪光灯信号
+    */
     void sigFlash();
+
     /**
     * @brief takePicCancel　取消拍照
     */
     void takePicCancel();
+
     /**
     * @brief takePicDone　拍照结束信号
     */
     void takePicDone();
+
     /**
     * @brief takePicOnce　多连拍时，除最后一次，每次提交一个信号
     */
     void takePicOnce();
+
     /**
     * @brief takeVdCancel　录制倒计时期间取消
     */
     void takeVdCancel();
+
     /**
     * @brief takeVdDone　录制完成
     */
     void takeVdDone();
+
     /**
     * @brief setBtnStatues　设置按钮状态
+    * @param status 按钮状态(enable/disable)
     */
     void setBtnStatues(bool status);
+
     /**
     * @brief updateBlockSystem　阻塞更新
     * @param bTrue
     */
     void updateBlockSystem(bool bTrue);
+
     /**
     * @brief noCam　无相机
     */
     void noCam();
+
     /**
     * @brief noCamAvailable　无相机可获取
     */
     void noCamAvailable();
+
     /**
     * @brief filename　文件名
-    * @param bTrue
+    * @param strFilename 文件夹名称
     */
     void filename(QString strFilename);
 
 public:
     /**
     * @brief setCapStatus　设置相机状态
+    * @param status 拍照状态
     */
     void setCapStatus(bool status)
     {
@@ -148,6 +162,7 @@ public:
 
     /**
     * @brief setInterval　设置倒计时
+    * @param nInterval 拍照延时
     */
     void setInterval(int nInterval)
     {
@@ -156,7 +171,8 @@ public:
     }
 
     /**
-    * @brief setContinuous　连拍次数
+    * @brief setContinuous　设置连拍次数
+    * @param nContinuous 连拍次数
     */
     void setContinuous(int nContinuous)
     {
@@ -165,6 +181,7 @@ public:
 
     /**
     * @brief setthumbnail　延迟加载
+    * @param thumb ThumbnailsBar类
     */
     void setThumbnail(ThumbnailsBar *thumb);
 
@@ -175,6 +192,7 @@ public:
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
+    * @param bTrue
     */
     void onTakePic(bool bTrue);
 
@@ -208,7 +226,6 @@ public slots:
     */
     void onRestartDevices();
 
-
 private slots:
 #ifdef __mips__
     /**
@@ -232,8 +249,10 @@ private slots:
     * @brief flash　闪光恢复
     */
     void flash();
+
     /**
     * @brief slotresolutionchanged　分辨率改变
+    * @param 分辨率字符串(例：1920*1080)
     */
     void slotresolutionchanged(const QString &);
 
@@ -242,6 +261,7 @@ private:
 
     /**
     * @brief showCountDownLabel　显示录制和拍照倒计时
+    * @param state 当前状态（拍照，没有设备，视频）
     */
     void showCountDownLabel(PRIVIEW_ENUM_STATE state);
 
@@ -250,12 +270,6 @@ private:
     * @param view
     */
     void forbidScrollBar(QGraphicsView *view);
-
-    /**
-    * @brief newPreViewByState　新建view
-    * @param state
-    */
-    void newPreViewByState(PRIVIEW_ENUM_STATE state);
 
     /**
     * @brief showCountDownLabel　摄像头被占用
@@ -285,7 +299,7 @@ public:
     MajorImageProcessingThread *m_imgPrcThread;
 
 private:
-    bool m_bActive = false;//是否录制中
+    bool                    m_bActive = false;//是否录制中
 #ifndef __mips__
     PreviewOpenglWidget     *m_openglwidget;//opengl渲染窗口
 #endif
@@ -297,13 +311,12 @@ private:
     QSound                  *m_takePicSound;//拍照声音
     QGridLayout             *m_pGridLayout;
     DFloatingWidget         *m_fWgtCountdown; //显示倒计时
-    //浮动窗口添加磨砂窗口和结束按钮
     DLabel                  *m_dLabel;  //倒计时
     DPushButton             *m_btnVdTime; //录制屏显时长
     DPushButton             *m_endBtn;      //结束按钮
-    QTimer                  *countTimer;     //倒计时定时器
-    QTimer                  *flashTimer;     //闪光灯定时器
-    QTimer                  *recordingTimer;//录制3秒后，每200ms设置一次时间
+    QTimer                  *m_countTimer;     //倒计时定时器
+    QTimer                  *m_flashTimer;     //闪光灯定时器
+    QTimer                  *m_recordingTimer;//录制3秒后，每200ms设置一次时间
     QDateTime               m_btnClickTime; //按钮点击时间
     int                     m_nFastClick; //快速点击次数，小于200ms计入
     ThumbnailsBar           *m_thumbnail;       //缩略图

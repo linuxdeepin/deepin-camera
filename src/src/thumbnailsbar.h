@@ -66,7 +66,7 @@ public:
      */
     void initShortcut();
     void setBtntooltip();
-    void ChangeActType(int nType);
+    void ChangeActType(enum ActType nType);
     void addPath(QString strPath);
     void addFile(QString strFile);
     void delFile(QString strFile);
@@ -75,14 +75,14 @@ public:
     QHBoxLayout *m_mainLayout;
     QHBoxLayout *m_hBox;
     int m_nMaxWidth;
-    int m_nStatus; //当前状态
+    enum CamStatus m_nStatus; //当前状态
     DLabel *m_showVdTime;//缩略图显示视频时长
 private:
-    int m_nActTpye;//拍照或者视频模式，默认拍照
+    enum ActType m_nActTpye;//拍照或者视频模式，默认拍照
 
     QStringList m_strlstFolders;//存放文件夹路径
 
-    DPushButton *m_lastButton {nullptr};//缩略图最后的按钮，可实现拍照/取消拍照/录制。   
+    DPushButton *m_lastButton {nullptr};//缩略图最后的按钮，可实现拍照/取消拍照/录制。
 
     QDateTime m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
 

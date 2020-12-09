@@ -491,7 +491,7 @@ void ThumbnailsBar::OnPrint()
 }
 
 
-void ThumbnailsBar::ChangeActType(int nType)
+void ThumbnailsBar::ChangeActType(enum ActType nType)
 {
     if (m_nActTpye == nType) {
         return;
