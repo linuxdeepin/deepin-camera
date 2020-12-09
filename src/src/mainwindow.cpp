@@ -661,7 +661,7 @@ void CMainWindow::loadAfterShow()
 
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
-    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));//重启设备
+    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));//接收休眠信号，仅wayland使用
 
     m_thumbnail->addPath(CMainWindow::lastVdFileName);
