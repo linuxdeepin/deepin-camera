@@ -759,7 +759,7 @@ void CMainWindow::initUI()
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
-    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundreminder").toBool();
+    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundswitchbtn").toBool();
 
     switch (nContinuous) {//连拍次数
     case 1:
@@ -1231,7 +1231,7 @@ void CMainWindow::onSettingsDlgClose()
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
-    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundreminder").toBool();
+    bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundswitchbtn").toBool();
 
     /**********************************************/
     switch (nContinuous) {

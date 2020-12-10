@@ -42,6 +42,18 @@
             "name": "Shoot",
             "groups": [
                 {
+                    "key": "audiosetting",
+                    "name": "Sound",
+                    "options": [
+                        {
+                            "key": "soundswitchbtn",
+                            "type": "switchbutton",
+                            "default": true,
+                            "name": "Sound"
+                        }
+                    ]
+                },
+                {
                     "key": "photosnumber",
                     "name": "Burst mode",
                     "options": [
@@ -73,19 +85,6 @@
                                 "6s"
                             ],
                             "default": 0
-                        }
-                    ]
-                },
-                {
-                    "key": "audiosetting",
-                    "name": "Audio Setting",
-                    "options": [
-                        {
-                            "key": "soundreminder",
-                            "name": "Sound Reminder",
-                            "type":"checkbox",
-                            "text": "Sound tips for taking pictures",
-                            "default": true
                         }
                     ]
                 }
