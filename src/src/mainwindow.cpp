@@ -146,10 +146,11 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
     optionWidget->setContentsMargins(0, 0, 0, 0);
     workaround_updateStyle(optionWidget, "light");
+
     return optionWidget;
 }
 
-static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
+static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 {
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
@@ -192,7 +193,6 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
     workaround_updateStyle(optionWidget, "light");
     optinvaliddialog->setObjectName("OptionInvalidDialog");
     optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
-    //prompt->setTitle(QObject::tr("Permissions prompt"));
     optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
     optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
     optinvaliddialog->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
@@ -233,10 +233,166 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
 
     option->connect(icon, &DPushButton::clicked, [ = ]() {
 #ifdef UNITTEST
-        QString name = "~/Videos/";
+        QString name = "~/Pictures/";
 #else
         QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
-                                                         CMainWindow::lastOpenedPath(),
+                                                         CMainWindow::lastOpenedPicPath(),
+                                                         DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+#endif
+
+        if (validate(name, false)) {
+            option->setValue(name);
+            nameLast = name;
+        }
+
+        QFileInfo fm(name);
+
+        if ((!fm.isReadable() || !fm.isWritable()) && !name.isEmpty())
+            optinvaliddialog->show();
+
+    });
+
+    option->connect(lineedit, &DLineEdit::editingFinished, option, [ = ]() {
+
+        QString name = lineedit->text();
+        QDir dir(name);
+
+        QString tempstrname = ElideText(name, {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                        lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+        QString temstrnamelast = ElideText(nameLast, {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                           lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+
+
+        if (!validate(lineedit->text(), false)) {
+            QFileInfo fn(dir.path());
+
+            if ((!fn.isReadable() || !fn.isWritable()) && !name.isEmpty()) {
+                optinvaliddialog->show();
+            }
+        }
+
+        if (!lineedit->lineEdit()->hasFocus()) {
+
+            if (validate(lineedit->text(), false)) {
+                option->setValue(lineedit->text());
+                lineedit->setText(tempstrname);
+                nameLast = name;
+            } else if (tempstrname == tmpstrelidetext) {
+                lineedit->setText(tmpstrelidetext);
+            } else {
+                option->setValue(QVariant(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))); //设置为默认路径
+                lineedit->setText(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera")));
+                lineedit->setText(temstrnamelast);
+            }
+        }
+    });
+
+    option->connect(lineedit, &DLineEdit::textEdited, option, [ = ](const QString & newStr) {
+        validate(newStr);
+    });
+
+    option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, lineedit,
+    [ = ](const QVariant & value) {
+        auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                            lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+        lineedit->setText(pi);
+        Settings::get().settings()->setOption("base.general.last_open_pic_path", pi);
+        qDebug() << "save pic last path:" << pi << endl;
+        lineedit->update();
+    });
+
+    return  optionWidget;
+}
+
+
+
+static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
+{
+    DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
+
+    DLineEdit *lineedit = new DLineEdit;
+    DWidget *main = new DWidget;
+    QHBoxLayout *horboxlayout = new QHBoxLayout;
+    DPushButton *icon = new DPushButton(main);
+    QWidget *optionWidget = new QWidget;
+    QFormLayout *optionLayout = new QFormLayout(optionWidget);
+    DDialog *optinvaliddialog = new DDialog(optionWidget);
+    static QString nameLast = nullptr;
+
+    main->setLayout(horboxlayout);
+    icon->setAutoDefault(false);
+    icon->setObjectName("OptionLineEditBtn");
+    lineedit->setFixedHeight(30);
+    lineedit->setObjectName("OptionSelectableLineEdit");
+    lineedit->setText(option->value().toString());
+    QFontMetrics tem_fontmetrics = lineedit->fontMetrics();
+    QString tmpstrelidetext = ElideText(lineedit->text(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                        lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+
+    option->connect(lineedit, &DLineEdit::focusChanged, [ = ](bool on) {
+        if (on)
+            lineedit->setText(option->value().toString());
+    });
+
+    lineedit->setText(tmpstrelidetext);
+    nameLast = tmpstrelidetext;
+    icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
+    icon->setIconSize(QSize(25, 25));
+    icon->setFixedHeight(30);
+    horboxlayout->addWidget(lineedit);
+    horboxlayout->addWidget(icon);
+    optionWidget->setObjectName("OptionFrame");
+    optionLayout->setContentsMargins(0, 0, 0, 0);
+    optionLayout->setSpacing(0);
+    main->setMinimumWidth(240);
+    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+    workaround_updateStyle(optionWidget, "light");
+    optinvaliddialog->setObjectName("OptionInvalidDialog");
+    optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
+    optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
+    optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
+    optinvaliddialog->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
+
+    auto validate = [ = ](QString name, bool alert = true) -> bool {
+        name = name.trimmed();
+        if (name.isEmpty()) return false;
+
+        if (name.size() && name[0] == '~')
+        {
+            name.replace(0, 1, QDir::homePath());
+        }
+
+        QFileInfo fileinfo(name);
+        QDir dir(name);
+        if (fileinfo.exists())
+        {
+            if (!fileinfo.isDir()) {
+                if (alert) lineedit->showAlertMessage(QObject::tr("Invalid folder"));
+                return false;
+            }
+
+            if (!fileinfo.isReadable() || !fileinfo.isWritable()) {
+                if (alert) lineedit->showAlertMessage(QObject::tr("You don't have permission to operate this folder"));
+                return false;
+            }
+        } else
+        {
+            if (dir.cdUp()) {
+                QFileInfo ch(dir.path());
+                if (!ch.isReadable() || !ch.isWritable())
+                    return false;
+            }
+        }
+
+        return true;
+    };
+
+    option->connect(icon, &DPushButton::clicked, [ = ]() {
+#ifdef UNITTEST
+        QString name = "~/Pictures/";
+#else
+        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
+                                                         CMainWindow::lastOpenedVideoPath(),
                                                          DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
 #endif
 
@@ -282,7 +438,6 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
             } else {
                 option->setValue(QVariant(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))); //设置为默认路径
                 lineedit->setText(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera")));
-                option->setValue(QVariant(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera")));
                 lineedit->setText(temstrnamelast);
             }
         }
@@ -297,27 +452,47 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
                             lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
         lineedit->setText(pi);
-        Settings::get().settings()->setOption("base.general.last_open_path", pi);
+        Settings::get().settings()->setOption("base.general.last_open_vd_path", pi);
+        qDebug() << "save pic last path:" << pi << endl;
         lineedit->update();
     });
 
     return  optionWidget;
 }
 
-QString CMainWindow::lastOpenedPath()
+QString CMainWindow::lastOpenedPicPath()
 {
-    QString lastPath = Settings::get().generalOption("last_open_path").toString();
-    QDir lastDir(lastPath);
+    QString lastPicPath = Settings::get().generalOption("last_open_pic_path").toString();
+    qDebug() << lastPicPath << endl;
+    QDir lastDir(lastPicPath);
 
-    if (lastPath.isEmpty() || !lastDir.exists()) {
-        lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
-        QDir newLastDir(lastPath);
+    if (lastPicPath.isEmpty() || !lastDir.exists()) {
+        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/" + QObject::tr("Camera");
+        QDir newLastDir(lastPicPath);
 
-        if (!newLastDir.exists())
-            lastPath = QDir::currentPath();
+        if (!newLastDir.exists()) {
+            lastPicPath = QDir::currentPath();
+        }
     }
 
-    return lastPath;
+    return lastPicPath;
+}
+
+QString CMainWindow::lastOpenedVideoPath()
+{
+    QString lastVdPath = Settings::get().generalOption("last_open_vd_path").toString();
+    QDir lastDir(lastVdPath);
+
+    if (lastVdPath.isEmpty() || !lastDir.exists()) {
+        lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/" + QObject::tr("Camera");
+        QDir newLastDir(lastVdPath);
+
+        if (!newLastDir.exists()) {
+            lastVdPath = QDir::currentPath();
+        }
+    }
+
+    return lastVdPath;
 }
 
 CMainWindow::CMainWindow(DWidget *w): DMainWindow(w)
@@ -515,7 +690,9 @@ void CMainWindow::initShortcut()
 void CMainWindow::settingDialog()
 {
     m_SetDialog = new DSettingsDialog(this);
-    m_SetDialog->widgetFactory()->registerWidget("selectableEdit", createSelectableLineEditOptionHandle);
+    bool isVideos = true;
+    m_SetDialog->widgetFactory()->registerWidget("selectableEditpic", createPicSelectableLineEditOptionHandle);
+    m_SetDialog->widgetFactory()->registerWidget("selectableEditvd", createVdSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     m_SetDialog->setObjectName("SettingDialog");
     connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
@@ -635,7 +812,6 @@ void CMainWindow::settingDialogDel()
 
 void CMainWindow::loadAfterShow()
 {
-
     initDynamicLibPath();
     //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
     //this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
@@ -723,16 +899,20 @@ void CMainWindow::initUI()
     setCentralWidget(m_videoPre);
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
-    CMainWindow::lastVdFileName = Settings::get().getOption("base.save.vddatapath").toString();
-    CMainWindow::lastPicFileName = Settings::get().getOption("base.save.picdatapath").toString();
+
+    CMainWindow::lastVdFileName = CMainWindow::lastOpenedVideoPath();
+    CMainWindow::lastPicFileName = CMainWindow::lastOpenedPicPath();
+
     if (CMainWindow::lastVdFileName.size() && CMainWindow::lastVdFileName[0] == '~') {
         QString str = QDir::homePath();
         CMainWindow::lastVdFileName.replace(0, 1, str);
     }
+
     if (CMainWindow::lastPicFileName.size() && CMainWindow::lastPicFileName[0] == '~') {
         QString str = QDir::homePath();
         CMainWindow::lastPicFileName.replace(0, 1, str);
     }
+
     QDir dir;
 
     if (QDir(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
@@ -741,14 +921,15 @@ void CMainWindow::initUI()
     if (QDir(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
         dir.mkdir(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"));
 
-    bool picturepathexist = false;
+    bool picturepathexist = false;//判断图片路径是否存在
 
-    if (QDir(CMainWindow::lastVdFileName).exists())
+    if (QDir(CMainWindow::lastVdFileName).exists()) {
         m_fileWatcher.addPath(CMainWindow::lastVdFileName);
+    }
 
     if (QDir(CMainWindow::lastPicFileName).exists()) {
         m_fileWatcher.addPath(CMainWindow::lastPicFileName);
-        picturepathexist = true;
+        picturepathexist = true;//图片路径存在
     }
 
     //缩略图延后加载
@@ -934,10 +1115,10 @@ void CMainWindow::initThumbnails()
 
     //右键菜单打开文件
     connect(m_actOpenfolder, &QAction::triggered, this, [ = ] {
-        QString save_path = Settings::get().generalOption("last_open_path").toString();
+        QString save_path = Settings::get().generalOption("last_open_pic_path").toString();
 
         if (save_path.isEmpty())
-            save_path = Settings::get().getOption("base.save.datapath").toString();
+            save_path = Settings::get().getOption("base.save.picdatapath").toString();
 
         if (save_path.size() && save_path[0] == '~')
             save_path.replace(0, 1, QDir::homePath());
@@ -1158,9 +1339,8 @@ void CMainWindow::onTitlePicBtn()
 
 void CMainWindow::onTitleVdBtn()
 {
-    if (m_nActTpye == ActTakeVideo) {
+    if (m_nActTpye == ActTakeVideo)
         return;
-    }
 
     m_nActTpye = ActTakeVideo;
     //切换标题栏视频按钮颜色
@@ -1181,8 +1361,8 @@ void CMainWindow::onTitleVdBtn()
     paVd.setColor(DPalette::Button, cloVd);
     m_pTitlePicBtn->setPalette(paVd);
 
-    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::UnknownType ||
-            DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
+    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::UnknownType
+            || DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
         QIcon iconVd(":/images/icons/light/photograph.svg");
         m_pTitlePicBtn->setIcon(iconVd);
     } else {
@@ -1197,23 +1377,17 @@ void CMainWindow::onTitleVdBtn()
 void CMainWindow::onSettingsDlgClose()
 {
     /**********************************************/
-    if (QDir(Settings::get().getOption("base.save.vddatapath").toString()).exists() == false) {
+    if (QDir(Settings::get().getOption("base.save.vddatapath").toString()).exists() == false)
         CMainWindow::lastVdFileName = QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera");
-        Settings::get().setPathOption("vddatapath", QVariant(CMainWindow::lastVdFileName));
-    }
 
-    if (QDir(Settings::get().getOption("base.save.picdatapath").toString()).exists() == false) {
+    if (QDir(Settings::get().getOption("base.save.picdatapath").toString()).exists() == false)
         CMainWindow::lastPicFileName = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
-        Settings::get().setPathOption("picdatapath", QVariant(CMainWindow::lastPicFileName));
-    }
 
-    if (CMainWindow::lastVdFileName.size() && CMainWindow::lastVdFileName[0] == '~') {
+    if (CMainWindow::lastVdFileName.size() && CMainWindow::lastVdFileName[0] == '~')
         CMainWindow::lastVdFileName.replace(0, 1, QDir::homePath());
-    }
 
-    if (CMainWindow::lastPicFileName.size() && CMainWindow::lastPicFileName[0] == '~') {
+    if (CMainWindow::lastPicFileName.size() && CMainWindow::lastPicFileName[0] == '~')
         CMainWindow::lastPicFileName.replace(0, 1, QDir::homePath());
-    }
 
     CMainWindow::lastVdFileName = Settings::get().getOption("base.save.vddatapath").toString();
     CMainWindow::lastPicFileName = Settings::get().getOption("base.save.picdatapath").toString();

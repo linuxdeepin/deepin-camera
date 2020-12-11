@@ -466,18 +466,14 @@ void ThumbnailsBar::onCallMenu()
 
 void ThumbnailsBar::onOpenFolder()
 {
-    QString save_path = Settings::get().generalOption("last_open_path").toString();
+    QString save_path = Settings::get().generalOption("last_open_pic_path").toString();
     if (save_path.isEmpty())
-    {
-        save_path = Settings::get().getOption("base.save.datapath").toString();
-    }
-    if (save_path.size() && save_path[0] == '~')
-    {
-        save_path.replace(0, 1, QDir::homePath());
-    }
+        save_path = Settings::get().getOption("base.save.picdatapath").toString();
 
-    if (!QFileInfo(save_path).exists())
-    {
+    if (save_path.size() && save_path[0] == '~')
+        save_path.replace(0, 1, QDir::homePath());
+
+    if (!QFileInfo(save_path).exists()) {
         QDir d;
         d.mkpath(save_path);
     }

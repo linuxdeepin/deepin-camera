@@ -64,9 +64,14 @@ public:
     CMainWindow(DWidget *w = nullptr);
 
     /**
-    * @brief lastOpenedPath　上一次打开的文件路径
+    * @brief lastOpenedPath　上一次打开的图片文件路径
     */
-    static QString lastOpenedPath();
+    static QString lastOpenedPicPath();
+
+    /**
+    * @brief lastOpenedPath　上一次打开的视频文件路径
+    */
+    static QString lastOpenedVideoPath();
 
     /**
     * @brief setWayland　判断是否是wayland，并初始化对应操作

@@ -11,15 +11,16 @@
                         {
                             "key": "picdatapath",
                             "name": "Photo:",
-                            "type": "selectableEdit",
+                            "type": "selectableEditpic",
                             "default": "~/Pictures/Camera"
                         },
                         {
                             "key": "vddatapath",
                             "name": "Video:",
-                            "type": "selectableEdit",
+                            "type": "selectableEditvd",
                             "default": "~/Videos/Camera"
                         }
+
                     ]
                 },
                 {
@@ -28,9 +29,15 @@
                     "hide": true,
                     "options": [
                         {
-                            "key": "last_open_path",
+                            "key": "last_open_pic_path",
                             "name": "",
-                            "type": "selectableEdit",
+                            "type": "selectableEditpic",
+                            "default": ""
+                        },
+                        {
+                            "key": "last_open_vd_path",
+                            "name": "",
+                            "type": "selectableEditvd",
                             "default": ""
                         }
                     ]
