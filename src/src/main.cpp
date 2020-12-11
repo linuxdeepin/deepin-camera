@@ -26,6 +26,7 @@ extern "C"
 #include "mainwindow.h"
 #include "capplication.h"
 #include "dbus_adpator.h"
+#include "../config.h"
 #include <stdio.h>
 
 #include <DMainWindow>
@@ -92,8 +93,7 @@ int main(int argc, char *argv[])
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
 
     //版本
-    QString t_date = QDate::currentDate().toString("MMdd");
-    a.setApplicationVersion(DApplication::buildVersion(t_date));
+    a.setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     a.setWindowIcon(myIcon);
     a.setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
