@@ -23,15 +23,15 @@ Shortcut::Shortcut(QObject *parent)
     ShortcutGroup group3;
     group1.groupName = tr("Camera");
     group3.groupName = tr("Settings");
-    group1.groupItems << ShortcutItem(tr("stop video"), "space")
-                      << ShortcutItem(tr("stop photo"), "space")
-                      << ShortcutItem(tr("call menu"), "Alt + M")
-                      << ShortcutItem(tr("copy"), "Ctrl + C")
-                      << ShortcutItem(tr("delete"), "Delete")
-                      << ShortcutItem(tr("open folder"), "Ctrl + O")
-                      << ShortcutItem(tr("print"), "Ctrl + P");
+    group1.groupItems << ShortcutItem(tr("Stop Video"), "space")
+                      << ShortcutItem(tr("Stop Photo"), "space")
+                      << ShortcutItem(tr("Call Menu"), "Alt + M")
+                      << ShortcutItem(tr("Copy"), "Ctrl + C")
+                      << ShortcutItem(tr("Delete"), "Delete")
+                      << ShortcutItem(tr("Open Folder"), "Ctrl + O")
+                      << ShortcutItem(tr("Print"), "Ctrl + P");
     group3.groupItems << ShortcutItem(tr("Help"), "F1")
-                      << ShortcutItem(tr("Display shortcuts"), "Ctrl + Shift + ?");
+                      << ShortcutItem(tr("Display Shortcuts"), "Ctrl + Shift + ?");
     m_shortcutGroups << group1 << group3;
     // convert to json object
     QJsonArray jsonGroups;
