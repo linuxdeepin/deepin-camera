@@ -56,7 +56,7 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_fWgtCountdown = new DFloatingWidget(this);
     m_dLabel = new DLabel(m_fWgtCountdown);
     m_endBtn = new DPushButton(this);
-    m_pNormalScene = new QGraphicsScene;
+    m_pNormalScene = new QGraphicsScene();
     m_pNormalItem = new QGraphicsPixmapItem;
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
@@ -94,6 +94,13 @@ videowidget::videowidget(DWidget *parent) : DWidget(parent)
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     m_dLabel->setFocusPolicy(Qt::ClickFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
+    //wayland平台设置背景色为黑色
+    if (get_wayland_status() == true) {
+        QPalette pal(palette());
+        pal.setColor(QPalette::Background, Qt::black);
+        setAutoFillBackground(true);
+        setPalette(pal);
+    }
     QFont ftLabel("SourceHanSansSC-ExtraLight");
     ftLabel.setWeight(QFont::Thin);//最小就是50,更小的设置不进去，也是bug？
     ftLabel.setPixelSize(60);
@@ -377,9 +384,7 @@ void videowidget::showNocam()
     }
 
 #ifndef __mips__
-    if (m_openglwidget->isVisible()) {
-        m_openglwidget->hide();
-    }
+    m_openglwidget->hide();
 #endif
 
     emit sigDeviceChange();
@@ -522,6 +527,27 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
         if (get_encoder_status() == 0 && getCapStatus())
             onEndBtnClicked();
+        //wayland平台等比例缩放画面
+        if (get_wayland_status() == true) {
+            int framewidth = m_openglwidget->getFrameWidth();
+            int frameheight = m_openglwidget->getFrameHeight();
+            int widgetwidth = width();
+            int widgetheight = height();
+            if (!framewidth && !frameheight) {
+                m_openglwidget->resize(widgetwidth, widgetheight);
+            } else {
+                if ((framewidth * 100 / frameheight) > (widgetwidth * 100 / widgetheight)) {
+                    m_openglwidget->resize(widgetwidth, widgetwidth * frameheight / framewidth);
+                    m_openglwidget->move(widgetwidth - widgetwidth, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
+                } else {
+
+                    m_openglwidget->resize(widgetheight * framewidth / frameheight, widgetheight);
+                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, widgetheight - widgetheight);
+                }
+            }
+        } else {
+            m_openglwidget->resize(width(), height());
+        }
 
         malloc_trim(0);
     }
@@ -702,16 +728,14 @@ void videowidget::resizeEvent(QResizeEvent *size)
     }
 
     //结束按钮放大缩小的显示
-    if (m_endBtn->isVisible()) {
+    if (m_endBtn->isVisible())
         m_endBtn->move((width() + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
                        height() - m_btnVdTime->height() - 10);
-    }
 
     //计时窗口放大缩小的显示
-    if (m_btnVdTime->isVisible()) {
+    if (m_btnVdTime->isVisible())
         m_btnVdTime->move((width() - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
                           height() - m_btnVdTime->height() - 5);
-    }
 
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
@@ -727,9 +751,6 @@ void videowidget::resizeEvent(QResizeEvent *size)
         itemPosChange();
         m_pCamErrItem->hide();
     }
-#ifndef __mips__
-    m_openglwidget->resize(width(), height());
-#endif
 }
 
 void videowidget::showCountdown()

@@ -36,15 +36,17 @@
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
 
-class PreviewOpenglWidget:public QOpenGLWidget, protected QOpenGLFunctions
+class PreviewOpenglWidget: public QOpenGLWidget, protected QOpenGLFunctions
 {
-     Q_OBJECT
+    Q_OBJECT
 public:
     PreviewOpenglWidget(QWidget *parent = nullptr);
     ~PreviewOpenglWidget()Q_DECL_OVERRIDE;
+    int getFrameHeight();
+    int getFrameWidth();
 
 public slots:
-    void slotShowYuv(uchar *ptr,uint width,uint height); //显示一帧Yuv图像
+    void slotShowYuv(uchar *ptr, uint width, uint height); //显示一帧Yuv图像
 
 protected:
     void initializeGL() Q_DECL_OVERRIDE;
@@ -68,8 +70,8 @@ private:
     GLuint idU;
     GLuint idV; //自己创建的纹理对象ID，创建错误返回0
 
-    uint videoW;
-    uint videoH;
+    uint m_videoWidth;
+    uint m_videoHeight;
 
     uchar *m_yuvPtr = nullptr;
 };
