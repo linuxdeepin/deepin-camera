@@ -5,4 +5,5 @@
 
 #define VERSION        "@VERSION@"
 
+
 #endif  /* __CONFIG_H__ */

@@ -23,13 +23,14 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(PROJECT_INCLUDE ../deepin-camera/src/libcam/libcam_v4l2core
-    ../deepin-camera/src/libcam/libcam_render
-    ../deepin-camera/src/libcam/libcam_encoder
-    ../deepin-camera/src/libcam/libcam_audio
-    ../deepin-camera/src/libcam/libcam
-    ../deepin-camera/src/basepub
-    ../deepin-camera/src/qtsingleapplication
+set(PROJECT_INCLUDE ../camera/src/libcam/libcam_v4l2core
+    ../camera/src/libcam/libcam_render
+    ../camera/src/libcam/libcam_encoder
+    ../camera/src/libcam/libcam_audio
+    ../camera/src/libcam/libcam
+    ../camera/src/basepub
+    ../camera/src/qtsingleapplication
+    ../camera/
     /usr/include
     /usr/include/libusb-1.0
     /usr/include/SDL2
@@ -47,36 +48,34 @@ file (GLOB_RECURSE SOURCES
     ./main.cpp
     ./MainwindowTest.cpp
     ./ClosedialogTest.cpp
-#    ./*.cpp
-    ../deepin-camera/src/*.c
-#    ../src/*.cpp
-    ../deepin-camera/src/libcam/*.c
-    ../deepin-camera/src/basepub/*.c
-    ../deepin-camera/src/basepub/*.cpp
-    ../deepin-camera/src/closedialog.cpp
-    ../deepin-camera/src/devnummonitor.cpp
-    ../deepin-camera/src/mainwindow.cpp
-    ../deepin-camera/src/majorimageprocessingthread.cpp
-    ../deepin-camera/src/previewopenglwidget.cpp
-    ../deepin-camera/src/shortcut.cpp
-    ../deepin-camera/src/thumbnailsbar.cpp
-    ../deepin-camera/src/videowidget.cpp
-    ../deepin-camera/src/imageitem.cpp
-    ../deepin-camera/src/Settings.cpp
-    ../deepin-camera/src/capplication.cpp
-    ../deepin-camera/src/dbus_adpator.cpp
-    ../deepin-camera/src/settings_translation.cpp
-    ../deepin-camera/src/qtsingleapplication/qtsingleapplication.cpp
-    ../deepin-camera/src/qtsingleapplication/qtlocalpeer.cpp
+    ../camera/src/*.c
+    ../camera/src/libcam/*.c
+    ../camera/src/basepub/*.c
+    ../camera/src/basepub/*.cpp
+    ../camera/src/closedialog.cpp
+    ../camera/src/devnummonitor.cpp
+    ../camera/src/mainwindow.cpp
+    ../camera/src/majorimageprocessingthread.cpp
+    ../camera/src/previewopenglwidget.cpp
+    ../camera/src/shortcut.cpp
+    ../camera/src/thumbnailsbar.cpp
+    ../camera/src/videowidget.cpp
+    ../camera/src/imageitem.cpp
+    ../camera/src/Settings.cpp
+    ../camera/src/capplication.cpp
+    ../camera/src/dbus_adpator.cpp
+    ../camera/src/settings_translation.cpp
+    ../camera/src/qtsingleapplication/qtsingleapplication.cpp
+    ../camera/src/qtsingleapplication/qtlocalpeer.cpp
     )
 file (GLOB_RECURSE HEADERS
-    ../deepin-camera/src/basepub/*.h
-    ../deepin-camera/src/libcam/*.h
-    ../deepin-camera/src/qtsingleapplication/*.h
-    ../deepin-camera/src/*.h
+    ../camera/src/basepub/*.h
+    ../camera/src/libcam/*.h
+    ../camera/src/qtsingleapplication/*.h
+    ../camera/src/*.h
     ../tests/*.h
     )
-file (GLOB_RECURSE RESOURCES  ../deepin-camera/assets/assets.qrc)
+file (GLOB_RECURSE RESOURCES  ../camera/assets/assets.qrc)
 
 add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES}
     )

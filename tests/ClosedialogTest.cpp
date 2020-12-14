@@ -14,9 +14,9 @@ CloseDialogTest::CloseDialogTest()
  */
 TEST_F(CloseDialogTest, dialogshow)
 {
-    CloseDialog* closedialog = new CloseDialog;
+    CloseDialog *closedialog = new CloseDialog;
     closedialog->show();
-     QTest::qWait(1000);
-     delete closedialog;
-     closedialog = nullptr;
+    QTest::qWait(1000);
+    delete closedialog;
+    closedialog = nullptr;
 }
