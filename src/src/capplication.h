@@ -22,16 +22,18 @@
 #ifndef CAPPLICATION_H
 #define CAPPLICATION_H
 
+#include "mainwindow.h"
+
 #include <DApplication>
 #include <DGuiApplicationHelper>
+
 #include <QProcess>
-#include "mainwindow.h"
 
 #include "../qtsingleapplication/qtsingleapplication.h"
 
 class CApplication;
 
-#if  defined(dApp)
+#if defined(dApp)
 #undef dApp
 #endif
 #define dApp (static_cast<CApplication *>(QCoreApplication::instance()))
@@ -43,17 +45,43 @@ class CApplication : public QtSingleApplication
     Q_OBJECT
 public:
     CApplication(int &argc, char **argv);
+
+    /**
+    * @brief setMainWindow　设置主窗口
+    * @param window
+    */
     void setMainWindow(CMainWindow *window);
-    void setprocess(QList<QProcess*> &process);
-    QList<QProcess*> getprocess();
+
+    /**
+    * @brief setprocess　设置命令行列表
+    * @param process
+    */
+    void setprocess(QList<QProcess *> &process);
+
+    /**
+    * @brief getprocess　获得命令行列表
+    */
+    QList<QProcess *> getprocess();
+
+    /**
+    * @brief getMainWindow　获得主窗口
+    */
     CMainWindow *getMainWindow();
+
 signals:
+    /**
+    * @brief popupConfirmDialog　弹出确认对话框
+    */
     void popupConfirmDialog();
 
 protected:
+    /**
+    * @brief popupConfirmDialog　退出事件处理
+    */
     void handleQuitAction() override;
+
 private:
-    CMainWindow* m_mainwindow = nullptr;
-    QList<QProcess*> m_camprocesslist;
+    CMainWindow *m_mainwindow = nullptr;
+    QList<QProcess *> m_camprocesslist;
 };
 #endif // CAPPLICATION_H
