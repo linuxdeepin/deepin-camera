@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/123.jpg</file>
         <file>resource/settings.json</file>
         <file>images/logo/deepin-camera-96px.svg</file>
         <file>images/logo/deepin-camera-512px.svg</file>

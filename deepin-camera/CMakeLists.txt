@@ -25,12 +25,15 @@ include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in  @ONLY)
-set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
-    ../libcam/libcam_render
-    ../libcam/libcam_encoder
-    ../libcam/libcam_audio
-    ../libcam/libcam
-    ../basepub
+
+set(PROJECT_INCLUDE
+    ./src/libcam/libcam_v4l2core
+    ./src/libcam/libcam_render
+    ./src/libcam/libcam_encoder
+    ./src/libcam/libcam_audio
+    ./src/libcam/libcam
+    ./src/basepub
+    ./src/qtsingleapplication
     /usr/include
     /usr/include/libusb-1.0
     )
@@ -41,21 +44,37 @@ set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupp
 find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
-file (GLOB_RECURSE SOURCES  ./src/*.cpp
-    ./*.c
-    ../libcam/*.c
-    ../basepub/*.c
-    ../basepub/*.cpp
-    ./qtsingleapplication/qtsingleapplication.cpp
-    ./qtsingleapplication/qtlocalpeer.cpp
+file (GLOB_RECURSE SOURCES
+    ./src/closedialog.cpp
+    ./src/devnummonitor.cpp
+    ./src/mainwindow.cpp
+    ./src/majorimageprocessingthread.cpp
+    ./src/previewopenglwidget.cpp
+    ./src/shortcut.cpp
+    ./src/thumbnailsbar.cpp
+    ./src/videowidget.cpp
+    ./src/imageitem.cpp
+    ./src/Settings.cpp
+    ./src/capplication.cpp
+    ./src/dbus_adpator.cpp
+    ./src/settings_translation.cpp
+    ./LPF_V4L2.c
+    ./src/libcam/*.c
+    ./src/basepub/*.c
+    ./src/basepub/*.cpp
+    ./src/qtsingleapplication/qtsingleapplication.cpp
+    ./src/qtsingleapplication/qtlocalpeer.cpp
+    ./src/main.cpp
     )
 
-file (GLOB_RECURSE HEADERS  ./src/*.h
-    ../libcam/*.h
-    ../basepub/*.h
+file (GLOB_RECURSE HEADERS
+    ./src/*.h
+    ./src/libcam/*.h
+    ./src/basepub/*.h
+    ./src/qtsingleapplication/*.h
     )
 
-file (GLOB_RECURSE RESOURCES  ./resource/resources.qrc)
+file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkcore
@@ -122,7 +141,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/deepin-camera.desktop
     DESTINATION /usr/share/applications)
 
 #icons
-install(FILES ${PROJECT_SOURCE_DIR}/resource/deepin-camera.svg
+install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
     DESTINATION /usr/share/icons/hicolor/scalable/apps)
 
 #manual

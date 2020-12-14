@@ -4,7 +4,7 @@ project(deepin-camera VERSION 1.0.0)
 
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
-add_subdirectory(src)
+add_subdirectory(deepin-camera)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_subdirectory(tests)

@@ -23,16 +23,17 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(PROJECT_INCLUDE ../libcam/libcam_v4l2core
-    ../libcam/libcam_render
-    ../libcam/libcam_encoder
-    ../libcam/libcam_audio
-    ../libcam/libcam
-    ../basepub
+set(PROJECT_INCLUDE ../deepin-camera/src/libcam/libcam_v4l2core
+    ../deepin-camera/src/libcam/libcam_render
+    ../deepin-camera/src/libcam/libcam_encoder
+    ../deepin-camera/src/libcam/libcam_audio
+    ../deepin-camera/src/libcam/libcam
+    ../deepin-camera/src/basepub
+    ../deepin-camera/src/qtsingleapplication
     /usr/include
     /usr/include/libusb-1.0
     /usr/include/SDL2
-    ${PROJECT_SOURCE_DIR}/../src
+    ${PROJECT_SOURCE_DIR}/../deepin-camera
     ${PROJECT_SOURCE_DIR}/googletest/include
     )
 # 设置Qt模块
@@ -47,34 +48,36 @@ file (GLOB_RECURSE SOURCES
     ./MainwindowTest.cpp
     ./ClosedialogTest.cpp
 #    ./*.cpp
-    ../src/*.c
-    ../libcam/*.c
-    ../basepub/*.c
-    ../basepub/*.cpp
-    ../src/closedialog.cpp
-    ../src/devnummonitor.cpp
-    ../src/mainwindow.cpp
-    ../src/majorimageprocessingthread.cpp
-    ../src/previewopenglwidget.cpp
-    ../src/shortcut.cpp
-    ../src/thumbnailsbar.cpp
-    ../src/videowidget.cpp
-    ../src/imageitem.cpp
-    ../src/Settings.cpp
-    ../src/capplication.cpp
-    ../src/dbus_adpator.cpp
-    ../src/settings_translation.cpp
-    ../src/qtsingleapplication/qtsingleapplication.cpp
-    ../src/qtsingleapplication/qtlocalpeer.cpp
+    ../deepin-camera/src/*.c
+#    ../src/*.cpp
+    ../deepin-camera/src/libcam/*.c
+    ../deepin-camera/src/basepub/*.c
+    ../deepin-camera/src/basepub/*.cpp
+    ../deepin-camera/src/closedialog.cpp
+    ../deepin-camera/src/devnummonitor.cpp
+    ../deepin-camera/src/mainwindow.cpp
+    ../deepin-camera/src/majorimageprocessingthread.cpp
+    ../deepin-camera/src/previewopenglwidget.cpp
+    ../deepin-camera/src/shortcut.cpp
+    ../deepin-camera/src/thumbnailsbar.cpp
+    ../deepin-camera/src/videowidget.cpp
+    ../deepin-camera/src/imageitem.cpp
+    ../deepin-camera/src/Settings.cpp
+    ../deepin-camera/src/capplication.cpp
+    ../deepin-camera/src/dbus_adpator.cpp
+    ../deepin-camera/src/settings_translation.cpp
+    ../deepin-camera/src/qtsingleapplication/qtsingleapplication.cpp
+    ../deepin-camera/src/qtsingleapplication/qtlocalpeer.cpp
     )
 file (GLOB_RECURSE HEADERS
-    ../basepub/*.h
-    ../libcam/*.h
-    ../src/*.h
+    ../deepin-camera/src/basepub/*.h
+    ../deepin-camera/src/libcam/*.h
+    ../deepin-camera/src/qtsingleapplication/*.h
+    ../deepin-camera/src/*.h
     ../tests/*.h
     )
-file (GLOB_RECURSE RESOURCES  ../src/resource/resources.qrc
-    )
+file (GLOB_RECURSE RESOURCES  ../deepin-camera/assets/assets.qrc)
+
 add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES}
     )
 
@@ -121,39 +124,41 @@ include_directories(${PROJECT_SOURCE_DIR})
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # 添加gocv覆盖率文件的输出
-set(CMAKE_CXX_FLAGS "-g -fprofile-arcs -ftest-coverage")
+#set(CMAKE_CXX_FLAGS "-g -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer -g -fprofile-arcs -ftest-coverage")
+set(CMAKE_C_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
+set(CMAKE_Ｌ_FLAGS "-fsanitize=undefined,address,leak -fno-omit-frame-pointer")
 set(CMAKE_CXX_OUTPUT_EXTENSION_REPLACE ON)
 
 set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/objects)
 
-add_custom_target(test
-    COMMAND mkdir -p coverageResult
-    COMMAND mkdir -p report
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+#add_custom_target(test
+#    COMMAND mkdir -p report
+#    COMMAND mkdir -p html
+#    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
-add_custom_command(TARGET test
-    COMMAND echo " ===================CREAT LCOV REPROT==================== "
-    COMMAND lcov --directory ./CMakeFiles/${PROJECT_NAME}.dir --zerocounters
-    COMMAND ./tests/${PROJECT_NAME} --gtest_output=xml:./report/report.xml
-    COMMAND lcov --directory . --capture --output-file ./coverageResult/${PROJECT_NAME}_Coverage.info
+#add_custom_command(TARGET test
+#    COMMAND echo " ===================CREAT LCOV REPROT==================== "
+#    COMMAND lcov --directory ./tests/CMakeFiles/deepin-camera-test.dir --zerocounters
+#    COMMAND ./tests/${PROJECT_NAME} --gtest_output=xml:./report/report.xml
+#    COMMAND lcov --directory . --capture --output-file ./coverageResult/${PROJECT_NAME}_Coverage.info
 
-    COMMAND echo " =================== do filter begin ==================== "
-    COMMAND lcov --remove ./coverageResult/${PROJECT_NAME}_Coverage.info 'CMakeFiles/${PROJECT_NAME}.dir/${PROJECT_NAME}_autogen/*/*'
-    '${PROJECT_NAME}_autogen/*/*'
-    'googletest/*/*'
-    '*/usr/include/*'
-    '*/tests/*'
-    '*/src/qtsingleapplication/*'
-    '*/basepub/printoptionspage.cpp'
-    '*/src/src/dbus_adpator.cpp'
-    '*/src/src/settings_translation.cpp'
-    '/usr/local/*'
-    -o ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
-    COMMAND echo " =================== do filter end ==================== "
+#    COMMAND echo " =================== do filter begin ==================== "
+#    COMMAND lcov --remove ./coverageResult/${PROJECT_NAME}_Coverage.info 'CMakeFiles/${PROJECT_NAME}.dir/${PROJECT_NAME}_autogen/*/*'
+#    '${PROJECT_NAME}_autogen/*/*'
+#    'googletest/*/*'
+#    '*/usr/include/*'
+#    '*/tests/*'
+#    '*/src/qtsingleapplication/*'
+#    '*/basepub/printoptionspage.cpp'
+#    '*/src/src/dbus_adpator.cpp'
+#    '*/src/src/settings_translation.cpp'
+#    '/usr/local/*'
+#    -o ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
+#    COMMAND echo " =================== do filter end ==================== "
 
-    COMMAND genhtml -o ./coverageResult/report ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
-    COMMAND echo " -- Coverage files have been output to ${CMAKE_BINARY_DIR}/coverageResult/report "
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    )
-add_dependencies(test ${PROJECT_NAME})
-
+#    COMMAND genhtml -o ./coverageResult/report ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
+#    COMMAND echo " -- Coverage files have been output to ${CMAKE_BINARY_DIR}/coverageResult/report "
+#    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#    )
+#add_dependencies(test ${PROJECT_NAME})

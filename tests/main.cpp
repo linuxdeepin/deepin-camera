@@ -8,8 +8,8 @@
 #include <DLog>
 #include <DApplicationSettings>
 #include <QCameraInfo>
-#include "../src/src/mainwindow.h"
-#include "../src/src/capplication.h"
+#include "src/mainwindow.h"
+#include "src/capplication.h"
 
 DWIDGET_USE_NAMESPACE
 
