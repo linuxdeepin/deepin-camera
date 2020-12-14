@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
+#include <sanitizer/asan_interface.h>
 #include <QtTest/QTest>
 #include <DApplication>
 #include <DMainWindow>
@@ -51,8 +52,10 @@ void QTestMain::cleanupTestCase()
 
 void QTestMain::testGTest()
 {
+//    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-camera.xml";
     testing::InitGoogleTest();
     runtest();
+    __sanitizer_set_report_path("asan.log");
     exit(0);
 }
 
@@ -103,32 +106,28 @@ int main(int argc, char *argv[])
     QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
     QStringList cameralist;
     QString command("ffplay -f v4l2 -video_size 1920x1080 -i ");
-    for(QList<QCameraInfo>::Iterator it = cameras.begin(); it != cameras.end(); ++it)
-    {
+    for (QList<QCameraInfo>::Iterator it = cameras.begin(); it != cameras.end(); ++it) {
         QString tmp = command + it->deviceName();
         cameralist.append(tmp);
     }
 
 
-    QList<QProcess*> Processlist;
+    QList<QProcess *> Processlist;
     Processlist.clear();
     int n = 0;
-    for(QStringList::Iterator str = cameralist.begin(); str != cameralist.end(); ++str)
-    {
+    for (QStringList::Iterator str = cameralist.begin(); str != cameralist.end(); ++str) {
         Processlist.append(new QProcess);
         Processlist.at(n)->start(*str);
         n++;
     }
 
-    while(n > 0)
-    {
-        if(Processlist.at(n - 1)->state() == QProcess::Starting)
-        {
+    while (n > 0) {
+        if (Processlist.at(n - 1)->state() == QProcess::Starting) {
             n--;
         }
     }
 
-    CMainWindow* w = new CMainWindow;
+    CMainWindow *w = new CMainWindow;
     w->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(w);
     a.setprocess(Processlist);
