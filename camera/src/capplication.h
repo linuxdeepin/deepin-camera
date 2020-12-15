@@ -40,6 +40,10 @@ class CApplication;
 
 DWIDGET_USE_NAMESPACE
 
+/**
+* @brief CApplication　对主窗口事件进行处理
+* 主窗口获取与设置，退出时间处理，调用进程等
+*/
 class CApplication : public QtSingleApplication
 {
     Q_OBJECT
@@ -48,18 +52,18 @@ public:
 
     /**
     * @brief setMainWindow　设置主窗口
-    * @param window
+    * @param window 主窗口对象
     */
     void setMainWindow(CMainWindow *window);
 
     /**
-    * @brief setprocess　设置命令行列表
-    * @param process
+    * @brief setprocess　设置进程列表
+    * @param process 进程表
     */
     void setprocess(QList<QProcess *> &process);
 
     /**
-    * @brief getprocess　获得命令行列表
+    * @brief getprocess　获得进程列表
     */
     QList<QProcess *> getprocess();
 
@@ -76,12 +80,12 @@ signals:
 
 protected:
     /**
-    * @brief popupConfirmDialog　退出事件处理
+    * @brief handleQuitAction　退出事件处理
     */
     void handleQuitAction() override;
 
 private:
-    CMainWindow *m_mainwindow = nullptr;
+    CMainWindow       *m_mainwindow;
     QList<QProcess *> m_camprocesslist;
 };
 #endif // CAPPLICATION_H

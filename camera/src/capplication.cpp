@@ -24,25 +24,27 @@
 CApplication::CApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
 {
-
+    m_mainwindow = nullptr;
 }
 
 void CApplication::setMainWindow(CMainWindow *window)
 {
-        if (!m_mainwindow) {
-            m_mainwindow = window;
-        }
+
+    if (!m_mainwindow)
+        m_mainwindow = window;
+
 }
 
 void CApplication::setprocess(QList<QProcess *> &process)
 {
     m_camprocesslist.clear();
+
     if (m_camprocesslist.isEmpty()) {
-        for(QList<QProcess *>::iterator i = process.begin(); i != process.end(); i++)
-        {
+        for (QList<QProcess *>::iterator i = process.begin(); i != process.end(); i++)
             m_camprocesslist.append(*i);
-        }
+
     }
+
 }
 
 QList<QProcess *> CApplication::getprocess()
