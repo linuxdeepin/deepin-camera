@@ -22,18 +22,24 @@
 #ifndef DC_SETTINGS_H
 #define DC_SETTINGS_H
 
-#include <QObject>
-#include <QPointer>
+#include "videowidget.h"
 
 #include <DSettingsOption>
 #include <DSettingsGroup>
 #include <DSettings>
 
-#include "videowidget.h"
+#include <QObject>
+#include <QPointer>
 
+/**
+* @brief dc　相机设置界面命名空间
+*/
 namespace dc {
 using namespace Dtk::Core;
 
+/**
+* @brief Settings　相机设置界面
+*/
 class Settings: public QObject
 {
     Q_OBJECT
@@ -42,50 +48,79 @@ public:
     * @brief get　获取设置对象
     */
     static Settings &get();
+
     /**
     * @brief configPath　获取设置路径
     */
     QString configPath() const
     {
-        return _configPath;
+        return m_configPath;
     }
+
     /**
     * @brief settings　获取DSettings对象
     */
     QPointer<DSettings> settings()
     {
-        return _settings;
+        return m_settings;
     }
+
     /**
-    * @brief group
+    * @brief group 获取组
     */
     QPointer<DSettingsGroup> group(const QString &name)
     {
         return settings()->group(name);
     }
+
+    /**
+    * @brief base　获取group.base
+    */
     QPointer<DSettingsGroup> base()
     {
         return group("base");
     }
 
+    /**
+    * @brief generalOption 获取json下的base.general.%1
+    * @param opt
+    */
     QVariant generalOption(const QString &opt);
 
+    /**
+    * @brief setPathOption 设置json下的base.save.%1的值
+    * @param opt
+    * @param v
+    */
     void setPathOption(const QString &opt, const QVariant &v);
 
+    /**
+    * @brief getOption 获取json下的值
+    * @param opt
+    */
     QVariant getOption(const QString &opt);
 
 public slots:
+
+    /**
+     * @brief resolutionchanged 设置新分辨率表
+     */
     void setNewResolutionList();
 
 signals:
-    void resolutionchanged(const QString &);//分辨率信号
+
+    /**
+     * @brief resolutionchanged 分辨率改变信号
+     * @param
+     */
+    void resolutionchanged(const QString &);
 
 
 private:
     Settings();
 
-    QPointer<DSettings> _settings;
-    QString _configPath;
+    QString             m_configPath;
+    QPointer<DSettings> m_settings;
 };
 
 }

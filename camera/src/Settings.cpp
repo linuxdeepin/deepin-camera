@@ -19,38 +19,38 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "Settings.h"
+#include "camview.h"
+#include "gviewv4l2core.h"
+
 #include <QtCore>
 #include <QtGui>
 #include <QComboBox>
 
-#include "Settings.h"
 #include <qsettingbackend.h>
-
-#include "camview.h"
-#include "gviewv4l2core.h"
 
 namespace dc {
 using namespace Dtk::Core;
+
 static Settings *_theSettings = nullptr;
 
 Settings &Settings::get()
 {
-    if (!_theSettings) {
+    if (!_theSettings)
         _theSettings = new Settings;
-    }
 
     return *_theSettings;
 }
 
-Settings::Settings()
-    : QObject(0)
+Settings::Settings(): QObject(0)
 {
-    _configPath = QString("%1/%2/%3/config.conf")
-                  .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
-                  .arg(qApp->organizationName())
-                  .arg(qApp->applicationName());
-    qDebug() << "configPath" << _configPath;
-    auto backend = new QSettingBackend(_configPath);
+    m_configPath = QString("%1/%2/%3/config.conf")
+                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
+                   .arg(qApp->organizationName())
+                   .arg(qApp->applicationName());
+    qDebug() << "configPath" << m_configPath;
+    auto backend = new QSettingBackend(m_configPath);
+
 #if defined (__mips__) || defined (__sw_64__) || defined ( __aarch64__)
     /*if (!CompositingManager::get().composited()) {
         _settings = DSettings::fromJsonFile(":/resource/settings.json");
@@ -59,12 +59,11 @@ Settings::Settings()
     }*/
     _settings = DSettings::fromJsonFile(":/resource/settings.json");
 #else
-    _settings = DSettings::fromJsonFile(":/resource/settings.json");
+    m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 #endif
-    _settings->setBackend(backend);
+    m_settings->setBackend(backend);
 
-    connect(_settings, &DSettings::valueChanged,
-    [ = ](const QString & key, const QVariant & value) {
+    connect(m_settings, &DSettings::valueChanged, [ = ](const QString & key, const QVariant & value) {
         if (key.startsWith("outsetting.resolutionsetting.resolution")) {
             auto mode_opt = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
             if (value >= 0) {
@@ -72,11 +71,13 @@ Settings::Settings()
                 emit resolutionchanged(mode);
             }
         }
+
     });
 
-    qDebug() << "keys" << _settings->keys();
+    qDebug() << "keys" << m_settings->keys();
     setNewResolutionList();
 }
+
 QVariant Settings::generalOption(const QString &opt)
 {
     return settings()->getOption(QString("base.general.%1").arg(opt));
@@ -89,7 +90,7 @@ QVariant Settings::getOption(const QString &opt)
 
 void Settings::setNewResolutionList()
 {
-    auto resolutionmodeFamily = _settings->option("outsetting.resolutionsetting.resolution");
+    auto resolutionmodeFamily = m_settings->option("outsetting.resolutionsetting.resolution");
 
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
@@ -115,7 +116,6 @@ void Settings::setNewResolutionList()
         int defres = 0;
         if (format_index >= 0 && resolu_index >= 0) {
             for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
-
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
                         && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
                         (list_stream_formats[format_index].list_stream_cap[i].width < 7680
@@ -127,8 +127,11 @@ void Settings::setNewResolutionList()
                     //去重
                     if (resolutionDatabase.contains(res_str) == false)
                         resolutionDatabase.append(res_str);
+
                 }
+
             }
+
             int tempostion = 0;
             int len = resolutionDatabase.size() - 1;
             for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
@@ -139,18 +142,19 @@ void Settings::setNewResolutionList()
 
                     if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
                             && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
-
                         QString resolutionstr = resolutionDatabase[j + 1];
                         resolutionDatabase[j + 1] = resolutionDatabase[j];
                         resolutionDatabase[j] = resolutionstr;
                         flag = 0;
                         tempostion = j;
                     }
+
                 }
                 len = tempostion;
-                if (flag == 1) {
+
+                if (flag == 1)
                     continue;
-                }
+
             }
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
@@ -161,7 +165,9 @@ void Settings::setNewResolutionList()
                     break;
                 }
             }
+
             resolutionmodeFamily->setData("items", resolutionDatabase);
+
             //设置当前分辨率的索引
             settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
@@ -173,14 +179,16 @@ void Settings::setNewResolutionList()
     } else {
         //初始化分辨率字符串表
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
-        if (resolutionDatabase.size() > 0) {
+
+        if (resolutionDatabase.size() > 0)
             resolutionmodeFamily->data("items").clear();
-        }
+
         resolutionDatabase.clear();
         resolutionDatabase.append(QString(tr("None")));
         settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
+
     settings()->sync();
 }
 
