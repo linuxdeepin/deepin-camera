@@ -816,6 +816,11 @@ void videowidget::showCountdown()
             m_countTimer->stop();
 
             if (QDir(m_strFolder).exists() == false) {
+                if (QDir(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))).exists() == false) {
+                    QDir dir;
+                    dir.mkdir(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"));
+                }
+
                 m_strFolder = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
             }
 
@@ -1258,6 +1263,10 @@ void videowidget::forbidScrollBar(QGraphicsView *view)
 
 void videowidget::startTakeVideo()
 {
+    QDir dir;
+    if (QDir(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
+        dir.mkdir(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"));
+
     if (getCapStatus()) {
         qDebug() << "stop takeVideo";
         stop_encoder_thread();
