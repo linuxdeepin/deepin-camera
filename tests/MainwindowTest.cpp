@@ -15,7 +15,8 @@ using namespace Dtk::Core;
 MainwindowTest::MainwindowTest()
 {
     if (!mainwindow)
-        mainwindow = dApp->getMainWindow();
+        mainwindow = CamApp->getMainWindow();
+
     if (!mainwindow->isVisible()) {
         mainwindow->show();
         mainwindow->activateWindow();
@@ -29,7 +30,7 @@ MainwindowTest::MainwindowTest()
  */
 TEST_F(MainwindowTest, CamUsed)
 {
-    QList<QProcess *> proclist = dApp->getprocess();
+    QList<QProcess *> proclist = CamApp->getprocess();
 
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
     QTest::qWait(1000);

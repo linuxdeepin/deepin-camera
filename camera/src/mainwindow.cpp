@@ -1035,7 +1035,7 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
-    connect(dApp, &CApplication::popupConfirmDialog, this, [ = ] {
+    connect(CamApp, &CApplication::popupConfirmDialog, this, [ = ] {
         if (m_videoPre->getCapStatus())
         {
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));

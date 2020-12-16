@@ -72,22 +72,22 @@ int main(int argc, char *argv[])
     //加载翻译
 
     //设置属性
-    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
-    a.setOrganizationName("deepin");
-    a.setApplicationName("deepin-camera");
-    a.setApplicationDisplayName("Camera");
-    a.setProductName("Camera");
-    a.loadTranslator(QList<QLocale>() << QLocale::system());
+    qApp->setOrganizationName("deepin");
+    qApp->setApplicationName("deepin-camera");
+    qApp->setApplicationDisplayName("Camera");
+    qApp->setProductName("Camera");
+    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
-    a.setApplicationVersion("1.0");
-    a.setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
+    qApp->setApplicationVersion("1.0");
+    qApp->setWindowIcon(QIcon(":/images/logo/deepin-camera-96px.svg"));
     //a.setProductIcon(QIcon::fromTheme("deepin-camera"));
-    a.setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
+    qApp->setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
 
-    a.setApplicationDescription("This is camera.");
+    qApp->setApplicationDescription("This is camera.");
 
     DApplicationSettings saveTheme;
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 
     QTestMain testMain;
     QTest::qExec(&testMain, argc, argv);
-    return a.exec();
+    return qApp->exec();
 }
 
 #include "main.moc"

@@ -63,44 +63,38 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
         set_wayland_status(1);
     }
-//    MyObject obj(argc,argv);
-
-//    DApplication *app = MyObject::getDtkInstance();
-//    app->installEventFilter(&obj);
 
     CApplication a(argc, argv);
 
-    a.setObjectName("deepin-camera");
+    qApp->setObjectName("deepin-camera");
 #ifndef __mips__
-    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     // overwrite DApplication default value
-    a.setAttribute(Qt::AA_ForceRasterWidgets, false);
+    qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
 #endif
 
-    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
-    a.setOrganizationName("deepin");
+    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qApp->setOrganizationName("deepin");
     //设置应用名称
-    a.setApplicationName("deepin-camera");
+    qApp->setApplicationName("deepin-camera");
     //加载翻译
-    a.loadTranslator(QList<QLocale>() << QLocale::system());
+    qApp->loadTranslator(QList<QLocale>() << QLocale::system());
     //设置程序名称
-    a.setApplicationDisplayName(QObject::tr("Camera"));
+    qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //设置产品名称
-    a.setProductName(QObject::tr("Camera"));
-
+    qApp->setProductName(QObject::tr("Camera"));
     //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
     qDebug() << "LogFile:" << DLogManager::getlogFilePath();
-
     //版本
-    a.setApplicationVersion(DApplication::buildVersion(VERSION));
+    qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
-    a.setWindowIcon(myIcon);
-    a.setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
+    qApp->setWindowIcon(myIcon);
+    qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
 
     //应用描述
-    a.setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
+    qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     DApplicationSettings saveTheme;
 
@@ -135,5 +129,5 @@ int main(int argc, char *argv[])
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
     QDBusConnection::sessionBus().registerObject("/", &w);
 
-    return a.exec();
+    return qApp->exec();
 }

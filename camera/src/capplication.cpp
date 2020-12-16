@@ -21,18 +21,30 @@
 
 #include "capplication.h"
 
+CApplication *CApplication::cameraCore = nullptr;
+
 CApplication::CApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
 {
-    m_mainwindow = nullptr;
+    if (cameraCore == nullptr)
+        cameraCore = this;
+
+    dApplication()->installEventFilter(this);
+    dApplication()->setQuitOnLastWindowClosed(true);
+
+    Dtk::Core::DVtableHook::overrideVfptrFun(dApplication(), &DApplication::handleQuitAction, CamApp, &CApplication::QuitAction);
+
+}
+
+CApplication *CApplication::CamApplication()
+{
+    return CApplication::cameraCore;
 }
 
 void CApplication::setMainWindow(CMainWindow *window)
 {
-
     if (!m_mainwindow)
         m_mainwindow = window;
-
 }
 
 void CApplication::setprocess(QList<QProcess *> &process)
@@ -42,9 +54,7 @@ void CApplication::setprocess(QList<QProcess *> &process)
     if (m_camprocesslist.isEmpty()) {
         for (QList<QProcess *>::iterator i = process.begin(); i != process.end(); i++)
             m_camprocesslist.append(*i);
-
     }
-
 }
 
 QList<QProcess *> CApplication::getprocess()
@@ -57,8 +67,8 @@ CMainWindow *CApplication::getMainWindow()
     return m_mainwindow;
 }
 
-void CApplication::handleQuitAction()
+void CApplication::QuitAction()
 {
-    emit popupConfirmDialog();
+    emit CamApp->popupConfirmDialog();
 }
 

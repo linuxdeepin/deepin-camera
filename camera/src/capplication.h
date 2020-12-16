@@ -24,21 +24,24 @@
 
 #include "mainwindow.h"
 
-#include <DApplication>
+#include <DVtableHook>
+#include <QObject>
 #include <DGuiApplicationHelper>
 
+#include <QtSingleApplication>
 #include <QProcess>
-
-#include "../qtsingleapplication/qtsingleapplication.h"
 
 class CApplication;
 
 #if defined(dApp)
 #undef dApp
 #endif
-#define dApp (static_cast<CApplication *>(QCoreApplication::instance()))
+#define cApp (static_cast<CApplication *>(QCoreApplication::instance()))
+#define CamApp (CApplication::CamApplication())
 
 DWIDGET_USE_NAMESPACE
+
+bool get_application(int &argc, char **argv);
 
 /**
 * @brief CApplication　对主窗口事件进行处理
@@ -49,6 +52,12 @@ class CApplication : public QtSingleApplication
     Q_OBJECT
 public:
     CApplication(int &argc, char **argv);
+
+    /**
+     * @brief Application 返回顶层topToolbar
+     * @return 返回程序的指针
+     */
+    static CApplication *CamApplication();
 
     /**
     * @brief setMainWindow　设置主窗口
@@ -80,11 +89,12 @@ signals:
 
 protected:
     /**
-    * @brief handleQuitAction　退出事件处理
+    * @brief QuitAction　退出事件处理
     */
-    void handleQuitAction() override;
+    void QuitAction();
 
 private:
+    static CApplication *cameraCore;
     CMainWindow       *m_mainwindow;
     QList<QProcess *> m_camprocesslist;
 };
