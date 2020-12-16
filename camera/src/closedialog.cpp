@@ -28,6 +28,7 @@
 #include <QDebug>
 
 DWIDGET_USE_NAMESPACE
+
 typedef DLabel QLbtoDLabel;
 
 CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QString btnName2)
@@ -35,29 +36,29 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
 {
     this->setIcon(QIcon(":/images/icons/warning.svg"));
     setFixedSize(380, 140);
-    widet = new DWidget(this);
-    addContent(widet);
-    m_vlayout = new QVBoxLayout(widet);
+    m_widget = new DWidget(this);
+    addContent(m_widget);
+    m_vlayout = new QVBoxLayout(m_widget);
     m_vlayout->setContentsMargins(2, 0, 2, 1);
     m_vlayout->addStretch();
     addButton(btnName1);
     addButton(btnName2);
 
-    QAbstractButton *CancelBtn = getButton(0);
-    CancelBtn->setObjectName("CancelBtn");
+    QAbstractButton *cancelBtn = getButton(0);
+    cancelBtn->setObjectName("CancelBtn");
 
     QAbstractButton *closeBtn = getButton(1);
     closeBtn->setObjectName("CloseBtn");
 
     QPalette plt = closeBtn->palette();
-    QColor clr(255,87,54);
-    plt.setColor(QPalette::ButtonText,clr);
+    QColor clr(255, 87, 54);
+    plt.setColor(QPalette::ButtonText, clr);
     closeBtn->setPalette(plt);
 
-    labtitle = new QLbtoDLabel();
-    labtitle->setText(strText);
-    labtitle->setAlignment(Qt::AlignCenter);
-    m_vlayout->addWidget(labtitle);
+    m_labtitle = new QLbtoDLabel();
+    m_labtitle->setText(strText);
+    m_labtitle->setAlignment(Qt::AlignCenter);
+    m_vlayout->addWidget(m_labtitle);
     m_vlayout->addStretch();
-    widet->setLayout(m_vlayout);
+    m_widget->setLayout(m_vlayout);
 }

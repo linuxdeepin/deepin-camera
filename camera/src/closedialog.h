@@ -34,23 +34,20 @@
 DWIDGET_USE_NAMESPACE
 
 typedef DLabel QLbtoDLabel;
+
+/**
+* @brief CloseDialog　关闭对话框
+*/
 class CloseDialog : public DDialog
 {
     Q_OBJECT
 public:
-    /**
-    * @brief settingsTriggered 关闭窗口设置
-    * @param parent
-    * @param strText
-    * @param btnName1
-    * @param btnName2
-    */
     CloseDialog(QWidget *parent = nullptr, QString strText = "", QString btnName1 = tr("Cancel"), QString btnName2 = tr("Close"));
 
 private:
-    QVBoxLayout *m_vlayout;
-    DWidget *widet;
-    QLbtoDLabel *labtitle;
+    QVBoxLayout  *m_vlayout;
+    DWidget      *m_widget;
+    QLbtoDLabel  *m_labtitle;
 };
 
 #endif // CLOSEDIALOG_H
