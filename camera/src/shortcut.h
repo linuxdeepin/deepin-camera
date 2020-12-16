@@ -21,26 +21,35 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
-struct ShortcutItem{
+
+struct ShortcutItem {
     QString name;
     QString value;
-    ShortcutItem(QString n,QString v):name(n),value(v){}
+    ShortcutItem(QString n, QString v): name(n), value(v) {}
 };
 
-struct ShortcutGroup{
+struct ShortcutGroup {
     QString groupName;
     QList<ShortcutItem> groupItems;
 };
 
+/**
+ * @brief setPic 取消image带来的警告
+ * space停止拍照或录像，Alt + M调用菜单，Ctrl + C复制，Ctrl + O打开文件夹，Ctrl + P打印，F1帮助，Delete删除，Ctrl + Shift + ?列出快捷键
+ */
 class Shortcut : public QObject
 {
     Q_OBJECT
 public:
     explicit Shortcut(QObject *parent = 0);
+
+    /**
+    * @brief toStr 数据类型转换
+    */
     QString toStr();
 
 private:
-    QJsonObject m_shortcutObj;
+    QJsonObject          m_shortcutObj;
     QList<ShortcutGroup> m_shortcutGroups;
 };
 
