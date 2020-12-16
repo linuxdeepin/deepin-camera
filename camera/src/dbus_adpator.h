@@ -22,24 +22,30 @@
 #ifndef DBUS_ADAPTOR
 #define DBUS_ADAPTOR
 
-#include <QtDBus>
-
 #include "mainwindow.h"
 
-class ApplicationAdaptor: public QDBusAbstractAdaptor {
+#include <QtDBus>
+
+/**
+* @brief CloseDialog　窗口大小适配
+* 窗口最小化后双击桌面图标弹出相应大小的窗口
+*/
+class ApplicationAdaptor: public QDBusAbstractAdaptor
+{
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.deepin.camera")
 public:
-    explicit ApplicationAdaptor(CMainWindow* mw);
-    static QVariant redDBusProperty(const QString &service, const QString &path, const QString &interface = QString(), const char *propert = "");
-    static QVariant redDBusMethod(const QString &service, const QString &path, const QString &interface, const char *method);
+    explicit ApplicationAdaptor(CMainWindow *mw);
 
 public slots:
+    /**
+    * @brief Raise 升起窗口信号
+    */
     void Raise();
 
 private:
-    CMainWindow *_mw {nullptr};
-    QTime oldTime;
+    CMainWindow *m_mw;
+    QTime       m_oldTime;
 };
 
 

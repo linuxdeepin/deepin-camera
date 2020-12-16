@@ -21,58 +21,16 @@
 
 #include "dbus_adpator.h"
 
-ApplicationAdaptor::ApplicationAdaptor(CMainWindow* mw)
-    :QDBusAbstractAdaptor(mw), _mw(mw)
+ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
+    : QDBusAbstractAdaptor(mw), m_mw(mw)
 {
-    oldTime = QTime::currentTime();
+    m_oldTime = QTime::currentTime();
 }
 
-
-void ApplicationAdaptor::Raise(){
-    qDebug()<<"raise window from dbus";
-    _mw->showNormal();
-    _mw->raise();
-    _mw->activateWindow();
-}
-
-QVariant ApplicationAdaptor::redDBusProperty(const QString &service, const QString &path, const QString &interface, const char *propert)
+void ApplicationAdaptor::Raise()
 {
-    // 创建QDBusInterface接口
-    QDBusInterface ainterface(service, path,
-                              interface,
-                              QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) {
-        qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
-        QVariant v(0) ;
-        return  v;
-    }
-    //调用远程的value方法
-    QList<QByteArray> q = ainterface.dynamicPropertyNames();
-    QVariant v = ainterface.property(propert);
-    return  v;
+    qDebug() << "raise window from dbus";
+    m_mw->showNormal();
+    m_mw->raise();
+    m_mw->activateWindow();
 }
-QVariant ApplicationAdaptor::redDBusMethod(const QString &service, const QString &path, const QString &interface, const char *method)
-{
-    // 创建QDBusInterface接口
-    QDBusInterface ainterface(service, path,
-                              interface,
-                              QDBusConnection::sessionBus());
-    if (!ainterface.isValid()) {
-        qDebug() <<  "error:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
-        QVariant v(0) ;
-        return  v;
-    }
-    //调用远程的value方法
-    QDBusReply<QDBusVariant> reply = ainterface.call(method);
-    if (reply.isValid()) {
-//        return reply.value();
-        QVariant v(0) ;
-        return  v;
-    } else {
-        qDebug() << "error1:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
-        QVariant v(0) ;
-        return  v;
-    }
-}
-
-
