@@ -21,37 +21,40 @@
 
 #include "previewopenglwidget.h"
 
-#include <malloc.h>
-
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
 
-PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent): QOpenGLWidget(parent)
-{
+#include <malloc.h>
 
+PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
+    : QOpenGLWidget(parent)
+{
+    m_textureY = nullptr;
+    m_textureU = nullptr;
+    m_textureV = nullptr;
+    m_yuvPtr = nullptr;
 }
 
 PreviewOpenglWidget::~PreviewOpenglWidget()
 {
-    //makeCurrent();
-    vbo.destroy();
+    m_vbo.destroy();
 
-    if (textureY) {
-        textureY->destroy();
-        delete textureY;
-        textureY = nullptr;
+    if (m_textureY) {
+        m_textureY->destroy();
+        delete m_textureY;
+        m_textureY = nullptr;
     }
 
-    if (textureU) {
-        textureU->destroy();
-        delete textureU;
-        textureU = nullptr;
+    if (m_textureU) {
+        m_textureU->destroy();
+        delete m_textureU;
+        m_textureU = nullptr;
     }
 
-    if (textureV) {
-        textureV->destroy();
-        delete textureV;
-        textureV = nullptr;
+    if (m_textureV) {
+        m_textureV->destroy();
+        delete m_textureV;
+        m_textureV = nullptr;
     }
 
     doneCurrent();
@@ -100,9 +103,9 @@ void PreviewOpenglWidget::initializeGL()
             1.0f, 1.0f,
         };
 
-    vbo.create();
-    vbo.bind();
-    vbo.allocate(vertices, sizeof(vertices));
+    m_vbo.create();
+    m_vbo.bind();
+    m_vbo.allocate(vertices, sizeof(vertices));
 
     const char *vsrc =
         "attribute vec4 vertexIn; \
@@ -153,30 +156,30 @@ void PreviewOpenglWidget::initializeGL()
         }";
     }
 
-    program = new QOpenGLShaderProgram(this);
-    textureY = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    textureU = new QOpenGLTexture(QOpenGLTexture::Target2D);
-    textureV = new QOpenGLTexture(QOpenGLTexture::Target2D);
+    m_program = new QOpenGLShaderProgram(this);
+    m_textureY = new QOpenGLTexture(QOpenGLTexture::Target2D);
+    m_textureU = new QOpenGLTexture(QOpenGLTexture::Target2D);
+    m_textureV = new QOpenGLTexture(QOpenGLTexture::Target2D);
 
-    program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
-    program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsrc);
-    program->link();
-    program->bind();
-    program->enableAttributeArray(VERTEXIN);
-    program->enableAttributeArray(TEXTUREIN);
-    program->setAttributeBuffer(VERTEXIN, GL_FLOAT, 0, 2, 2 * sizeof(GLfloat));
-    program->setAttributeBuffer(TEXTUREIN, GL_FLOAT, 8 * sizeof(GLfloat), 2, 2 * sizeof(GLfloat));
+    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, vsrc);
+    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fsrc);
+    m_program->link();
+    m_program->bind();
+    m_program->enableAttributeArray(VERTEXIN);
+    m_program->enableAttributeArray(TEXTUREIN);
+    m_program->setAttributeBuffer(VERTEXIN, GL_FLOAT, 0, 2, 2 * sizeof(GLfloat));
+    m_program->setAttributeBuffer(TEXTUREIN, GL_FLOAT, 8 * sizeof(GLfloat), 2, 2 * sizeof(GLfloat));
 
-    textureUniformY = static_cast<uint>(program->uniformLocation("tex_y"));
-    textureUniformU = static_cast<uint>(program->uniformLocation("tex_u"));
-    textureUniformV = static_cast<uint>(program->uniformLocation("tex_v"));
+    m_textureUniformY = static_cast<uint>(m_program->uniformLocation("tex_y"));
+    m_textureUniformU = static_cast<uint>(m_program->uniformLocation("tex_u"));
+    m_textureUniformV = static_cast<uint>(m_program->uniformLocation("tex_v"));
 
-    textureY->create();
-    textureU->create();
-    textureV->create();
-    idY = textureY->textureId();
-    idU = textureU->textureId();
-    idV = textureV->textureId();
+    m_textureY->create();
+    m_textureU->create();
+    m_textureV->create();
+    m_idY = m_textureY->textureId();
+    m_idU = m_textureU->textureId();
+    m_idV = m_textureV->textureId();
     glClearColor(0.0, 0.0, 0.0, 0.0);
 }
 
@@ -190,24 +193,20 @@ void PreviewOpenglWidget::paintGL()
 {
     if (m_yuvPtr == nullptr)
         return;
-
-    //    QMatrix4x4 m;
-    //    m.perspective(60.0f, 4.0f/3.0f, 0.1f, 100.0f );//透视矩阵随距离的变化，图形跟着变化。屏幕平面中心就是视点（摄像头）,需要将图形移向屏幕里面一定距离。
-    //    m.ortho(-2,+2,-2,+2,-10,10);//近裁剪平面是一个矩形,矩形左下角点三维空间坐标是（left,bottom,-near）,右上角点是（right,top,-near）所以此处为负，表示z轴最大为10；
-    //远裁剪平面也是一个矩形,左下角点空间坐标是（left,bottom,-far）,右上角点是（right,top,-far）所以此处为正，表示z轴最小为-10；
-    //此时坐标中心还是在屏幕水平面中间，只是前后左右的距离已限制。
+  
     glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
-    glBindTexture(GL_TEXTURE_2D, idY); //绑定y分量纹理对象id到激活的纹理单元
-    //使用内存中的数据创建真正的y分量纹理数据
+    glBindTexture(GL_TEXTURE_2D, m_idY); //绑定y分量纹理对象id到激活的纹理单元
+
+    //使用内存中的数据创建真正的y分量纹理数据,https://blog.csdn.net/xipiaoyouzi/article/details/53584798 纹理参数解析
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, static_cast<int>(m_videoWidth), static_cast<int>(m_videoHeight), 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr);
-    //https://blog.csdn.net/xipiaoyouzi/article/details/53584798 纹理参数解析
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glActiveTexture(GL_TEXTURE1); //激活纹理单元GL_TEXTURE1
-    glBindTexture(GL_TEXTURE_2D, idU);
+    glBindTexture(GL_TEXTURE_2D, m_idU);
+
     //使用内存中的数据创建真正的u分量纹理数据
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -216,19 +215,24 @@ void PreviewOpenglWidget::paintGL()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glActiveTexture(GL_TEXTURE2); //激活纹理单元GL_TEXTURE2
-    glBindTexture(GL_TEXTURE_2D, idV);
+    glBindTexture(GL_TEXTURE_2D, m_idV);
+
     //使用内存中的数据创建真正的v分量纹理数据
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight * 5 / 4);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
     //指定y纹理要使用新值
-    glUniform1i(static_cast<int>(textureUniformY), 0);
+    glUniform1i(static_cast<int>(m_textureUniformY), 0);
+
     //指定u纹理要使用新值
-    glUniform1i(static_cast<int>(textureUniformU), 1);
+    glUniform1i(static_cast<int>(m_textureUniformU), 1);
+
     //指定v纹理要使用新值
-    glUniform1i(static_cast<int>(textureUniformV), 2);
+    glUniform1i(static_cast<int>(m_textureUniformV), 2);
+
     //使用顶点数组方式绘制图形
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
