@@ -24,7 +24,6 @@
 
 #include <QThread>
 #include <QTimer>
-#include <QMutex>
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,12 +40,23 @@ extern "C" {
 }
 #endif
 
+/**
+* @brief DevNumMonitor　设备数目监视器
+*/
 class DevNumMonitor: public QThread
 {
     Q_OBJECT
 public:
     DevNumMonitor();
+
+    /**
+    * @brief stop　停止
+    */
     void stop();
+
+    /**
+    * @brief init　初始化
+    */
     void init();
 
 signals:
@@ -54,33 +64,37 @@ signals:
     * @brief seltBtnStateEnable 相机选择按钮可用信号
     */
     void seltBtnStateEnable();
+
     /**
     * @brief seltBtnStateDisable 相机选择按钮不可用信号
     */
     void seltBtnStateDisable();
+
     /**
-    * @brief noDeviceFound 无相机设备信号
+    * @brief noDeviceFound 未发现相机设备信号
     */
     void noDeviceFound();
+
     /**
     * @brief existDevice 存在相机设备信号
     */
     void existDevice();
+
 protected:
+    /**
+    * @brief run 运行
+    */
     void run();
 
 private slots:
     /**
-    * @brief timeOutSlot 设置相机切换按钮状态
+    * @brief timeOutSlot 监视设备数目槽，根据相机数目执行相应的处理
     */
     void timeOutSlot();
 
-public:
-    //sstatic QMap<QString, QString> devmap;
 private:
-    QTimer *m_pTimer;
-    v4l2_device_list_t *devlist;
-    QMutex mutex;
+    QTimer             *m_pTimer;
+    v4l2_device_list_t *m_devlist;
 
 };
 

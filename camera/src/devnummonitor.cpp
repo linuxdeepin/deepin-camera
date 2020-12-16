@@ -26,20 +26,21 @@ extern "C"
 #include "v4l2_devices.h"
 #include "camview.h"
 }
-//QMap<QString, QString> DevNumMonitor::devmap;
-
 
 DevNumMonitor::DevNumMonitor()
 {
     m_pTimer = nullptr;
-    devlist = nullptr;
+    m_devlist = nullptr;
 }
+
 void DevNumMonitor::stop()
 {
+
     if (m_pTimer != nullptr) {
         m_pTimer->stop();
         m_pTimer->deleteLater();
     }
+
     m_pTimer = nullptr;
     this->exit();
 }
@@ -51,9 +52,9 @@ void DevNumMonitor::init()
 
 void DevNumMonitor::run()
 {
-    if (m_pTimer == nullptr) {
+    if (m_pTimer == nullptr)
         m_pTimer = new QTimer;
-    }
+
     m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
@@ -63,10 +64,11 @@ void DevNumMonitor::run()
 void DevNumMonitor::timeOutSlot()
 {
     check_device_list_events(get_v4l2_device_handler());
-    devlist = get_device_list();
-    if (devlist->num_devices <= 1) {
+    m_devlist = get_device_list();
+
+    if (m_devlist->num_devices <= 1) {
         emit seltBtnStateDisable();
-        if (devlist->num_devices < 1)
+        if (m_devlist->num_devices < 1)
             //没有设备发送信号
             emit noDeviceFound();
         else
