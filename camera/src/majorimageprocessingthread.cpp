@@ -20,76 +20,78 @@
 */
 
 #include "majorimageprocessingthread.h"
+
 #include <QFile>
 #include <QDate>
 #include <QDir>
 
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
+    m_yuvPtr = nullptr;
     init();
 }
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
-    if(m_yuvPtr)
-    {
+
+    if (m_yuvPtr) {
         delete [] m_yuvPtr;
         m_yuvPtr = nullptr;
     }
+
     config_clean();
     qDebug() << "~MajorImageProcessingThread";
 }
 
 void MajorImageProcessingThread::stop()
 {
-    stopped = 1;
+    m_stopped = 1;
 }
 
 void MajorImageProcessingThread::init()
 {
-    stopped = 0;
-    majorindex = -1;
-    frame = nullptr;
+    m_stopped = 0;
+    m_majorindex = -1;
+    m_frame = nullptr;
     m_bTake = false;
-    vd1 = nullptr;
-    result = -1;
+    m_videoDevice = nullptr;
+    m_result = -1;
 }
 
 void MajorImageProcessingThread::run()
 {
-    vd1 = get_v4l2_device_handler();
-    v4l2core_start_stream(vd1);
+    m_videoDevice = get_v4l2_device_handler();
+    v4l2core_start_stream(m_videoDevice);
     int framedely = 0;
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
-    while (stopped == 0) {
+    while (m_stopped == 0) {
         if (get_resolution_status()) {
-            request_format_update(0); /*reset*/
-            v4l2core_stop_stream(vd1);
+            //reset
+            request_format_update(0);
+            v4l2core_stop_stream(m_videoDevice);
             m_rwMtxImg.lock();
-            v4l2core_clean_buffers(vd1);
-
+            v4l2core_clean_buffers(m_videoDevice);
             m_rwMtxImg.unlock();
 
-            int ret = v4l2core_update_current_format(vd1);
-
-
+            int ret = v4l2core_update_current_format(m_videoDevice);
 
             if (ret != E_OK) {
                 fprintf(stderr, "camera: could not set the defined stream format\n");
                 fprintf(stderr, "camera: trying first listed stream format\n");
 
-                v4l2core_prepare_valid_format(vd1);
-                v4l2core_prepare_valid_resolution(vd1);
-                ret = v4l2core_update_current_format(vd1);
+                v4l2core_prepare_valid_format(m_videoDevice);
+                v4l2core_prepare_valid_resolution(m_videoDevice);
+                ret = v4l2core_update_current_format(m_videoDevice);
 
                 if (ret != E_OK) {
                     fprintf(stderr, "camera: also could not set the first listed stream format\n");
                     stop();
                 }
+
             }
 
-            v4l2core_start_stream(vd1);
+            v4l2core_start_stream(m_videoDevice);
 
             //保存新的分辨率
             QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin/deepin-camera/") + QString("deepin-camera");
@@ -98,74 +100,81 @@ void MajorImageProcessingThread::run()
 
             config_t *my_config = config_get();
 
-            my_config->width = static_cast<int>(vd1->format.fmt.pix.width);
-            my_config->height = static_cast<int>(vd1->format.fmt.pix.height);
-            my_config->format = static_cast<uint>(vd1->format.fmt.pix.pixelformat);
+            my_config->width = static_cast<int>(m_videoDevice->format.fmt.pix.width);
+            my_config->height = static_cast<int>(m_videoDevice->format.fmt.pix.height);
+            my_config->format = static_cast<uint>(m_videoDevice->format.fmt.pix.pixelformat);
             v4l2_device_list_t *devlist = get_device_list();
             set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
             config_save(config_file.toLatin1().data());
-
         }
-        result = -1;
-        frame = v4l2core_get_decoded_frame(vd1);
 
-        if (frame == nullptr) {
+        m_result = -1;
+        m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+
+        if (m_frame == nullptr) {
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
-                stopped = 1;
+                m_stopped = 1;
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
                 close_v4l2_device_handler();
             }
+
             continue;
         }
-        if(get_wayland_status() == 1 && QString::compare(QString(vd1->videodevice),"/dev/video0") == 0)
-        {
-            render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
+
+        if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
+            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
+
 #ifdef __mips__
-        uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
+        uint8_t *rgb = static_cast<uint8_t *>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
         yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
 #endif
+
         /*录像*/
         if (video_capture_get_save_video()) {
-            if (get_myvideo_bebin_timer() == 0) {
-                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
-            }
-            int size = (frame->width * frame->height * 3) / 2;
-            uint8_t *input_frame = frame->yuv_frame;
 
+            if (get_myvideo_bebin_timer() == 0)
+                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
+
+            int size = (m_frame->width * m_frame->height * 3) / 2;
+            uint8_t *input_frame = m_frame->yuv_frame;
 
             /*
              * TODO: check codec_id, format and frame flags
              * (we may want to store a compressed format
              */
             if (get_video_codec_ind() == 0) { //raw frame
-                switch (v4l2core_get_requested_frame_format(vd1)) {
+                switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
                 case  V4L2_PIX_FMT_H264:
-                    input_frame = frame->h264_frame;
-                    size = static_cast<int>(frame->h264_frame_size);
+                    input_frame = m_frame->h264_frame;
+                    size = static_cast<int>(m_frame->h264_frame_size);
                     break;
                 default:
-                    input_frame = frame->raw_frame;
-                    size = static_cast<int>(frame->raw_frame_size);
+                    input_frame = m_frame->raw_frame;
+                    size = static_cast<int>(m_frame->raw_frame_size);
                     break;
                 }
+
             }
+
             /*把帧加入编码队列*/
             if (!get_capture_pause()) {
                 //设置时间戳
-                set_video_timestamptmp(static_cast<int64_t>(frame->timestamp));
-                encoder_add_video_frame(input_frame, size, static_cast<int64_t>(frame->timestamp), frame->isKeyframe);
+                set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+                encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
             } else {
                 //设置暂停时长
                 timespausestamp = get_video_timestamptmp();
-                if(timespausestamp == 0){
+                if (timespausestamp == 0) {
                     set_video_pause_timestamp(0);
-                }else {
-                    set_video_pause_timestamp(static_cast<int64_t>(frame->timestamp) - timespausestamp);
+                } else {
+                    set_video_pause_timestamp(static_cast<int64_t>(m_frame->timestamp) - timespausestamp);
                 }
+
             }
+
             /*
              * exponencial scheduler
              *  with 50% threshold (milisec)
@@ -173,79 +182,81 @@ void MajorImageProcessingThread::run()
              */
             double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
             if (time_sched > 0) {
-                switch (v4l2core_get_requested_frame_format(vd1)) {
+                switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
                 case V4L2_PIX_FMT_H264: {
                     uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
-                    v4l2core_set_h264_frame_rate_config(vd1, framerate);
+                    v4l2core_set_h264_frame_rate_config(m_videoDevice, framerate);
                     break;
                 }
+
                 default: {
                     struct timespec req = {0, static_cast<__syscall_slong_t>(time_sched * 1E6)}; /*nanosec*/
                     nanosleep(&req, nullptr);
                     break;
                 }
                 }
+
             }
+
         }
+
         /*拍照*/
         if (m_bTake) {
-            int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+            int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
                 qDebug() << "保存照片失败";
             }
+
             m_bTake = false;
         }
 
-
-        result = 0;
+        m_result = 0;
         framedely = 0;
         m_rwMtxImg.lock();
-        if (frame->yuv_frame != nullptr && (stopped == 0)) {
+        if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
 #ifdef __mips__
-            QImage imgTmp(rgb,frame->width,frame->height,QImage::Format_RGB888);
+            QImage imgTmp(rgb, frame->width, frame->height, QImage::Format_RGB888);
             if (!imgTmp.isNull()) {
                 m_Img = imgTmp.copy();
-                emit SendMajorImageProcessing(&m_Img, result);
+                emit SendMajorImageProcessing(&m_Img, m_result);
             }
 #else
             emit sigRenderYuv(true);
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
-            if(m_nVdWidth != static_cast<unsigned int>(frame->width)&& m_nVdHeight != static_cast<unsigned int>(frame->height))
-            {
-                m_nVdWidth = static_cast<unsigned int>(frame->width);
-                m_nVdHeight = static_cast<unsigned int>(frame->height);
-                if(m_yuvPtr != nullptr)
-                {
+            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+                if (m_yuvPtr != nullptr) {
                     delete [] m_yuvPtr;
                     m_yuvPtr = nullptr;
                 }
+
                 yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                 m_yuvPtr = new uchar[yuvsize];
-                memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
-            }
-            else
-            {
+                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+            } else {
                 yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                memcpy(m_yuvPtr, frame->yuv_frame, yuvsize);
+                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
             }
-            emit sigYUVFrame(m_yuvPtr,m_nVdWidth,m_nVdHeight);
+
+            emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
 #endif
             malloc_trim(0);
         }
+
 #ifndef __mips__
-        if(frame->yuv_frame == nullptr)
-        {
+        if (m_frame->yuv_frame == nullptr) {
             emit sigRenderYuv(false);
         }
+
 #endif
         m_rwMtxImg.unlock();
 
 #ifdef __mips__
         free(rgb);
 #endif
-        v4l2core_release_frame(vd1, frame);
-//        msleep(33);//1000 / 30
+        v4l2core_release_frame(m_videoDevice, m_frame);
     }
 
-    v4l2core_stop_stream(vd1);
+    v4l2core_stop_stream(m_videoDevice);
 }

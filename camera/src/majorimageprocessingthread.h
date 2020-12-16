@@ -44,50 +44,84 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+/**
+ * @brief stop 线程处理图片
+ */
 class MajorImageProcessingThread : public QThread
 {
     Q_OBJECT
 public:
     MajorImageProcessingThread();
+
     ~MajorImageProcessingThread();
 
+    /**
+     * @brief stop 停止线程
+     */
     void stop();
+
+    /**
+     * @brief init 线程初始化
+     */
     void init();
 
-public:
-    QMutex m_rwMtxImg;
-    QString m_strPath;
-    QMutex m_rwMtxPath;
-    bool m_bTake; //是否拍照
-
+    /**
+     * @brief getStatus 获取状态
+     */
     QAtomicInt getStatus()
     {
-        return stopped;
+        return m_stopped;
     }
-protected:
-    void run();
+
+public:
+    QMutex  m_rwMtxImg;
+    QString m_strPath;
+    QMutex  m_rwMtxPath;
+    bool    m_bTake; //是否拍照
 
 private:
-    volatile int majorindex;
-    QAtomicInt stopped;
-    v4l2_dev_t *vd1;
-    v4l2_frame_buff_t *frame;
-    int result;
-    uint m_nVdWidth;
-    uint m_nVdHeight;
-    uchar *m_yuvPtr = nullptr;
+    int               m_result;
+    uint              m_nVdWidth;
+    uint              m_nVdHeight;
+    volatile int      m_majorindex;
+    QAtomicInt        m_stopped;
+    v4l2_dev_t        *m_videoDevice;
+    v4l2_frame_buff_t *m_frame;
+    uchar             *m_yuvPtr;
+
+protected:
+    /**
+     * @brief run 运行线程
+     */
+    void run();
 
 #ifdef __mips__
     QImage m_Img;
 #endif
 
-signals: 
+signals:
 #ifdef __mips__
     void SendMajorImageProcessing(QImage *image, int result);
 #else
-    void sigYUVFrame(uchar* yuv,uint width,uint height);
+    /**
+     * @brief sigYUVFrame YUV框架信号
+     * @param yuv YUV
+     * @param width 宽度
+     * @param height 高度
+     */
+    void sigYUVFrame(uchar *yuv, uint width, uint height);
+
+    /**
+     * @brief sigRenderYuv 发送Yuv信号
+     * @param width
+     */
     void sigRenderYuv(bool);
+
 #endif
+    /**
+     * @brief reachMaxDelayedFrames 到达最大延迟信号
+     */
     void reachMaxDelayedFrames();
 
 };
