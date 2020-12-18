@@ -53,8 +53,15 @@ class QSpacerItem;
 class QSound;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
+/**
+* @brief PRIVIEW_ENUM_STATE　枚举拍照，无设备，录像
+*/
 enum PRIVIEW_ENUM_STATE {PICTRUE, NODEVICE, VIDEO};
 
+/**
+* @brief videowidget　完成拍照，录像相关工作
+* 连拍，延时拍照录像，闪光灯，文件保存等
+*/
 class videowidget : public DWidget
 {
     Q_OBJECT
@@ -122,7 +129,7 @@ signals:
 
     /**
     * @brief filename　文件名
-    * @param strFilename 文件夹名称
+    * @param strFilename 文件名
     */
     void filename(QString strFilename);
 
@@ -145,7 +152,7 @@ public:
     }
 
     /**
-    * @brief getFolder　获取保存文件夹路径
+    * @brief getFolder　获取文件夹
     */
     QString getFolder()
     {
@@ -180,8 +187,8 @@ public:
     }
 
     /**
-    * @brief setthumbnail　延迟加载
-    * @param thumb ThumbnailsBar类
+    * @brief setthumbnail　设置缩略图
+    * @param thumb
     */
     void setThumbnail(ThumbnailsBar *thumb);
 
@@ -189,6 +196,7 @@ public:
     * @brief delayInit　延迟加载
     */
     void delayInit();
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -217,7 +225,7 @@ public slots:
     void onChangeDev();
 
     /**
-    * @brief onEndBtnClicked　结束按钮click事件响应
+    * @brief onEndBtnClicked　点击结束按钮
     */
     void onEndBtnClicked();
 
@@ -232,12 +240,14 @@ private slots:
     * @brief ReceiveMajorImage　处理视频帧
     */
     void ReceiveMajorImage(QImage *image, int result);
+
 #else
 
     /**
-    * @brief ReceiveOpenGLstatus　openGL状态
+    * @brief ReceiveOpenGLstatus　接收openGL状态
     */
     void ReceiveOpenGLstatus(bool);
+
 #endif
 
     /**
@@ -246,13 +256,13 @@ private slots:
     void onReachMaxDelayedFrames();
 
     /**
-    * @brief flash　闪光恢复
+    * @brief flash　闪光
     */
     void flash();
 
     /**
-    * @brief slotresolutionchanged　分辨率改变
-    * @param 分辨率字符串(例：1920*1080)
+    * @brief slotresolutionchanged　分辨率改变槽函数
+    * @param 分辨率字符串(如：1920*1080)
     */
     void slotresolutionchanged(const QString &);
 
@@ -266,18 +276,18 @@ private:
     void showCountDownLabel(PRIVIEW_ENUM_STATE state);
 
     /**
-    * @brief forbidScrollBar　关闭滚轮显示区域
+    * @brief forbidScrollBar　禁止滚轮显示区域
     * @param view
     */
     void forbidScrollBar(QGraphicsView *view);
 
     /**
-    * @brief showCountDownLabel　摄像头被占用
+    * @brief showCountDownLabel　显示设备被占用或者拔掉的图片的槽函数
     */
     void showCamUsed();
 
     /**
-    * @brief showNocam　未发现摄像头
+    * @brief showNocam　显示没有设备的图片的槽函数
     */
     void showNocam();
 
@@ -287,7 +297,7 @@ private:
     void startTakeVideo();
 
     /**
-    * @brief itemPosChange　item位置处理
+    * @brief itemPosChange　item位置改变
     */
     void itemPosChange();
 
@@ -295,40 +305,43 @@ private:
     * @brief itemPosChange　结束所有操作
     */
     void stopEverything();
+
 public:
     MajorImageProcessingThread *m_imgPrcThread;
-
 private:
-    bool                    m_bActive = false;//是否录制中
+    bool                       m_bActive = false;//是否录制中
 #ifndef __mips__
-    PreviewOpenglWidget     *m_openglwidget;//opengl渲染窗口
+    PreviewOpenglWidget        *m_openglwidget;//opengl渲染窗口
 #endif
-    DLabel                  *m_flashLabel;  //闪光灯Label
-    QGraphicsView           *m_pNormalView;
-    QGraphicsScene          *m_pNormalScene;
-    QGraphicsPixmapItem     *m_pNormalItem;
-    QGraphicsTextItem       *m_pCamErrItem; //摄像头异常提示
-    QSound                  *m_takePicSound;//拍照声音
-    QGridLayout             *m_pGridLayout;
-    DFloatingWidget         *m_fWgtCountdown; //显示倒计时
-    DLabel                  *m_dLabel;  //倒计时
-    DPushButton             *m_btnVdTime; //录制屏显时长
-    DPushButton             *m_endBtn;      //结束按钮
-    QTimer                  *m_countTimer;     //倒计时定时器
-    QTimer                  *m_flashTimer;     //闪光灯定时器
-    QTimer                  *m_recordingTimer;//录制3秒后，每200ms设置一次时间
-    QDateTime               m_btnClickTime; //按钮点击时间
-    int                     m_nFastClick; //快速点击次数，小于200ms计入
-    ThumbnailsBar           *m_thumbnail;       //缩略图
-    QPixmap                 m_pixmap;         //
-    int                     m_nFileID;        //文件id
-    QString                 m_strFolder;      //文件路径（视频,图片）
-    int                     m_nMaxContinuous; //最大连拍数：0,4,10
-    int                     m_curTakePicTime; //当前连拍次数
-    int                     m_Maxinterval;     //最大间隔
-    int                     m_nMaxInterval; //最大间隔：0,3,6
-    int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-    int                     m_nCount; //录制计时
+    int                        m_nMaxContinuous; //最大连拍数：0,4,10
+    int                        m_curTakePicTime; //当前连拍次数
+    int                        m_Maxinterval;     //最大间隔
+    int                        m_nMaxInterval; //最大间隔：0,3,6
+    int                        m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
+    int                        m_nCount; //录制计时
+    int                        m_nFileID;        //文件id
+    int                        m_nFastClick; //快速点击次数，小于200ms计入
+
+    ThumbnailsBar              *m_thumbnail;       //缩略图
+
+    DLabel                     *m_flashLabel;  //闪光灯Label
+    DLabel                     *m_dLabel;  //倒计时
+    DPushButton                *m_btnVdTime; //录制屏显时长
+    DPushButton                *m_endBtn;      //结束按钮
+    DFloatingWidget            *m_fWgtCountdown; //显示倒计时
+
+    QSound                     *m_takePicSound;//拍照声音
+    QPixmap                    m_pixmap;         //
+    QString                    m_strFolder;      //文件路径（视频,图片）
+    QTimer                     *m_countTimer;     //倒计时定时器
+    QTimer                     *m_flashTimer;     //闪光灯定时器
+    QTimer                     *m_recordingTimer;//录制3秒后，每200ms设置一次时间
+    QDateTime                  m_btnClickTime; //按钮点击时间
+    QGridLayout                *m_pGridLayout;
+    QGraphicsView              *m_pNormalView;
+    QGraphicsScene             *m_pNormalScene;
+    QGraphicsPixmapItem        *m_pNormalItem;
+    QGraphicsTextItem          *m_pCamErrItem; //摄像头异常提示
 };
 
 #endif // VIDEOWIDGET_H
