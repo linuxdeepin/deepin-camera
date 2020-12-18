@@ -26,6 +26,8 @@ CApplication *CApplication::cameraCore = nullptr;
 CApplication::CApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
 {
+    m_mainwindow = nullptr;
+
     if (cameraCore == nullptr)
         cameraCore = this;
 
