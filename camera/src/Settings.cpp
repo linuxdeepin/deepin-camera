@@ -57,7 +57,7 @@ Settings::Settings(): QObject(0)
     } else {
         _settings = DSettings::fromJsonFile(":/resource/settings.json");
     }*/
-    _settings = DSettings::fromJsonFile(":/resource/settings.json");
+    m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 #else
     m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 #endif
@@ -123,7 +123,7 @@ void Settings::setNewResolutionList()
                         ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
-                    QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
+                    QString res_str = QString("%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
                     //去重
                     if (resolutionDatabase.contains(res_str) == false)
                         resolutionDatabase.append(res_str);
