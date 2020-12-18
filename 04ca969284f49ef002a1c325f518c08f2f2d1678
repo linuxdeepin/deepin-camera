@@ -33,6 +33,23 @@
       "revId": "04ca969284f49ef002a1c325f518c08f2f2d1678",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79b1cd6d_29e34ad5",
+        "filename": "camera/src/videowidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1000224
+      },
+      "writtenOn": "2020-12-18T08:40:37Z",
+      "side": 1,
+      "message": "注释修改错误",
+      "revId": "04ca969284f49ef002a1c325f518c08f2f2d1678",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
