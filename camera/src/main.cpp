@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
 
     if (!shared_memory.create(1)) {
         qDebug() << "another deepin camera instance has started";
-        QDBusInterface iface("com.deepin.camera", "/", "com.deepin.camera");
+        QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
             qWarning() << "deepin-camera raise";
             iface.asyncCall("Raise");
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     //最小化后双击桌面恢复画面
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
-    QDBusConnection::sessionBus().registerObject("/", &w);
+    QDBusConnection::sessionBus().registerObject(QDir::separator(), &w);
 
     return qApp->exec();
 }

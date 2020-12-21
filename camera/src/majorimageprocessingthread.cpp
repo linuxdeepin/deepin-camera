@@ -93,8 +93,9 @@ void MajorImageProcessingThread::run()
 
             v4l2core_start_stream(m_videoDevice);
 
-            //保存新的分辨率
-            QString config_file = QString(getenv("HOME")) + QString("/") + QString(".config/deepin/deepin-camera/") + QString("deepin-camera");
+            //保存新的分辨率//后续修改为标准Qt用法
+            QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
+                    QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
 
             config_load(config_file.toLatin1().data());
 

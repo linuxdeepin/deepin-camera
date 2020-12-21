@@ -38,6 +38,7 @@
 #include <QKeyEvent>
 #include <QDir>
 #include <QGraphicsProxyWidget>
+#include <QStandardPaths>
 
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
@@ -818,17 +819,18 @@ void videowidget::showCountdown()
             m_countTimer->stop();
 
             if (QDir(m_strFolder).exists() == false) {
-                if (QDir(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))).exists() == false) {
+                QString strDefaultPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+                if (QDir(strDefaultPath).exists() == false) {
                     QDir dir;
-                    dir.mkdir(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"));
+                    dir.mkdir(strDefaultPath);
                 }
 
-                m_strFolder = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
+                m_strFolder = strDefaultPath;
             }
 
             QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
-            m_imgPrcThread->m_strPath = m_strFolder + "/" + strFileName;
+            m_imgPrcThread->m_strPath = m_strFolder + QDir::separator() + strFileName;
             m_imgPrcThread->m_bTake = true; //保存图片标志
             m_nFileID++;
             m_curTakePicTime -= 1;
@@ -1305,8 +1307,9 @@ void videowidget::startTakeVideo()
 {
     QDir dir;
 
-    if (QDir(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
-        dir.mkdir(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"));
+    QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+    if (QDir(strDefaultVdPath).exists() == false)
+        dir.mkdir(strDefaultVdPath);
 
     if (getCapStatus()) {
         qDebug() << "stop takeVideo";
@@ -1323,7 +1326,7 @@ void videowidget::startTakeVideo()
             QString str = m_strFolder;
 
             if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera");
+                m_strFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
             }
 
             set_video_path(m_strFolder.toStdString().c_str());

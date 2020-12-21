@@ -290,8 +290,9 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             } else if (tempstrname == tmpstrelidetext) {
                 lineedit->setText(tmpstrelidetext);
             } else {
-                option->setValue(QVariant(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))); //设置为默认路径
-                lineedit->setText(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera")));
+                QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+                option->setValue(strDefaultVdPath); //设置为默认路径
+                lineedit->setText(strDefaultVdPath);
                 lineedit->setText(temstrnamelast);
             }
 
@@ -448,8 +449,9 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
             } else if (tempstrname == tmpstrelidetext) {
                 lineedit->setText(tmpstrelidetext);
             } else {
-                option->setValue(QVariant(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))); //设置为默认路径
-                lineedit->setText(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera")));
+                QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+                option->setValue(strDefaultVdPath); //设置为默认路径
+                lineedit->setText(strDefaultVdPath);
                 lineedit->setText(temstrnamelast);
             }
 
@@ -481,7 +483,7 @@ QString CMainWindow::lastOpenedPicPath()
     QDir lastDir(lastPicPath);
 
     if (lastPicPath.isEmpty() || !lastDir.exists()) {
-        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/" + QObject::tr("Camera");
+        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
         QDir newLastDir(lastPicPath);
 
         if (!newLastDir.exists())
@@ -498,7 +500,7 @@ QString CMainWindow::lastOpenedVideoPath()
     QDir lastDir(lastVdPath);
 
     if (lastVdPath.isEmpty() || !lastDir.exists()) {
-        lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + "/" + QObject::tr("Camera");
+        lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
         QDir newLastDir(lastVdPath);
 
         if (!newLastDir.exists())
@@ -852,8 +854,10 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor->start();
     initTitleBar();
     initConnection();
+    //后续修改为标准Qt用法
+    QString strCache = QString(getenv("HOME")) + QDir::separator() + QString(".cache") + QDir::separator() + QString("deepin") +
+            QDir::separator() + QString("deepin-camera") + QDir::separator();
     QDir dir;
-    QString strCache = QString(getenv("HOME")) + QString("/") + QString(".cache/deepin/deepin-camera/");
     dir.mkpath(strCache);
     initThumbnails();
     initThumbnailsConn();
@@ -939,12 +943,14 @@ void CMainWindow::initUI()
     }
 
     QDir dir;
+    QString strDefaultPicPath,strDefaultVdPath;
+    strDefaultPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+    strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+    if (QDir(strDefaultPicPath).exists() == false)
+        dir.mkdir(strDefaultPicPath);
 
-    if (QDir(QString(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
-        dir.mkdir(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"));
-
-    if (QDir(QString(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"))).exists() == false)
-        dir.mkdir(QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera"));
+    if (QDir(strDefaultVdPath).exists() == false)
+        dir.mkdir(strDefaultVdPath);
 
     bool picturepathexist = false;//判断图片路径是否存在
 
@@ -961,7 +967,7 @@ void CMainWindow::initUI()
     if (picturepathexist)
         m_videoPre->setSaveFolder(lastPicFileName);
     else
-        m_videoPre->setSaveFolder(QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera"));
+        m_videoPre->setSaveFolder(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera"));
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -1516,7 +1522,7 @@ void CMainWindow::onTakeVdDone()
     onEnableSettings(true);
 
     QTimer::singleShot(200, this, [ = ] {
-        QString strFileName = m_videoPre->getFolder() + "/" + DataManager::instance()->getstrFileName();
+        QString strFileName = m_videoPre->getFolder() + QDir::separator() + DataManager::instance()->getstrFileName();
         QFile file(strFileName);
 
         if (!file.exists())
