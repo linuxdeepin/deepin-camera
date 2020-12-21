@@ -17,7 +17,18 @@
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>CloseDialog</name>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -32,6 +43,10 @@
     </message>
     <message>
         <source>Open folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -110,10 +125,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Save to:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Photo:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -127,6 +138,65 @@
     </message>
     <message>
         <source>Resolution:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Photos:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Videos:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Shortcut</name>
+    <message>
+        <source>Camera</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop recording</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stop taking Photos</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Context Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display shortcuts</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

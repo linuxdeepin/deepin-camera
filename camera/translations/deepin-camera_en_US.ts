@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">Close</translation>
+        <translation>Close</translation>
     </message>
 </context>
 <context>
@@ -44,6 +44,10 @@
     <message>
         <source>Open folder</source>
         <translation>Open folder</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -122,7 +126,7 @@
     </message>
     <message>
         <source>Save to:</source>
-        <translation>Save to:</translation>
+        <translation type="vanished">Save to:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -139,6 +143,65 @@
     <message>
         <source>Resolution:</source>
         <translation>Resolution:</translation>
+    </message>
+    <message>
+        <source>Photos:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Videos:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sound effects</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Shortcut</name>
+    <message>
+        <source>Camera</source>
+        <translation type="unfinished">Camera</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">Settings</translation>
+    </message>
+    <message>
+        <source>Stop recording</source>
+        <translation type="unfinished">Stop recording</translation>
+    </message>
+    <message>
+        <source>Stop taking Photos</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Context Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation type="unfinished">Copy</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation type="unfinished">Delete</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Display shortcuts</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

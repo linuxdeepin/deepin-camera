@@ -10,13 +10,13 @@
                     "options": [
                         {
                             "key": "picdatapath",
-                            "name": "Photo:",
+                            "name": "Photos:",
                             "type": "selectableEditpic",
                             "default": "~/Pictures/Camera"
                         },
                         {
                             "key": "vddatapath",
-                            "name": "Video:",
+                            "name": "Videos:",
                             "type": "selectableEditvd",
                             "default": "~/Videos/Camera"
                         }
@@ -50,13 +50,13 @@
             "groups": [
                 {
                     "key": "audiosetting",
-                    "name": "Sound",
+                    "name": "Sound effects",
                     "options": [
                         {
                             "key": "soundswitchbtn",
                             "type": "switchbutton",
                             "default": true,
-                            "name": "Sound"
+                            "name": "Sound effects"
                         }
                     ]
                 },
