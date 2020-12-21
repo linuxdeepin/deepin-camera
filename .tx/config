@@ -4,14 +4,14 @@ minimum_perc = 80
 mode = developer
 
 [deepin-camera.deepin-camera-ts]
-file_filter = src/translations/deepin-camera_<lang>.ts
-source_file = src/translations/deepin-camera_en_US.ts
+file_filter = camera/translations/deepin-camera_<lang>.ts
+source_file = camera/translations/deepin-camera_en_US.ts
 source_lang = en_US
 type = QT
 
 [deepin-camera.desktop-ts]
-file_filter = src/translations/desktop/desktop_<lang>.ts
-source_file = src/translations/desktop/desktop_en_US.ts
-preTranslate_file = src/deepin-camera.desktop
+file_filter = camera/translations/desktop/desktop_<lang>.ts
+source_file = camera/translations/desktop/desktop_en_US.ts
+preTranslate_file = camera/deepin-camera.desktop
 source_lang = en_US
 type = QT
