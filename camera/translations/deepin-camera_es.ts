@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="es">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="es" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>La grabación esta en progreso. Cerrar ventana?</translation>
+        <translation>La grabación esta en progreso. ¿Quiere cerrar la ventana?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -13,7 +11,7 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configuración</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>None</source>
@@ -39,7 +37,7 @@
     </message>
     <message>
         <source>Delete</source>
-        <translation>Eliminar</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -47,15 +45,14 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>No tienes permiso para 
-modificar este folder</translation>
+        <translation>No tiene permisos para modificar esta carpeta</translation>
     </message>
     <message>
         <source>Close</source>
@@ -63,7 +60,7 @@ modificar este folder</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Carpeta invalida</translation>
+        <translation>Carpeta inválida</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -71,7 +68,7 @@ modificar este folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configuración</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Basic</source>
@@ -83,7 +80,7 @@ modificar este folder</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Captura</translation>
+        <translation>Capturar</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -91,8 +88,7 @@ modificar este folder</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Retardo del temporizador
-automático</translation>
+        <translation>Ajustes de temporizador</translation>
     </message>
     <message>
         <source>Output</source>
@@ -120,13 +116,11 @@ automático</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Cámara es una utilidad de captura
-de imágen y video que utiliza la cámara
-de tu PC o cámara web.</translation>
+        <translation>Cámara de Deepin captura imágenes y vídeos con la cámara de su equipo o cámara web.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>No se guardo archivo</translation>
+        <translation>No se guardo el archivo</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -142,7 +136,7 @@ de tu PC o cámara web.</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Configurar Resolución</translation>
+        <translation>Ajustes de resolución</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -150,62 +144,62 @@ de tu PC o cámara web.</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation type="unfinished">Cámara</translation>
+        <translation>Cámara</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">Configuración</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished">Detener grabación</translation>
-    </message>
-    <message>
-        <source>Stop taking Photos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Context Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Detener grabación</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Copiar</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Eliminar</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Stop taking photos</source>
+        <translation>Detener captura</translation>
+    </message>
+    <message>
+        <source>Context menu</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="bo">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="bo" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -47,7 +45,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -146,62 +144,62 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation type="unfinished">པར་ཆས།</translation>
+        <translation>པར་ཆས།</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">སྒྲིག་འགོད།</translation>
+        <translation>སྒྲིག་འགོད།</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished">ཕབ་ལེན་བྱེད་མཚམས་འཇོག་པ།</translation>
-    </message>
-    <message>
-        <source>Stop taking Photos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Context Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>ཕབ་ལེན་བྱེད་མཚམས་འཇོག་པ།</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">འདྲ་བཤུས།</translation>
+        <translation>འདྲ་བཤུས།</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">སུབ་པ།</translation>
+        <translation>སུབ་པ།</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Stop taking photos</source>
+        <translation>པར་ལེན་མཚམས་འཇོག་པ།</translation>
+    </message>
+    <message>
+        <source>Context menu</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

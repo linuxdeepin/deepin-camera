@@ -1,47 +1,47 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hi_IN" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Trwa nagrywanie wideo. Zamknij okno?</translation>
+        <translation>वीडियो रिकॉर्ड प्रक्रिया जारी है। विंडो बंद की जाएँ?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>फोल्डर खोलें</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>सेटिंग्स</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation>कुछ नहीं</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Anuluj</translation>
+        <translation>रद्द करें</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zamknij</translation>
+        <translation>बंद करें</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopiuj</translation>
+        <translation>कॉपी करें</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Usuń</translation>
+        <translation>हटाएँ</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>फोल्डर खोलें</translation>
     </message>
     <message>
         <source>Print</source>
@@ -52,95 +52,95 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie masz uprawnień do obsługi tego folderu</translation>
+        <translation>आपके पास इस फोल्डर के उपयोग हेतु अनुमति नहीं है</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zamknij</translation>
+        <translation>बंद करें</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Nieprawidłowy folder</translation>
+        <translation>अमान्य फोल्डर</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>फोल्डर खोलें</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>सेटिंग्स</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Podstawowy</translation>
+        <translation>सामान्य</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokalizacja pliku</translation>
+        <translation>फाइल स्थान</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Zrób zdjęcie</translation>
+        <translation>रिकॉर्डिंग आरंभ</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Tryb zdjęć seryjnych</translation>
+        <translation>निरंतर फोटो मोड</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Opóźnienie samowyzwalacza</translation>
+        <translation>फोटो टाइमर विलंब</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Wynik</translation>
+        <translation>आउटपुट</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format wyjściowy</translation>
+        <translation>आउटपुट प्रारूप</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 sztuki</translation>
+        <translation>4 पीसीएस</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 sztuk</translation>
+        <translation>10 पीसीएस</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation>कुछ नहीं</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>कैमरा</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą kamery komputera lub kamery internetowej.</translation>
+        <translation>कैमरा - कंप्यूटर कैमरा या वेब कैम उपयोग कर चित्र लेने व वीडियो हेतु साधन है।</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Plik nie został zapisany</translation>
+        <translation>फाइल संचित नहीं हुई</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Zapisz do:</translation>
+        <translation type="vanished">यहाँ संचित करें :</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Zdjęcie:</translation>
+        <translation>फोटो :</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Wideo:</translation>
+        <translation>वीडियो :</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Ustawienia rozdzielczości</translation>
+        <translation>रेजोलुशन सेटिंग्स</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rozdzielczość:</translation>
+        <translation>रेजोलुशन :</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -159,23 +159,23 @@
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>कैमरा</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>सेटिंग्स</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Zatrzymaj nagrywanie</translation>
+        <translation>रिकॉर्डिंग बंद करें</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiuj</translation>
+        <translation>कॉपी करें</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Usuń</translation>
+        <translation>हटाएँ</translation>
     </message>
     <message>
         <source>Open</source>
@@ -195,7 +195,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Przestań robić zdjęcia</translation>
+        <translation>चित्र लेना बंद करें</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -206,37 +206,37 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Zrobić zdjęcie</translation>
+        <translation>चित्र लें</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Nagraj wideo</translation>
+        <translation>वीडियो रिकॉर्ड करें</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Przestań robić zdjęcia</translation>
+        <translation>चित्र लेना बंद करें</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation>कुछ नहीं</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nie znaleziono kamery internetowej</translation>
+        <translation>कोई वेब कैम नहीं मिला</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera internetowa jest używana</translation>
+        <translation>वेब कैम कार्यरत है</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Zatrzymaj nagrywanie</translation>
+        <translation>रिकॉर्डिंग बंद करें</translation>
     </message>
 </context>
 </TS>

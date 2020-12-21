@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="sq">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sq" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -47,7 +45,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -146,62 +144,62 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation type="unfinished">Kamerë</translation>
+        <translation>Kamerë</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">Rregullime</translation>
+        <translation>Rregullime</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished">Resht së regjistruari</translation>
-    </message>
-    <message>
-        <source>Stop taking Photos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Context Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Resht së regjistruari</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Kopjoje</translation>
+        <translation>Kopjoje</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Fshije</translation>
+        <translation>Fshije</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Stop taking photos</source>
+        <translation>Resht së bëri foto</translation>
+    </message>
+    <message>
+        <source>Context menu</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

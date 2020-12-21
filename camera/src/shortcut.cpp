@@ -25,8 +25,8 @@ Shortcut::Shortcut(QObject *parent)
     group1.groupName = tr("Camera");
     group3.groupName = tr("Settings");
     group1.groupItems << ShortcutItem(tr("Stop recording"), "space")
-                      << ShortcutItem(tr("Stop taking Photos"), "space")
-                      << ShortcutItem(tr("Context Menu"), "Alt + M")
+                      << ShortcutItem(tr("Stop taking photos"), "space")
+                      << ShortcutItem(tr("Context menu"), "Alt + M")
                       << ShortcutItem(tr("Copy"), "Ctrl + C")
                       << ShortcutItem(tr("Delete"), "Delete")
                       << ShortcutItem(tr("Open"), "Ctrl + O")

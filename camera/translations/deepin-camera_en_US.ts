@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="en_US">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="en_US" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -47,7 +45,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Print</translation>
     </message>
 </context>
 <context>
@@ -146,62 +144,62 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Photos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Videos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Sound effects</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation type="unfinished">Camera</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished">Settings</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished">Stop recording</translation>
-    </message>
-    <message>
-        <source>Stop taking Photos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Context Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Stop recording</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished">Copy</translation>
+        <translation>Copy</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Delete</translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Open</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Print</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Help</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Display shortcuts</translation>
+    </message>
+    <message>
+        <source>Stop taking photos</source>
+        <translation>Stop taking photos</translation>
+    </message>
+    <message>
+        <source>Context menu</source>
+        <translation>Context menu</translation>
     </message>
 </context>
 <context>

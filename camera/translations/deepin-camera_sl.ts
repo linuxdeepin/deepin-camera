@@ -1,114 +1,114 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="sl" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Trwa nagrywanie wideo. Zamknij okno?</translation>
+        <translation>Video se snema. Naj zaprem okno?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>Odpri mapo</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>Nastavitve</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Anuluj</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zamknij</translation>
+        <translation>Zapri</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopiuj</translation>
+        <translation>Kopiraj</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Usuń</translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>Odpri mapoOdpri mapo</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Tiskanje</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie masz uprawnień do obsługi tego folderu</translation>
+        <translation>Za to mapo nimate pravic</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zamknij</translation>
+        <translation>Zapri</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Nieprawidłowy folder</translation>
+        <translation>Neveljavna mapa</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>Odpri mapoOdpri mapo</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>Nastavitve</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Podstawowy</translation>
+        <translation>Osnovno</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokalizacja pliku</translation>
+        <translation>Lokacija datoteke</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Zrób zdjęcie</translation>
+        <translation>Slikaj</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Tryb zdjęć seryjnych</translation>
+        <translation>Zaporedje posnetkov</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Opóźnienie samowyzwalacza</translation>
+        <translation>Časovni zamik</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Wynik</translation>
+        <translation>Izhod</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format wyjściowy</translation>
+        <translation>Izhodni format</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 sztuki</translation>
+        <translation>4 kosi</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 sztuk</translation>
+        <translation>10 kosov</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Camera</source>
@@ -116,31 +116,31 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą kamery komputera lub kamery internetowej.</translation>
+        <translation>Kamera je orodje za zajem slik in videa, ki uporablja PC ali spletno kamero.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Plik nie został zapisany</translation>
+        <translation>Datoteka ni shranjena</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Zapisz do:</translation>
+        <translation type="vanished">Shrani v:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Zdjęcie:</translation>
+        <translation>Fotografija:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Wideo:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Ustawienia rozdzielczości</translation>
+        <translation>Nastavitve ločljivosti</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rozdzielczość:</translation>
+        <translation>Ločljivost</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -163,19 +163,19 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ustawienia</translation>
+        <translation>Nastavitve</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Zatrzymaj nagrywanie</translation>
+        <translation>Zaustavi snemanje</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiuj</translation>
+        <translation>Kopiraj</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Usuń</translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Open</source>
@@ -183,11 +183,11 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Tiskanje</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation>Pomoč</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
@@ -195,7 +195,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Przestań robić zdjęcia</translation>
+        <translation>Zaustavi slikanje</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -206,37 +206,37 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Zrobić zdjęcie</translation>
+        <translation>Slikaj</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Nagraj wideo</translation>
+        <translation>Snemaj</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Przestań robić zdjęcia</translation>
+        <translation>Zaustavi slikanje</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Brak</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nie znaleziono kamery internetowej</translation>
+        <translation>Ni spletne kamere</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera internetowa jest używana</translation>
+        <translation>Spletna kamera je že v rabi</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Zatrzymaj nagrywanie</translation>
+        <translation>Zaustavi snemanje</translation>
     </message>
 </context>
 </TS>
