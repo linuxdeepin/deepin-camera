@@ -1,240 +1,242 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="el" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"></translation>
+        <translation>Η εγγραφή βίντεο είναι σε εξέλιξη. Να κλείσει το παράθυρο;</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>Κανένα</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Ακύρωση</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Κλείσιμο</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Αντιγραφή</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Διαγραφή</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Δεν έχετε άδεια πρόσβασης στον φάκελο</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Κλείσιμο</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Μη έγκυρος φάκελος</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"></translation>
+        <translation>Βασικό</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation type="unfinished"></translation>
+        <translation>Τοποθεσία φακέλου</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation type="unfinished"></translation>
+        <translation>Λήψη</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Γρήγορη λειτουργία</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation type="unfinished"></translation>
+        <translation>Χρονοκαθυστέρηση</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Έξοδος</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation type="unfinished"></translation>
+        <translation>Φορμά Εξόδου</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation type="unfinished"></translation>
+        <translation>4 τμχ</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation type="unfinished"></translation>
+        <translation>10 τμχ</translation>
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation>Κανένα</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάμερα</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"></translation>
+        <translation>Το Camera είναι ένα εργαλείο λήψης και εγγραφής φωτογραφιών και βίντεο, με τη χρήση της κάμερας του υπολογιστή σας.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation type="unfinished"></translation>
+        <translation>Το αρχείο δεν αποθηκεύτηκε</translation>
+    </message>
+    <message>
+        <source>Save to:</source>
+        <translation type="vanished">Αποθήκευση σε:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation type="unfinished"></translation>
+        <translation>Φωτογραφία:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation type="unfinished"></translation>
+        <translation>Βίντεο:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ρυθμίσεις ανάλυσεις</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ανάλυση:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation type="unfinished"></translation>
+        <translation>Κάμερα</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Stop taking Photos</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Context Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Λήξη εγγραφής</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation type="unfinished"></translation>
+        <translation>Αντιγραφή</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Διαγραφή</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Stop taking photos</source>
+        <translation>Ακύρωση λήψης φωτογραφιών</translation>
+    </message>
+    <message>
+        <source>Context menu</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Λήψη φωτογραφίας</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="unfinished"></translation>
+        <translation>Εγγραφή βίντεο</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="unfinished"></translation>
+        <translation>Ακύρωση λήψης φωτογραφιών</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation>Κανένα</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation type="unfinished"></translation>
+        <translation>Δεν βρέθηκε κάμερα</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation type="unfinished"></translation>
+        <translation>Η κάμερα είναι σε χρήση</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="unfinished"></translation>
+        <translation>Λήξη εγγραφής</translation>
     </message>
 </context>
 </TS>
