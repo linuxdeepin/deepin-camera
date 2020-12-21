@@ -44,13 +44,10 @@ set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupp
 find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
-file (GLOB_RECURSE SOURCES
+file (GLOB_RECURSE CXXSOURCES
     ./main.cpp
     ./MainwindowTest.cpp
     ./ClosedialogTest.cpp
-    ../camera/src/*.c
-    ../camera/src/libcam/*.c
-    ../camera/src/basepub/*.c
     ../camera/src/basepub/*.cpp
     ../camera/src/closedialog.cpp
     ../camera/src/devnummonitor.cpp
@@ -68,6 +65,13 @@ file (GLOB_RECURSE SOURCES
     ../camera/src/qtsingleapplication/qtsingleapplication.cpp
     ../camera/src/qtsingleapplication/qtlocalpeer.cpp
     )
+
+file (GLOB_RECURSE CSOURCES
+    ../camera/src/*.c
+    ../camera/src/libcam/*.c
+    ../camera/src/basepub/*.c
+    )
+
 file (GLOB_RECURSE HEADERS
     ../camera/src/basepub/*.h
     ../camera/src/libcam/*.h
@@ -77,7 +81,7 @@ file (GLOB_RECURSE HEADERS
     )
 file (GLOB_RECURSE RESOURCES  ../camera/assets/assets.qrc)
 
-add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES}
+add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
     )
 
 

@@ -45,7 +45,7 @@ set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupp
 find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
-file (GLOB_RECURSE SOURCES
+file (GLOB_RECURSE CXXSOURCES
     ./src/closedialog.cpp
     ./src/devnummonitor.cpp
     ./src/mainwindow.cpp
@@ -59,13 +59,16 @@ file (GLOB_RECURSE SOURCES
     ./src/capplication.cpp
     ./src/dbus_adpator.cpp
     ./src/settings_translation.cpp
-    ./src/LPF_V4L2.c
-    ./src/libcam/*.c
-    ./src/basepub/*.c
     ./src/basepub/*.cpp
     ./src/qtsingleapplication/qtsingleapplication.cpp
     ./src/qtsingleapplication/qtlocalpeer.cpp
     ./src/main.cpp
+    )
+
+file (GLOB_RECURSE CSOURCES
+    ./src/LPF_V4L2.c
+    ./src/libcam/*.c
+    ./src/basepub/*.c
     )
 
 file (GLOB_RECURSE HEADERS
@@ -104,23 +107,22 @@ file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET
 #    message(STATUS ${cur})
 #endforeach(file)
 
-
 set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
-
-qt5_create_translation(QM ${SOURCES} ${TS})
 
 #message(STATUS "ts")
 #message(STATUS ${TS})
 
+qt5_create_translation(QM ${CXXSOURCES} ${TS})
+
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_create_translation(QM ${SOURCES} ${TS})
+    qt5_create_translation(QM ${CXXSOURCES} ${TS})
 endif ()
 
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
 
-add_executable( ${TARGET_NAME} ${SOURCES} ${RESOURCES} ${QM} )
+add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
