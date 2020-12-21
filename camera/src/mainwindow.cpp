@@ -864,8 +864,7 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));//接收休眠信号，仅wayland使用
 
-    m_thumbnail->addPath(lastVdFileName);
-    m_thumbnail->addPath(lastPicFileName);
+    m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
     m_videoPre->delayInit();
 }
 
@@ -1406,11 +1405,18 @@ void CMainWindow::onTitleVdBtn()
 void CMainWindow::onSettingsDlgClose()
 {
     /**********************************************/
-    if (QDir(Settings::get().getOption("base.save.vddatapath").toString()).exists() == false)
-        lastVdFileName = QDir::homePath() + QDir::separator() + "Videos" + QDir::separator() + QObject::tr("Camera");
+    //先获取路径，再对路径进行修正
+    lastVdFileName = Settings::get().getOption("base.save.vddatapath").toString();
+    lastPicFileName = Settings::get().getOption("base.save.picdatapath").toString();
 
-    if (QDir(Settings::get().getOption("base.save.picdatapath").toString()).exists() == false)
-        lastPicFileName = QDir::homePath() + QDir::separator() + "Pictures" + QDir::separator() + QObject::tr("Camera");
+    //由于U盘、可移动磁盘的加入，如果路径不存在，可能是U盘被拔掉了，因此此时不能创建，而是恢复默认路径
+    if (QDir(lastVdFileName).exists() == false)
+        lastVdFileName = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+
+    if (QDir(lastPicFileName).exists() == false)
+        lastPicFileName = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+
+    /***next，发现这个路径已经不存在了，需要设置后台路径为默认，其他地方方法同***/
 
     if (lastVdFileName.size() && lastVdFileName[0] == '~')
         lastVdFileName.replace(0, 1, QDir::homePath());
@@ -1418,19 +1424,20 @@ void CMainWindow::onSettingsDlgClose()
     if (lastPicFileName.size() && lastPicFileName[0] == '~')
         lastPicFileName.replace(0, 1, QDir::homePath());
 
-    lastVdFileName = Settings::get().getOption("base.save.vddatapath").toString();
-    lastPicFileName = Settings::get().getOption("base.save.picdatapath").toString();
-
     if (m_nActTpye == ActTakeVideo)
         m_videoPre->setSaveFolder(lastVdFileName);
     else
         m_videoPre->setSaveFolder(lastPicFileName);
 
-    //关闭设置时，添加保存路径下图片和视频的缩略图
-    m_fileWatcher.addPath(lastVdFileName);
-    m_thumbnail->addPath(lastVdFileName);
-    m_fileWatcher.addPath(lastPicFileName);
-    m_thumbnail->addPath(lastPicFileName);
+    //关闭设置时，先删除原有的文件监控（需求上不再需要），再添加保存路径下图片和视频的缩略图
+    bool bContainVd = m_fileWatcher.directories().contains(lastVdFileName);
+    bool bContainPic = m_fileWatcher.directories().contains(lastPicFileName);
+    if (!bContainVd && !bContainPic) {
+        m_fileWatcher.removePaths(m_fileWatcher.directories());
+        m_fileWatcher.addPath(lastVdFileName);
+        m_fileWatcher.addPath(lastPicFileName);
+        m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
+    }
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();

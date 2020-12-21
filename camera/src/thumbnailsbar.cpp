@@ -184,15 +184,54 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
     int tIndex = 0;
     QString strFolder;
-    for (int i = m_strlstFolders.size(); i >= 1; i--) {
-        strFolder = m_strlstFolders[i - 1];
-        QDir dir(strFolder);
-        //按时间逆序排序
-        dir.setNameFilters(filters);
-        dir.setSorting(QDir::Time /*| QDir::Reversed*/);
 
-        if (dir.exists())
-            m_fileInfoLst += dir.entryInfoList();
+    //第一个、第二个文件的list
+    QFileInfoList tmpLst1,tmpLst2;
+
+    strFolder = m_strlstFolders[0];
+    QDir dir1(strFolder);
+    //按时间逆序排序
+    dir1.setNameFilters(filters);
+    dir1.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir1.exists())
+        tmpLst1 += dir1.entryInfoList();
+
+    strFolder = m_strlstFolders[1];
+    QDir dir2(strFolder);
+    //按时间逆序排序
+    dir2.setNameFilters(filters);
+    dir2.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir2.exists())
+        tmpLst2 += dir2.entryInfoList();
+
+    //将两个tmpLst合并排序，赋值给m_fileInfoLst
+    while (m_fileInfoLst.size() < nLetAddCount) {
+        if (tmpLst1.size() > 0) {
+            if (tmpLst2.size() > 0) {
+                QFileInfo fileInfo1 = tmpLst1.at(0);
+                QFileInfo fileInfo2 = tmpLst2.at(0);
+
+                if (fileInfo1.fileTime(QFileDevice::FileBirthTime).secsTo(fileInfo2.fileTime(QFileDevice::FileBirthTime)) > 0) {
+                    m_fileInfoLst += fileInfo2;
+                    tmpLst2.removeAt(0);
+                } else {
+                    m_fileInfoLst += fileInfo1;
+                    tmpLst1.removeAt(0);
+                }
+            } else {
+                QFileInfo fileInfo1 = tmpLst1.at(0);
+                m_fileInfoLst += fileInfo1;
+                tmpLst1.removeAt(0);
+            }
+        } else {
+            //两个都为空，结束while循环
+            if (tmpLst2.size() <= 0) {
+                break;
+            }
+            QFileInfo fileInfo2 = tmpLst2.at(0);
+            m_fileInfoLst += fileInfo2;
+            tmpLst2.removeAt(0);
+        }
 
     }
 
@@ -555,6 +594,17 @@ void ThumbnailsBar::addPath(QString strPath)
         onFoldersChanged("");
     }
 
+}
+
+void ThumbnailsBar::addPaths(QString strPicPath, QString strVdPath)
+{
+    if (m_strlstFolders.contains(strPicPath) && m_strlstFolders.contains(strVdPath)) {
+        return;
+    }
+    m_strlstFolders.clear();
+    m_strlstFolders.push_back(strPicPath);
+    m_strlstFolders.push_back(strVdPath);
+    onFoldersChanged("");
 }
 
 void ThumbnailsBar::addFile(QString strFile)
