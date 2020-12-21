@@ -28,7 +28,6 @@ extern "C"
 #include "dbus_adpator.h"
 #include "cameraconfig.h"
 #include "config.h"
-#include <stdio.h>
 
 #include <DMainWindow>
 #include <DWidgetUtil>
@@ -37,7 +36,10 @@ extern "C"
 
 #include <QSharedMemory>
 
+#include <stdio.h>
+
 DWIDGET_USE_NAMESPACE
+
 //判断是否采用wayland显示服务器
 bool CheckWayland()
 {
@@ -47,14 +49,16 @@ bool CheckWayland()
 
     if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
         return true;
-    } else {
+    } else
         return false;
-    }
+
 }
+
 int main(int argc, char *argv[])
 {
 
     bool bWayland = CheckWayland();
+
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
@@ -102,9 +106,8 @@ int main(int argc, char *argv[])
     QString userpath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
     QSharedMemory shared_memory(userpath + "deepincamera");
 
-    if (shared_memory.attach()) {
+    if (shared_memory.attach())
         shared_memory.detach();
-    }
 
     if (!shared_memory.create(1)) {
         qDebug() << "another deepin camera instance has started";
@@ -113,6 +116,7 @@ int main(int argc, char *argv[])
             qWarning() << "deepin-camera raise";
             iface.asyncCall("Raise");
         }
+
         exit(0);
     }
 

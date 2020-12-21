@@ -22,7 +22,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "thumbnailsbar.h"
-//#include "toolbar.h"
 #include "videowidget.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
@@ -51,10 +50,9 @@
 
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
+
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
-//const int TOOLBAR_MINIMUN_WIDTH = 630 - 20 + 10 + 2;
-
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -77,7 +75,10 @@ public:
     * @brief setWayland　判断是否是wayland，并初始化对应操作
     * @param bTrue
     */
-    void setWayland(bool bTrue) {m_bWayland = bTrue;}
+    void setWayland(bool bTrue)
+    {
+        m_bWayland = bTrue;
+    }
 
     /**
     * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
@@ -194,6 +195,7 @@ private:
     * @param strlib 路径的字符串
     */
     QString libPath(const QString &strlib);
+
 private slots:
     /**
      * @brief setSelBtnHide 设置切换相机按钮隐藏
@@ -305,29 +307,31 @@ public:
 private:
     static QString                  lastVdFileName;//上次打开的视频文件
     static QString                  lastPicFileName;//上次打开的照片文件
-    DSettingsDialog                 *m_SetDialog = nullptr;//设置页面
-    ThumbnailsBar                   *m_thumbnail = nullptr;//缩略图
-    DMenu                           *m_titlemenu;//标题栏菜单
-    QMenu                           *m_rightbtnmenu;//右键菜单
-    QAction                         *m_actOpenfolder;//打开文件
-    videowidget                     *m_videoPre = nullptr;//相机预览类
-    QFileSystemWatcher              m_fileWatcher;//文件监控
+    enum ActType                    m_nActTpye;
+    bool                            m_bWayland;
+    ThumbnailsBar                   *m_thumbnail;//缩略图
+    videowidget                     *m_videoPre;//相机预览类
+
+    DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
     DButtonBox                      *pDButtonBox;//按钮盒
     DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
     DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
     DIconButton                     *pSelectBtn; //切换按钮
+    DMenu                           *m_titlemenu;//标题栏菜单
+
+    QMenu                           *m_rightbtnmenu;//右键菜单
+    QAction                         *m_actOpenfolder;//打开文件
+    QFileSystemWatcher              m_fileWatcher;//文件监控
     QString                         m_strCfgPath;//配置文件路径
     QAction                         *m_actionSettings;//打开设置页面
-    enum ActType                    m_nActTpye;
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
-    QDBusInterface                 *m_pLoginManager = nullptr;
+    QDBusInterface                 *m_pLoginManager;
     QList<QVariant>                 m_arg;
     QDBusReply<QDBusUnixFileDescriptor> m_replySleep;
-    QDBusInterface                 *m_pLoginMgrSleep = nullptr;
+    QDBusInterface                 *m_pLoginMgrSleep;
     QList<QVariant>                 m_argSleep;
-    bool                            m_bWayland;
-    QDBusInterface                  *m_pDBus = nullptr;//接收休眠信号，仅wayland使用
+    QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
 };
 
 #endif // MAINWINDOW_H
