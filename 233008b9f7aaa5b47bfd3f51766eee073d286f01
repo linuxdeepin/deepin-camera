@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15fc5910_8cff9532",
+        "filename": "camera/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-22T12:39:06Z",
+      "side": 1,
+      "message": "注释行数: 11; 改动行数(修改和新增): 93; 注释率: 11.8%",
+      "revId": "233008b9f7aaa5b47bfd3f51766eee073d286f01",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
