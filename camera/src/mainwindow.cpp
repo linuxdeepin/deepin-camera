@@ -484,9 +484,9 @@ QString CMainWindow::lastOpenedPicPath()
 
     if (lastPicPath.isEmpty() || !lastDir.exists()) {
         lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-        QDir newLastDir(lastPicPath);
+        lastDir.mkdir(lastPicPath);
 
-        if (!newLastDir.exists())
+        if (!lastDir.exists())
             lastPicPath = QDir::currentPath();
 
     }
@@ -501,9 +501,9 @@ QString CMainWindow::lastOpenedVideoPath()
 
     if (lastVdPath.isEmpty() || !lastDir.exists()) {
         lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-        QDir newLastDir(lastVdPath);
+        lastDir.mkdir(lastVdPath);
 
-        if (!newLastDir.exists())
+        if (!lastDir.exists())
             lastVdPath = QDir::currentPath();
 
     }
