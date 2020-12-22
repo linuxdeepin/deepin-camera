@@ -1103,7 +1103,7 @@ void CMainWindow::initConnection()
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     //设备切换信号
-    connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(changeDev()));
+    connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
     //标题栏图片按钮
