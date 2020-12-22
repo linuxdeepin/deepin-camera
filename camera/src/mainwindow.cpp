@@ -484,9 +484,9 @@ QString CMainWindow::lastOpenedPicPath()
 
     if (lastPicPath.isEmpty() || !lastDir.exists()) {
         lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-        QDir newLastDir(lastPicPath);
+        lastDir.mkdir(lastPicPath);
 
-        if (!newLastDir.exists())
+        if (!lastDir.exists())
             lastPicPath = QDir::currentPath();
 
     }
@@ -501,9 +501,9 @@ QString CMainWindow::lastOpenedVideoPath()
 
     if (lastVdPath.isEmpty() || !lastDir.exists()) {
         lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-        QDir newLastDir(lastVdPath);
+        lastDir.mkdir(lastVdPath);
 
-        if (!newLastDir.exists())
+        if (!lastDir.exists())
             lastVdPath = QDir::currentPath();
 
     }
@@ -941,16 +941,6 @@ void CMainWindow::initUI()
         QString str = QDir::homePath();
         lastPicFileName.replace(0, 1, str);
     }
-
-    QDir dir;
-    QString strDefaultPicPath,strDefaultVdPath;
-    strDefaultPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-    strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-    if (QDir(strDefaultPicPath).exists() == false)
-        dir.mkdir(strDefaultPicPath);
-
-    if (QDir(strDefaultVdPath).exists() == false)
-        dir.mkdir(strDefaultVdPath);
 
     bool picturepathexist = false;//判断图片路径是否存在
 
