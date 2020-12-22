@@ -868,7 +868,11 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));//接收休眠信号，仅wayland使用
 
-    m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
+    if (QString::compare(lastVdFileName, lastPicFileName) == 0)
+        m_thumbnail->addPaths(lastVdFileName, "");
+    else
+        m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
+
     m_videoPre->delayInit();
 }
 
@@ -1428,11 +1432,24 @@ void CMainWindow::onSettingsDlgClose()
     //关闭设置时，先删除原有的文件监控（需求上不再需要），再添加保存路径下图片和视频的缩略图
     bool bContainVd = m_fileWatcher.directories().contains(lastVdFileName);
     bool bContainPic = m_fileWatcher.directories().contains(lastPicFileName);
-    if (!bContainVd && !bContainPic) {
+
+    if (!bContainVd || !bContainPic) {
         m_fileWatcher.removePaths(m_fileWatcher.directories());
-        m_fileWatcher.addPath(lastVdFileName);
-        m_fileWatcher.addPath(lastPicFileName);
-        m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
+        //指向同一个文件夹
+        if (QString::compare(lastVdFileName, lastPicFileName) == 0) {
+            m_fileWatcher.addPath(lastVdFileName);
+            m_thumbnail->addPaths(lastVdFileName, "");
+        } else {
+            m_fileWatcher.addPath(lastVdFileName);
+            m_fileWatcher.addPath(lastPicFileName);
+            m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
+        }
+    } else {
+        if (QString::compare(lastVdFileName, lastPicFileName) == 0) {
+            m_fileWatcher.removePaths(m_fileWatcher.directories());
+            m_fileWatcher.addPath(lastVdFileName);
+            m_thumbnail->addPaths(lastVdFileName, "");
+        }
     }
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
