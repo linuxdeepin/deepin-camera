@@ -1428,11 +1428,17 @@ void CMainWindow::onSettingsDlgClose()
     //关闭设置时，先删除原有的文件监控（需求上不再需要），再添加保存路径下图片和视频的缩略图
     bool bContainVd = m_fileWatcher.directories().contains(lastVdFileName);
     bool bContainPic = m_fileWatcher.directories().contains(lastPicFileName);
-    if (!bContainVd && !bContainPic) {
+    if (!bContainVd || !bContainPic) {
         m_fileWatcher.removePaths(m_fileWatcher.directories());
         m_fileWatcher.addPath(lastVdFileName);
         m_fileWatcher.addPath(lastPicFileName);
-        m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
+        m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
+    } else {
+        if (QString::compare(lastVdFileName, lastPicFileName) == 0) {
+            m_fileWatcher.removePaths(m_fileWatcher.directories());
+            m_fileWatcher.addPath(lastVdFileName);
+            m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
+        }
     }
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
