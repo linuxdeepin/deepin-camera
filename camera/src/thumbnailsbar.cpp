@@ -154,12 +154,15 @@ void ThumbnailsBar::setBtntooltip()
 
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
+    Q_UNUSED(strDirectory);
     if (m_nDelTimes > 0) {
         m_nDelTimes--;
         qDebug() << "FoldersChanged but return case del";
         return;
     }
-    Q_UNUSED(strDirectory);
+    if (m_strlstFolders.size() <= 0) {
+        return;
+    }
     QString strShowTime = "";
     qDebug() << m_nMaxWidth;
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
@@ -196,7 +199,12 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     if (dir1.exists())
         tmpLst1 += dir1.entryInfoList();
 
-    strFolder = m_strlstFolders[1];
+    if (m_strlstFolders.size() > 1) {
+        strFolder = m_strlstFolders[1];
+    } else {
+        strFolder = "";
+    }
+
     QDir dir2(strFolder);
     //按时间逆序排序
     dir2.setNameFilters(filters);
@@ -601,10 +609,20 @@ void ThumbnailsBar::addPaths(QString strPicPath, QString strVdPath)
     if (m_strlstFolders.contains(strPicPath) && m_strlstFolders.contains(strVdPath)) {
         return;
     }
+
     m_strlstFolders.clear();
-    m_strlstFolders.push_back(strPicPath);
-    m_strlstFolders.push_back(strVdPath);
-    onFoldersChanged("");
+
+    if (!strPicPath.isEmpty()) {
+        m_strlstFolders.push_back(strPicPath);
+    }
+    //两个路径不相同并且都不为空才添加
+    if (strPicPath.compare(strVdPath) != 0 && !strVdPath.isEmpty()) {
+        m_strlstFolders.push_back(strVdPath);
+    }
+
+    if (m_strlstFolders.size() > 0) {
+        onFoldersChanged("");
+    }
 }
 
 void ThumbnailsBar::addFile(QString strFile)

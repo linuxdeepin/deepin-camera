@@ -93,7 +93,7 @@ public:
     void addPath(QString strPath);
 
     /**
-     * @brief addPaths 添加多个路径,无顺序要求
+     * @brief addPaths 添加多个路径,无顺序要求,但文件夹需要存在
      */
     void addPaths(QString strPicPath,QString strVdPath);
 
