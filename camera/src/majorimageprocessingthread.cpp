@@ -95,7 +95,7 @@ void MajorImageProcessingThread::run()
 
             //保存新的分辨率//后续修改为标准Qt用法
             QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
-                    QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
+                                  QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
 
             config_load(config_file.toLatin1().data());
 
@@ -129,8 +129,8 @@ void MajorImageProcessingThread::run()
         }
 
 #ifdef __mips__
-        uint8_t *rgb = static_cast<uint8_t *>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
-        yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
+        uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
+        yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
 #endif
 
         /*录像*/
@@ -216,7 +216,7 @@ void MajorImageProcessingThread::run()
         m_rwMtxImg.lock();
         if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
 #ifdef __mips__
-            QImage imgTmp(rgb, frame->width, frame->height, QImage::Format_RGB888);
+            QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
             if (!imgTmp.isNull()) {
                 m_Img = imgTmp.copy();
                 emit SendMajorImageProcessing(&m_Img, m_result);
