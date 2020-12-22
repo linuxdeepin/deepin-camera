@@ -157,13 +157,14 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 {
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
 
-    DLineEdit *lineedit = new DLineEdit;
+    DLineEdit *lineedit = new DLineEdit;//文本框
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
     DPushButton *icon = new DPushButton(main);
     QWidget *optionWidget = new QWidget;
     QFormLayout *optionLayout = new QFormLayout(optionWidget);
     DDialog *optinvaliddialog = new DDialog(optionWidget);
+    //保存上一次正确的文件夹路径，否则为默认文件夹
     static QString nameLast = nullptr;
 
     main->setLayout(horboxlayout);
@@ -171,18 +172,40 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     icon->setObjectName("OptionLineEditBtn");
     lineedit->setFixedHeight(30);
     lineedit->setObjectName("OptionSelectableLineEdit");
-    lineedit->setText(option->value().toString());
+    //获取当前设置的照片保存路径
+    QString str = option->value().toString();
+    QDir dir(option->value().toString());
+    //路径不存在
+    if (!dir.exists())
+        lineedit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
+    else
+        lineedit->setText(option->value().toString());//更改文本框为设置的路径
+
     QFontMetrics tem_fontmetrics = lineedit->fontMetrics();
     QString tmpstrelidetext = ElideText(lineedit->text(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
                                         lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
 
     option->connect(lineedit, &DLineEdit::focusChanged, [ = ](bool on) {
-        if (on)
-            lineedit->setText(option->value().toString());
+        if (on) {
+            QDir dir(option->value().toString());
+
+            if (!dir.exists())
+                lineedit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
+            else
+                lineedit->setText(option->value().toString());//更改文本框为设置的路径
+        }
     });
 
     lineedit->setText(tmpstrelidetext);
-    nameLast = tmpstrelidetext;
+    if (tmpstrelidetext[0] == '~' && tmpstrelidetext != "~/Pictures/Camera") {
+        tmpstrelidetext.replace(0, 1, QDir::homePath());
+        nameLast = tmpstrelidetext;
+    } else if (tmpstrelidetext[0] == '~' && tmpstrelidetext == "~/Pictures/Camera") {
+        tmpstrelidetext = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+        nameLast = tmpstrelidetext;
+    } else
+        nameLast = tmpstrelidetext;
+
     icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
     icon->setIconSize(QSize(25, 25));
     icon->setFixedHeight(30);
@@ -235,9 +258,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
                     return false;
 
             }
-
         }
-
         return true;
     };
 
@@ -245,9 +266,22 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 #ifdef UNITTEST
         QString name = "~/Pictures/";
 #else
-        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
-                                                         CMainWindow::lastOpenedPicPath(),
-                                                         DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+        QString name;
+        QDir dir(nameLast);
+        if (!dir.exists()) {
+            //设置文本框为新的路径
+            nameLast = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                       + QDir::separator() + QObject::tr("Camera");
+            QDir defaultdir(nameLast);
+            if (!defaultdir.exists()) {
+                dir.mkdir(nameLast);
+            }
+            lineedit->setText(option->defaultValue().toString());
+        }
+        //打开文件夹
+        name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
+                                                 nameLast,
+                                                 DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
 #endif
 
         if (validate(name, false)) {
@@ -272,13 +306,11 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         QString temstrnamelast = ElideText(nameLast, {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
                                            lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
 
-
         if (!validate(lineedit->text(), false)) {
             QFileInfo fn(dir.path());
 
             if ((!fn.isReadable() || !fn.isWritable()) && !name.isEmpty())
                 optinvaliddialog->show();
-
         }
 
         if (!lineedit->lineEdit()->hasFocus()) {
@@ -290,9 +322,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             } else if (tempstrname == tmpstrelidetext) {
                 lineedit->setText(tmpstrelidetext);
             } else {
-                QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-                option->setValue(strDefaultVdPath); //设置为默认路径
-                lineedit->setText(strDefaultVdPath);
+                QString strDefaultPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                                            + QDir::separator() + QObject::tr("Camera");
+                option->setValue(strDefaultPicPath); //设置为默认路径
+                lineedit->setText(strDefaultPicPath);
                 lineedit->setText(temstrnamelast);
             }
 
@@ -309,6 +342,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
                             lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
         lineedit->setText(pi);
+        nameLast = pi;
         Settings::get().settings()->setOption("base.general.last_open_pic_path", pi);
         qDebug() << "save pic last path:" << pi << endl;
         lineedit->update();
@@ -337,18 +371,41 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     icon->setObjectName("OptionLineEditBtn");
     lineedit->setFixedHeight(30);
     lineedit->setObjectName("OptionSelectableLineEdit");
-    lineedit->setText(option->value().toString());
+    QDir dir(option->value().toString());
+
+    if (!dir.exists())
+        lineedit->setText(option->defaultValue().toString());
+    else
+        lineedit->setText(option->value().toString());
+
     QFontMetrics tem_fontmetrics = lineedit->fontMetrics();
     QString tmpstrelidetext = ElideText(lineedit->text(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
                                         lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
 
     option->connect(lineedit, &DLineEdit::focusChanged, [ = ](bool on) {
-        if (on)
-            lineedit->setText(option->value().toString());
+        if (on) {
+            QDir dir(option->value().toString());
+
+            if (!dir.exists())
+                lineedit->setText(option->defaultValue().toString());
+            else
+                lineedit->setText(option->value().toString());
+        }
     });
 
     lineedit->setText(tmpstrelidetext);
-    nameLast = tmpstrelidetext;
+
+    if (tmpstrelidetext[0] == '~' && tmpstrelidetext != "~/Videos/Camera") {
+        tmpstrelidetext.replace(0, 1, QDir::homePath());
+        nameLast = tmpstrelidetext;
+    } else if (tmpstrelidetext[0] == '~' && tmpstrelidetext == "~/Videos/Camera") {
+        tmpstrelidetext = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                          + QDir::separator() + QObject::tr("Camera");
+
+        nameLast = tmpstrelidetext;
+    } else
+        nameLast = tmpstrelidetext;
+
     icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
     icon->setIconSize(QSize(25, 25));
     icon->setFixedHeight(30);
@@ -382,11 +439,14 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         {
             if (!fileinfo.isDir()) {
                 if (alert) lineedit->showAlertMessage(QObject::tr("Invalid folder"));
+
                 return false;
             }
 
             if (!fileinfo.isReadable() || !fileinfo.isWritable()) {
-                if (alert) lineedit->showAlertMessage(QObject::tr("You don't have permission to operate this folder"));
+                if (alert)
+                    lineedit->showAlertMessage(QObject::tr("You don't have permission to operate this folder"));
+
                 return false;
             }
         } else
@@ -397,17 +457,27 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
                     return false;
             }
         }
-
         return true;
     };
 
     option->connect(icon, &DPushButton::clicked, [ = ]() {
 #ifdef UNITTEST
-        QString name = "~/Pictures/";
+        QString name = "~/Videos/";
 #else
-        QString name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
-                                                         CMainWindow::lastOpenedVideoPath(),
-                                                         DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+
+        QString name;
+        QDir dir(nameLast);
+        if (!dir.exists()) {
+            nameLast = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+            QDir defaultdir(nameLast);
+            if (!defaultdir.exists()) {
+                dir.mkdir(nameLast);
+            }
+            lineedit->setText(option->defaultValue().toString());
+        }
+        name = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
+                                                 nameLast,
+                                                 DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
 #endif
 
         if (validate(name, false)) {
@@ -465,9 +535,12 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
     option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, lineedit,
     [ = ](const QVariant & value) {
-        auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                            lineedit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+        auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()},
+                            QTextOption::WrapAnywhere, lineedit->font(), Qt::ElideMiddle,
+                            tem_fontmetrics.height(), 285);
+
         lineedit->setText(pi);
+        nameLast = pi;
         Settings::get().settings()->setOption("base.general.last_open_vd_path", pi);
         qDebug() << "save pic last path:" << pi << endl;
         lineedit->update();
@@ -483,7 +556,8 @@ QString CMainWindow::lastOpenedPicPath()
     QDir lastDir(lastPicPath);
 
     if (lastPicPath.isEmpty() || !lastDir.exists()) {
-        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                      + QDir::separator() + QObject::tr("Camera");
         lastDir.mkdir(lastPicPath);
 
         if (!lastDir.exists())
@@ -855,8 +929,9 @@ void CMainWindow::loadAfterShow()
     initTitleBar();
     initConnection();
     //后续修改为标准Qt用法
-    QString strCache = QString(getenv("HOME")) + QDir::separator() + QString(".cache") + QDir::separator() + QString("deepin") +
-            QDir::separator() + QString("deepin-camera") + QDir::separator();
+    QString strCache = QString(getenv("HOME")) + QDir::separator() + QString(".cache")
+                       + QDir::separator() + QString("deepin") + QDir::separator()
+                       + QString("deepin-camera") + QDir::separator();
     QDir dir;
     dir.mkpath(strCache);
     initThumbnails();
@@ -868,7 +943,7 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));//接收休眠信号，仅wayland使用
 
-    m_thumbnail->addPaths(lastVdFileName,lastPicFileName);
+    m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
     m_videoPre->delayInit();
 }
 
