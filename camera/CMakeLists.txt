@@ -24,7 +24,7 @@ endif()
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 
-configure_file(${PROJECT_SOURCE_DIR}/config.h.in  @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
 set(PROJECT_INCLUDE
     ./src/libcam/libcam_v4l2core
