@@ -558,11 +558,12 @@ QString CMainWindow::lastOpenedPicPath()
     if (lastPicPath.isEmpty() || !lastDir.exists()) {
         lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
                       + QDir::separator() + QObject::tr("Camera");
-        lastDir.mkdir(lastPicPath);
-
-        if (!lastDir.exists())
-            lastPicPath = QDir::currentPath();
-
+        QDir dirNew(lastPicPath);
+        if (!dirNew.exists()) {
+            if (!dirNew.mkdir(lastPicPath)) {
+                lastPicPath = QDir::currentPath();//这是错误的路径，但肯定存在
+            }
+        }
     }
 
     return lastPicPath;
@@ -574,12 +575,14 @@ QString CMainWindow::lastOpenedVideoPath()
     QDir lastDir(lastVdPath);
 
     if (lastVdPath.isEmpty() || !lastDir.exists()) {
-        lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-        lastDir.mkdir(lastVdPath);
-
-        if (!lastDir.exists())
-            lastVdPath = QDir::currentPath();
-
+        lastVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                + QDir::separator() + QObject::tr("Camera");
+        QDir dirNew(lastVdPath);
+        if (!dirNew.exists()) {
+            if (!dirNew.mkdir(lastVdPath)) {
+                lastVdPath = QDir::currentPath();//这是错误的路径，但肯定存在
+            }
+        }
     }
 
     return lastVdPath;
@@ -995,6 +998,18 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 
 }
 
+void CMainWindow::onDirectoryChanged(const QString &strPath)
+{
+    QDir dir(strPath);
+    if (!dir.exists()) {
+        if (lastVdFileName.compare(strPath) == 0) {
+            m_thumbnail->addPaths(lastPicFileName,"");
+        } else {
+            m_thumbnail->addPaths(lastVdFileName,"");
+        }
+    }
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1236,7 +1251,7 @@ void CMainWindow::initThumbnails()
 void CMainWindow::initThumbnailsConn()
 {
     //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //系统文件变化信号
     connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));//待测试
     //增删文件修改界面

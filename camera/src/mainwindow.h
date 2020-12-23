@@ -62,12 +62,12 @@ public:
     CMainWindow(DWidget *w = nullptr);
 
     /**
-    * @brief lastOpenedPath　上一次打开的图片文件路径
+    * @brief lastOpenedPath　上一次打开的图片文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
     */
     static QString lastOpenedPicPath();
 
     /**
-    * @brief lastOpenedPath　上一次打开的视频文件路径
+    * @brief lastOpenedPath　上一次打开的视频文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
     */
     static QString lastOpenedVideoPath();
 
@@ -286,6 +286,12 @@ private slots:
      * @param bTrue
      */
     void onSleepWhenTaking(bool);
+
+    /**
+     * @brief onDirectoryChanged 文件夹修改槽函数
+     * @param 文件夹路径
+     */
+    void onDirectoryChanged(const QString &);
 
 protected:
 
