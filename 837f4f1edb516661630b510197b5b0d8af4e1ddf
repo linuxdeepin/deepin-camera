@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "ec6f6ee0_78588074",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-24T07:54:42Z",
+      "side": 1,
+      "message": "详细信息下方缺少空行",
+      "revId": "837f4f1edb516661630b510197b5b0d8af4e1ddf",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb6e94d4_74d1a964",
         "filename": "camera/src/thumbnailsbar.cpp",
         "patchSetId": 2
