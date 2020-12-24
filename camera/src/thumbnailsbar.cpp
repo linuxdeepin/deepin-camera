@@ -764,7 +764,7 @@ void ThumbnailsBar::widthChanged()
 {
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;
     while (m_hBox->count() > nLetAddCount) {
-        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1));
+        ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(m_hBox->count() - 1)->widget());
         QString strPath = tmp->getPath();
         g_indexImage.remove(tmp->getIndex());
         m_hBox->removeWidget(tmp);
