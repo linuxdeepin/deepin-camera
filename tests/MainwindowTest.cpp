@@ -12,6 +12,7 @@
 #include "datamanager.h"
 
 using namespace Dtk::Core;
+
 MainwindowTest::MainwindowTest()
 {
     if (!mainwindow)
@@ -510,6 +511,8 @@ TEST_F(MainwindowTest, ImageItemDel)
 
     if (it.count() > 0) {
         imgit = it.value(0);
+        if (!imgit)
+            return;
 
         //点击鼠标右键
         QTest::qWait(1000);
@@ -550,22 +553,22 @@ TEST_F(MainwindowTest, ChangeResolution)
     mainwindow->settingDialogDel();
 }
 
-/**
- *  @brief 无摄像头
- */
-TEST_F(MainwindowTest, NoCam)
-{
-    DIconButton *selectBtn = mainwindow->findChild<DIconButton *>("SelectBtn");
+///**
+// *  @brief 无摄像头
+// */
+//TEST_F(MainwindowTest, NoCam)
+//{
+//    DIconButton *selectBtn = mainwindow->findChild<DIconButton *>("SelectBtn");
 
-    system("echo '123'|sudo -S rm -rf /dev/video*");
-    QTest::qWait(4000);
-    if (selectBtn->isVisible()) {
-        QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-    }
-    QTest::qWait(1000);
-    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
-    QTest::qWait(1000);
-}
+//    system("echo '123'|sudo -S rm -rf /dev/video*");
+//    QTest::qWait(4000);
+//    if (selectBtn->isVisible()) {
+//        QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+//    }
+//    QTest::qWait(1000);
+//    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+//    QTest::qWait(1000);
+//}
 
 /**
  *  @brief 打开摄像头设置页面
