@@ -200,9 +200,8 @@ LoadLibs *getLoadLibsInstance()
         // 这里要对pLibs加锁
         pthread_mutex_lock(&mutex);
         if (pLibs == NULL)
-        {
             pLibs = newClass();
-        }
+
         //退出时解锁
         pthread_mutex_unlock(&mutex);
     }
@@ -344,9 +343,9 @@ static LoadAvutil *newAvutil(void)
     PrintError();
     Avutil->m_av_free = (uos_av_free)dlsym(handle5, "av_free");
     PrintError();
-    Avutil->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_free");
+    Avutil->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_samples_get_buffer_size");
     PrintError();
-    Avutil->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_free");
+    Avutil->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_get_media_type_string");
     PrintError();
     Avutil->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
     PrintError();
