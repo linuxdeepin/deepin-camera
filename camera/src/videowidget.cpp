@@ -67,7 +67,8 @@ videowidget::videowidget(DWidget *parent)
     m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
-    m_strFolder = "";
+    m_savePicFolder = "";
+    m_saveVdFolder = "";
     m_nFileID = 0;
     m_nInterval = 0;
     m_curTakePicTime = 0;
@@ -818,19 +819,19 @@ void videowidget::showCountdown()
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
 
-            if (QDir(m_strFolder).exists() == false) {
+            if (QDir(m_savePicFolder).exists() == false) {
                 QString strDefaultPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
                 if (QDir(strDefaultPath).exists() == false) {
                     QDir dir;
                     dir.mkdir(strDefaultPath);
                 }
 
-                m_strFolder = strDefaultPath;
+                m_savePicFolder = strDefaultPath;
             }
 
             QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
-            m_imgPrcThread->m_strPath = m_strFolder + QDir::separator() + strFileName;
+            m_imgPrcThread->m_strPath = m_savePicFolder + QDir::separator() + strFileName;
             m_imgPrcThread->m_bTake = true; //保存图片标志
             m_nFileID++;
             m_curTakePicTime -= 1;
@@ -1323,13 +1324,12 @@ void videowidget::startTakeVideo()
             DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
-            QString str = m_strFolder;
 
-            if (QDir(m_strFolder).exists() == false) {
-                m_strFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+            if (QDir(m_saveVdFolder).exists() == false) {
+                m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
             }
 
-            set_video_path(m_strFolder.toStdString().c_str());
+            set_video_path(m_saveVdFolder.toStdString().c_str());
             set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
             start_encoder_thread();
             emit updateBlockSystem(true);

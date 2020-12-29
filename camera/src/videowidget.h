@@ -152,19 +152,21 @@ public:
     }
 
     /**
-    * @brief getFolder　获取文件夹
+    * @brief setSaveVdFolder　设置保存视频文件夹
+    * @param strVdFolder 视频文件夹路径
     */
-    QString getFolder()
+    void setSaveVdFolder(QString strVdFolder)
     {
-        return m_strFolder;
+        m_saveVdFolder = strVdFolder;
     }
 
     /**
-    * @brief setSaveFolder　设置保存文件夹
+    * @brief setSavePicFolder　设置保存照片文件夹
+    * @param strPicFolder 照片文件夹路径
     */
-    void setSaveFolder(QString strFolder)
+    void setSavePicFolder(QString strPicFolder)
     {
-        m_strFolder = strFolder;
+        m_savePicFolder = strPicFolder;
     }
 
     /**
@@ -309,39 +311,40 @@ private:
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 private:
-    bool                       m_bActive = false;//是否录制中
+    bool                       m_bActive = false;   //是否录制中
 #ifndef __mips__
-    PreviewOpenglWidget        *m_openglwidget;//opengl渲染窗口
+    PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
 #endif
-    int                        m_nMaxContinuous; //最大连拍数：0,4,10
-    int                        m_curTakePicTime; //当前连拍次数
-    int                        m_Maxinterval;     //最大间隔
-    int                        m_nMaxInterval; //最大间隔：0,3,6
-    int                        m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
-    int                        m_nCount; //录制计时
-    int                        m_nFileID;        //文件id
-    int                        m_nFastClick; //快速点击次数，小于200ms计入
+    int                        m_nMaxContinuous;    //最大连拍数：0,4,10
+    int                        m_curTakePicTime;    //当前连拍次数
+    int                        m_Maxinterval;       //最大间隔
+    int                        m_nMaxInterval;      //最大间隔：0,3,6
+    int                        m_nInterval;         //当前间隔时间,初始化为0,按钮响应时赋值
+    int                        m_nCount;            //录制计时
+    int                        m_nFileID;           //文件id
+    int                        m_nFastClick;        //快速点击次数，小于200ms计入
 
-    ThumbnailsBar              *m_thumbnail;       //缩略图
+    ThumbnailsBar              *m_thumbnail;        //缩略图
 
-    DLabel                     *m_flashLabel;  //闪光灯Label
-    DLabel                     *m_dLabel;  //倒计时
-    DPushButton                *m_btnVdTime; //录制屏显时长
-    DPushButton                *m_endBtn;      //结束按钮
-    DFloatingWidget            *m_fWgtCountdown; //显示倒计时
+    DLabel                     *m_flashLabel;       //闪光灯Label
+    DLabel                     *m_dLabel;           //倒计时
+    DPushButton                *m_btnVdTime;        //录制屏显时长
+    DPushButton                *m_endBtn;           //结束按钮
+    DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
-    QSound                     *m_takePicSound;//拍照声音
-    QPixmap                    m_pixmap;         //
-    QString                    m_strFolder;      //文件路径（视频,图片）
-    QTimer                     *m_countTimer;     //倒计时定时器
-    QTimer                     *m_flashTimer;     //闪光灯定时器
-    QTimer                     *m_recordingTimer;//录制3秒后，每200ms设置一次时间
-    QDateTime                  m_btnClickTime; //按钮点击时间
+    QSound                     *m_takePicSound;     //拍照声音
+    QPixmap                    m_pixmap;
+    QString                    m_savePicFolder;     //图片文件夹路径
+    QString                    m_saveVdFolder;      //视频文件夹路径
+    QTimer                     *m_countTimer;       //倒计时定时器
+    QTimer                     *m_flashTimer;       //闪光灯定时器
+    QTimer                     *m_recordingTimer;   //录制3秒后，每200ms设置一次时间
+    QDateTime                  m_btnClickTime;      //按钮点击时间
     QGridLayout                *m_pGridLayout;
     QGraphicsView              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
     QGraphicsPixmapItem        *m_pNormalItem;
-    QGraphicsTextItem          *m_pCamErrItem; //摄像头异常提示
+    QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
 };
 
 #endif // VIDEOWIDGET_H

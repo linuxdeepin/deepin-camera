@@ -176,10 +176,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     picPathLineEdit->setObjectName("OptionSelectableLineEdit");
     //获取当前设置的照片保存路径
     QString curPicSettingPath = option->value().toString();
-  
+
     if (curPicSettingPath.contains(relativeHomePath))
         curPicSettingPath.replace(0, 1, QDir::homePath());
-    
+
     QDir dir(curPicSettingPath);
 
     //路径不存在
@@ -290,12 +290,12 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
         QString selectPicSavePath;
         QString tmplastpicpath = lastPicPath;
-      
+
         if (tmplastpicpath.contains(relativeHomePath))
             tmplastpicpath.replace(0, 1, QDir::homePath());
-      
+
         QDir dir(tmplastpicpath);
-      
+
         if (!dir.exists()) {
             //设置文本框为新的路径
             tmplastpicpath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
@@ -414,7 +414,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     QString curVideoSettingPath = option->value().toString();
     if (curVideoSettingPath.contains(relativeHomePath))
         curVideoSettingPath.replace(0, 1, QDir::homePath());
-    
+
     QDir dir(curVideoSettingPath);
 
     //路径不存在
@@ -622,46 +622,40 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     return  optionWidget;
 }
 
-QString CMainWindow::lastOpenedPicPath()
+QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
 {
-    QString lastPicPath = Settings::get().generalOption("last_open_pic_path").toString();
-    qDebug() << lastPicPath << endl;
-
-    if (lastPicPath.contains("~/"))
-        lastPicPath.replace(0, 1, QDir::homePath());
-
-    QDir lastDir(lastPicPath);
-
-    if (lastPicPath.isEmpty() || !lastDir.exists()) {
-        lastPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                      + QDir::separator() + QObject::tr("Camera");
-        QDir dirNew(lastPicPath);
-        if (!dirNew.exists())
-            if (!dirNew.mkdir(lastPicPath))
-                lastPicPath = QDir::currentPath();//这是错误的路径，但肯定存在
+    QString lastPath;
+    if (standard == QStandardPaths::MoviesLocation) {
+        lastPath = Settings::get().generalOption(CONFIG_VD_FOLDER).toString();
+    } else {
+        lastPath = Settings::get().generalOption(CONFIG_PIC_FOLDER).toString();
     }
-    return lastPicPath;
-}
 
-QString CMainWindow::lastOpenedVideoPath()
-{
-    QString lastVideoPath = Settings::get().generalOption("last_open_vd_path").toString();
-    qDebug() << lastVideoPath << endl;
+    QDir lastDir(lastPath);
+    if (lastPath.isEmpty() || !lastDir.exists()) {
+        if (standard == QStandardPaths::MoviesLocation) {
+            lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                    + QDir::separator() + QObject::tr("Camera");
+        } else {
+            lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                    + QDir::separator() + QObject::tr("Camera");
+        }
 
-    if (lastVideoPath.contains("~/"))
-        lastVideoPath.replace(0, 1, QDir::homePath());
-
-    QDir lastDir(lastVideoPath);
-
-    if (lastVideoPath.isEmpty() || !lastDir.exists()) {
-        lastVideoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                        + QDir::separator() + QObject::tr("Camera");
-        QDir dirNew(lastVideoPath);
-        if (!dirNew.exists())
-            if (!dirNew.mkdir(lastVideoPath))
-                lastVideoPath = QDir::currentPath();//这是错误的路径，但肯定存在
+        QDir dirNew(lastPath);
+        if (!dirNew.exists()) {
+            if (!dirNew.mkdir(lastPath)) {
+                qDebug() << "make dir error:" << lastPath;
+                lastPath = QDir::currentPath();//这是错误的路径，但肯定存在
+                qDebug() << "now lastVdPath is:" << lastPath;
+            }
+        }
     }
-    return lastVideoPath;
+
+    if (lastPath.size() && lastPath[0] == '~') {
+        QString str = QDir::homePath();
+        lastPath.replace(0, 1, str);
+    }
+    return lastPath;
 }
 
 CMainWindow::CMainWindow(DWidget *w)
@@ -1074,15 +1068,54 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 
 }
 
-void CMainWindow::onDirectoryChanged(const QString &strPath)
+void CMainWindow::onDirectoryChanged(const QString &)
 {
-    QDir dir(strPath);
-    if (!dir.exists()) {
-        if (lastVdFileName.compare(strPath) == 0) {
-            m_thumbnail->addPaths(lastPicFileName, "");
-        } else {
-            m_thumbnail->addPaths(lastVdFileName, "");
+    QDir dirPic(lastPicFileName);
+    QDir dirVd(lastVdFileName);
+    bool bPic = dirPic.exists();
+    bool bVd = dirVd.exists();
+    if (bPic && bVd) {
+        return;
+    } else {
+        if (!bVd) {
+            lastVdFileName = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+            QDir dirDefaultVd(lastVdFileName);
+            if (!dirDefaultVd.exists()) {
+                bool bMakeDir = dirDefaultVd.mkdir(lastVdFileName);
+                if (!bMakeDir) {
+                    qDebug() << "make dir error:" << lastVdFileName;
+                }
+            }
         }
+
+        if (!bPic) {
+            lastPicFileName = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+            QDir dirDefaultPic(lastPicFileName);
+            if (!dirDefaultPic.exists()) {
+                bool bMakeDir = dirDefaultPic.mkdir(lastPicFileName);
+                if (!bMakeDir) {
+                    qDebug() << "make dir error:" << lastPicFileName;
+                }
+            }
+        }
+        //更新文件夹监控
+        QDir dirVd(lastVdFileName);
+        dirVd.cdUp();
+        QDir dirPic(lastPicFileName);
+        dirPic.cdUp();
+        QString strVd = dirVd.path();
+        m_fileWatcher.removePaths(m_fileWatcher.directories());
+        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
+        m_fileWatcher.addPath(lastVdFileName);
+        m_fileWatcher.addPath(lastPicFileName);
+
+        QString strPic = dirPic.path();
+        m_fileWatcherUp.addPath(strVd);
+        if (strVd.compare(strPic) != 0) {
+            m_fileWatcherUp.addPath(strPic);
+        }
+        //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
+        m_thumbnail->addPaths(lastPicFileName,lastVdFileName);
     }
 }
 
@@ -1095,35 +1128,24 @@ void CMainWindow::initUI()
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
 
-    lastVdFileName = lastOpenedVideoPath();
-    lastPicFileName = lastOpenedPicPath();
+    lastVdFileName = lastOpenedPath(QStandardPaths::MoviesLocation);//如果路径不存在会自动使用并创建默认路径
+    lastPicFileName = lastOpenedPath(QStandardPaths::PicturesLocation);
 
-    if (lastVdFileName.size() && lastVdFileName[0] == '~') {
-        QString str = QDir::homePath();
-        lastVdFileName.replace(0, 1, str);
+    m_fileWatcher.addPath(lastVdFileName);
+    m_fileWatcher.addPath(lastPicFileName);
+
+    QDir dirVd(lastVdFileName);
+    dirVd.cdUp();
+    m_fileWatcherUp.addPath(dirVd.path());
+
+    QDir dirPic(lastPicFileName);
+    dirPic.cdUp();
+    if (!m_fileWatcherUp.directories().contains(dirPic.path())) {
+        m_fileWatcherUp.addPath(dirPic.path());
     }
 
-    if (lastPicFileName.size() && lastPicFileName[0] == '~') {
-        QString str = QDir::homePath();
-        lastPicFileName.replace(0, 1, str);
-    }
-
-    bool picturepathexist = false;//判断图片路径是否存在
-
-    if (QDir(lastVdFileName).exists()) {
-        m_fileWatcher.addPath(lastVdFileName);
-    }
-
-    if (QDir(lastPicFileName).exists()) {
-        m_fileWatcher.addPath(lastPicFileName);
-        picturepathexist = true;//图片路径存在
-    }
-
-    //缩略图延后加载
-    if (picturepathexist)
-        m_videoPre->setSaveFolder(lastPicFileName);
-    else
-        m_videoPre->setSaveFolder(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera"));
+    m_videoPre->setSaveVdFolder(lastVdFileName);
+    m_videoPre->setSavePicFolder(lastPicFileName);
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -1327,9 +1349,13 @@ void CMainWindow::initThumbnails()
 void CMainWindow::initThumbnailsConn()
 {
     //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
     //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));//待测试
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+    //系统文件夹变化信号
+    connect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    //系统文件夹变化信号
+    connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
     //修改标题栏按钮状态
@@ -1586,23 +1612,35 @@ void CMainWindow::onSettingsDlgClose()
     if (lastPicFileName.size() && lastPicFileName[0] == '~')
         lastPicFileName.replace(0, 1, QDir::homePath());
 
-    if (m_nActTpye == ActTakeVideo)
-        m_videoPre->setSaveFolder(lastVdFileName);
-    else
-        m_videoPre->setSaveFolder(lastPicFileName);
+    m_videoPre->setSavePicFolder(lastPicFileName);
+    m_videoPre->setSaveVdFolder(lastVdFileName);
 
     //关闭设置时，先删除原有的文件监控（需求上不再需要），再添加保存路径下图片和视频的缩略图
     bool bContainVd = m_fileWatcher.directories().contains(lastVdFileName);
     bool bContainPic = m_fileWatcher.directories().contains(lastPicFileName);
+    QDir dirVd(lastVdFileName);
+    dirVd.cdUp();
+    QDir dirPic(lastPicFileName);
+    dirPic.cdUp();
+    QString strVd = dirVd.path();
     if (!bContainVd || !bContainPic) {
         m_fileWatcher.removePaths(m_fileWatcher.directories());
+        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
         m_fileWatcher.addPath(lastVdFileName);
         m_fileWatcher.addPath(lastPicFileName);
+
+        QString strPic = dirPic.path();
+        m_fileWatcherUp.addPath(strVd);
+        if (strVd.compare(strPic) != 0) {
+            m_fileWatcherUp.addPath(strPic);
+        }
         m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
     } else {
         if (QString::compare(lastVdFileName, lastPicFileName) == 0) {
             m_fileWatcher.removePaths(m_fileWatcher.directories());
+            m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
             m_fileWatcher.addPath(lastVdFileName);
+            m_fileWatcherUp.addPath(strVd);
             m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
         }
     }
@@ -1684,7 +1722,7 @@ void CMainWindow::onTakeVdDone()
     onEnableSettings(true);
 
     QTimer::singleShot(200, this, [ = ] {
-        QString strFileName = m_videoPre->getFolder() + QDir::separator() + DataManager::instance()->getstrFileName();
+        QString strFileName = lastVdFileName + QDir::separator() + DataManager::instance()->getstrFileName();
         QFile file(strFileName);
 
         if (!file.exists())
@@ -1743,9 +1781,5 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 }
 void CMainWindow::SettingPathsave()
 {
-    if (m_nActTpye == ActTakeVideo)
-        m_videoPre->setSaveFolder(lastVdFileName);
-    else
-        m_videoPre->setSaveFolder(lastPicFileName);
-
+    m_videoPre->setSavePicFolder(lastPicFileName);
 }

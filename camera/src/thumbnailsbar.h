@@ -223,6 +223,8 @@ private:
     QStringList    m_strlstFolders;//存放文件夹路径
     QDateTime      m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
     QFileInfoList  m_fileInfoLst;//所有文件信息，界面每加载一个，对应删除一个
+    QFileInfoList  m_lstPicFolder;//图片文件夹文件信息列表
+    QFileInfoList  m_lstVdFolder;//视频文件夹文件信息列表
     QString        m_strFileName;//当前拍照或录制视频的文件名
 
 };

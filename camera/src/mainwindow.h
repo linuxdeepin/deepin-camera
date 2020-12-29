@@ -47,12 +47,15 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
+#include <QStandardPaths>
 
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
+#define CONFIG_PIC_FOLDER "last_open_pic_path"
+#define CONFIG_VD_FOLDER "last_open_vd_path"
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -62,14 +65,9 @@ public:
     CMainWindow(DWidget *w = nullptr);
 
     /**
-    * @brief lastOpenedPath　上一次打开的图片文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
+    * @brief lastOpenedPath　上一次打开的文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
     */
-    static QString lastOpenedPicPath();
-
-    /**
-    * @brief lastOpenedPath　上一次打开的视频文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
-    */
-    static QString lastOpenedVideoPath();
+    static QString lastOpenedPath(QStandardPaths::StandardLocation standard);
 
     /**
     * @brief setWayland　判断是否是wayland，并初始化对应操作
@@ -288,8 +286,8 @@ private slots:
     void onSleepWhenTaking(bool);
 
     /**
-     * @brief onDirectoryChanged 文件夹修改槽函数
-     * @param 文件夹路径
+     * @brief onDirectoryChanged 文件夹删除、重命名监控
+     * @param 当前文件夹路径
      */
     void onDirectoryChanged(const QString &);
 
@@ -329,6 +327,7 @@ private:
     QMenu                           *m_rightbtnmenu;//右键菜单
     QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控
+    QFileSystemWatcher              m_fileWatcherUp;//文件夹监控，当前视频、照片文件夹的上级路径监控
     QString                         m_strCfgPath;//配置文件路径
     QAction                         *m_actionSettings;//打开设置页面
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
