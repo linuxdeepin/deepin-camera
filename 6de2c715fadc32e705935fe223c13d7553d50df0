@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ef175ad_d904ebce",
+        "filename": "camera/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 6; 改动行数(修改和新增): 108; 注释率: 5.6%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d85183ed_35744d74",
+        "filename": "camera/src/mainwindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 8; 注释率: 12.5%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "634520be_0d2e91b4",
+        "filename": "camera/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 79; 注释率: 2.5%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13c1fc6d_33d90220",
+        "filename": "camera/src/thumbnailsbar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 2; 注释率: 100.0%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4743f8c0_f2e9e9fe",
+        "filename": "camera/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 8; 注释率: 0.0%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64cdfd70_54d42586",
+        "filename": "camera/src/videowidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-29T12:39:19Z",
+      "side": 1,
+      "message": "注释行数: 24; 改动行数(修改和新增): 33; 注释率: 72.7%",
+      "revId": "6de2c715fadc32e705935fe223c13d7553d50df0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
