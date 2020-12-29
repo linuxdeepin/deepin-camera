@@ -59,9 +59,6 @@ signals:
 private:
     static bool createAppInstance(int &argc, char **argv);
 
-
-protected:
-
 private:
     CMainWindow* m_mainwindow = nullptr;
     static CApplication *m_cameracore;
