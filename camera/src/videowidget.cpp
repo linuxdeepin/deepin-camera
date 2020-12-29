@@ -22,6 +22,7 @@
 #include "videowidget.h"
 #include "mainwindow.h"
 #include "datamanager.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
@@ -140,7 +141,9 @@ videowidget::videowidget(DWidget *parent)
     m_btnVdTime->setPalette(pa_cb);
     m_btnVdTime->setFont(ft);
     m_btnVdTime->setText(QString("00:00:00"));
-    m_endBtn->setObjectName("TakeVdEndBtn");
+    m_endBtn->setObjectName(BUTTON_TAKE_VIDEO_END);
+    m_endBtn->setAccessibleName(BUTTON_TAKE_VIDEO_END);
+
     m_endBtn->setFlat(true);
     m_endBtn->setFixedSize(QSize(56, 51));
     m_endBtn->setFocusPolicy(Qt::ClickFocus);

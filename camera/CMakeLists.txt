@@ -34,6 +34,8 @@ set(PROJECT_INCLUDE
     ./src/libcam/libcam
     ./src/basepub
     ./src/qtsingleapplication
+    ./src/accessibility
+    ./src/accessible
     ../
     /usr/include
     /usr/include/libusb-1.0
@@ -77,6 +79,8 @@ file (GLOB_RECURSE HEADERS
     ./src/libcam/*.h
     ./src/basepub/*.h
     ./src/qtsingleapplication/*.h
+    ./src/accessibility/*.h
+    ./src/accessible/*.h
     )
 
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)

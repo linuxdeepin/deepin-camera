@@ -23,6 +23,7 @@
 #include "camview.h"
 #include "datamanager.h"
 #include "Settings.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DLabel>
 #include <DDesktopServices>
@@ -60,7 +61,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     : DFloatingWidget(parent)
 {
     m_lastButton = new DPushButton(this);
-    m_lastButton->setObjectName("PicVdBtn");
+    m_lastButton->setObjectName(BUTTON_PICTURE_VIDEO);
+    m_lastButton->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_nDelTimes = 0;
     m_strFileName = "";
     setFocus(Qt::OtherFocusReason);
@@ -189,7 +191,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QString strFolder;
 
     //第一个、第二个文件的list
-    QFileInfoList tmpLst1,tmpLst2;
+    QFileInfoList tmpLst1, tmpLst2;
 
     strFolder = m_strlstFolders[0];
     QDir dir1(strFolder);
