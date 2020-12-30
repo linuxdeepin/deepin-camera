@@ -20,6 +20,7 @@
 */
 
 #include "closedialog.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DMessageBox>
 #include <DLabel>
@@ -45,10 +46,12 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
     addButton(btnName2);
 
     QAbstractButton *cancelBtn = getButton(0);
-    cancelBtn->setObjectName("CancelBtn");
+    cancelBtn->setObjectName(CANCEL_BUTTON);
+    cancelBtn->setAccessibleName(CANCEL_BUTTON);
 
     QAbstractButton *closeBtn = getButton(1);
-    closeBtn->setObjectName("CloseBtn");
+    closeBtn->setObjectName(CLOSE_BUTTON);
+    closeBtn->setAccessibleName(CLOSE_BUTTON);
 
     QPalette plt = closeBtn->palette();
     QColor clr(255, 87, 54);

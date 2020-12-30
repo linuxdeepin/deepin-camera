@@ -29,6 +29,8 @@ set(PROJECT_INCLUDE ../camera/src/libcam/libcam_v4l2core
     ../camera/src/libcam/libcam_audio
     ../camera/src/libcam/libcam
     ../camera/src/basepub
+    ../camera/src/accessibility
+    ../camera/src/accessible
     ../camera/src/qtsingleapplication
     ../camera/
     /usr/include
@@ -77,6 +79,8 @@ file (GLOB_RECURSE HEADERS
     ../camera/src/libcam/*.h
     ../camera/src/qtsingleapplication/*.h
     ../camera/src/*.h
+    ../camera/src/accessibility/*.h
+    ../camera/src/accessible/*.h
     ../tests/*.h
     )
 file (GLOB_RECURSE RESOURCES  ../camera/assets/assets.qrc)

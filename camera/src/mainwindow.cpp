@@ -24,6 +24,7 @@
 #include "v4l2_core.h"
 #include "datamanager.h"
 #include "shortcut.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -135,7 +136,8 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     layout->addWidget(lab);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignVCenter);
-    lab->setObjectName("OptionFormatLabel");
+    lab->setObjectName(OPTION_FORMAT_LABER);
+    lab->setAccessibleName(OPTION_FORMAT_LABER);
     lab->setFixedHeight(15);
     lab->setText(option->value().toString());
     QFont font = lab->font();
@@ -143,7 +145,8 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     lab->setFont(font);
     lab->setAlignment(Qt::AlignVCenter);
     lab->show();
-    optionWidget->setObjectName("OptionFrame");
+    optionWidget->setObjectName(OPTION_FRAME);
+    optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
     optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
@@ -171,9 +174,11 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
     main->setLayout(horboxlayout);
     icon->setAutoDefault(false);
-    icon->setObjectName("OptionLineEditBtn");
+    icon->setObjectName(BUTTON_OPTION_LINE_EDIT);
+    icon->setAccessibleName(BUTTON_OPTION_LINE_EDIT);
     picPathLineEdit->setFixedHeight(30);
-    picPathLineEdit->setObjectName("OptionSelectableLineEdit");
+    picPathLineEdit->setObjectName(OPTION_SELECTABLE_LINE_EDIT);
+    picPathLineEdit->setAccessibleName(OPTION_SELECTABLE_LINE_EDIT);
     //获取当前设置的照片保存路径
     QString curPicSettingPath = option->value().toString();
 
@@ -226,13 +231,15 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     icon->setFixedHeight(30);
     horboxlayout->addWidget(picPathLineEdit);
     horboxlayout->addWidget(icon);
-    optionWidget->setObjectName("OptionFrame");
+    optionWidget->setObjectName(OPTION_FRAME);
+    optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
     main->setMinimumWidth(240);
     optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
     workaround_updateStyle(optionWidget, "light");
-    optinvaliddialog->setObjectName("OptionInvalidDialog");
+    optinvaliddialog->setObjectName(OPTION_INVALID_DIALOG);
+    optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
     optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
     optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
@@ -408,9 +415,11 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
     main->setLayout(horboxlayout);
     icon->setAutoDefault(false);
-    icon->setObjectName("OptionLineEditBtn");
+    icon->setObjectName(BUTTON_OPTION_LINE_EDIT);
+    icon->setAccessibleName(BUTTON_OPTION_LINE_EDIT);
     videoPathLineEdit->setFixedHeight(30);
-    videoPathLineEdit->setObjectName("OptionSelectableLineEdit");
+    videoPathLineEdit->setObjectName(OPTION_SELECTABLE_LINE_EDIT);
+    videoPathLineEdit->setAccessibleName(OPTION_SELECTABLE_LINE_EDIT);
     QString curVideoSettingPath = option->value().toString();
     if (curVideoSettingPath.contains(relativeHomePath))
         curVideoSettingPath.replace(0, 1, QDir::homePath());
@@ -461,13 +470,15 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     icon->setFixedHeight(30);
     horboxlayout->addWidget(videoPathLineEdit);
     horboxlayout->addWidget(icon);
-    optionWidget->setObjectName("OptionFrame");
+    optionWidget->setObjectName(OPTION_FRAME);
+    optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
     main->setMinimumWidth(240);
     optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
     workaround_updateStyle(optionWidget, "light");
-    optinvaliddialog->setObjectName("OptionInvalidDialog");
+    optinvaliddialog->setObjectName(OPTION_INVALID_DIALOG);
+    optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
     optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
     optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
@@ -635,10 +646,10 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
     if (lastPath.isEmpty() || !lastDir.exists()) {
         if (standard == QStandardPaths::MoviesLocation) {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                    + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + QObject::tr("Camera");
         } else {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                    + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + QObject::tr("Camera");
         }
 
         QDir dirNew(lastPath);
@@ -669,6 +680,8 @@ CMainWindow::CMainWindow(DWidget *w)
     m_pDBus = nullptr;
     m_bWayland = false;
     m_nActTpye = ActTakePic;
+    this->setObjectName(MAIN_WINDOW);
+    this->setAccessibleName(MAIN_WINDOW);
     setupTitlebar();
 }
 
@@ -864,7 +877,8 @@ void CMainWindow::settingDialog()
     m_SetDialog->widgetFactory()->registerWidget("selectableEditpic", createPicSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("selectableEditvd", createVdSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
-    m_SetDialog->setObjectName("SettingDialog");
+    m_SetDialog->setObjectName(SETTING_DIALOG);
+    m_SetDialog->setAccessibleName(SETTING_DIALOG);
     connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
@@ -1115,7 +1129,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
             m_fileWatcherUp.addPath(strPic);
         }
         //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
-        m_thumbnail->addPaths(lastPicFileName,lastVdFileName);
+        m_thumbnail->addPaths(lastPicFileName, lastVdFileName);
     }
 }
 
@@ -1123,7 +1137,8 @@ void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
     QPalette paletteTime = m_videoPre->palette();
-    m_videoPre->setObjectName("VideoPreviewWidget");
+    m_videoPre->setObjectName(VIDEO_PREVIEW_WIDGET);
+    m_videoPre->setAccessibleName(VIDEO_PREVIEW_WIDGET);
     setCentralWidget(m_videoPre);
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
@@ -1194,12 +1209,14 @@ void CMainWindow::initTitleBar()
     m_pTitleVdBtn = new DButtonBoxButton(QString(""), this);
     pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
 
-    pDButtonBox->setObjectName("myButtonBox");
+    pDButtonBox->setObjectName(BUTTOM_TITLE_BOX);
+    pDButtonBox->setAccessibleName(BUTTOM_TITLE_BOX);
     pDButtonBox->setFixedWidth(120);
     pDButtonBox->setFixedHeight(36);
     //初始化标题栏拍照按钮
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
-    m_pTitlePicBtn->setObjectName("pTitlePicBtn");
+    m_pTitlePicBtn->setObjectName(BUTTOM_TITLE_PICTURE);
+    m_pTitlePicBtn->setAccessibleName(BUTTOM_TITLE_PICTURE);
     m_pTitlePicBtn->setIcon(iconPic);
     m_pTitlePicBtn->setIconSize(QSize(26, 26));
     DPalette pa = m_pTitlePicBtn->palette();
@@ -1217,7 +1234,8 @@ void CMainWindow::initTitleBar()
         iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
 
     //初始化标题栏录像按钮
-    m_pTitleVdBtn->setObjectName("pTitleVdBtn");
+    m_pTitleVdBtn->setObjectName(BUTTOM_TITLE_VEDIO);
+    m_pTitleVdBtn->setAccessibleName(BUTTOM_TITLE_VEDIO);
     m_pTitleVdBtn->setIcon(iconVd);
     m_pTitleVdBtn->setIconSize(QSize(26, 26));
     listButtonBox.append(m_pTitlePicBtn);
@@ -1226,7 +1244,8 @@ void CMainWindow::initTitleBar()
     titlebar()->addWidget(pDButtonBox);
 
     //初始化切换按钮
-    pSelectBtn->setObjectName("SelectBtn");
+    pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
+    pSelectBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
     pSelectBtn->hide();
@@ -1308,11 +1327,13 @@ void CMainWindow::initThumbnails()
     m_rightbtnmenu = new QMenu(this);//添加右键打开文件夹功能
     m_actOpenfolder = new QAction(this);
 
-    m_thumbnail->setObjectName("thumbnail");
+    m_thumbnail->setObjectName(THUMBNAIL);
+    m_thumbnail->setAccessibleName(THUMBNAIL);
     m_thumbnail->move(0, height() - 10);
     m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
     m_videoPre->setThumbnail(m_thumbnail);
-    m_rightbtnmenu->setObjectName("rightbtnmenu");
+    m_rightbtnmenu->setObjectName(BUTTON_RIGHT_MENU);
+    m_rightbtnmenu->setAccessibleName(BUTTON_RIGHT_MENU);
     m_actOpenfolder->setText(tr("Open folder"));
     m_rightbtnmenu->addAction(m_actOpenfolder);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -1387,8 +1408,10 @@ void CMainWindow::setupTitlebar()
     m_titlemenu = new DMenu(this);
     m_actionSettings = new QAction(tr("Settings"), this);
 
-    titlebar()->setObjectName("TitleBar");
-    m_titlemenu->setObjectName("TitleMenu");
+    titlebar()->setObjectName(TITLEBAR);
+    titlebar()->setAccessibleName(TITLEBAR);
+    m_titlemenu->setObjectName(TITLE_MUNE);
+    m_titlemenu->setAccessibleName(TITLE_MUNE);
     m_actionSettings->setObjectName("SettingAction");
     m_titlemenu->addAction(m_actionSettings);
     titlebar()->setMenu(m_titlemenu);
@@ -1415,7 +1438,8 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 {
     if (m_videoPre->getCapStatus()) {
         CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
-        closeDlg.setObjectName("closeDlg");
+        closeDlg.setObjectName(CLOSE_DIALOG);
+        closeDlg.setAccessibleName(CLOSE_DIALOG);
 #ifdef UNITTEST
         closeDlg.show();
         event->ignore();

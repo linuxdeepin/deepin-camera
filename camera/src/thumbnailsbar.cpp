@@ -23,6 +23,7 @@
 #include "camview.h"
 #include "datamanager.h"
 #include "Settings.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DLabel>
 #include <DDesktopServices>
@@ -60,7 +61,8 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     : DFloatingWidget(parent)
 {
     m_lastButton = new DPushButton(this);
-    m_lastButton->setObjectName("PicVdBtn");
+    m_lastButton->setObjectName(BUTTON_PICTURE_VIDEO);
+    m_lastButton->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_nDelTimes = 0;
     m_strFileName = "";
     setFocus(Qt::OtherFocusReason);

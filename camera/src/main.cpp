@@ -28,6 +28,7 @@ extern "C"
 #include "dbus_adpator.h"
 #include "cameraconfig.h"
 #include "config.h"
+#include "acobjectlist.h"
 
 #include <DMainWindow>
 #include <DWidgetUtil>
@@ -56,7 +57,7 @@ bool CheckWayland()
 
 int main(int argc, char *argv[])
 {
-
+    QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
 
     if (bWayland) {

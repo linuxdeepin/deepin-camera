@@ -21,6 +21,7 @@
 
 #include "datamanager.h"
 #include "imageitem.h"
+#include "ac-deepin-camera-define.h"
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
@@ -503,7 +504,8 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
     }
 
     DPrintPreviewDialog printDialog(parent);
-    printDialog.setObjectName("PrintDialog");
+    printDialog.setObjectName(PRINT_DIALOG);
+    printDialog.setAccessibleName(PRINT_DIALOG);
 
 #ifndef UNITTEST
     QObject::connect(&printDialog, &DPrintPreviewDialog::paintRequested, parent, [ = ](DPrinter * _printer) {
