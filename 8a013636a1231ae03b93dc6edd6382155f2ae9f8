@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2101587a_37a9838e",
+        "filename": "camera/src/accessibility/ac-deepin-camera-define.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-31T01:58:39Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "8a013636a1231ae03b93dc6edd6382155f2ae9f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da1af9d3_66437452",
+        "filename": "tests/MainwindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-31T01:58:39Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 29; 注释率: 0.0%",
+      "revId": "8a013636a1231ae03b93dc6edd6382155f2ae9f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e40a1979_428067a1",
+        "filename": "tests/MainwindowTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-12-31T01:58:39Z",
+      "side": 1,
+      "message": "注释行数: 6; 改动行数(修改和新增): 8; 注释率: 75.0%",
+      "revId": "8a013636a1231ae03b93dc6edd6382155f2ae9f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
