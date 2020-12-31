@@ -639,9 +639,9 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
 {
     QString lastPath;
     if (standard == QStandardPaths::MoviesLocation) {
-        lastPath = Settings::get().generalOption(CONFIG_VD_FOLDER).toString();
+        lastPath = Settings::get().getOption("base.save.vddatapath").toString();
     } else {
-        lastPath = Settings::get().generalOption(CONFIG_PIC_FOLDER).toString();
+        lastPath = Settings::get().getOption("base.save.picdatapath").toString();
     }
 
     QDir lastDir(lastPath);
@@ -1102,6 +1102,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
                     qDebug() << "make dir error:" << lastVdFileName;
                 }
             }
+            Settings::get().settings()->setOption("base.save.vddatapath", lastVdFileName);
         }
 
         if (!bPic) {
@@ -1113,6 +1114,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
                     qDebug() << "make dir error:" << lastPicFileName;
                 }
             }
+            Settings::get().settings()->setOption("base.save.picdatapath", lastPicFileName);
         }
         //更新文件夹监控
         QDir dirVd(lastVdFileName);

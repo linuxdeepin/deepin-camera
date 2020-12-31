@@ -54,8 +54,6 @@ DWIDGET_USE_NAMESPACE
 
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
-#define CONFIG_PIC_FOLDER "last_open_pic_path"
-#define CONFIG_VD_FOLDER "last_open_vd_path"
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
