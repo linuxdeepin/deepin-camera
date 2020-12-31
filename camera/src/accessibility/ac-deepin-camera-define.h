@@ -21,7 +21,7 @@
 #define BUTTON_RIGHT_MENU QObject::tr("Rightbtnmenu")
 
 #define MAIN_WINDOW QObject::tr("MainWindow")
-#define TITLE_MUNE QObject::tr("titleMenu")
+#define TITLE_MUNE QObject::tr("TitleMenu")
 #define TITLEBAR QObject::tr("TitleBar")
 #define OPTION_FORMAT_LABER QObject::tr("OptionFormatLabel")
 #define OPTION_FRAME QObject::tr("OptionFrame")
