@@ -10,6 +10,7 @@
 #include "MainwindowTest.h"
 #include "DButtonBox"
 #include "datamanager.h"
+#include "ac-deepin-camera-define.h"
 
 using namespace Dtk::Core;
 
@@ -61,14 +62,14 @@ TEST_F(MainwindowTest, Themechange)
     QTest::qWait(1000);
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
 
-    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitleVdBtn");
+    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
 
     QTest::mouseMove(iconVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
     QTest::qWait(1000);
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
@@ -89,12 +90,12 @@ TEST_F(MainwindowTest, TakePicture)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -108,7 +109,7 @@ TEST_F(MainwindowTest, TakePicture)
  */
 TEST_F(MainwindowTest, ChangeCamera)
 {
-    DIconButton *selectBtn = mainwindow->findChild<DIconButton *>("SelectBtn");
+    DIconButton *selectBtn = mainwindow->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
 
     if (selectBtn->isVisible()) {
         QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
@@ -131,12 +132,12 @@ TEST_F(MainwindowTest, ThreeContinuousShooting)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -150,7 +151,7 @@ TEST_F(MainwindowTest, ThreeContinuousShooting)
  */
 TEST_F(MainwindowTest, DelShortCut)
 {
-    videowidget *prevideo = mainwindow->findChild<videowidget *>("VideoPreviewWidget");
+    videowidget *prevideo = mainwindow->findChild<videowidget *>(VIDEO_PREVIEW_WIDGET);
 
     //点击鼠标右键
     QTest::qWait(1000);
@@ -172,12 +173,12 @@ TEST_F(MainwindowTest, TenContinuousShooting)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -197,12 +198,12 @@ TEST_F(MainwindowTest, ContinuousShootingCancel)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
@@ -244,12 +245,12 @@ TEST_F(MainwindowTest, TakePicDelay)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitlePicBtn");
+    iconpixBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
     QTest::mouseMove(iconpixBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -278,7 +279,7 @@ TEST_F(MainwindowTest, rightbtn)
 {
     //点击鼠标右键
     QTest::qWait(1000);
-    QMenu *rightMouseMenu = mainwindow->findChild<QMenu *>("rightbtnmenu");
+    QMenu *rightMouseMenu = mainwindow->findChild<QMenu *>(BUTTON_RIGHT_MENU);
     if (rightMouseMenu->isVisible())
         rightMouseMenu->hide();
 }
@@ -343,13 +344,13 @@ TEST_F(MainwindowTest, TakeVideo1)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitleVdBtn");
+    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
 
     QTest::mouseMove(iconVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -382,7 +383,7 @@ TEST_F(MainwindowTest, TakeVideo1)
         mainwindow->activateWindow();
     }
 
-    EndBtn = mainwindow->findChild<DPushButton *>("TakeVdEndBtn");
+    EndBtn = mainwindow->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
     if (EndBtn->isVisible()) {
         QTest::mouseMove(EndBtn, QPoint(0, 0), 1000);
         QTest::mousePress(EndBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -404,19 +405,19 @@ TEST_F(MainwindowTest, TakeVideoDelay)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>("pTitleVdBtn");
+    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
 
     QTest::mouseMove(iconVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>("PicVdBtn");
+    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(PixVdBtn, QPoint(0, 0), 1000);
     QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::qWait(4500);
 
-    EndBtn = mainwindow->findChild<DPushButton *>("TakeVdEndBtn");
+    EndBtn = mainwindow->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
     if (EndBtn->isVisible()) {
         //窗口按钮退出
         DWindowCloseButton *windowcloseBtn = mainwindow->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
@@ -455,7 +456,7 @@ TEST_F(MainwindowTest, TakeVideoDelay)
 TEST_F(MainwindowTest, SettingDialogReset)
 {
     mainwindow->settingDialog();
-    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >("SettingDialog");
+    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
     dialog->show();
 
     auto reset = dialog->findChild<QPushButton *>("SettingsContentReset");
@@ -478,12 +479,12 @@ TEST_F(MainwindowTest, SettingDialogShow)
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 1);
 
     dc::Settings::get().settings()->sync();
-    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >("SettingDialog");
+    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
     dialog->show();
 
-    DPushButton *openfilebtn = dialog->findChild<DPushButton *>("OptionLineEditBtn");
-    DDialog *invaliddlg = dialog->findChild<DDialog *>("OptionInvalidDialog");
-    DLineEdit *lineedit = dialog->findChild<DLineEdit *>("OptionSelectableLineEdit");
+    DPushButton *openfilebtn = dialog->findChild<DPushButton *>(BUTTON_OPTION_LINE_EDIT);
+    DDialog *invaliddlg = dialog->findChild<DDialog *>(OPTION_INVALID_DIALOG);
+    DLineEdit *lineedit = dialog->findChild<DLineEdit *>(OPTION_SELECTABLE_LINE_EDIT);
 
     lineedit->clear();
     lineedit->setText(QDir::homePath() + "/Musics/");
@@ -541,7 +542,7 @@ TEST_F(MainwindowTest, ImageItemDel)
 TEST_F(MainwindowTest, ChangeResolution)
 {
     mainwindow->settingDialog();
-    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >("SettingDialog");
+    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
     dialog->show();
 
     QComboBox *cmbox = dialog->findChild<QComboBox *>("OptionLineEdit");
@@ -559,7 +560,7 @@ TEST_F(MainwindowTest, ChangeResolution)
 TEST_F(MainwindowTest, SettingDialogOpen)
 {
     mainwindow->settingDialog();
-    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >("SettingDialog");
+    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
     dialog->show();
 
     QTest::qWait(3000);
