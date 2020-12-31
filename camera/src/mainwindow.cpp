@@ -325,6 +325,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
         if (validate(selectPicSavePath, false)) {
             option->setValue(selectPicSavePath);
+            picPathLineEdit->setText(selectPicSavePath);
             tmplastpicpath = selectPicSavePath;
         }
 
@@ -559,6 +560,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
         if (validate(selectVideoSavePath, false)) {
             option->setValue(selectVideoSavePath);
+            videoPathLineEdit->setText(selectVideoSavePath);
             lastVideoPath = selectVideoSavePath;
         }
 
@@ -625,8 +627,8 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
         videoPathLineEdit->setText(pi);
         lastVideoPath = pi;
-        Settings::get().settings()->setOption("base.general.last_open_vd_path", pi);
-        qDebug() << "save video last path:" << pi << endl;
+        option->setValue(pi);
+
         videoPathLineEdit->update();
     });
 
