@@ -43,14 +43,14 @@ public:
     }
 
 protected:
-    CMainWindow* mainwindow = nullptr;
-    DIconButton* selectBtn = nullptr;//切换按钮
-    DButtonBoxButton* iconpixBtn = nullptr;//标题栏拍照按钮
-    DButtonBoxButton* iconVdBtn = nullptr;//标题栏录像按钮
-    DSettingsDialog* settingdlg = nullptr;//设置界面
-    DPushButton* PixVdBtn = nullptr;//缩略图按钮
-    DPushButton* EndBtn = nullptr;//录制结束按钮
-    ThumbnailsBar* thumbnails = nullptr;
+    CMainWindow *mainwindow = nullptr;
+    DIconButton *selectBtn = nullptr;//切换按钮
+    DButtonBoxButton *iconpixBtn = nullptr;//标题栏拍照按钮
+    DButtonBoxButton *iconVdBtn = nullptr;//标题栏录像按钮
+    DSettingsDialog *settingdlg = nullptr;//设置界面
+    DPushButton *PixVdBtn = nullptr;//缩略图按钮
+    DPushButton *EndBtn = nullptr;//录制结束按钮
+    ThumbnailsBar *thumbnails = nullptr;
 
 
 };
