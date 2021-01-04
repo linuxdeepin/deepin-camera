@@ -1026,9 +1026,8 @@ void videowidget::onEndBtnClicked()
         setCapStatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
+        emit takeVdDone();
     }
-
-    emit takeVdDone();
 }
 
 void videowidget::onRestartDevices()
