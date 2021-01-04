@@ -671,6 +671,28 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
     return lastPath;
 }
 
+void CMainWindow::setWayland(bool bTrue)
+{
+    m_bWayland = bTrue;
+    m_devnumMonitor = new DevNumMonitor();
+    m_devnumMonitor->start();
+
+    if (bTrue) {
+        m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
+
+        m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager", "/com/deepin/SessionManager",
+                                               "com.deepin.SessionManager", QDBusConnection::sessionBus());
+
+        m_pLockTimer = new QTimer;
+        m_pLockTimer->setInterval(300);
+        connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
+        m_pLockTimer->start();
+        //接收休眠信号，仅wayland使用
+        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+    }
+}
+
 CMainWindow::CMainWindow(DWidget *w)
     : DMainWindow(w)
 {
@@ -680,7 +702,9 @@ CMainWindow::CMainWindow(DWidget *w)
     m_pLoginManager = nullptr;
     m_pLoginMgrSleep = nullptr;
     m_pDBus = nullptr;
+    m_pDBusSessionMgr = nullptr;
     m_bWayland = false;
+    m_bLocked = false;
     m_nActTpye = ActTakePic;
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
@@ -1009,8 +1033,6 @@ void CMainWindow::loadAfterShow()
     gviewencoder_init();
     v4l2core_init();
     m_devnumMonitor = new DevNumMonitor();
-    m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
-                                 "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
     m_devnumMonitor->init();
@@ -1030,7 +1052,6 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
     connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
-    connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));//接收休眠信号，仅wayland使用
 
     m_thumbnail->addPaths(lastVdFileName, lastPicFileName);
     m_videoPre->delayInit();
@@ -1134,6 +1155,30 @@ void CMainWindow::onDirectoryChanged(const QString &)
         }
         //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
         m_thumbnail->addPaths(lastPicFileName, lastVdFileName);
+    }
+}
+
+void CMainWindow::onTimeoutLock()
+{
+    if (m_pDBusSessionMgr) {
+        if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
+            qDebug() << "locked";
+            if (m_videoPre->getCapStatus()) {
+                m_videoPre->onEndBtnClicked();
+            }
+            m_videoPre->m_imgPrcThread->stop();
+            m_bLocked = true;
+            qDebug() << "lock end";
+        } else {
+            if (m_bLocked) {
+                qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+                //打开摄像头
+                m_videoPre->onChangeDev();
+                qDebug() << "v4l2core_start_stream OK";
+                m_bLocked = false;
+            }
+        }
+
     }
 }
 

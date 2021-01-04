@@ -71,10 +71,7 @@ public:
     * @brief setWayland　判断是否是wayland，并初始化对应操作
     * @param bTrue
     */
-    void setWayland(bool bTrue)
-    {
-        m_bWayland = bTrue;
-    }
+    void setWayland(bool bTrue);
 
     /**
     * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
@@ -289,6 +286,10 @@ private slots:
      */
     void onDirectoryChanged(const QString &);
 
+    /**
+     * @brief onVisible 是否是锁屏
+     */
+    void onTimeoutLock();
 protected:
 
     /**
@@ -329,12 +330,15 @@ private:
     QString                         m_strCfgPath;//配置文件路径
     QAction                         *m_actionSettings;//打开设置页面
     QDBusReply<QDBusUnixFileDescriptor> m_reply;
-    QDBusInterface                 *m_pLoginManager;
+    QDBusInterface                  *m_pLoginManager;
     QList<QVariant>                 m_arg;
     QDBusReply<QDBusUnixFileDescriptor> m_replySleep;
-    QDBusInterface                 *m_pLoginMgrSleep;
+    bool                            m_bLocked;
+    QDBusInterface                  *m_pLoginMgrSleep;
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
+    QDBusInterface                  *m_pDBusSessionMgr;//锁屏恢复
+    QTimer                          *m_pLockTimer = nullptr;//定时检测锁屏属性
 };
 
 #endif // MAINWINDOW_H
