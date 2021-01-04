@@ -58,17 +58,21 @@ HEADERS += \
     $$PWD/camera/src/dbus_adpator.h \
     $$PWD/camera/src/previewopenglwidget.h \
     $$PWD/camera/src/shortcut.h \
-    $$PWD/config.h
+    $$PWD/camera/config.h
+
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include \
-                ./camera/src/libcam/libcam_v4l2core\
-                ./camera/src/libcam/libcam_render\
-                ./camera/src/libcam/libcam_encoder \
-                ./camera/src/libcam/libcam_audio \
-                ./camera/src/libcam/libcam \
-                ./camera/src/basepub \
-                ./camera/src/qtsingleapplication
+                $$PWD/camera/src/libcam/libcam_v4l2core\
+                $$PWD/camera/src/libcam/libcam_render\
+                $$PWD/camera/src/libcam/libcam_encoder \
+                $$PWD/camera/src/libcam/libcam_audio \
+                $$PWD/camera/src/libcam/libcam \
+                $$PWD/camera/src/basepub \
+                $$PWD/camera \
+                $$PWD/camera/src/accessibility \
+                $$PWD/camera/src/accessible \
+                $$PWD/camera/src/qtsingleapplication
 
 LIBS += -L/lib/x86_64-linux-gnu\
 #        -ludev\
