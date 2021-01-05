@@ -1,6 +1,7 @@
 #include <QComboBox>
 #include <QAction>
 #include <QProcess>
+#include <QShortcut>
 
 #include <DWindowMaxButton>
 #include <DWindowMinButton>
@@ -51,6 +52,39 @@ TEST_F(MainwindowTest, CamUsed)
     }
 
     proclist.clear();
+}
+
+/**
+ *  @brief 右键菜单
+ */
+TEST_F(MainwindowTest, RightMenushortCut)
+{
+    //点击鼠标右键
+    QTest::qWait(1000);
+    QShortcut *shortcutCopy = mainwindow->findChild<QShortcut *>(SHORTCUT_COPY);
+    QShortcut *shortcutDel = mainwindow->findChild<QShortcut *>(SHORTCUT_DELETE);
+    QShortcut *shortcutMenu = mainwindow->findChild<QShortcut *>(SHORTCUT_CALLMENU);
+    QShortcut *shortcutOpenFolder = mainwindow->findChild<QShortcut *>(SHORTCUT_OPENFOLDER);
+    QShortcut *shortcutPrint = mainwindow->findChild<QShortcut *>(SHORTCUT_PRINT);
+
+    emit shortcutCopy->activated();
+    emit shortcutDel->activated();
+    emit shortcutMenu->activated();
+    emit shortcutOpenFolder->activated();
+    emit shortcutPrint->activated();
+
+
+}
+
+/**
+ *  @brief 快捷键
+ */
+TEST_F(MainwindowTest, shortcut)
+{
+    QShortcut *ShortcutView =  mainwindow->findChild<QShortcut *>(SHORTCUT_VIEW);
+    QShortcut *ShortcutSpace = mainwindow->findChild<QShortcut *>(SHORTCUT_SPACE);
+    emit ShortcutView->activated();
+    emit ShortcutSpace->activated();
 }
 
 /**
@@ -128,7 +162,8 @@ TEST_F(MainwindowTest, ThreeContinuousShooting)
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 1);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
-    dc::Settings::get().setPathOption("picdatapath", QVariant("picture"));
+    dc::Settings::get().setPathOption("picdatapath", QVariant(picture));
+    dc::Settings::get().setPathOption("vddatapath", QVariant(picture));
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
@@ -170,6 +205,7 @@ TEST_F(MainwindowTest, TenContinuousShooting)
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 2);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
+    dc::Settings::get().setPathOption("picdatapath", QVariant(QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)));
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
@@ -341,6 +377,7 @@ TEST_F(MainwindowTest, TakeVideo1)
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 0);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
+    dc::Settings::get().setPathOption("vddatapath", QVariant(QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)));
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
@@ -482,23 +519,44 @@ TEST_F(MainwindowTest, SettingDialogShow)
     DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
     dialog->show();
 
-    DPushButton *openfilebtn = dialog->findChild<DPushButton *>(BUTTON_OPTION_LINE_EDIT);
+    //拍照路径
+    DPushButton *openpicfilebtn = dialog->findChild<DPushButton *>(BUTTON_OPTION_PIC_LINE_EDIT);
     DDialog *invaliddlg = dialog->findChild<DDialog *>(OPTION_INVALID_DIALOG);
-    DLineEdit *lineedit = dialog->findChild<DLineEdit *>(OPTION_SELECTABLE_LINE_EDIT);
+    DLineEdit *piclineedit = dialog->findChild<DLineEdit *>(OPTION_PIC_SELECTABLE_LINE_EDIT);
 
-    lineedit->clear();
-    lineedit->setText(QDir::homePath() + "/Musics/");
-    emit lineedit->editingFinished();
+    piclineedit->clear();
+    piclineedit->setText(QDir::homePath() + "/Musics/");
+    emit piclineedit->editingFinished();
+    emit piclineedit->focusChanged(true);
 
-    QTest::mouseMove(openfilebtn, QPoint(0, 0), 1000);
-    QTest::mousePress(openfilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-    QTest::mouseRelease(openfilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    emit openpicfilebtn->clicked();
+    QTest::mouseMove(openpicfilebtn, QPoint(0, 0), 1000);
+    QTest::mousePress(openpicfilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(openpicfilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+
     emit invaliddlg->close();
-    QTest::qWait(2000);
+    QTest::qWait(500);
+
+    //视频路径
+    DPushButton *openvideofilebtn = dialog->findChild<DPushButton *>(BUTTON_OPTION_VIDEO_LINE_EDIT);
+    DLineEdit *videolineedit = dialog->findChild<DLineEdit *>(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
+
+    videolineedit->clear();
+    videolineedit->setText(QDir::homePath() + "/Musics/");
+    emit videolineedit->editingFinished();
+    emit videolineedit->focusChanged(true);
+
+    emit openvideofilebtn->clicked();
+    QTest::mouseMove(openvideofilebtn, QPoint(0, 0), 1000);
+    QTest::mousePress(openvideofilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(openvideofilebtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+
+    emit invaliddlg->close();
+    QTest::qWait(500);
+
     dialog->hide();
     mainwindow->settingDialogDel();
 }
-
 
 /**
  *  @brief 删除单张缩略图
