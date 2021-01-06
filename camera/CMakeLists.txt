@@ -64,7 +64,6 @@ file (GLOB_RECURSE CXXSOURCES
     ./src/settings_translation.cpp
     ./src/basepub/*.cpp
     ./src/qtsingleapplication/qtsingleapplication.cpp
-    ./src/qtsingleapplication/qtlocalpeer.cpp
     ./src/main.cpp
     )
 

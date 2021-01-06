@@ -46,25 +46,8 @@
 #undef protected
 
 DWIDGET_USE_NAMESPACE
-class QtLocalPeer;
 
-#if defined(Q_OS_WIN)
-#  if !defined(QT_QTSINGLEAPPLICATION_EXPORT) && !defined(QT_QTSINGLEAPPLICATION_IMPORT)
-#    define QT_QTSINGLEAPPLICATION_EXPORT
-#  elif defined(QT_QTSINGLEAPPLICATION_IMPORT)
-#    if defined(QT_QTSINGLEAPPLICATION_EXPORT)
-#      undef QT_QTSINGLEAPPLICATION_EXPORT
-#    endif
-#    define QT_QTSINGLEAPPLICATION_EXPORT __declspec(dllimport)
-#  elif defined(QT_QTSINGLEAPPLICATION_EXPORT)
-#    undef QT_QTSINGLEAPPLICATION_EXPORT
-#    define QT_QTSINGLEAPPLICATION_EXPORT __declspec(dllexport)
-#  endif
-#else
-#  define QT_QTSINGLEAPPLICATION_EXPORT
-#endif
-
-class QT_QTSINGLEAPPLICATION_EXPORT QtSingleApplication : public QObject
+class QtSingleApplication : public QObject
 {
     Q_OBJECT
 
@@ -73,47 +56,9 @@ public:
 
     ~QtSingleApplication();
 
-#if QT_VERSION < 0x050000
-    QtSingleApplication(int &argc, char **argv, Type type);
-
-#  if defined(Q_WS_X11)
-    QtSingleApplication(Display *dpy, Qt::HANDLE visual = 0, Qt::HANDLE colormap = 0);
-
-    QtSingleApplication(Display *dpy, int &argc, char **argv, Qt::HANDLE visual = 0, Qt::HANDLE cmap = 0);
-
-    QtSingleApplication(Display *dpy, const QString &appId, int argc, char **argv, Qt::HANDLE visual = 0, Qt::HANDLE colormap = 0);
-#  endif // Q_WS_X11
-
-#endif // QT_VERSION < 0x050000
-
-    bool isRunning();
-
-    QString id() const;
-
-    void setActivationWindow(QWidget *aw, bool activateOnMessage = true);
-
-    QWidget *activationWindow() const;
-
-    // Obsolete:
-    void initialize(bool dummy = true)
-    {
-        isRunning();
-        Q_UNUSED(dummy)
-    }
-
     DApplication *dApplication();
 
-public Q_SLOTS:
-    bool sendMessage(const QString &message, int timeout = 5000);
-    void activateWindow();
-
-Q_SIGNALS:
-    void messageReceived(const QString &message);
-
 private:
-    void sysInit(const QString &appId = QString());
-    QtLocalPeer *peer;
-    QWidget *actWin;
     DApplication *_app = nullptr;
 };
 

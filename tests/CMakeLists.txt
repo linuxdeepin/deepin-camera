@@ -65,7 +65,6 @@ file (GLOB_RECURSE CXXSOURCES
     ../camera/src/dbus_adpator.cpp
     ../camera/src/settings_translation.cpp
     ../camera/src/qtsingleapplication/qtsingleapplication.cpp
-    ../camera/src/qtsingleapplication/qtlocalpeer.cpp
     )
 
 file (GLOB_RECURSE CSOURCES
