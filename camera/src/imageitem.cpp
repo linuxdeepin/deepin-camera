@@ -468,7 +468,9 @@ void ImageItem::showMenu()
 {
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
+#ifndef UNITTEST
     m_menu->exec(screen_centerpos);
+#endif
 }
 
 void ImageItem::onPrint()
@@ -476,17 +478,18 @@ void ImageItem::onPrint()
 
     if (!m_bVideo) {
         QStringList paths;
+
         if (DataManager::instance()->m_setIndex.isEmpty()) {
             paths = QStringList(m_path);
             qDebug() << "sigle print";
         } else {
             QSet<int>::iterator it;
+
             for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
                 paths << g_indexImage.value(*it)->getPath();
                 qDebug() << g_indexImage.value(*it)->getPath();
             }
         }
-
         showPrintDialog(QStringList(paths), this);
     }
 

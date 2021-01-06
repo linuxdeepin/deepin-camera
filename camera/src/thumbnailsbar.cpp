@@ -132,20 +132,25 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
 
 void ThumbnailsBar::initShortcut()
 {
-    QShortcut *shortcut = new QShortcut(QKeySequence("ctrl+c"), this);
-    connect(shortcut, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
+    QShortcut *shortcutCopy = new QShortcut(QKeySequence("ctrl+c"), this);
+    shortcutCopy->setObjectName(SHORTCUT_COPY);
+    connect(shortcutCopy, SIGNAL(activated()), this, SLOT(onShortcutCopy()));
     //也可以用Qt::Key_Delete
     QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
+    shortcutDel->setObjectName(SHORTCUT_DELETE);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
     //唤起右键菜单
-    QShortcut *shortcutmenu = new QShortcut(QKeySequence("Alt+M"), this);
-    connect(shortcutmenu, SIGNAL(activated()), this, SLOT(onCallMenu()));
+    QShortcut *shortcutMenu = new QShortcut(QKeySequence("Alt+M"), this);
+    shortcutMenu->setObjectName(SHORTCUT_CALLMENU);
+    connect(shortcutMenu, SIGNAL(activated()), this, SLOT(onCallMenu()));
     //打开文件夹
-    QShortcut *shortcutopenfolder = new QShortcut(QKeySequence("Ctrl+O"), this);
-    connect(shortcutopenfolder, SIGNAL(activated()), this, SLOT(onOpenFolder()));
+    QShortcut *shortcutOpenFolder = new QShortcut(QKeySequence("Ctrl+O"), this);
+    shortcutOpenFolder->setObjectName(SHORTCUT_OPENFOLDER);
+    connect(shortcutOpenFolder, SIGNAL(activated()), this, SLOT(onOpenFolder()));
     //打印
-    QShortcut *shortcutprint = new QShortcut(QKeySequence("Ctrl+P"), this);
-    connect(shortcutprint, SIGNAL(activated()), this, SLOT(OnPrint()));
+    QShortcut *shortcutPrint = new QShortcut(QKeySequence("Ctrl+P"), this);
+    shortcutPrint->setObjectName(SHORTCUT_PRINT);
+    connect(shortcutPrint, SIGNAL(activated()), this, SLOT(OnPrint()));
 }
 
 void ThumbnailsBar::setBtntooltip()
@@ -580,8 +585,9 @@ void ThumbnailsBar::onOpenFolder()
         QDir d;
         d.mkpath(save_path);
     }
-
+#ifndef UNITTEST
     Dtk::Widget::DDesktopServices::showFolder(save_path);
+#endif
 }
 
 void ThumbnailsBar::OnPrint()
@@ -622,15 +628,6 @@ void ThumbnailsBar::ChangeActType(enum ActType nType)
         m_lastButton->setToolTip(tr("Record video"));
     } else
         return;
-
-}
-
-void ThumbnailsBar::addPath(QString strPath)
-{
-    if (!m_strlstFolders.contains(strPath)) {
-        m_strlstFolders.push_back(strPath);
-        onFoldersChanged("");
-    }
 
 }
 

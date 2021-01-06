@@ -2,7 +2,7 @@ rm -rf ../build-ut
 mkdir ../build-ut
 cd ../build-ut
 cmake -DCMAKE_BUILD_TYPE=Debug ..
-make -j8
+make -j16
 #mv asan.log* asan_${PROJECT_REALNAME}.log
 
 workdir=$(cd ../$(dirname $0)/build-ut; pwd)

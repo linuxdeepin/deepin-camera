@@ -159,7 +159,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
 static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 {
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
-
+    option->setObjectName(PIC_OPTION);
     DLineEdit *picPathLineEdit = new DLineEdit;//文本框
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
@@ -174,11 +174,11 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
     main->setLayout(horboxlayout);
     icon->setAutoDefault(false);
-    icon->setObjectName(BUTTON_OPTION_LINE_EDIT);
-    icon->setAccessibleName(BUTTON_OPTION_LINE_EDIT);
+    icon->setObjectName(BUTTON_OPTION_PIC_LINE_EDIT);
+    icon->setAccessibleName(BUTTON_OPTION_PIC_LINE_EDIT);
     picPathLineEdit->setFixedHeight(30);
-    picPathLineEdit->setObjectName(OPTION_SELECTABLE_LINE_EDIT);
-    picPathLineEdit->setAccessibleName(OPTION_SELECTABLE_LINE_EDIT);
+    picPathLineEdit->setObjectName(OPTION_PIC_SELECTABLE_LINE_EDIT);
+    picPathLineEdit->setAccessibleName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     //获取当前设置的照片保存路径
     QString curPicSettingPath = option->value().toString();
 
@@ -402,6 +402,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 {
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
+    option->setObjectName(VIDEO_OPTION);
 
     DLineEdit *videoPathLineEdit = new DLineEdit;
     DWidget *main = new DWidget;
@@ -416,11 +417,11 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
     main->setLayout(horboxlayout);
     icon->setAutoDefault(false);
-    icon->setObjectName(BUTTON_OPTION_LINE_EDIT);
-    icon->setAccessibleName(BUTTON_OPTION_LINE_EDIT);
+    icon->setObjectName(BUTTON_OPTION_VIDEO_LINE_EDIT);
+    icon->setAccessibleName(BUTTON_OPTION_VIDEO_LINE_EDIT);
     videoPathLineEdit->setFixedHeight(30);
-    videoPathLineEdit->setObjectName(OPTION_SELECTABLE_LINE_EDIT);
-    videoPathLineEdit->setAccessibleName(OPTION_SELECTABLE_LINE_EDIT);
+    videoPathLineEdit->setObjectName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
+    videoPathLineEdit->setAccessibleName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     QString curVideoSettingPath = option->value().toString();
     if (curVideoSettingPath.contains(relativeHomePath))
         curVideoSettingPath.replace(0, 1, QDir::homePath());
@@ -860,8 +861,8 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowoptionButton, windowMinBtn);
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
-    setTabOrder(windowCloseBtn, m_thumbnail->findChild<DPushButton *>("PicVdBtn"));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>("PicVdBtn"), pSelectBtn);
+    setTabOrder(windowCloseBtn, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
+    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), pSelectBtn);
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 
@@ -869,6 +870,9 @@ void CMainWindow::initShortcut()
 {
     QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
     QShortcut *scSpaceShortcut = new QShortcut(QKeySequence("space"), this);
+
+    scViewShortcut->setObjectName(SHORTCUT_VIEW);
+    scSpaceShortcut->setObjectName(SHORTCUT_SPACE);
 
     connect(scViewShortcut, &QShortcut::activated, this, [ = ] {
         qDebug() << "receive Ctrl+Shift+/";
@@ -880,16 +884,18 @@ void CMainWindow::initShortcut()
         QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
 
         shortcutString << "-b" << param1 << param2;
+#ifndef UNITTEST
         QProcess::startDetached("deepin-shortcut-viewer", shortcutString);
+#endif
     });
 
     connect(scSpaceShortcut, &QShortcut::activated, this, [ = ] {
-        DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>("TakeVdEndBtn");
+        DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
 
         if (tabkevdent->isVisible())
             tabkevdent->click();
         else
-            m_thumbnail->findChild<DPushButton *>("PicVdBtn")->click();
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
     });
 
 }
