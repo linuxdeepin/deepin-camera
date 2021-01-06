@@ -221,9 +221,9 @@ videowidget::~videowidget()
 void videowidget::delayInit()
 {
     m_imgPrcThread = new MajorImageProcessingThread;
-
+    m_imgPrcThread->setParent(this);
+    m_imgPrcThread->setObjectName("MajorThread");
     setCapStatus(false);
-    m_imgPrcThread->setObjectName("MajorImageThread");
     m_imgPrcThread->m_bTake = false;
 #ifdef __mips__
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
