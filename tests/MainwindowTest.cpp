@@ -628,6 +628,15 @@ TEST_F(MainwindowTest, SettingDialogOpen)
 }
 
 /**
+ *  @brief 最大延迟帧
+ */
+TEST_F(MainwindowTest, reachMaxDelayedFrames)
+{
+    MajorImageProcessingThread *processThread = mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
+    emit processThread->reachMaxDelayedFrames();
+}
+
+/**
  *  @brief 主窗口退出(这个case一定得放在最后)
  */
 TEST_F(MainwindowTest, quitmainwindow)
