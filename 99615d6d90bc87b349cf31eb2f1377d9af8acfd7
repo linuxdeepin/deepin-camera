@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfeaef88_63f09f0f",
+        "filename": "camera/src/accessibility/ac-deepin-camera-define.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-06T01:24:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 14; 注释率: 0.0%",
+      "revId": "99615d6d90bc87b349cf31eb2f1377d9af8acfd7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbbc4ce7_13115c29",
+        "filename": "camera/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-06T01:24:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "99615d6d90bc87b349cf31eb2f1377d9af8acfd7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f872b561_0ef899af",
+        "filename": "camera/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-06T01:24:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 18; 注释率: 0.0%",
+      "revId": "99615d6d90bc87b349cf31eb2f1377d9af8acfd7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9241c85f_6274fa72",
+        "filename": "camera/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-06T01:24:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 15; 注释率: 0.0%",
+      "revId": "99615d6d90bc87b349cf31eb2f1377d9af8acfd7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e87eea4d_4ddc2b0b",
+        "filename": "camera/src/thumbnailsbar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-06T01:24:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "99615d6d90bc87b349cf31eb2f1377d9af8acfd7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
