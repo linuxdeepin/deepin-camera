@@ -138,7 +138,6 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
 
-
 #application
 install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
 
@@ -151,7 +150,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
     DESTINATION /usr/share/icons/hicolor/scalable/apps)
 
 #manual
-#install(DIRECTORY ${PROJECT_SOURCE_DIR}/dman/* DESTINATION /usr/share/dman)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
 
 #debus_service
 install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/share/dbus-1/services)

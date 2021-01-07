@@ -101,15 +101,15 @@ isEmpty(PREFIX){
 
 target.path = $$INSTROOT$$BINDIR
 icon_files.path = $$INSTROOT$$PREFIX/share/icons/hicolor/scalable/apps/
-icon_files.files = $$PWD/assets/deepin-camera.svg
+icon_files.files = $$PWD/camera/assets/deepin-camera.svg
 
 desktop.path = $$INSTROOT$$APPDIR
-desktop.files = deepin-camera.desktop
+desktop.files = $$PWD/camera/deepin-camera.desktop
 
-manual.path = /usr/share/dman/
-manual.files = $$PWD/dman/*
+manual_dir.files = $$PWD/camera/assets/deepin-camera
+manual_dir.path=/usr/share/deepin-manual/manual-assets/application/
 
-dbus_service.files = $$PWD/com.deepin.Camera.service
+dbus_service.files = $$PWD/camera/com.deepin.Camera.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 unix {
     target.path = /usr/bin
@@ -125,10 +125,10 @@ CONFIG(release, debug|release) {
     }
 }
 
-translations.path = $$PREFIX/share/camera/translations
+translations.path = $$PREFIX/share/deepin-camera/translations
 translations.files = $$PWD/camera/translations/*.qm
 
-INSTALLS = target desktop dbus_service icon_files manual translations
+INSTALLS = target desktop dbus_service icon_files translations manual_dir
 QMAKE_CXXFLAGS += -Wl,-as-need -fPIE
 QMAKE_LFLAGS+=-pie
 
