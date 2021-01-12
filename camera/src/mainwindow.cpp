@@ -41,6 +41,7 @@
 #include <DWindowCloseButton>
 #include <DWindowMaxButton>
 #include <DWindowOptionButton>
+#include <DListView>
 
 #include <QListWidgetItem>
 #include <QTextLayout>
@@ -161,6 +162,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
     option->setObjectName(PIC_OPTION);
     DLineEdit *picPathLineEdit = new DLineEdit;//文本框
+    picPathLineEdit->lineEdit()->setFocusPolicy(Qt::ClickFocus);
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
     DPushButton *icon = new DPushButton(main);
@@ -405,6 +407,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     option->setObjectName(VIDEO_OPTION);
 
     DLineEdit *videoPathLineEdit = new DLineEdit;
+    videoPathLineEdit->lineEdit()->setFocusPolicy(Qt::ClickFocus);
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
     DPushButton *icon = new DPushButton(main);
@@ -908,6 +911,15 @@ void CMainWindow::settingDialog()
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     m_SetDialog->setObjectName(SETTING_DIALOG);
     m_SetDialog->setAccessibleName(SETTING_DIALOG);
+    DListView *leftListView = m_SetDialog->findChild<DListView *>("NavigationBar");
+    leftListView->setFocusPolicy(Qt::ClickFocus);
+
+    QList<QObject *>obj = m_SetDialog->findChildren<QObject *>("qt_scrollarea_viewport");
+    for (QList<QObject *>::iterator it = obj.begin(); it != obj.end(); ++it) {
+        QWidget *scrollarea = dynamic_cast<QWidget *>(*it);
+        scrollarea->setFocusPolicy(Qt::ClickFocus);
+    }
+
     connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
