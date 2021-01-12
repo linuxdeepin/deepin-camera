@@ -12,6 +12,8 @@
 #include "DButtonBox"
 #include "datamanager.h"
 #include "ac-deepin-camera-define.h"
+#include "stub_function.h"
+#include "stub.h"
 
 using namespace Dtk::Core;
 
@@ -634,6 +636,34 @@ TEST_F(MainwindowTest, reachMaxDelayedFrames)
 {
     MajorImageProcessingThread *processThread = mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
     emit processThread->reachMaxDelayedFrames();
+}
+
+/**
+ *  @brief Setting类打桩
+ */
+TEST_F(MainwindowTest, Setting)
+{
+    //进入setNewResolutionList设备句柄不为空分支
+    Stub stub;
+    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    dc::Settings::get().setNewResolutionList();
+    
+    //进入setNewResolutionList有效分辨率分支
+    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
+    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
+    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
+    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
+    dc::Settings::get().setNewResolutionList();
+
+    //进入setNewResolutionList无效分辨率分支
+    stub.reset(ADDR(QString, toInt));
+    dc::Settings::get().setNewResolutionList();
+
+    //打桩函数全部还原
+    stub.reset(get_v4l2_device_handler);
+    stub.reset(v4l2core_get_format_resolution_index);
+    stub.reset(v4l2core_get_frame_format_index);
+    stub.reset(v4l2core_get_formats_list);
 }
 
 /**

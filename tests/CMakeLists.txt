@@ -33,6 +33,7 @@ set(PROJECT_INCLUDE ../camera/src/libcam/libcam_v4l2core
     ../camera/src/accessible
     ../camera/src/qtsingleapplication
     ../camera/
+    ./stub
     /usr/include
     /usr/include/libusb-1.0
     /usr/include/SDL2
@@ -65,6 +66,7 @@ file (GLOB_RECURSE CXXSOURCES
     ../camera/src/dbus_adpator.cpp
     ../camera/src/settings_translation.cpp
     ../camera/src/qtsingleapplication/qtsingleapplication.cpp
+    ./stub/*.cpp
     )
 
 file (GLOB_RECURSE CSOURCES
@@ -81,6 +83,8 @@ file (GLOB_RECURSE HEADERS
     ../camera/src/accessibility/*.h
     ../camera/src/accessible/*.h
     ../tests/*.h
+    ./stub/*.h
+    ./stub/*.hpp
     )
 file (GLOB_RECURSE RESOURCES  ../camera/assets/assets.qrc)
 
