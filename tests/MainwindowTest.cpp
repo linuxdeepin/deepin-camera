@@ -57,6 +57,19 @@ TEST_F(MainwindowTest, CamUsed)
 }
 
 /**
+ *  @brief Tab键切换
+ */
+TEST_F(MainwindowTest, TabChange)
+{
+    //tab键切换次数
+    const int TabNumber = 10;
+    //预览界面循环切换tab键
+    for (int i = 0 ; i < TabNumber; i++) {
+        QTest::keyPress(mainwindow, Qt::Key_Tab, Qt::NoModifier, 500);
+    }
+}
+
+/**
  *  @brief 右键菜单
  */
 TEST_F(MainwindowTest, RightMenushortCut)
@@ -74,7 +87,6 @@ TEST_F(MainwindowTest, RightMenushortCut)
     emit shortcutMenu->activated();
     emit shortcutOpenFolder->activated();
     emit shortcutPrint->activated();
-
 
 }
 
@@ -647,7 +659,7 @@ TEST_F(MainwindowTest, Setting)
     Stub stub;
     stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     dc::Settings::get().setNewResolutionList();
-    
+
     //进入setNewResolutionList有效分辨率分支
     stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
     stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
