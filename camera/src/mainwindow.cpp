@@ -1550,8 +1550,9 @@ void CMainWindow::onFitToolBar()
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
             m_thumbnail->m_showVdTime->hide();
+            m_thumbnail->m_thumbLeftWidget->hide();
         } else {
-
+            m_thumbnail->m_thumbLeftWidget->show();
             if (DataManager::instance()->getvideoCount() <= 0) {
                 m_thumbnail->m_showVdTime->hide();
                 nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH;
