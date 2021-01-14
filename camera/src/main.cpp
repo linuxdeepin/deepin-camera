@@ -36,6 +36,7 @@ extern "C"
 #include <DApplicationSettings>
 
 #include <QSharedMemory>
+#include <QtDebug>
 
 #include <stdio.h>
 
@@ -91,7 +92,7 @@ int main(int argc, char *argv[])
     //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
+    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
@@ -111,7 +112,7 @@ int main(int argc, char *argv[])
         shared_memory.detach();
 
     if (!shared_memory.create(1)) {
-        qDebug() << "another deepin camera instance has started";
+        qWarning() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
             qWarning() << "deepin-camera raise";

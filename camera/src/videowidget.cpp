@@ -895,7 +895,7 @@ void videowidget::showCountdown()
     } else {
         showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
         m_nInterval--;
-        qDebug() << "m_nInterval:" << m_nInterval;
+        qInfo() << "m_nInterval:" << m_nInterval;
     }
 
 }
@@ -907,7 +907,7 @@ void videowidget::showRecTime()
 
     //过滤不正常的时间
     if (m_nCount <= 3) {
-        qDebug() << "error time" << m_nCount;
+        qWarning() << "error time" << m_nCount;
         return;
     }
 
@@ -1179,7 +1179,7 @@ void videowidget::onChangeDev()
                     if (vd != nullptr)
                         close_v4l2_device_handler();
 
-                    qDebug() << "camInit failed";
+                    qWarning() << "camInit failed";
 
                     if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
                         showCamUsed();

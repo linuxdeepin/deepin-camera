@@ -661,7 +661,7 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
         QDir dirNew(lastPath);
         if (!dirNew.exists()) {
             if (!dirNew.mkdir(lastPath)) {
-                qDebug() << "make dir error:" << lastPath;
+                qWarning() << "make dir error:" << lastPath;
                 lastPath = QDir::currentPath();//这是错误的路径，但肯定存在
                 qDebug() << "now lastVdPath is:" << lastPath;
             }
@@ -1115,9 +1115,9 @@ void CMainWindow::onNoCam()
 void CMainWindow::onSleepWhenTaking(bool bTrue)
 {
     if (m_bWayland && bTrue) {
-        qDebug() << "onSleepWhenTaking(bool)";
+        qInfo() << "onSleepWhenTaking(bool)";
         m_videoPre->onEndBtnClicked();
-        qDebug() << "onSleepWhenTaking(over)";
+        qInfo() << "onSleepWhenTaking(over)";
     }
 
 }
@@ -1137,7 +1137,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
             if (!dirDefaultVd.exists()) {
                 bool bMakeDir = dirDefaultVd.mkdir(lastVdFileName);
                 if (!bMakeDir) {
-                    qDebug() << "make dir error:" << lastVdFileName;
+                    qWarning() << "make dir error:" << lastVdFileName;
                 }
             }
             Settings::get().settings()->setOption("base.save.vddatapath", lastVdFileName);
@@ -1149,7 +1149,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
             if (!dirDefaultPic.exists()) {
                 bool bMakeDir = dirDefaultPic.mkdir(lastPicFileName);
                 if (!bMakeDir) {
-                    qDebug() << "make dir error:" << lastPicFileName;
+                    qWarning() << "make dir error:" << lastPicFileName;
                 }
             }
             Settings::get().settings()->setOption("base.save.picdatapath", lastPicFileName);
@@ -1567,7 +1567,7 @@ void CMainWindow::onFitToolBar()
 
         }
 
-        qDebug() << "onFitToolBar" << nWidth;
+        qInfo() << "onFitToolBar" << nWidth;
         m_thumbnail->resize(/*qMin(this->width(), nWidth)*/nWidth, THUMBNAIL_HEIGHT + 30);
         m_thumbnail->m_hBox->setSpacing(ITEM_SPACE);
         m_thumbnail->move((width() - m_thumbnail->width()) / 2,

@@ -27,6 +27,8 @@ extern "C"
 #include "camview.h"
 }
 
+#include <QDebug>
+
 DevNumMonitor::DevNumMonitor()
 {
     m_pTimer = nullptr;
@@ -68,14 +70,14 @@ void DevNumMonitor::timeOutSlot()
 
     if (m_devlist->num_devices <= 1) {
         emit seltBtnStateDisable();
-        if (m_devlist->num_devices < 1)
-            //没有设备发送信号
+        if (m_devlist->num_devices < 1) {
+            qDebug() << "There is no device to send a signal";
             emit noDeviceFound();
-        else
+        } else
             emit existDevice();
     } else {
         emit existDevice();
-        //显示切换按钮
+        qDebug() << "Display toggle button";
         emit seltBtnStateEnable();
     }
 

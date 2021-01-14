@@ -78,7 +78,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
-                qDebug() << "generateThumbnail failed";
+                qWarning() << "generateThumbnail failed";
             }
 
         }
@@ -187,7 +187,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
             for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
                 paths << g_indexImage.value(*it)->getPath();
-                qDebug() << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
             }
 
         }
@@ -257,20 +257,22 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     QFileInfo fileInfo(m_path);
     QString program;
     if (fileInfo.suffix() == "jpg") {
-        program = "deepin-image-viewer"; //用看图打开
+        program = "deepin-image-viewer";
+        qDebug() << "open it using deepin-image-viewer";
     } else {
-        program = "deepin-movie"; //用影院打开
+        program = "deepin-movie";
+        qDebug() << "open it using deepin-movie";
     }
 
     QStringList arguments;
     //表示本地文件
     arguments << QUrl::fromLocalFile(m_path).toString();
-    qDebug() << QUrl::fromLocalFile(m_path).toString();
+    qInfo() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
     bool bOK = myProcess->startDetached(program, arguments);
 
     if (!bOK)
-        qDebug() << "QProcess startDetached error";
+        qWarning() << "QProcess startDetached error";
 
 }
 
@@ -487,7 +489,7 @@ void ImageItem::onPrint()
 
             for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
                 paths << g_indexImage.value(*it)->getPath();
-                qDebug() << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
             }
         }
         showPrintDialog(QStringList(paths), this);
