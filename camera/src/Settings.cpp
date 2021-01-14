@@ -52,11 +52,6 @@ Settings::Settings(): QObject(0)
     auto backend = new QSettingBackend(m_configPath);
 
 #if defined (__mips__) || defined (__sw_64__) || defined ( __aarch64__)
-    /*if (!CompositingManager::get().composited()) {
-        _settings = DSettings::fromJsonFile(":/resource/settings.json");
-    } else {
-        _settings = DSettings::fromJsonFile(":/resource/settings.json");
-    }*/
     m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 #else
     m_settings = DSettings::fromJsonFile(":/resource/settings.json");
