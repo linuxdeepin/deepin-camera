@@ -681,16 +681,8 @@ void CMainWindow::setWayland(bool bTrue)
     if (bTrue) {
         m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
                                      "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
-
-        m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager", "/com/deepin/SessionManager",
-                                               "com.deepin.SessionManager", QDBusConnection::sessionBus());
-
-        m_pLockTimer = new QTimer;
-        m_pLockTimer->setInterval(300);
-        connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
-        m_pLockTimer->start();
-        //接收休眠信号，仅wayland使用
         connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
+        //接收休眠信号，仅wayland使用
     }
 }
 
@@ -1049,6 +1041,15 @@ void CMainWindow::loadAfterShow()
     initShortcut();
     gviewencoder_init();
     v4l2core_init();
+
+    //连拍在锁屏、熄屏情况下都要结束，与平台无关
+    m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager", "/com/deepin/SessionManager",
+                                           "com.deepin.SessionManager", QDBusConnection::sessionBus());
+
+    m_pLockTimer = new QTimer;
+    m_pLockTimer->setInterval(100);//仅在连拍和录制期间开启,因此时间下调到100ms
+    connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
+
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
@@ -1078,9 +1079,11 @@ void CMainWindow::updateBlockSystem(bool bTrue)
 {
     initBlockShutdown();
 
-    if (bTrue)
+    if (bTrue) {
+        m_pLockTimer->start();
         m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
-    else {
+    } else {
+        m_pLockTimer->stop();
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
         qDebug() << "Nublock shutdown.";
@@ -1177,25 +1180,32 @@ void CMainWindow::onDirectoryChanged(const QString &)
 
 void CMainWindow::onTimeoutLock()
 {
-    if (m_pDBusSessionMgr) {
-        if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
-            qDebug() << "locked";
-            if (m_videoPre->getCapStatus()) {
-                m_videoPre->onEndBtnClicked();
-            }
-            m_videoPre->m_imgPrcThread->stop();
-            m_bLocked = true;
-            qDebug() << "lock end";
-        } else {
-            if (m_bLocked) {
-                qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
-                //打开摄像头
-                m_videoPre->onChangeDev();
-                qDebug() << "v4l2core_start_stream OK";
-                m_bLocked = false;
+    if (m_bWayland) {
+        if (m_pDBusSessionMgr) {
+            if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
+                qDebug() << "locked";
+                if (m_videoPre->getCapStatus()) {
+                    m_videoPre->onEndBtnClicked();
+                }
+                m_videoPre->m_imgPrcThread->stop();
+                m_bLocked = true;
+                qDebug() << "lock end";
+            } else {
+                if (m_bLocked) {
+                    qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+                    //打开摄像头
+                    m_videoPre->onChangeDev();
+                    qDebug() << "v4l2core_start_stream OK";
+                    m_bLocked = false;
+                }
             }
         }
+    }
 
+    if (m_pDBusSessionMgr) {
+        if (m_thumbnail->m_nStatus == STATPicIng && m_pDBusSessionMgr->property("Locked").value<bool>()) {
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        }
     }
 }
 

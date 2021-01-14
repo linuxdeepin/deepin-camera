@@ -857,6 +857,7 @@ void videowidget::showCountdown()
                     }
                     emit takePicDone();
                     QThread::currentThread()->quit();
+                    emit updateBlockSystem(false);
                 });
 
                 thread->start();
@@ -1226,9 +1227,11 @@ void videowidget::onTakePic(bool bTrue)
 
         m_nInterval = m_nMaxInterval = m_Maxinterval;
         m_curTakePicTime = m_nMaxContinuous;
+        emit updateBlockSystem(true);
         m_countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
     } else {
         emit takePicCancel();
+        emit updateBlockSystem(false);
         m_nInterval = 0; //下次可开启
         m_curTakePicTime = 0; //结束当前拍照
 
