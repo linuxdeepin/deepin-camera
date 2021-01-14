@@ -857,6 +857,7 @@ void CMainWindow::initTabOrder()
     DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
     DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
 
     //设置鼠标tab同时切换策略，有一个问题鼠标点击时也会出现一个tab选择框
     setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
@@ -865,7 +866,8 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
     setTabOrder(windowCloseBtn, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), pSelectBtn);
+    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), thumbLeftWidget);
+    setTabOrder(thumbLeftWidget, pSelectBtn);
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 

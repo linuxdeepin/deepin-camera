@@ -61,27 +61,31 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     : DFloatingWidget(parent)
 {
     m_lastButton = new DPushButton(this);
+    m_thumbLeftWidget = new ThumbWidget(this);
     m_lastButton->setObjectName(BUTTON_PICTURE_VIDEO);
     m_lastButton->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_nDelTimes = 0;
     m_strFileName = "";
     setFocus(Qt::OtherFocusReason);
-    setFocusPolicy(Qt::StrongFocus);
+    setFocusPolicy(Qt::NoFocus);
     this->setFramRadius(18);
     initShortcut();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
     m_nMaxWidth = 0;
     m_hBox = new QHBoxLayout();
+    m_thumbLeftWidget->setLayout(m_hBox);
+    m_thumbLeftWidget->setObjectName("thumbLeftWidget");
+    m_thumbLeftWidget->setFocusPolicy(Qt::TabFocus);
+    m_hBox->setContentsMargins(0, 0, 0, 0);
     m_hBox->setSpacing(ITEM_SPACE);
-    m_mainLayout = new QHBoxLayout();
-    m_mainLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainLayout = new QHBoxLayout(this);
+    m_mainLayout->setContentsMargins(5, 0, 5, 0);
 
     setBlurBackgroundEnabled(true); //设置磨砂效果
 
-    m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_4"));
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
-    m_mainLayout->addLayout(m_hBox, Qt::AlignLeft);
+    m_mainLayout->addWidget(m_thumbLeftWidget, Qt::AlignLeft);
 
     m_showVdTime = new DLabel(this);
     m_mainLayout->addWidget(m_showVdTime, Qt::AlignRight);

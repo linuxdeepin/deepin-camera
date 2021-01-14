@@ -59,6 +59,7 @@ file (GLOB_RECURSE CXXSOURCES
     ../camera/src/previewopenglwidget.cpp
     ../camera/src/shortcut.cpp
     ../camera/src/thumbnailsbar.cpp
+    ../camera/src/thumbwidget.cpp
     ../camera/src/videowidget.cpp
     ../camera/src/imageitem.cpp
     ../camera/src/Settings.cpp

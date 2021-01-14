@@ -23,6 +23,7 @@
 #define THUMBNAILSBAR_H
 
 #include "imageitem.h"
+#include "thumbwidget.h"
 
 #include <DWidget>
 #include <DButtonBox>
@@ -106,7 +107,6 @@ public:
      * @brief widthChanged 改变缩略图宽度
      */
     void widthChanged();
-
 private:
 
     /**
@@ -205,7 +205,7 @@ public:
     int            m_nMaxWidth;
 
     DLabel         *m_showVdTime;//缩略图显示视频时长
-
+    ThumbWidget    *m_thumbLeftWidget;
     QHBoxLayout    *m_mainLayout;
     QHBoxLayout    *m_hBox;
 

@@ -42,7 +42,8 @@ SOURCES += \
     $$PWD/camera/src/settings_translation.cpp \
     $$PWD/camera/src/dbus_adpator.cpp \
     $$PWD/camera/src/previewopenglwidget.cpp \
-    $$PWD/camera/src/shortcut.cpp
+    $$PWD/camera/src/shortcut.cpp \
+    $$PWD/camera/src/thumbwidget.cpp
 
 HEADERS += \
     $$PWD/camera/src/mainwindow.h \
@@ -58,7 +59,8 @@ HEADERS += \
     $$PWD/camera/src/dbus_adpator.h \
     $$PWD/camera/src/previewopenglwidget.h \
     $$PWD/camera/src/shortcut.h \
-    $$PWD/camera/config.h
+    $$PWD/camera/config.h \
+    $$PWD/camera/src/thumbwidget.h
 
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
