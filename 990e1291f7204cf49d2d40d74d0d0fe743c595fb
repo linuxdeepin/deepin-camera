@@ -33,6 +33,24 @@
       "revId": "990e1291f7204cf49d2d40d74d0d0fe743c595fb",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c9439ee_dfb876f7",
+        "filename": "camera/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-01-14T10:16:29Z",
+      "side": 1,
+      "message": "添加注释",
+      "parentUuid": "f0eaff34_088b481f",
+      "revId": "990e1291f7204cf49d2d40d74d0d0fe743c595fb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
