@@ -33,13 +33,14 @@ class DataManager: public QObject
 public:
 
     static DataManager *instance();
-
+    int m_firstshift;//第一次shift点击的位置索引
+    int m_lastshift;//第二次shift点击的位置索引
     QSet<int> m_setIndex;
     Q_DISABLE_COPY(DataManager)
-    
+
     /**
      * @brief getbMultiSlt 是否多选
-     */
+     */ 
     bool getbMultiSlt();
     /**
      * @brief setbMultiSlt 设置多选
@@ -55,66 +56,67 @@ public:
      * @param indexNow
      */
     void setindexNow(int indexNow);
-    /**
-     * @brief getbindexNow 获得缩略图索引
-     */
-//    QSet<int> getindex();
-//    /**
-//     * @brief clearindex 清除缩略图索引
-//     */
-//    void clearindex();
-//    /**
-//     * @brief insertindex 插入缩略图索引
-//     */
-//    void insertindex(int index);
-//    /**
-//     * @brief getbindexNow 设置缩略图索引
-//     */
-//    void setindex(int index);
+
     /**
      * @brief getstrFileName 获得文件名
      */
     QString &getstrFileName();
+
     /**
      * @brief getstrFileName 设置文件名
      * @param strFileName
      */
     void setstrFileName(QString strFileName);
+
     /**
      * @brief getvideoCount 获得视频数目
      */
     int &getvideoCount();
+
     /**
      * @brief setvideoCount 设置视频数目
      */
     void setvideoCount(int videoCount);
+
     /**
      * @brief getdevStatus 获得设备状态
      */
     enum DeviceStatus getdevStatus();
+
     /**
      * @brief setdevStatus 设置设备状态
      */
     void setdevStatus(enum DeviceStatus devStatus);
-//    /**
-//     * @brief getindexImage 获得图片索引
-//     */
-//    QMap<int, ImageItem *> &getindexImage();
-//    /**
-//     * @brief setdevStatus 设置图片索引
-//     */
-//    void setindexImage(int tIndex,ImageItem * pLabel);
 
+    /**
+     * @brief getIndexCount 利用shift选中缩略图，最多选择两次，获得选中次数
+     */
+    int getIndexCount();
 
+    /**
+     * @brief setIndexCount 设置shift选中缩略图次数
+     */
+    void setIndexCount(int index);
+
+    /**
+     * @brief getTakePicVd 获取是否完成拍照或者录像状态
+     */
+    bool getTakePicVd();
+
+    /**
+     * @brief setTakePicVd 设置是否拍照或者录像状态
+     */
+    void setTakePicVd(bool isTakePicVd);
 
 private:
     DataManager();
     static DataManager *m_dataManager;
-    bool m_bMultiSlt=false;
-    int m_indexNow=0;
-//    QMap<int, ImageItem *> m_indexImage;
+    bool m_bMultiSlt;
+    int m_indexNow;
     QString m_strFileName;
     int m_videoCount;
     volatile enum DeviceStatus m_devStatus;
+    int m_indexShiftCount;//缩略图shift共记录两次
+    bool m_isTakePicVd;//是否已完成拍照或者录像
 };
 #endif // DATAMANAGER_H

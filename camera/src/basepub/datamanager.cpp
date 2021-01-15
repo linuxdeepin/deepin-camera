@@ -22,7 +22,7 @@
 
 #include "datamanager.h"
 
-DataManager *DataManager::m_dataManager=nullptr;
+DataManager *DataManager::m_dataManager = nullptr;
 bool DataManager::getbMultiSlt()
 {
     return m_bMultiSlt;
@@ -30,7 +30,7 @@ bool DataManager::getbMultiSlt()
 
 void DataManager::setbMultiSlt(bool bMultiSlt)
 {
-    m_bMultiSlt=bMultiSlt;
+    m_bMultiSlt = bMultiSlt;
 }
 
 int DataManager::getindexNow()
@@ -40,28 +40,8 @@ int DataManager::getindexNow()
 
 void DataManager::setindexNow(int indexNow)
 {
-    m_indexNow=indexNow;
+    m_indexNow = indexNow;
 }
-
-//QSet<int> DataManager::getindex()
-//{
-//    return m_setIndex;
-//}
-
-//void DataManager::clearindex()
-//{
-//    m_setIndex.clear();
-//}
-
-//void DataManager::insertindex(int index)
-//{
-//    m_setIndex.insert(index);
-//}
-
-//void DataManager::setindex(int index)
-//{
-//    m_setIndex.insert(index);
-//}
 
 QString &DataManager::getstrFileName()
 {
@@ -70,7 +50,7 @@ QString &DataManager::getstrFileName()
 
 void DataManager::setstrFileName(QString strFileName)
 {
-    m_strFileName=strFileName;
+    m_strFileName = strFileName;
 }
 
 int &DataManager::getvideoCount()
@@ -80,7 +60,7 @@ int &DataManager::getvideoCount()
 
 void DataManager::setvideoCount(int videoCount)
 {
-    m_videoCount=videoCount;
+    m_videoCount = videoCount;
 }
 
 enum DeviceStatus DataManager::getdevStatus()
@@ -90,18 +70,28 @@ enum DeviceStatus DataManager::getdevStatus()
 
 void DataManager::setdevStatus(enum DeviceStatus devStatus)
 {
-    m_devStatus=devStatus;
+    m_devStatus = devStatus;
 }
 
-//QMap<int, ImageItem *> &DataManager::getindexImage()
-//{
-//    return m_indexImage;
-//}
+int DataManager::getIndexCount()
+{
+    return m_indexShiftCount;
+}
 
-//void DataManager::setindexImage(int tIndex, ImageItem *pLabel)
-//{
-//    m_indexImage.insert(tIndex,pLabel);
-//}
+void DataManager::setIndexCount(int count)
+{
+    m_indexShiftCount = count;
+}
+
+bool DataManager::getTakePicVd()
+{
+    return m_isTakePicVd;
+}
+
+void DataManager::setTakePicVd(bool isTakePicVd)
+{
+    m_isTakePicVd = isTakePicVd;
+}
 
 DataManager *DataManager::instance()
 {
@@ -114,5 +104,11 @@ DataManager *DataManager::instance()
 DataManager::DataManager()
 {
     m_videoCount = 0;
+    m_bMultiSlt = false;
+    m_indexNow = 0;
+    m_indexShiftCount = 1;
+    m_firstshift = -1;
+    m_lastshift = -1;
+    m_isTakePicVd = false;
 }
 
