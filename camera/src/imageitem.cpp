@@ -293,19 +293,95 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_indexImage.value(DataManager::instance()->getindexNow())->update();
     }
 
-    //当按下shift键，多选，鼠标右键弹出右键菜单后松开shift键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
-    //此处补充获取shift键盘状态，以避免继续选择图元，应用处于多选状态的问题
-    if (DataManager::instance()->getbMultiSlt() && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
-        if (DataManager::instance()->m_setIndex.contains(m_index)) {
-            if (ev->button() == Qt::LeftButton) {
-                DataManager::instance()->m_setIndex.remove(m_index);
-                if (DataManager::instance()->m_setIndex.size() > 0) {
-                    DataManager::instance()->setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
+    //当按下ctrl键，多选，鼠标右键弹出右键菜单后松开ctrl键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
+    //此处补充获取ctrl键盘状态，以避免继续选择图元，应用处于多选状态的问题
+    if (DataManager::instance()->getbMultiSlt()) {
+        if (QGuiApplication::keyboardModifiers() == Qt::ControlModifier) {
+            if (DataManager::instance()->m_setIndex.contains(m_index)) {
+                if (ev->button() == Qt::LeftButton) {
+                    DataManager::instance()->m_setIndex.remove(m_index);
+                    if (DataManager::instance()->m_setIndex.size() > 0) {
+                        DataManager::instance()-> setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
+                    }
                 }
+            } else {
+                DataManager::instance()->setindexNow(m_index);
+                DataManager::instance()->m_setIndex.insert(m_index);
             }
-        } else {
-            DataManager::instance()->setindexNow(m_index);
-            DataManager::instance()->m_setIndex.insert(m_index);
+
+        } else if (QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
+
+            if (DataManager::instance()->getIndexCount() > 2) {
+                DataManager::instance()->setIndexCount(1);
+                DataManager::instance()->m_firstshift = -1;
+                DataManager::instance()->m_lastshift = -1;
+            }
+
+            if (DataManager::instance()->getIndexCount() == 1) {
+                DataManager::instance()->m_setIndex.clear();
+                DataManager::instance()->m_firstshift = m_index;
+                DataManager::instance()->setIndexCount(DataManager::instance()->getIndexCount() + 1);
+                DataManager::instance()->m_setIndex.insert(m_index);
+
+            } else if (DataManager::instance()->getIndexCount() == 2) {
+                if (DataManager::instance()->m_lastshift != DataManager::instance()->m_firstshift) {
+                    if (DataManager::instance()->getTakePicVd() == true) {
+                        //获取缩略图数目
+                        int count = g_indexImage.size();
+                        //先获取非第一张缩略图索引，再从0开始插入到该索引，最后插入第一张
+                        //在拍照或录像完成后判断两次选择是否其中一次选中第一张
+                        if (DataManager::instance()->m_setIndex.contains(count - 1) || (m_index == count - 1)) {
+                            if (DataManager::instance()->m_setIndex.contains(count - 1) && (m_index == count - 1)) {
+                                DataManager::instance()->m_setIndex.insert(count - 1);
+                                DataManager::instance()->setIndexCount(1);
+                            } else {
+                                //获取两张中不是第一张的索引
+                                int isNoFirstThumbnailIndex = -1;
+                                if (!(*DataManager::instance()->m_setIndex.begin() == count - 1)) {
+                                    isNoFirstThumbnailIndex = *DataManager::instance()->m_setIndex.begin();
+                                } else {
+                                    isNoFirstThumbnailIndex = m_index;
+                                }
+
+                                DataManager::instance()->m_setIndex.clear();
+                                for (int i = 0; i <= isNoFirstThumbnailIndex; i++) {
+                                    DataManager::instance()->m_setIndex.insert(i);
+                                }
+                                DataManager::instance()->m_setIndex.insert(count - 1);
+                                DataManager::instance()->m_firstshift = m_index;
+                                DataManager::instance()->setIndexCount(1);
+                            }
+
+                        } else {//如果没有选择到第一张缩略图
+                            DataManager::instance()->m_lastshift = m_index;
+                            DataManager::instance()->setIndexCount(DataManager::instance()->getIndexCount() + 1);
+                            //加入在m_firstshift和m_lastshift索引之间缩略图
+                            int max = qMax(DataManager::instance()->m_firstshift, DataManager::instance()->m_lastshift);
+                            int min = qMin(DataManager::instance()->m_firstshift, DataManager::instance()->m_lastshift);
+                            DataManager::instance()->m_setIndex.clear();
+                            for (int i = min; i <= max; i++) {
+                                DataManager::instance()->m_setIndex.insert(i);
+                            }
+
+                        }
+
+                    } else {
+                        DataManager::instance()->m_lastshift = m_index;
+                        DataManager::instance()->setIndexCount(DataManager::instance()->getIndexCount() + 1);
+                        //加入在m_firstshift和m_lastshift索引之间缩略图
+                        int max = qMax(DataManager::instance()->m_firstshift, DataManager::instance()->m_lastshift);
+                        int min = qMin(DataManager::instance()->m_firstshift, DataManager::instance()->m_lastshift);
+                        DataManager::instance()->m_setIndex.clear();
+                        for (int i = min; i <= max; i++) {
+                            DataManager::instance()->m_setIndex.insert(i);
+                        }
+
+                    }
+
+                }
+
+            }
+
         }
 
     } else {

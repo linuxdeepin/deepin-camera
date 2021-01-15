@@ -1788,6 +1788,7 @@ void CMainWindow::onTakePicDone()
     m_thumbnail->setBtntooltip();
     QString strPath = m_videoPre->m_imgPrcThread->m_strPath;
     m_thumbnail->addFile(strPath);
+    DataManager::instance()->setTakePicVd(true);
 }
 
 void CMainWindow::onTakePicOnce()
@@ -1820,7 +1821,7 @@ void CMainWindow::onTakeVdDone()
 
         m_thumbnail->addFile(strFileName);
     });
-
+    DataManager::instance()->setTakePicVd(true);
 }
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
@@ -1855,6 +1856,12 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 
 void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
+    if (e->key() == Qt::Key_Control) {
+        qDebug() << "ctrl pressed";
+        DataManager::instance()->setbMultiSlt(true);
+        DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
+    }
+
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift pressed";
         DataManager::instance()->setbMultiSlt(true);
@@ -1864,6 +1871,11 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 
 void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
+    if (e->key() == Qt::Key_Control) {
+        qDebug() << "ctrl released";
+        DataManager::instance()->setbMultiSlt(false);
+    }
+
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift released";
         DataManager::instance()->setbMultiSlt(false);

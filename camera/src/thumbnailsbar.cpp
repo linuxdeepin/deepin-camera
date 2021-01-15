@@ -392,7 +392,7 @@ void ThumbnailsBar::onShortcutDel()
 
     m_lastDelTime = timeNow;
     onTrashFile();
-
+    DataManager::instance()->setTakePicVd(false);
 }
 
 void ThumbnailsBar::onTrashFile()

@@ -159,7 +159,7 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
 
     /**
-     * @brief paintEvent 鼠标弹起事件
+     * @brief paintEvent 绘制事件
      */
     void paintEvent(QPaintEvent *event) override;
 
