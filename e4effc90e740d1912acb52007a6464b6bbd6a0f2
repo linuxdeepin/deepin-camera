@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "93d3215e_e1eeb0e4",
+        "filename": "camera/src/mainwindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1000291
+      },
+      "writtenOn": "2021-01-15T01:50:21Z",
+      "side": 1,
+      "message": "注释说明定时器开启与停止，打开或关闭什么功能",
+      "range": {
+        "startLine": 1083,
+        "startChar": 8,
+        "endLine": 1083,
+        "endChar": 30
+      },
+      "revId": "e4effc90e740d1912acb52007a6464b6bbd6a0f2",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "50896a05_2e05f093",
         "filename": "camera/src/videowidget.cpp",
         "patchSetId": 3
