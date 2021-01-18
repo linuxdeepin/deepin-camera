@@ -118,7 +118,6 @@ public:
      * @brief showMenu 显示菜单
      */
     void showMenu();
-
 signals:
 
     /**
@@ -135,6 +134,11 @@ signals:
      * @brief needFit 图片适应界面大小信号
      */
     void needFit();
+
+    /**
+     * @brief ShiftMulti 多选
+     */
+    void shiftMulti();
 
 public slots:
     /**

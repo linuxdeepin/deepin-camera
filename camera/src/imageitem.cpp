@@ -171,7 +171,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         Q_UNUSED(pos);
         m_menu->exec(QCursor::pos());
         DataManager::instance()->m_setIndex.clear();
-        DataManager::instance()->setbMultiSlt(false);
+        DataManager::instance()->setCtrlMulti(false);
+        DataManager::instance()->setShiftMulti(false);
     });
 
     connect(actCopy, &QAction::triggered, this, [ = ] {
@@ -281,7 +282,6 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *ev)
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
-
     if (DataManager::instance()->getindexNow() != -1) {
         //当图片铺满缩略图，选中最后一张，拍照；此时缩略图选中的框消失，选择缩略图的某一个图元，程序崩溃
         //根本问题在于缩略图铺满是，继续添加图元，没有正确维护g_indexNow
@@ -293,9 +293,9 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_indexImage.value(DataManager::instance()->getindexNow())->update();
     }
 
-    //当按下shift键，多选，鼠标右键弹出右键菜单后松开shift键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
-    //此处补充获取shift键盘状态，以避免继续选择图元，应用处于多选状态的问题
-    if (DataManager::instance()->getbMultiSlt() && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
+    //当按下Ctrl键，多选，鼠标右键弹出右键菜单后松开Ctrl键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
+    //此处补充获取Ctrl键盘状态，以避免继续选择图元，应用处于多选状态的问题
+    if (DataManager::instance()->getMultiType() == Ctrl && QGuiApplication::keyboardModifiers() == Qt::ControlModifier) {
         if (DataManager::instance()->m_setIndex.contains(m_index)) {
             if (ev->button() == Qt::LeftButton) {
                 DataManager::instance()->m_setIndex.remove(m_index);
@@ -308,6 +308,30 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             DataManager::instance()->m_setIndex.insert(m_index);
         }
 
+    } else if (DataManager::instance()->getMultiType() == Shift && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
+        if (ev->button() == Qt::LeftButton) {
+            if (DataManager::instance()->getLastIndex() == -1) {//没有上一次的按键记录就添加
+                DataManager::instance()->setLastIndex(DataManager::instance()->getindexNow());
+            } else {
+                static int nCount = 0;//确保不会本次和上次重复填导致ui选中效果错误
+                if (0 == nCount) {
+                    DataManager::instance()->setindexNow(m_index);
+                    nCount ++;
+                } else {
+                    DataManager::instance()->setLastIndex(m_index);
+                    nCount = 0;
+                }
+                DataManager::instance()->m_setIndex.clear();
+                int nLast = DataManager::instance()->getLastIndex();
+                int nNow = DataManager::instance()->getindexNow();
+                if (nLast == nNow) {
+                    DataManager::instance()->setindexNow(m_index);
+                    DataManager::instance()->m_setIndex.clear();
+                    return;
+                }
+                emit shiftMulti();
+            }
+        }
     } else {
         DataManager::instance()->setindexNow(m_index);
         DataManager::instance()->m_setIndex.clear();

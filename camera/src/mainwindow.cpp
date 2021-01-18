@@ -1869,7 +1869,16 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift pressed";
-        DataManager::instance()->setbMultiSlt(true);
+        DataManager::instance()->setShiftMulti(true);
+        int nIndex = DataManager::instance()->getindexNow();
+        //按下shift键就要更新第一个索引值
+        if (-1 == DataManager::instance()->getLastIndex()) {
+            DataManager::instance()->setLastIndex(nIndex);
+        }
+    }
+    if (e->key() == Qt::Key_Control) {
+        qDebug() << "ctrl pressed";
+        DataManager::instance()->setCtrlMulti(true);
         DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
     }
 }
@@ -1878,7 +1887,12 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
         qDebug() << "shift released";
-        DataManager::instance()->setbMultiSlt(false);
+        DataManager::instance()->setShiftMulti(false);
+        DataManager::instance()->setLastIndex(-1);
+    }
+    if (e->key() == Qt::Key_Control) {
+        qDebug() << "ctrl pressed";
+        DataManager::instance()->setCtrlMulti(false);
     }
 }
 void CMainWindow::SettingPathsave()
