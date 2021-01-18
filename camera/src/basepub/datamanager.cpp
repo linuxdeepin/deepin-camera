@@ -23,14 +23,31 @@
 #include "datamanager.h"
 
 DataManager *DataManager::m_dataManager=nullptr;
-bool DataManager::getbMultiSlt()
+MultiType DataManager::getMultiType()
 {
-    return m_bMultiSlt;
+    //几种状态：都没选，都选，选其中一个，选其中另一个
+    if (!m_bCtrlMulti && !m_bShitfMulti) {
+        return None;
+    } else if (m_bCtrlMulti && m_bShitfMulti) {
+        return Both;
+    } else {
+        if (m_bCtrlMulti) {
+            return Ctrl;
+        }
+        if (m_bShitfMulti) {
+            return Shift;
+        }
+    }
 }
 
-void DataManager::setbMultiSlt(bool bMultiSlt)
+void DataManager::setCtrlMulti(bool bCtrlMulti)
 {
-    m_bMultiSlt=bMultiSlt;
+    m_bCtrlMulti=bCtrlMulti;
+}
+
+void DataManager::setShiftMulti(bool bShitfMulti)
+{
+    m_bShitfMulti=bShitfMulti;
 }
 
 int DataManager::getindexNow()

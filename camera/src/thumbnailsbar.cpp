@@ -272,6 +272,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
+        connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
         g_indexImage.insert(tIndex, pLabel);
         //g_indexImage.insert(tIndex, pLabel);
         tIndex++;
@@ -531,6 +532,7 @@ void ThumbnailsBar::onTrashFile()
             connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
             connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
+            connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
             g_indexImage.insert(nIndexMax + 1 + i, pLabel);
             m_hBox->insertWidget(m_hBox->count(), pLabel);
         }
@@ -598,6 +600,30 @@ void ThumbnailsBar::OnPrint()
 {
     ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
     tmp->onPrint();
+}
+
+void ThumbnailsBar::onShiftMulti()
+{
+    int n1,n2;
+    n1 = n2 = -1;
+    //按ui顺序读取出两个索引值的位置
+    for (int i = 0; i < m_hBox->count(); i ++) {
+        ImageItem *item = dynamic_cast<ImageItem *>(m_hBox->itemAt(i)->widget());
+        if (item->getIndex() == DataManager::instance()->getLastIndex() ||
+                item->getIndex() == DataManager::instance()->getindexNow()) {
+            if (-1 == n1) {
+                n1 = i;
+            } else {
+                n2 = i;
+                break;
+            }
+        }
+    }
+    //取两个ui索引中间的值并添加到m_setIndex
+    for (int i = n1; i <= n2; i ++) {
+        ImageItem *item = dynamic_cast<ImageItem *>(m_hBox->itemAt(i)->widget());
+        DataManager::instance()->m_setIndex.insert(item->getIndex());
+    }
 }
 
 
@@ -699,6 +725,7 @@ void ThumbnailsBar::addFile(QString strFile)
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+    connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
     if (pLabel == nullptr)
@@ -814,6 +841,7 @@ void ThumbnailsBar::delFile(QString strFile)
     connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
+    connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
     m_hBox->insertWidget(m_hBox->count(), pLabel);
 }
