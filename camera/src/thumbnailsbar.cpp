@@ -343,6 +343,9 @@ void ThumbnailsBar::onShortcutCopy()
     QStringList paths;
 
     if (DataManager::instance()->m_setIndex.isEmpty()) {
+        if (g_indexImage.isEmpty()) {
+            return;
+        }
         paths = QStringList(g_indexImage.value(DataManager::instance()->getindexNow())->getPath());
         qDebug() << "sigle way";
     } else {
