@@ -200,6 +200,11 @@ public slots:
     */
     void OnPrint();
 
+    /**
+     * @brief onShiftMulti 多选
+     */
+    void onShiftMulti();
+
 public:
     enum CamStatus m_nStatus;
     int            m_nMaxWidth;

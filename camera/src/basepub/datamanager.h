@@ -27,6 +27,7 @@
 #include <QSet>
 
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
+enum MultiType {None, Ctrl, Shift, Both};
 
 class DataManager: public QObject
 {
@@ -38,14 +39,19 @@ public:
     Q_DISABLE_COPY(DataManager)
     
     /**
-     * @brief getbMultiSlt 是否多选
+     * @brief getMultiType 返回ctrl多选或者shift多选
      */
-    bool getbMultiSlt();
+    MultiType getMultiType();
     /**
-     * @brief setbMultiSlt 设置多选
-     * @param bMultiSlt
+     * @brief setCtrlMulti 设置ctrl多选
+     * @param bCtrlMulti
      */
-    void setbMultiSlt(bool bMultiSlt);
+    void setCtrlMulti(bool bCtrlMulti);
+    /**
+     * @brief setShiftMulti 设置shift连续多选
+     * @param bShiftMultiSlt
+     */
+    void setShiftMulti(bool bShiftMultiSlt);
     /**
      * @brief getbindexNow 获得当前索引
      */
@@ -55,6 +61,22 @@ public:
      * @param indexNow
      */
     void setindexNow(int indexNow);
+    /**
+     * @brief setLastIndex 设置上一次图片索引
+     * @param index
+     */
+    void setLastIndex(int index)
+    {
+        m_indexLast = index;
+    }
+
+    /**
+     * @brief getLastIndex 获取图片索引
+     */
+    int getLastIndex()
+    {
+        return m_indexLast;
+    }
     /**
      * @brief getbindexNow 获得缩略图索引
      */
@@ -110,7 +132,9 @@ public:
 private:
     DataManager();
     static DataManager *m_dataManager;
-    bool m_bMultiSlt=false;
+    bool m_bCtrlMulti=false;//ctrl键多选
+    bool m_bShitfMulti=false;//shift键连续多选
+    int m_indexLast=-1;
     int m_indexNow=0;
 //    QMap<int, ImageItem *> m_indexImage;
     QString m_strFileName;
