@@ -342,6 +342,9 @@ void ThumbnailsBar::onBtnClick()
 void ThumbnailsBar::onShortcutCopy()
 {
     QStringList paths;
+    //缩略图个数为零
+    if (g_indexImage.size() <= 0)
+        return;
 
     if (DataManager::instance()->m_setIndex.isEmpty()) {
         paths = QStringList(g_indexImage.value(DataManager::instance()->getindexNow())->getPath());
@@ -574,7 +577,9 @@ void ThumbnailsBar::onFileName(QString strfilename)
 void ThumbnailsBar::onCallMenu()
 {
     ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
-    tmp->showMenu();
+    //判断指针不为空
+    if (tmp)
+        tmp->showMenu();
 }
 
 void ThumbnailsBar::onOpenFolder()
@@ -599,7 +604,9 @@ void ThumbnailsBar::onOpenFolder()
 void ThumbnailsBar::OnPrint()
 {
     ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
-    tmp->onPrint();
+    //判断指针不为空
+    if (tmp)
+        tmp->onPrint();
 }
 
 void ThumbnailsBar::onShiftMulti()
