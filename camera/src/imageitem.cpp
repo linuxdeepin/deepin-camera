@@ -388,7 +388,9 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
 
         } else {
             emit showDuration("");
-            m_actPrint->setVisible(true);
+            //多选有视频存在,M_bVideo为true
+            if (!m_bVideo)
+                m_actPrint->setVisible(true);
         }
 
     }
