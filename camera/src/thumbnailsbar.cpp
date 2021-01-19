@@ -584,7 +584,9 @@ void ThumbnailsBar::onCallMenu()
 
 void ThumbnailsBar::onOpenFolder()
 {
-    QString save_path = Settings::get().generalOption("last_open_pic_path").toString();
+    //保证和缩略图打开的一致
+    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
+    QString save_path = tmp->getPath();
 
     if (save_path.isEmpty())
         save_path = Settings::get().getOption("base.save.picdatapath").toString();
@@ -611,7 +613,7 @@ void ThumbnailsBar::OnPrint()
 
 void ThumbnailsBar::onShiftMulti()
 {
-    int n1,n2;
+    int n1, n2;
     n1 = n2 = -1;
     //按ui顺序读取出两个索引值的位置
     for (int i = 0; i < m_hBox->count(); i ++) {
