@@ -144,15 +144,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Fényképek:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Videók:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Hang effektek</translation>
     </message>
 </context>
 <context>
@@ -179,7 +179,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Megnyitás</translation>
     </message>
     <message>
         <source>Print</source>
@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Gyorsbillentyűk megjelenítése</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Helyi menü</translation>
     </message>
 </context>
 <context>

@@ -15,14 +15,14 @@
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Brez</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"/>
+        <translation>Prekini</translation>
     </message>
     <message>
         <source>Close</source>
@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Odpri mapoOdpri mapo</translation>
+        <translation>Odpri mapo</translation>
     </message>
     <message>
         <source>Print</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Odpri mapoOdpri mapo</translation>
+        <translation>Odpri mapo</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -108,7 +108,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Brez</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -144,15 +144,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Fotografije:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Video posnetki:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Zvočni učinki</translation>
     </message>
 </context>
 <context>
@@ -179,7 +179,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Odpri</translation>
     </message>
     <message>
         <source>Print</source>
@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Prikaži bljižnice</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Kontekstualni meni</translation>
     </message>
 </context>
 <context>
@@ -221,7 +221,7 @@
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation type="unfinished"/>
+        <translation>Brez</translation>
     </message>
 </context>
 <context>

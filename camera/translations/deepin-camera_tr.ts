@@ -144,15 +144,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Fotoğraflar:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Videolar:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Ses efektleri</translation>
     </message>
 </context>
 <context>
@@ -179,7 +179,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Aç</translation>
     </message>
     <message>
         <source>Print</source>
@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Kısayolları göster</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Bağlam menüsü</translation>
     </message>
 </context>
 <context>

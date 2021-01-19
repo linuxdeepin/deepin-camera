@@ -144,15 +144,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Fotos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Vídeos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Efeitos sonoros</translation>
     </message>
 </context>
 <context>
@@ -167,7 +167,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Parar gravação</translation>
+        <translation>Interromper a gravação</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -179,7 +179,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Abrir</translation>
     </message>
     <message>
         <source>Print</source>
@@ -191,22 +191,22 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Exibir atalhos</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Parar de tirar fotos</translation>
+        <translation>Interromper a captura de fotos</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu de contexto</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Tirar foto</translation>
+        <translation>Capturar foto</translation>
     </message>
     <message>
         <source>Record video</source>
@@ -214,7 +214,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Parar de tirar fotos</translation>
+        <translation>Interromper a captura de fotos</translation>
     </message>
 </context>
 <context>
@@ -236,7 +236,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Parar gravação</translation>
+        <translation>Interromper a gravação</translation>
     </message>
 </context>
 </TS>

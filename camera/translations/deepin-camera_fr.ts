@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Photo:</translation>
+        <translation>Photo :</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Vidéo:</translation>
+        <translation>Vidéo :</translation>
     </message>
     <message>
         <source>Resolution settings</source>
@@ -140,19 +140,19 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Résolution: </translation>
+        <translation>Résolution : </translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Photos :</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Vidéos :</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Effets sonores</translation>
     </message>
 </context>
 <context>
@@ -179,7 +179,7 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <source>Print</source>
@@ -191,7 +191,7 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Afficher les raccourcis</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu contextuel</translation>
     </message>
 </context>
 <context>
