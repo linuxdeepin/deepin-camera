@@ -161,20 +161,28 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         m_actPrint->setText(tr("Print"));
         m_actPrint->setObjectName("PrinterAction");
         m_menu->addAction(m_actPrint);
+        /**
+         * @brief 右键菜单打印
+         */
         connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
     }
 
     m_menu->addAction(actOpenFolder);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
+    /**
+    *缩略图右键打开菜单栏
+    **/
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         m_menu->exec(QCursor::pos());
-        DataManager::instance()->m_setIndex.clear();
         DataManager::instance()->setCtrlMulti(false);
         DataManager::instance()->setShiftMulti(false);
     });
 
+    /**
+     *右键菜单复制
+    **/
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
 
@@ -217,6 +225,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         cb->setMimeData(newMimeData, QClipboard::Clipboard);
     });
 
+    /**
+     *右键菜单打开文件夹
+    **/
     connect(actOpenFolder, &QAction::triggered, this, [ = ] {
         QString strtmp = fileInfo.path();
 
@@ -238,6 +249,9 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         }
     });
 
+    /**
+     *右键菜单删除
+    **/
     connect(actDel, &QAction::triggered, this, [ = ] {
         emit trashFile();
     }, Qt::QueuedConnection);
@@ -254,7 +268,10 @@ ImageItem::~ImageItem()
 
 void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
-    Q_UNUSED(ev);
+//    Q_UNUSED(ev);
+    if (ev->button() == Qt::RightButton)
+        return;
+
     QFileInfo fileInfo(m_path);
     QString program;
     if (fileInfo.suffix() == "jpg") {
@@ -327,18 +344,23 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
                 if (nLast == nNow) {
                     DataManager::instance()->setindexNow(m_index);
                     DataManager::instance()->m_setIndex.clear();
+                    update();
                     return;
                 }
                 emit shiftMulti();
             }
         }
     } else {
-        DataManager::instance()->setindexNow(m_index);
-        DataManager::instance()->m_setIndex.clear();
-        DataManager::instance()->m_setIndex.insert(m_index);
+        if (ev->button() == Qt::LeftButton) {
+            //左键点击，清空之前的多选和单选，重新开始选择
+            DataManager::instance()->setindexNow(m_index);
+            DataManager::instance()->m_setIndex.clear();
+            DataManager::instance()->m_setIndex.insert(m_index);
+        }
     }
 
     update();
+
     if (DataManager::instance()->m_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
 
