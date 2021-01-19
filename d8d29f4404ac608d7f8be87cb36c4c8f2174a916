@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "380cec0b_6bce16c2",
+        "filename": "camera/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-19T07:13:27Z",
+      "side": 1,
+      "message": "注释行数: 17; 改动行数(修改和新增): 25; 注释率: 68.0%",
+      "revId": "d8d29f4404ac608d7f8be87cb36c4c8f2174a916",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
