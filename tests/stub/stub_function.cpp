@@ -48,4 +48,17 @@ int Stub_Function::toInt()
     return v4l2core_get_frame_width(get_v4l2_device_handler());
 }
 
+//thumbnailsbar
+Stub_Function::DeviceStatus Stub_Function::getdevStatus()
+{
+    return CAM_CANUSE;
+}
+
+qint64 Stub_Function::msecsTo(const QDateTime &)
+{
+    return 0;
+}
+
+
+
 
