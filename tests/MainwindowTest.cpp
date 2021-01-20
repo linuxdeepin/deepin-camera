@@ -1,7 +1,12 @@
+#define private public
+#include "src/mainwindow.h"
+#include "src/imageitem.h"
+
 #include <QComboBox>
 #include <QAction>
 #include <QProcess>
 #include <QShortcut>
+#include <QMap>
 
 #include <DWindowMaxButton>
 #include <DWindowMinButton>
@@ -16,6 +21,8 @@
 #include "stub.h"
 
 using namespace Dtk::Core;
+
+extern QMap<int, ImageItem *> g_indexImage;
 
 MainwindowTest::MainwindowTest()
 {
@@ -339,7 +346,8 @@ TEST_F(MainwindowTest, rightbtn)
  */
 TEST_F(MainwindowTest, ImageItemContinuousChoose)
 {
-    QTest::keyPress(mainwindow, Qt::Key_Shift, Qt::NoModifier, 500);
+    //Ctrl多选
+    QTest::keyPress(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
     QMap<int, ImageItem *> ImageMap = get_imageitem();
     QList<ImageItem *> ImageList;
     ImageList.clear();
@@ -360,13 +368,34 @@ TEST_F(MainwindowTest, ImageItemContinuousChoose)
                 QTest::qWait(1000);
             }
         }
+
+        QTest::keyRelease(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
+        //Shift多选
+        if (get_imageitem().count() > 2) {
+            QTest::mouseMove(ImageMap[1], QPoint(0, 0), 500);
+            QTest::mousePress(ImageMap[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+            QTest::mouseRelease(ImageMap[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+
+            QTest::keyPress(mainwindow, Qt::Key_Shift, Qt::ShiftModifier, 500);
+            QTest::mousePress(ImageMap[2], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+            QTest::mouseRelease(ImageMap[2], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+
+            QTest::mouseMove(ImageMap[0], QPoint(0, 0), 500);
+            QTest::mousePress(ImageMap[0], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+            QTest::mouseRelease(ImageMap[0], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+        }
+
         QAction *copyact = mainwindow->findChild<QAction *>("CopyAction");
         copyact->trigger();
 
         QAction *delact = mainwindow->findChild<QAction *>("DelAction");
         delact->trigger();
-        QTest::keyRelease(mainwindow, Qt::Key_Shift, Qt::NoModifier, 500);
+
+
     }
+
+
+
 }
 
 /**
@@ -676,6 +705,65 @@ TEST_F(MainwindowTest, Setting)
     stub.reset(v4l2core_get_format_resolution_index);
     stub.reset(v4l2core_get_frame_format_index);
     stub.reset(v4l2core_get_formats_list);
+}
+
+/**
+ *  @brief thumbnailsbar类打桩
+ */
+TEST_F(MainwindowTest, thumbarnail)
+{
+    Stub stub;
+    ThumbnailsBar *thumbnailsBarNew = new ThumbnailsBar();
+    //调用setBtntooltip()
+    thumbnailsBarNew->setBtntooltip();
+    //调用设备不可用状态分支
+    thumbnailsBarNew->onBtnClick();
+    //调用onBtnClick（）设备可用状态分支
+    stub.set(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getdevStatus));
+    //调用拍照分支的非正在拍照状态
+    thumbnailsBarNew->onBtnClick();
+    //调用拍照分支的正在拍照状态
+    CMainWindow *mw = new CMainWindow();
+    thumbnailsBarNew->onBtnClick();
+    //调用录像分支但不处于正在录像分支
+    mw->m_nActTpye = ActTakeVideo;
+    thumbnailsBarNew->ChangeActType(mw->m_nActTpye);
+    thumbnailsBarNew->onBtnClick();
+    //调用录像分支但处于正在录像分支
+    thumbnailsBarNew->onBtnClick();
+    //还原
+    stub.reset(ADDR(DataManager, getdevStatus));
+    //调用onShortcutDel删除太快分支
+    stub.set(ADDR(QDateTime, msecsTo), ADDR(Stub_Function, msecsTo));
+    thumbnailsBarNew->onShortcutDel();
+    delete thumbnailsBarNew;
+    //还原
+    stub.reset(ADDR(QDateTime, msecsTo));
+
+    //调用addFile()
+    QString str = QString(QDir::homePath() + "/Pictures/" + QObject::tr("Camera"));
+    qWarning() << QDir(str).exists();
+    ThumbnailsBar *thumbnailsBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
+    thumbnailsBar->addFile(str);
+    //调用onTrashFile()
+    QMap<int, ImageItem *> it = get_imageitem();
+    ImageItem *imgit = nullptr;
+
+    if (it.count() > 0) {
+        imgit = it.value(0);
+        if (!imgit)
+            return;
+    }
+  
+    QTest::mouseMove(imgit, QPoint(0, 0), 1000);
+    QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
+    thumbnailsBar->onTrashFile();
+    //调用delFile
+    thumbnailsBar->delFile(str);
+    //调用widthChanged
+    thumbnailsBar->widthChanged();
+
 }
 
 /**
