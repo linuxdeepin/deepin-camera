@@ -13,6 +13,7 @@ extern "C"
 class Stub_Function
 {
 public:
+    enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
     Stub_Function();
     //Setting
     v4l2_dev_t *get_v4l2_device_handler();
@@ -23,6 +24,10 @@ public:
     int toInt();
 
     v4l2_device_list_t m_devlist2;
+    //thumbnailsbar
+    enum DeviceStatus getdevStatus();
+    qint64 msecsTo(const QDateTime &);
+
 };
 
 #endif // STUB_FUNCTION_H
