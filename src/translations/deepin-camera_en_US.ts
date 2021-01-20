@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en_US">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>A videó rögzítése folyamatban van. Bezárja az ablakot?</translation>
+        <translation>Video recording is in progress. Close the window?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Mappa megnyitása</translation>
+        <translation>Open folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Beállítások</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nincs</translation>
+        <translation>None</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Mégsem</translation>
+        <translation type="vanished">Cancel</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Bezárás</translation>
+        <translation type="vanished">Close</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Másolás</translation>
+        <translation>Copy</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Törlés</translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Mappa megnyitása</translation>
+        <translation>Open folder</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Nyomtatás</translation>
+        <translation>Print</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nincs jogosultsága az adott mappa kezelésére</translation>
+        <translation>You don&apos;t have permission to operate this folder</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Bezárás</translation>
+        <translation>Close</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Érvénytelen mappa</translation>
+        <translation type="vanished">Invalid folder</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Mappa megnyitása</translation>
+        <translation>Open folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Beállítások</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Alap</translation>
+        <translation>Basic</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Fájl elérési útvonala</translation>
+        <translation>File location</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Fényképezés</translation>
+        <translation>Shoot</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Folyamatos üzemmód</translation>
+        <translation>Burst mode</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Önkioldó késleltetése</translation>
+        <translation>Self-timer delay</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Kimenet</translation>
+        <translation>Output</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Kimeneti formátum</translation>
+        <translation>Output format</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 db.</translation>
+        <translation>4 pcs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 db.</translation>
+        <translation>10 pcs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nincs</translation>
+        <translation>None</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>A Kamera egy kép és videofelvételi segédprogram, amely a számítógép kameráját vagy webkameráját használja.</translation>
+        <translation>Camera is an image and video capture utility using your PC camera or webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>A fájl mentése sikertelen</translation>
+        <translation>File not saved</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Mentés ide:</translation>
+        <translation type="vanished">Save to:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Fénykép:</translation>
+        <translation>Photo:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Videó:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Felbontási beállítások</translation>
+        <translation>Resolution settings</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Felbontás:</translation>
+        <translation>Resolution:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fényképek:</translation>
+        <translation>Photos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videók:</translation>
+        <translation>Videos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Hang effektek</translation>
+        <translation>Sound effects</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Beállítások</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Rögzítés megállítása</translation>
+        <translation>Stop recording</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Másolás</translation>
+        <translation>Copy</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Törlés</translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Megnyitás</translation>
+        <translation>Open</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Nyomtatás</translation>
+        <translation>Print</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Segítség</translation>
+        <translation>Help</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Gyorsbillentyűk megjelenítése</translation>
+        <translation>Display shortcuts</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fénykép készítés megállítása</translation>
+        <translation>Stop taking photos</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Helyi menü</translation>
+        <translation>Context menu</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fénykép készítése</translation>
+        <translation>Take photo</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Videó rögzítése</translation>
+        <translation>Record video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fénykép készítés megállítása</translation>
+        <translation>Stop taking photos</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Nincs</translation>
+        <translation>None</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nem található Webkamera</translation>
+        <translation>No webcam found</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>A Webkamera használatban van</translation>
+        <translation>The webcam is in use</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Rögzítés megállítása</translation>
+        <translation>Stop recording</translation>
     </message>
 </context>
 </TS>

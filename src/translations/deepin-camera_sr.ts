@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>La gravació de vídeo està en curs. Voleu tancar la finestra?</translation>
+        <translation>Снимање видеа је у току. Затворити прозор?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Obre la carpeta</translation>
+        <translation>Отвори фасциклу</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Paràmetres</translation>
+        <translation>Подешавања</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Cap</translation>
+        <translation>Ништа</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Cancel·la</translation>
+        <translation type="vanished">Откажи</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tanca</translation>
+        <translation type="vanished">Затвори</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation>Копирај</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Обриши</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Obre la carpeta</translation>
+        <translation>Отвори фасциклу</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimeix</translation>
+        <translation>Штампај</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>No teniu permís per operar en aquesta carpeta.</translation>
+        <translation>Немате дозволу да управљате овом фасциклом</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tanca</translation>
+        <translation>Затвори</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Carpeta no vàlida</translation>
+        <translation type="vanished">Неважећа фасцикла</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Obre la carpeta</translation>
+        <translation>Отвори фасциклу</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Paràmetres</translation>
+        <translation>Подешавања</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Bàsic</translation>
+        <translation>Основно</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Ubicació del fitxer</translation>
+        <translation>Локација датотеке</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Grava</translation>
+        <translation>Снимање</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mode de ràfega</translation>
+        <translation>Рафални режим</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Retard del temporitzador</translation>
+        <translation>Одлагање снимања</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Sortida</translation>
+        <translation>Испис</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format de sortida</translation>
+        <translation>Излазни формат</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pcs</translation>
+        <translation>4 сли</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pcs</translation>
+        <translation>10 сли</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Cap</translation>
+        <translation>Ништа</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Càmera</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>La Càmera és una utilitat de captura d’imatges i vídeos que usa la càmera o la càmera web del PC.</translation>
+        <translation>Камера је алат за снимање видеа и слика помоћу камаре рачунара или мрежне камере.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>El fitxer no s&apos;ha desat.</translation>
+        <translation>Датотека није сачувана</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Desa-ho a:</translation>
+        <translation type="vanished">Сачувај у:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Fotografia:</translation>
+        <translation>Слика:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Vídeo:</translation>
+        <translation>Видео:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Paràmetres de la resolució</translation>
+        <translation>Подешавање резолуције</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolució:</translation>
+        <translation>Резолуција:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotografies:</translation>
+        <translation>Слике:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Vídeos:</translation>
+        <translation>Видео:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Efectes de so</translation>
+        <translation>Звучни ефекти</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Càmera</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Paràmetres</translation>
+        <translation>Подешавања</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromp la gravació</translation>
+        <translation>Заустави снимање</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation>Копирај</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Обриши</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Obre</translation>
+        <translation>Отвори</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimeix</translation>
+        <translation>Штампај</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Ajuda</translation>
+        <translation>Помоћ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Mostra&apos;n les dreceres</translation>
+        <translation>Прикажи пречице</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromp la presa de fotos</translation>
+        <translation>Заустави усликавање</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menú contextual</translation>
+        <translation>Приручни изборник</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fes una foto</translation>
+        <translation>Усликај</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Gravació de vídeo</translation>
+        <translation>Сними видео</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromp la presa de fotos</translation>
+        <translation>Заустави усликавање</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Cap</translation>
+        <translation>Ништа</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>No s&apos;ha trobat cap càmera web.</translation>
+        <translation>Није пронађена мрежна камера</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>La càmera web s&apos;usa.</translation>
+        <translation>Мрежна камера је заузета</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromp la gravació</translation>
+        <translation>Заустави снимање</translation>
     </message>
 </context>
 </TS>

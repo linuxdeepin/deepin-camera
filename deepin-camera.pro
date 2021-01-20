@@ -23,58 +23,58 @@ DEFINES += LIBCHEESE_LIBRARY
 DEFINES += QT_DEPRECATED_WARNINGS
 
 #SUBDIRS += src
-include(camera/src/basepub/basepub.pri)
-include(camera/src/libcam/libcam.pri)
-include(camera/src/qtsingleapplication/qtsingleapplication.pri)
+include(src/src/basepub/basepub.pri)
+include(src/src/libcam/libcam.pri)
+include(src/src/qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
-    $$PWD/camera/src/capplication.cpp \
-    $$PWD/camera/src/main.cpp \
-    $$PWD/camera/src/mainwindow.cpp \
-    $$PWD/camera/src/videowidget.cpp \
-    $$PWD/camera/src/thumbnailsbar.cpp \
-    $$PWD/camera/src/majorimageprocessingthread.cpp \
-    $$PWD/camera/src/LPF_V4L2.c \
-    $$PWD/camera/src/devnummonitor.cpp \
-    $$PWD/camera/src/Settings.cpp\
-    $$PWD/camera/src/imageitem.cpp\
-    $$PWD/camera/src/closedialog.cpp \
-    $$PWD/camera/src/settings_translation.cpp \
-    $$PWD/camera/src/dbus_adpator.cpp \
-    $$PWD/camera/src/previewopenglwidget.cpp \
-    $$PWD/camera/src/shortcut.cpp \
-    $$PWD/camera/src/thumbwidget.cpp
+    $$PWD/src/src/capplication.cpp \
+    $$PWD/src/src/main.cpp \
+    $$PWD/src/src/mainwindow.cpp \
+    $$PWD/src/src/videowidget.cpp \
+    $$PWD/src/src/thumbnailsbar.cpp \
+    $$PWD/src/src/majorimageprocessingthread.cpp \
+    $$PWD/src/src/LPF_V4L2.c \
+    $$PWD/src/src/devnummonitor.cpp \
+    $$PWD/src/src/Settings.cpp\
+    $$PWD/src/src/imageitem.cpp\
+    $$PWD/src/src/closedialog.cpp \
+    $$PWD/src/src/settings_translation.cpp \
+    $$PWD/src/src/dbus_adpator.cpp \
+    $$PWD/src/src/previewopenglwidget.cpp \
+    $$PWD/src/src/shortcut.cpp \
+    $$PWD/src/src/thumbwidget.cpp
 
 HEADERS += \
-    $$PWD/camera/src/mainwindow.h \
-    $$PWD/camera/src/thumbnailsbar.h \
-    $$PWD/camera/src/majorimageprocessingthread.h \
-    $$PWD/camera/src/LPF_V4L2.h \
-    $$PWD/camera/src/videowidget.h \
-    $$PWD/camera/src/devnummonitor.h \
-    $$PWD/camera/src/imageitem.h \
-    $$PWD/camera/src/Settings.h \
-    $$PWD/camera/src/closedialog.h \
-    $$PWD/camera/src/capplication.h \
-    $$PWD/camera/src/dbus_adpator.h \
-    $$PWD/camera/src/previewopenglwidget.h \
-    $$PWD/camera/src/shortcut.h \
-    $$PWD/camera/config.h \
-    $$PWD/camera/src/thumbwidget.h
+    $$PWD/src/src/mainwindow.h \
+    $$PWD/src/src/thumbnailsbar.h \
+    $$PWD/src/src/majorimageprocessingthread.h \
+    $$PWD/src/src/LPF_V4L2.h \
+    $$PWD/src/src/videowidget.h \
+    $$PWD/src/src/devnummonitor.h \
+    $$PWD/src/src/imageitem.h \
+    $$PWD/src/src/Settings.h \
+    $$PWD/src/src/closedialog.h \
+    $$PWD/src/src/capplication.h \
+    $$PWD/src/src/dbus_adpator.h \
+    $$PWD/src/src/previewopenglwidget.h \
+    $$PWD/src/src/shortcut.h \
+    $$PWD/src/config.h \
+    $$PWD/src/src/thumbwidget.h
 
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include \
-                $$PWD/camera/src/libcam/libcam_v4l2core\
-                $$PWD/camera/src/libcam/libcam_render\
-                $$PWD/camera/src/libcam/libcam_encoder \
-                $$PWD/camera/src/libcam/libcam_audio \
-                $$PWD/camera/src/libcam/libcam \
-                $$PWD/camera/src/basepub \
-                $$PWD/camera \
-                $$PWD/camera/src/accessibility \
-                $$PWD/camera/src/accessible \
-                $$PWD/camera/src/qtsingleapplication
+                $$PWD/src/src/libcam/libcam_v4l2core\
+                $$PWD/src/src/libcam/libcam_render\
+                $$PWD/src/src/libcam/libcam_encoder \
+                $$PWD/src/src/libcam/libcam_audio \
+                $$PWD/src/src/libcam/libcam \
+                $$PWD/src/src/basepub \
+                $$PWD/src \
+                $$PWD/src/src/accessibility \
+                $$PWD/src/src/accessible \
+                $$PWD/src/src/qtsingleapplication
 
 LIBS += -L/lib/x86_64-linux-gnu\
 #        -ludev\
@@ -91,7 +91,7 @@ LIBS += -L/lib/x86_64-linux-gnu\
 LIBS += -LSYSTEMLIBDIR
 
 RESOURCES += \
-    $$PWD/camera/assets/assets.qrc
+    $$PWD/src/assets/assets.qrc
 
 isEmpty(BINDIR):BINDIR=/usr/bin
 isEmpty(APPDIR):APPDIR=/usr/share/applications
@@ -103,15 +103,15 @@ isEmpty(PREFIX){
 
 target.path = $$INSTROOT$$BINDIR
 icon_files.path = $$INSTROOT$$PREFIX/share/icons/hicolor/scalable/apps/
-icon_files.files = $$PWD/camera/assets/deepin-camera.svg
+icon_files.files = $$PWD/src/assets/deepin-camera.svg
 
 desktop.path = $$INSTROOT$$APPDIR
-desktop.files = $$PWD/camera/deepin-camera.desktop
+desktop.files = $$PWD/src/deepin-camera.desktop
 
-manual_dir.files = $$PWD/camera/assets/deepin-camera
+manual_dir.files = $$PWD/src/assets/deepin-camera
 manual_dir.path=/usr/share/deepin-manual/manual-assets/application/
 
-dbus_service.files = $$PWD/camera/com.deepin.Camera.service
+dbus_service.files = $$PWD/src/com.deepin.Camera.service
 dbus_service.path = $$PREFIX/share/dbus-1/services
 unix {
     target.path = /usr/bin
@@ -119,7 +119,7 @@ unix {
 }
 
 CONFIG(release, debug|release) {
-    TRANSLATIONS = $$files($$PWD/camera/translations/*.ts)
+    TRANSLATIONS = $$files($$PWD/src/translations/*.ts)
     #遍历目录中的ts文件，调用lrelease将其生成为qm文件
     for(tsfile, TRANSLATIONS) {
         qmfile = $$replace(tsfile, .ts$, .qm)
@@ -128,7 +128,7 @@ CONFIG(release, debug|release) {
 }
 
 translations.path = $$PREFIX/share/deepin-camera/translations
-translations.files = $$PWD/camera/translations/*.qm
+translations.files = $$PWD/src/translations/*.qm
 
 INSTALLS = target desktop dbus_service icon_files translations manual_dir
 QMAKE_CXXFLAGS += -Wl,-as-need -fPIE

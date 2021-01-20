@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ro">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>正在录制视频，是否关闭？</translation>
+        <translation>Înregistrare video în proces. Doriți să închideți fereastra?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打开文件夹</translation>
+        <translation>Deschidere fișier</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation>Setări</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>无</translation>
+        <translation>Nimic</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="vanished">Anulare</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>关闭</translation>
+        <translation type="vanished">Închide</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>复制</translation>
+        <translation>Copiere</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation>Ștergere</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打开文件夹</translation>
+        <translation>Deschidere fișier</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>打印</translation>
+        <translation>Imprimare</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>您没有权限操作此文件夹</translation>
+        <translation>Dvs. nu aveți permisiune pentru manipulare cu acest directoriu.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>关闭</translation>
+        <translation>Închide</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>文件夹无效</translation>
+        <translation type="vanished">Directoriu incorect</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打开文件夹</translation>
+        <translation>Deschidere fișier</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation>Setări</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>基本设置</translation>
+        <translation>De bază</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>保存路径</translation>
+        <translation>Locație fișier</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>拍照设置</translation>
+        <translation>Fotografie</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>连拍</translation>
+        <translation>Mod rafală</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延时设置</translation>
+        <translation>Întârziere autodeclanșator</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>输出设置</translation>
+        <translation>Ieșire</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>输出格式</translation>
+        <translation>Formatul de ieșire</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4张</translation>
+        <translation>4 buc</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10张</translation>
+        <translation>10 buc</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>无</translation>
+        <translation>Nimic</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>相机</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translation>
+        <translation>Camera - este instrumentul de capturare foto și video ce utilizează camera web a calculatorului dvs.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>文件未保存</translation>
+        <translation>Fișier nu a fost salvat</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">存储位置：</translation>
+        <translation type="vanished">Salvare la:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>照片：</translation>
+        <translation>Poza:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>视频：</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>分辨率设置</translation>
+        <translation>Setări rezoluție</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>分辨率：</translation>
+        <translation>Rezoluție:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>照片存储位置：</translation>
+        <translation>Poze:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>视频存储位置：</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>音效</translation>
+        <translation>Efecte sonore</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>相机</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>设置</translation>
+        <translation>Setări</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>结束录制</translation>
+        <translation>Stop înregistrare video</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>复制</translation>
+        <translation>Copiere</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>删除</translation>
+        <translation>Ștergere</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>打开</translation>
+        <translation>Deschide</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>打印</translation>
+        <translation>Imprimare</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>帮助</translation>
+        <translation>Ajutor</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>显示快捷键</translation>
+        <translation>Afișați comenzile rapide</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>结束拍照</translation>
+        <translation>Stop</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>唤起右键菜单</translation>
+        <translation>Meniu context</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>拍照</translation>
+        <translation>Faceți poza</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>录制视频</translation>
+        <translation>Înregistrare video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>结束拍照</translation>
+        <translation>Stop</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>无</translation>
+        <translation>Nimic</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>未连接摄像头</translation>
+        <translation>Nici-o cameră web nu a fost găsită</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>摄像头已被占用</translation>
+        <translation>Camera web este pornită</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>结束录制</translation>
+        <translation>Stop înregistrare video</translation>
     </message>
 </context>
 </TS>

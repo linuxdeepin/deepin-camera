@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Videotallennus on käynnissä. Sulje ikkuna?</translation>
+        <translation>正在录制视频，是否关闭？</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Avaa kansio</translation>
+        <translation>打开文件夹</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Asetukset</translation>
+        <translation>设置</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ei mitään</translation>
+        <translation>无</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Peruuta</translation>
+        <translation type="vanished">取消</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Sulje</translation>
+        <translation type="vanished">关闭</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopioi</translation>
+        <translation>复制</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Poista</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Avaa kansio</translation>
+        <translation>打开文件夹</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Tulosta</translation>
+        <translation>打印</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Sinulla ei ole lupaa käyttää tätä kansiota</translation>
+        <translation>您没有权限操作此文件夹</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Sulje</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Virheellinen kansio</translation>
+        <translation type="vanished">文件夹无效</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Avaa kansio</translation>
+        <translation>打开文件夹</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Asetukset</translation>
+        <translation>设置</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Normaali</translation>
+        <translation>基本设置</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Tiedoston sijainti</translation>
+        <translation>保存路径</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Laukaise</translation>
+        <translation>拍照设置</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Sarjakuvaus</translation>
+        <translation>连拍</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Itselaukaisimen viive</translation>
+        <translation>拍照延时设置</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Ulostulo</translation>
+        <translation>输出设置</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Ulostulon muoto</translation>
+        <translation>输出格式</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 kpl</translation>
+        <translation>4张</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 kpl</translation>
+        <translation>10张</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ei mitään</translation>
+        <translation>无</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>相机</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera on kuvan ja videon sieppaustyökalu, joka käyttää tietokoneen kameraa tai verkkokameraa.</translation>
+        <translation>相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Tiedostoa ei tallennettu</translation>
+        <translation>文件未保存</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Tallenna nimellä:</translation>
+        <translation type="vanished">存储位置：</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Kuva:</translation>
+        <translation>照片：</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>视频：</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Tarkkuuden asetukset</translation>
+        <translation>分辨率设置</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Tarkkuus:</translation>
+        <translation>分辨率：</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Kuvat:</translation>
+        <translation>照片存储位置：</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videot:</translation>
+        <translation>视频存储位置：</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Äänitehosteet</translation>
+        <translation>音效</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>相机</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Asetukset</translation>
+        <translation>设置</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Lopeta tallennus</translation>
+        <translation>结束录制</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopioi</translation>
+        <translation>复制</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Poista</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Avaa</translation>
+        <translation>打开</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Tulosta</translation>
+        <translation>打印</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Apua</translation>
+        <translation>帮助</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Näytä pikavalinnat</translation>
+        <translation>显示快捷键</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Lopeta kuvaaminen</translation>
+        <translation>结束拍照</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Pikavalikko</translation>
+        <translation>唤起右键菜单</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Ota kuva</translation>
+        <translation>拍照</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Tallenna video</translation>
+        <translation>录制视频</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Lopeta kuvaaminen</translation>
+        <translation>结束拍照</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Ei mitään</translation>
+        <translation>无</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Verkkokameraa ei löytynyt</translation>
+        <translation>未连接摄像头</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Verkkokamera on käytössä</translation>
+        <translation>摄像头已被占用</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Lopeta tallennus</translation>
+        <translation>结束录制</translation>
     </message>
 </context>
 </TS>

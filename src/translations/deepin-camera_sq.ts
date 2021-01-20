@@ -1,130 +1,132 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sq">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>A gravação de vídeo está em andamento. Fechar a janela?</translation>
+        <translation>Po kryhet regjistrim videoje. Të mbyllet dritarja?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Abrir pasta</translation>
+        <translation>Hap dosjen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurações</translation>
+        <translation>Rregullime</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nenhum</translation>
+        <translation>Asnjë</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Cancelar</translation>
+        <translation type="vanished">Anuloje</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Fechar</translation>
+        <translation type="vanished">Mbylle</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Copiar</translation>
+        <translation>Kopjoje</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Excluir</translation>
+        <translation>Fshije</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Abrir pasta</translation>
+        <translation>Hap dosjen</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimir</translation>
+        <translation>Shtypje</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Você não tem permissão para operar esta pasta</translation>
+        <translation>S’keni leje të veproni në këtë dosje</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Fechar</translation>
+        <translation>Mbylle</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Pasta inválida</translation>
+        <translation type="vanished">Dosje e pavlefshme</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Abrir pasta</translation>
+        <translation>Hap dosjen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurações</translation>
+        <translation>Rregullime</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Básico</translation>
+        <translation>Elementare</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Localização do arquivo</translation>
+        <translation>Vendndodhje kartele</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Disparar</translation>
+        <translation>Shkrepe</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Modo sequencial</translation>
+        <translation>Metodë shkrepjesh të vazhdueshme</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Atrasar temporizador</translation>
+        <translation>Vonesë kohëmatësi automatik</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Saída</translation>
+        <translation>Përfundim</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Formato de saída</translation>
+        <translation>Format përfundimi</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pçs</translation>
+        <translation>4 copë</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pçs</translation>
+        <translation>10 copë</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nenhum</translation>
+        <translation>Asnjë</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Câmera</translation>
+        <translation>Kamerë</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>O Câmera é um utilitário para capturar imagens e vídeos pela webcam.</translation>
+        <translation>Kamera është një mjet për bërje fotosh dhe videosh duke përdorur kamerën e PC-së tuaj ose një kamerë web.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Arquivo não salvo</translation>
+        <translation>Kartela s’u ruajt</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Salvar em:</translation>
+        <translation type="vanished">Ruaje te:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -132,111 +134,111 @@
     </message>
     <message>
         <source>Video:</source>
-        <translation>Vídeo:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Configurações da resolução</translation>
+        <translation>Rregullime qartësie</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolução:</translation>
+        <translation>Qartësi:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotos:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Vídeos:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Efeitos sonoros</translation>
+        <translation>Efekte zanore</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Câmera</translation>
+        <translation>Kamerë</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Configurações</translation>
+        <translation>Rregullime</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromper a gravação</translation>
+        <translation>Resht së regjistruari</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copiar</translation>
+        <translation>Kopjoje</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Excluir</translation>
+        <translation>Fshije</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Abrir</translation>
+        <translation>Hape</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimir</translation>
+        <translation>Shtypje</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Ajuda</translation>
+        <translation>Ndihmë</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Exibir atalhos</translation>
+        <translation>Shfaq shkurtore</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromper a captura de fotos</translation>
+        <translation>Resht së bëri foto</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menu de contexto</translation>
+        <translation>Menu konteksti</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Capturar foto</translation>
+        <translation>Bëni foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Gravar vídeo</translation>
+        <translation>Regjistroni video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromper a captura de fotos</translation>
+        <translation>Resht së bëri foto</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Nenhum</translation>
+        <translation>Asnjë</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nenhuma webcam encontrada</translation>
+        <translation>S’u gjet kamerë web</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>A webcam está em uso</translation>
+        <translation>Kamera web është në përdorim</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromper a gravação</translation>
+        <translation>Resht së regjistruari</translation>
     </message>
 </context>
 </TS>

@@ -1,242 +1,245 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="it">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"/>
+        <translation>Registrazione in corso, terminarla?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
+        <translation>Apri cartella</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Impostazioni</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Keine</translation>
+        <translation>No</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Abbrechen</translation>
+        <translation type="vanished">Annulla</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Schließen</translation>
+        <translation type="vanished">Chiudi</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopieren</translation>
+        <translation>Copia</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Löschen</translation>
+        <translation>Elimina</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
+        <translation>Apri cartella</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Drucken</translation>
+        <translation>Stampa</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"/>
+        <translation>Non hai le autorizzazioni per modificare questa cartella</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Schließen</translation>
+        <translation>Chiudi</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Ungültiger Ordner</translation>
+        <translation type="vanished">Cartella non valida</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
+        <translation>Apri cartella</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Impostazioni</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>Base</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Dateispeicherort</translation>
+        <translation>Locazione file</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Fotografieren</translation>
+        <translation>Scatta</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Serienbildmodus</translation>
+        <translation>Scatto continuo</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Selbstauslöser-Verzögerung</translation>
+        <translation>Scatto ritardato</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Ausgabe</translation>
+        <translation>Output</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Ausgabeformat</translation>
+        <translation>Formato output</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 Stk.</translation>
+        <translation>4 pcs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 Stk.</translation>
+        <translation>10 pcs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Keine</translation>
+        <translation>No</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"/>
+        <translation>Camera è un&apos;app di acquisizione immagini e video che sfrutta la camera integrata nel tuo dispositivo.
+Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Datei nicht gespeichert</translation>
+        <translation>File non salvato</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Speichern unter:</translation>
+        <translation type="vanished">Salva in: </translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Foto:</translation>
+        <translation>Foto: </translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>Video: </translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Auflösungseinstellungen</translation>
+        <translation>Impostazioni risoluzione</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Auflösung:</translation>
+        <translation>Risoluzione: </translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotos:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videos:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Klangeffekte</translation>
+        <translation>Effetti sonori</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Camera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Einstellungen</translation>
+        <translation>Impostazioni</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Aufnahme stoppen</translation>
+        <translation>Interrompi video</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopieren</translation>
+        <translation>Copia</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Löschen</translation>
+        <translation>Elimina</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Öffnen</translation>
+        <translation>Apri</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Drucken</translation>
+        <translation>Stampa</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Hilfe</translation>
+        <translation>Aiuto</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Tastaturkürzel anzeigen</translation>
+        <translation>Mostra scorciatoie</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Keine Fotos mehr machen</translation>
+        <translation>Interrompi scatti</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Kontextmenü</translation>
+        <translation>Menu contestuale</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Foto machen</translation>
+        <translation>Scatta foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video aufnehmen</translation>
+        <translation>Registra video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Keine Fotos mehr machen</translation>
+        <translation>Interrompi scatti</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Keine</translation>
+        <translation>No</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Keine Webkamera gefunden</translation>
+        <translation>Nessuna camera rilevata</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Die Webkamera ist in Betrieb</translation>
+        <translation>Questa camera è in uso</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Aufnahme stoppen</translation>
+        <translation>Interrompi video</translation>
     </message>
 </context>
 </TS>

@@ -1,114 +1,116 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="nl">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Registrazione in corso, terminarla?</translation>
+        <translation>Er wordt een video opgenomen. Weet je zeker dat je het venster wilt sluiten?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Apri cartella</translation>
+        <translation>Map openen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Impostazioni</translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>No</translation>
+        <translation>Geen</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Annulla</translation>
+        <translation type="vanished">Annuleren</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation type="vanished">Sluiten</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation>Kopiëren</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Apri cartella</translation>
+        <translation>Map openen</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Stampa</translation>
+        <translation>Afdrukken</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Non hai le autorizzazioni per modificare questa cartella</translation>
+        <translation>Je bent niet gemachtigd om deze map te gebruiken</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Chiudi</translation>
+        <translation>Sluiten</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Cartella non valida</translation>
+        <translation type="vanished">Ongeldige map</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Apri cartella</translation>
+        <translation>Map openen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Impostazioni</translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Base</translation>
+        <translation>Algemeen</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Locazione file</translation>
+        <translation>Bestandslocatie</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Scatta</translation>
+        <translation>Vastleggen</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Scatto continuo</translation>
+        <translation>Meerdere foto&apos;s maken</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Scatto ritardato</translation>
+        <translation>Vastlegvertraging</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Output</translation>
+        <translation>Uitvoer</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Formato output</translation>
+        <translation>Uitvoerformaat</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pcs</translation>
+        <translation>4</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pcs</translation>
+        <translation>10</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>No</translation>
+        <translation>Geen</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -116,44 +118,43 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Camera è un&apos;app di acquisizione immagini e video che sfrutta la camera integrata nel tuo dispositivo.
-Localizzazione italiana a cura di Massimo A. Carofano.</translation>
+        <translation>Met Camera kun je foto&apos;s en video&apos;s maken met je camera of webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>File non salvato</translation>
+        <translation>Bestand is niet opgeslagen</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Salva in: </translation>
+        <translation type="vanished">Opslaan in:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Foto: </translation>
-    </message>
-    <message>
-        <source>Video:</source>
-        <translation>Video: </translation>
-    </message>
-    <message>
-        <source>Resolution settings</source>
-        <translation>Impostazioni risoluzione</translation>
-    </message>
-    <message>
-        <source>Resolution:</source>
-        <translation>Risoluzione: </translation>
-    </message>
-    <message>
-        <source>Photos:</source>
         <translation>Foto:</translation>
     </message>
     <message>
-        <source>Videos:</source>
+        <source>Video:</source>
         <translation>Video:</translation>
     </message>
     <message>
+        <source>Resolution settings</source>
+        <translation>Resolutie-instellingen</translation>
+    </message>
+    <message>
+        <source>Resolution:</source>
+        <translation>Resolutie:</translation>
+    </message>
+    <message>
+        <source>Photos:</source>
+        <translation>Foto&apos;s:</translation>
+    </message>
+    <message>
+        <source>Videos:</source>
+        <translation>Video&apos;s:</translation>
+    </message>
+    <message>
         <source>Sound effects</source>
-        <translation>Effetti sonori</translation>
+        <translation>Geluidseffecten</translation>
     </message>
 </context>
 <context>
@@ -164,80 +165,80 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Impostazioni</translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interrompi video</translation>
+        <translation>Opname stoppen</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copia</translation>
+        <translation>Kopiëren</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Elimina</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Apri</translation>
+        <translation>Openen</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Stampa</translation>
+        <translation>Afdrukken</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Aiuto</translation>
+        <translation>Hulp</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Mostra scorciatoie</translation>
+        <translation>Sneltoetsen tonen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interrompi scatti</translation>
+        <translation>Stoppen met foto&apos;s maken</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menu contestuale</translation>
+        <translation>Rechtermuisknopmenu</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Scatta foto</translation>
+        <translation>Foto maken</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Registra video</translation>
+        <translation>Video opnemen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interrompi scatti</translation>
+        <translation>Stoppen met foto&apos;s maken</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>No</translation>
+        <translation>Geen</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nessuna camera rilevata</translation>
+        <translation>Geen webcam aangetroffen</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Questa camera è in uso</translation>
+        <translation>De webcam is in gebruik</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interrompi video</translation>
+        <translation>Opname stoppen</translation>
     </message>
 </context>
 </TS>

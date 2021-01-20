@@ -1,130 +1,132 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Rakaman video masih berlangsung. Mahu tutup tetingkap?</translation>
+        <translation>La grabación esta en progreso. ¿Quiere cerrar la ventana?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation>Abrir carpeta</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Ninguno</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Batal</translation>
+        <translation type="vanished">Cancelar</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tutup</translation>
+        <translation type="vanished">Cerrar</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Salin</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation>Abrir carpeta</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Cetak</translation>
+        <translation>Imprimir</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Anda tiada keizinan mengendalikan folder ini</translation>
+        <translation>No tiene permisos para modificar esta carpeta</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tutup</translation>
+        <translation>Cerrar</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Folder tidak sah</translation>
+        <translation type="vanished">Carpeta inválida</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation>Abrir carpeta</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Asas</translation>
+        <translation>Básico</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokasi fail</translation>
+        <translation>Ubicación del archivo</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Syot</translation>
+        <translation>Capturar</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mod ledak</translation>
+        <translation>Modo ráfaga</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Lengah swa-pemasa</translation>
+        <translation>Ajustes de temporizador</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Output</translation>
+        <translation>Salida</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format output</translation>
+        <translation>Formato de salida</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 kpg</translation>
+        <translation>4 piezas</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 kpg</translation>
+        <translation>10 piezas</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Ninguno</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Cámara</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera ialah sebuah utiliti tangkapan imej dan video menggunakan kamera PC atau kamera sesawang anda.</translation>
+        <translation>Cámara de Deepin captura imágenes y vídeos con la cámara de su equipo o cámara web.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Fail tidak disimpan</translation>
+        <translation>No se guardo el archivo</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Simpan ke:</translation>
+        <translation type="vanished">Guardar en:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -132,111 +134,111 @@
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>Vídeo:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Tetapan resolusi</translation>
+        <translation>Ajustes de resolución</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolusi:</translation>
+        <translation>Resolución:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto:</translation>
+        <translation>Fotos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video:</translation>
+        <translation>Vídeos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Kesan bunyi</translation>
+        <translation>Efectos sonoros</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Cámara</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Henti rakaman</translation>
+        <translation>Detener grabación</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Salin</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>Borrar</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Buka</translation>
+        <translation>Abrir</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Cetak</translation>
+        <translation>Imprimir</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Bantuan</translation>
+        <translation>Ayuda</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Pintasan paparan</translation>
+        <translation>Atajos</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Henti menangkap foto</translation>
+        <translation>Detener captura</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menu konteks</translation>
+        <translation>Menú contextual</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Tangkap foto</translation>
+        <translation>Tomar foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Rakam video</translation>
+        <translation>Grabar vídeo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Henti menangkap foto</translation>
+        <translation>Detener captura</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Ninguno</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Tiada kamera sesawang ditemui</translation>
+        <translation>No se encontró cámara web</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera sesawang sedang digunakan</translation>
+        <translation>La cámara web está en uso</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Henti rakaman</translation>
+        <translation>Detener grabación</translation>
     </message>
 </context>
 </TS>

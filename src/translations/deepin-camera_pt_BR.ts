@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_HK" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pt_BR">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>正在錄製影片，是否關閉？</translation>
+        <translation>A gravação de vídeo está em andamento. Fechar a janela?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打開文件夾</translation>
+        <translation>Abrir pasta</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設置</translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Nenhum</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="vanished">Cancelar</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation type="vanished">Fechar</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Excluir</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打開文件夾</translation>
+        <translation>Abrir pasta</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>打印</translation>
+        <translation>Imprimir</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>您沒有權限操作此文件夾</translation>
+        <translation>Você não tem permissão para operar esta pasta</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>Fechar</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>文件夾無效</translation>
+        <translation type="vanished">Pasta inválida</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打開文件夾</translation>
+        <translation>Abrir pasta</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設置</translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>基本設置</translation>
+        <translation>Básico</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>保存路徑</translation>
+        <translation>Localização do arquivo</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>拍照設置</translation>
+        <translation>Disparar</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>連拍</translation>
+        <translation>Modo sequencial</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延時設置</translation>
+        <translation>Atrasar temporizador</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>輸出設置</translation>
+        <translation>Saída</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>輸出格式</translation>
+        <translation>Formato de saída</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4張</translation>
+        <translation>4 pçs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10張</translation>
+        <translation>10 pçs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Nenhum</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Câmera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>相機是一款簡單易用的鏡頭應用工具，可實現拍照、錄製影片等功能。</translation>
+        <translation>O Câmera é um utilitário para capturar imagens e vídeos pela webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>文件未保存</translation>
+        <translation>Arquivo não salvo</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">存儲位置：</translation>
+        <translation type="vanished">Salvar em:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>照片：</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>影片：</translation>
+        <translation>Vídeo:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>解像度設置</translation>
+        <translation>Configurações da resolução</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>解像度：</translation>
+        <translation>Resolução:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>照片存儲位置：</translation>
+        <translation>Fotos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>視頻存儲位置：</translation>
+        <translation>Vídeos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>音效</translation>
+        <translation>Efeitos sonoros</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Câmera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設置</translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>Interromper a gravação</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Copiar</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Excluir</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>打開</translation>
+        <translation>Abrir</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>打印</translation>
+        <translation>Imprimir</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>幫助</translation>
+        <translation>Ajuda</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>顯示快捷鍵</translation>
+        <translation>Exibir atalhos</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>Interromper a captura de fotos</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>喚起右鍵菜單</translation>
+        <translation>Menu de contexto</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>拍照</translation>
+        <translation>Capturar foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>錄製影片</translation>
+        <translation>Gravar vídeo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>Interromper a captura de fotos</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Nenhum</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>未連接鏡頭</translation>
+        <translation>Nenhuma webcam encontrada</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>鏡頭已被佔用</translation>
+        <translation>A webcam está em uso</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>Interromper a gravação</translation>
     </message>
 </context>
 </TS>

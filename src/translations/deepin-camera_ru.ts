@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_TW" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>正在錄製影片，是否關閉？</translation>
+        <translation>Видео запись в процессе. Закрыть окно?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>Открыть папку</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ничего</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation type="vanished">Отмена</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation type="vanished">Закрыть</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>Открыть папку</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>您沒有權限操作此資料夾</translation>
+        <translation>У вас нет разрешения вносить изменения в этой папке.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>資料夾無效</translation>
+        <translation type="vanished">Неверная папка</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>Открыть папку</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>基本設定</translation>
+        <translation>Основной</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>儲存路徑</translation>
+        <translation>Местоположение файла</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>拍照設定</translation>
+        <translation>Снимать</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>連拍</translation>
+        <translation>Режим серийной съемки</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延時設定</translation>
+        <translation>Задержка автоспуска</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>輸出設定</translation>
+        <translation>Вывод</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>輸出格式</translation>
+        <translation>Формат вывода</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4張</translation>
+        <translation>4 шт</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10張</translation>
+        <translation>10 шт</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ничего</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>相機是一款簡單易用的攝影機應用工具，可實現拍照、錄製影片等功能。</translation>
+        <translation>Камера - это приложение для захвата изображения и записи видео, используя веб-камеру вашего компьютера.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>文件未儲存</translation>
+        <translation>Файл не сохранен</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">儲存位置：</translation>
+        <translation type="vanished">Сохранить на:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>照片：</translation>
+        <translation>Фото:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>影片：</translation>
+        <translation>Видео:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>解析度設定</translation>
+        <translation>Настройки разрешения</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>解析度：</translation>
+        <translation>Разрешение:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>照片存儲位置：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>影片存儲位置：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>音效</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>Остановить видеозапись</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>打開</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>說明</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>顯示快捷鍵</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>Остановить фотосъемку</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>喚起右鍵菜單</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>拍照</translation>
+        <translation>Снять фото</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>錄製影片</translation>
+        <translation>Видеозапись</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>Остановить фотосъемку</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ничего</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>未連接攝影機</translation>
+        <translation>Веб камера не найдена</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>攝影機已被占用</translation>
+        <translation>Веб камера включена</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>Остановить видеозапись</translation>
     </message>
 </context>
 </TS>

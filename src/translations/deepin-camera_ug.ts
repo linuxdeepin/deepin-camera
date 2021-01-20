@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sq" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ug">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Po kryhet regjistrim videoje. Të mbyllet dritarja?</translation>
+        <translation>سىن خاتىرىلەش خىزمىتى ئېلىپ بېرىلماقتا. كۆزنەكنى تاقامسىز؟</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Hap dosjen</translation>
+        <translation>قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Rregullime</translation>
+        <translation>تەڭشەكلەر</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Asnjë</translation>
+        <translation>يوق</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Anuloje</translation>
+        <translation type="vanished">بىكار قىلىش</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Mbylle</translation>
+        <translation type="vanished">تاقاش</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopjoje</translation>
+        <translation>كۆپەيتىش</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Fshije</translation>
+        <translation>ئۆچۈرۈش</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Hap dosjen</translation>
+        <translation>قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Shtypje</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>S’keni leje të veproni në këtë dosje</translation>
+        <translation>بۇ قىسقۇچنى بىر تەرەپ قىلىش ھوقۇقىڭىز يوق</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Mbylle</translation>
+        <translation>تاقاش</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Dosje e pavlefshme</translation>
+        <translation type="vanished">ئىناۋەتسىز قىسقۇچ</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Hap dosjen</translation>
+        <translation>قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Rregullime</translation>
+        <translation>تەڭشەكلەر</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Elementare</translation>
+        <translation>ئاساس</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Vendndodhje kartele</translation>
+        <translation>ھۆججەت ئورنى</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Shkrepe</translation>
+        <translation>تۇتۇش</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Metodë shkrepjesh të vazhdueshme</translation>
+        <translation>جىددى ھالىتى</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Vonesë kohëmatësi automatik</translation>
+        <translation>ئۆزلۈكىدىن كېچىكىش</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Përfundim</translation>
+        <translation>چىقىرىش</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format përfundimi</translation>
+        <translation>چىقىرىش فورماتى</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 copë</translation>
+        <translation>4 pcs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 copë</translation>
+        <translation>10 pcs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Asnjë</translation>
+        <translation>يوق</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamerë</translation>
+        <translation>كامېرا</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera është një mjet për bërje fotosh dhe videosh duke përdorur kamerën e PC-së tuaj ose një kamerë web.</translation>
+        <translation>كامېرا كومپيۇتېرىڭىز ياكى كامېرا ئارقىلىق رەسىم ۋە سىنغا ئېلىش قورالى.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Kartela s’u ruajt</translation>
+        <translation>ھۆججەت ساقلانمىدى</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Ruaje te:</translation>
+        <translation type="vanished">گە ساقلاش:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Foto:</translation>
+        <translation>فوتو:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>ۋېدىئو:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Rregullime qartësie</translation>
+        <translation>ئېنىقلىق تەڭشىكى</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Qartësi:</translation>
+        <translation>ئېنىقلىقى:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Efekte zanore</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamerë</translation>
+        <translation>كامېرا</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Rregullime</translation>
+        <translation>تەڭشەكلەر</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Resht së regjistruari</translation>
+        <translation>ئېلىشنى توختىتىش</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopjoje</translation>
+        <translation>كۆپەيتىش</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Fshije</translation>
+        <translation>ئۆچۈرۈش</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Hape</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Shtypje</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Ndihmë</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Shfaq shkurtore</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Resht së bëri foto</translation>
+        <translation>سۈرئەتكە ئېلىشنى توختىتىش</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menu konteksti</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Bëni foto</translation>
+        <translation>رەسىمگە تارتىش</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Regjistroni video</translation>
+        <translation>سىنغا ئېلىش</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Resht së bëri foto</translation>
+        <translation>سۈرئەتكە ئېلىشنى توختىتىش</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Asnjë</translation>
+        <translation>يوق</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>S’u gjet kamerë web</translation>
+        <translation>تور كامېراسى تېپىلمىدى</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera web është në përdorim</translation>
+        <translation>تور كامېراسى خىزمەتتە</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Resht së regjistruari</translation>
+        <translation>ئېلىشنى توختىتىش</translation>
     </message>
 </context>
 </TS>

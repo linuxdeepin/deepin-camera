@@ -1,130 +1,132 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="nl" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="de">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Er wordt een video opgenomen. Weet je zeker dat je het venster wilt sluiten?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Map openen</translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Instellingen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Geen</translation>
+        <translation>Keine</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Annuleren</translation>
+        <translation type="vanished">Abbrechen</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Sluiten</translation>
+        <translation type="vanished">Schließen</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopiëren</translation>
+        <translation>Kopieren</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Verwijderen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Map openen</translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Afdrukken</translation>
+        <translation>Drucken</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Je bent niet gemachtigd om deze map te gebruiken</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Sluiten</translation>
+        <translation>Schließen</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Ongeldige map</translation>
+        <translation type="vanished">Ungültiger Ordner</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Map openen</translation>
+        <translation>Ordner öffnen</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Instellingen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Algemeen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Bestandslocatie</translation>
+        <translation>Dateispeicherort</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Vastleggen</translation>
+        <translation>Fotografieren</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Meerdere foto&apos;s maken</translation>
+        <translation>Serienbildmodus</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Vastlegvertraging</translation>
+        <translation>Selbstauslöser-Verzögerung</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Uitvoer</translation>
+        <translation>Ausgabe</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Uitvoerformaat</translation>
+        <translation>Ausgabeformat</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4</translation>
+        <translation>4 Stk.</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10</translation>
+        <translation>10 Stk.</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Geen</translation>
+        <translation>Keine</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Met Camera kun je foto&apos;s en video&apos;s maken met je camera of webcam.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Bestand is niet opgeslagen</translation>
+        <translation>Datei nicht gespeichert</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Opslaan in:</translation>
+        <translation type="vanished">Speichern unter:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -136,107 +138,107 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Resolutie-instellingen</translation>
+        <translation>Auflösungseinstellungen</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolutie:</translation>
+        <translation>Auflösung:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto&apos;s:</translation>
+        <translation>Fotos:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video&apos;s:</translation>
+        <translation>Videos:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Geluidseffecten</translation>
+        <translation>Klangeffekte</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Instellingen</translation>
+        <translation>Einstellungen</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Opname stoppen</translation>
+        <translation>Aufnahme stoppen</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiëren</translation>
+        <translation>Kopieren</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Verwijderen</translation>
+        <translation>Löschen</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Openen</translation>
+        <translation>Öffnen</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Afdrukken</translation>
+        <translation>Drucken</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Hulp</translation>
+        <translation>Hilfe</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Sneltoetsen tonen</translation>
+        <translation>Tastaturkürzel anzeigen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stoppen met foto&apos;s maken</translation>
+        <translation>Keine Fotos mehr machen</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Rechtermuisknopmenu</translation>
+        <translation>Kontextmenü</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Foto maken</translation>
+        <translation>Foto machen</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video opnemen</translation>
+        <translation>Video aufnehmen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stoppen met foto&apos;s maken</translation>
+        <translation>Keine Fotos mehr machen</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Geen</translation>
+        <translation>Keine</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Geen webcam aangetroffen</translation>
+        <translation>Keine Webkamera gefunden</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>De webcam is in gebruik</translation>
+        <translation>Die Webkamera ist in Betrieb</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Opname stoppen</translation>
+        <translation>Aufnahme stoppen</translation>
     </message>
 </context>
 </TS>

@@ -23,16 +23,16 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(PROJECT_INCLUDE ../camera/src/libcam/libcam_v4l2core
-    ../camera/src/libcam/libcam_render
-    ../camera/src/libcam/libcam_encoder
-    ../camera/src/libcam/libcam_audio
-    ../camera/src/libcam/libcam
-    ../camera/src/basepub
-    ../camera/src/accessibility
-    ../camera/src/accessible
-    ../camera/src/qtsingleapplication
-    ../camera/
+set(PROJECT_INCLUDE ../src/src/libcam/libcam_v4l2core
+    ../src/src/libcam/libcam_render
+    ../src/src/libcam/libcam_encoder
+    ../src/src/libcam/libcam_audio
+    ../src/src/libcam/libcam
+    ../src/src/basepub
+    ../src/src/accessibility
+    ../src/src/accessible
+    ../src/src/qtsingleapplication
+    ../src/
     ./stub
     /usr/include
     /usr/include/libusb-1.0
@@ -51,43 +51,43 @@ file (GLOB_RECURSE CXXSOURCES
     ./main.cpp
     ./MainwindowTest.cpp
     ./ClosedialogTest.cpp
-    ../camera/src/basepub/*.cpp
-    ../camera/src/closedialog.cpp
-    ../camera/src/devnummonitor.cpp
-    ../camera/src/mainwindow.cpp
-    ../camera/src/majorimageprocessingthread.cpp
-    ../camera/src/previewopenglwidget.cpp
-    ../camera/src/shortcut.cpp
-    ../camera/src/thumbnailsbar.cpp
-    ../camera/src/thumbwidget.cpp
-    ../camera/src/videowidget.cpp
-    ../camera/src/imageitem.cpp
-    ../camera/src/Settings.cpp
-    ../camera/src/capplication.cpp
-    ../camera/src/dbus_adpator.cpp
-    ../camera/src/settings_translation.cpp
-    ../camera/src/qtsingleapplication/qtsingleapplication.cpp
+    ../src/src/basepub/*.cpp
+    ../src/src/closedialog.cpp
+    ../src/src/devnummonitor.cpp
+    ../src/src/mainwindow.cpp
+    ../src/src/majorimageprocessingthread.cpp
+    ../src/src/previewopenglwidget.cpp
+    ../src/src/shortcut.cpp
+    ../src/src/thumbnailsbar.cpp
+    ../src/src/thumbwidget.cpp
+    ../src/src/videowidget.cpp
+    ../src/src/imageitem.cpp
+    ../src/src/Settings.cpp
+    ../src/src/capplication.cpp
+    ../src/src/dbus_adpator.cpp
+    ../src/src/settings_translation.cpp
+    ../src/src/qtsingleapplication/qtsingleapplication.cpp
     ./stub/*.cpp
     )
 
 file (GLOB_RECURSE CSOURCES
-    ../camera/src/*.c
-    ../camera/src/libcam/*.c
-    ../camera/src/basepub/*.c
+    ../src/src/*.c
+    ../src/src/libcam/*.c
+    ../src/src/basepub/*.c
     )
 
 file (GLOB_RECURSE HEADERS
-    ../camera/src/basepub/*.h
-    ../camera/src/libcam/*.h
-    ../camera/src/qtsingleapplication/*.h
-    ../camera/src/*.h
-    ../camera/src/accessibility/*.h
-    ../camera/src/accessible/*.h
+    ../src/src/basepub/*.h
+    ../src/src/libcam/*.h
+    ../src/src/qtsingleapplication/*.h
+    ../src/src/*.h
+    ../src/src/accessibility/*.h
+    ../src/src/accessible/*.h
     ../tests/*.h
     ./stub/*.h
     ./stub/*.hpp
     )
-file (GLOB_RECURSE RESOURCES  ../camera/assets/assets.qrc)
+file (GLOB_RECURSE RESOURCES  ../src/assets/assets.qrc)
 
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
     )

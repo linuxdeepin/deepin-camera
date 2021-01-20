@@ -1,102 +1,104 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en_US" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Video recording is in progress. Close the window?</translation>
+        <translation>L&apos;enregistrement vidéo est en cours. Fermer la fenêtre ?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Open folder</translation>
+        <translation>Ouvrir dossier</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Settings</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>None</translation>
+        <translation>Aucun</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Cancel</translation>
+        <translation type="vanished">Annuler</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation type="vanished">Fermer</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Copy</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Delete</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Open folder</translation>
+        <translation>Ouvrir dossier</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Print</translation>
+        <translation>Imprimer</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>You don&apos;t have permission to operate this folder</translation>
+        <translation>Vous n&apos;êtes pas autorisé à modifier ce dossier</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation>Fermer</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Invalid folder</translation>
+        <translation type="vanished">Dossier invalide</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Open folder</translation>
+        <translation>Ouvrir dossier</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Settings</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Basic</translation>
+        <translation>Simple</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>File location</translation>
+        <translation>Emplacement du fichier</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Shoot</translation>
+        <translation>Prendre</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Burst mode</translation>
+        <translation>Mode rafale</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Self-timer delay</translation>
+        <translation>Délai du retardateur</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Output</translation>
+        <translation>Sortie</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Output format</translation>
+        <translation>Format de sortie</translation>
     </message>
     <message>
         <source>4 pcs</source>
@@ -108,135 +110,135 @@
     </message>
     <message>
         <source>None</source>
-        <translation>None</translation>
+        <translation>Aucun</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Caméra</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Camera is an image and video capture utility using your PC camera or webcam.</translation>
+        <translation>Camera est un utilitaire de capture d&apos;images et de vidéos utilisant votre caméra intégrée ou votre webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>File not saved</translation>
+        <translation>Fichier non sauvegardé</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Save to:</translation>
+        <translation type="vanished">Enregistrer dans :</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Photo:</translation>
+        <translation>Photo :</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>Vidéo :</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Resolution settings</translation>
+        <translation>Paramètres de résolution</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolution:</translation>
+        <translation>Résolution : </translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Photos:</translation>
+        <translation>Photos :</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videos:</translation>
+        <translation>Vidéos :</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Sound effects</translation>
+        <translation>Effets sonores</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Caméra</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Settings</translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop recording</translation>
+        <translation>Arrêter l&apos;enregistrement</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copy</translation>
+        <translation>Copier</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Delete</translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Open</translation>
+        <translation>Ouvrir</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Print</translation>
+        <translation>Imprimer</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Help</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Display shortcuts</translation>
+        <translation>Afficher les raccourcis</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop taking photos</translation>
+        <translation>Arrêter de prendre des photos</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Context menu</translation>
+        <translation>Menu contextuel</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Take photo</translation>
+        <translation>Prendre une photo</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Record video</translation>
+        <translation>Enregistrer une vidéo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop taking photos</translation>
+        <translation>Arrêter de prendre des photos</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>None</translation>
+        <translation>Aucun</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>No webcam found</translation>
+        <translation>Aucune webcam trouvée</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>The webcam is in use</translation>
+        <translation>La webcam est en cours d&apos;utilisation</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop recording</translation>
+        <translation>Arrêter l&apos;enregistrement</translation>
     </message>
 </context>
 </TS>

@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ug" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="el">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>سىن خاتىرىلەش خىزمىتى ئېلىپ بېرىلماقتا. كۆزنەكنى تاقامسىز؟</translation>
+        <translation>Η εγγραφή βίντεο είναι σε εξέλιξη. Να κλείσει το παράθυρο;</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>قىسقۇچنى ئېچىش</translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>تەڭشەكلەر</translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>يوق</translation>
+        <translation>Κανένα</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>بىكار قىلىش</translation>
+        <translation type="vanished">Ακύρωση</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>تاقاش</translation>
+        <translation type="vanished">Κλείσιμο</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>كۆپەيتىش</translation>
+        <translation>Αντιγραφή</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ئۆچۈرۈش</translation>
+        <translation>Διαγραφή</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>قىسقۇچنى ئېچىش</translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>بۇ قىسقۇچنى بىر تەرەپ قىلىش ھوقۇقىڭىز يوق</translation>
+        <translation>Δεν έχετε άδεια πρόσβασης στον φάκελο</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>تاقاش</translation>
+        <translation>Κλείσιμο</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>ئىناۋەتسىز قىسقۇچ</translation>
+        <translation type="vanished">Μη έγκυρος φάκελος</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>قىسقۇچنى ئېچىش</translation>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>تەڭشەكلەر</translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>ئاساس</translation>
+        <translation>Βασικό</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>ھۆججەت ئورنى</translation>
+        <translation>Τοποθεσία φακέλου</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>تۇتۇش</translation>
+        <translation>Λήψη</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>جىددى ھالىتى</translation>
+        <translation>Γρήγορη λειτουργία</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>ئۆزلۈكىدىن كېچىكىش</translation>
+        <translation>Χρονοκαθυστέρηση</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>چىقىرىش</translation>
+        <translation>Έξοδος</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>چىقىرىش فورماتى</translation>
+        <translation>Φορμά Εξόδου</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pcs</translation>
+        <translation>4 τμχ</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pcs</translation>
+        <translation>10 τμχ</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>يوق</translation>
+        <translation>Κανένα</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>كامېرا</translation>
+        <translation>Κάμερα</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>كامېرا كومپيۇتېرىڭىز ياكى كامېرا ئارقىلىق رەسىم ۋە سىنغا ئېلىش قورالى.</translation>
+        <translation>Το Camera είναι ένα εργαλείο λήψης και εγγραφής φωτογραφιών και βίντεο, με τη χρήση της κάμερας του υπολογιστή σας.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>ھۆججەت ساقلانمىدى</translation>
+        <translation>Το αρχείο δεν αποθηκεύτηκε</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">گە ساقلاش:</translation>
+        <translation type="vanished">Αποθήκευση σε:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>فوتو:</translation>
+        <translation>Φωτογραφία:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>ۋېدىئو:</translation>
+        <translation>Βίντεο:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>ئېنىقلىق تەڭشىكى</translation>
+        <translation>Ρυθμίσεις ανάλυσεις</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>ئېنىقلىقى:</translation>
+        <translation>Ανάλυση:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>كامېرا</translation>
+        <translation>Κάμερα</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>تەڭشەكلەر</translation>
+        <translation>Ρυθμίσεις</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>ئېلىشنى توختىتىش</translation>
+        <translation>Λήξη εγγραφής</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>كۆپەيتىش</translation>
+        <translation>Αντιγραφή</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ئۆچۈرۈش</translation>
+        <translation>Διαγραφή</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>سۈرئەتكە ئېلىشنى توختىتىش</translation>
+        <translation>Ακύρωση λήψης φωτογραφιών</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>رەسىمگە تارتىش</translation>
+        <translation>Λήψη φωτογραφίας</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>سىنغا ئېلىش</translation>
+        <translation>Εγγραφή βίντεο</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>سۈرئەتكە ئېلىشنى توختىتىش</translation>
+        <translation>Ακύρωση λήψης φωτογραφιών</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>يوق</translation>
+        <translation>Κανένα</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>تور كامېراسى تېپىلمىدى</translation>
+        <translation>Δεν βρέθηκε κάμερα</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>تور كامېراسى خىزمەتتە</translation>
+        <translation>Η κάμερα είναι σε χρήση</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>ئېلىشنى توختىتىش</translation>
+        <translation>Λήξη εγγραφής</translation>
     </message>
 </context>
 </TS>

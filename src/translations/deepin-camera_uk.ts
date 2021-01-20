@@ -1,242 +1,244 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="el" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="uk">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Η εγγραφή βίντεο είναι σε εξέλιξη. Να κλείσει το παράθυρο;</translation>
+        <translation>Виконуємо запис відео. Закрити вікно попри це?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Άνοιγμα φακέλου</translation>
+        <translation>Відкрити теку</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ρυθμίσεις</translation>
+        <translation>Параметри</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Κανένα</translation>
+        <translation>Немає</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Ακύρωση</translation>
+        <translation type="vanished">Скасувати</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Κλείσιμο</translation>
+        <translation type="vanished">Закрити</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Αντιγραφή</translation>
+        <translation>Копіювати</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Διαγραφή</translation>
+        <translation>Вилучити</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Άνοιγμα φακέλου</translation>
+        <translation>Відкрити теку</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Надрукувати</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Δεν έχετε άδεια πρόσβασης στον φάκελο</translation>
+        <translation>У вас немає прав доступу для роботи з цією текою</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Κλείσιμο</translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Μη έγκυρος φάκελος</translation>
+        <translation type="vanished">Некоректна тека</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Άνοιγμα φακέλου</translation>
+        <translation>Відкрити теку</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ρυθμίσεις</translation>
+        <translation>Параметри</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Βασικό</translation>
+        <translation>Основні</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Τοποθεσία φακέλου</translation>
+        <translation>Розташування файла</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Λήψη</translation>
+        <translation>Знімок</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Γρήγορη λειτουργία</translation>
+        <translation>Серійна знімання</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Χρονοκαθυστέρηση</translation>
+        <translation>Затримка власного таймера</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Έξοδος</translation>
+        <translation>Виведення</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Φορμά Εξόδου</translation>
+        <translation>Формат виведення</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 τμχ</translation>
+        <translation>4 знімка</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 τμχ</translation>
+        <translation>10 знімків</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Κανένα</translation>
+        <translation>Немає</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Κάμερα</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Το Camera είναι ένα εργαλείο λήψης και εγγραφής φωτογραφιών και βίντεο, με τη χρήση της κάμερας του υπολογιστή σας.</translation>
+        <translation>«Камера» — допоміжна програма для захоплення зображень та відео з відеокамери вашого персонального комп&apos;ютера або вебкамери.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Το αρχείο δεν αποθηκεύτηκε</translation>
+        <translation>Файл не збережено</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Αποθήκευση σε:</translation>
+        <translation type="vanished">Зберегти до:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Φωτογραφία:</translation>
+        <translation>Фото:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Βίντεο:</translation>
+        <translation>Відео:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Ρυθμίσεις ανάλυσεις</translation>
+        <translation>Параметри роздільності</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Ανάλυση:</translation>
+        <translation>Роздільна здатність:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Фотографії:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Відео:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation>Звукові ефекти</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Κάμερα</translation>
+        <translation>Камера</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ρυθμίσεις</translation>
+        <translation>Параметри</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Λήξη εγγραφής</translation>
+        <translation>Зупинити записування</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Αντιγραφή</translation>
+        <translation>Копіювати</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Διαγραφή</translation>
+        <translation>Вилучити</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Відкрити</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Надрукувати</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation>Довідка</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Показати скорочення</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Ακύρωση λήψης φωτογραφιών</translation>
+        <translation>Зупинити створення фотографій</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Контекстне меню</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Λήψη φωτογραφίας</translation>
+        <translation>Створити знімок</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Εγγραφή βίντεο</translation>
+        <translation>Записати відео</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Ακύρωση λήψης φωτογραφιών</translation>
+        <translation>Зупинити створення фотографій</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Κανένα</translation>
+        <translation>Немає</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Δεν βρέθηκε κάμερα</translation>
+        <translation>Вебкамери не знайдено</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Η κάμερα είναι σε χρήση</translation>
+        <translation>Вебкамера використовується іншою програмою</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Λήξη εγγραφής</translation>
+        <translation>Зупинити записування</translation>
     </message>
 </context>
 </TS>

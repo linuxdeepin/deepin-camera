@@ -1,134 +1,136 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ro" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="tr">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Înregistrare video în proces. Doriți să închideți fereastra?</translation>
+        <translation>Video kaydı devam ediyor. Pencere kapatılsın mı?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Deschidere fișier</translation>
+        <translation>Klasör aç</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Setări</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nimic</translation>
+        <translation>Yok</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Anulare</translation>
+        <translation type="vanished">İptal</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Închide</translation>
+        <translation type="vanished">Kapat</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Copiere</translation>
+        <translation>Kopyala</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Ștergere</translation>
+        <translation>Sil</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Deschidere fișier</translation>
+        <translation>Klasör aç</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimare</translation>
+        <translation>Yazdır</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Dvs. nu aveți permisiune pentru manipulare cu acest directoriu.</translation>
+        <translation>Bu klasörü kullanma izniniz yok</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Închide</translation>
+        <translation>Kapat</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Directoriu incorect</translation>
+        <translation type="vanished">Geçersiz klasör</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Deschidere fișier</translation>
+        <translation>Klasör aç</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Setări</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>De bază</translation>
+        <translation>Temel</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Locație fișier</translation>
+        <translation>Dosya konumu</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Fotografie</translation>
+        <translation>Çekim</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mod rafală</translation>
+        <translation>Seri çekim kipi</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Întârziere autodeclanșator</translation>
+        <translation>Zamanlayıcı gecikmesi</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Ieșire</translation>
+        <translation>Çıktı</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Formatul de ieșire</translation>
+        <translation>Çıktı biçimi</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 buc</translation>
+        <translation>4 adet</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 buc</translation>
+        <translation>10 adet</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Nimic</translation>
+        <translation>Yok</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Camera - este instrumentul de capturare foto și video ce utilizează camera web a calculatorului dvs.</translation>
+        <translation>Kamera, PC kameranızı veya web kameranızı kullanan bir görüntü ve video yakalama aracıdır.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Fișier nu a fost salvat</translation>
+        <translation>Dosya kaydedilemedi</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Salvare la:</translation>
+        <translation type="vanished">Şuraya kaydet:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Poza:</translation>
+        <translation>Fotoğraf:</translation>
     </message>
     <message>
         <source>Video:</source>
@@ -136,107 +138,107 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Setări rezoluție</translation>
+        <translation>Çözünürlük ayarları</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rezoluție:</translation>
+        <translation>Çözünürlük:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Poze:</translation>
+        <translation>Fotoğraflar:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video:</translation>
+        <translation>Videolar:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Efecte sonore</translation>
+        <translation>Ses efektleri</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Camera</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Setări</translation>
+        <translation>Ayarlar</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop înregistrare video</translation>
+        <translation>Kaydı durdur</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Copiere</translation>
+        <translation>Kopyala</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Ștergere</translation>
+        <translation>Sil</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Deschide</translation>
+        <translation>Aç</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Imprimare</translation>
+        <translation>Yazdır</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Ajutor</translation>
+        <translation>Yardım</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Afișați comenzile rapide</translation>
+        <translation>Kısayolları göster</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop</translation>
+        <translation>Fotoğraf çekmeyi bırak</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Meniu context</translation>
+        <translation>Bağlam menüsü</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Faceți poza</translation>
+        <translation>Fotoğraf çek</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Înregistrare video</translation>
+        <translation>Video kaydet</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop</translation>
+        <translation>Fotoğraf çekmeyi bırak</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Nimic</translation>
+        <translation>Yok</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nici-o cameră web nu a fost găsită</translation>
+        <translation>Web kamerası bulunamadı</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Camera web este pornită</translation>
+        <translation>Web kamerası kullanımda</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop înregistrare video</translation>
+        <translation>Kaydı durdur</translation>
     </message>
 </context>
 </TS>

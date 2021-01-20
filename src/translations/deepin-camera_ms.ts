@@ -1,114 +1,116 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="tr" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ms">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Video kaydı devam ediyor. Pencere kapatılsın mı?</translation>
+        <translation>Rakaman video masih berlangsung. Mahu tutup tetingkap?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Klasör aç</translation>
+        <translation>Buka folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ayarlar</translation>
+        <translation>Tetapan</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Yok</translation>
+        <translation>Tiada</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>İptal</translation>
+        <translation type="vanished">Batal</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Kapat</translation>
+        <translation type="vanished">Tutup</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopyala</translation>
+        <translation>Salin</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Sil</translation>
+        <translation>Padam</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Klasör aç</translation>
+        <translation>Buka folder</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Yazdır</translation>
+        <translation>Cetak</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Bu klasörü kullanma izniniz yok</translation>
+        <translation>Anda tiada keizinan mengendalikan folder ini</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Kapat</translation>
+        <translation>Tutup</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>Geçersiz klasör</translation>
+        <translation type="vanished">Folder tidak sah</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Klasör aç</translation>
+        <translation>Buka folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ayarlar</translation>
+        <translation>Tetapan</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Temel</translation>
+        <translation>Asas</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Dosya konumu</translation>
+        <translation>Lokasi fail</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Çekim</translation>
+        <translation>Syot</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Seri çekim kipi</translation>
+        <translation>Mod ledak</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Zamanlayıcı gecikmesi</translation>
+        <translation>Lengah swa-pemasa</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Çıktı</translation>
+        <translation>Output</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Çıktı biçimi</translation>
+        <translation>Format output</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 adet</translation>
+        <translation>4 kpg</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 adet</translation>
+        <translation>10 kpg</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Yok</translation>
+        <translation>Tiada</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -116,19 +118,19 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera, PC kameranızı veya web kameranızı kullanan bir görüntü ve video yakalama aracıdır.</translation>
+        <translation>Kamera ialah sebuah utiliti tangkapan imej dan video menggunakan kamera PC atau kamera sesawang anda.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Dosya kaydedilemedi</translation>
+        <translation>Fail tidak disimpan</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Şuraya kaydet:</translation>
+        <translation type="vanished">Simpan ke:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Fotoğraf:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Video:</source>
@@ -136,23 +138,23 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Çözünürlük ayarları</translation>
+        <translation>Tetapan resolusi</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Çözünürlük:</translation>
+        <translation>Resolusi:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotoğraflar:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videolar:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Ses efektleri</translation>
+        <translation>Kesan bunyi</translation>
     </message>
 </context>
 <context>
@@ -163,80 +165,80 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Ayarlar</translation>
+        <translation>Tetapan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Kaydı durdur</translation>
+        <translation>Henti rakaman</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopyala</translation>
+        <translation>Salin</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Sil</translation>
+        <translation>Padam</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Aç</translation>
+        <translation>Buka</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Yazdır</translation>
+        <translation>Cetak</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Yardım</translation>
+        <translation>Bantuan</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Kısayolları göster</translation>
+        <translation>Pintasan paparan</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fotoğraf çekmeyi bırak</translation>
+        <translation>Henti menangkap foto</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Bağlam menüsü</translation>
+        <translation>Menu konteks</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fotoğraf çek</translation>
+        <translation>Tangkap foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video kaydet</translation>
+        <translation>Rakam video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fotoğraf çekmeyi bırak</translation>
+        <translation>Henti menangkap foto</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Yok</translation>
+        <translation>Tiada</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Web kamerası bulunamadı</translation>
+        <translation>Tiada kamera sesawang ditemui</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Web kamerası kullanımda</translation>
+        <translation>Kamera sesawang sedang digunakan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Kaydı durdur</translation>
+        <translation>Henti rakaman</translation>
     </message>
 </context>
 </TS>
