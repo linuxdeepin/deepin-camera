@@ -232,7 +232,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
                 QFileInfo fileInfo1 = m_lstPicFolder.at(0);
                 QFileInfo fileInfo2 = m_lstVdFolder.at(0);
 
-                if (fileInfo1.fileTime(QFileDevice::FileBirthTime).secsTo(fileInfo2.fileTime(QFileDevice::FileBirthTime)) > 0) {
+                if (fileInfo1.fileTime(QFileDevice::FileModificationTime).secsTo(fileInfo2.fileTime(QFileDevice::FileModificationTime)) > 0) {
                     m_fileInfoLst += fileInfo2;
                     m_lstVdFolder.removeAt(0);
                 } else {
