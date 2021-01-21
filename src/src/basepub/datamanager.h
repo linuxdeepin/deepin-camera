@@ -37,7 +37,7 @@ public:
 
     QSet<int> m_setIndex;
     Q_DISABLE_COPY(DataManager)
-    
+
     /**
      * @brief getMultiType 返回ctrl多选或者shift多选
      */
@@ -97,23 +97,22 @@ public:
      * @brief getstrFileName 获得文件名
      */
     QString &getstrFileName();
-    /**
-     * @brief getstrFileName 设置文件名
-     * @param strFileName
-     */
-    void setstrFileName(QString strFileName);
+
     /**
      * @brief getvideoCount 获得视频数目
      */
     int &getvideoCount();
+
     /**
      * @brief setvideoCount 设置视频数目
      */
     void setvideoCount(int videoCount);
+
     /**
      * @brief getdevStatus 获得设备状态
      */
     enum DeviceStatus getdevStatus();
+
     /**
      * @brief setdevStatus 设置设备状态
      */
@@ -127,15 +126,13 @@ public:
 //     */
 //    void setindexImage(int tIndex,ImageItem * pLabel);
 
-
-
 private:
     DataManager();
     static DataManager *m_dataManager;
-    bool m_bCtrlMulti=false;//ctrl键多选
-    bool m_bShitfMulti=false;//shift键连续多选
-    int m_indexLast=-1;
-    int m_indexNow=0;
+    bool m_bCtrlMulti; //ctrl键多选
+    bool m_bShitfMulti; //shift键连续多选
+    int m_indexLast;
+    int m_indexNow ;
 //    QMap<int, ImageItem *> m_indexImage;
     QString m_strFileName;
     int m_videoCount;

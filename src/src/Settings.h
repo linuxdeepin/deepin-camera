@@ -88,13 +88,6 @@ public:
     QVariant generalOption(const QString &opt);
 
     /**
-    * @brief setPathOption 设置json下的base.save.%1的值
-    * @param opt
-    * @param v
-    */
-    void setPathOption(const QString &opt, const QVariant &v);
-
-    /**
     * @brief getOption 获取json下的值
     * @param opt
     */

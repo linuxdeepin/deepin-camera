@@ -54,7 +54,7 @@ void CApplication::setprocess(QList<QProcess *> &process)
     m_camprocesslist.clear();
 
     if (m_camprocesslist.isEmpty()) {
-        for (QList<QProcess *>::iterator i = process.begin(); i != process.end(); i++)
+        for (QList<QProcess *>::iterator i = process.begin(); i != process.end(); ++i)
             m_camprocesslist.append(*i);
     }
 }

@@ -283,21 +283,21 @@ void videowidget::delayInit()
     }
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
-        QPalette pltLabel = m_dLabel->palette();
+        QPalette pltCountdownLabel = m_dLabel->palette();
 
         if (DGuiApplicationHelper::LightType == type) {
-            pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
+            pltCountdownLabel.setColor(QPalette::WindowText, QColor("#000000"));
             QColor clrFill(235, 235, 235);
             clrFill.setAlphaF(0.3);
-            pltLabel.setColor(QPalette::Base, clrFill);
+            pltCountdownLabel.setColor(QPalette::Base, clrFill);
         } else {
-            pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
+            pltCountdownLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
             QColor clrFill(25, 25, 25);
             clrFill.setAlphaF(0.8);
-            pltLabel.setColor(QPalette::Base, clrFill);
+            pltCountdownLabel.setColor(QPalette::Base, clrFill);
         }
 
-        m_dLabel->setPalette(pltLabel);
+        m_dLabel->setPalette(pltCountdownLabel);
 
         if (m_btnVdTime->isVisible()) {
             if (type == DGuiApplicationHelper::LightType) {
@@ -544,11 +544,11 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             } else {
                 if ((framewidth * 100 / frameheight) > (widgetwidth * 100 / widgetheight)) {
                     m_openglwidget->resize(widgetwidth, widgetwidth * frameheight / framewidth);
-                    m_openglwidget->move(widgetwidth - widgetwidth, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
+                    m_openglwidget->move(0, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
                 } else {
 
                     m_openglwidget->resize(widgetheight * framewidth / frameheight, widgetheight);
-                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, widgetheight - widgetheight);
+                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, 0);
                 }
 
             }
@@ -1078,9 +1078,7 @@ void videowidget::onChangeDev()
                     break;
 
                 } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
+                    if (get_v4l2_device_handler() != nullptr)
                         close_v4l2_device_handler();
 
                     if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
@@ -1089,9 +1087,7 @@ void videowidget::onChangeDev()
                     DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
 
                 } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
+                    if (get_v4l2_device_handler() != nullptr)
                         close_v4l2_device_handler();
 
                     DataManager::instance()->setdevStatus(NOCAM);
@@ -1115,9 +1111,7 @@ void videowidget::onChangeDev()
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
                     } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
+                        if (get_v4l2_device_handler() != nullptr)
                             close_v4l2_device_handler();
 
                         if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
@@ -1125,9 +1119,7 @@ void videowidget::onChangeDev()
 
                         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
                     } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
+                        if (get_v4l2_device_handler() != nullptr)
                             close_v4l2_device_handler();
 
                         DataManager::instance()->setdevStatus(NOCAM);
@@ -1143,9 +1135,7 @@ void videowidget::onChangeDev()
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
                     } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
+                        if (get_v4l2_device_handler() != nullptr)
                             close_v4l2_device_handler();
 
                         if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
@@ -1153,9 +1143,7 @@ void videowidget::onChangeDev()
 
                         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
                     } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
+                        if (get_v4l2_device_handler() != nullptr)
                             close_v4l2_device_handler();
 
                         DataManager::instance()->setdevStatus(NOCAM);
@@ -1175,9 +1163,7 @@ void videowidget::onChangeDev()
                     m_imgPrcThread->start();
                     DataManager::instance()->setdevStatus(CAM_CANUSE);
                 } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
+                    if (get_v4l2_device_handler() != nullptr)
                         close_v4l2_device_handler();
 
                     qDebug() << "camInit failed";
@@ -1187,9 +1173,7 @@ void videowidget::onChangeDev()
 
                     DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
                 } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
+                    if (get_v4l2_device_handler() != nullptr)
                         close_v4l2_device_handler();
 
                     DataManager::instance()->setdevStatus(NOCAM);
