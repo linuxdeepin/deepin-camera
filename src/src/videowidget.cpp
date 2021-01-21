@@ -859,7 +859,7 @@ void videowidget::showCountdown()
                     QThread::currentThread()->quit();
                     emit updateBlockSystem(false);//连拍结束，取消阻止关机
                 });
-
+                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
                 thread->start();
             } else {
                 QThread *thread = QThread::create([ = ]() {
@@ -880,7 +880,7 @@ void videowidget::showCountdown()
                     emit takePicOnce();
                     QThread::currentThread()->quit();
                 });
-
+                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
                 thread->start();
 
             }
