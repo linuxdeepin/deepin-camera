@@ -27,6 +27,7 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
+#include <linux/version.h>
 
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
@@ -202,10 +203,15 @@ int enum_v4l2_devices()
             getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
-        if(v4l2_cap.capabilities&V4L2_CAP_VBI_CAPTURE && v4l2_cap.capabilities&V4L2_CAP_STREAMING)
-        {
-            fprintf(stderr, "V4L2_CORE: V4L2_CAP_VBI_CAPTURE or V4L2_CAP_STREAMING error: %s\n", strerror(errno));
-            fprintf(stderr, "V4L2_CORE: couldn't query device %s\n", v4l2_device);
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
+        /*
+         * The kernel is issuing two video devices to each connected camera (/dev/video0 and /dev/video1).
+         * showing only the devices with expose video capture capabilities.
+        */
+        if (!(v4l2_cap.device_caps & V4L2_CAP_VIDEO_CAPTURE) || !(v4l2_cap.capabilities & V4L2_CAP_VIDEO_CAPTURE)) {
+            fprintf(stderr, "V4L2_CORE: V4L2_CAP_VIDEO_CAPTURE error: %s\n", strerror(errno));
+            fprintf(stderr, "V4L2_CORE: ignore the device(%s) for not have the ability to capture video.\n", v4l2_device);
             getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
@@ -220,7 +226,7 @@ int enum_v4l2_devices()
             getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
-
+#endif
         getV4l2()->m_v4l2_close(fd);
 
         num_dev++;
