@@ -30,12 +30,13 @@
 * @brief CloseDialog　窗口大小适配
 * 窗口最小化后双击桌面图标弹出相应大小的窗口
 */
+
 class ApplicationAdaptor: public QDBusAbstractAdaptor
 {
-    Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "com.deepin.camera")
+    Q_OBJECT
 public:
-    explicit ApplicationAdaptor(CMainWindow *mw);
+    ApplicationAdaptor(CMainWindow *mw = nullptr, QTime curtime = QTime::currentTime());
 
 public slots:
     /**

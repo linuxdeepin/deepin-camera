@@ -22,7 +22,7 @@
 
 #include "datamanager.h"
 
-DataManager *DataManager::m_dataManager=nullptr;
+DataManager *DataManager::m_dataManager = nullptr;
 MultiType DataManager::getMultiType()
 {
     //几种状态：都没选，都选，选其中一个，选其中另一个
@@ -42,12 +42,12 @@ MultiType DataManager::getMultiType()
 
 void DataManager::setCtrlMulti(bool bCtrlMulti)
 {
-    m_bCtrlMulti=bCtrlMulti;
+    m_bCtrlMulti = bCtrlMulti;
 }
 
 void DataManager::setShiftMulti(bool bShitfMulti)
 {
-    m_bShitfMulti=bShitfMulti;
+    m_bShitfMulti = bShitfMulti;
 }
 
 int DataManager::getindexNow()
@@ -57,7 +57,7 @@ int DataManager::getindexNow()
 
 void DataManager::setindexNow(int indexNow)
 {
-    m_indexNow=indexNow;
+    m_indexNow = indexNow;
 }
 
 //QSet<int> DataManager::getindex()
@@ -85,11 +85,6 @@ QString &DataManager::getstrFileName()
     return m_strFileName;
 }
 
-void DataManager::setstrFileName(QString strFileName)
-{
-    m_strFileName=strFileName;
-}
-
 int &DataManager::getvideoCount()
 {
     return m_videoCount;
@@ -97,7 +92,7 @@ int &DataManager::getvideoCount()
 
 void DataManager::setvideoCount(int videoCount)
 {
-    m_videoCount=videoCount;
+    m_videoCount = videoCount;
 }
 
 enum DeviceStatus DataManager::getdevStatus()
@@ -107,7 +102,7 @@ enum DeviceStatus DataManager::getdevStatus()
 
 void DataManager::setdevStatus(enum DeviceStatus devStatus)
 {
-    m_devStatus=devStatus;
+    m_devStatus = devStatus;
 }
 
 //QMap<int, ImageItem *> &DataManager::getindexImage()
@@ -131,5 +126,11 @@ DataManager *DataManager::instance()
 DataManager::DataManager()
 {
     m_videoCount = 0;
+    m_devStatus = DeviceStatus::NOCAM;
+    m_bCtrlMulti = false;
+    m_bShitfMulti = false;
+    m_strFileName.clear();
+    m_indexLast = -1;
+    m_indexNow = 0;
 }
 

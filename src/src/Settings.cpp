@@ -44,10 +44,12 @@ Settings &Settings::get()
 
 Settings::Settings(): QObject(0)
 {
-    m_configPath = QString("%1/%2/%3/config.conf")
-                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
-                   .arg(qApp->organizationName())
-                   .arg(qApp->applicationName());
+
+    m_configPath.clear();
+    m_configPath.append(QString("%1/%2/%3/config.conf")
+                        .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
+                        .arg(qApp->organizationName())
+                        .arg(qApp->applicationName()));
     qDebug() << "configPath" << m_configPath;
     auto backend = new QSettingBackend(m_configPath);
 
@@ -107,8 +109,7 @@ void Settings::setNewResolutionList()
         QStringList resolutionDatabase;
         resolutionDatabase.clear();
 
-        //当前分辨率下标
-        int defres = 0;
+
         if (format_index >= 0 && resolu_index >= 0) {
             for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
@@ -126,7 +127,8 @@ void Settings::setNewResolutionList()
                 }
 
             }
-
+            //当前分辨率下标
+            int defres = 0;
             int tempostion = 0;
             int len = resolutionDatabase.size() - 1;
             for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
@@ -152,13 +154,12 @@ void Settings::setNewResolutionList()
 
             }
 
-            for (int i = 0; i < resolutionDatabase.size(); i++) {
-                QStringList resolutiontemp = resolutionDatabase[i].split("x");
+            for (defres = 0; defres < resolutionDatabase.size(); defres++) {
+                QStringList resolutiontemp = resolutionDatabase[defres].split("x");
                 if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                    defres = i; //set selected resolution index
+                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt()))
                     break;
-                }
+
             }
 
             resolutionmodeFamily->setData("items", resolutionDatabase);
@@ -186,7 +187,7 @@ void Settings::setNewResolutionList()
 
     settings()->sync();
 }
-
+  
 void Settings::setPathOption(const QString &opt, const QVariant &v)
 {
     settings()->setOption(QString("base.save.%1").arg(opt), v);

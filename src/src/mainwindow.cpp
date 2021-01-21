@@ -187,10 +187,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     if (curPicSettingPath.contains(relativeHomePath))
         curPicSettingPath.replace(0, 1, QDir::homePath());
 
-    QDir dir(curPicSettingPath);
+    QDir curPicSettingPathdir(curPicSettingPath);
 
     //路径不存在
-    if (!dir.exists())
+    if (!curPicSettingPathdir.exists())
         picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
     else
         picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
@@ -206,9 +206,9 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             if (settingPicPathValue.front() == '~')
                 settingPicPathValue.replace(0, 1, QDir::homePath());
 
-            QDir dir(settingPicPathValue);
+            QDir settingPicPathDir(settingPicPathValue);
 
-            if (!dir.exists())
+            if (!settingPicPathDir.exists())
                 picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
             else
                 picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
@@ -262,7 +262,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             name.replace(0, 1, QDir::homePath());
 
         QFileInfo fileinfo(name);
-        QDir dir(name);
+        QDir picSaveDir(name);
 
         if (fileinfo.exists())
         {
@@ -281,8 +281,8 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             if (relativeHomePath.contains(name))
                 return false;
 
-            if (dir.cdUp()) {
-                QFileInfo ch(dir.path());
+            if (picSaveDir.cdUp()) {
+                QFileInfo ch(picSaveDir.path());
 
                 if (!ch.isReadable() || !ch.isWritable())
                     return false;
@@ -429,10 +429,10 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     if (curVideoSettingPath.contains(relativeHomePath))
         curVideoSettingPath.replace(0, 1, QDir::homePath());
 
-    QDir dir(curVideoSettingPath);
+    QDir curVideoSettingPathDir(curVideoSettingPath);
 
     //路径不存在
-    if (!dir.exists())
+    if (!curVideoSettingPathDir.exists())
         videoPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Videos/Camera
     else
         videoPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
@@ -448,9 +448,9 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
             if (settingVideoPathValue.front() == '~')
                 settingVideoPathValue.replace(0, 1, QDir::homePath());
 
-            QDir dir(settingVideoPathValue);
+            QDir settingVideoPathDir(settingVideoPathValue);
 
-            if (!dir.exists())
+            if (!settingVideoPathDir.exists())
                 videoPathLineEdit->setText(option->defaultValue().toString());
             else
                 videoPathLineEdit->setText(option->value().toString());
@@ -929,7 +929,7 @@ void CMainWindow::settingDialog()
                                format_index,
                                v4l2core_get_frame_width(get_v4l2_device_handler()),
                                v4l2core_get_frame_height(get_v4l2_device_handler()));
-        int defres = 0;
+
         //获取当前摄像头的格式表
         v4l2_stream_formats_t *list_stream_formats = v4l2core_get_formats_list(get_v4l2_device_handler());
         //初始化分辨率字符串表
@@ -956,7 +956,7 @@ void CMainWindow::settingDialog()
                         resolutionDatabase.append(res_str);
                 }
             }
-
+            int defres = 0;
             int tempostion = 0;
             int len = resolutionDatabase.size() - 1;
 
@@ -984,14 +984,13 @@ void CMainWindow::settingDialog()
 
             }
 
-            for (int i = 0; i < resolutionDatabase.size(); i++) {
-                QStringList resolutiontemp = resolutionDatabase[i].split("x");
+            for (defres = 0; defres < resolutionDatabase.size(); defres++) {
+                QStringList resolutiontemp = resolutionDatabase[defres].split("x");
 
                 if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                    defres = i; //设置分辨率下拉菜单当前索引
+                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt()))
                     break;
-                }
+
 
             }
 
@@ -1127,10 +1126,10 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 
 void CMainWindow::onDirectoryChanged(const QString &)
 {
-    QDir dirPic(lastPicFileName);
-    QDir dirVd(lastVdFileName);
-    bool bPic = dirPic.exists();
-    bool bVd = dirVd.exists();
+    QDir oldDirPic(lastPicFileName);
+    QDir oldDirVd(lastVdFileName);
+    bool bPic = oldDirPic.exists();
+    bool bVd = oldDirVd.exists();
     if (bPic && bVd) {
         return;
     } else {
@@ -1158,11 +1157,11 @@ void CMainWindow::onDirectoryChanged(const QString &)
             Settings::get().settings()->setOption("base.save.picdatapath", lastPicFileName);
         }
         //更新文件夹监控
-        QDir dirVd(lastVdFileName);
-        dirVd.cdUp();
+        QDir newDirVd(lastVdFileName);
+        newDirVd.cdUp();
         QDir dirPic(lastPicFileName);
         dirPic.cdUp();
-        QString strVd = dirVd.path();
+        QString strVd = newDirVd.path();
         m_fileWatcher.removePaths(m_fileWatcher.directories());
         m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
         m_fileWatcher.addPath(lastVdFileName);
@@ -1346,18 +1345,17 @@ void CMainWindow::initConnection()
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
-            int ret = 1;
 #else
-            int ret = closeDlg.exec();
+            closeDlg.exec();
 #endif
-            if (ret == 1) {
-                m_videoPre->onEndBtnClicked();
+
+            m_videoPre->onEndBtnClicked();
 #ifdef UNITTEST
-                closeDlg.close();
+            closeDlg.close();
 #else
-                qApp->quit();
+            qApp->quit();
 #endif
-            }
+
         } else
         {
 #ifndef UNITTEST
@@ -1613,11 +1611,6 @@ void CMainWindow::onEnableTitleBar(int nType)
     }
 }
 
-void CMainWindow::menuItemInvoked(QAction *action)
-{
-    Q_UNUSED(action);
-}
-
 void CMainWindow::onTitlePicBtn()
 {
     if (m_nActTpye == ActTakePic)
@@ -1668,8 +1661,8 @@ void CMainWindow::onTitleVdBtn()
     paPic.setColor(DPalette::Light, cloPic);
     paPic.setColor(DPalette::Button, cloPic);
     m_pTitleVdBtn->setPalette(paPic);
-    QIcon iconVd(":/images/icons/light/button/transcribe.svg");
-    m_pTitleVdBtn->setIcon(iconVd);
+    QIcon defaultIconVd(":/images/icons/light/button/transcribe.svg");
+    m_pTitleVdBtn->setIcon(defaultIconVd);
     //切换标题栏拍照按钮颜色
     DPalette paVd = m_pTitlePicBtn->palette();
     QColor cloVd("#000000");
@@ -1681,11 +1674,11 @@ void CMainWindow::onTitleVdBtn()
 
     if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::UnknownType
             || DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-        QIcon iconVd(":/images/icons/light/photograph.svg");
-        m_pTitlePicBtn->setIcon(iconVd);
+        QIcon lightIconVd(":/images/icons/light/photograph.svg");
+        m_pTitlePicBtn->setIcon(lightIconVd);
     } else {
-        QIcon iconPic(":/images/icons/dark/button/photograph_dark.svg");
-        m_pTitlePicBtn->setIcon(iconPic);
+        QIcon lightIconPic(":/images/icons/dark/button/photograph_dark.svg");
+        m_pTitlePicBtn->setIcon(lightIconPic);
     }
 
     m_thumbnail->ChangeActType(m_nActTpye);

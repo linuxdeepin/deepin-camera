@@ -21,10 +21,9 @@
 
 #include "dbus_adpator.h"
 
-ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
-    : QDBusAbstractAdaptor(mw), m_mw(mw)
+ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw, QTime curtime)
+    : QDBusAbstractAdaptor(mw), m_mw(mw), m_oldTime(curtime)
 {
-    m_oldTime = QTime::currentTime();
 }
 
 void ApplicationAdaptor::Raise()

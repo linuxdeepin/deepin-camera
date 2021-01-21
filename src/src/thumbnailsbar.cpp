@@ -693,9 +693,9 @@ void ThumbnailsBar::addPaths(QString strPicPath, QString strVdPath)
 void ThumbnailsBar::addFile(QString strFile)
 {
     //避免出现空白图片
-    QFileInfo fileinfo(strFile);
+    QFileInfo avoidWhitePicFileInfo(strFile);
 
-    if (!fileinfo.exists())
+    if (!avoidWhitePicFileInfo.exists())
         return;
 
     //先删除多余的，保证全选情况下缩略图大小正确

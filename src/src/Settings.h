@@ -93,7 +93,7 @@ public:
     * @param v
     */
     void setPathOption(const QString &opt, const QVariant &v);
-
+    
     /**
     * @brief getOption 获取json下的值
     * @param opt
