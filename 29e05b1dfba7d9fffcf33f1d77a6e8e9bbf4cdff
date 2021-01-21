@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8435bc3_60b1bfa4",
+        "filename": "src/src/libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-21T02:54:19Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 10; 注释率: 40.0%",
+      "revId": "29e05b1dfba7d9fffcf33f1d77a6e8e9bbf4cdff",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
