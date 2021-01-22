@@ -28,64 +28,31 @@ include(src/src/libcam/libcam.pri)
 include(src/src/qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
-    $$PWD/src/src/capplication.cpp \
-    $$PWD/src/src/main.cpp \
-    $$PWD/src/src/mainwindow.cpp \
-    $$PWD/src/src/videowidget.cpp \
-    $$PWD/src/src/thumbnailsbar.cpp \
-    $$PWD/src/src/majorimageprocessingthread.cpp \
-    $$PWD/src/src/LPF_V4L2.c \
-    $$PWD/src/src/devnummonitor.cpp \
-    $$PWD/src/src/Settings.cpp\
-    $$PWD/src/src/imageitem.cpp\
-    $$PWD/src/src/closedialog.cpp \
-    $$PWD/src/src/settings_translation.cpp \
-    $$PWD/src/src/dbus_adpator.cpp \
-    $$PWD/src/src/previewopenglwidget.cpp \
-    $$PWD/src/src/shortcut.cpp \
-    $$PWD/src/src/thumbwidget.cpp
+    $$PWD/src/src/*.cpp \
+    $$PWD/src/src/*.c \
+    $$PWD/src/*.cpp \
+
 
 HEADERS += \
-    $$PWD/src/src/mainwindow.h \
-    $$PWD/src/src/thumbnailsbar.h \
-    $$PWD/src/src/majorimageprocessingthread.h \
-    $$PWD/src/src/LPF_V4L2.h \
-    $$PWD/src/src/videowidget.h \
-    $$PWD/src/src/devnummonitor.h \
-    $$PWD/src/src/imageitem.h \
-    $$PWD/src/src/Settings.h \
-    $$PWD/src/src/closedialog.h \
-    $$PWD/src/src/capplication.h \
-    $$PWD/src/src/dbus_adpator.h \
-    $$PWD/src/src/previewopenglwidget.h \
-    $$PWD/src/src/shortcut.h \
-    $$PWD/src/config.h \
-    $$PWD/src/src/thumbwidget.h
+    $$PWD/src/src/*.h \
+    $$PWD/src/*.h
 
 
 INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include \
+                $$PWD/src \
+                $$PWD/src/src \
                 $$PWD/src/src/libcam/libcam_v4l2core\
                 $$PWD/src/src/libcam/libcam_render\
                 $$PWD/src/src/libcam/libcam_encoder \
                 $$PWD/src/src/libcam/libcam_audio \
                 $$PWD/src/src/libcam/libcam \
-                $$PWD/src/src/basepub \
-                $$PWD/src \
+                $$PWD/src/src/basepub \                
                 $$PWD/src/src/accessibility \
                 $$PWD/src/src/accessible \
                 $$PWD/src/src/qtsingleapplication
 
 LIBS += -L/lib/x86_64-linux-gnu\
-#        -ludev\
-#        -lusb-1.0\
-#        -lv4l2\
-#        -lavutil\
-#        -lswscale\
-#        -lpng\
-#        -lSDL2\
-#        -lportaudio\
-#        -lswresample \
         -ldl
 
 LIBS += -LSYSTEMLIBDIR
