@@ -1,8 +1,7 @@
 HEADERS += \
-    $$PWD/load_libs.h \
-    $$PWD/datamanager.h
+    $$PWD/*.h
 
 SOURCES += \
-    $$PWD/load_libs.c \
-    $$PWD/datamanager.cpp
+    $$PWD/*.c \
+    $$PWD/*.cpp
 
