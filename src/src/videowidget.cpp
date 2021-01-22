@@ -279,7 +279,7 @@ void videowidget::delayInit()
         }
 
         showNocam();
-        qDebug() << "No webcam found" << endl;
+        qWarning() << "No webcam found" << endl;
     }
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
@@ -845,7 +845,7 @@ void videowidget::showCountdown()
 
                     while (true) {
                         if (nCount > 50) {
-                            qDebug() << "too long to emit takePicDone";
+                            qWarning() << "too long to emit takePicDone";
                             break;
                         }
 
@@ -867,7 +867,7 @@ void videowidget::showCountdown()
 
                     while (true) {
                         if (nCount > 50) {
-                            qDebug() << "too long to emit takePicOnce";
+                            qWarning() << "too long to emit takePicOnce";
                             break;
                         }
 
@@ -896,7 +896,7 @@ void videowidget::showCountdown()
     } else {
         showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
         m_nInterval--;
-        qDebug() << "m_nInterval:" << m_nInterval;
+        qInfo() << "m_nInterval:" << m_nInterval;
     }
 
 }
@@ -908,7 +908,7 @@ void videowidget::showRecTime()
 
     //过滤不正常的时间
     if (m_nCount <= 3) {
-        qDebug() << "error time" << m_nCount;
+        qWarning() << "error time" << m_nCount;
         return;
     }
 
@@ -1180,7 +1180,7 @@ void videowidget::onChangeDev()
                     if (vd != nullptr)
                         close_v4l2_device_handler();
 
-                    qDebug() << "camInit failed";
+                    qWarning() << "camInit failed";
 
                     if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
                         showCamUsed();

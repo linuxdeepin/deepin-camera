@@ -78,7 +78,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
-                qDebug() << "generateThumbnail failed";
+                qWarning() << "generateThumbnail failed";
             }
 
         }
@@ -178,6 +178,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         m_menu->exec(QCursor::pos());
         DataManager::instance()->setCtrlMulti(false);
         DataManager::instance()->setShiftMulti(false);
+        qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
 
     /**
@@ -196,7 +197,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 
             for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
                 paths << g_indexImage.value(*it)->getPath();
-                qDebug() << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
             }
 
         }
@@ -247,6 +248,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             //https://pms.uniontech.com/zentao/bug-view-41745.html
             Dtk::Widget::DDesktopServices::showFolder(strtmp);
         }
+        qDebug() << "Click the right mouse to open the folder";
     });
 
     /**
@@ -276,19 +278,21 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     QString program;
     if (fileInfo.suffix() == "jpg") {
         program = "deepin-image-viewer"; //用看图打开
+        qDebug() << "Open it with deepin-image-viewer";
     } else {
         program = "deepin-movie"; //用影院打开
+        qDebug() << "Open it with deepin-movie";
     }
 
     QStringList arguments;
     //表示本地文件
     arguments << QUrl::fromLocalFile(m_path).toString();
-    qDebug() << QUrl::fromLocalFile(m_path).toString();
+    qInfo() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
     bool bOK = myProcess->startDetached(program, arguments);
 
     if (!bOK)
-        qDebug() << "QProcess startDetached error";
+        qWarning() << "QProcess startDetached error";
 
 }
 
@@ -535,7 +539,7 @@ void ImageItem::onPrint()
 
             for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
                 paths << g_indexImage.value(*it)->getPath();
-                qDebug() << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
             }
         }
         showPrintDialog(QStringList(paths), this);

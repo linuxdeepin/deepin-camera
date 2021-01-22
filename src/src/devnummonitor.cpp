@@ -21,6 +21,8 @@
 
 #include "devnummonitor.h"
 
+#include <QDebug>
+
 extern "C"
 {
 #include "v4l2_devices.h"
@@ -43,6 +45,7 @@ void DevNumMonitor::stop()
 
     m_pTimer = nullptr;
     this->exit();
+    qDebug() << "Stop monitoring the number of devices!";
 }
 
 void DevNumMonitor::init()
@@ -59,6 +62,7 @@ void DevNumMonitor::run()
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
     this->exec();
+    qDebug() << "Start monitoring the number of devices!";
 }
 
 void DevNumMonitor::timeOutSlot()
@@ -68,15 +72,19 @@ void DevNumMonitor::timeOutSlot()
 
     if (m_devlist->num_devices <= 1) {
         emit seltBtnStateDisable();
-        if (m_devlist->num_devices < 1)
+        if (m_devlist->num_devices < 1) {
             //没有设备发送信号
             emit noDeviceFound();
-        else
+            qDebug() << "There is no camera connected!";
+        } else {
             emit existDevice();
+            qDebug() << "There is a camera connected!";
+        }
     } else {
         emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();
+        qDebug() << "There are two or more cameras connected!";
     }
 
 }

@@ -661,7 +661,7 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
         QDir dirNew(lastPath);
         if (!dirNew.exists()) {
             if (!dirNew.mkdir(lastPath)) {
-                qDebug() << "make dir error:" << lastPath;
+                qWarning() << "make dir error:" << lastPath;
                 lastPath = QDir::currentPath();//这是错误的路径，但肯定存在
                 qDebug() << "now lastVdPath is:" << lastPath;
             }
@@ -782,7 +782,7 @@ void CMainWindow::initDynamicLibPath()
 void CMainWindow::initBlockShutdown()
 {
     if (!m_arg.isEmpty() || m_reply.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_reply.value().isValid();
+        qInfo() << "m_reply.value().isValid():" << m_reply.value().isValid();
         return;
     }
 
@@ -812,7 +812,7 @@ void CMainWindow::initBlockShutdown()
 void CMainWindow::initBlockSleep()
 {
     if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+        qInfo() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
         return;
     }
 
@@ -1140,7 +1140,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
             if (!dirDefaultVd.exists()) {
                 bool bMakeDir = dirDefaultVd.mkdir(lastVdFileName);
                 if (!bMakeDir) {
-                    qDebug() << "make dir error:" << lastVdFileName;
+                    qWarning() << "make dir error:" << lastVdFileName;
                 }
             }
             Settings::get().settings()->setOption("base.save.vddatapath", lastVdFileName);
@@ -1152,7 +1152,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
             if (!dirDefaultPic.exists()) {
                 bool bMakeDir = dirDefaultPic.mkdir(lastPicFileName);
                 if (!bMakeDir) {
-                    qDebug() << "make dir error:" << lastPicFileName;
+                    qWarning() << "make dir error:" << lastPicFileName;
                 }
             }
             Settings::get().settings()->setOption("base.save.picdatapath", lastPicFileName);
@@ -1472,12 +1472,14 @@ void CMainWindow::setSelBtnHide()
 {
     pSelectBtn->hide();
     pSelectBtn->setFocusPolicy(Qt::ClickFocus);
+    qDebug() << "Hide camera selection button";
 }
 
 void CMainWindow::setSelBtnShow()
 {
     pSelectBtn->show();
     pSelectBtn->setFocusPolicy(Qt::TabFocus);
+    qDebug() << "Show camera selection button";
 }
 
 void CMainWindow::setupTitlebar()
@@ -1624,6 +1626,7 @@ void CMainWindow::onTitlePicBtn()
         return;
 
     m_nActTpye = ActTakePic;
+    qDebug() << "Switch to take picture state!";
     //切换标题栏拍照按钮颜色
     DPalette pa = m_pTitlePicBtn->palette();
     QColor clo("#0081FF");
@@ -1661,6 +1664,7 @@ void CMainWindow::onTitleVdBtn()
         return;
 
     m_nActTpye = ActTakeVideo;
+    qDebug() << "Switch to take video state!";
     //切换标题栏视频按钮颜色
     DPalette paPic = m_pTitleVdBtn->palette();
     QColor cloPic("#0081FF");
@@ -1814,6 +1818,7 @@ void CMainWindow::onTakePicCancel()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
+    qDebug() << "Cancel taking photo!";
 }
 
 void CMainWindow::onTakeVdDone()
@@ -1832,6 +1837,7 @@ void CMainWindow::onTakeVdDone()
 
         m_thumbnail->addFile(strFileName);
     });
+    qDebug() << "Taking video completed!";
 
 }
 
@@ -1841,6 +1847,7 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->show();
     onEnableSettings(true);
+    qDebug() << "Cancel taking video!";
 }
 
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)

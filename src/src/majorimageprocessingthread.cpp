@@ -205,7 +205,7 @@ void MajorImageProcessingThread::run()
         if (m_bTake) {
             int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
-                qDebug() << "保存照片失败";
+                qWarning() << "保存照片失败";
             }
 
             m_bTake = false;
