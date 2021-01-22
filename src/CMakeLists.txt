@@ -27,6 +27,8 @@ include_directories(${PROJECT_SOURCE_DIR})
 configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
 set(PROJECT_INCLUDE
+    ../
+    ./src/
     ./src/libcam/libcam_v4l2core
     ./src/libcam/libcam_render
     ./src/libcam/libcam_encoder
@@ -36,7 +38,6 @@ set(PROJECT_INCLUDE
     ./src/qtsingleapplication
     ./src/accessibility
     ./src/accessible
-    ../
     /usr/include
     /usr/include/libusb-1.0
     )
@@ -49,27 +50,12 @@ find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
 file (GLOB_RECURSE CXXSOURCES
-    ./src/closedialog.cpp
-    ./src/devnummonitor.cpp
-    ./src/mainwindow.cpp
-    ./src/majorimageprocessingthread.cpp
-    ./src/previewopenglwidget.cpp
-    ./src/shortcut.cpp
-    ./src/thumbnailsbar.cpp
-    ./src/videowidget.cpp
-    ./src/imageitem.cpp
-    ./src/Settings.cpp
-    ./src/capplication.cpp
-    ./src/dbus_adpator.cpp
-    ./src/settings_translation.cpp
-    ./src/basepub/*.cpp
-    ./src/qtsingleapplication/qtsingleapplication.cpp
-    ./src/thumbwidget.cpp
-    ./src/main.cpp
+    ./src/*.cpp
+    ./*.cpp
     )
 
 file (GLOB_RECURSE CSOURCES
-    ./src/LPF_V4L2.c
+    ./src/*.c
     ./src/libcam/*.c
     ./src/basepub/*.c
     )

@@ -52,21 +52,8 @@ file (GLOB_RECURSE CXXSOURCES
     ./MainwindowTest.cpp
     ./ClosedialogTest.cpp
     ../src/src/basepub/*.cpp
-    ../src/src/closedialog.cpp
-    ../src/src/devnummonitor.cpp
-    ../src/src/mainwindow.cpp
-    ../src/src/majorimageprocessingthread.cpp
-    ../src/src/previewopenglwidget.cpp
-    ../src/src/shortcut.cpp
-    ../src/src/thumbnailsbar.cpp
-    ../src/src/thumbwidget.cpp
-    ../src/src/videowidget.cpp
-    ../src/src/imageitem.cpp
-    ../src/src/Settings.cpp
-    ../src/src/capplication.cpp
-    ../src/src/dbus_adpator.cpp
-    ../src/src/settings_translation.cpp
-    ../src/src/qtsingleapplication/qtsingleapplication.cpp
+    ../src/src/*.cpp
+    ../src/src/qtsingleapplication/*.cpp
     ./stub/*.cpp
     )
 
