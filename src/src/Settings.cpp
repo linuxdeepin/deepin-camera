@@ -48,7 +48,7 @@ Settings::Settings(): QObject(0)
                    .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
                    .arg(qApp->organizationName())
                    .arg(qApp->applicationName());
-    qDebug() << "configPath" << m_configPath;
+    qInfo() << "configPath" << m_configPath;
     auto backend = new QSettingBackend(m_configPath);
 
 #if defined (__mips__) || defined (__sw_64__) || defined ( __aarch64__)
@@ -69,7 +69,7 @@ Settings::Settings(): QObject(0)
 
     });
 
-    qDebug() << "keys" << m_settings->keys();
+    qInfo() << "keys" << m_settings->keys();
     setNewResolutionList();
 }
 
