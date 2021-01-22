@@ -173,7 +173,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     }
 
     QString strShowTime = "";
-    qDebug() << m_nMaxWidth;
+    qInfo() << m_nMaxWidth;
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
 
     QLayoutItem *child;
@@ -353,7 +353,7 @@ void ThumbnailsBar::onShortcutCopy()
         QSet<int>::iterator it;
         for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
             paths << g_indexImage.value(*it)->getPath();
-            qDebug() << g_indexImage.value(*it)->getPath();
+            qInfo() << g_indexImage.value(*it)->getPath();
         }
 
     }
@@ -389,8 +389,8 @@ void ThumbnailsBar::onShortcutDel()
 
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
         qDebug() << "del too fast";
-        qDebug() << timeNow;
-        qDebug() << m_lastDelTime;
+        qInfo() << timeNow;
+        qInfo() << m_lastDelTime;
         return;
     }
 
@@ -411,7 +411,7 @@ void ThumbnailsBar::onTrashFile()
 
         if (tmp == nullptr) {
             qDebug() << "ImageItem not exist !";
-            qDebug() << "DataManager::instance()->getindexNow()=" << DataManager::instance()->getindexNow();
+            qInfo() << "DataManager::instance()->getindexNow()=" << DataManager::instance()->getindexNow();
 
             ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(itemNow->getIndex());
@@ -423,7 +423,7 @@ void ThumbnailsBar::onTrashFile()
 
         if (!file.exists()) {
             qDebug() << "file not exist !";
-            qDebug() << DataManager::instance()->getindexNow() << " " << strPath;
+            qInfo() << DataManager::instance()->getindexNow() << " " << strPath;
         }
 
         bool bTrashed = DDesktopServices::trash(strPath);
@@ -487,7 +487,7 @@ void ThumbnailsBar::onTrashFile()
                     m_showVdTime->setText(itemExist->getDuration());
                     QFile file1(itemExist->getPath());
                     if (!file1.exists())
-                        qDebug() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
+                        qWarning() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
 
                 }
 
@@ -527,10 +527,10 @@ void ThumbnailsBar::onTrashFile()
             int nIndexSupply = nIndexMax + 1 + i;
 
             ImageItem *pLabel = new ImageItem(nIndexSupply, fileInfo.filePath());
-            qDebug() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
+            qInfo() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
 
             if (pLabel == nullptr)
-                qDebug() << "error! imageitem is null!!";
+                qWarning() << "error! imageitem is null!!";
 
             connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
@@ -556,8 +556,8 @@ void ThumbnailsBar::onTrashFile()
         QFile file2(itemNow->getPath());
 
         if (!file2.exists()) {
-            qDebug() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
-            qDebug() << "path : " << itemNow->getPath();
+            qWarning() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
+            qInfo() << "path : " << itemNow->getPath();
         }
 
     }
@@ -732,13 +732,13 @@ void ThumbnailsBar::addFile(QString strFile)
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
     connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
-    qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
+    qInfo() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
     if (pLabel == nullptr)
-        qDebug() << "error! imageitem is null!!";
+        qWarning() << "error! imageitem is null!!";
 
     m_hBox->insertWidget(0, pLabel);
 
@@ -755,7 +755,7 @@ void ThumbnailsBar::addFile(QString strFile)
             QFile file(tmp->getPath());
 
             if (!file.exists())
-                qDebug() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
+                qWarning() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
 
         }
 
@@ -799,7 +799,7 @@ void ThumbnailsBar::delFile(QString strFile)
     }
 
     if (!bRemoved)
-        qDebug() << "warning: item didn't removed!!!";
+        qWarning() << "item didn't removed!!!";
 
     if (!g_indexImage.isEmpty())
         DataManager::instance()->setindexNow(g_indexImage.begin().value()->getIndex());
@@ -842,10 +842,10 @@ void ThumbnailsBar::delFile(QString strFile)
 
 
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, fileInfo.filePath());
-    qDebug() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
+    qInfo() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
 
     if (pLabel == nullptr)
-        qDebug() << "error! imageitem is null!!";
+        qWarning() << "error! imageitem is null!!";
 
     connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
