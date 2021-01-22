@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
+    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
         qDebug() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
-            qWarning() << "deepin-camera raise";
+            qDebug() << "deepin-camera raise";
             iface.asyncCall("Raise");
         }
 
