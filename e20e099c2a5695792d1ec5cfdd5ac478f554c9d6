@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "72797f4c_5297a095",
+        "filename": "src/src/basepub/datamanager.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T02:46:46Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 7; 注释率: 42.9%",
+      "revId": "e20e099c2a5695792d1ec5cfdd5ac478f554c9d6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7070beba_0ff95301",
+        "filename": "src/src/basepub/datamanager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T02:46:46Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 4; 注释率: 50.0%",
+      "revId": "e20e099c2a5695792d1ec5cfdd5ac478f554c9d6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31257e30_54ea305e",
+        "filename": "src/src/libcam/libcam_encoder/file_io.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T02:46:46Z",
+      "side": 1,
+      "message": "改动行数(修改和新增): 0; 删除代码行数: 1; 注释率: 不计算",
+      "revId": "e20e099c2a5695792d1ec5cfdd5ac478f554c9d6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a12a8373_fd0ad774",
+        "filename": "src/src/libcam/libcam_encoder/matroska.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T02:46:46Z",
+      "side": 1,
+      "message": "改动行数(修改和新增): 0; 删除代码行数: 1; 注释率: 不计算",
+      "revId": "e20e099c2a5695792d1ec5cfdd5ac478f554c9d6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
