@@ -132,11 +132,10 @@ public:
 private:
     DataManager();
     static DataManager *m_dataManager;
-    bool m_bCtrlMulti=false;//ctrl键多选
-    bool m_bShitfMulti=false;//shift键连续多选
-    int m_indexLast=-1;
-    int m_indexNow=0;
-//    QMap<int, ImageItem *> m_indexImage;
+    bool m_bCtrlMulti;//ctrl键多选
+    bool m_bShitfMulti;//shift键连续多选
+    int m_indexLast;
+    int m_indexNow;
     QString m_strFileName;
     int m_videoCount;
     volatile enum DeviceStatus m_devStatus;
