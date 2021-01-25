@@ -130,6 +130,14 @@ DataManager *DataManager::instance()
 
 DataManager::DataManager()
 {
+
+    m_bCtrlMulti = false; //ctrl键多选
+    m_bShitfMulti = false; //shift键连续多选
+    m_indexLast = -1;
+    m_indexNow = 0;
+//    QMap<int, ImageItem *> m_indexImage;
+    m_strFileName.clear();
     m_videoCount = 0;
+    m_devStatus = DeviceStatus::NOCAM;
 }
 
