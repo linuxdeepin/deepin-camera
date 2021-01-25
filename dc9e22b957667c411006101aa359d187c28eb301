@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a741afe0_c0a29f22",
+        "filename": "libcam/libcam/cameraconfig.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T03:21:12Z",
+      "side": 1,
+      "message": "注释行数: 162; 改动行数(修改和新增): 463; 注释率: 35.0%",
+      "revId": "dc9e22b957667c411006101aa359d187c28eb301",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19cc85e1_f503b6c0",
+        "filename": "libcam/libcam/cameraconfig.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T03:21:12Z",
+      "side": 1,
+      "message": "注释行数: 163; 改动行数(修改和新增): 206; 注释率: 79.1%",
+      "revId": "dc9e22b957667c411006101aa359d187c28eb301",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc32b16a_4f5f1cc4",
+        "filename": "libcam/libcam/camview.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T03:21:12Z",
+      "side": 1,
+      "message": "注释行数: 544; 改动行数(修改和新增): 1158; 注释率: 47.0%",
+      "revId": "dc9e22b957667c411006101aa359d187c28eb301",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9f72f14_fb91c9b9",
+        "filename": "libcam/libcam/camview.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-25T03:21:12Z",
+      "side": 1,
+      "message": "注释行数: 331; 改动行数(修改和新增): 391; 注释率: 84.7%",
+      "revId": "dc9e22b957667c411006101aa359d187c28eb301",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
