@@ -25,19 +25,20 @@
 DataManager *DataManager::m_dataManager=nullptr;
 MultiType DataManager::getMultiType()
 {
+    MultiType multiTypeStatus = MultiType::None;
     //几种状态：都没选，都选，选其中一个，选其中另一个
-    if (!m_bCtrlMulti && !m_bShitfMulti) {
-        return None;
-    } else if (m_bCtrlMulti && m_bShitfMulti) {
-        return Both;
-    } else {
-        if (m_bCtrlMulti) {
-            return Ctrl;
-        }
-        if (m_bShitfMulti) {
-            return Shift;
-        }
+    if (!m_bCtrlMulti && !m_bShitfMulti)
+        multiTypeStatus =  MultiType::None;
+    else if (m_bCtrlMulti && m_bShitfMulti)
+        multiTypeStatus = MultiType::Both;
+    else {
+        if (m_bCtrlMulti)
+            multiTypeStatus = MultiType::Ctrl;
+
+        if (m_bShitfMulti)
+            multiTypeStatus = MultiType::Shift;
     }
+    return multiTypeStatus;
 }
 
 void DataManager::setCtrlMulti(bool bCtrlMulti)
