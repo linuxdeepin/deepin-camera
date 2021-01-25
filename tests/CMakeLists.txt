@@ -23,11 +23,12 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-set(PROJECT_INCLUDE ../src/src/libcam/libcam_v4l2core
-    ../src/src/libcam/libcam_render
-    ../src/src/libcam/libcam_encoder
-    ../src/src/libcam/libcam_audio
-    ../src/src/libcam/libcam
+set(PROJECT_INCLUDE
+    ../libcam/libcam_v4l2core
+    ../libcam/libcam_render
+    ../libcam/libcam_encoder
+    ../libcam/libcam_audio
+    ../libcam/libcam
     ../src/src/basepub
     ../src/src/accessibility
     ../src/src/accessible
@@ -59,13 +60,13 @@ file (GLOB_RECURSE CXXSOURCES
 
 file (GLOB_RECURSE CSOURCES
     ../src/src/*.c
-    ../src/src/libcam/*.c
+    ../libcam/*.c
     ../src/src/basepub/*.c
     )
 
 file (GLOB_RECURSE HEADERS
     ../src/src/basepub/*.h
-    ../src/src/libcam/*.h
+    ../libcam/*.h
     ../src/src/qtsingleapplication/*.h
     ../src/src/*.h
     ../src/src/accessibility/*.h

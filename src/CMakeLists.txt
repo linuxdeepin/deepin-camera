@@ -29,11 +29,11 @@ configure_file(${PROJECT_SOURCE_DIR}/config.h.in ${PROJECT_BINARY_DIR}/config.h 
 set(PROJECT_INCLUDE
     ../
     ./src/
-    ./src/libcam/libcam_v4l2core
-    ./src/libcam/libcam_render
-    ./src/libcam/libcam_encoder
-    ./src/libcam/libcam_audio
-    ./src/libcam/libcam
+    ../libcam/libcam_v4l2core
+    ../libcam/libcam_render
+    ../libcam/libcam_encoder
+    ../libcam/libcam_audio
+    ../libcam/libcam
     ./src/basepub
     ./src/qtsingleapplication
     ./src/accessibility
@@ -56,13 +56,13 @@ file (GLOB_RECURSE CXXSOURCES
 
 file (GLOB_RECURSE CSOURCES
     ./src/*.c
-    ./src/libcam/*.c
+    ../libcam/*.c
     ./src/basepub/*.c
     )
 
 file (GLOB_RECURSE HEADERS
     ./src/*.h
-    ./src/libcam/*.h
+    ../libcam/*.h
     ./src/basepub/*.h
     ./src/qtsingleapplication/*.h
     ./src/accessibility/*.h

@@ -24,7 +24,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #SUBDIRS += src
 include(src/src/basepub/basepub.pri)
-include(src/src/libcam/libcam.pri)
+include(libcam/libcam.pri)
 include(src/src/qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
@@ -42,11 +42,11 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
                 /usr/include \
                 $$PWD/src \
                 $$PWD/src/src \
-                $$PWD/src/src/libcam/libcam_v4l2core\
-                $$PWD/src/src/libcam/libcam_render\
-                $$PWD/src/src/libcam/libcam_encoder \
-                $$PWD/src/src/libcam/libcam_audio \
-                $$PWD/src/src/libcam/libcam \
+                $$PWD/libcam/libcam_v4l2core\
+                $$PWD/libcam/libcam_render\
+                $$PWD/libcam/libcam_encoder \
+                $$PWD/libcam/libcam_audio \
+                $$PWD/libcam/libcam \
                 $$PWD/src/src/basepub \                
                 $$PWD/src/src/accessibility \
                 $$PWD/src/src/accessible \

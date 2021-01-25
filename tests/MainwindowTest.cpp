@@ -1,5 +1,6 @@
 #define private public
 #include "src/mainwindow.h"
+#undef private
 #include "src/imageitem.h"
 
 #include <QComboBox>
