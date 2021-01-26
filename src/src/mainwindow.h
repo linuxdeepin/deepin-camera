@@ -338,7 +338,7 @@ private:
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     QDBusInterface                  *m_pDBusSessionMgr;//锁屏恢复
-    QTimer                          *m_pLockTimer = nullptr;//定时检测锁屏属性
+    QTimer                          *m_pLockTimer;//定时检测锁屏属性
 };
 
 #endif // MAINWINDOW_H

@@ -311,7 +311,7 @@ private:
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 private:
-    bool                       m_bActive = false;   //是否录制中
+    bool                       m_bActive;   //是否录制中
 #ifndef __mips__
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
 #endif

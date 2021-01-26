@@ -698,6 +698,7 @@ CMainWindow::CMainWindow(DWidget *w)
     m_pDBusSessionMgr = nullptr;
     m_bWayland = false;
     m_bLocked = false;
+    m_pLockTimer = nullptr;
     m_nActTpye = ActTakePic;
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
@@ -712,8 +713,10 @@ CMainWindow::~CMainWindow()
     }
 
     if (m_devnumMonitor) {
-        m_devnumMonitor->stop();
-        m_devnumMonitor->deleteLater();
+        while (m_devnumMonitor->isRunning()) {
+            m_devnumMonitor->exit();
+            m_devnumMonitor->deleteLater();
+        }
         m_devnumMonitor = nullptr;
     }
 
@@ -1053,7 +1056,6 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
-    m_devnumMonitor->init();
     m_devnumMonitor->start();
     initTitleBar();
     initConnection();

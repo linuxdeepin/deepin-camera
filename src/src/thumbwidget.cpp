@@ -32,19 +32,21 @@ ThumbWidget::ThumbWidget(QWidget *parent, int outlinewidth): DLabel(parent), m_o
 
 void ThumbWidget::focusInEvent(QFocusEvent *event)
 {
+    Q_UNUSED(event);
     m_tabFocusStatus = true;
     update();
 }
 
 void ThumbWidget::focusOutEvent(QFocusEvent *event)
 {
+    Q_UNUSED(event);
     m_tabFocusStatus = false;
     update();
 }
 
 void ThumbWidget::paintEvent(QPaintEvent *event)
 {
-
+    Q_UNUSED(event);
     if (m_tabFocusStatus) {
         //获取painter
         QPainter painter(this);

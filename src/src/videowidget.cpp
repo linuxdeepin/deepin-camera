@@ -49,6 +49,7 @@ videowidget::videowidget(DWidget *parent)
 #ifndef __mips__
     m_openglwidget = new PreviewOpenglWidget(this);
 #endif
+    m_bActive = false;   //是否录制中
     m_takePicSound = new QSound(":/resource/Camera.wav");
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
@@ -398,8 +399,8 @@ void videowidget::showNocam()
     emit sigDeviceChange();
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        QImage imgnocam = QImage(":/images/icons/light/Not connected.svg");
-        m_pixmap = QPixmap::fromImage(imgnocam);
+        QImage imgNocam = QImage(":/images/icons/light/Not connected.svg");
+        m_pixmap = QPixmap::fromImage(imgNocam);
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -410,8 +411,8 @@ void videowidget::showNocam()
         plt.setColor(QPalette::Base, clrBase);
         setPalette(plt);
     } else {
-        QImage imgnocam = QImage(":/images/icons/dark/Not connected_dark.svg");
-        m_pixmap = QPixmap::fromImage(imgnocam);
+        QImage imgNocam = QImage(":/images/icons/dark/Not connected_dark.svg");
+        m_pixmap = QPixmap::fromImage(imgNocam);
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
