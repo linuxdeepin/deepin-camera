@@ -37,6 +37,8 @@ class ApplicationAdaptor: public QDBusAbstractAdaptor
 public:
     explicit ApplicationAdaptor(CMainWindow *mw);
 
+    ~ApplicationAdaptor();
+
 public slots:
     /**
     * @brief Raise 升起窗口信号

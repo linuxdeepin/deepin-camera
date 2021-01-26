@@ -74,34 +74,20 @@ public:
         return m_stopped;
     }
 
-public:
-    QMutex  m_rwMtxImg;
-    QString m_strPath;
-    QMutex  m_rwMtxPath;
-    bool    m_bTake; //是否拍照
-
-private:
-    int               m_result;
-    uint              m_nVdWidth;
-    uint              m_nVdHeight;
-    volatile int      m_majorindex;
-    QAtomicInt        m_stopped;
-    v4l2_dev_t        *m_videoDevice;
-    v4l2_frame_buff_t *m_frame;
-    uchar             *m_yuvPtr;
-
 protected:
     /**
      * @brief run 运行线程
      */
     void run();
 
-#ifdef __mips__
-    QImage m_Img;
-#endif
 
 signals:
 #ifdef __mips__
+    /**
+     * @brief SendMajorImageProcessing 向预览界面发送帧数据
+     * @param image 图像
+     * @param result 结果
+     */
     void SendMajorImageProcessing(QImage *image, int result);
 #else
     /**
@@ -123,6 +109,25 @@ signals:
      * @brief reachMaxDelayedFrames 到达最大延迟信号
      */
     void reachMaxDelayedFrames();
+
+public:
+    QMutex  m_rwMtxImg;
+    QString m_strPath;
+    QMutex  m_rwMtxPath;
+    bool    m_bTake; //是否拍照
+
+private:
+    int               m_result;
+    uint              m_nVdWidth;
+    uint              m_nVdHeight;
+    volatile int      m_majorindex;
+    QAtomicInt        m_stopped;
+    v4l2_dev_t        *m_videoDevice;
+    v4l2_frame_buff_t *m_frame;
+    uchar             *m_yuvPtr;
+#ifdef __mips__
+    QImage             m_Img;
+#endif
 
 };
 

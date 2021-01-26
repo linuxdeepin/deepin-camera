@@ -31,33 +31,20 @@ extern "C"
 
 DevNumMonitor::DevNumMonitor()
 {
-    m_pTimer = nullptr;
-    m_devlist = nullptr;
+    m_pTimer = new QTimer;
 }
 
-void DevNumMonitor::stop()
+DevNumMonitor::~DevNumMonitor()
 {
-
     if (m_pTimer != nullptr) {
         m_pTimer->stop();
         m_pTimer->deleteLater();
+        m_pTimer = nullptr;
     }
-
-    m_pTimer = nullptr;
-    this->exit();
-    qDebug() << "Stop monitoring the number of devices!";
-}
-
-void DevNumMonitor::init()
-{
-
 }
 
 void DevNumMonitor::run()
 {
-    if (m_pTimer == nullptr)
-        m_pTimer = new QTimer;
-
     m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
@@ -68,11 +55,10 @@ void DevNumMonitor::run()
 void DevNumMonitor::timeOutSlot()
 {
     check_device_list_events(get_v4l2_device_handler());
-    m_devlist = get_device_list();
 
-    if (m_devlist->num_devices <= 1) {
+    if (get_device_list()->num_devices <= 1) {
         emit seltBtnStateDisable();
-        if (m_devlist->num_devices < 1) {
+        if (get_device_list()->num_devices < 1) {
             //没有设备发送信号
             emit noDeviceFound();
             qDebug() << "There is no camera connected!";

@@ -49,15 +49,7 @@ class DevNumMonitor: public QThread
 public:
     DevNumMonitor();
 
-    /**
-    * @brief stop　停止
-    */
-    void stop();
-
-    /**
-    * @brief init　初始化
-    */
-    void init();
+    ~DevNumMonitor();
 
 signals:
     /**
@@ -94,7 +86,6 @@ private slots:
 
 private:
     QTimer             *m_pTimer;
-    v4l2_device_list_t *m_devlist;
 
 };
 

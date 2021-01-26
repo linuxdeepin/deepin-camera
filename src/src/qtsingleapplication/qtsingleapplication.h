@@ -59,7 +59,7 @@ public:
     DApplication *dApplication();
 
 private:
-    DApplication *_app = nullptr;
+    DApplication *_app;
 };
 
 #endif // QTSINGLEAPPLICATION_H

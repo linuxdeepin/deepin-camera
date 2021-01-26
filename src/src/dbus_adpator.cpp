@@ -27,6 +27,14 @@ ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
     m_oldTime = QTime::currentTime();
 }
 
+ApplicationAdaptor::~ApplicationAdaptor()
+{
+    if (m_mw) {
+        m_mw->deleteLater();
+        m_mw = nullptr;
+    }
+}
+
 void ApplicationAdaptor::Raise()
 {
     qDebug() << "raise window from dbus";
