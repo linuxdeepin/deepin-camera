@@ -22,7 +22,7 @@
 
 #include "datamanager.h"
 
-DataManager *DataManager::m_dataManager=nullptr;
+DataManager *DataManager::m_dataManager = nullptr;
 MultiType DataManager::getMultiType()
 {
     MultiType multiTypeStatus = MultiType::None;
@@ -43,12 +43,12 @@ MultiType DataManager::getMultiType()
 
 void DataManager::setCtrlMulti(bool bCtrlMulti)
 {
-    m_bCtrlMulti=bCtrlMulti;
+    m_bCtrlMulti = bCtrlMulti;
 }
 
 void DataManager::setShiftMulti(bool bShitfMulti)
 {
-    m_bShitfMulti=bShitfMulti;
+    m_bShitfMulti = bShitfMulti;
 }
 
 int DataManager::getindexNow()
@@ -58,28 +58,8 @@ int DataManager::getindexNow()
 
 void DataManager::setindexNow(int indexNow)
 {
-    m_indexNow=indexNow;
+    m_indexNow = indexNow;
 }
-
-//QSet<int> DataManager::getindex()
-//{
-//    return m_setIndex;
-//}
-
-//void DataManager::clearindex()
-//{
-//    m_setIndex.clear();
-//}
-
-//void DataManager::insertindex(int index)
-//{
-//    m_setIndex.insert(index);
-//}
-
-//void DataManager::setindex(int index)
-//{
-//    m_setIndex.insert(index);
-//}
 
 QString &DataManager::getstrFileName()
 {
@@ -88,7 +68,7 @@ QString &DataManager::getstrFileName()
 
 void DataManager::setstrFileName(QString strFileName)
 {
-    m_strFileName=strFileName;
+    m_strFileName = strFileName;
 }
 
 int &DataManager::getvideoCount()
@@ -98,7 +78,7 @@ int &DataManager::getvideoCount()
 
 void DataManager::setvideoCount(int videoCount)
 {
-    m_videoCount=videoCount;
+    m_videoCount = videoCount;
 }
 
 enum DeviceStatus DataManager::getdevStatus()
@@ -108,18 +88,8 @@ enum DeviceStatus DataManager::getdevStatus()
 
 void DataManager::setdevStatus(enum DeviceStatus devStatus)
 {
-    m_devStatus=devStatus;
+    m_devStatus = devStatus;
 }
-
-//QMap<int, ImageItem *> &DataManager::getindexImage()
-//{
-//    return m_indexImage;
-//}
-
-//void DataManager::setindexImage(int tIndex, ImageItem *pLabel)
-//{
-//    m_indexImage.insert(tIndex,pLabel);
-//}
 
 DataManager *DataManager::instance()
 {

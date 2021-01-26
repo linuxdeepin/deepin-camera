@@ -31,7 +31,7 @@ class ThumbWidget : public DLabel
 {
     Q_OBJECT
 public:
-    ThumbWidget(QWidget *parent = 0, int outlinewidth = 2);
+    ThumbWidget(QWidget *parent = nullptr, int outlinewidth = 2);
 
 protected:
 

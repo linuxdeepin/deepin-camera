@@ -153,11 +153,6 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *ev) override;
 
     /**
-     * @brief mouseReleaseEvent 鼠标弹起事件
-     */
-    void mouseReleaseEvent(QMouseEvent *ev) override;
-
-    /**
      * @brief mousePressEvent 鼠标按下事件
      */
     void mousePressEvent(QMouseEvent *ev) override;
@@ -179,18 +174,18 @@ protected:
 
 private:
     bool     m_bVideo;//是否视频
-    int      m_index;
+    int      m_index;//索引
     int64_t  m_nDuration = 0; //视频文件时长,int形式时间
 
-    QString  m_path;
-    QPixmap  m_pixmap;
-    QString  m_pixmapstring;
+    QString  m_path;//文件路径
+    QPixmap  m_pixmap;//缩略图
+    QString  m_pixmapstring;//缩略图路径
     QString  m_strDuratuion;//视频文件时长,形式为00：00：00
-    QMenu    *m_menu;
+    QMenu    *m_menu;//菜单
 
-    QAction  *m_actCopy;
-    QAction  *m_actDel;
-    QAction  *m_actOpenFolder;
+    QAction  *m_actCopy;//复制
+    QAction  *m_actDel;//删除
+    QAction  *m_actOpenFolder;//打开文件夹
     QAction  *m_actPrint;//打印
 
 };

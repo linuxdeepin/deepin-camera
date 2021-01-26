@@ -296,11 +296,6 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 
 }
 
-void ImageItem::mouseReleaseEvent(QMouseEvent *ev)
-{
-    Q_UNUSED(ev);
-}
-
 void ImageItem::mousePressEvent(QMouseEvent *ev)
 {
     if (DataManager::instance()->getindexNow() != -1) {
