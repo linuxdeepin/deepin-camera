@@ -697,6 +697,7 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_bWayland = false;
     m_bLocked = false;
     m_pLockTimer = nullptr;
+    m_pLockTimerRestart = nullptr;
     m_nActTpye = ActTakePic;
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
@@ -726,6 +727,16 @@ CMainWindow::~CMainWindow()
     if (m_thumbnail) {
         m_thumbnail->deleteLater();
         m_thumbnail = nullptr;
+    }
+
+    if (m_pLockTimer) {
+        m_pLockTimer->deleteLater();
+        m_pLockTimer = nullptr;
+    }
+
+    if (m_pLockTimerRestart) {
+        m_pLockTimerRestart->deleteLater();
+        m_pLockTimerRestart = nullptr;
     }
 
     qDebug() << "stop_encoder_thread";
@@ -1051,6 +1062,10 @@ void CMainWindow::loadAfterShow()
     m_pLockTimer->setInterval(100);//仅在连拍和录制期间开启,因此时间下调到100ms
     connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
 
+    m_pLockTimerRestart = new QTimer;
+    m_pLockTimerRestart->setInterval(100);
+    connect(m_pLockTimerRestart, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));
+
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
@@ -1185,12 +1200,19 @@ void CMainWindow::onTimeoutLock()
         if (m_pDBusSessionMgr) {
             if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
                 qDebug() << "locked";
+
                 if (m_videoPre->getCapStatus()) {
                     m_videoPre->onEndBtnClicked();
                 }
+
+                if (m_thumbnail->m_nStatus == STATPicIng) {
+                    m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+                }
+
                 m_videoPre->m_imgPrcThread->stop();
                 m_bLocked = true;
                 qDebug() << "lock end";
+                m_pLockTimerRestart->start();
             } else {
                 if (m_bLocked) {
                     qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
@@ -1198,12 +1220,11 @@ void CMainWindow::onTimeoutLock()
                     m_videoPre->onChangeDev();
                     qDebug() << "v4l2core_start_stream OK";
                     m_bLocked = false;
+                    m_pLockTimerRestart->stop();
                 }
             }
         }
-    }
-    //锁屏结束连拍
-    if (m_pDBusSessionMgr) {
+    } else if (m_pDBusSessionMgr) {//锁屏结束连拍
         if (m_thumbnail->m_nStatus == STATPicIng && m_pDBusSessionMgr->property("Locked").value<bool>()) {
             m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
         }
