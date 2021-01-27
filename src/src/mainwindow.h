@@ -332,6 +332,7 @@ private:
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     QDBusInterface                  *m_pDBusSessionMgr;//锁屏恢复
     QTimer                          *m_pLockTimer;//定时检测锁屏属性
+    QTimer                          *m_pLockTimerRestart;//用于wayland连拍和录制中锁屏,再次进入桌面时重启摄像头
 };
 
 #endif // MAINWINDOW_H
