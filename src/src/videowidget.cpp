@@ -238,9 +238,9 @@ void videowidget::delayInit()
             this, SLOT(onReachMaxDelayedFrames()));
     connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
-    QPalette pltLabel = m_flashLabel->palette();
-    pltLabel.setColor(QPalette::Window, QColor(Qt::white));
-    m_flashLabel->setPalette(pltLabel);
+    QPalette pltFlashLabel = m_flashLabel->palette();
+    pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
+    m_flashLabel->setPalette(pltFlashLabel);
     m_flashLabel->hide();
     m_flashLabel->setFocusPolicy(Qt::ClickFocus);
     //启动视频
@@ -545,11 +545,11 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             } else {
                 if ((framewidth * 100 / frameheight) > (widgetwidth * 100 / widgetheight)) {
                     m_openglwidget->resize(widgetwidth, widgetwidth * frameheight / framewidth);
-                    m_openglwidget->move(widgetwidth - widgetwidth, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
+                    m_openglwidget->move(0, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
                 } else {
 
                     m_openglwidget->resize(widgetheight * framewidth / frameheight, widgetheight);
-                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, widgetheight - widgetheight);
+                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, 0);
                 }
 
             }
@@ -1053,7 +1053,7 @@ void videowidget::onRestartDevices()
 
 void videowidget::onChangeDev()
 {
-    v4l2_dev_t *vd =  get_v4l2_device_handler();
+    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
@@ -1061,8 +1061,8 @@ void videowidget::onChangeDev()
     while (m_imgPrcThread->isRunning());
     QString str;
 
-    if (vd != nullptr) {
-        str = QString(vd->videodevice);
+    if (devicehandler != nullptr) {
+        str = QString(devicehandler->videodevice);
         close_v4l2_device_handler();
     }
 

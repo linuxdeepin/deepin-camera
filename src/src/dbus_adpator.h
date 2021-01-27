@@ -33,9 +33,10 @@
 class ApplicationAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "com.deepin.camera")
+
 public:
-    explicit ApplicationAdaptor(CMainWindow *mw);
+    explicit ApplicationAdaptor(CMainWindow *mw = nullptr);
+    Q_CLASSINFO("D-Bus Interface", "com.deepin.camera")
 
     ~ApplicationAdaptor();
 
@@ -47,7 +48,6 @@ public slots:
 
 private:
     CMainWindow *m_mw;
-    QTime       m_oldTime;
 };
 
 

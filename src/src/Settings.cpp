@@ -44,10 +44,11 @@ Settings &Settings::get()
 
 Settings::Settings(): QObject(0)
 {
-    m_configPath = QString("%1/%2/%3/config.conf")
-                   .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
-                   .arg(qApp->organizationName())
-                   .arg(qApp->applicationName());
+    m_configPath.clear();
+    m_configPath.append(QString("%1/%2/%3/config.conf")
+                        .arg(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))
+                        .arg(qApp->organizationName())
+                        .arg(qApp->applicationName()));
     qInfo() << "configPath" << m_configPath;
     auto backend = new QSettingBackend(m_configPath);
 
@@ -108,7 +109,7 @@ void Settings::setNewResolutionList()
         resolutionDatabase.clear();
 
         //当前分辨率下标
-        int defres = 0;
+
         if (format_index >= 0 && resolu_index >= 0) {
             for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
@@ -126,7 +127,7 @@ void Settings::setNewResolutionList()
                 }
 
             }
-
+            int defres = 0;
             int tempostion = 0;
             int len = resolutionDatabase.size() - 1;
             for (int i = 0; i < resolutionDatabase.size() - 1; i++) {

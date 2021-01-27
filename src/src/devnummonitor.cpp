@@ -29,9 +29,8 @@ extern "C"
 #include "camview.h"
 }
 
-DevNumMonitor::DevNumMonitor()
+DevNumMonitor::DevNumMonitor(QTimer *timer): m_pTimer(timer)
 {
-    
 }
 
 DevNumMonitor::~DevNumMonitor()

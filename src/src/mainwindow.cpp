@@ -186,10 +186,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     if (curPicSettingPath.contains(relativeHomePath))
         curPicSettingPath.replace(0, 1, QDir::homePath());
 
-    QDir dir(curPicSettingPath);
+    QDir curPicSettingPathdir(curPicSettingPath);
 
     //路径不存在
-    if (!dir.exists())
+    if (!curPicSettingPathdir.exists())
         picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
     else
         picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
@@ -428,10 +428,10 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     if (curVideoSettingPath.contains(relativeHomePath))
         curVideoSettingPath.replace(0, 1, QDir::homePath());
 
-    QDir dir(curVideoSettingPath);
+    QDir curVideoSettingPathdir(curVideoSettingPath);
 
     //路径不存在
-    if (!dir.exists())
+    if (!curVideoSettingPathdir.exists())
         videoPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Videos/Camera
     else
         videoPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
@@ -685,8 +685,7 @@ void CMainWindow::setWayland(bool bTrue)
     }
 }
 
-CMainWindow::CMainWindow(DWidget *w)
-    : DMainWindow(w)
+CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
 {
     m_SetDialog = nullptr;
     m_thumbnail = nullptr;
@@ -931,7 +930,7 @@ void CMainWindow::settingDialog()
                                format_index,
                                v4l2core_get_frame_width(get_v4l2_device_handler()),
                                v4l2core_get_frame_height(get_v4l2_device_handler()));
-        int defres = 0;
+
         //获取当前摄像头的格式表
         v4l2_stream_formats_t *list_stream_formats = v4l2core_get_formats_list(get_v4l2_device_handler());
         //初始化分辨率字符串表
@@ -958,7 +957,7 @@ void CMainWindow::settingDialog()
                         resolutionDatabase.append(res_str);
                 }
             }
-
+            int defres = 0;
             int tempostion = 0;
             int len = resolutionDatabase.size() - 1;
 
@@ -1128,10 +1127,10 @@ void CMainWindow::onSleepWhenTaking(bool bTrue)
 
 void CMainWindow::onDirectoryChanged(const QString &)
 {
-    QDir dirPic(lastPicFileName);
-    QDir dirVd(lastVdFileName);
-    bool bPic = dirPic.exists();
-    bool bVd = dirVd.exists();
+    QDir dirChangePic(lastPicFileName);
+    QDir dirChangeVd(lastVdFileName);
+    bool bPic = dirChangePic.exists();
+    bool bVd = dirChangeVd.exists();
     if (bPic && bVd) {
         return;
     } else {
@@ -1347,24 +1346,17 @@ void CMainWindow::initConnection()
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
-            int ret = 1;
 #else
-            int ret = closeDlg.exec();
+            closeDlg.exec();
 #endif
-            if (ret == 1) {
-                m_videoPre->onEndBtnClicked();
+            m_videoPre->onEndBtnClicked();
 #ifdef UNITTEST
-                closeDlg.close();
+            closeDlg.close();
 #else
-                qApp->quit();
-#endif
-            }
-        } else
-        {
-#ifndef UNITTEST
             qApp->quit();
 #endif
         }
+
     });
 
     //设置按钮信号
@@ -1616,11 +1608,6 @@ void CMainWindow::onEnableTitleBar(int nType)
     }
 }
 
-void CMainWindow::menuItemInvoked(QAction *action)
-{
-    Q_UNUSED(action);
-}
-
 void CMainWindow::onTitlePicBtn()
 {
     if (m_nActTpye == ActTakePic)
@@ -1673,8 +1660,8 @@ void CMainWindow::onTitleVdBtn()
     paPic.setColor(DPalette::Light, cloPic);
     paPic.setColor(DPalette::Button, cloPic);
     m_pTitleVdBtn->setPalette(paPic);
-    QIcon iconVd(":/images/icons/light/button/transcribe.svg");
-    m_pTitleVdBtn->setIcon(iconVd);
+    QIcon defaultIconVd(":/images/icons/light/button/transcribe.svg");
+    m_pTitleVdBtn->setIcon(defaultIconVd);
     //切换标题栏拍照按钮颜色
     DPalette paVd = m_pTitlePicBtn->palette();
     QColor cloVd("#000000");

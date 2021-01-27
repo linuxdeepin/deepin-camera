@@ -710,8 +710,8 @@ void ThumbnailsBar::addFile(QString strFile)
         delete tmp;
         tmp = nullptr;
         //ui上删掉的得加回来，否则删除文件的时候，总会剩一个文件
-        QFileInfo fileinfo(strPath);
-        m_fileInfoLst += fileinfo;
+        QFileInfo finfo(strPath);
+        m_fileInfoLst += finfo;
     }
 
     int nIndexMax = -1;

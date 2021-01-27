@@ -66,11 +66,6 @@ QString &DataManager::getstrFileName()
     return m_strFileName;
 }
 
-void DataManager::setstrFileName(QString strFileName)
-{
-    m_strFileName = strFileName;
-}
-
 int &DataManager::getvideoCount()
 {
     return m_videoCount;

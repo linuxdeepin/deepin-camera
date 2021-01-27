@@ -195,7 +195,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         {
             QSet<int>::iterator it;
 
-            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
+            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
                 paths << g_indexImage.value(*it)->getPath();
                 qInfo() << g_indexImage.value(*it)->getPath();
             }
@@ -372,7 +372,7 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         QSet<int>::iterator it;
         bool bHaveVideo = false;
 
-        for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
+        for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
             if (g_indexImage.value(*it)->getIsVideo()) {
                 bHaveVideo = true;
                 break;
@@ -532,7 +532,7 @@ void ImageItem::onPrint()
         } else {
             QSet<int>::iterator it;
 
-            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); it++) {
+            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
                 paths << g_indexImage.value(*it)->getPath();
                 qInfo() << g_indexImage.value(*it)->getPath();
             }

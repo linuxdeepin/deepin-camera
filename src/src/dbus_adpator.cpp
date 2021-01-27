@@ -24,7 +24,6 @@
 ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
     : QDBusAbstractAdaptor(mw), m_mw(mw)
 {
-    m_oldTime = QTime::currentTime();
 }
 
 ApplicationAdaptor::~ApplicationAdaptor()

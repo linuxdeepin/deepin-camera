@@ -37,7 +37,7 @@ public:
 
     QSet<int> m_setIndex;
     Q_DISABLE_COPY(DataManager)
-    
+
     /**
      * @brief getMultiType 返回ctrl多选或者shift多选
      */
@@ -97,11 +97,6 @@ public:
      * @brief getstrFileName 获得文件名
      */
     QString &getstrFileName();
-    /**
-     * @brief getstrFileName 设置文件名
-     * @param strFileName
-     */
-    void setstrFileName(QString strFileName);
     /**
      * @brief getvideoCount 获得视频数目
      */

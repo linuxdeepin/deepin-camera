@@ -47,7 +47,7 @@ class DevNumMonitor: public QThread
 {
     Q_OBJECT
 public:
-    DevNumMonitor();
+    explicit DevNumMonitor(QTimer *timer = nullptr);
 
     ~DevNumMonitor();
 

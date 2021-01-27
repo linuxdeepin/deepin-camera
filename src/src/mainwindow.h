@@ -60,7 +60,7 @@ class CMainWindow : public DMainWindow
 {
     Q_OBJECT
 public:
-    CMainWindow(DWidget *w = nullptr);
+    explicit CMainWindow(QWidget *parent = nullptr);
 
     /**
     * @brief lastOpenedPath　上一次打开的文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
@@ -159,13 +159,6 @@ private:
     * @brief changeEvent　录制视频时改变窗口事件
     */
     void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
-
-
-    /**
-    * @brief menuItemInvoked 调用菜单选项
-    * @param action  动作
-    */
-    void menuItemInvoked(QAction *action);
 
     /**
     * @brief settingsTriggered 触发设置
