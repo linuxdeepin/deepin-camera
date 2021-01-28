@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10c5d982_02f6f41c",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-28T01:47:46Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 19; 注释率: 10.5%",
+      "revId": "769c1dcd29811e030e604017ed1c7b0bb1818727",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96ba2b18_323858ad",
+        "filename": "src/src/mainwindow.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-01-28T01:47:46Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 1; 注释率: 100.0%",
+      "revId": "769c1dcd29811e030e604017ed1c7b0bb1818727",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
