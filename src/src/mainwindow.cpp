@@ -693,11 +693,7 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_pLoginManager = nullptr;
     m_pLoginMgrSleep = nullptr;
     m_pDBus = nullptr;
-    m_pDBusSessionMgr = nullptr;
     m_bWayland = false;
-    m_bLocked = false;
-    m_pLockTimer = nullptr;
-    m_pLockTimerRestart = nullptr;
     m_nActTpye = ActTakePic;
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
@@ -727,16 +723,6 @@ CMainWindow::~CMainWindow()
     if (m_thumbnail) {
         m_thumbnail->deleteLater();
         m_thumbnail = nullptr;
-    }
-
-    if (m_pLockTimer) {
-        m_pLockTimer->deleteLater();
-        m_pLockTimer = nullptr;
-    }
-
-    if (m_pLockTimerRestart) {
-        m_pLockTimerRestart->deleteLater();
-        m_pLockTimerRestart = nullptr;
     }
 
     qDebug() << "stop_encoder_thread";
@@ -1054,18 +1040,6 @@ void CMainWindow::loadAfterShow()
     gviewencoder_init();
     v4l2core_init();
 
-    //连拍在锁屏、熄屏情况下都要结束，与平台无关
-    m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager", "/com/deepin/SessionManager",
-                                           "com.deepin.SessionManager", QDBusConnection::sessionBus());
-
-    m_pLockTimer = new QTimer;
-    m_pLockTimer->setInterval(100);//仅在连拍和录制期间开启,因此时间下调到100ms
-    connect(m_pLockTimer, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));//默认
-
-    m_pLockTimerRestart = new QTimer;
-    m_pLockTimerRestart->setInterval(100);
-    connect(m_pLockTimerRestart, SIGNAL(timeout()), this, SLOT(onTimeoutLock()));
-
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
@@ -1095,10 +1069,8 @@ void CMainWindow::updateBlockSystem(bool bTrue)
     initBlockShutdown();
 
     if (bTrue) {
-        m_pLockTimer->start();//连拍、录制开启
         m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
     } else {
-        m_pLockTimer->stop();//连拍、录制结束，连拍取消时关闭
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
         qDebug() << "Nublock shutdown.";
@@ -1182,7 +1154,6 @@ void CMainWindow::onDirectoryChanged(const QString &)
         m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
         m_fileWatcher.addPath(lastVdFileName);
         m_fileWatcher.addPath(lastPicFileName);
-
         QString strPic = dirPic.path();
         m_fileWatcherUp.addPath(strVd);
         if (strVd.compare(strPic) != 0) {
@@ -1193,43 +1164,34 @@ void CMainWindow::onDirectoryChanged(const QString &)
     }
 }
 
-void CMainWindow::onTimeoutLock()
+void CMainWindow::onTimeoutLock(QString serviceName, QVariantMap key2value, QStringList name)
 {
+    qDebug() << serviceName << key2value << endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
     if (m_bWayland) {
-        if (m_pDBusSessionMgr) {
-            if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
-                qDebug() << "locked";
 
-                if (m_videoPre->getCapStatus()) {
-                    m_videoPre->onEndBtnClicked();
-                }
+        if (key2value.value("Locked").value<bool>()) {
+            qDebug() << "locked";
 
-                //连拍状态下锁屏需要关掉连拍 
-                if (m_thumbnail->m_nStatus == STATPicIng) {
-                    m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-                }
+            if (m_videoPre->getCapStatus())
+                m_videoPre->onEndBtnClicked();
 
-                m_videoPre->m_imgPrcThread->stop();
-                m_bLocked = true;
-                qDebug() << "lock end";
-                m_pLockTimerRestart->start();
-            } else {
-                if (m_bLocked) {
-                    qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
-                    //打开摄像头
-                    m_videoPre->onChangeDev();
-                    qDebug() << "v4l2core_start_stream OK";
-                    m_bLocked = false;
-                    m_pLockTimerRestart->stop();
-                }
-            }
+            //连拍状态下锁屏需要关掉连拍
+            if (m_thumbnail->m_nStatus == STATPicIng)
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+
+            m_videoPre->m_imgPrcThread->stop();
+            qDebug() << "lock end";
+        } else {
+            qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+            //打开摄像头
+            m_videoPre->onChangeDev();
+            qDebug() << "v4l2core_start_stream OK";
         }
-    } else if (m_pDBusSessionMgr) {//锁屏结束连拍
-        if (m_thumbnail->m_nStatus == STATPicIng && m_pDBusSessionMgr->property("Locked").value<bool>()) {
+
+    } else//锁屏结束连拍
+        if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
             m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-        }
-    }
 }
 
 void CMainWindow::initUI()
@@ -1411,6 +1373,11 @@ void CMainWindow::initConnection()
     connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
     //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
+
+    //连拍在锁屏、熄屏情况下都要结束，与平台无关
+    QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
+                                          "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
+                                          SLOT(onTimeoutLock(QString, QVariantMap, QStringList)));
 }
 
 void CMainWindow::initThumbnails()
