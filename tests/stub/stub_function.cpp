@@ -18,6 +18,7 @@ v4l2_dev_t *Stub_Function::get_v4l2_device_handler()
     v4l2_devlist->list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_cap_t));
     v4l2_devlist->list_stream_formats[0].list_stream_cap[0].width = 640;
     v4l2_devlist->list_stream_formats[0].list_stream_cap[0].width = 480;
+    v4l2_devlist->this_device = 0;
     return v4l2_devlist;
 }
 
@@ -164,6 +165,77 @@ void Stub_Function::start()
 
 }
 
+int Stub_Function::v4l2core_start_stream(v4l2_dev_t *vd)
+{
+    return 0;
+}
+
+int Stub_Function::v4l2core_stop_stream(v4l2_dev_t *vd)
+{
+    return 0;
+}
+
+v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame(v4l2_dev_t *vd)
+{
+    v4l2_frame_buff_t *v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof (v4l2_frame_buff_t));
+    v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(sizeof (uint8_t));
+    return v4l2_frame_buff;
+}
+
+int Stub_Function::get_resolution_status()
+{
+    return 1;
+}
+
+void Stub_Function::v4l2core_clean_buffers(v4l2_dev_t *vd)
+{
+
+}
+
+int Stub_Function::v4l2core_update_current_format_OK(v4l2_dev_t *vd)
+{
+    return 0;
+}
+
+int Stub_Function::v4l2core_update_current_format_Not_OK(v4l2_dev_t *vd)
+{
+    return -10;
+}
+
+void Stub_Function::v4l2core_prepare_valid_format(v4l2_dev_t *vd)
+{
+
+}
+
+void Stub_Function::v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
+{
+
+}
+
+void Stub_Function::set_device_name(const char *name)
+{
+
+}
+
+int Stub_Function::v4l2core_get_requested_frame_format(v4l2_dev_t *vd)
+{
+    return V4L2_PIX_FMT_H264;
+}
+
+int Stub_Function::get_capture_pause()
+{
+    return 1;
+}
+
+double Stub_Function::encoder_buff_scheduler(int mode, double thresh, double max_time)
+{
+    return 1;
+}
+
+int Stub_Function::v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate)
+{
+    return 0;
+}
 
 
 

@@ -56,8 +56,34 @@ public:
     //MajorImageProcessingThread开始函数打桩
     void start();
 
-
-
+    //MajorImageProcessingThread
+    //开始启动流
+    int v4l2core_start_stream(v4l2_dev_t *vd);
+    //停止启动流
+    int v4l2core_stop_stream(v4l2_dev_t *vd);
+    //获得解码数据库帧
+    v4l2_frame_buff_t *v4l2core_get_decoded_frame(v4l2_dev_t *vd);
+    //获取重启状态
+    int get_resolution_status();
+    //清理缓存区
+    void v4l2core_clean_buffers(v4l2_dev_t *vd);
+    //更新当前格式
+    int v4l2core_update_current_format_OK(v4l2_dev_t *vd);//返回零
+    int v4l2core_update_current_format_Not_OK(v4l2_dev_t *vd);//返回非零
+    //有效格式
+    void v4l2core_prepare_valid_format(v4l2_dev_t *vd);
+    //宽度高度获取
+    void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd);
+    //设置设备名
+    void set_device_name(const char *name);
+    //进入V4L2_PIX_FMT_H264分支
+    int v4l2core_get_requested_frame_format(v4l2_dev_t *vd);
+    //获得暂停标志
+    int get_capture_pause();
+    //编码器任务调度
+    double encoder_buff_scheduler(int mode, double thresh, double max_time);
+    //h264帧率设置
+    int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
 
 };
 

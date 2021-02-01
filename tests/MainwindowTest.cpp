@@ -1,4 +1,5 @@
 #define private public
+#define protected public
 #include "src/mainwindow.h"
 #undef private
 #include "src/imageitem.h"
@@ -946,6 +947,57 @@ TEST_F(MainwindowTest, videowidget)
     videowidgt->stopEverything();
 
 }
+
+/**
+ *  @brief majorimageprocessingthread类打桩
+ */
+TEST_F(MainwindowTest, majorimageprocessingthread)
+{
+    Stub stub;
+    videowidget *videowidgt = mainwindow->findChild<videowidget *>(VIDEO_PREVIEW_WIDGET);
+    //进入默认分支
+    stub.set(v4l2core_start_stream, ADDR(Stub_Function, v4l2core_start_stream));
+    stub.set(v4l2core_stop_stream, ADDR(Stub_Function, v4l2core_stop_stream));
+    stub.set(v4l2core_get_decoded_frame, ADDR(Stub_Function, v4l2core_get_decoded_frame));
+    stub.set(get_resolution_status, ADDR(Stub_Function, get_resolution_status));
+    stub.set(v4l2core_clean_buffers, ADDR(Stub_Function, v4l2core_clean_buffers));
+    stub.set(v4l2core_update_current_format, ADDR(Stub_Function, v4l2core_update_current_format_Not_OK));
+    stub.set(v4l2core_prepare_valid_format, ADDR(Stub_Function, v4l2core_prepare_valid_format));
+    stub.set(v4l2core_prepare_valid_resolution, ADDR(Stub_Function, v4l2core_prepare_valid_resolution));
+    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    stub.set(set_device_name, ADDR(Stub_Function, set_device_name));
+    videowidgt->m_imgPrcThread->run();
+    //录像分支
+    //设置暂停时长,进入解码任务调度分支
+    stub.reset(v4l2core_update_current_format);
+    videowidgt->m_imgPrcThread->m_stopped = 0;
+    stub.set(get_capture_pause, ADDR(Stub_Function, get_capture_pause));
+    stub.set(video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
+    stub.set(encoder_buff_scheduler, ADDR(Stub_Function, encoder_buff_scheduler));
+    videowidgt->m_imgPrcThread->run();
+    //进入H264分支
+    videowidgt->m_imgPrcThread->m_stopped = 0;
+    stub.set(v4l2core_get_requested_frame_format, ADDR(Stub_Function, v4l2core_get_requested_frame_format));
+    stub.set(v4l2core_set_h264_frame_rate_config, ADDR(Stub_Function, v4l2core_set_h264_frame_rate_config));
+    videowidgt->m_imgPrcThread->run();
+    //还原
+    stub.reset(v4l2core_start_stream);
+    stub.reset(v4l2core_stop_stream);
+    stub.reset(v4l2core_get_decoded_frame);
+    stub.reset(get_resolution_status);
+    stub.reset(v4l2core_clean_buffers);
+    stub.reset(v4l2core_prepare_valid_format);
+    stub.reset(v4l2core_prepare_valid_resolution);
+    stub.reset(get_v4l2_device_handler);
+    stub.reset(set_device_name);
+    stub.reset(get_capture_pause);
+    stub.reset(video_capture_get_save_video);
+    stub.reset(encoder_buff_scheduler);
+    stub.reset(v4l2core_get_requested_frame_format);
+    stub.reset(v4l2core_set_h264_frame_rate_config);
+
+}
+
 
 /**
  *  @brief 主窗口退出(这个case一定得放在最后)
