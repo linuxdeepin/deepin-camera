@@ -91,7 +91,7 @@ static int video_init(int width, int height, int flags, int win_w, int win_h)
         SDL_SetHint("SDL_HINT_RENDER_SCALE_QUALITY", "1");
 
 		sdl_window = SDL_CreateWindow(
-			"Guvcview Video",                  // window title
+            "Deepin-camera Video",                  // window title
 			SDL_WINDOWPOS_UNDEFINED,           // initial x position
 			SDL_WINDOWPOS_UNDEFINED,           // initial y position
 			w,                               // width, in pixels
@@ -281,7 +281,7 @@ static int video_init(int width, int height, int flags, int win_w, int win_h)
  *
  * returns: error code
  */
-int render_sdl2_frame(uint8_t *frame, int width, int height)
+int render_sdl2_frame(uint8_t *frame, int width, __attribute__((unused)) int height)
 {
 	/*asserts*/
 	assert(rending_texture != NULL);

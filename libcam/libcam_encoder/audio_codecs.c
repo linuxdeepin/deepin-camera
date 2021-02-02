@@ -178,9 +178,13 @@ static int get_aac_obj_ind(int profile)
 {
 	int i = 0;
 
-	for (i=0; i<5; i++)
-	 if(AAC_OBJ_TYPE[i] == profile) break;
-
+    for (i=0; i<5; i++)
+    {
+        if(AAC_OBJ_TYPE[i] == profile)
+        {
+            break;
+        }
+    }
 	 return i;
 }
 
@@ -188,9 +192,13 @@ static int get_aac_samp_ind(int samprate)
 {
 	int i = 0;
 
-	for (i=0; i<13; i++)
-	 if(AAC_SAMP_FREQ[i] == samprate) break;
-
+    for (i=0; i<13; i++)
+    {
+        if(AAC_SAMP_FREQ[i] == samprate)
+        {
+            break;
+        }
+    }
 	 if (i>12)
 	 {
 		printf("WARNING: invalid sample rate for AAC encoding\n");
@@ -390,7 +398,7 @@ int encoder_check_webm_audio_codec(int codec_ind)
  */
 int encoder_get_webm_audio_codec_index()
 {
-	return get_audio_codec_list_index(AV_CODEC_ID_VORBIS);
+    return get_audio_codec_list_index(AV_CODEC_ID_VORBIS);
 }
 
 /*

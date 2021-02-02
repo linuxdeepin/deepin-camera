@@ -47,7 +47,8 @@ extern int verbosity;
 static void convert_border_bayer_line_to_bgr24( uint8_t* bayer, uint8_t* adjacent_bayer,
 	uint8_t *bgr, int width, uint8_t start_with_green, uint8_t blue_line)
 {
-	int t0, t1;
+    //LMH0612之前是强制类型转换int到uint8_t,这里初始化就为uint8_t
+    uint8_t t0, t1;
 
 	if (start_with_green)
 	{
@@ -207,7 +208,8 @@ static void bayer_to_rgbbgr24(uint8_t *bayer,
 	/* reduce height by 2 because of the special case top/bottom line */
 	for (height -= 2; height; height--)
 	{
-		int t0, t1;
+        //LMH0612之前是强制类型转换int到uint8_t,这里初始化就为uint8_t
+        uint8_t t0, t1;
 		/* (width - 2) because of the border */
 		uint8_t *bayerEnd = bayer + (width - 2);
 
@@ -587,7 +589,8 @@ void vyuy_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
 
 	int w = 0, h = 0;
 	int y_sizeline = width;
-	int c_sizeline = width/2;
+    //LMH0612消除警告,该地方c_sizeline并未使用到
+    //int c_sizeline = width/2;
 	
 	uint8_t *in1 = in; //first line
 	uint8_t *in2 = in1 + (width * 2); //second line in yuyv buffer
@@ -637,10 +640,13 @@ void yuv422p_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
 	assert(out);
 
     /*copy y data*/
-    memcpy(out, in, width*height);
+
+    //LMH0612,强制类型转换警告消除
+    memcpy(out, in, (unsigned long)width*(unsigned long)height);
 
 	int w = 0, h = 0;
-	int c_sizeline = width/2;
+    //LMH0612后面并未使用到c_sizeline
+    //int c_sizeline = width/2;
 	
 	uint8_t *pu = out + (width * height);
     uint8_t *inu1 = in + (width * height);
@@ -687,7 +693,9 @@ void yyuv_to_yu12(uint8_t *out, uint8_t *in, int width, int height)
 
 	int w = 0, h = 0;
 	int y_sizeline = width;
-	int c_sizeline = width/2;
+
+    //LMH0612后面并未使用c_sizeline
+   // int c_sizeline = width/2;
 	
 	uint8_t *in1 = in; //first line
 	uint8_t *in2 = in1 + (width * 2); //second line in yyuv buffer

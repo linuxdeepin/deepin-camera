@@ -44,6 +44,8 @@
 #include "gview.h"
 #include "config.h"
 
+//LMH0613++
+#include <libavutil/imgutils.h>
 extern int verbosity;
 
 /* default Huffman table*/
@@ -125,7 +127,9 @@ typedef struct _jpeg_decoder_context_t
 
 static jpeg_decoder_context_t *jpeg_ctx = NULL;
 
-#if MJPG_BUILTIN //use internal jpeg decoder
+//LMH0613
+#if 0 //use internal jpeg decoder
+//#if MJPG_BUILTIN //use internal jpeg decoder
 
 #define ISHIFT 11
 
@@ -1449,7 +1453,7 @@ int jpeg_init_decoder(int width, int height)
 #endif
 
 	/*alloc temp buffer*/
-	jpeg_ctx->tmp_frame = calloc(width*height*2, sizeof(uint8_t));
+    jpeg_ctx->tmp_frame = calloc((size_t)(width*height*2), sizeof(uint8_t));
 	if(jpeg_ctx->tmp_frame == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
@@ -1509,7 +1513,7 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 	if(got_frame)
 	{
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-		av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+        av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
                              (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
                              codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
 #else
@@ -1517,13 +1521,22 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 			jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
 #endif
 		/* libavcodec output is in yuv422p */
-        yuv422p_to_yu12(out_buf, jpeg_ctx->tmp_frame, jpeg_ctx->width, jpeg_ctx->height);
-
-		return jpeg_ctx->pic_size;
-	}
-	else
-		return 0;
-
+        if (codec_data->context->pix_fmt == AV_PIX_FMT_YUVJ422P) {
+            yuv422p_to_yu12(out_buf, jpeg_ctx->tmp_frame, jpeg_ctx->width, jpeg_ctx->height);
+            return jpeg_ctx->pic_size;
+        } else if (codec_data->context->pix_fmt == AV_PIX_FMT_YUVJ420P) {
+            if (jpeg_ctx->pic_size > (size_t)(jpeg_ctx->width * jpeg_ctx->height * 3 / 2))
+                jpeg_ctx->pic_size  = (size_t)(jpeg_ctx->width * jpeg_ctx->height * 3 / 2);
+            memcpy(out_buf, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
+            return jpeg_ctx->pic_size;
+        }
+        else
+        {
+          return 0;
+        }
+    }
+    else
+        return 0;
 }
 
 /*

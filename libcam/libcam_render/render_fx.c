@@ -47,10 +47,16 @@ typedef struct _blur_t
 
 static blur_t* blur[2] = {NULL, NULL};
 
-uint8_t *tmpbuffer = NULL;
-uint32_t *TB_Sqrt_ind = NULL; //look up table for sqrt lens distort indexes
-uint32_t *TB_Pow_ind = NULL; //look up table for pow lens distort indexes
-uint32_t *TB_Pow2_ind = NULL; //look up table for pow2 lens distort indexes
+
+//LMH0612下方变量改为static
+static uint8_t *tmpbuffer = NULL;
+static uint32_t *TB_Sqrt_ind = NULL; //look up table for sqrt lens distort indexes
+static uint32_t *TB_Pow_ind = NULL; //look up table for pow lens distort indexes
+static uint32_t *TB_Pow2_ind = NULL; //look up table for pow2 lens distort indexes
+// uint8_t *tmpbuffer = NULL;
+// uint32_t *TB_Sqrt_ind = NULL; //look up table for sqrt lens distort indexes
+// uint32_t *TB_Pow_ind = NULL; //look up table for pow lens distort indexes
+// uint32_t *TB_Pow2_ind = NULL; //look up table for pow2 lens distort indexes
 
 typedef struct _particle_t
 {
@@ -84,8 +90,9 @@ static void fx_yu12_mirror (uint8_t *frame, int width, int height)
 
 	int h=0;
 	int w=0;
-	int y_sizeline = width;
-	int c_sizeline = width/2;
+//LMH消除警告
+//    int y_sizeline = width;
+//    int c_sizeline = width/2;
 
 	uint8_t *end = NULL;
 	uint8_t *end2 = NULL;
@@ -156,8 +163,9 @@ static void fx_yu12_half_mirror (uint8_t *frame, int width, int height)
 	uint8_t *pu = frame + (width * height);
 	uint8_t *pv = pu + ((width * height) / 4);
 
-	uint8_t pixel =0;
-	uint8_t pixel2=0;
+    //LMH消除警告
+//	uint8_t pixel =0;
+//	uint8_t pixel2=0;
 
 	/*mirror y*/
 	for(h = 0; h < height; h++)
@@ -236,9 +244,9 @@ static void fx_yu12_upturn(uint8_t *frame, int width, int height)
 	/*upturn y*/
 	for ( h = 0; h < height / 2; ++h)
 	{	/*line iterator*/
-		memcpy(line, pi, width);
-		memcpy(pi, pf, width);
-		memcpy(pf, line, width);
+        memcpy(line, pi,(size_t) width);
+        memcpy(pi, pf, (size_t)width);
+        memcpy(pf, line, (size_t)width);
 
 		pi+=width;
 		pf-=width;
@@ -250,9 +258,9 @@ static void fx_yu12_upturn(uint8_t *frame, int width, int height)
 	pf = pi + ((width * height) / 4) - (width / 2); //begin of last u line
 	for ( h = 0; h < height / 2; h += 2) //every two lines = height / 4
 	{	/*line iterator*/
-		memcpy(line, pi, width / 2);
-		memcpy(pi, pf, width / 2);
-		memcpy(pf, line, width / 2);
+        memcpy(line, pi, (size_t)width / 2);
+        memcpy(pi, pf, (size_t)width / 2);
+        memcpy(pf, line,(size_t) width / 2);
 
 		pi+=width/2;
 		pf-=width/2;
@@ -263,9 +271,9 @@ static void fx_yu12_upturn(uint8_t *frame, int width, int height)
 	pf = pi + ((width * height) / 4) - (width / 2); //begin of last v line
 	for ( h = 0; h < height / 2; h += 2) //every two lines = height / 4
 	{	/*line iterator*/
-		memcpy(line, pi, width / 2);
-		memcpy(pi, pf, width / 2);
-		memcpy(pf, line, width / 2);
+        memcpy(line, pi, (size_t)width / 2);
+        memcpy(pi, pf, (size_t)width / 2);
+        memcpy(pf, line, (size_t)width / 2);
 
 		pi+=width/2;
 		pf-=width/2;
@@ -300,8 +308,8 @@ static void fx_yu12_half_upturn(uint8_t *frame, int width, int height)
 	/*upturn y*/
 	for ( h = 0; h < height / 2; ++h)
 	{	/*line iterator*/
-		memcpy(line, pi, width);
-		memcpy(pf, line, width);
+        memcpy(line, pi, (size_t)width);
+        memcpy(pf, line, (size_t)width);
 
 		pi+=width;
 		pf-=width;
@@ -313,8 +321,8 @@ static void fx_yu12_half_upturn(uint8_t *frame, int width, int height)
 	pf = pi + ((width * height) / 4) - (width / 2); //begin of last u line
 	for ( h = 0; h < height / 2; h += 2) //every two lines = height / 4
 	{	/*line iterator*/
-		memcpy(line, pi, width / 2);
-		memcpy(pf, line, width / 2);
+        memcpy(line, pi, (size_t)width / 2);
+        memcpy(pf, line, (size_t)width / 2);
 
 		pi+=width/2;
 		pf-=width/2;
@@ -325,8 +333,8 @@ static void fx_yu12_half_upturn(uint8_t *frame, int width, int height)
 	pf = pi + ((width * height) / 4) - (width / 2); //begin of last v line
 	for ( h = 0; h < height / 2; h += 2) //every two lines = height / 4
 	{	/*line iterator*/
-		memcpy(line, pi, width / 2);
-		memcpy(pf, line, width / 2);
+        memcpy(line, pi, (size_t)width / 2);
+        memcpy(pf, line, (size_t)width / 2);
 
 		pi+=width/2;
 		pf-=width/2;
@@ -423,9 +431,9 @@ static void fx_yu12_pieces(uint8_t* frame, int width, int height, int piece_size
 				}
 			}
 
-			ppy = piece;
-			ppu = piece + (piece_size * piece_size);
-			ppv = ppu + ((piece_size * piece_size) / 4);
+//			ppy = piece;
+//			ppu = piece + (piece_size * piece_size);
+//			ppv = ppu + ((piece_size * piece_size) / 4);
 
 			/*rotate piece and copy it to frame*/
 			//rotation is random
@@ -452,9 +460,9 @@ static void fx_yu12_pieces(uint8_t* frame, int width, int height, int piece_size
 					break;
 			}
 
-			ppy = piece;
-			ppu = piece + (piece_size * piece_size);
-			ppv = ppu + ((piece_size * piece_size) / 4);
+            ppy = piece;
+            ppu = piece + (piece_size * piece_size);
+            ppv = ppu + ((piece_size * piece_size) / 4);
 
 			for(i = 0; i < piece_size; ++i)
 			{
@@ -775,29 +783,30 @@ double fast_cos(double x)
 /*
  * fast atan2 replacement
  */
+//LMH0612消除警告，最有可能改错的地方
 double fast_atan2( double y, double x )
 {
-	if ( x == 0.0f )
+    if ( (float)x == 0.0f )
 	{
-		if ( y > 0.0f ) return PI2;
-		if ( y == 0.0f ) return 0.0f;
+        if ( (float)y > 0.0f ) return PI2;
+        if ( (float)y == 0.0f ) return (double)0.0f;
 		return -PI2;
 	}
 	double atan;
 	double z = y/x;
-	if ( fabs( z ) < 1.0f )
+    if ( (float)fabs( z ) < 1.0f )
 	{
-		atan = z/(1.0f + 0.28f*z*z);
-		if ( x < 0.0f )
+        atan = (double)(z/((double)1.0f + (double)0.28f*z*z));
+        if ( x < (double)0.0f )
 		{
-			if ( y < 0.0f ) return atan - PI;
+            if ( (float)y < 0.0f ) return atan - PI;
 			return atan + PI;
 		}
 	}
 	else
 	{
-		atan = PI2- z/(z*z + 0.28f);
-		if ( y < 0.0f ) return atan - PI;
+        atan = PI2- z/(z*z + (double)0.28f);
+        if ( y < (double)0.0f ) return atan - PI;
 	}
 	return atan;
 }
@@ -878,18 +887,18 @@ static void boxes4gauss(int sigma, int n, blur_t* blur)
 	//allocate box sizes array
 	if(blur->bSizes != NULL)
 		free(blur->bSizes);
-	blur->bSizes = calloc(n, sizeof(int));
+    blur->bSizes = calloc((size_t)n, sizeof(int));
 
 	double ideal_width = sqrt((12*sigma*sigma/n) + 1);
 
-	int wl = lround(floor(ideal_width));
+    int wl = (int)lround(floor(ideal_width));
 	if(wl%2==0)
 		wl--;
 	int wu = wl+2;
 
 	double ideal_m = (n*wl*wl + 4*n*wl + 3*n - 12*sigma*sigma)/(4*wl + 4);
 
-	int m = lround(ideal_m);
+    int m = (int)lround(ideal_m);
 
 	//allocate division lookup table
 	if(blur->divTable != NULL)
@@ -898,7 +907,7 @@ static void boxes4gauss(int sigma, int n, blur_t* blur)
 			free(blur->divTable[i]);
 		free(blur->divTable);
 	}
-	blur->divTable = calloc(n, sizeof(int*));
+    blur->divTable = calloc((size_t)n, sizeof(int*));
 
 	for(i = 0; i < n; ++i)
 	{
@@ -908,7 +917,7 @@ static void boxes4gauss(int sigma, int n, blur_t* blur)
 
 		//precalculate all possible division values for this box size
 		int divider = blur->bSizes[i] + blur->bSizes[i] + 1; // r + r +1
-		blur->divTable[i] = calloc(256 * divider, sizeof(int));
+        blur->divTable[i] = calloc((size_t)(256 * divider), sizeof(int));
 
 		for(j = 0; j < 256*divider; ++j)
 			blur->divTable[i][j] = j/divider;
@@ -1049,7 +1058,7 @@ void boxBlurT(uint8_t* scl, uint8_t* tcl, int w, int h, int r_ind, blur_t* blur)
  */
 void boxBlur(uint8_t* scl, uint8_t* tcl, int width, int height, int r_ind, blur_t* blur)
 {
-	memcpy(tcl, scl, width * height);
+    memcpy(tcl, scl, (size_t)(width * height));
 
 	boxBlurH(tcl, scl, width, height, r_ind, blur);
 	boxBlurT(scl, tcl, width, height, r_ind, blur);
@@ -1074,10 +1083,10 @@ void fx_yu12_gauss_blur(uint8_t* frame, int width, int height, int sigma, int in
 {
 	assert(frame != NULL);
 
-	assert(ind < ARRAY_LENGTH(blur));
+    assert(ind < (int)ARRAY_LENGTH(blur));
 
 	if(!tmpbuffer)
-		tmpbuffer = malloc(width * height * 3 / 2);
+        tmpbuffer = malloc((size_t)(width * height) * 3 / 2);
 
 	if(!blur[ind])
 		blur[ind] = calloc(1, sizeof(blur_t));
@@ -1109,9 +1118,9 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
   assert(frame != NULL);
 
   if(!tmpbuffer)
-		tmpbuffer = malloc(width * height * 3 / 2);
+        tmpbuffer = malloc((size_t)(width * height * 3 / 2));
 
-  memcpy(tmpbuffer, frame, width * height * 3 / 2);
+  memcpy(tmpbuffer, frame, (size_t)(width * height * 3 / 2));
   uint8_t *pu = frame + (width*height);
   uint8_t *pv = pu + (width*height)/4;
   uint8_t *tpu = tmpbuffer + (width*height);
@@ -1164,7 +1173,7 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
 
 	if(idx_table == NULL) //fill lookup table
 	{
-		idx_table = calloc(width * height * 3 / 2, sizeof(uint32_t));
+        idx_table = calloc((size_t)(width * height * 3 / 2), sizeof(uint32_t));
 
 		tb_pu = idx_table + (width * height);
 		tb_pv  = tb_pu + (width * height)/4;
@@ -1180,7 +1189,7 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
 				den_x = denormX(xnew, width);
 				den_y = denormY(ynew, height);
 
-				idx_table[i + (j * width)] = den_x + (den_y * width);
+                idx_table[i + (j * width)] = (uint32_t)(den_x + (den_y * width));
 			}
 		}
 
@@ -1195,8 +1204,8 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
 				den_x = denormX(xnew, width/2);
 				den_y = denormY(ynew, height/2);
 
-				tb_pu[i + (j * width/2)] = den_x + (den_y * width/2);
-				tb_pv[i + (j * width/2)] = den_x + (den_y * width/2);
+                tb_pu[i + (j * width/2)] = (uint32_t)(den_x + (den_y * width/2));
+                tb_pv[i + (j * width/2)] = (uint32_t)(den_x + (den_y * width/2));
 			}
 		}
 		//store the table pointer in the matching global
@@ -1226,7 +1235,7 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
 			int bi = i + start_x;
 			int bj = j + start_y;
 
-			ind = bi + (bj * box_width);
+            ind =(uint32_t)( bi + (bj * box_width));
 
 			frame[ind] = tmpbuffer[idx_table[ind]];
     }
@@ -1242,7 +1251,7 @@ void fx_yu12_distort(uint8_t* frame, int width, int height, int box_width, int b
 			int bi = i + start_x/2;
 			int bj = j + start_y/2;
 
-			ind = bi + (bj * box_width/2);
+            ind =(uint32_t)( bi + (bj * box_width/2));
 
 			pu[ind] = tpu[tb_pu[ind]];
 			pv[ind] = tpv[tb_pv[ind]];

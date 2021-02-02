@@ -45,10 +45,10 @@
 
 extern int debug_level;
 
-int is_control_panel = 0;
+//int is_control_panel = 0;
 
 /*default camera button action: DEF_ACTION_IMAGE - save image; DEF_ACTION_VIDEO - save video*/
-static int default_camera_button_action = 0;
+__attribute__((unused))static int default_camera_button_action = 0;
 
 /*photo basename*/
 static char *photo_name = NULL;
@@ -61,8 +61,9 @@ static int photo_format = IMG_FMT_JPG;
 static char *video_name = NULL;
 /*video path*/
 static char *video_path = NULL;
+
 /*photo format*/
-static int video_muxer = ENCODER_MUX_MKV;
+static int video_muxer = ENCODER_MUX_MP4;
 
 /*index: 0 numerator; 1 denominator*/
 static int my_fps[2] = {0, 0};
@@ -221,6 +222,80 @@ char *get_profile_name()
 	return profile_name;
 }
 
+
+/*
+ * sets the device name
+ * args:
+ *   name: device name
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_device_location(const char *name)
+{
+    if(device_location != NULL)
+        free(device_location);
+
+    device_location = strdup(name);
+
+    /* update the config */
+    config_t *my_config = config_get();
+
+    /*this can be the function arg 'name'*/
+    if(my_config->device_location)
+        free(my_config->device_location);
+
+    /*so here we use the dup string*/
+    my_config->device_location = strdup(device_location);
+}
+
+
+
+/*
+ * sets the device name
+ * args:
+ *   name: device name
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_device_name(const char *name)
+{
+    if(device_name != NULL)
+        free(device_name);
+
+
+
+    /* update the config */
+    config_t *my_config = config_get();
+
+    if(name == NULL)
+    {
+        device_name = strdup(my_config->device_name);
+    }
+    else {
+        device_name = strdup(name);
+    }
+
+    /*this can be the function arg 'name'*/
+    if(my_config->device_name)
+        free(my_config->device_name);
+
+    /*so here we use the dup string*/
+    my_config->device_name = strdup(device_name);
+}
+
+char* get_device_name(void)
+{
+    if(!device_name)
+        device_name = strdup("none");
+    return device_name;
+}
+
 /*
  * sets the control profile file name
  * args:
@@ -368,7 +443,7 @@ void set_video_muxer(int muxer)
 char *get_video_name()
 {
 	if(!video_name)
-		video_name = strdup("my_video.mkv");
+        video_name = strdup("");
 
 	return video_name;
 }
@@ -397,9 +472,9 @@ void set_video_name(const char *name)
 		if(video_name)
 			free(video_name);
 
-		fprintf(stderr, "GUVCVIEW: no valid file extension for video file %s\n",
+		fprintf(stderr, "deepin-camera: no valid file extension for video file %s\n",
 			name);
-		fprintf(stderr, "GUVCVIEW: using muxer %i\n", get_video_muxer());
+		fprintf(stderr, "deepin-camera: using muxer %i\n", get_video_muxer());
 		switch(get_video_muxer())
 		{
 			case ENCODER_MUX_MKV:
@@ -408,16 +483,23 @@ void set_video_name(const char *name)
 			case ENCODER_MUX_WEBM:
 				video_name = set_file_extension(name, "webm");
 				break;
-			default:
+            case ENCODER_MUX_MP4:
+                video_name = set_file_extension(name,"mp4");
+                break;
+            default:
 				video_name = set_file_extension(name, "avi");
 				break;
 		}
 	}
 	else if( strcasecmp(ext, "mkv") == 0)
 		set_video_muxer(ENCODER_MUX_MKV);
+    else if(strcasecmp(ext,"mp4") == 0)
+        set_video_muxer(ENCODER_MUX_MP4);
 	else if ( strcasecmp(ext, "webm") == 0 )
 	{
-		set_video_muxer(ENCODER_MUX_WEBM);
+        set_video_muxer(ENCODER_MUX_WEBM);
+
+        //注释这个地方是因为占用CPU过高
 		/*force webm codecs*/
         int video_codec_ind = encoder_get_webm_video_codec_index();
         set_video_codec_ind(video_codec_ind);
@@ -455,7 +537,14 @@ char *get_video_path()
 {
 	if(!video_path)
 		video_path = strdup(getenv("HOME"));
-
+    if(access(video_path,F_OK&W_OK) < 0)
+    {
+        char* str = getenv("HOME");
+        if(strstr(str, "/Videos") == NULL)
+            strcat(str, "/Videos");
+        video_path = (char*)malloc(sizeof(str));
+        strcpy(video_path, str);
+    }
 	return video_path;
 }
 
@@ -475,6 +564,12 @@ void set_video_path(const char *path)
 		free(video_path);
 
 	video_path = strdup(path);
+
+    if(access(video_path, 0) != 0)
+    {
+        video_path = getenv("HOME");
+        strcat(video_path,"/Videos");
+    }
 
 	/* update the config */
 	config_t *my_config = config_get();
@@ -589,9 +684,9 @@ void set_photo_name(const char *name)
 		if(photo_name)
 			free(photo_name);
 
-		fprintf(stderr, "GUVCVIEW: no valid file extension for image file %s\n",
+		fprintf(stderr, "deepin-camera: no valid file extension for image file %s\n",
 			name);
-		fprintf(stderr, "GUVCVIEW: using format %i\n", get_photo_format());
+		fprintf(stderr, "deepin-camera: using format %i\n", get_photo_format());
 		switch(get_photo_format())
 		{
 			case IMG_FMT_JPG:

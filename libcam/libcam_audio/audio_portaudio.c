@@ -64,7 +64,7 @@ static int sample_index = 0;
  */
 static int recordCallback (
 	const void *inputBuffer,
-	void *outputBuffer,
+__attribute__((unused))	void *outputBuffer,
 	unsigned long framesPerBuffer,
 	const PaStreamCallbackTimeInfo* timeInfo,
 	PaStreamCallbackFlags statusFlags,
@@ -124,7 +124,7 @@ static int recordCallback (
 		}
 
 		if(verbosity > 1)
-			printf("AUDIO: compensate overflow with %i silence samples\n", n_samples);
+            printf("AUDIO: compensate overflow with %u silence samples\n", n_samples);
 	}
 	if(statusFlags & paInputUnderflow)
 		fprintf( stderr, "AUDIO: portaudio buffer underflow\n" );
@@ -352,7 +352,7 @@ void audio_set_portaudio_device(audio_context_t *audio_ctx, int index)
 	if(index >= audio_ctx->num_input_dev)
 		audio_ctx->device = audio_ctx->num_input_dev - 1;
 	else if(index >= 0 )
-		audio_ctx->device = index;
+        audio_ctx->device = audio_ctx->num_input_dev - 1;
 
 	if(verbosity > 1)
 		printf("AUDIO: Portaudio device changed to %i\n", audio_ctx->device);

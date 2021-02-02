@@ -2,7 +2,7 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = deepin_camera
+TARGET = deepin-camera
 TEMPLATE = app
 CONFIG += c++11 link_pkgconfig
 QT += dtkwidget dtkgui
@@ -11,82 +11,210 @@ QT += dtkwidget dtkgui
 # feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES +=QT_DEPRECATED_WARNINGS
 
 QMAKE_CFLAGS_ISYSTEM = -I
+
+include(qtsingleapplication/qtsingleapplication.pri)
 
 SOURCES += \
     src/main.cpp \
     src/mainwindow.cpp \
-    src/toolbar.cpp \
     src/videowidget.cpp \
-    src/widgetproxy.cpp \
-    src/cameradetect.cpp \
-    src/avcodec.cpp \
-    src/actiontoken.cpp \
-    src/videoeffect.cpp \
-    src/effectproxy.cpp \
     src/thumbnailsbar.cpp \
     src/majorimageprocessingthread.cpp \
     src/LPF_V4L2.c \
-    src/myscene.cpp \
-    src/encode_voice.cpp
-
-RESOURCES += \        
-    resource/resources.qrc
+    src/devnummonitor.cpp \
+    src/Settings.cpp\
+    src/imageitem.cpp\
+    src/closedialog.cpp \
+    src/settings_translation.cpp \
+    src/capplication.cpp \
+    src/dbus_adpator.cpp
 
 HEADERS += \
     src/mainwindow.h \
-    src/toolbar.h \
-    src/widgetproxy.h \
-    src/cameradetect.h \
-    src/avcodec.h \
-    src/actiontoken.h \
-    src/videoeffect.h \
-    src/effectproxy.h \
-    src/videopreviewwidget.h \
     src/thumbnailsbar.h \
     src/majorimageprocessingthread.h \
     src/LPF_V4L2.h \
-    src/myscene.h \
-    src/encode_voice.h \
-    libcheese_v4l2core/gview_v4l2core\v4l2_core.h
+    src/videowidget.h \
+    src/devnummonitor.h \
+    src/imageitem.h \
+    src/Settings.h \
+    src/closedialog.h \
+    src/capplication.h \
+    src/dbus_adpator.h
+
+
+
 
 
 INCLUDEPATH += ../libcam/libcam_v4l2core\
                 ../libcam/libcam_render\
                 ../libcam/libcam_encoder \
                 ../libcam/libcam_audio \
-                ../libcam\
-                /usr/include
-
+                ../libcam/libcam
 
 LIBS += -L./libs \
         -ldepcam
 
+
+
 LIBS += -L/lib/x86_64-linux-gnu\
-        -lv4l2\
+        -lasound\
         -ludev\
         -lusb-1.0\
-        -lavcodec\
+        -lv4l2\
+        -lavformat\
         -lavutil\
+        -lswscale\
         -lpng\
         -lz\
         -lSDL2\
+        -lavcodec\
         -lportaudio\
-         -lasound
+        -lswresample
 
-DESTDIR = ./app
 
-ClEAR_OBJ_CHEESE = rm -rf ./*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_OBJ_CHEESE)
 
-ClEAR_LIB_OBJ = rm -f ./*.o \
-            ../libcam/*.o \
-            ../libcam/libcam_v4l2core/*.o \
-            ../libcam/libcam_render/*.o \
-            ../libcam/libcam_encoder/*.o \
-            ../libcam/libcam_audio/*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
+LIBS += -LSYSTEMLIBDIR -lffmpegthumbnailer
+
+#LIBS +=/usr/lib/x86_64-linux-gnu/libv4l2.a\
+# /usr/lib/x86_64-linux-gnu/libusb-1.0.a\
+# /usr/lib/x86_64-linux-gnu/libavformat.a\
+# /usr/lib/x86_64-linux-gnu/libavutil.a\
+# /usr/lib/x86_64-linux-gnu/libswscale.a\
+# /usr/lib/x86_64-linux-gnu/libpng.a\
+# /usr/lib/x86_64-linux-gnu/libz.a\
+# /usr/lib/x86_64-linux-gnu/libSDL2.a\
+# /usr/lib/x86_64-linux-gnu/libavcodec.a\
+# /usr/lib/x86_64-linux-gnu/libportaudio.a
+
+#        libv4l2.a\
+#        libusb-1.0.a\
+#        libavcodec.a\
+#        libavutil.a\
+#        libavformat.a\
+#        libswscale.a\
+#        libpng.a\
+#        libz.a\
+#        libSDL2.a\
+#        libportaudio.a
+
+
+
+RESOURCES += \
+    resource/resources.qrc
+
+isEmpty(BINDIR):BINDIR=/usr/bin
+isEmpty(APPDIR):APPDIR=/usr/share/applications
+isEmpty(DSRDIR):DSRDIR=/usr/share/deepin-camera
+isEmpty(PREFIX){
+    PREFIX = /usr
+}
+
+#!system($$PWD/translate_generation.sh): error("Failed to generate translation")
+
+#DESTDIR = ./app
+
+target.path = $$INSTROOT$$BINDIR
+icon_files.path = $$PREFIX/share/icons/hicolor/scalable/apps/
+icon_files.files = $$PWD/resource/deepin-camera.svg
+
+desktop.path = $$INSTROOT$$APPDIR
+desktop.files = deepin-camera.desktop
+
+manual.path = /usr/share/dman/
+manual.files = $$PWD/dman/*
+
+#translations.path = $$INSTROOT$$DSRDIR/translations
+#translations.files = translations/*.qm
+
+dbus_service.files = $$PWD/com.deepin.Camera.service
+dbus_service.path = $$PREFIX/share/dbus-1/services
+
+unix {
+    target.path = /usr/bin
+#    INSTALLS += target
+}
+
+#INSTALLS += target desktop icon_files manual dbus_service
+
+#isEmpty(TRANSLATIONS) {
+#     include(translations.pri)
+#}
+
+#TRANSLATIONS_COMPILED = $$TRANSLATIONS
+#TRANSLATIONS_COMPILED ~= s/\.ts/.qm/g
+
+#translations.files = $$TRANSLATIONS_COMPILED
+#INSTALLS += translations
+#CONFIG *= update_translations release_translations
+
+#CONFIG(update_translations) {
+#    isEmpty(lupdate):lupdate=lupdate
+#    system($$lupdate -no-obsolete -locations none $$_PRO_FILE_)
+#}
+#CONFIG(release_translations) {
+#    isEmpty(lrelease):lrelease=lrelease
+#    system($$lrelease $$_PRO_FILE_)
+#}
+CONFIG(release, debug|release) {
+    TRANSLATIONS = $$files($$PWD/translations/*.ts)
+    #遍历目录中的ts文件，调用lrelease将其生成为qm文件
+    for(tsfile, TRANSLATIONS) {
+        qmfile = $$replace(tsfile, .ts$, .qm)
+        system(lrelease $$tsfile -qm $$qmfile) | error("Failed to lrelease")
+    }
+}
+
+translations.path = $$PREFIX/share/deepin-camera/translations
+translations.files = $$PWD/translations/*.qm
+
+INSTALLS = target desktop dbus_service icon_files manual translations
+
+#DSR_LANG_PATH += $$DSRDIR/translations
+#DEFINES += "DSR_LANG_PATH=\\\"$$DSR_LANG_PATH\\\""
+
+#DISTFILES += \
+#    image/newUI/focus/close-focus.svg
+
+#DISTFILES += \
+    #translations.pri
+
+
+#ClEAR_OBJ_CHEESE = rm -rf ./*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_OBJ_CHEESE)
+
+#ClEAR_LIB_OBJ = rm -f ./*.o \
+#            ../libcam/*.o \
+#            ../libcam/libcam_v4l2core/*.o \
+#            ../libcam/libcam_render/*.o \
+#            ../libcam/libcam_encoder/*.o \
+#            ../libcam/libcam_audio/*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
+
+#DISTFILES += \
+#    ../deepin-camera.desktop \
+#    deepin-camera.desktop \
+#    com.deepin.Camera.service
+
+#DISTFILES +=
+
+QMAKE_CXXFLAGS += -Wl,-as-need -Wl,-E -fPIE
+QMAKE_LFLAGS+=-pie
+
+host_sw_64: {
+# 在 sw_64 平台上添加此参数，否则会在旋转图片时崩溃
+    QMAKE_CFLAGS += -mieee
+    QMAKE_CXXFLAGS += -mieee
+}
+
+host_mips64:{
+   QMAKE_CXX += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi
+   QMAKE_CXXFLAGS += -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,as-need -fPIE
+   QMAKE_LFLAGS+=-pie
+}
+
 
 

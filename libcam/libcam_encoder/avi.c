@@ -58,9 +58,9 @@
 #ifndef PACKAGE
 #define PACKAGE "guvcview"
 #endif
-#ifndef VERSION
-#define VERSION "1.0"
-#endif
+//#ifndef VERSION
+//#define VERSION "1.0"
+//#endif
 
 #define AVI_INDEX_CLUSTER_SIZE 16384
 
@@ -107,7 +107,7 @@ static void avi_close_tag(avi_context_t *avi_ctx, int64_t start_pos)
 	int64_t current_offset = io_get_offset(avi_ctx->writer);
 	int32_t size = (int32_t) (current_offset - start_pos);
 	io_seek(avi_ctx->writer, start_pos-4);
-	io_write_wl32(avi_ctx->writer, size);
+    io_write_wl32(avi_ctx->writer, (uint32_t)size);
 	io_seek(avi_ctx->writer, current_offset);
 
 	if(verbosity > 0)
@@ -140,7 +140,7 @@ static int avi_audio_sample_size(stream_io_t *stream)
 
 static char* avi_stream2fourcc(char* tag, stream_io_t *stream)
 {
-    tag[0] = '0' + (stream->id)/10;
+    tag[0] = '0' + (char)((stream->id)/10);
     tag[1] = '0' + (stream->id)%10;
     switch(stream->type)
     {
@@ -191,10 +191,10 @@ void avi_put_main_header(avi_context_t *avi_ctx, avi_riff_t *riff)
 	//riff->frames_hdr_all = io_get_offset(avi_ctx->writer);
 	io_write_wl32(avi_ctx->writer, 0);			       // number of video frames
 	io_write_wl32(avi_ctx->writer, 0);			       // number of preview frames
-	io_write_wl32(avi_ctx->writer, avi_ctx->stream_list_size); // number of data streams (audio + video)*/
+    io_write_wl32(avi_ctx->writer, (uint32_t)avi_ctx->stream_list_size); // number of data streams (audio + video)*/
 	io_write_wl32(avi_ctx->writer, 1024*1024);         // suggested playback buffer size (bytes)
-	io_write_wl32(avi_ctx->writer, width);		       // width
-	io_write_wl32(avi_ctx->writer, height);	    	   // height
+    io_write_wl32(avi_ctx->writer, (uint32_t)width);		       // width
+    io_write_wl32(avi_ctx->writer, (uint32_t)height);	    	   // height
 	io_write_wl32(avi_ctx->writer, 0);                 // time scale:  unit used to measure time (30)
 	io_write_wl32(avi_ctx->writer, 0);			       // data rate (frame rate * time scale)
 	io_write_wl32(avi_ctx->writer, 0);			       // start time (0)
@@ -217,17 +217,17 @@ int64_t avi_put_bmp_header(avi_context_t *avi_ctx, stream_io_t *stream)
 	io_write_wl32(avi_ctx->writer, 0);                  // initial frames
 	io_write_wl32(avi_ctx->writer, FRAME_RATE_SCALE);   // Scale
 	stream->rate_hdr_strm = io_get_offset(avi_ctx->writer); //store this to set proper fps
-	io_write_wl32(avi_ctx->writer, frate);              // Rate: Rate/Scale == sample/second (fps) */
+    io_write_wl32(avi_ctx->writer, (uint32_t)frate);              // Rate: Rate/Scale == sample/second (fps) */
 	io_write_wl32(avi_ctx->writer, 0);                  // start time
 	stream->frames_hdr_strm = io_get_offset(avi_ctx->writer);
 	io_write_wl32(avi_ctx->writer, 0);                  // lenght of stream
 	io_write_wl32(avi_ctx->writer, 1024*1024);          // suggested playback buffer size
-	io_write_wl32(avi_ctx->writer, -1);                 // Quality
+    io_write_wl32(avi_ctx->writer, (uint32_t)(-1));                 // Quality
 	io_write_wl32(avi_ctx->writer, 0);                  // SampleSize
 	io_write_wl16(avi_ctx->writer, 0);                  // rFrame (left)
 	io_write_wl16(avi_ctx->writer, 0);                  // rFrame (top)
-	io_write_wl16(avi_ctx->writer, stream->width);      // rFrame (right)
-	io_write_wl16(avi_ctx->writer, stream->height);     // rFrame (bottom)
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->width);      // rFrame (right)
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->height);     // rFrame (bottom)
 	avi_close_tag(avi_ctx, strh); //write the chunk size
 
 	return strh;
@@ -245,14 +245,14 @@ int64_t avi_put_wav_header(avi_context_t *avi_ctx, stream_io_t *stream)
 	io_write_wl16(avi_ctx->writer, 0);                  // language tag
 	io_write_wl32(avi_ctx->writer, 0);                  // initial frames
 	stream->rate_hdr_strm = io_get_offset(avi_ctx->writer);
-	io_write_wl32(avi_ctx->writer, sampsize/4);         // Scale
-	io_write_wl32(avi_ctx->writer, stream->mpgrate/8);  // Rate: Rate/Scale == sample/second (fps) */
+    io_write_wl32(avi_ctx->writer, (uint32_t)(sampsize/4));         // Scale
+    io_write_wl32(avi_ctx->writer, (uint32_t)(stream->mpgrate/8));  // Rate: Rate/Scale == sample/second (fps) */
 	io_write_wl32(avi_ctx->writer, 0);                  // start time
 	stream->frames_hdr_strm = io_get_offset(avi_ctx->writer);
 	io_write_wl32(avi_ctx->writer, 0);                  // lenght of stream
 	io_write_wl32(avi_ctx->writer, 12*1024);            // suggested playback buffer size
-	io_write_wl32(avi_ctx->writer, -1);                 // Quality
-	io_write_wl32(avi_ctx->writer, sampsize/4);         // SampleSize
+    io_write_wl32(avi_ctx->writer, (uint32_t)(-1));                 // Quality
+    io_write_wl32(avi_ctx->writer,(uint32_t)( sampsize/4));         // SampleSize
 	io_write_wl16(avi_ctx->writer, 0);                  // rFrame (left)
 	io_write_wl16(avi_ctx->writer, 0);                  // rFrame (top)
 	io_write_wl16(avi_ctx->writer, 0);                  // rFrame (right)
@@ -268,16 +268,16 @@ void avi_put_vstream_format_header(avi_context_t *avi_ctx, stream_io_t *stream)
 	int vxd_size_align  = (stream->extra_data_size+1) & ~1;
 
 	int64_t strf = avi_open_tag(avi_ctx, "strf");   // stream format header
-	io_write_wl32(avi_ctx->writer, 40 + vxd_size);  // sruct Size
-	io_write_wl32(avi_ctx->writer, stream->width);  // Width
-	io_write_wl32(avi_ctx->writer, stream->height); // Height
+    io_write_wl32(avi_ctx->writer, (uint32_t)(40 + vxd_size));  // sruct Size
+    io_write_wl32(avi_ctx->writer,(uint32_t) stream->width);  // Width
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->height); // Height
 	io_write_wl16(avi_ctx->writer, 1);              // Planes
 	io_write_wl16(avi_ctx->writer, 24);             // Count - bitsperpixel - 1,4,8 or 24  32
 	if(strncmp(stream->compressor,"DIB",3)==0)
 		io_write_wl32(avi_ctx->writer, 0);          // Compression
 	else
 		io_write_4cc(avi_ctx->writer, stream->compressor);
-	io_write_wl32(avi_ctx->writer, stream->width*stream->height*3);// image size (in bytes?)
+    io_write_wl32(avi_ctx->writer, (uint32_t)(stream->width*stream->height*3));// image size (in bytes?)
 	io_write_wl32(avi_ctx->writer, 0);              // XPelsPerMeter
 	io_write_wl32(avi_ctx->writer, 0);              // YPelsPerMeter
 	io_write_wl32(avi_ctx->writer, 0);              // ClrUsed: Number of colors used
@@ -302,13 +302,13 @@ void avi_put_astream_format_header(avi_context_t *avi_ctx, stream_io_t *stream)
 	int sampsize = avi_audio_sample_size(stream);
 
 	int64_t strf = avi_open_tag(avi_ctx, "strf");// audio stream format
-	io_write_wl16(avi_ctx->writer, stream->a_fmt);    // Format (codec) tag
-	io_write_wl16(avi_ctx->writer, stream->a_chans);  // Number of channels
-	io_write_wl32(avi_ctx->writer, stream->a_rate);   // SamplesPerSec
-	io_write_wl32(avi_ctx->writer, stream->mpgrate/8);// Average Bytes per sec
-	io_write_wl16(avi_ctx->writer, sampsize/4);       // BlockAlign
-	io_write_wl16(avi_ctx->writer, stream->a_bits);   //BitsPerSample
-	io_write_wl16(avi_ctx->writer, axd_size);         //size of extra data
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->a_fmt);    // Format (codec) tag
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->a_chans);  // Number of channels
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->a_rate);   // SamplesPerSec
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->mpgrate/8);// Average Bytes per sec
+    io_write_wl16(avi_ctx->writer, (uint16_t)sampsize/4);       // BlockAlign
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->a_bits);   //BitsPerSample
+    io_write_wl16(avi_ctx->writer, (uint16_t)axd_size);         //size of extra data
 	// write extradata (codec private)
 	if (axd_size > 0 && stream->extra_data)
 	{
@@ -323,28 +323,28 @@ void avi_put_astream_format_header(avi_context_t *avi_ctx, stream_io_t *stream)
 
 void avi_put_vproperties_header(avi_context_t *avi_ctx, stream_io_t *stream)
 {
-	uint32_t refresh_rate =  (uint32_t) lrintf(2.0 * avi_ctx->fps);
+    uint32_t refresh_rate =  (uint32_t) lrintf((float)(2.0 * avi_ctx->fps));
 	if(avi_ctx->time_base_den  > 0 || avi_ctx->time_base_num > 0) //these are not set yet so it's always false
 	{
 		double time_base = avi_ctx->time_base_num / (double) avi_ctx->time_base_den;
-		refresh_rate = lrintf(1.0/time_base);
+        refresh_rate = (uint32_t)lrintf((float)(1.0/time_base));
 	}
-	int vprp= avi_open_tag(avi_ctx, "vprp");
+    int vprp= (int)avi_open_tag(avi_ctx, "vprp");
     io_write_wl32(avi_ctx->writer, 0);              //video format  = unknown
     io_write_wl32(avi_ctx->writer, 0);              //video standard= unknown
     io_write_wl32(avi_ctx->writer, refresh_rate);   // dwVerticalRefreshRate
-    io_write_wl32(avi_ctx->writer, stream->width ); //horizontal pixels
-    io_write_wl32(avi_ctx->writer, stream->height); //vertical lines
-    io_write_wl16(avi_ctx->writer, stream->height); //Active Frame Aspect Ratio (4:3 - 16:9)
-    io_write_wl16(avi_ctx->writer, stream->width);  //Active Frame Aspect Ratio
-    io_write_wl32(avi_ctx->writer, stream->width ); //Active Frame Height in Pixels
-    io_write_wl32(avi_ctx->writer, stream->height); //Active Frame Height in Lines
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->width ); //horizontal pixels
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->height); //vertical lines
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->height); //Active Frame Aspect Ratio (4:3 - 16:9)
+    io_write_wl16(avi_ctx->writer, (uint16_t)stream->width);  //Active Frame Aspect Ratio
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->width ); //Active Frame Height in Pixels
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->height); //Active Frame Height in Lines
     io_write_wl32(avi_ctx->writer, 1);              //progressive FIXME
 	//Field Framing Information
-    io_write_wl32(avi_ctx->writer, stream->height);
-    io_write_wl32(avi_ctx->writer, stream->width );
-    io_write_wl32(avi_ctx->writer, stream->height);
-    io_write_wl32(avi_ctx->writer, stream->width );
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->height);
+    io_write_wl32(avi_ctx->writer,(uint32_t) stream->width );
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->height);
+    io_write_wl32(avi_ctx->writer, (uint32_t)stream->width );
     io_write_wl32(avi_ctx->writer, 0);
     io_write_wl32(avi_ctx->writer, 0);
     io_write_wl32(avi_ctx->writer, 0);
@@ -548,7 +548,7 @@ stream_io_t *avi_add_video_stream(
 {
 	stream_io_t *stream = add_new_stream(&avi_ctx->stream_list, &avi_ctx->stream_list_size);
 	stream->type = STREAM_TYPE_VIDEO;
-	stream->fps = (double) fps/fps_num;;
+    stream->fps = (double) fps/fps_num;
 	stream->width = width;
 	stream->height = height;
 	stream->codec_id = codec_id;
@@ -664,7 +664,7 @@ avi_I_entry_t *avi_get_ientry(avi_index_t *idx, int ent_id)
     return &idx->cluster[cl][id];
 }
 
-static int avi_write_counters(avi_context_t *avi_ctx, avi_riff_t *riff)
+static int avi_write_counters(avi_context_t *avi_ctx, __attribute__((unused))avi_riff_t *riff)
 {
     int n, nb_frames = 0;
     io_flush_buffer(avi_ctx->writer);
@@ -690,9 +690,9 @@ static int avi_write_counters(avi_context_t *avi_ctx, avi_riff_t *riff)
 
 			if(stream->type == STREAM_TYPE_VIDEO && avi_ctx->fps > 0.001)
 			{
-				uint32_t rate =(uint32_t) FRAME_RATE_SCALE * lrintf(avi_ctx->fps);
+                uint32_t rate =(uint32_t) FRAME_RATE_SCALE * (uint32_t)lrintf((float)avi_ctx->fps);
 				if(verbosity > 0)
-					fprintf(stderr,"ENCODER: (avi) storing rate(%i)\n",rate);
+                    fprintf(stderr,"ENCODER: (avi) storing rate(%u)\n",rate);
 				io_write_wl32(avi_ctx->writer, rate);
 			}
 		}
@@ -708,12 +708,12 @@ static int avi_write_counters(avi_context_t *avi_ctx, avi_riff_t *riff)
 			if(stream->type == STREAM_TYPE_VIDEO)
 			{
 				io_write_wl32(avi_ctx->writer, stream->packet_count);
-				nb_frames = MAX(nb_frames, stream->packet_count);
+                nb_frames = (int)MAX((uint32_t)nb_frames, stream->packet_count);
 			}
 			else
 			{
 				int sampsize = avi_audio_sample_size(stream);
-				io_write_wl32(avi_ctx->writer, 4*stream->audio_strm_length/sampsize);
+                io_write_wl32(avi_ctx->writer, (uint32_t)(4*stream->audio_strm_length/(size_t)sampsize));
 			}
 		}
     }
@@ -729,7 +729,7 @@ static int avi_write_counters(avi_context_t *avi_ctx, avi_riff_t *riff)
         {
 			uint32_t us_per_frame = 1000; //us
 			if(avi_ctx->fps > 0.001)
-				us_per_frame=(uint32_t) lrintf(1000000.0 / avi_ctx->fps);
+                us_per_frame=(uint32_t) lrintf((float)(1000000.0 / avi_ctx->fps));
 
 			avi_ctx->avi_flags |= AVIF_HASINDEX;
 
@@ -739,7 +739,7 @@ static int avi_write_counters(avi_context_t *avi_ctx, avi_riff_t *riff)
 			io_write_wl32(avi_ctx->writer, 0);                 // Padding multiple size (2048)
 			io_write_wl32(avi_ctx->writer, avi_ctx->avi_flags);    // parameter Flags
 			//io_seek(avi_ctx->writer, riff_1->frames_hdr_all);
-			io_write_wl32(avi_ctx->writer, nb_frames);
+            io_write_wl32(avi_ctx->writer, (uint32_t)nb_frames);
 		}
     }
 
@@ -767,21 +767,21 @@ static int avi_write_ix(avi_context_t *avi_ctx)
 
         avi_stream2fourcc(tag, stream);
 
-        ix_tag[3] = '0' + i; /*only 10 streams supported*/
+        ix_tag[3] = '0' + (char)i; /*only 10 streams supported*/
 
         /* Writing AVI OpenDML leaf index chunk */
         ix = io_get_offset(avi_ctx->writer);
         io_write_4cc(avi_ctx->writer, ix_tag);     /* ix?? */
         avi_index_t *indexes = (avi_index_t *) stream->indexes;
-        io_write_wl32(avi_ctx->writer, indexes->entry * 8 + 24);
+        io_write_wl32(avi_ctx->writer, (uint32_t)(indexes->entry * 8 + 24));
                                       /* chunk size */
         io_write_wl16(avi_ctx->writer, 2);           /* wLongsPerEntry */
         io_write_w8(avi_ctx->writer, 0);             /* bIndexSubType (0 == frame index) */
         io_write_w8(avi_ctx->writer, AVI_INDEX_OF_CHUNKS); /* bIndexType (1 == AVI_INDEX_OF_CHUNKS) */
-        io_write_wl32(avi_ctx->writer, indexes->entry);
+        io_write_wl32(avi_ctx->writer, (uint32_t)indexes->entry);
                                       /* nEntriesInUse */
         io_write_4cc(avi_ctx->writer, tag);        /* dwChunkId */
-        io_write_wl64(avi_ctx->writer, riff->movi_list);/* qwBaseOffset */
+        io_write_wl64(avi_ctx->writer, (uint64_t)riff->movi_list);/* qwBaseOffset */
         io_write_wl32(avi_ctx->writer, 0);             /* dwReserved_3 (must be 0) */
 
         for (j=0; j< indexes->entry; j++)
@@ -801,11 +801,11 @@ static int avi_write_ix(avi_context_t *avi_ctx)
          io_seek(avi_ctx->writer, indexes->indx_start);
          io_write_4cc(avi_ctx->writer, "indx");            /* enabling this entry */
          io_skip(avi_ctx->writer, 8);
-         io_write_wl32(avi_ctx->writer, riff->id);         /* nEntriesInUse */
+         io_write_wl32(avi_ctx->writer, (uint32_t)(riff->id));         /* nEntriesInUse */
          io_skip(avi_ctx->writer, 16*(riff->id));
-         io_write_wl64(avi_ctx->writer, ix);               /* qwOffset */
-         io_write_wl32(avi_ctx->writer, pos - ix);         /* dwSize */
-         io_write_wl32(avi_ctx->writer, indexes->entry);   /* dwDuration */
+         io_write_wl64(avi_ctx->writer,(uint64_t) ix);               /* qwOffset */
+         io_write_wl32(avi_ctx->writer, (uint32_t)(pos - ix));         /* dwSize */
+         io_write_wl32(avi_ctx->writer,(uint32_t)(indexes->entry));   /* dwDuration */
 
 		//return to position
          io_seek(avi_ctx->writer, pos);
@@ -877,8 +877,8 @@ int avi_write_packet(
 	int stream_index,
 	uint8_t *data,
 	uint32_t size,
-	int64_t dts,
-	int block_align,
+__attribute__((unused))	int64_t dts,
+__attribute__((unused))	int block_align,
 	int32_t flags)
 {
     char tag[5];
@@ -923,7 +923,7 @@ int avi_write_packet(
     int id = idx->entry % AVI_INDEX_CLUSTER_SIZE;
     if (idx->ents_allocated <= idx->entry)
     {
-        idx->cluster = realloc(idx->cluster, (cl+1)*sizeof(void*));
+        idx->cluster = realloc(idx->cluster, (size_t)(cl+1)*sizeof(void*));
         if (idx->cluster == NULL)
         {
 			fprintf(stderr, "ENCODER: FATAL memory allocation failure (avi_write_packet): %s\n", strerror(errno));
@@ -940,14 +940,14 @@ int avi_write_packet(
     }
 
     idx->cluster[cl][id].flags = i_flags;
-    idx->cluster[cl][id].pos = io_get_offset(avi_ctx->writer) - riff->movi_list;
+    idx->cluster[cl][id].pos = (unsigned int)(io_get_offset(avi_ctx->writer) - riff->movi_list);
     idx->cluster[cl][id].len = size;
     idx->entry++;
 
 
     io_write_4cc(avi_ctx->writer, tag);
     io_write_wl32(avi_ctx->writer, size);
-    io_write_buf(avi_ctx->writer, data, size);
+    io_write_buf(avi_ctx->writer, data, (int)size);
     if (size & 1)
         io_write_w8(avi_ctx->writer, 0);
 
@@ -991,8 +991,8 @@ int avi_close(avi_context_t *avi_ctx)
 
             if (stream->type == STREAM_TYPE_VIDEO)
             {
-                if (nb_frames < stream->packet_count)
-                        nb_frames = stream->packet_count;
+                if (nb_frames < (int)stream->packet_count)
+                        nb_frames = (int)stream->packet_count;
             }
             else
             {
@@ -1000,7 +1000,7 @@ int avi_close(avi_context_t *avi_ctx)
                         nb_frames += stream->packet_count;
             }
         }
-        io_write_wl32(avi_ctx->writer, nb_frames);
+        io_write_wl32(avi_ctx->writer, (uint32_t)nb_frames);
         io_seek(avi_ctx->writer, file_size);
 
         avi_write_counters(avi_ctx, riff);

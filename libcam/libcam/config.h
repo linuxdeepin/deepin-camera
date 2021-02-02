@@ -23,11 +23,12 @@
 #define CONFIG_H
 
 #include <stdint.h>
+#include <stdio.h>
 #include "options.h"
 
 #define PACKAGE_LOCALE_DIR "./"
 #define GETTEXT_PACKAGE "cheese"
-#define VERSION "cheese-1.0"
+//#define VERSION "cheese-1.0"
 #define HAS_QT5 1
 
 #define ENABLE_SDL2 1
@@ -39,6 +40,8 @@
 typedef struct _config_t {
     int  width;      /*width*/
     int  height;     /*height*/
+    char *device_name; /*device name*/
+    char *device_location; /*device location*/
     unsigned int format;  /*pixelformat - v4l2 fourcc*/
     char render[5];  /*render api*/
     char gui[5];     /*gui api*/
@@ -64,18 +67,24 @@ typedef struct _config_t {
 } config_t;
 
 /*video sufix flag*/
-static int video_sufix_flag = 1;
+__attribute__((unused))static int video_sufix_flag = 1;
 
 /*photo sufix flag*/
-static int photo_sufix_flag = 1;
+__attribute__((unused))static int photo_sufix_flag = 1;
 
 /*control profile file name*/
-static char *profile_name = NULL;
+__attribute__((unused))static char *profile_name = NULL;
+
+/*divece name*/
+__attribute__((unused))static char *device_name = NULL;
+
+/*device location*/
+__attribute__((unused))static char *device_location = NULL;
 
 /*control profile path to dir*/
-static char *profile_path = NULL;
+__attribute__((unused))static char *profile_path = NULL;
 
-static int debug_level;
+__attribute__((unused))static int debug_level;
 /*
  * get the internal config data
  * args:
@@ -99,6 +108,30 @@ config_t *config_get();
  * returns: none
  */
 void set_photo_sufix_flag(int flag);
+
+/*
+ * sets the device location
+ * args:
+ *   name: device location
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_device_location(const char *name);
+
+/*
+ * sets the device name
+ * args:
+ *   name: device name
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_device_name(const char *name);
 
 /*
  * sets the control profile file name

@@ -99,9 +99,9 @@ int xioctl(int fd, int IOCTL_X, void *arg)
 	do
 	{
 		if(!disable_libv4l2)
-			ret = v4l2_ioctl(fd, IOCTL_X, arg);
+            ret = v4l2_ioctl(fd, (unsigned long int)IOCTL_X, arg);
 		else
-			ret = ioctl(fd, IOCTL_X, arg);
+            ret = ioctl(fd, (unsigned long int)IOCTL_X, arg);
 	}
 	while (ret && tries-- &&
 			((errno == EINTR) || (errno == EAGAIN) || (errno == ETIMEDOUT)));
@@ -150,6 +150,8 @@ void __attribute__ ((destructor)) v4l2core_fini()
 	v4l2core_close_v4l2_device_list();
 }
 
+
+
 /*
  * Query video device capabilities and supported formats
  * args:
@@ -169,7 +171,7 @@ static int check_v4l2_dev(v4l2_dev_t *vd)
 
 	memset(&vd->cap, 0, sizeof(struct v4l2_capability));
 
-	if ( xioctl(vd->fd, VIDIOC_QUERYCAP, &vd->cap) < 0 )
+    if ( xioctl(vd->fd, (int)VIDIOC_QUERYCAP, &vd->cap) < 0 )
 	{
 		fprintf( stderr, "V4L2_CORE: (VIDIOC_QUERYCAP) error: %s\n", strerror(errno));
 		return E_QUERYCAP_ERR;
@@ -301,7 +303,7 @@ static int map_buff(v4l2_dev_t *vd)
 			return E_MMAP_ERR;
 		}
 		if(verbosity > 1)
-			printf("V4L2_CORE: mapped buffer[%i] with length %i to pos %p\n",
+            printf("V4L2_CORE: mapped buffer[%i] with length %u to pos %p\n",
 				i,
 				vd->buff_length[i],
 				vd->mem[i]);
@@ -340,14 +342,14 @@ static int query_buff(v4l2_dev_t *vd)
 			for (i = 0; i < NB_BUFFER; i++)
 			{
 				memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
-				vd->buf.index = i;
+                vd->buf.index = (__u32)i;
 				vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 				//vd->buf.flags = V4L2_BUF_FLAG_TIMECODE;
 				//vd->buf.timecode = vd->timecode;
 				//vd->buf.timestamp.tv_sec = 0;
 				//vd->buf.timestamp.tv_usec = 0;
 				vd->buf.memory = V4L2_MEMORY_MMAP;
-				ret = xioctl(vd->fd, VIDIOC_QUERYBUF, &vd->buf);
+                ret = xioctl(vd->fd, (int)VIDIOC_QUERYBUF, &vd->buf);
 
 				if (ret < 0)
 				{
@@ -407,14 +409,14 @@ static int queue_buff(v4l2_dev_t *vd)
 			for (i = 0; i < NB_BUFFER; ++i)
 			{
 				memset(&vd->buf, 0, sizeof(struct v4l2_buffer));
-				vd->buf.index = i;
+                vd->buf.index = (__u32)i;
 				vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 				//vd->buf.flags = V4L2_BUF_FLAG_TIMECODE;
 				//vd->buf.timecode = vd->timecode;
 				//vd->buf.timestamp.tv_sec = 0;
 				//vd->buf.timestamp.tv_usec = 0;
 				vd->buf.memory = V4L2_MEMORY_MMAP;
-				ret = xioctl(vd->fd, VIDIOC_QBUF, &vd->buf);
+                ret = xioctl(vd->fd, (int)VIDIOC_QBUF, &vd->buf);
 				if (ret < 0)
 				{
 					fprintf(stderr, "V4L2_CORE: (VIDIOC_QBUF) Unable to queue buffer: %s\n", strerror(errno));
@@ -445,7 +447,7 @@ static int do_v4l2_framerate_update(v4l2_dev_t *vd)
 
 	/*get the current stream parameters*/
 	vd->streamparm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	ret = xioctl(vd->fd, VIDIOC_G_PARM, &vd->streamparm);
+    ret = xioctl(vd->fd, (int)VIDIOC_G_PARM, &vd->streamparm);
 	if (ret < 0)
 	{
 		fprintf(stderr, "V4L2_CORE: (VIDIOC_G_PARM) error: %s\n", strerror(errno));
@@ -458,11 +460,11 @@ static int do_v4l2_framerate_update(v4l2_dev_t *vd)
 		fprintf(stderr, "V4L2_CORE: V4L2_CAP_TIMEPERFRAME not supported\n");
 	}
 
-	vd->streamparm.parm.capture.timeperframe.numerator = vd->fps_num;
-	vd->streamparm.parm.capture.timeperframe.denominator = vd->fps_denom;
+    vd->streamparm.parm.capture.timeperframe.numerator = (__u32)vd->fps_num;
+    vd->streamparm.parm.capture.timeperframe.denominator = (__u32)vd->fps_denom;
 
 	/*request the new frame rate*/
-	ret = xioctl(vd->fd, VIDIOC_S_PARM, &vd->streamparm);
+    ret = xioctl(vd->fd, (int)VIDIOC_S_PARM, &vd->streamparm);
 
 	if (ret < 0)
 	{
@@ -1073,6 +1075,15 @@ static int get_next_ready_frame(v4l2_dev_t *vd)
 	return -1;
 }
 
+int get_my_width()
+{
+    return my_width;
+}
+
+int get_my_height()
+{
+    return my_height;
+}
 /*
  * process input buffer
  * args:
@@ -1103,7 +1114,7 @@ static int process_input_buffer(v4l2_dev_t *vd)
 	 */
 	vd->frame_queue[qind].timestamp = ns_time_monotonic();
 	
-	vd->frame_queue[qind].index = vd->buf.index;
+    vd->frame_queue[qind].index = (int)vd->buf.index;
 	 
 	vd->frame_index++;
 	
@@ -1170,8 +1181,8 @@ v4l2_frame_buff_t *v4l2core_get_frame(v4l2_dev_t *vd)
 			__LOCK_MUTEX( __PMUTEX );
 			if(vd->streaming == STRM_OK)
 			{
-				vd->buf.bytesused = v4l2_read (vd->fd, vd->mem[vd->buf.index], vd->buf.length);
-				bytes_used = vd->buf.bytesused;
+                vd->buf.bytesused = (__u32)v4l2_read (vd->fd, vd->mem[vd->buf.index], vd->buf.length);
+                bytes_used = (int)vd->buf.bytesused;
 
 				if(bytes_used > 0)
 					qind = process_input_buffer(vd);
@@ -1240,7 +1251,7 @@ v4l2_frame_buff_t *v4l2core_get_frame(v4l2_dev_t *vd)
 				vd->buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 				vd->buf.memory = V4L2_MEMORY_MMAP;
 
-				ret = xioctl(vd->fd, VIDIOC_DQBUF, &vd->buf);
+                ret = xioctl(vd->fd, (int)VIDIOC_DQBUF, &vd->buf);
 
 				if(!ret)
 					qind = process_input_buffer(vd);
@@ -1259,8 +1270,8 @@ v4l2_frame_buff_t *v4l2core_get_frame(v4l2_dev_t *vd)
 	if(qind < 0 || qind >= vd->frame_queue_size)
 		return NULL;
 
-	vd->frame_queue[qind].width = vd->format.fmt.pix.width;
-	vd->frame_queue[qind].height = vd->format.fmt.pix.height;
+    vd->frame_queue[qind].width = (int)vd->format.fmt.pix.width;
+    vd->frame_queue[qind].height = (int)vd->format.fmt.pix.height;
 	
 	return &vd->frame_queue[qind];
 }
@@ -1281,7 +1292,7 @@ int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 	int ret = 0;
 	
 	//match the v4l2_buffer with the correspondig frame
-	vd->buf.index = frame->index;
+    vd->buf.index = (__u32)frame->index;
 	
 	switch(vd->cap_meth)
 	{
@@ -1291,7 +1302,7 @@ int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 		case IO_MMAP:
 		default:
 			/* queue the buffer */
-			ret = xioctl(vd->fd, VIDIOC_QBUF, &vd->buf);
+            ret = xioctl(vd->fd, (int)VIDIOC_QBUF, &vd->buf);
 
 			if(ret)
 				fprintf(stderr, "V4L2_CORE: (VIDIOC_QBUF) Unable to queue buffer %i: %s\n", frame->index, strerror(errno));
@@ -1374,9 +1385,9 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 		pixelformat = V4L2_PIX_FMT_MJPEG;
 	}
 
-	vd->format.fmt.pix.pixelformat = pixelformat;
-	vd->format.fmt.pix.width = width;
-	vd->format.fmt.pix.height = height;
+    vd->format.fmt.pix.pixelformat = (__u32)pixelformat;
+    vd->format.fmt.pix.width = (__u32)width;
+    vd->format.fmt.pix.height = (__u32)height;
 
 	/* make sure we set a valid format*/
 	if(verbosity > 0)
@@ -1388,7 +1399,7 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 	vd->format.fmt.pix.field = V4L2_FIELD_ANY;
 	vd->format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 
-	ret = xioctl(vd->fd, VIDIOC_S_FMT, &vd->format);
+    ret = xioctl(vd->fd, (int)VIDIOC_S_FMT, &vd->format);
 
 	if(!ret && (vd->requested_fmt == V4L2_PIX_FMT_H264) && (h264_get_support() == H264_MUXED))
 	{
@@ -1412,8 +1423,8 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 
 	my_pixelformat = vd->requested_fmt;
 
-	if ((vd->format.fmt.pix.width != width) ||
-		(vd->format.fmt.pix.height != height))
+    if (((int)vd->format.fmt.pix.width != width) ||
+        ((int)vd->format.fmt.pix.height != height))
 	{
 		fprintf(stderr, "V4L2_CORE: Requested resolution unavailable: got width %d height %d\n",
 		vd->format.fmt.pix.width, vd->format.fmt.pix.height);
@@ -1456,7 +1467,7 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 			vd->rb.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 			vd->rb.memory = V4L2_MEMORY_MMAP;
 
-			ret = xioctl(vd->fd, VIDIOC_REQBUFS, &vd->rb);
+            ret = xioctl(vd->fd, (int)VIDIOC_REQBUFS, &vd->rb);
 
 			if (ret < 0)
 			{
@@ -1477,7 +1488,7 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 				vd->rb.count = 0;
 				vd->rb.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 				vd->rb.memory = V4L2_MEMORY_MMAP;
-				if(xioctl(vd->fd, VIDIOC_REQBUFS, &vd->rb)<0)
+                if(xioctl(vd->fd, (int)VIDIOC_REQBUFS, &vd->rb)<0)
 					fprintf(stderr, "V4L2_CORE: (VIDIOC_REQBUFS) Unable to delete buffers: %s\n", strerror(errno));
 
 				return E_QUERYBUF_ERR;
@@ -1495,7 +1506,7 @@ static int try_video_stream_format(v4l2_dev_t *vd,
 				vd->rb.count = 0;
 				vd->rb.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 				vd->rb.memory = V4L2_MEMORY_MMAP;
-				if(xioctl(vd->fd, VIDIOC_REQBUFS, &vd->rb)<0)
+                if(xioctl(vd->fd, (int)VIDIOC_REQBUFS, &vd->rb)<0)
 					fprintf(stderr, "V4L2_CORE: (VIDIOC_REQBUFS) Unable to delete buffers: %s\n", strerror(errno));
 				return E_QBUF_ERR;
 			}
@@ -1528,7 +1539,7 @@ int v4l2core_get_frame_width(v4l2_dev_t *vd)
 	/*assertions*/
 	assert(vd != NULL);
 	
-	return vd->format.fmt.pix.width;
+    return (int)vd->format.fmt.pix.width;
 }
 
 /*
@@ -1546,7 +1557,7 @@ int v4l2core_get_frame_height(v4l2_dev_t *vd)
 	/*assertions*/
 	assert(vd != NULL);
 	
-	return vd->format.fmt.pix.height;
+    return (int)vd->format.fmt.pix.height;
 }
 
 /*
@@ -1639,7 +1650,7 @@ void v4l2core_prepare_new_resolution(v4l2_dev_t *vd,
 	int resolution_index = v4l2core_get_format_resolution_index(vd, 
 		format_index, new_width, new_height);
 
-	if(resolution_index < 0)
+    if(resolution_index < 0)
 		resolution_index = 0;
 
 	my_width  = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].width;
@@ -1662,15 +1673,46 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 	assert(vd != NULL);
 
 	int format_index = v4l2core_get_frame_format_index(vd, my_pixelformat);
+    my_width = 0;
+    my_height = 0;
 
-	if(format_index < 0)
-		format_index = 0;
+    if(format_index < 0){
+        format_index = 0;
+    }
 
-	int resolution_index = 0;
-
-	my_width  = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].width;
-	my_height = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].height;
+    for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
+    {
+        if( my_width <= vd->list_stream_formats[format_index].list_stream_cap[i].width &&
+            my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height)
+        {
+            my_width = vd->list_stream_formats[format_index].list_stream_cap[i].width;
+            my_height = vd->list_stream_formats[format_index].list_stream_cap[i].height;
+        }
+    }
 }
+
+/*
+ * update the old format (pixelformat, width and height)
+ * args:
+ *    vd - pointer to v4l2 device handler
+ *
+ * asserts:
+ *    vd is not null
+ *
+ * returns:
+ *    error code
+ */
+int v4l2core_update_old_format(v4l2_dev_t *vd,int width,int height ,int pixelformat)
+{
+    /*asserts*/
+    assert(vd != NULL);
+    my_pixelformat = pixelformat;
+    my_width = width;
+    my_height = height;
+
+    return(try_video_stream_format(vd, my_width, my_height, my_pixelformat));
+}
+
 
 /*
  * update the current format (pixelformat, width and height)
@@ -1744,7 +1786,7 @@ static void clean_v4l2_dev(v4l2_dev_t *vd)
 v4l2_dev_t* v4l2core_init_dev(const char *device)
 {
 	/*assertions*/
-	assert(device != NULL);
+    //assert(device != NULL);
 	
 	///*make sure to close and clean any existing device data*/
 	//if(vd != NULL)
@@ -1778,7 +1820,7 @@ v4l2_dev_t* v4l2core_init_dev(const char *device)
 
 	vd->frame_queue_size = frame_queue_size;
 	/*alloc frame buffer queue*/
-	vd->frame_queue = calloc(vd->frame_queue_size, sizeof(v4l2_frame_buff_t));
+    vd->frame_queue = calloc((size_t)vd->frame_queue_size, sizeof(v4l2_frame_buff_t));
 	
 	vd->h264_no_probe_default = 0;
 	vd->h264_SPS = NULL;
@@ -1803,7 +1845,7 @@ v4l2_dev_t* v4l2core_init_dev(const char *device)
 		return (NULL);
 	}
 
-	vd->this_device = v4l2core_get_device_index(vd->videodevice);
+    vd->this_device = v4l2core_get_device_index(vd->videodevice);
 	if(vd->this_device < 0)
 		vd->this_device = 0;
 
@@ -1892,14 +1934,14 @@ int v4l2core_check_control_events(v4l2_dev_t *vd)
 	int ret = 0;
 	struct v4l2_event ev;
 
-	while (xioctl(vd->fd, VIDIOC_DQEVENT, &ev) == 0)
+    while (xioctl(vd->fd, (int)VIDIOC_DQEVENT, &ev) == 0)
 	{
 		if (ev.type != V4L2_EVENT_CTRL)
 			continue;
 
 		ret++;
 		//update control
-		v4l2_ctrl_t *control = v4l2core_get_control_by_id(vd, ev.id);
+        v4l2_ctrl_t *control = v4l2core_get_control_by_id(vd, (int)ev.id);
 		if(control != NULL)
 		{
 			control->control.flags = ev.u.ctrl.flags;
@@ -2079,7 +2121,7 @@ void v4l2core_clean_buffers(v4l2_dev_t *vd)
 			vd->rb.count = 0;
 			vd->rb.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 			vd->rb.memory = V4L2_MEMORY_MMAP;
-			if(xioctl(vd->fd, VIDIOC_REQBUFS, &vd->rb)<0)
+            if(xioctl(vd->fd, (int)VIDIOC_REQBUFS, &vd->rb)<0)
 			{
 				fprintf(stderr, "V4L2_CORE: (VIDIOC_REQBUFS) Failed to delete buffers: %s (errno %d)\n", strerror(errno), errno);
 			}
@@ -2157,7 +2199,7 @@ int v4l2core_get_framerate (v4l2_dev_t *vd)
 	int ret=0;
 
 	vd->streamparm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	ret = xioctl(vd->fd, VIDIOC_G_PARM, &vd->streamparm);
+    ret = xioctl(vd->fd, (int)VIDIOC_G_PARM, &vd->streamparm);
 	if (ret < 0)
 	{
 		fprintf(stderr, "V4L2_CORE: (VIDIOC_G_PARM) error: %s\n", strerror(errno));
@@ -2167,8 +2209,8 @@ int v4l2core_get_framerate (v4l2_dev_t *vd)
 	{
 		if (vd->streamparm.parm.capture.capability & V4L2_CAP_TIMEPERFRAME)
 		{
-			vd->fps_denom = vd->streamparm.parm.capture.timeperframe.denominator;
-			vd->fps_num = vd->streamparm.parm.capture.timeperframe.numerator;
+            vd->fps_denom = (int)vd->streamparm.parm.capture.timeperframe.denominator;
+            vd->fps_num = (int)vd->streamparm.parm.capture.timeperframe.numerator;
 		}
 	}
 

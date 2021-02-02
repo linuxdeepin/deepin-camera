@@ -48,8 +48,8 @@
 /*flags*/
 extern int debug_level;//debug
 
-extern __MUTEX_TYPE capture_mutex;
-extern __COND_TYPE capture_cond;
+__MUTEX_TYPE capture_mutex = __STATIC_MUTEX_INIT;//初始化静态锁
+__COND_TYPE capture_cond;
 
 static int render = RENDER_SDL; /*render API*/
 static int quit = 0; /*terminate flag*/
@@ -59,6 +59,7 @@ static int save_video = 0; /*save video flag*/
 static uint64_t my_photo_timer = 0; /*timer count*/
 
 static uint64_t my_video_timer = 0; /*timer count*/
+
 static uint64_t my_video_begin_time = 0; /*first video frame ts*/
 
 static int restart = 0; /*restart flag*/
@@ -68,6 +69,23 @@ static char render_caption[30]; /*render window caption*/
 static uint32_t my_render_mask = REND_FX_YUV_NOFILT; /*render fx filter mask*/
 
 static uint32_t my_audio_mask = AUDIO_FX_NONE; /*audio fx filter mask*/
+
+/*暂停录制*/
+static int capture_pause = 0;
+
+/*暂停时刻的视频时间*/
+static int64_t video_timestamp_tmp = 0;
+
+/*音频时间引用*/
+static int64_t audio_timestamp_reference = 0;
+
+/*暂停时刻的音频时间*/
+static int64_t audio_timestamp_tmp = 0;
+
+/*音频的暂停总时间*/
+static int64_t audio_pause_timestamp = 0;
+
+static double video_time_capture = 0;
 
 /*continues focus*/
 static int do_soft_autofocus = 0;
@@ -84,7 +102,84 @@ static __THREAD_TYPE encoder_thread;
 
 static int my_encoder_status = 0;
 
+static int is_wayland = 0;
+
 static char status_message[80];
+
+
+void set_video_time_capture(double video_time)
+{
+    video_time_capture = video_time;
+}
+
+double get_video_time_capture()
+{
+    return video_time_capture;
+}
+
+/*
+ * set pause times
+ * args:
+ *    value - timestamp
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_timestamptmp(int64_t timestamp)
+{
+    video_timestamp_tmp = timestamp;
+}
+
+/*
+ * get pause times
+ * args:
+ *    value: none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause_time
+ */
+int64_t get_video_timestamptmp(void)
+{
+    return video_timestamp_tmp;
+}
+
+/*
+ * set capture_pause flag
+ * args:
+ *    value - flag value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_capture_pause(int bvalue)
+{
+    if(capture_pause != bvalue)
+        capture_pause = bvalue;
+    printf("capture_pause = %d\n", bvalue);
+}
+
+/*
+ * get capture_pause value
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: capture_pause
+ */
+int get_capture_pause()
+{
+    return capture_pause;
+
+}
+
 
 /*
  * set render flag
@@ -100,6 +195,7 @@ void set_render_flag(int value)
 {
     render = value;
 }
+
 
 /*
  * get render fx mask
@@ -197,7 +293,7 @@ void video_capture_save_video(int value)
     save_video = value;
 
     if(debug_level > 1)
-        printf("CHEESE: save video flag changed to %i\n", save_video);
+        printf("deepin-camera: save video flag changed to %i\n", save_video);
 }
 
 /*
@@ -293,6 +389,51 @@ void reset_video_timer()
 }
 
 /*
+ * set video begin timer
+ * args:
+ *   begin_time
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_myvideo_begin_timer(ulong begin_time)
+{
+    my_video_begin_time = begin_time;
+}
+
+/*
+ * get video begin timer
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: video begin timer
+ */
+ulong get_myvideo_bebin_timer(void)
+{
+    return my_video_begin_time;
+}
+
+/*
+ * set video timer
+ * args:
+ *   timer
+ *
+ * asserts:
+ *   none
+ *
+ * returns: none
+ */
+void set_video_timer(ulong timer)
+{
+    my_video_timer = NSEC_PER_SEC * timer;
+}
+
+/*
  * stops the video timed capture
  * args:
  *    none
@@ -359,10 +500,16 @@ void set_soft_focus(int value)
  *
  * returns: none
  */
-void request_format_update()
+void request_format_update(int bstatus)
 {
-    restart = 1;
+    restart = bstatus;
 }
+
+int get_resolution_status()
+{
+    return restart;
+}
+
 /*
  * create a v4l2 device handler
  * args:
@@ -373,7 +520,7 @@ void request_format_update()
  *
  * returns: pointer to v4l2 device handler (or null on error)
  */
-v4l2_dev_t *create_v4l2_device_handler(const char *device)
+v4l2_dev_t *get_v4l2_dev(const char *device)
 {
     my_vd = v4l2core_init_dev(device);
 
@@ -432,7 +579,7 @@ audio_context_t *create_audio_context(int api, int device)
     my_audio_ctx = audio_init(api, device);
 
     if(my_audio_ctx == NULL)
-        fprintf(stderr, "CHEESE: couldn't allocate audio context\n");
+        fprintf(stderr, "deepin-camera: couldn't allocate audio context\n");
 
     return my_audio_ctx;
 }
@@ -492,13 +639,13 @@ static void *audio_processing_loop(void *data)
     encoder_context_t *encoder_ctx = (encoder_context_t *) data;
 
     if(debug_level > 1)
-        printf("CHEESE: audio thread (tid: %u)\n",
+        printf("deepin-camera: audio thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     audio_context_t *audio_ctx = get_audio_context();
     if(!audio_ctx)
     {
-        fprintf(stderr, "CHEESE: no audio context: skiping audio processing\n");
+        fprintf(stderr, "deepin-camera: no audio context: skiping audio processing\n");
         return ((void *) -1);
     }
     audio_buff_t *audio_buff = NULL;
@@ -537,9 +684,25 @@ static void *audio_processing_loop(void *data)
 
     while(video_capture_get_save_video())
     {
+        if(get_capture_pause())
+        {
+            int ret = audio_get_next_buffer(audio_ctx, audio_buff, sample_type, my_audio_mask);
+            if(ret == 0)
+            {
+                audio_pause_timestamp = audio_buff->timestamp - audio_timestamp_tmp;
+            }
+            continue;
+        }
+
         int ret = audio_get_next_buffer(audio_ctx, audio_buff,
                 sample_type, my_audio_mask);
 
+        audio_timestamp_tmp = audio_buff->timestamp;
+        if(audio_pause_timestamp != 0)
+        {
+            audio_timestamp_reference += audio_pause_timestamp;
+            audio_pause_timestamp = 0;
+        }
         if(ret > 0)
         {
             /*
@@ -553,19 +716,20 @@ static void *audio_processing_loop(void *data)
         }
         else if(ret == 0)
         {
-            encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp;
+            encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp - audio_timestamp_reference;
 
             /*OSD vu meter level*/
             render_set_vu_level(audio_buff->level_meter);
 
             encoder_process_audio_buffer(encoder_ctx, audio_buff->data);
         }
-
     }
 
     /*flush any delayed audio frames*/
     encoder_flush_audio_buffer(encoder_ctx);
-
+    audio_timestamp_tmp = 0;
+    audio_pause_timestamp = 0;
+    audio_timestamp_reference = 0;
     /*reset vu meter*/
     audio_buff->level_meter[0] = 0;
     audio_buff->level_meter[1] = 0;
@@ -593,12 +757,12 @@ static void *audio_processing_loop(void *data)
  *
  * returns: pointer to return code
  */
-static void *encoder_loop(void *data)
+static void *encoder_loop(__attribute__((unused))void *data)
 {
     my_encoder_status = 1;
 
     if(debug_level > 1)
-        printf("CHEESE: encoder thread (tid: %u)\n",
+        printf("deepin-camera: encoder thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     /*get the audio context*/
@@ -616,7 +780,7 @@ static void *encoder_loop(void *data)
     }
 
     if(debug_level > 0)
-        printf("CHEESE: audio [channels= %i; samprate= %i] \n",
+        printf("deepin-camera: audio [channels= %i; samprate= %i] \n",
             channels, samprate);
 
     /*create the encoder context*/
@@ -640,14 +804,14 @@ static void *encoder_loop(void *data)
         v4l2core_h264_request_idr(my_vd);
 
         if(debug_level > 0)
-            printf("CHEESE: storing external pps and sps data in encoder context\n");
+            printf("deepin-camera: storing external pps and sps data in encoder context\n");
         encoder_ctx->h264_pps_size = v4l2core_get_h264_pps_size(my_vd);
         if(encoder_ctx->h264_pps_size > 0)
         {
             encoder_ctx->h264_pps = calloc(encoder_ctx->h264_pps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_pps == NULL)
             {
-                fprintf(stderr,"CHEESE: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_pps, v4l2core_get_h264_pps(my_vd), encoder_ctx->h264_pps_size);
@@ -659,7 +823,7 @@ static void *encoder_loop(void *data)
             encoder_ctx->h264_sps = calloc(encoder_ctx->h264_sps_size, sizeof(uint8_t));
             if(encoder_ctx->h264_sps == NULL)
             {
-                fprintf(stderr,"CHEESE: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
                 exit(-1);
             }
             memcpy(encoder_ctx->h264_sps, v4l2core_get_h264_sps(my_vd), encoder_ctx->h264_sps_size);
@@ -678,12 +842,13 @@ static void *encoder_loop(void *data)
     char *name = strdup(get_video_name());
     char *path = strdup(get_video_path());
 
-    if(get_video_sufix_flag())
-    {
-        char *new_name = add_file_suffix(path, name);
-        free(name); /*free old name*/
-        name = new_name; /*replace with suffixed name*/
-    }
+
+    //    if(get_video_sufix_flag())
+    //    {
+    //        char *new_name = add_file_suffix(path, name);
+    //        free(name); /*free old name*/
+    //        name = new_name; /*replace with suffixed name*/
+    //    }
     int pathsize = strlen(path);
     if(path[pathsize - 1] != '/')
         video_filename = smart_cat(path, '/', name);
@@ -694,26 +859,27 @@ static void *encoder_loop(void *data)
     //gui_status_message(status_message);
 
     /*muxer initialization*/
+
     encoder_muxer_init(encoder_ctx, video_filename);
 
     /*start video capture*/
     video_capture_save_video(1);
 
-    int treshold = 102400; /*100 Mbytes*/
-    int64_t last_check_pts = 0; /*last pts when disk supervisor called*/
+//    int treshold = 358400; /*100 Mbytes*/
+//    int64_t last_check_pts = 0; /*last pts when disk supervisor called*/
 
     /*start audio processing thread*/
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("CHEESE: starting encoder audio thread\n");
+            printf("deepin-camera: starting encoder audio thread\n");
 
         int ret = __THREAD_CREATE(&encoder_audio_thread, audio_processing_loop, (void *) encoder_ctx);
 
         if(ret)
-            fprintf(stderr, "CHEESE: encoder audio thread creation failed (%i)\n", ret);
+            fprintf(stderr, "deepin-camera: encoder audio thread creation failed (%i)\n", ret);
         else if(debug_level > 2)
-            printf("CHEESE: created audio encoder thread with tid: %u\n",
+            printf("deepin-camera: created audio encoder thread with tid: %u\n",
                 (unsigned int) encoder_audio_thread);
     }
 
@@ -734,34 +900,34 @@ static void *encoder_loop(void *data)
         }
 
         /*disk supervisor*/
-        if(encoder_ctx->enc_video_ctx->pts - last_check_pts > 2 * NSEC_PER_SEC)
-        {
-            last_check_pts = encoder_ctx->enc_video_ctx->pts;
+//        if(encoder_ctx->enc_video_ctx->pts - last_check_pts > 2 * NSEC_PER_SEC)
+//        {
+//            last_check_pts = encoder_ctx->enc_video_ctx->pts;
 
-            if(!encoder_disk_supervisor(treshold, path))
-            {
-                /*stop capture*/
-                if((save_image||save_video) == 1)
-                {
-                    save_image = 0;
-                    save_video = 0;
-                }
-            }
-        }
+//            if(!encoder_disk_supervisor(treshold, path))
+//            {
+//                /*stop capture*/
+//                if((save_image || save_video) == 1)
+//                {
+//                    save_image = 0;
+//                    save_video = 0;
+//                }
+//            }
+//        }
     }
 
     if(debug_level > 1)
-        printf("CHEESE: video capture terminated - flushing video buffers\n");
+        printf("deepin-camera: video capture terminated - flushing video buffers\n");
     /*flush the video buffer*/
     encoder_flush_video_buffer(encoder_ctx);
     if(debug_level > 1)
-        printf("CHEESE: flushing video buffers - done\n");
+        printf("deepin-camera: flushing video buffers - done\n");
 
     /*make sure the audio processing thread has stopped*/
     if(encoder_ctx->enc_audio_ctx != NULL && audio_get_channels(audio_ctx) > 0)
     {
         if(debug_level > 1)
-            printf("CHEESE: join encoder audio thread\n");
+            printf("deepin-camera: join encoder audio thread\n");
         __THREAD_JOIN(encoder_audio_thread);
     }
 
@@ -771,12 +937,13 @@ static void *encoder_loop(void *data)
     /*close the encoder context (clean up)*/
     encoder_close(encoder_ctx);
 
-    if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
-    {
-        /* restore framerate */
-        v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+    if(my_vd){
+        if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
+        {
+            /* restore framerate */
+            v4l2core_set_h264_frame_rate_config(my_vd, current_framerate);
+        }
     }
-
     /*clean strings*/
     free(video_filename);
     free(path);
@@ -785,6 +952,24 @@ static void *encoder_loop(void *data)
     my_encoder_status = 0;
 
     return ((void *) 0);
+}
+
+/*
+ * create a v4l2 device handler
+ * args:
+ *    device - device name
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to v4l2 device handler (or null on error)
+ */
+v4l2_dev_t *create_v4l2_device_handler(const char *device)
+{
+//    cheese_print_log("create_v4l2_device_handler\n");
+    my_vd = v4l2core_init_dev(device);
+
+    return my_vd;
 }
 
 /*
@@ -811,7 +996,7 @@ void *capture_loop(void *data)
     quit = 0;
 
     if(debug_level > 1)
-        printf("CHEESE: capture thread (tid: %u)\n",
+        printf("deepin-camera: capture thread (tid: %u)\n",
             (unsigned int) syscall (SYS_gettid));
 
     int ret = 0;
@@ -881,8 +1066,8 @@ void *capture_loop(void *data)
             /*try to set the video stream format on the device*/
             if(ret != E_OK)
             {
-                fprintf(stderr, "GUCVIEW: could not set the defined stream format\n");
-                fprintf(stderr, "GUCVIEW: trying first listed stream format\n");
+                fprintf(stderr, "deepin-camera: could not set the defined stream format\n");
+                fprintf(stderr, "deepin-camera: trying first listed stream format\n");
 
                 v4l2core_prepare_valid_format(my_vd);
                 v4l2core_prepare_valid_resolution(my_vd);
@@ -890,9 +1075,9 @@ void *capture_loop(void *data)
 
                 if(ret != E_OK)
                 {
-                    fprintf(stderr, "GUCVIEW: also could not set the first listed stream format\n");
+                    fprintf(stderr, "deepin-camera: also could not set the first listed stream format\n");
 
-                    //gui_error("Guvcview error", "could not start a video stream in the device", 1);
+                    //gui_error("Deepin-camera error", "could not start a video stream in the device", 1);
 
                     return ((void *) -1);
                 }
@@ -902,7 +1087,7 @@ void *capture_loop(void *data)
                 current_height != v4l2core_get_frame_height(my_vd))
             {
                 if(debug_level > 1)
-                    printf("CHEESE: resolution changed, reseting render\n");
+                    printf("deepin-camera: resolution changed, reseting render\n");
 
                 /*close render*/
                 render_close();
@@ -919,7 +1104,7 @@ void *capture_loop(void *data)
             }
 
             if(debug_level > 0)
-                printf("CHEESE: reset to pixelformat=%x width=%i and height=%i\n",
+                printf("deepin-camera: reset to pixelformat=%x width=%i and height=%i\n",
                     v4l2core_get_requested_frame_format(my_vd),
                     v4l2core_get_frame_width(my_vd),
                     v4l2core_get_frame_height(my_vd));
@@ -997,7 +1182,7 @@ void *capture_loop(void *data)
                     img_filename = smart_cat(path, 0, name);
 
                 //if(debug_level > 1)
-                //	printf("CHEESE: saving image to %s\n", img_filename);
+                //	printf("deepin-camera: saving image to %s\n", img_filename);
 
                 snprintf(status_message, 79, _("saving image to %s"), img_filename);
                 //gui_status_message(status_message);
@@ -1074,7 +1259,7 @@ void *capture_loop(void *data)
             render_frame_osd(frame->yuv_frame);
 
             /* finally render the frame */
-            snprintf(render_caption, 29, "Guvcview  (%2.2f fps)",
+            snprintf(render_caption, 29, "Deepin-camera  (%2.2f fps)",
                 v4l2core_get_realfps(my_vd));
             render_set_caption(render_caption);
             render_frame(frame->yuv_frame);
@@ -1110,9 +1295,9 @@ int start_encoder_thread(void *data)
     int ret = __THREAD_CREATE(&encoder_thread, encoder_loop, data);
 
     if(ret)
-        fprintf(stderr, "CHEESE: encoder thread creation failed (%i)\n", ret);
+        fprintf(stderr, "deepin-camera: encoder thread creation failed (%i)\n", ret);
     else if(debug_level > 2)
-        printf("CHEESE: created encoder thread with tid: %u\n",
+        printf("deepin-camera: created encoder thread with tid: %u\n",
             (unsigned int) encoder_thread);
 
     return ret;
@@ -1131,11 +1316,25 @@ int start_encoder_thread(void *data)
 int stop_encoder_thread()
 {
     video_capture_save_video(0);
+    if(0 != (int)(get_video_time_capture()))
+        set_video_time_capture(0);
+
+    //usleep(2000);
 
     __THREAD_JOIN(encoder_thread);
 
     if(debug_level > 1)
-        printf("CHEESE: encoder thread terminated and joined\n");
+        printf("deepin-camera: encoder thread terminated and joined\n");
 
     return 0;
+}
+
+void set_wayland_status(int status)
+{
+    is_wayland = status;
+}
+
+int get_wayland_status()
+{
+    return is_wayland;
 }

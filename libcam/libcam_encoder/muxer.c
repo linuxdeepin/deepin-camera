@@ -39,6 +39,16 @@
 #include <errno.h>
 #include <assert.h>
 #include <sys/statfs.h>
+#include <libavformat/avformat.h>
+#include <libavutil/avassert.h>
+#include <libavutil/channel_layout.h>
+#include <libavutil/opt.h>
+#include <libavutil/frame.h>
+#include <libavutil/mathematics.h>
+#include <libavutil/timestamp.h>
+#include <libavutil/hwcontext.h>
+#include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 /* support for internationalization - i18n */
 #include <locale.h>
 #include <libintl.h>
@@ -49,15 +59,24 @@
 #include "stream_io.h"
 #include "matroska.h"
 #include "avi.h"
+#include "mp4.h"
 #include "gview.h"
+
 
 extern int verbosity;
 
 static mkv_context_t *mkv_ctx = NULL;
 static avi_context_t *avi_ctx = NULL;
+static AVFormatContext *mp4_ctx = NULL;
 
 static stream_io_t *video_stream = NULL;
 static stream_io_t *audio_stream = NULL;
+static OutputStream *mp4_video_stream = NULL;
+static OutputStream *mp4_audio_stream = NULL;
+
+//static AVCodec *audio_codec = NULL;
+//static AVCodec *video_codec = NULL;
+static AVDictionary** opt = NULL;
 
 /*file mutex*/
 static __MUTEX_TYPE mutex = __STATIC_MUTEX_INIT;
@@ -80,10 +99,14 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 
 	encoder_video_context_t *enc_video_ctx = encoder_ctx->enc_video_ctx;
 	assert(enc_video_ctx);
-
-	if(enc_video_ctx->outbuf_coded_size <= 0)
+     //cheese_print_log("encoder_write_video_data");
+    if(enc_video_ctx->outbuf_coded_size <= 0){
+         //cheese_print_log("enc_video_ctx->outbuf_coded_size <= 0");
 		return -1;
-
+    }
+    //else {
+        //cheese_print_log("enc_video_ctx->outbuf_coded_size >= 0");
+    //}
 	enc_video_ctx->framecount++;
 
 	int ret =0;
@@ -102,11 +125,21 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 					avi_ctx,
 					0,
 					enc_video_ctx->outbuf,
-					enc_video_ctx->outbuf_coded_size,
+          (uint32_t)enc_video_ctx->outbuf_coded_size,
 					enc_video_ctx->dts,
 					block_align,
 					enc_video_ctx->flags);
 			break;
+
+        case ENCODER_MUX_MP4:
+        //cheese_print_log("write video data");
+            ret = mp4_write_packet(mp4_ctx,
+                         video_codec_data,
+                         0,
+                         enc_video_ctx->outbuf,
+                 (uint32_t)enc_video_ctx->outbuf_coded_size,
+                         enc_video_ctx->flags);
+            break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -116,7 +149,7 @@ int encoder_write_video_data(encoder_context_t *encoder_ctx)
 					enc_video_ctx->outbuf,
 					enc_video_ctx->outbuf_coded_size,
 					enc_video_ctx->duration,
-					enc_video_ctx->pts,
+          (uint64_t)enc_video_ctx->pts,
 					enc_video_ctx->flags);
 			break;
 
@@ -171,11 +204,21 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					avi_ctx,
 					1,
 					enc_audio_ctx->outbuf,
-					enc_audio_ctx->outbuf_coded_size,
+          (uint32_t)enc_audio_ctx->outbuf_coded_size,
 					enc_audio_ctx->dts,
 					block_align,
 					enc_audio_ctx->flags);
 			break;
+        case ENCODER_MUX_MP4:
+//        cheese_print_log("write audio data");
+            mp4_write_packet(
+                    mp4_ctx,
+                    audio_codec_data,
+                    1,
+                    enc_audio_ctx->outbuf,
+            (uint32_t)enc_audio_ctx->outbuf_coded_size,
+                    enc_audio_ctx->flags);
+            break;
 
 		case ENCODER_MUX_MKV:
 		case ENCODER_MUX_WEBM:
@@ -185,7 +228,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
 					enc_audio_ctx->outbuf,
 					enc_audio_ctx->outbuf_coded_size,
 					enc_audio_ctx->duration,
-					enc_audio_ctx->pts,
+          (uint64_t)enc_audio_ctx->pts,
 					enc_audio_ctx->flags);
 			break;
 
@@ -212,6 +255,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
  */
 void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 {
+
 	/*assertions*/
 	assert(encoder_ctx != NULL);
 	assert(encoder_ctx->enc_video_ctx != NULL);
@@ -231,7 +275,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 	}
 	else if(video_codec_data)
 	{
-		video_codec_id = video_codec_data->codec_context->codec_id;
+        video_codec_id = (int)video_codec_data->codec_context->codec_id;
 	}
 
 	if(verbosity > 1)
@@ -269,7 +313,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 				encoder_codec_data_t *audio_codec_data = (encoder_codec_data_t *) encoder_ctx->enc_audio_ctx->codec_data;
 				if(audio_codec_data)
 				{
-					int acodec_ind = get_audio_codec_list_index(audio_codec_data->codec_context->codec_id);
+                    int acodec_ind = get_audio_codec_list_index((int)audio_codec_data->codec_context->codec_id);
 					/*sample size - only used for PCM*/
 					int32_t a_bits = encoder_get_audio_bits(acodec_ind);
 					/*bit rate (compressed formats)*/
@@ -281,7 +325,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 						encoder_ctx->audio_samprate,
 						a_bits,
 						b_rate,
-						audio_codec_data->codec_context->codec_id,
+                        (int32_t)audio_codec_data->codec_context->codec_id,
 						encoder_ctx->enc_audio_ctx->avi_4cc);
 
 					if(audio_codec_data->codec_context->codec_id == AV_CODEC_ID_VORBIS)
@@ -296,6 +340,64 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 			avi_add_new_riff(avi_ctx);
 
 			break;
+
+        case ENCODER_MUX_MP4:
+
+            //av_register_all();
+            if(mp4_ctx != NULL)
+            {
+                mp4_destroy_context(mp4_ctx);
+                mp4_ctx = NULL;
+            }
+            mp4_ctx = mp4_create_context(filename);
+
+            mp4_video_stream = (OutputStream*)calloc(1,sizeof(OutputStream));
+
+            mp4_add_video_stream(
+                mp4_ctx,
+                video_codec_data,
+                mp4_video_stream);
+            int ret = avcodec_parameters_from_context(mp4_video_stream->st->codecpar, mp4_video_stream->enc);
+                if (ret < 0) {
+                    fprintf(stderr, "Could not copy the stream parameters\n");
+                    exit(1);
+                }
+            if(encoder_ctx->enc_audio_ctx != NULL &&
+                encoder_ctx->audio_channels > 0)
+            {
+                encoder_codec_data_t *audio_codec_data = (encoder_codec_data_t *) encoder_ctx->enc_audio_ctx->codec_data;
+                if(audio_codec_data)
+                {
+                    mp4_audio_stream = (OutputStream*)calloc(1,sizeof(OutputStream));
+                    mp4_add_audio_stream(
+                    mp4_ctx,
+                    audio_codec_data,
+                    mp4_audio_stream);
+                }
+                 if(!video_codec_data->private_options)
+                    av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+
+                 int ret = avcodec_parameters_from_context(mp4_audio_stream->st->codecpar, mp4_audio_stream->enc);
+                     if (ret < 0) {
+                         fprintf(stderr, "Could not copy the stream parameters\n");
+                         exit(1);
+                     }
+                 //if(!audio_codec_data->private_options)
+                    //av_dict_copy(opt,video_codec_data->private_options, AV_DICT_DONT_OVERWRITE);
+            }
+
+            ret = avio_open(&mp4_ctx->pb, filename, AVIO_FLAG_WRITE);
+            if (ret < 0) {
+                fprintf(stderr, "Could not open '%s': %s\n", filename,
+                        av_err2str(ret));
+            }
+            ret= avformat_write_header(mp4_ctx, opt);
+            if(ret < 0)
+            {
+                fprintf(stderr, "Error occurred when opening output file: %s\n",
+                                av_err2str(ret));
+            }
+            break;
 
 		default:
 		case ENCODER_MUX_MKV:
@@ -345,7 +447,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 						encoder_ctx->audio_samprate,
 						a_bits,
 						b_rate,
-						audio_codec_data->codec_context->codec_id,
+                        (int32_t)audio_codec_data->codec_context->codec_id,
 						encoder_ctx->enc_audio_ctx->avi_4cc);
 
 					audio_stream->extra_data_size = encoder_set_audio_mkvCodecPriv(encoder_ctx);
@@ -375,6 +477,7 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
  */
 void encoder_muxer_close(encoder_context_t *encoder_ctx)
 {
+
 	switch (encoder_ctx->muxer_id)
 	{
 		case ENCODER_MUX_AVI:
@@ -384,17 +487,17 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
 				float tottime = (float) ((int64_t) (encoder_ctx->enc_video_ctx->pts) / 1000000); // convert to miliseconds
 
 				if (verbosity > 0)
-					printf("ENCODER: (avi) time = %f\n", tottime);
+                    printf("ENCODER: (avi) time = %f\n", (double)tottime);
 
 				if (tottime > 0)
 				{
 					/*try to find the real frame rate*/
-					avi_ctx->fps = (double) (encoder_ctx->enc_video_ctx->framecount * 1000) / tottime;
+                    avi_ctx->fps = (double) (encoder_ctx->enc_video_ctx->framecount * 1000) / (double)tottime;
 				}
 
 				if (verbosity > 0)
 					printf("ENCODER: (avi) %"PRId64" frames in %f ms [ %f fps]\n",
-						encoder_ctx->enc_video_ctx->framecount, tottime, avi_ctx->fps);
+                        encoder_ctx->enc_video_ctx->framecount, (double)tottime, avi_ctx->fps);
 
 				//close sound ??
 
@@ -404,6 +507,51 @@ void encoder_muxer_close(encoder_context_t *encoder_ctx)
 				avi_ctx = NULL;
 			}
 			break;
+
+        case ENCODER_MUX_MP4:
+            if(mp4_ctx)
+            {
+                av_write_trailer(mp4_ctx);
+                avio_closep(&mp4_ctx->pb);
+
+//                if(!!mp4_video_stream->enc)
+//                    avcodec_free_context(&mp4_video_stream->enc);
+                if(!!mp4_video_stream->frame)
+                    av_frame_free(&mp4_video_stream->frame);
+                if(!!mp4_video_stream->tmp_frame)
+                    av_frame_free(&mp4_video_stream->tmp_frame);
+                if(!!mp4_video_stream->sws_ctx)
+                    sws_freeContext(mp4_video_stream->sws_ctx);
+                if(!!mp4_video_stream->swr_ctx)
+                    swr_free(&mp4_video_stream->swr_ctx);
+                if(!!mp4_video_stream)
+                {
+                    free(mp4_video_stream);
+                    mp4_video_stream = NULL;
+                }
+
+                //if(!!mp4_audio_stream->enc)
+                    //avcodec_free_context(&mp4_audio_stream->enc);
+                if(!!mp4_audio_stream->frame)
+                    av_frame_free(&mp4_audio_stream->frame);
+                if(!!mp4_audio_stream->tmp_frame)
+                    av_frame_free(&mp4_audio_stream->tmp_frame);
+                if(!!mp4_audio_stream->sws_ctx)
+                    sws_freeContext(mp4_audio_stream->sws_ctx);
+                if(!!mp4_audio_stream->swr_ctx)
+                    swr_free(&mp4_audio_stream->swr_ctx);
+                if(!!mp4_audio_stream)
+                {
+                    free(mp4_audio_stream);
+                    mp4_audio_stream = NULL;
+                }
+
+                mp4_destroy_context(mp4_ctx);
+
+                mp4_ctx = NULL;
+                //malloc_trim(0);
+            }
+        break;
 
 		default:
 		case ENCODER_MUX_MKV:
@@ -447,15 +595,15 @@ int encoder_disk_supervisor(int treshold, const char *path)
 
     statfs(path, &buf);
 
-    total_kbytes= buf.f_blocks * (buf.f_bsize/1024);
-    free_kbytes= buf.f_bavail * (buf.f_bsize/1024);
+    total_kbytes= buf.f_blocks * (__fsblkcnt_t)(buf.f_bsize/1024);
+    free_kbytes= buf.f_bavail * (__fsblkcnt_t)(buf.f_bsize/1024);
 
     if(total_kbytes > 0)
         percent = (int) ((1.0f-((float)free_kbytes/(float)total_kbytes))*100.0f);
     else
     {
         fprintf(stderr, "ENCODER: couldn't get disk stats for %s\n", path);
-        return (1); /* don't invalidate video capture*/
+        return (0); /* don't invalidate video capture*/
     }
 
     if(verbosity > 0)
@@ -463,7 +611,7 @@ int encoder_disk_supervisor(int treshold, const char *path)
             path, (unsigned long long) free_kbytes,
             (unsigned long long) total_kbytes, percent, treshold);
 
-    if(free_kbytes < treshold)
+    if(free_kbytes < (uint64_t)treshold)
     {
         fprintf(stderr,"ENCODER: Not enough free disk space (%lluKb) left on disk, need > %ik \n",
             (unsigned long long) free_kbytes, treshold);

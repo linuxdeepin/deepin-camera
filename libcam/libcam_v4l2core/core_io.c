@@ -158,7 +158,7 @@ char *smart_cat(const char *dest, const char c, const char *str1)
 	char *my_cat = calloc(size, sizeof(char));
 	if(my_cat == NULL)
 	{
-		fprintf(stderr,"CHEESE: FATAL memory allocation failure (smart_cat): %s\n", strerror(errno));
+        fprintf(stderr,"deepin-camera: FATAL memory allocation failure (smart_cat): %s\n", strerror(errno));
 		exit(-1);
 	}
 	char *my_p = my_cat;
@@ -178,7 +178,7 @@ char *smart_cat(const char *dest, const char c, const char *str1)
 	my_cat[size_dest + size_c + size_str1] = '\0';
 
 	if(debug_level > 1)
-		printf("CHEESE: (smart_cat) dest=%s(%i) len_c=%c(%i) len_str1=%s(%i) => %s\n",
+        printf("deepin-camera: (smart_cat) dest=%s(%i) len_c=%c(%i) len_str1=%s(%i) => %s\n",
 			dest, size_dest, c, size_c, str1, size_str1, my_cat);
 	return my_cat;
 }
@@ -205,7 +205,7 @@ char *get_file_basename(const char *filename)
 		basename = strdup(filename);
 
 	if(debug_level > 1)
-		printf("CHEESE: basename for %s is %s\n", filename, basename);
+        printf("deepin-camera: basename for %s is %s\n", filename, basename);
 
 	return basename;
 }
@@ -234,7 +234,7 @@ char *get_file_pathname(const char *filename)
 	}
 
 	if(debug_level > 1)
-		printf("CHEESE: path for %s is %s\n", filename, pathname);
+        printf("deepin-camera: path for %s is %s\n", filename, pathname);
 
 	return pathname;
 }
@@ -262,7 +262,7 @@ char *get_file_extension(const char *filename)
 		extname = strdup(name + 1);
 
 	if(debug_level > 1)
-		printf("CHEESE: extension for %s is %s\n", filename, extname);
+        printf("deepin-camera: extension for %s is %s\n", filename, extname);
 
 	free(basename);
 
@@ -296,7 +296,7 @@ char *set_file_extension(const char *filename, const char *ext)
 	free(noext_filename);
 
 	if(debug_level > 1)
-		printf("CHEESE: changed file extension to %s\n", new_filename);
+        printf("deepin-camera: changed file extension to %s\n", new_filename);
 	return new_filename;
 }
 
@@ -324,6 +324,7 @@ char *set_file_extension(const char *filename, const char *ext)
 
 size_t dirent_buf_size(DIR * dirp)
 {
+    (void)dirp;
     long name_max;
     size_t name_end;
 #   if defined(HAVE_FPATHCONF) && defined(HAVE_DIRFD) \
@@ -342,7 +343,7 @@ size_t dirent_buf_size(DIR * dirp)
 #           error "buffer size for readdir_r cannot be determined"
 #       endif
 #   endif
-    name_end = (size_t)offsetof(struct dirent, d_name) + name_max + 1;
+    name_end = (size_t)offsetof(struct dirent, d_name) + (size_t)name_max + 1;
     return (name_end > sizeof(struct dirent)
             ? name_end : sizeof(struct dirent));
 }
@@ -368,13 +369,13 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
 
 	if(dirp == NULL)
 	{
-		fprintf(stderr, "CHEESE: Error Couldn't open %s directory\n", path);
+        fprintf(stderr, "deepin-camera: Error Couldn't open %s directory\n", path);
 		return suffix;
 	}
 	size = dirent_buf_size(dirp);
 	if(size == 0)
 	{
-		perror("CHEESE: dirent_buf_size returned 0");
+        perror("deepin-camera: dirent_buf_size returned 0");
 		closedir(dirp);
 		return suffix;
 	}
@@ -405,11 +406,11 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
             if((ent = readdir(dirp)) != NULL)
             {
 		if(debug_level > 3)
-			printf("CHEESE: (get_file_suffix) checking %s\n", ent->d_name);
+            printf("deepin-camera: (get_file_suffix) checking %s\n", ent->d_name);
 		if (strncmp(ent->d_name, noextname, noextsize) == 0)
 		{
 			if(debug_level > 3)
-				printf("CHEESE: (get_file_suffix) prefix matched (%s)\n", noextname);
+                printf("deepin-camera: (get_file_suffix) prefix matched (%s)\n", noextname);
 
 			char *ext = strrchr(ent->d_name, '.');
 			if (((extension != NULL) && (ext != NULL) && (strcmp(ext + 1, extension) == 0)) ||
@@ -420,7 +421,7 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
 				sscanf(ent->d_name, format_str, sfixstr);
 
 				if(debug_level > 3)
-					printf("CHEESE: (get_file_suffix) matched with suffix %s\n", sfixstr);
+                    printf("deepin-camera: (get_file_suffix) matched with suffix %s\n", sfixstr);
 
 				sfix = strtoull(sfixstr, (char **)NULL, 10);
 
@@ -432,7 +433,7 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
             else
             {
                 if(errno)
-                    fprintf(stderr,"CHEESE: error while reading dir: %s\n", strerror(errno));
+                    fprintf(stderr,"deepin-camera: error while reading dir: %s\n", strerror(errno));
 
                 closedir(dirp);
 
@@ -440,12 +441,12 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
                 free(extension);
 
                 if(debug_level > 1)
-                    printf("CHEESE: (get_file_suffix) %s has sufix %llu\n", filename, suffix);
+                    printf("deepin-camera: (get_file_suffix) %s has sufix %llu\n", filename, suffix);
                 return suffix;
             }
         }
 
-        fprintf(stderr,"CHEESE: error while reading dir: null DIR pointer while readind entries\n");
+        fprintf(stderr,"deepin-camera: error while reading dir: null DIR pointer while readind entries\n");
 
         closedir(dirp);
 
@@ -453,7 +454,7 @@ unsigned long long get_file_suffix(const char *path, const char* filename)
         free(extension);
 
         if(debug_level > 1)
-            printf("CHEESE: (get_file_suffix) %s has sufix %llu\n", filename, suffix);
+            printf("deepin-camera: (get_file_suffix) %s has sufix %llu\n", filename, suffix);
         return suffix;
 }
 
@@ -494,7 +495,7 @@ char *add_file_suffix(const char *path, const char *filename)
 	char *new_name = calloc(size_name + size_suffix + 3, sizeof(char));
 	if(new_name == NULL)
 	{
-		fprintf(stderr,"CHEESE: FATAL memory allocation failure (add_file_suffix): %s\n", strerror(errno));
+        fprintf(stderr,"deepin-camera: FATAL memory allocation failure (add_file_suffix): %s\n", strerror(errno));
 		exit(-1);
 	}
 	if(noextname && extension)

@@ -36,7 +36,6 @@
 #include "core_io.h"
 #include "gui.h"
 #include "config.h"
-#include "config.h"
 
 #define MAXLINE 100 /*100 char lines max*/
 
@@ -44,25 +43,27 @@ extern int debug_level;
 
 static config_t my_config =
 {
-	.width = 640,
-	.height = 480,
-    .format = V4L2_PIX_FMT_YUYV,
+    .width = 1920,
+    .height = 1080,
+    .device_name = NULL,
+    .device_location = NULL,
+    .format = V4L2_PIX_FMT_MJPEG,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",
 	.capture = "mmap",
-    .video_codec = "h264",
-    .audio_codec = "mp3",
+    .video_codec = "mjpg",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
+    .audio_codec = "aac",
 	.profile_name = NULL,
 	.profile_path = NULL,
-	.video_name = NULL,
+    .video_name = NULL,
 	.video_path = NULL,
 	.photo_name = NULL,
 	.photo_path = NULL,
 	.video_sufix = 1,
 	.photo_sufix = 1,
 	.fps_num = 1,
-	.fps_denom = 25,
+    .fps_denom = 30,
     .audio_device = -1,/*will use API default in this case*/
 	.video_fx = 0, /*no video fx*/
 	.audio_fx = 0, /*no audio fx*/
@@ -87,7 +88,7 @@ int config_save(const char *filename)
 	/*open file for write*/
 	if((fp = fopen(filename,"w")) == NULL)
 	{
-        fprintf(stderr, "CHEESE: couldn't open %s for write: %s\n", filename, strerror(errno));
+        fprintf(stderr, "deepin-camera: couldn't open %s for write: %s\n", filename, strerror(errno));
 		return -1;
 	}
 
@@ -95,12 +96,16 @@ int config_save(const char *filename)
     setlocale(LC_NUMERIC, "C");
 
 	/*write config data*/
-	fprintf(fp, "#Guvcview %s config file\n", VERSION);
+//	fprintf(fp, "#Deepin-camera %s config file\n", VERSION);
 	fprintf(fp, "\n");
 	fprintf(fp, "#video input width\n");
 	fprintf(fp, "width=%i\n", my_config.width);
 	fprintf(fp, "#video input height\n");
 	fprintf(fp, "height=%i\n", my_config.height);
+    fprintf(fp, "#device name\n");
+    fprintf(fp, "device_name=%s\n",my_config.device_name);
+    fprintf(fp, "#device location\n");
+    fprintf(fp, "device_location=%s\n",my_config.device_location);
 	fprintf(fp, "#video input format\n");
 	fprintf(fp, "v4l2_format=%u\n", my_config.format);
 	fprintf(fp, "#video input capture method\n");
@@ -154,12 +159,12 @@ int config_save(const char *filename)
 	/* close file after fsync (sync file data to disk) */
 	if (fsync(fileno(fp)) || fclose(fp))
 	{
-        fprintf(stderr, "CHEESE: error writing configuration data to file: %s\n", strerror(errno));
+        fprintf(stderr, "deeepin_camera: error writing configuration data to file: %s\n", strerror(errno));
 		return -1;
 	}
 
 	if(debug_level > 1)
-        printf("CHEESE: saving config to %s\n", filename);
+        printf("deeepin_camera: saving config to %s\n", filename);
 
 	return 0;
 }
@@ -183,7 +188,7 @@ int config_load(const char *filename)
 	/*open file for read*/
 	if((fp = fopen(filename,"r")) == NULL)
 	{
-        fprintf(stderr, "CHEESE: couldn't open %s for read: %s\n", filename, strerror(errno));
+        fprintf(stderr, "deepin-camera: couldn't open %s for read: %s\n", filename, strerror(errno));
 		return -1;
 	}
 
@@ -202,7 +207,7 @@ int config_load(const char *filename)
 		if(size < 1 || *bufp == '#')
 		{
 			if(debug_level > 1)
-                printf("CHEESE: (config) empty or commented line (%i)\n", line);
+                printf("deepin-camera: (config) empty or commented line (%i)\n", line);
 			continue;
 		}
 
@@ -226,7 +231,7 @@ int config_load(const char *filename)
 		/*skip invalid lines */
 		if(!token || !value || strlen(token) < 1 || strlen(value) < 1)
 		{
-            fprintf(stderr, "CHEESE: (config) skiping invalid config entry at line %i\n", line);
+            fprintf(stderr, "deepin-camera: (config) skiping invalid config entry at line %i\n", line);
 			if(token)
 				free(token);
 			if(value)
@@ -239,84 +244,98 @@ int config_load(const char *filename)
 			my_config.width = (int) strtoul(value, NULL, 10);
 		else if(strcmp(token, "height") == 0)
 			my_config.height = (int) strtoul(value, NULL, 10);
-		else if(strcmp(token, "v4l2_format") == 0)
-			my_config.format = (uint32_t) strtoul(value, NULL, 10);
-		else if(strcmp(token, "capture") == 0)
-			strncpy(my_config.capture, value, 4);
-		else if(strcmp(token, "audio") == 0)
-			strncpy(my_config.audio, value, 5);
-		else if(strcmp(token, "gui") == 0)
-			strncpy(my_config.gui, value, 4);
-		else if(strcmp(token, "render") == 0)
-			strncpy(my_config.render, value, 4);
-		else if(strcmp(token, "video_codec") == 0)
-			strncpy(my_config.video_codec, value, 4);
-		else if(strcmp(token, "audio_codec") == 0)
-			strncpy(my_config.audio_codec, value, 4);
-		else if(strcmp(token, "profile_name") == 0 && strlen(value) > 2)
-		{
-			if(my_config.profile_name)
-				free(my_config.profile_name);
-			my_config.profile_name = strdup(value);
-            set_profile_name(value);
-		}
-		else if(strcmp(token, "profile_path") == 0)
-		{
-			if(my_config.profile_path)
-				free(my_config.profile_path);
-			my_config.profile_path = strdup(value);
-            set_profile_path(value);
-		}
-		else if(strcmp(token, "video_name") == 0  && strlen(value) > 2)
-		{
-			if(my_config.video_name)
-				free(my_config.video_name);
-			my_config.video_name = strdup(value);
-		}
-		else if(strcmp(token, "video_path") == 0)
-		{
-			if(my_config.video_path)
-				free(my_config.video_path);
-			my_config.video_path = strdup(value);
-		}
-		else if(strcmp(token, "photo_name") == 0  && strlen(value) > 2)
-		{
-			if(my_config.photo_name)
-				free(my_config.photo_name);
-			my_config.photo_name = strdup(value);
-		}
-		else if(strcmp(token, "photo_path") == 0)
-		{
-			if(my_config.photo_path)
-				free(my_config.photo_path);
-			my_config.photo_path = strdup(value);
-		}
-		else if(strcmp(token, "video_sufix") == 0)
-		{
-			my_config.video_sufix = (int) strtoul(value, NULL, 10);
-            set_video_sufix_flag(my_config.video_sufix);
-		}
-		else if(strcmp(token, "photo_sufix") == 0)
-		{
-			my_config.photo_sufix = (int) strtoul(value, NULL, 10);
-            set_photo_sufix_flag(my_config.photo_sufix);
-		}
-		else if(strcmp(token, "fps_num") == 0)
-			my_config.fps_num = (int) strtoul(value, NULL, 10);
-		else if(strcmp(token, "fps_denom") == 0)
-			my_config.fps_denom = (int) strtoul(value, NULL, 10);
-		else if(strcmp(token, "audio_device") == 0)
-			my_config.audio_device = (int) strtoul(value, NULL, 10);
-		else if(strcmp(token, "video_fx") == 0)
-			my_config.video_fx = (uint32_t) strtoul(value, NULL, 16);
-		else if(strcmp(token, "audio_fx") == 0)
-			my_config.audio_fx = (uint32_t) strtoul(value, NULL, 16);
-		else if(strcmp(token, "osd_mask") == 0)
-			my_config.osd_mask = (uint32_t) strtoul(value, NULL, 16);
-		else if(strcmp(token, "crosshair_color") == 0)
-			my_config.crosshair_color = (uint32_t) strtoul(value, NULL, 16);
-		else
-            fprintf(stderr, "CHEESE: (config) skiping invalid entry at line %i ('%s', '%s')\n", line, token, value);
+        else if(strcmp(token, "device_name") == 0 && strlen(value) > 0)
+        {
+            if(my_config.device_name)
+                free(my_config.device_name);
+            my_config.device_name = strdup(value);
+            set_device_name(value);
+        }
+        else if(strcmp(token, "device_location") == 0 && strlen(value) > 0)
+        {
+            if(my_config.device_location)
+                free(my_config.device_location);
+            my_config.device_location = strdup(value);
+            set_device_location(value);
+        }
+        else if(strcmp(token, "v4l2_format") == 0)
+            my_config.format = (uint32_t) strtoul("V4L2_PIX_FMT_MJPEG", NULL, 10);
+//		else if(strcmp(token, "capture") == 0)
+//			strncpy(my_config.capture, value, 4);
+//		else if(strcmp(token, "audio") == 0)
+//			strncpy(my_config.audio, value, 5);
+//		else if(strcmp(token, "gui") == 0)
+//			strncpy(my_config.gui, value, 4);
+//		else if(strcmp(token, "render") == 0)
+//			strncpy(my_config.render, value, 4);
+//		else if(strcmp(token, "video_codec") == 0)
+//			strncpy(my_config.video_codec, value, 4);
+//		else if(strcmp(token, "audio_codec") == 0)
+//			strncpy(my_config.audio_codec, value, 4);
+//		else if(strcmp(token, "profile_name") == 0 && strlen(value) > 2)
+//		{
+//			if(my_config.profile_name)
+//				free(my_config.profile_name);
+//			my_config.profile_name = strdup(value);
+//            set_profile_name(value);
+//		}
+//		else if(strcmp(token, "profile_path") == 0)
+//		{
+//			if(my_config.profile_path)
+//				free(my_config.profile_path);
+//			my_config.profile_path = strdup(value);
+//            set_profile_path(value);
+//		}
+        else if(strcmp(token, "video_name") == 0  && strlen(value) > 2)
+        {
+            if(my_config.video_name)
+                free(my_config.video_name);
+            my_config.video_name = strdup(value);
+        }
+        else if(strcmp(token, "video_path") == 0)
+        {
+            if(my_config.video_path)
+                free(my_config.video_path);
+            my_config.video_path = strdup(value);
+        }
+        else if(strcmp(token, "photo_name") == 0  && strlen(value) > 2)
+        {
+            if(my_config.photo_name)
+                free(my_config.photo_name);
+            my_config.photo_name = strdup(value);
+        }
+        else if(strcmp(token, "photo_path") == 0)
+        {
+            if(my_config.photo_path)
+                free(my_config.photo_path);
+            my_config.photo_path = strdup(value);
+        }
+//		else if(strcmp(token, "video_sufix") == 0)
+//		{
+//			my_config.video_sufix = (int) strtoul(value, NULL, 10);
+//            set_video_sufix_flag(my_config.video_sufix);
+//		}
+//		else if(strcmp(token, "photo_sufix") == 0)
+//		{
+//			my_config.photo_sufix = (int) strtoul(value, NULL, 10);
+//            set_photo_sufix_flag(my_config.photo_sufix);
+//		}
+//		else if(strcmp(token, "fps_num") == 0)
+//			my_config.fps_num = (int) strtoul(value, NULL, 10);
+//		else if(strcmp(token, "fps_denom") == 0)
+//			my_config.fps_denom = (int) strtoul(value, NULL, 10);
+//		else if(strcmp(token, "audio_device") == 0)
+//			my_config.audio_device = (int) strtoul(value, NULL, 10);
+//		else if(strcmp(token, "video_fx") == 0)
+//			my_config.video_fx = (uint32_t) strtoul(value, NULL, 16);
+//		else if(strcmp(token, "audio_fx") == 0)
+//			my_config.audio_fx = (uint32_t) strtoul(value, NULL, 16);
+//		else if(strcmp(token, "osd_mask") == 0)
+//			my_config.osd_mask = (uint32_t) strtoul(value, NULL, 16);
+//		else if(strcmp(token, "crosshair_color") == 0)
+//			my_config.crosshair_color = (uint32_t) strtoul(value, NULL, 16);
+//		else
+//            fprintf(stderr, "deepin-camera: (config) skiping invalid entry at line %i ('%s', '%s')\n", line, token, value);
 
 		if(token)
 			free(token);
@@ -326,7 +345,7 @@ int config_load(const char *filename)
 
 	//if(errno)
 	//{
-    //	fprintf(stderr, "CHEESE: couldn't read line %i of config file: %s\n", line, strerror(errno));
+    //	fprintf(stderr, "deepin-camera: couldn't read line %i of config file: %s\n", line, strerror(errno));
 	//	fclose(fp);
 	//	return -1;
 	//}

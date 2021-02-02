@@ -59,46 +59,6 @@ typedef struct _jpeg_file_header_t
 	uint8_t HTN;/*height Thumbnail 0*/
 } __attribute__ ((packed)) jpeg_file_header_t;
 
-typedef struct _jpeg_encoder_ctx_t
-{
-	uint16_t	image_width;
-	uint16_t	image_height;
-	uint16_t	mcu_width;
-	uint16_t	mcu_height;
-	uint16_t	horizontal_mcus;
-	uint16_t	vertical_mcus;
-
-	uint16_t	rows;
-	uint16_t	cols;
-
-	uint16_t	length_minus_mcu_width;
-	uint16_t	length_minus_width;
-	uint16_t	incr;
-	uint16_t	mcu_width_size;
-	uint16_t	offset;
-
-	int16_t		ldc1;
-	int16_t		ldc2;
-	int16_t		ldc3;
-
-	uint32_t	lcode;
-	uint16_t	bitindex;
-
-	/* MCUs */
-	int16_t		Y1 [64];
-	int16_t		Y2 [64];
-	int16_t		Temp [64];
-	int16_t		CB [64];
-	int16_t		CR [64];
-
-	/* Quantization Tables */
-	uint8_t		Lqt [64];
-	uint8_t		Cqt [64];
-	uint16_t	ILqt [64];
-	uint16_t	ICqt [64];
-
-} jpeg_encoder_ctx_t;
-
 #define PUTBITS	\
 {	\
 	bits_in_next_word = (int16_t) (jpeg_ctx->bitindex + numbits - 32);	\
@@ -410,7 +370,7 @@ static void read_422_format (jpeg_encoder_ctx_t *jpeg_ctx, uint8_t *input)
  *
  * returns: none
  */
-static void initialize_quantization_tables (jpeg_encoder_ctx_t *jpeg_ctx)
+void initialize_quantization_tables (jpeg_encoder_ctx_t *jpeg_ctx)
 {
 	/*assertions*/
 	assert(jpeg_ctx != NULL);
@@ -649,7 +609,7 @@ static uint8_t *close_bitstream (jpeg_encoder_ctx_t *jpeg_ctx, uint8_t *output)
  *
  * returns: none
  */
-static void initialization (jpeg_encoder_ctx_t *jpeg_ctx, int image_width, int image_height)
+void initialization (jpeg_encoder_ctx_t *jpeg_ctx, int image_width, int image_height)
 {
 	/*assertions*/
 	assert(jpeg_ctx != NULL);
@@ -959,7 +919,7 @@ static uint8_t *write_markers(jpeg_encoder_ctx_t *jpeg_ctx, uint8_t *output, int
  *
  * returns: ouput size
  */
-static int encode_jpeg (uint8_t *input, uint8_t *output,
+int encode_jpeg (uint8_t *input, uint8_t *output,
 	jpeg_encoder_ctx_t *jpeg_ctx, int huff)
 {
 	/*assertions*/
@@ -979,7 +939,7 @@ static int encode_jpeg (uint8_t *input, uint8_t *output,
 	/* Writing Marker Data */
 	tmp_optr = write_markers (jpeg_ctx, tmp_optr, huff);
 
-	uint8_t *yuv422 = calloc(jpeg_ctx->image_width * jpeg_ctx->image_height * 2, sizeof(uint8_t));
+    uint8_t *yuv422 = (uint8_t*)calloc(jpeg_ctx->image_width * jpeg_ctx->image_height * 2, sizeof(uint8_t));
 	if(yuv422 == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: couldn't allocate memory for jpeg encoder (fatal)\n");

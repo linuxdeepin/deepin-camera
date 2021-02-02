@@ -264,7 +264,7 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 			{
 				struct libusb_config_descriptor *config = NULL;
 
-				if (libusb_get_config_descriptor (device, i, &config) == 0)
+                if (libusb_get_config_descriptor (device, (uint8_t)i, &config) == 0)
 				{
 					int j = 0;
 					for (j = 0; j < config->bNumInterfaces; j++)
@@ -280,16 +280,16 @@ uint8_t get_guid_unit_id (v4l2_dev_t *vd, uint8_t *guid)
 								interface->bInterfaceSubClass != USB_VIDEO_CONTROL)
 								continue;
 							ptr = interface->extra;
-							while (ptr - interface->extra +
-								sizeof (xu_descriptor) < interface->extra_length)
+                            while (ptr - interface->extra +
+                                sizeof (xu_descriptor) < (unsigned long)interface->extra_length)
 							{
-								xu_descriptor *desc = (xu_descriptor *) ptr;
+                                xu_descriptor *desc = (xu_descriptor *) ptr;
 
 								if (desc->bDescriptorType == USB_VIDEO_CONTROL_INTERFACE &&
 									desc->bDescriptorSubType == USB_VIDEO_CONTROL_XU_TYPE &&
 									memcmp (desc->guidExtensionCode, guid, 16) == 0)
 								{
-									unit_id = desc->bUnitID;
+                                    unit_id = (uint8_t)desc->bUnitID;
 
 									libusb_unref_device (device);
 									/*it's a match*/
@@ -342,7 +342,7 @@ int init_xu_ctrls(v4l2_dev_t *vd)
 	{
 		if(verbosity > 0)
 			printf("V4L2_CORE: mapping control for %s\n", xu_mappings[i].name);
-		if ((err=xioctl(vd->fd, UVCIOC_CTRL_MAP, &xu_mappings[i])) < 0)
+        if ((err=xioctl(vd->fd, (int)UVCIOC_CTRL_MAP, &xu_mappings[i])) < 0)
 		{
 			if ((errno!=EEXIST) || (errno != EACCES))
 			{

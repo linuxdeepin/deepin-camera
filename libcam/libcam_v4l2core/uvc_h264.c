@@ -38,7 +38,8 @@
 
 #include "uvc_h264.h"
 #include "v4l2_formats.h"
-
+//LMH++
+#include <libavutil/imgutils.h>
 // GUID of the UVC H.264 extension unit: {A29E7641-DE04-47E3-8B2B-F4341AFF003B}
 #define GUID_UVCX_H264_XU {0x41, 0x76, 0x9E, 0xA2, 0x04, 0xDE, 0xE3, 0x47, 0x8B, 0x2B, 0xF4, 0x34, 0x1A, 0xFF, 0x00, 0x3B}
 
@@ -107,8 +108,8 @@ static void print_probe_commit_data(uvcx_video_config_probe_commit_t *data)
 	assert(data != NULL);
 
 	printf("uvcx_video_config_probe_commit:\n");
-	printf("\tFrameInterval: %i\n", data->dwFrameInterval);
-	printf("\tBitRate: %i\n", data->dwBitRate);
+    printf("\tFrameInterval: %u\n", data->dwFrameInterval);
+    printf("\tBitRate: %u\n", data->dwBitRate);
 	printf("\tHints: 0x%X\n", data->bmHints);
 	printf("\tConfigurationIndex: %i\n", data->wConfigurationIndex);
 	printf("\tWidth: %i\n", data->wWidth);
@@ -116,8 +117,8 @@ static void print_probe_commit_data(uvcx_video_config_probe_commit_t *data)
 	printf("\tSliceUnits: %i\n", data->wSliceUnits);
 	printf("\tSliceMode: %i\n", data->wSliceMode);
 	printf("\tProfile: %i\n", data->wProfile);
-	printf("\tIFramePeriod: %i\n", data->wIFramePeriod);
-	printf("\tEstimatedVideoDelay: %i\n",data->wEstimatedVideoDelay);
+    printf("\tIFramePeriod: %u\n", data->wIFramePeriod);
+    printf("\tEstimatedVideoDelay: %u\n",data->wEstimatedVideoDelay);
 	printf("\tEstimatedMaxConfigDelay: %i\n",data->wEstimatedMaxConfigDelay);
 	printf("\tUsageType: %i\n",data->bUsageType);
 	printf("\tRateControlMode: %i\n",data->bRateControlMode);
@@ -358,7 +359,7 @@ void add_h264_format(v4l2_dev_t *vd)
 
 	vd->list_stream_formats = realloc(
 		vd->list_stream_formats,
-		fmtind * sizeof(v4l2_stream_formats_t));
+        (size_t)fmtind * sizeof(v4l2_stream_formats_t));
 	if(vd->list_stream_formats == NULL)
 	{
 		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -385,7 +386,7 @@ void add_h264_format(v4l2_dev_t *vd)
 		res_index++;
 		vd->list_stream_formats[fmtind-1].list_stream_cap = realloc(
 			vd->list_stream_formats[fmtind-1].list_stream_cap,
-			res_index * sizeof(v4l2_stream_cap_t));
+            (size_t)res_index * sizeof(v4l2_stream_cap_t));
 		if(vd->list_stream_formats[fmtind-1].list_stream_cap == NULL)
 		{
 			fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -410,7 +411,7 @@ void add_h264_format(v4l2_dev_t *vd)
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].numb_frates = frate_index;
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num = realloc(
 				vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num,
-				frate_index * sizeof(int));
+                (size_t)frate_index * sizeof(int));
 			if(vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -420,7 +421,7 @@ void add_h264_format(v4l2_dev_t *vd)
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_num[frate_index-1] = framerate_num;
 			vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom = realloc(
 				vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom,
-				frate_index * sizeof(int));
+                (size_t)frate_index * sizeof(int));
 			if(vd->list_stream_formats[fmtind-1].list_stream_cap[res_index-1].framerate_denom == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (add_h264_format): %s\n", strerror(errno));
@@ -458,10 +459,10 @@ void set_h264_muxed_format(v4l2_dev_t *vd)
 	vd->h264_no_probe_default = 0;
 
 	/*set resolution*/
-	config_probe_req->wWidth = vd->format.fmt.pix.width;
-	config_probe_req->wHeight = vd->format.fmt.pix.height;
+    config_probe_req->wWidth = (uint16_t)vd->format.fmt.pix.width;
+    config_probe_req->wHeight = (uint16_t)vd->format.fmt.pix.height;
 	/*set frame rate in 100ns units*/
-	uint32_t frame_interval = (vd->fps_num * 1000000000LL / vd->fps_denom)/100;
+    uint32_t frame_interval = ((uint32_t)vd->fps_num * 1000000000LL / (uint32_t)vd->fps_denom)/100;
 	config_probe_req->dwFrameInterval = frame_interval;
 
 	/*set the aux stream (h264)*/
@@ -487,7 +488,7 @@ void set_h264_muxed_format(v4l2_dev_t *vd)
 	}
 	if(config_probe_req->dwFrameInterval != frame_interval)
 	{
-		fprintf(stderr, "V4L2_CORE: H264 config probe: requested frame interval %i but got %i\n",
+        fprintf(stderr, "V4L2_CORE: H264 config probe: requested frame interval %u but got %u\n",
 			frame_interval, config_probe_req->dwFrameInterval);
 	}
 	/*commit the format*/
@@ -1046,7 +1047,7 @@ int h264_init_decoder(int width, int height)
 #endif
 
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-	h264_ctx->pic_size = av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
+    h264_ctx->pic_size = av_image_get_buffer_size(h264_ctx->context->pix_fmt, width, height, 1);
 #else
 	h264_ctx->pic_size = avpicture_get_size(h264_ctx->context->pix_fmt, width, height);
 #endif

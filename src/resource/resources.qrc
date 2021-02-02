@@ -1,6 +1,30 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/logo.svg</file>
         <file>images/123.jpg</file>
+        <file>resource/settings.json</file>
+        <file>images/logo/deepin-camera-96px.svg</file>
+        <file>images/logo/deepin-camera-512px.svg</file>
+        <file>images/logo/deepin-camera-32px.svg</file>
+        <file>images/icons/warning.svg</file>
+        <file>deepin-camera.svg</file>
+        <file>images/icons/light/Not connected.svg</file>
+        <file>images/icons/light/photograph.svg</file>
+        <file>images/icons/light/record video.svg</file>
+        <file>images/icons/light/select-hover.svg</file>
+        <file>images/icons/light/select-normal.svg</file>
+        <file>images/icons/light/select-press.svg</file>
+        <file>images/icons/light/Take up.svg</file>
+        <file>images/icons/light/button/photograph.svg</file>
+        <file>images/icons/light/button/Switch camera.svg</file>
+        <file>images/icons/light/button/transcribe.svg</file>
+        <file>images/icons/light/Stop Recording.svg</file>
+        <file>images/icons/light/Timer Status.svg</file>
+        <file>images/icons/dark/Not connected_dark.svg</file>
+        <file>images/icons/dark/Take up_dark.svg</file>
+        <file>images/icons/dark/button/photograph_dark.svg</file>
+        <file>images/icons/dark/button/record video_dark.svg</file>
+        <file>images/icons/dark/button/Switch camera_dark.svg</file>
+        <file>images/icons/dark/play_dark.svg</file>
+        <file>images/icons/light/play.svg</file>
     </qresource>
 </RCC>

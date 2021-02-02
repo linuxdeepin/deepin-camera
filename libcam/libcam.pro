@@ -9,7 +9,7 @@ TEMPLATE = lib
 CONFIG   += c++11 link_pkgconfig
 
 DEFINES += LIBCHEESE_LIBRARY
-
+#DEFINES +=QT_NO_WARNING_OUTPUT
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -49,6 +49,7 @@ SOURCES +=libcam_v4l2core/colorspaces.c \
     libcam_encoder/muxer.c \
     libcam_encoder/stream_io.c \
     libcam_encoder/video_codecs.c \
+    libcam_encoder/mp4.c \
     libcam_render/render.c \
     libcam_render/render_fx.c \
     libcam_render/render_osd_crosshair.c \
@@ -87,6 +88,7 @@ HEADERS +=libcam_v4l2core/colorspaces.h \
     libcam_encoder/gviewencoder.h \
     libcam_encoder/matroska.h \
     libcam_encoder/stream_io.h \
+    libcam_encoder/mp4.h \
     libcam_render/gview.h \
     libcam_render/gviewrender.h \
     libcam_render/render.h \
@@ -127,13 +129,13 @@ unix {
     } else {
         target.path = $${PREFIX}/lib
     }
-ClEAR_LIB_OBJ = rm -f ./*.o \
-            ../libcam/*.o \
-            ../libcam/libcam_v4l2core/*.o \
-            ../libcam/libcam_render/*.o \
-            ../libcam/libcam_encoder/*.o \
-            ../libcam/libcam_audio/*.o
-QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
+#ClEAR_LIB_OBJ = rm -f ./*.o \
+#            ../libcam/*.o \
+#            ../libcam/libcam_v4l2core/*.o \
+#            ../libcam/libcam_render/*.o \
+#            ../libcam/libcam_encoder/*.o \
+#            ../libcam/libcam_audio/*.o
+#QMAKE_POST_LINK += $$quote($$ClEAR_LIB_OBJ)
 }
 
-
+#QMAKE_CXXFLAGS += -Wno-enum-compare

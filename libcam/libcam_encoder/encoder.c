@@ -49,6 +49,8 @@
 #include "encoder.h"
 #include "stream_io.h"
 #include "gview.h"
+#include "camview.h"
+
 
 #if LIBAVUTIL_VER_AT_LEAST(52,2)
 #include <libavutil/channel_layout.h>
@@ -74,6 +76,37 @@ static video_buffer_t *video_ring_buffer = NULL;
 static int video_read_index = 0;
 static int video_write_index = 0;
 static int video_scheduler = 0;
+
+static int64_t video_pause_timestamp = 0;
+
+/*
+ * set pause timestamp
+ * args:
+ *   value - timestamp value
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_video_pause_timestamp(int64_t timestamp){
+    video_pause_timestamp = timestamp;
+}
+
+/*
+ * get pause timestamp
+ * args:
+ *   value: nome
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pause timestamp
+ */
+int64_t get_video_pause_timestamp()
+{
+    return video_pause_timestamp;
+}
 
 /*
  * set verbosity
@@ -484,23 +517,41 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 
     if(video_defaults->gop_size > 0)
+    {
         video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+    }
     else
+    {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
-
-	if(video_defaults->codec_id == AV_CODEC_ID_H264)
-	{
-	   video_codec_data->codec_context->me_range = 16;
-	   //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
-	   av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
-	}
-
-	if(video_defaults->codec_id == AV_CODEC_ID_HEVC)
-	{
-	   video_codec_data->codec_context->me_range = 16;
-	   av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
-	   av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
-	}
+    }
+    switch (video_defaults->codec_id)
+    {
+        case AV_CODEC_ID_H264:
+        {
+           video_codec_data->codec_context->me_range = 16;
+           //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
+           av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
+           av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+           av_dict_set(&video_codec_data->private_options,"tune", "zerolatency", 0);
+        }
+        break;
+    case AV_CODEC_ID_HEVC:
+        {
+           video_codec_data->codec_context->me_range = 16;
+           av_dict_set(&video_codec_data->private_options, "crf", "28", 0);
+           av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
+        }
+        break;
+    case AV_CODEC_ID_VP8:
+        {
+            av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
+            av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
+            av_dict_set(&video_codec_data->private_options, "speed","10",0);
+        }
+        break;
+    default:
+        break;
+    }
 
 	int ret = 0;
 	/* open codec*/
@@ -1122,6 +1173,7 @@ encoder_context_t *encoder_init(
  */
 int encoder_add_video_frame(uint8_t *frame, int size, int64_t timestamp, int isKeyframe)
 {
+//    cheese_print_log("encoder_add_video_frame");
 	if(!video_ring_buffer)
 		return -1;
 
@@ -1131,8 +1183,14 @@ int encoder_add_video_frame(uint8_t *frame, int size, int64_t timestamp, int isK
 		if(verbosity > 0)
 			printf("ENCODER: ref ts = %" PRId64 "\n", timestamp);
 	}
+    int64_t video_pause_timestamp = get_video_pause_timestamp();
+    if(video_pause_timestamp != 0)
+    {
+        reference_pts += video_pause_timestamp;
+        set_video_pause_timestamp(0);
+    }
 
-	int64_t pts = timestamp - reference_pts;
+    int64_t pts = timestamp - reference_pts;
 
 	__LOCK_MUTEX( __PMUTEX );
 	int flag = video_ring_buffer[video_write_index].flag;
@@ -1210,6 +1268,7 @@ int encoder_process_next_video_buffer(encoder_context_t *encoder_ctx)
 	NEXT_IND(video_read_index, video_ring_buffer_size);
 
 	__UNLOCK_MUTEX ( __PMUTEX );
+
 
 	encoder_write_video_data(encoder_ctx);
 
@@ -1439,13 +1498,16 @@ static int libav_encode(AVCodecContext *avctx, AVPacket *pkt, AVFrame *frame, in
   *got_packet = 0;
 
 	if(frame)
-	{
+    {
 		ret = avcodec_send_frame(avctx, frame);
-  	if (ret < 0)
-  		return ret; //if (ret == AVERROR(EAGAIN)) //input buffer is full
-	}
+        if (ret < 0)
+            return ret; //if (ret == AVERROR(EAGAIN)) //input buffer is full
+    }
 
   ret = avcodec_receive_packet(avctx, pkt);
+  char str[50];
+  sprintf(str,"avcode_receive_packet of ret=%d",ret);
+  //cheese_print_log(str);
   if (!ret)
   	*got_packet = 1;
   if (ret == AVERROR(EAGAIN)) //output buffer is empty
@@ -1503,6 +1565,9 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
 		}
 		/*outbuf_coded_size must already be set*/
 		outsize = enc_video_ctx->outbuf_coded_size;
+        char str[100];
+        sprintf(str,"enc_video_ctx->outbuf_coded_size of outsize is %d\n",outsize);
+        //cheese_print_log(str);
 		if(outsize > enc_video_ctx->outbuf_size)
 		{
 			enc_video_ctx->outbuf_size = outsize;
@@ -1574,6 +1639,10 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
 		fprintf(stderr, "ENCODER: Error encoding video frame: %i\n", ret);
 		return ret;
 	}
+
+    char str_gotpacket[30];
+    sprintf(str_gotpacket,"ret = %d, gotpacket = %d\n",ret, got_packet);
+    //cheese_print_log(str_gotpacket);
 
 	if(got_packet)
 	{
@@ -1669,7 +1738,6 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 	AVPacket *pkt = audio_codec_data->outpkt;
 	int got_packet = 0;
 	int ret = 0;
-
 
 	if(!enc_audio_ctx->flush_delayed_frames)
 	{
@@ -1816,6 +1884,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	/*close video codec*/
 	if(enc_video_ctx)
 	{
+
 		video_codec_data = (encoder_codec_data_t *) enc_video_ctx->codec_data;
 		if(video_codec_data)
 		{
@@ -1824,8 +1893,9 @@ void encoder_close(encoder_context_t *encoder_ctx)
 				avcodec_flush_buffers(video_codec_data->codec_context);
 				enc_video_ctx->flushed_buffers = 1;
 			}
-			avcodec_close(video_codec_data->codec_context);
-			free(video_codec_data->codec_context);
+
+            avcodec_close(video_codec_data->codec_context);
+                free(video_codec_data->codec_context);
 
 			av_dict_free(&(video_codec_data->private_options));
 
@@ -1851,6 +1921,8 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	/*close audio codec*/
 	if(enc_audio_ctx)
 	{
+        //测试video时长是否正常
+        printf("video_duration:%d",enc_audio_ctx->duration);
 		audio_codec_data = (encoder_codec_data_t *) enc_audio_ctx->codec_data;
 		if(audio_codec_data)
 		{
@@ -1879,6 +1951,8 @@ void encoder_close(encoder_context_t *encoder_ctx)
 	free(encoder_ctx);
 
 	/*reset static data*/
+    set_video_pause_timestamp(0);
+    set_video_timestamptmp(0);
 	last_video_pts = 0;
 	last_audio_pts = 0;
 	reference_pts  = 0;

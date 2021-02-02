@@ -73,7 +73,7 @@ __BEGIN_DECLS
 /*internally is always float*/
 typedef float sample_t;
 
-static int my_audio_codec_ind = 0;
+__attribute__((unused))static int my_audio_codec_ind = 0;
 
 typedef struct _audio_buff_t {
     void *data; /*sample buffer - usually sample_t (float)*/
