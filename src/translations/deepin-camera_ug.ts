@@ -47,7 +47,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>بېسىش</translation>
     </message>
 </context>
 <context>
@@ -146,15 +146,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation>رەسىم ساقلانغان ئورۇن:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation>سىن ساقلانغان ئورۇن:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation>ئاۋاز ئۈنۈمى</translation>
     </message>
 </context>
 <context>
@@ -181,19 +181,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>ئېچىش</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>بېسىش</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>ياردەم</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>تېزلەتمە كۆرۈنسۇن</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -201,7 +201,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>ئوڭ كۇنۇپكا كۆرۈنسۇن</translation>
     </message>
 </context>
 <context>

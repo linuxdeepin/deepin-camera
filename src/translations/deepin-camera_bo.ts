@@ -47,7 +47,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>པར་འདེབས། </translation>
     </message>
 </context>
 <context>
@@ -146,15 +146,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation>པར་ཉར་ས། </translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation>བརྙན་འཕྲིན་ཉར་ས། </translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation>སྒྲ་ནུས། </translation>
     </message>
 </context>
 <context>
@@ -181,19 +181,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>ཁ་འབྱེད། </translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>པར་འདེབས། </translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>རོགས་རམ། </translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>མྱུར་མཐེབ་མངོན་སྟོན། </translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -201,7 +201,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>འདེམས་བྱང་གཡས་མཐེབ་འགོ་སློང་། </translation>
     </message>
 </context>
 <context>
