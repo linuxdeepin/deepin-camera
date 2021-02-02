@@ -74,7 +74,7 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation>Alap</translation>
+        <translation>Alapvető</translation>
     </message>
     <message>
         <source>File location</source>

@@ -47,7 +47,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Vytisknout</translation>
     </message>
 </context>
 <context>
@@ -146,15 +146,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fotky:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Videa:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Zvukové efekty</translation>
     </message>
 </context>
 <context>
@@ -181,19 +181,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Otevřít</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Vytisknout</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Nápověda</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Zobrazit klávesové zkratky</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -201,7 +201,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontextová nabídka</translation>
     </message>
 </context>
 <context>
