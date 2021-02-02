@@ -329,6 +329,7 @@ private:
     QDBusInterface                  *m_pLoginMgrSleep;
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
+    qint64                          m_SpaceKeyInterval;//空格按键时间间隔
 };
 
 #endif // MAINWINDOW_H

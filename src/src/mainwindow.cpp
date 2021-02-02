@@ -692,6 +692,7 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_pDBus = nullptr;
     m_bWayland = false;
     m_nActTpye = ActTakePic;
+    m_SpaceKeyInterval = 0;
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
     setupTitlebar();
@@ -884,10 +885,20 @@ void CMainWindow::initShortcut()
     connect(scSpaceShortcut, &QShortcut::activated, this, [ = ] {
         DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
 
-        if (tabkevdent->isVisible())
-            tabkevdent->click();
-        else
-            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        if(QDateTime::currentMSecsSinceEpoch() - m_SpaceKeyInterval > 300)
+        {
+            if (tabkevdent->isVisible())
+            {
+                m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+                tabkevdent->click();
+            }
+            else
+            {
+                m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+
+            }
+        }
     });
 
 }
