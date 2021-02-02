@@ -1,7 +1,9 @@
 #define private public
 #define protected public
 #include "src/mainwindow.h"
+#include "src/thumbwidget.h"
 #undef private
+#undef protected
 #include "src/imageitem.h"
 
 #include <QComboBox>
@@ -998,6 +1000,17 @@ TEST_F(MainwindowTest, majorimageprocessingthread)
 
 }
 
+/**
+ *  @brief ThumbWidget类
+ */
+TEST_F(MainwindowTest, ThumbWidget)
+{
+    ThumbnailsBar *thumbnailBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
+    //调用paintEvent函数
+    QPaintEvent *paintevent;
+    thumbnailBar->m_thumbLeftWidget->m_tabFocusStatus = true;
+    thumbnailBar->m_thumbLeftWidget->paintEvent(paintevent);
+}
 
 /**
  *  @brief 主窗口退出(这个case一定得放在最后)
