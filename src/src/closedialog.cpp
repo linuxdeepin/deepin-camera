@@ -32,8 +32,8 @@ DWIDGET_USE_NAMESPACE
 
 typedef DLabel QLbtoDLabel;
 
-CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QString btnName2)
-    : DDialog(parent)
+CloseDialog::CloseDialog(QWidget *parent, QString strText)
+    : DDialog(parent), m_leftNamebtn(tr("Cancel")), m_rightNamebtn(tr("Close"))
 {
     this->setIcon(QIcon(":/images/icons/warning.svg"));
     setFixedSize(380, 140);
@@ -42,8 +42,8 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText, QString btnName1, QSt
     m_vlayout = new QVBoxLayout(m_widget);
     m_vlayout->setContentsMargins(2, 0, 2, 1);
     m_vlayout->addStretch();
-    addButton(btnName1);
-    addButton(btnName2);
+    addButton(m_leftNamebtn);
+    addButton(m_rightNamebtn);
 
     QAbstractButton *cancelBtn = getButton(0);
     cancelBtn->setObjectName(CANCEL_BUTTON);
