@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">འདོར་བ།</translation>
+        <translation>འདོར་བ།</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">ཁ་རྒྱག</translation>
+        <translation>ཁ་རྒྱག</translation>
     </message>
 </context>
 <context>

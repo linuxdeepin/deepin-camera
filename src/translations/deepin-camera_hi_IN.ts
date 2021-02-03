@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">रद्द करें</translation>
+        <translation>रद्द करें</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">बंद करें</translation>
+        <translation>बंद करें</translation>
     </message>
 </context>
 <context>

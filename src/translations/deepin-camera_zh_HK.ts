@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">取消</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">關閉</translation>
+        <translation>關閉</translation>
     </message>
 </context>
 <context>
@@ -150,7 +150,7 @@
     </message>
     <message>
         <source>Videos:</source>
-        <translation>視頻存儲位置：</translation>
+        <translation>影片存儲位置：</translation>
     </message>
     <message>
         <source>Sound effects</source>

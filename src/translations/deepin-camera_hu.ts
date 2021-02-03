@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Mégsem</translation>
+        <translation>Mégsem</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">Bezárás</translation>
+        <translation>Bezárás</translation>
     </message>
 </context>
 <context>

@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cancel·la</translation>
+        <translation>Cancel·la</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">Tanca</translation>
+        <translation>Tanca</translation>
     </message>
 </context>
 <context>

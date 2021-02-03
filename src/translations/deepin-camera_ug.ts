@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">بىكار قىلىش</translation>
+        <translation>بىكار قىلىش</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">تاقاش</translation>
+        <translation>تاقاش</translation>
     </message>
 </context>
 <context>

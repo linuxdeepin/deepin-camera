@@ -24,11 +24,11 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">İptal</translation>
+        <translation>İptal</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="vanished">Kapat</translation>
+        <translation>Kapat</translation>
     </message>
 </context>
 <context>
