@@ -41,10 +41,13 @@ typedef DLabel QLbtoDLabel;
 class CloseDialog : public DDialog
 {
     Q_OBJECT
+    
 public:
-    CloseDialog(QWidget *parent = nullptr, QString strText = "", QString btnName1 = QString(tr("Cancel")), QString btnName2 = QString(tr("Close")));
+    CloseDialog(QWidget *parent = nullptr, QString strText = "");
 
 private:
+    const QString m_leftNamebtn;
+    const QString m_rightNamebtn;
     QVBoxLayout  *m_vlayout;
     DWidget      *m_widget;
     QLbtoDLabel  *m_labtitle;
