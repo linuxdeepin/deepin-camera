@@ -5,6 +5,12 @@ extern "C"
 #include "camview.h"
 }
 
+v4l2_dev_t *Stub_Function::m_v4l2_dev = nullptr;
+v4l2_stream_formats_t *Stub_Function::m_list_stream_formats = nullptr;
+v4l2_device_list_t *Stub_Function::m_v4l2_device_list1 = nullptr;
+v4l2_device_list_t *Stub_Function::m_v4l2_device_list2 = nullptr;
+v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff = nullptr;
+
 Stub_Function::Stub_Function()
 {
 
@@ -13,13 +19,15 @@ Stub_Function::Stub_Function()
 //Settings
 v4l2_dev_t *Stub_Function::get_v4l2_device_handler()
 {
-    v4l2_dev_t *v4l2_devlist = (v4l2_dev_t *)malloc(sizeof(v4l2_dev_t));
-    v4l2_devlist->list_stream_formats = (v4l2_stream_formats_t *)malloc(sizeof(v4l2_stream_formats_t));
-    v4l2_devlist->list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_cap_t));
-    v4l2_devlist->list_stream_formats[0].list_stream_cap[0].width = 640;
-    v4l2_devlist->list_stream_formats[0].list_stream_cap[0].width = 480;
-    v4l2_devlist->this_device = 0;
-    return v4l2_devlist;
+    if (m_v4l2_dev == nullptr) {
+        m_v4l2_dev = (v4l2_dev_t *)malloc(sizeof(v4l2_dev_t));
+        m_v4l2_dev->list_stream_formats = (v4l2_stream_formats_t *)malloc(sizeof(v4l2_stream_formats_t));
+        m_v4l2_dev->list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_cap_t));
+        m_v4l2_dev->list_stream_formats[0].list_stream_cap[0].width = 640;
+        m_v4l2_dev->list_stream_formats[0].list_stream_cap[0].width = 480;
+        m_v4l2_dev->this_device = 0;
+    }
+    return m_v4l2_dev;
 }
 
 int Stub_Function::v4l2core_get_frame_format_index(v4l2_dev_t *vd, int format)
@@ -33,14 +41,17 @@ int Stub_Function::v4l2core_get_format_resolution_index(v4l2_dev_t *vd, int form
 
 v4l2_stream_formats_t *Stub_Function::v4l2core_get_formats_list(v4l2_dev_t *vd)
 {
-    v4l2_stream_formats_t *list_stream_formats = (v4l2_stream_formats_t *)malloc(sizeof(v4l2_stream_formats_t));
-    list_stream_formats[0].numb_res = 2;
-    list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_formats_t));
-    list_stream_formats[0].list_stream_cap[0].width = 640;
-    list_stream_formats[0].list_stream_cap[0].height = 480;
-    list_stream_formats[0].list_stream_cap[1].width = 960;
-    list_stream_formats[0].list_stream_cap[1].height = 720;
-    return list_stream_formats;
+    if (m_list_stream_formats == nullptr) {
+        m_list_stream_formats = (v4l2_stream_formats_t *)malloc(sizeof(v4l2_stream_formats_t));
+        m_list_stream_formats[0].numb_res = 2;
+        m_list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_formats_t));
+        m_list_stream_formats[0].list_stream_cap[0].width = 640;
+        m_list_stream_formats[0].list_stream_cap[0].height = 480;
+        m_list_stream_formats[0].list_stream_cap[1].width = 960;
+        m_list_stream_formats[0].list_stream_cap[1].height = 720;
+    }
+
+    return m_list_stream_formats;
 }
 
 int Stub_Function::size()
@@ -131,27 +142,35 @@ int Stub_Function::video_capture_get_save_video()
 
 v4l2_device_list_t *Stub_Function::get_device_list_1()
 {
-    v4l2_device_list_t *v4l2_device_list = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
-    v4l2_device_list->list_devices = new v4l2_dev_sys_data_t[1];
-    v4l2_device_list->num_devices = 1;
-    QString str1 = "/dev/video0";
-    v4l2_device_list->list_devices[0].device = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
-    strcpy(v4l2_device_list->list_devices[0].device, str1.toLatin1().data());
-    return v4l2_device_list;
+
+    if (m_v4l2_device_list1 == nullptr) {
+        m_v4l2_device_list1 = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
+        m_v4l2_device_list1->list_devices = new v4l2_dev_sys_data_t[1];
+        m_v4l2_device_list1->num_devices = 1;
+        QString str1 = "/dev/video0";
+        m_v4l2_device_list1->list_devices[0].device = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list1->list_devices[0].device, str1.toLatin1().data());
+    }
+
+    return m_v4l2_device_list1;
 }
 
 v4l2_device_list_t *Stub_Function::get_device_list_2()
 {
-    v4l2_device_list_t *v4l2_device_list = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
-    v4l2_device_list->list_devices = new v4l2_dev_sys_data_t[2];
-    v4l2_device_list->num_devices = 2;
-    QString str1 = "/dev/video0";
-    QString str2 = "/dev/video2";
-    v4l2_device_list->list_devices[0].device = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
-    strcpy(v4l2_device_list->list_devices[0].device, str1.toLatin1().data());
-    v4l2_device_list->list_devices[1].device = (char *)malloc(strlen(str2.toLatin1().data()) + 1);
-    strcpy(v4l2_device_list->list_devices[1].device, str2.toLatin1().data());
-    return v4l2_device_list;
+
+    if (m_v4l2_device_list2 == nullptr) {
+        m_v4l2_device_list2 = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
+        m_v4l2_device_list2->list_devices = new v4l2_dev_sys_data_t[2];
+        m_v4l2_device_list2->num_devices = 2;
+        QString str1 = "/dev/video0";
+        QString str2 = "/dev/video2";
+        m_v4l2_device_list2->list_devices[0].device = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list2->list_devices[0].device, str1.toLatin1().data());
+        m_v4l2_device_list2->list_devices[1].device = (char *)malloc(strlen(str2.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list2->list_devices[1].device, str2.toLatin1().data());
+    }
+
+    return m_v4l2_device_list2;
 
 }
 
@@ -177,9 +196,12 @@ int Stub_Function::v4l2core_stop_stream(v4l2_dev_t *vd)
 
 v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame(v4l2_dev_t *vd)
 {
-    v4l2_frame_buff_t *v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof (v4l2_frame_buff_t));
-    v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(sizeof (uint8_t));
-    return v4l2_frame_buff;
+    if (m_v4l2_frame_buff == nullptr) {
+        m_v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof (v4l2_frame_buff_t));
+        m_v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(sizeof (uint8_t));
+    }
+
+    return m_v4l2_frame_buff;
 }
 
 int Stub_Function::get_resolution_status()

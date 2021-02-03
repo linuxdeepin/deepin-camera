@@ -41,6 +41,42 @@ MainwindowTest::MainwindowTest()
     QTest::qWait(2000);
 }
 
+MainwindowTest::~MainwindowTest()
+{
+    if (Stub_Function::m_v4l2_dev != nullptr) {
+        free(Stub_Function::m_v4l2_dev->list_stream_formats[0].list_stream_cap);
+        free(Stub_Function::m_v4l2_dev->list_stream_formats);
+        free(Stub_Function::m_v4l2_dev);
+        Stub_Function::m_v4l2_dev = nullptr;
+    }
+
+    if (Stub_Function::m_list_stream_formats != nullptr) {
+        free(Stub_Function::m_list_stream_formats[0].list_stream_cap);
+        free(Stub_Function::m_list_stream_formats);
+        Stub_Function::m_list_stream_formats = nullptr;
+    }
+
+    if (Stub_Function::m_v4l2_device_list1 != nullptr) {
+        free(Stub_Function::m_v4l2_device_list1->list_devices[0].device);
+        delete []Stub_Function::m_v4l2_device_list1->list_devices;
+        free(Stub_Function::m_v4l2_device_list1);
+        Stub_Function::m_v4l2_device_list1 = nullptr;
+    }
+
+    if (Stub_Function::m_v4l2_device_list2 != nullptr) {
+        free(Stub_Function::m_v4l2_device_list2->list_devices[0].device);
+        delete []Stub_Function::m_v4l2_device_list2->list_devices;
+        free(Stub_Function::m_v4l2_device_list2);
+        Stub_Function::m_v4l2_device_list2 = nullptr;
+    }
+
+    if (Stub_Function::m_v4l2_frame_buff != nullptr) {
+        free(Stub_Function::m_v4l2_frame_buff->yuv_frame);
+        free(Stub_Function::m_v4l2_frame_buff);
+        Stub_Function::m_v4l2_frame_buff = nullptr;
+    }
+}
+
 /**
  *  @brief 摄像头被占用
  */
