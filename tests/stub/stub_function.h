@@ -85,6 +85,11 @@ public:
     //h264帧率设置
     int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
 
+    //mainwindow
+    QVariant toString();
+    bool mkdir(const QString &dirName);
+    static QString currentPath();
+
 };
 
 #endif // STUB_FUNCTION_H
