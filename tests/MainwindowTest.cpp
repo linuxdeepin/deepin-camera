@@ -11,6 +11,7 @@
 #include <QProcess>
 #include <QShortcut>
 #include <QMap>
+#include <QVariantMap>
 
 #include <DWindowMaxButton>
 #include <DWindowMinButton>
@@ -740,6 +741,9 @@ TEST_F(MainwindowTest, Setting)
     stub.reset(ADDR(QString, toInt));
     dc::Settings::get().setNewResolutionList();
 
+    //调用generalOption
+    dc::Settings::get().generalOption("");
+
     //打桩函数全部还原
     stub.reset(get_v4l2_device_handler);
     stub.reset(v4l2core_get_format_resolution_index);
@@ -1046,6 +1050,94 @@ TEST_F(MainwindowTest, ThumbWidget)
     QPaintEvent *paintevent;
     thumbnailBar->m_thumbLeftWidget->m_tabFocusStatus = true;
     thumbnailBar->m_thumbLeftWidget->paintEvent(paintevent);
+}
+
+/**
+ *  @brief CMainWindow类打桩
+ */
+TEST_F(MainwindowTest, CMainWindow)
+{
+    Stub stub;
+    //调用非wayland锁屏定时器槽函数
+    QVariantMap key2value1;
+    QStringList strList;
+    mainwindow->onTimeoutLock("", key2value1, strList);
+    //调用wayland锁屏定时器槽函数
+    QVariantMap key2value2;
+    key2value2.insert("Locked", true);
+    mainwindow->m_thumbnail->m_nStatus = STATPicIng;
+    mainwindow->setWayland(true);
+    mainwindow->onTimeoutLock("", key2value2, strList);
+    //调用wayland锁屏定时器槽函数
+    QVariantMap key2value3;
+    key2value3.insert("Locked", false);
+    mainwindow->onTimeoutLock("", key2value3, strList);
+    //还原wayland状态
+    mainwindow->setWayland(false);
+
+    //调用settingDialog函数
+    mainwindow->settingDialog();
+    //进入settingDialog设备句柄不为空分支
+    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    mainwindow->settingDialog();
+    //进入settingDialog有效分辨率分支
+    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
+    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
+    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
+    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
+    mainwindow->settingDialog();
+
+    //进入settingDialog无效分辨率分支
+    stub.reset(ADDR(QString, toInt));
+    mainwindow->settingDialog();
+    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    mainwindow->settingDialog();
+    //打桩函数全部还原
+    stub.reset(get_v4l2_device_handler);
+    stub.reset(v4l2core_get_format_resolution_index);
+    stub.reset(v4l2core_get_frame_format_index);
+    stub.reset(v4l2core_get_formats_list);
+
+    //调用录制状态关闭窗口函数
+    mainwindow->m_videoPre->setCapStatus(true);
+
+    //调用显示相机可选按钮窗口
+    mainwindow->setSelBtnShow();
+
+    //调用拍照屏幕休眠函数
+    mainwindow->setWayland(true);
+    mainwindow->onSleepWhenTaking(true);
+    mainwindow->setWayland(false);
+
+    //调用路径文件改变槽函数
+    //路径文件夹无改变分支
+    mainwindow->onDirectoryChanged("");
+    //调用图片视频存储路径不存在分支
+    mainwindow->lastPicFileName = QString("/a");
+    mainwindow->lastVdFileName = QString("/a");
+    mainwindow->onDirectoryChanged("");
+
+    //调用onEnableTitleBar的case
+    mainwindow->onEnableTitleBar(1);
+    mainwindow->onEnableTitleBar(2);
+    mainwindow->onEnableTitleBar(5);
+
+    //调用lastOpenedPath最后打开路径不存在分支
+    stub.set(ADDR(QVariant, toString), ADDR(Stub_Function, toString));
+    stub.set(ADDR(QDir, mkdir), ADDR(Stub_Function, mkdir));
+    stub.set(ADDR(QDir, currentPath), ADDR(Stub_Function, currentPath));
+    //删除视频文件夹的相机文件夹
+    QDir dir;
+    QString del_file = QString(QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                               + QDir::separator() + QObject::tr("Camera"));
+    dir.setPath(del_file);
+    dir.removeRecursively();
+    mainwindow->lastOpenedPath(QStandardPaths::MoviesLocation);
+    mainwindow->lastOpenedPath(QStandardPaths::PicturesLocation);
+    //桩函数还原
+    stub.reset(ADDR(QVariant, toString));
+    stub.reset(ADDR(QDir, mkdir));
+    stub.reset(ADDR(QDir, currentPath));
 }
 
 /**

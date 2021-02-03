@@ -85,6 +85,14 @@ public:
     //h264帧率设置
     int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
 
+    //mainwindow
+    //返回不存在的路径
+    QVariant toString();
+    //返回创建路径失败
+    bool mkdir(const QString &dirName);
+    //获得当前路径，此处需要获得一个以～开头的的路径
+    static QString currentPath();
+
 public:
     //定义静态成员变量用于打桩时多次调用
     static v4l2_dev_t *m_v4l2_dev;//设备属性

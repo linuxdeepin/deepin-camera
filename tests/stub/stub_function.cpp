@@ -259,7 +259,20 @@ int Stub_Function::v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t 
     return 0;
 }
 
+QVariant Stub_Function::toString()
+{
+    return "/a";
+}
 
+bool Stub_Function::mkdir(const QString &dirName)
+{
+    return false;
+}
+
+QString Stub_Function::currentPath()
+{
+    return "~/a";
+}
 
 
 
