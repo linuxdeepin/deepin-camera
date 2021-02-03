@@ -85,6 +85,12 @@ public:
     //h264帧率设置
     int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
 
+public:
+    static v4l2_dev_t *m_v4l2_dev;
+    static v4l2_stream_formats_t *m_list_stream_formats;
+    static v4l2_device_list_t *m_v4l2_device_list1;
+    static v4l2_device_list_t *m_v4l2_device_list2;
+    static v4l2_frame_buff_t *m_v4l2_frame_buff;
 };
 
 #endif // STUB_FUNCTION_H

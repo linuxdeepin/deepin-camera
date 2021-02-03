@@ -32,6 +32,7 @@ class MainwindowTest : public ::testing::Test
 {
 public:
     MainwindowTest();
+    ~MainwindowTest();
     virtual void SetUp()
     {
 
