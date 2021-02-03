@@ -189,6 +189,11 @@ private slots:
     void setSelBtnHide();
 
     /**
+     * @brief onLocalTimeChanged DBus更改本地时间槽函数
+     */
+    void onLocalTimeChanged();
+
+    /**
      * @brief setSelBtnShow 设置切换相机按钮显示
      */
     void setSelBtnShow();

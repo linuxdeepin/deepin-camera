@@ -1380,6 +1380,13 @@ void CMainWindow::initConnection()
     QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
                                           "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
                                           SLOT(onTimeoutLock(QString, QVariantMap, QStringList)));
+
+
+    //控制中心更改了本地时间，及时更新当前时间
+    //避免时间往前切换过后，需要点击两次才能结束录制
+    QDBusConnection::sessionBus().connect("com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate",
+                                          "com.deepin.daemon.Timedate", "TimeUpdate", this,
+                                          SLOT(onLocalTimeChanged()));
 }
 
 void CMainWindow::initThumbnails()
@@ -1457,6 +1464,11 @@ void CMainWindow::setSelBtnHide()
     pSelectBtn->hide();
     pSelectBtn->setFocusPolicy(Qt::ClickFocus);
     qDebug() << "Hide camera selection button";
+}
+
+void CMainWindow::onLocalTimeChanged()
+{
+    m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
 }
 
 void CMainWindow::setSelBtnShow()
