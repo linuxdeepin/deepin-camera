@@ -85,6 +85,13 @@ public:
     //h264帧率设置
     int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
 
+public:
+    //定义静态成员变量用于打桩时多次调用
+    static v4l2_dev_t *m_v4l2_dev;//设备属性
+    static v4l2_stream_formats_t *m_list_stream_formats;//流格式列表
+    static v4l2_device_list_t *m_v4l2_device_list1;//一个摄像头
+    static v4l2_device_list_t *m_v4l2_device_list2;//两个摄像头
+    static v4l2_frame_buff_t *m_v4l2_frame_buff;//帧缓冲器
 };
 
 #endif // STUB_FUNCTION_H
