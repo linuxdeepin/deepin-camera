@@ -18,6 +18,6 @@ Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- dde-api
+ dde-api, deepin-icon-theme (>= 2020.09.25-1)
 Description: This package software for  UOS
  This package is a tool to view camera, and also a smart take photo and video in life.
