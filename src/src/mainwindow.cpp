@@ -1122,6 +1122,11 @@ void CMainWindow::onDirectoryChanged(const QString &)
         return;
     } else {
         if (!bVd) {
+            //录制状态下文件夹不存在需要停止录制
+            DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+            if (tabkevdent->isVisible()) {
+                tabkevdent->click();
+            }
             lastVdFileName = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
             QDir dirDefaultVd(lastVdFileName);
             if (!dirDefaultVd.exists()) {
@@ -1130,10 +1135,14 @@ void CMainWindow::onDirectoryChanged(const QString &)
                     qWarning() << "make dir error:" << lastVdFileName;
                 }
             }
+            m_videoPre->setSaveVdFolder(lastVdFileName);
             Settings::get().settings()->setOption("base.save.vddatapath", lastVdFileName);
         }
 
         if (!bPic) {
+            //连拍状态下文件夹不存在需要关掉连拍
+            if (m_thumbnail->m_nStatus == STATPicIng)
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
             lastPicFileName = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
             QDir dirDefaultPic(lastPicFileName);
             if (!dirDefaultPic.exists()) {
@@ -1142,6 +1151,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
                     qWarning() << "make dir error:" << lastPicFileName;
                 }
             }
+            m_videoPre->setSavePicFolder(lastPicFileName);
             Settings::get().settings()->setOption("base.save.picdatapath", lastPicFileName);
         }
         //更新文件夹监控
