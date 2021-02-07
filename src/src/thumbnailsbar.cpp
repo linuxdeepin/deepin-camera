@@ -585,11 +585,23 @@ void ThumbnailsBar::onCallMenu()
 void ThumbnailsBar::onOpenFolder()
 {
     //保证和缩略图打开的一致
-    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
-    QString save_path = tmp->getPath();
+//    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
+//    QString save_path = tmp->getPath();
+    QString save_path;
 
-    if (save_path.isEmpty())
+//    if (save_path.isEmpty())
+    if (m_nActTpye == ActTakePic) {
         save_path = Settings::get().getOption("base.save.picdatapath").toString();
+        if (save_path.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
+            save_path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                        + QDir::separator() + QObject::tr("Camera");
+    }
+    if (m_nActTpye == ActTakeVideo) {
+        save_path = Settings::get().getOption("base.save.vddatapath").toString();
+        if (save_path.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
+            save_path = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                        + QDir::separator() + QObject::tr("Camera");
+    }
 
     if (save_path.size() && save_path[0] == '~')
         save_path.replace(0, 1, QDir::homePath());

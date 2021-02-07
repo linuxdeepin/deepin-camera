@@ -640,8 +640,15 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
     QString lastPath;
     if (standard == QStandardPaths::MoviesLocation) {
         lastPath = Settings::get().getOption("base.save.vddatapath").toString();
+        if (lastPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
+            lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                       + QDir::separator() + QObject::tr("Camera");
+
     } else {
         lastPath = Settings::get().getOption("base.save.picdatapath").toString();
+        if (lastPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
+            lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                       + QDir::separator() + QObject::tr("Camera");
     }
 
     QDir lastDir(lastPath);
@@ -1423,21 +1430,39 @@ void CMainWindow::initThumbnails()
 
     //右键菜单打开文件
     connect(m_actOpenfolder, &QAction::triggered, this, [ = ] {
-        QString save_path = Settings::get().generalOption("last_open_pic_path").toString();
 
-        if (save_path.isEmpty())
-            save_path = Settings::get().getOption("base.save.picdatapath").toString();
+        QString currentDefaultSavePath("");
+        QString currentsavePath("");
 
-        if (save_path.size() && save_path[0] == '~')
-            save_path.replace(0, 1, QDir::homePath());
-
-        if (!QFileInfo(save_path).exists())
+        if (m_nActTpye == ActTakePic)
         {
-            QDir d;
-            d.mkpath(save_path);
+            QString currentDefaultPicSavePath = Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString();
+            QString picSavePath = Settings::get().getOption("base.save.picdatapath").toString();
+            if (picSavePath.compare(currentDefaultPicSavePath) == 0) {
+                currentsavePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                + QDir::separator() + QObject::tr("Camera");
+            } else
+                currentsavePath = picSavePath;
+
+        }
+        if (m_nActTpye == ActTakeVideo)
+        {
+            QString currentDefaultSaveVideoPath = Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString();
+            QString videoSavePath = Settings::get().getOption("base.save.vddatapath").toString();
+            if (videoSavePath.compare(currentDefaultSaveVideoPath) == 0) {
+                currentsavePath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                                  + QDir::separator() + QObject::tr("Camera");
+            } else
+                currentsavePath = videoSavePath;
         }
 
-        Dtk::Widget::DDesktopServices::showFolder(save_path);
+        if (!QFileInfo(currentsavePath).exists())
+        {
+            QDir d;
+            d.mkpath(currentsavePath);
+        }
+
+        Dtk::Widget::DDesktopServices::showFolder(currentsavePath);
     });
 
     m_thumbnail->setVisible(true);
@@ -1703,6 +1728,13 @@ void CMainWindow::onSettingsDlgClose()
     //先获取路径，再对路径进行修正
     lastVdFileName = Settings::get().getOption("base.save.vddatapath").toString();
     lastPicFileName = Settings::get().getOption("base.save.picdatapath").toString();
+
+    if (lastPicFileName.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
+        lastPicFileName = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+
+    if (lastVdFileName.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
+        lastVdFileName = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+
 
     //由于U盘、可移动磁盘的加入，如果路径不存在，可能是U盘被拔掉了，因此此时不能创建，而是恢复默认路径
     if (QDir(lastVdFileName).exists() == false)
