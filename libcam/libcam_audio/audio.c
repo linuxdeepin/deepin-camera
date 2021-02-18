@@ -480,7 +480,10 @@ audio_context_t *audio_init(int api, int device)
 	if(audio_ctx->channels > 2)
 		audio_ctx->channels = 2;
 
-	return audio_ctx;
+    if (audio_ctx->device < 0)
+        return NULL;
+    else
+        return audio_ctx;
 }
 
 /*
