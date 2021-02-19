@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16e2cdf9_b40c7aa4",
+        "filename": "libcam/libcam_audio/audio.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-02-19T08:56:42Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 10; 注释率: 0.0%",
+      "revId": "eadd631105ed0303573145f2795bdf2315b050ac",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebe3f43b_1ab160f1",
+        "filename": "libcam/libcam_audio/audio_pulseaudio.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-02-19T08:56:42Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 11; 注释率: 9.1%",
+      "revId": "eadd631105ed0303573145f2795bdf2315b050ac",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6f4dd43_25376523",
+        "filename": "src/src/LPF_V4L2.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-02-19T08:56:42Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 6; 注释率: 0.0%",
+      "revId": "eadd631105ed0303573145f2795bdf2315b050ac",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
