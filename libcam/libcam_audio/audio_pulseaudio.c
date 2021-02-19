@@ -694,20 +694,19 @@ void audio_set_pulseaudio_device(audio_context_t *audio_ctx, int index)
 	/*assertions*/
 	assert(audio_ctx != NULL);
 	
-	if(index >= audio_ctx->num_input_dev)
-		audio_ctx->device = audio_ctx->num_input_dev - 1;
-	else if(index >= 0 )
-		audio_ctx->device = index;
-	
-	if(verbosity > 0)
-		printf("AUDIO: Pulseaudio device changed to %i\n", audio_ctx->device);
-	
-	audio_ctx->latency = audio_ctx->list_devices[audio_ctx->device].high_latency;
-	
-	audio_ctx->channels = audio_ctx->list_devices[audio_ctx->device].channels;
-	if(audio_ctx->channels > 2)
-		audio_ctx->channels = 2;/*limit it to stereo input*/
-	audio_ctx->samprate = audio_ctx->list_devices[audio_ctx->device].samprate;
+    audio_ctx->device = index;
+    if (audio_ctx->num_input_dev > 1){
+        audio_ctx->device = audio_ctx->num_input_dev - 1;
+        if (verbosity > 0)
+            printf("AUDIO: Pulseaudio device changed to %i\n", audio_ctx->device);
+
+        audio_ctx->latency = audio_ctx->list_devices[audio_ctx->device].high_latency;
+
+        audio_ctx->channels = audio_ctx->list_devices[audio_ctx->device].channels;
+        if (audio_ctx->channels > 2)
+            audio_ctx->channels = 2;/*limit it to stereo input*/
+        audio_ctx->samprate = audio_ctx->list_devices[audio_ctx->device].samprate;
+    }
 }
 
 /*
