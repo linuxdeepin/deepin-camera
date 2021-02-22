@@ -25,7 +25,6 @@
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
-#include <DPrintPreviewDialog>
 
 #include <QFileInfo>
 #include <QPainterPath>
@@ -544,71 +543,113 @@ void ImageItem::onPrint()
 
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 {
-    QList<QImage> imgs;
-
+    m_imgs.clear();
     for (const QString &path : paths) {
         QImage img(path);
-
         if (!img.isNull())
-            imgs << img;
+            m_imgs << img;
     }
 
     DPrintPreviewDialog printDialog(parent);
     printDialog.setObjectName(PRINT_DIALOG);
     printDialog.setAccessibleName(PRINT_DIALOG);
-
 #ifndef UNITTEST
-    QObject::connect(&printDialog, &DPrintPreviewDialog::paintRequested, parent, [ = ](DPrinter * _printer) {
-        QPainter painter(_printer);
-        for (QImage img : imgs) {
-            if (!img.isNull()) {
-                painter.setRenderHint(QPainter::Antialiasing);
-                painter.setRenderHint(QPainter::SmoothPixmapTransform);
-                QRect wRect  = _printer->pageRect();
-                QImage tmpMap;
+    //适配打印接口2.0，dtk大于 5.4.4 版才合入最新的2.0打印控件接口
+#if (DTK_VERSION_MAJOR > 5 \
+    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
 
-                if (img.width() > wRect.width() || img.height() > wRect.height()) {
-                    tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                } else {
-                    tmpMap = img;
-                }
+    bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
 
-                QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
-                                          qreal(wRect.height() - tmpMap.height()) / 2,
-                                          tmpMap.width(), tmpMap.height());
-                painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
-                                         tmpMap.height()), tmpMap);
-            }
+    if (suc) //异步
+        connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
+                this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
+    else //同步
+        connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
+                this, SLOT(paintRequestSync(DPrinter *)));
 
-            if (img != imgs.last()) {
-                _printer->newPage();
-                qDebug() << "painter newPage!    File:" << __FILE__ << "    Line:" << __LINE__;
-            }
-
-        }
-
-        painter.end();
-    });
-
+#else
+    connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
+            this, SLOT(paintRequestSync(DPrinter *)));
+#endif
     printDialog.exec();
 #else
     printDialog.show();
 #endif
 }
 
+#if (DTK_VERSION_MAJOR > 5 \
+    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
+void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange)
+{
+    QPainter painter(_printer);
+    if (pageRange.size() > 0) {
+        QImage img = m_imgs.at(pageRange.at(0) - 1);
+
+        if (!img.isNull()) {
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setRenderHint(QPainter::SmoothPixmapTransform);
+            QRect wRect  = _printer->pageRect();
+            QImage tmpMap;
+
+            if (img.width() > wRect.width() || img.height() > wRect.height())
+                tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            else
+                tmpMap = img;
+
+            QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
+                                      qreal(wRect.height() - tmpMap.height()) / 2,
+                                      tmpMap.width(), tmpMap.height());
+
+            painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
+                                     tmpMap.height()), tmpMap);
+        }
+    }
+    painter.end();
+}
+#endif
+
+void ImageItem::paintRequestSync(DPrinter *_printer)
+{
+    QPainter painter(_printer);
+    for (QImage img : m_imgs) {
+
+        if (!img.isNull()) {
+            painter.setRenderHint(QPainter::Antialiasing);
+            painter.setRenderHint(QPainter::SmoothPixmapTransform);
+            QRect wRect  = _printer->pageRect();
+            QImage tmpMap;
+
+            if (img.width() > wRect.width() || img.height() > wRect.height())
+                tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            else
+                tmpMap = img;
+
+            QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
+                                      qreal(wRect.height() - tmpMap.height()) / 2,
+                                      tmpMap.width(), tmpMap.height());
+            painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
+                                     tmpMap.height()), tmpMap);
+        }
+
+        if (img != m_imgs.last())
+            _printer->newPage();
+    }
+
+    painter.end();
+}
+
 static int open_codec_context(int *stream_idx, AVCodecParameters **dec_par, AVFormatContext *fmt_ctx, enum AVMediaType type)
 {
     int ret, stream_index;
     AVStream *st;
-
     ret = getAvformat()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
-
     if (ret < 0) {
         qWarning() << "Could not find " << getAvutil()->m_av_get_media_type_string(type)
                    << " stream in input file";
         return ret;
     }
-
     stream_index = ret;
     st = fmt_ctx->streams[stream_index];
     *dec_par = st->codecpar;

@@ -27,7 +27,15 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileInfo>
-
+#ifdef private
+#undef private
+#include <dprintpreviewwidget.h>
+#include <dprintpreviewdialog.h>
+#define private public
+#else
+#include <dprintpreviewwidget.h>
+#include <dprintpreviewdialog.h>
+#endif
 DWIDGET_USE_NAMESPACE
 
 #define THUMBNAIL_WIDTH 30//缩略图图元宽度
@@ -172,17 +180,33 @@ protected:
      */
     void showPrintDialog(const QStringList &paths, QWidget *parent);
 
+private slots:
+#if (DTK_VERSION_MAJOR > 5 \
+    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
+    /**
+     * @brief paintRequestedAsyn 同步打印
+     * @param _printer 打印机
+     * @param pageRange 页数
+     */
+    void paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange);
+#endif
+    /**
+     * @brief paintRequestSync 异步打印
+     * @param _printer 打印机
+     */
+    void paintRequestSync(DPrinter *_printer);
+
 private:
     bool     m_bVideo;//是否视频
     int      m_index;//索引
     int64_t  m_nDuration = 0; //视频文件时长,int形式时间
-
+    QList<QImage> m_imgs;//需要打印的图片
     QString  m_path;//文件路径
     QPixmap  m_pixmap;//缩略图
     QString  m_pixmapstring;//缩略图路径
     QString  m_strDuratuion;//视频文件时长,形式为00：00：00
     QMenu    *m_menu;//菜单
-
     QAction  *m_actCopy;//复制
     QAction  *m_actDel;//删除
     QAction  *m_actOpenFolder;//打开文件夹
