@@ -72,13 +72,16 @@ int camInit(const char* devicename)
     debug_level = my_options->verbosity;
 
     int audio = AUDIO_PORTAUDIO;
-    if (get_wayland_status()) {
-        audio = AUDIO_PULSE;
-        strncpy(my_config->audio, "pulse", 5);
-    } else {
+
+    if(strcasecmp(my_config->audio, "none") == 0)
+        audio = AUDIO_NONE;
+    else if(strcasecmp(my_config->audio, "port") == 0)
         audio = AUDIO_PORTAUDIO;
-        strncpy(my_config->audio, "port", 5);
-    }
+
+    if(debug_level > 1)
+        printf("deepin-camera: main thread (tid: %u)\n",
+            (unsigned int) syscall (SYS_gettid));
+
     /*设置v4l2debug*/
     v4l2core_set_verbosity(debug_level);
 

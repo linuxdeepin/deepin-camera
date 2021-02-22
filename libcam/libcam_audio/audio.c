@@ -47,9 +47,9 @@
 #include "audio.h"
 #include "gview.h"
 #include "audio_portaudio.h"
-
-#include "audio_pulseaudio.h"
-
+#if HAS_PULSEAUDIO
+  #include "audio_pulseaudio.h"
+#endif
 
 #define AUDBUFF_NUM     80    /*number of audio buffers*/
 #define AUDBUFF_FRAMES  1152  /*number of audio frames per buffer*/
@@ -458,10 +458,11 @@ audio_context_t *audio_init(int api, int device)
 			audio_ctx->api = AUDIO_NONE;
 			break;
 
+#if HAS_PULSEAUDIO
 		case AUDIO_PULSE:
 			ret = audio_init_pulseaudio(audio_ctx);
 			break;
-
+#endif
 		case AUDIO_PORTAUDIO:
 		default:
 			ret = audio_init_portaudio(audio_ctx);
@@ -479,10 +480,7 @@ audio_context_t *audio_init(int api, int device)
 	if(audio_ctx->channels > 2)
 		audio_ctx->channels = 2;
 
-    if (audio_ctx->device < 0)
-        return NULL;
-    else
-        return audio_ctx;
+	return audio_ctx;
 }
 
 /*
@@ -524,10 +522,11 @@ void audio_set_device_index(audio_context_t *audio_ctx, int index)
 		case AUDIO_NONE:
 			break;
 
+#if HAS_PULSEAUDIO
 		case AUDIO_PULSE:
 			audio_set_pulseaudio_device(audio_ctx, index);
 			break;
-
+#endif
 		case AUDIO_PORTAUDIO:
 		default:
 			audio_set_portaudio_device(audio_ctx, index);
@@ -766,10 +765,11 @@ int audio_start(audio_context_t *audio_ctx)
 		case AUDIO_NONE:
 			break;
 
+#if HAS_PULSEAUDIO
 		case AUDIO_PULSE:
 			err = audio_start_pulseaudio(audio_ctx);
 			break;
-
+#endif
 		case AUDIO_PORTAUDIO:
 		default:
 			err = audio_start_portaudio(audio_ctx);
@@ -801,10 +801,11 @@ int audio_stop(audio_context_t *audio_ctx)
 		case AUDIO_NONE:
 			break;
 
+#if HAS_PULSEAUDIO
 		case AUDIO_PULSE:
 			err = audio_stop_pulseaudio(audio_ctx);
 			break;
-
+#endif
 		case AUDIO_PORTAUDIO:
 		default:
 			err = audio_stop_portaudio(audio_ctx);
@@ -846,10 +847,11 @@ void audio_close(audio_context_t *audio_ctx)
 		case AUDIO_NONE:
 			break;
 
+#if HAS_PULSEAUDIO
 		case AUDIO_PULSE:
 			audio_close_pulseaudio(audio_ctx);
 			break;
-
+#endif
 		case AUDIO_PORTAUDIO:
 		default:
 			audio_close_portaudio(audio_ctx);
