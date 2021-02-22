@@ -860,9 +860,9 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowoptionButton, windowMinBtn);
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
-    setTabOrder(windowCloseBtn, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), thumbLeftWidget);
-    setTabOrder(thumbLeftWidget, pSelectBtn);
+    setTabOrder(windowCloseBtn, thumbLeftWidget);
+    setTabOrder(thumbLeftWidget, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
+    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), pSelectBtn);
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 
@@ -1548,8 +1548,10 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 {
     if (m_videoPre->getCapStatus()) {
         CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
+        closeDlg.setFocusPolicy(Qt::NoFocus);
         closeDlg.setObjectName(CLOSE_DIALOG);
         closeDlg.setAccessibleName(CLOSE_DIALOG);
+
 #ifdef UNITTEST
         closeDlg.show();
         event->ignore();

@@ -308,11 +308,10 @@ public:
 private:
     static QString                  lastVdFileName;//上次打开的视频文件
     static QString                  lastPicFileName;//上次打开的照片文件
-    enum ActType                    m_nActTpye;
     bool                            m_bWayland;
+    enum ActType                    m_nActTpye;
     ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
-
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
     DButtonBox                      *pDButtonBox;//按钮盒
@@ -320,7 +319,6 @@ private:
     DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
     DIconButton                     *pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
-
     QMenu                           *m_rightbtnmenu;//右键菜单
     QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控
