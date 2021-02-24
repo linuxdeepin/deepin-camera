@@ -24,6 +24,8 @@
 
 #include <DMessageBox>
 #include <DLabel>
+#include <DTitlebar>
+#include <DWindowCloseButton>
 
 #include <QRegExp>
 #include <QDebug>
@@ -64,4 +66,12 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText)
     m_vlayout->addWidget(m_labtitle);
     m_vlayout->addStretch();
     m_widget->setLayout(m_vlayout);
+
+    DTitlebar *titlebar = findChild<DTitlebar *>();
+    titlebar->setFocusPolicy(Qt::ClickFocus);
+
+    //设置Tab顺序
+    DWindowCloseButton *windowCloseBtn = findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    setTabOrder(windowCloseBtn, cancelBtn);
+    setTabOrder(cancelBtn, closeBtn);
 }

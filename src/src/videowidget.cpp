@@ -146,12 +146,18 @@ videowidget::videowidget(DWidget *parent)
     m_endBtn->setObjectName(BUTTON_TAKE_VIDEO_END);
     m_endBtn->setAccessibleName(BUTTON_TAKE_VIDEO_END);
     m_endBtn->setFlat(true);
-    m_endBtn->setFixedSize(QSize(56, 51));
-    m_endBtn->setFocusPolicy(Qt::ClickFocus);
-    m_endBtn->setIconSize(QSize(56, 51));
+    m_endBtn->setFixedSize(QSize(40, 40));
+    m_endBtn->setFocusPolicy(Qt::TabFocus);
+    m_endBtn->setIconSize(QSize(35, 35));
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
     m_endBtn->setToolTip(tr("Stop recording"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
+    m_endBtn->setWindowFlags(Qt::FramelessWindowHint);
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
+    effect->setBlurRadius(10);                  // 阴影圆角的大小
+    effect->setColor(QColor(202, 0, 0, 100));       //阴影的颜色
+    effect->setOffset(0, 2);                    //阴影的偏移量
+    m_endBtn->setGraphicsEffect(effect);        //给那个控件设置阴影，这里需要注意的是所有此控件的子控件，也都继承这个阴影。
     m_endBtn->hide();
 
     connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认

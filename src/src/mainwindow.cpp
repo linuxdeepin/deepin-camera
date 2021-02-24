@@ -41,6 +41,7 @@
 #include <DWindowCloseButton>
 #include <DWindowMaxButton>
 #include <DWindowOptionButton>
+#include <DWindowQuitFullButton>
 
 #include <QListWidgetItem>
 #include <QTextLayout>
@@ -860,16 +861,18 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowoptionButton, windowMinBtn);
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
-    setTabOrder(windowCloseBtn, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), thumbLeftWidget);
-    setTabOrder(thumbLeftWidget, pSelectBtn);
+    setTabOrder(windowCloseBtn, thumbLeftWidget);
+    setTabOrder(thumbLeftWidget, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
+    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END));
+    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END), pSelectBtn);
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 
 void CMainWindow::initShortcut()
 {
     QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
-    QShortcut *scSpaceShortcut = new QShortcut(QKeySequence("space"), this);
+    QShortcut *scSpaceShortcut = new QShortcut(Qt::Key_Space, this);
+    QShortcut *scEnterShortcut = new QShortcut(Qt::Key_Return, this);
 
     scViewShortcut->setObjectName(SHORTCUT_VIEW);
     scSpaceShortcut->setObjectName(SHORTCUT_SPACE);
@@ -906,6 +909,50 @@ void CMainWindow::initShortcut()
 
             }
         }
+    });
+
+    //根据tab焦点进行Enter键操作
+    connect(scEnterShortcut, &QShortcut::activated, this, [ = ] {
+        DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+        DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+        DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+        DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+        DWindowQuitFullButton *windowQuitFullBtn = titlebar()->findChild<DWindowQuitFullButton *>("DTitlebarDWindowQuitFullscreenButton");
+        QWidget *focuswidget = focusWidget();
+        if (m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END) == focuswidget
+                || m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO) == focuswidget)
+        {
+            DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+
+            if (QDateTime::currentMSecsSinceEpoch() < m_SpaceKeyInterval)
+                m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+
+            if (QDateTime::currentMSecsSinceEpoch() - m_SpaceKeyInterval > 300) {
+
+                if (tabkevdent->isVisible()) {
+                    m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+                    tabkevdent->click();
+                } else {
+                    m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+                    m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+                }
+            }
+        } else if (m_pTitlePicBtn == focuswidget)
+            m_pTitlePicBtn->click();
+        else if (m_pTitleVdBtn == focuswidget)
+            m_pTitleVdBtn->click();
+        else if (windowoptionButton == focuswidget)
+            windowoptionButton->click();
+        else if (windowMinBtn == focuswidget)
+            windowMinBtn->click();
+        else if (windowMaxBtn == focuswidget)
+            windowMaxBtn->click();
+        else if (windowCloseBtn == focuswidget)
+            windowCloseBtn->click();
+        else if (windowQuitFullBtn == focuswidget)
+            windowQuitFullBtn->click();
+        else
+            return;
     });
 
 }

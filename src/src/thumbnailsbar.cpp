@@ -66,7 +66,6 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     m_lastButton->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_nDelTimes = 0;
     m_strFileName = "";
-    setFocus(Qt::OtherFocusReason);
     setFocusPolicy(Qt::NoFocus);
     this->setFramRadius(18);
     initShortcut();
@@ -318,6 +317,7 @@ void ThumbnailsBar::onBtnClick()
         }
 
     } else if (m_nActTpye == ActTakeVideo) {
+
         if (m_nStatus == STATVdIng) {
             m_nStatus = STATNULL;
             emit enableTitleBar(4);
@@ -333,7 +333,6 @@ void ThumbnailsBar::onBtnClick()
             //3、录制
             emit takeVd();
         }
-
     } else
         return;
 
