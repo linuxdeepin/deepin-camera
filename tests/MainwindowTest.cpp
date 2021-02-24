@@ -797,16 +797,15 @@ TEST_F(MainwindowTest, thumbarnail)
         imgit = it.value(0);
         if (!imgit)
             return;
+        QTest::mouseMove(imgit, QPoint(0, 0), 1000);
+        QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+        QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
+        thumbnailsBar->onTrashFile();
+        //调用delFile
+        thumbnailsBar->delFile(str);
+        //调用widthChanged
+        thumbnailsBar->widthChanged();
     }
-    QTest::mouseMove(imgit, QPoint(0, 0), 1000);
-    QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-    QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-    thumbnailsBar->onTrashFile();
-    //调用delFile
-    thumbnailsBar->delFile(str);
-    //调用widthChanged
-    thumbnailsBar->widthChanged();
-
 }
 
 TEST_F(MainwindowTest, videowidget)
