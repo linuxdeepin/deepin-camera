@@ -128,9 +128,13 @@ qt5_use_modules(${TARGET_NAME} ${QtModule})
 #application
 install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
 
-#desktop
+#desk desktop
 install(FILES ${PROJECT_SOURCE_DIR}/deepin-camera.desktop
     DESTINATION /usr/share/applications)
+
+#table desktop
+install(FILES ${PROJECT_SOURCE_DIR}/table/deepin-camera.desktop
+    DESTINATION /usr/share/due-shell/shortcuts)
 
 #icons
 install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
