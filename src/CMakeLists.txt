@@ -99,9 +99,6 @@ file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET
 
 set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
 
-#message(STATUS "ts")
-#message(STATUS ${TS})
-
 qt5_create_translation(QM ${CXXSOURCES} ${TS})
 
 if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
@@ -139,6 +136,9 @@ install(FILES ${PROJECT_SOURCE_DIR}/table/deepin-camera.desktop
 #icons
 install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
     DESTINATION /usr/share/icons/hicolor/scalable/apps)
+
+#table_icons
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/Icons DESTINATION /usr/share/due-shell/shortcuts)
 
 #manual
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
