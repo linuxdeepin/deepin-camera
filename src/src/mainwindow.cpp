@@ -854,17 +854,20 @@ void CMainWindow::initTabOrder()
     DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
+    DPushButton *picVideoBtn = m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
+    DPushButton *takeVideoEndBtn = m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
 
     //设置鼠标tab同时切换策略，有一个问题鼠标点击时也会出现一个tab选择框
+    setTabOrder(picVideoBtn, takeVideoEndBtn);
+    setTabOrder(picVideoBtn, pSelectBtn);
+    setTabOrder(pSelectBtn, m_pTitlePicBtn);
     setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
     setTabOrder(m_pTitleVdBtn, windowoptionButton);
     setTabOrder(windowoptionButton, windowMinBtn);
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
     setTabOrder(windowCloseBtn, thumbLeftWidget);
-    setTabOrder(thumbLeftWidget, m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO), m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END));
-    setTabOrder(m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END), pSelectBtn);
+
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
 
@@ -1374,7 +1377,7 @@ void CMainWindow::initTitleBar()
     pSelectBtn->setFixedSize(QSize(37, 37));
     pSelectBtn->setIconSize(QSize(37, 37));
     pSelectBtn->hide();
-    pSelectBtn->setFocusPolicy(Qt::ClickFocus);
+    pSelectBtn->setFocusPolicy(Qt::TabFocus);
 
     //初始化主题判断
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType)
@@ -1544,7 +1547,6 @@ void CMainWindow::initThumbnailsConn()
 void CMainWindow::setSelBtnHide()
 {
     pSelectBtn->hide();
-    pSelectBtn->setFocusPolicy(Qt::ClickFocus);
     qDebug() << "Hide camera selection button";
 }
 
@@ -1556,7 +1558,6 @@ void CMainWindow::onLocalTimeChanged()
 void CMainWindow::setSelBtnShow()
 {
     pSelectBtn->show();
-    pSelectBtn->setFocusPolicy(Qt::TabFocus);
     qDebug() << "Show camera selection button";
 }
 
