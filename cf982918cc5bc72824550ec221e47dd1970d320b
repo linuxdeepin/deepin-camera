@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02a363af_c4b56f2f",
+        "filename": "tests/MainwindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-02-25T09:51:16Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 91; 注释率: 0.0%",
+      "revId": "cf982918cc5bc72824550ec221e47dd1970d320b",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
