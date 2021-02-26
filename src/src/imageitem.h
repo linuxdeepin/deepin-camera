@@ -183,7 +183,7 @@ protected:
 private slots:
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 7))//5.4.7暂时没有合入
     /**
      * @brief paintRequestedAsyn 同步打印
      * @param _printer 打印机

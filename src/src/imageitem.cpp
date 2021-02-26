@@ -544,22 +544,31 @@ void ImageItem::onPrint()
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 {
     m_imgs.clear();
+    QStringList tempExsitPaths;//保存存在的图片路径
+    tempExsitPaths.clear();
+
     for (const QString &path : paths) {
         QImage img(path);
         if (!img.isNull())
             m_imgs << img;
+        tempExsitPaths << paths;
     }
 
     DPrintPreviewDialog printDialog(parent);
     printDialog.setObjectName(PRINT_DIALOG);
     printDialog.setAccessibleName(PRINT_DIALOG);
 #ifndef UNITTEST
-    //适配打印接口2.0，dtk大于 5.4.4 版才合入最新的2.0打印控件接口
+    //适配打印接口2.0，dtk大于 5.4.7 版才合入最新的2.0打印控件接口
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 7))//5.4.7暂时没有合入
 
     bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
+    //单张照片设置名称,可能多选照片，但能成功加载的可能只有一张，或从相册中选中的原图片不存在
+    if (tempExsitPaths.size() == 1) {
+        QString docName = QString(QFileInfo(tempExsitPaths.at(0)).baseName());
+        printDialog.setDocName(docName);
+    }//else 多张照片不设置名称，默认使用print模块的print.pdf
 
     if (suc) //异步
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
@@ -580,7 +589,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 4))//5.4.4暂时没有合入
+    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH > 7))//5.4.7暂时没有合入
 void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange)
 {
     QPainter painter(_printer);
