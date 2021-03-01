@@ -325,7 +325,6 @@ void ThumbnailsBar::onBtnClick()
             emit takeVd();
         } else {
             m_nStatus = STATVdIng;
-            this->hide();
             //1、标题栏拍照按钮置灰不可选
             emit enableTitleBar(2);
             //2、禁用设置功能
@@ -335,7 +334,6 @@ void ThumbnailsBar::onBtnClick()
         }
     } else
         return;
-
 }
 
 void ThumbnailsBar::onShortcutCopy()

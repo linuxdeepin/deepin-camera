@@ -682,12 +682,6 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
 void CMainWindow::setWayland(bool bTrue)
 {
     m_bWayland = bTrue;
-    if (bTrue) {
-        m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
-                                     "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
-        connect(m_pDBus, SIGNAL(PrepareForSleep(bool)), this, SLOT(onSleepWhenTaking(bool)));
-        //接收休眠信号，仅wayland使用
-    }
 }
 
 CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
@@ -1159,14 +1153,19 @@ void CMainWindow::onNoCam()
 
 }
 
-void CMainWindow::onSleepWhenTaking(bool bTrue)
+void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 {
-    if (m_bWayland && bTrue) {
-        qDebug() << "onSleepWhenTaking(bool)";
-        m_videoPre->onEndBtnClicked();
-        qDebug() << "onSleepWhenTaking(over)";
+    if (bTrue) {
+        if (m_thumbnail->m_nStatus == STATPicIng)
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        else if (m_thumbnail->m_nStatus == STATVdIng) {
+            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+            if (btn->isVisible())
+                btn->click();
+            else
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        }
     }
-
 }
 
 void CMainWindow::onDirectoryChanged(const QString &)
@@ -1259,6 +1258,14 @@ void CMainWindow::onTimeoutLock(QString serviceName, QVariantMap key2value, QStr
     } else//锁屏结束连拍
         if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
             m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+    /*锁屏取消、结束录制*/
+        else if (m_thumbnail->m_nStatus == STATVdIng && key2value.value("Locked").value<bool>()) {
+            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+            if (btn->isVisible())
+                btn->click();
+            else
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        }
 }
 
 void CMainWindow::initUI()
@@ -1454,6 +1461,12 @@ void CMainWindow::initConnection()
     QDBusConnection::sessionBus().connect("com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate",
                                           "com.deepin.daemon.Timedate", "TimeUpdate", this,
                                           SLOT(onLocalTimeChanged()));
+
+    QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager", "PrepareForSleep", this, SLOT(stopCancelContinuousRecording(bool)));
+
+    QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
+                                         "org.freedesktop.login1.Manager", "PrepareForShutdown", this, SLOT(stopCancelContinuousRecording(bool)));
 }
 
 void CMainWindow::initThumbnails()

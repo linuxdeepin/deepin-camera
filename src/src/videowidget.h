@@ -144,12 +144,17 @@ public:
     }
 
     /**
-    * @brief getCapStatus　获取相机状态
+    * @brief getCapStatus　获取相机录制状态
     */
     bool getCapStatus()
     {
         return m_bActive;
     }
+
+    /**
+     * @brief stopCountTimeRecord 取消录制
+     */
+    void takeVideoCancel();
 
     /**
     * @brief setSaveVdFolder　设置保存视频文件夹
@@ -311,7 +316,10 @@ private:
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 private:
-    bool                       m_bActive;   //是否录制中
+    /**
+     * @brief m_bActive //是否录制中
+     */
+    bool                       m_bActive;
 #ifndef __mips__
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
 #endif

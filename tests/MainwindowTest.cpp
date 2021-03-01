@@ -1127,7 +1127,7 @@ TEST_F(MainwindowTest, CMainWindow)
 
     //调用拍照屏幕休眠函数
     mainwindow->setWayland(true);
-    mainwindow->onSleepWhenTaking(true);
+    mainwindow->stopCancelContinuousRecording(true);
     mainwindow->setWayland(false);
 
     //调用路径文件改变槽函数

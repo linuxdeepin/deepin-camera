@@ -1269,20 +1269,18 @@ void videowidget::onTakePic(bool bTrue)
 
 void videowidget::onTakeVideo() //点一次开，再点一次关
 {
-
-    if (m_countTimer->isActive())
-        m_countTimer->stop();
-
-    if (m_pCamErrItem->isVisible())
-        m_pCamErrItem->hide();
-
-    if (m_fWgtCountdown->isVisible())
-        m_fWgtCountdown->hide();
-
-    if (m_nInterval > 0) { //倒计时期间的处理
+    if (m_nInterval >= 0 && m_countTimer->isActive()) { //倒计时期间的处理
         m_nInterval = 0; //下次可开启
         set_video_time_capture(0);
         emit takeVdCancel(); //用于恢复缩略图
+        if (m_countTimer->isActive())
+            m_countTimer->stop();
+
+        if (m_pCamErrItem->isVisible())
+            m_pCamErrItem->hide();
+
+        if (m_fWgtCountdown->isVisible())
+            m_fWgtCountdown->hide();
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
 
@@ -1292,6 +1290,14 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         setCapStatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
+        if (m_countTimer->isActive())
+            m_countTimer->stop();
+
+        if (m_pCamErrItem->isVisible())
+            m_pCamErrItem->hide();
+
+        if (m_fWgtCountdown->isVisible())
+            m_fWgtCountdown->hide();
         return;
     }
 
@@ -1359,7 +1365,9 @@ void videowidget::startTakeVideo()
         m_btnVdTime->setText(QString("00:00:00"));
         int nWidth = width();
         int nHeight = height();
+        parentWidget()->findChild<ThumbnailsBar *>()->hide();
         m_endBtn->show();
+
         m_btnVdTime->show();
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
                           nHeight - m_btnVdTime->height() - 6);

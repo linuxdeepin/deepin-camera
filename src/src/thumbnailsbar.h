@@ -57,7 +57,7 @@ DWIDGET_USE_NAMESPACE
 enum ActType {ActTakePic, ActTakeVideo};
 
 /**
- * @brief CamStatus 定义枚举类型CamStatus，即空闲，拍照，录像状态
+ * @brief The CamStatus enum 定义枚举类型CamStatus，即空闲，拍照，录像状态
  */
 enum CamStatus {STATNULL, STATPicIng, STATVdIng}; //定义枚举类型CamStatus
 

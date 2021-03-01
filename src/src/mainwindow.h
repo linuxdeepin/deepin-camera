@@ -273,10 +273,10 @@ private slots:
     void onNoCam();
 
     /**
-     * @brief onSleepWhenTaking 录像时如果处于休眠状态则关闭录像
+     * @brief onSleepWhenTaking 结束(取消)连拍、录制
      * @param bTrue
      */
-    void onSleepWhenTaking(bool);
+    void stopCancelContinuousRecording(bool);
 
     /**
      * @brief onDirectoryChanged 文件夹删除、重命名监控
