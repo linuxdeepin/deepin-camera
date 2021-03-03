@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "926dc44b_897a8e1a",
+        "filename": "src/src/capplication.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-03T08:05:44Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 9; 注释率: 0.0%",
+      "revId": "ab666291a98c46697b7d151a6e01fbc84587530e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c02d981_50b6f524",
+        "filename": "src/src/capplication.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-03-03T08:05:44Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 26; 注释率: 3.8%",
+      "revId": "ab666291a98c46697b7d151a6e01fbc84587530e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
