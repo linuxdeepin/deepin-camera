@@ -27,6 +27,11 @@ CApplication::CApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
 {
     m_mainwindow = nullptr;
+#ifndef TABLE_ENVIRONMENT
+    m_bpanel = false;
+#elif
+    m_bpanel = true;
+#endif
 
     if (cameraCore == nullptr)
         cameraCore = this;
@@ -47,6 +52,11 @@ void CApplication::setMainWindow(CMainWindow *window)
 {
     if (!m_mainwindow)
         m_mainwindow = window;
+}
+
+bool CApplication::isPanelEnvironment()
+{
+    return m_bpanel;
 }
 
 void CApplication::setprocess(QList<QProcess *> &process)
