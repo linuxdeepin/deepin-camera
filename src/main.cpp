@@ -125,7 +125,12 @@ int main(int argc, char *argv[])
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
-    w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
+
+    if (!CamApp->isPanelEnvironment())
+        w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
+    else
+        w.showMaximized();
+
     w.show();
     w.loadAfterShow();
 
