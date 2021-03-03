@@ -66,6 +66,12 @@ public:
     void setMainWindow(CMainWindow *window);
 
     /**
+     * @brief isPanelEnvironment 是否是平板环境
+     * @return
+     */
+    bool isPanelEnvironment();
+
+    /**
     * @brief setprocess　设置进程列表
     * @param process 进程表
     */
@@ -95,7 +101,8 @@ protected:
 
 private:
     static CApplication *cameraCore;
-    CMainWindow       *m_mainwindow;
+    CMainWindow       *m_mainwindow;//主窗口
     QList<QProcess *> m_camprocesslist;
+    bool                 m_bpanel;//是否是平板设备
 };
 #endif // CAPPLICATION_H

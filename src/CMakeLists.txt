@@ -139,7 +139,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
     DESTINATION /usr/share/icons/hicolor/scalable/apps)
 
 #table_icons
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/Icons DESTINATION /usr/share/due-shell/shortcuts)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION /usr/share/due-shell/shortcuts)
 
 #manual
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
