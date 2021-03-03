@@ -1387,10 +1387,17 @@ void CMainWindow::initTitleBar()
     pSelectBtn->setFocusPolicy(Qt::TabFocus);
 
     //初始化主题判断
-    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType)
-        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
-    else
-        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
+        if (CamApp->isPanelEnvironment())
+            pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
+        else
+            pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+    } else {
+        if (CamApp->isPanelEnvironment())
+            pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
+        else
+            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+    }
 
     titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
     titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
@@ -1948,7 +1955,11 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         pSelectBtn->setIconSize(QSize(37, 37));
-        pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+
+        if (CamApp->isPanelEnvironment())
+            pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
+        else
+            pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
 
         if (m_nActTpye == ActTakePic)
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -1957,7 +1968,11 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
     }
 
     if (type == DGuiApplicationHelper::DarkType) {
-        pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+
+        if (CamApp->isPanelEnvironment())
+            pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
+        else
+            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
 
         if (m_nActTpye == ActTakePic)
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
