@@ -22,6 +22,7 @@
 #include "datamanager.h"
 #include "imageitem.h"
 #include "ac-deepin-camera-define.h"
+#include "capplication.h"
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
@@ -53,6 +54,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 {
     Q_UNUSED(parent);
     m_bVideo = false;
+    m_bMousePress = false;
     m_actPrint = nullptr;
     m_index = index;
     m_path = path;
@@ -269,30 +271,30 @@ ImageItem::~ImageItem()
 
 void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
-//    Q_UNUSED(ev);
-    if (ev->button() == Qt::RightButton)
-        return;
+    if (!CamApp->isPanelEnvironment()) {
+        if (ev->button() == Qt::RightButton)
+            return;
 
-    QFileInfo fileInfo(m_path);
-    QString program;
-    if (fileInfo.suffix() == "jpg") {
-        program = "deepin-image-viewer"; //用看图打开
-        qDebug() << "Open it with deepin-image-viewer";
-    } else {
-        program = "deepin-movie"; //用影院打开
-        qDebug() << "Open it with deepin-movie";
+        QFileInfo fileInfo(m_path);
+        QString program;
+        if (fileInfo.suffix() == "jpg") {
+            program = "deepin-image-viewer"; //用看图打开
+            qDebug() << "Open it with deepin-image-viewer";
+        } else {
+            program = "deepin-movie"; //用影院打开
+            qDebug() << "Open it with deepin-movie";
+        }
+
+        QStringList arguments;
+        //表示本地文件
+        arguments << QUrl::fromLocalFile(m_path).toString();
+        qInfo() << QUrl::fromLocalFile(m_path).toString();
+        QProcess *myProcess = new QProcess(this);
+        bool bOK = myProcess->startDetached(program, arguments);
+
+        if (!bOK)
+            qWarning() << "QProcess startDetached error";
     }
-
-    QStringList arguments;
-    //表示本地文件
-    arguments << QUrl::fromLocalFile(m_path).toString();
-    qInfo() << QUrl::fromLocalFile(m_path).toString();
-    QProcess *myProcess = new QProcess(this);
-    bool bOK = myProcess->startDetached(program, arguments);
-
-    if (!bOK)
-        qWarning() << "QProcess startDetached error";
-
 }
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
@@ -308,44 +310,54 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
         g_indexImage.value(DataManager::instance()->getindexNow())->update();
     }
 
-    //当按下Ctrl键，多选，鼠标右键弹出右键菜单后松开Ctrl键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
-    //此处补充获取Ctrl键盘状态，以避免继续选择图元，应用处于多选状态的问题
-    if (DataManager::instance()->getMultiType() == Ctrl && QGuiApplication::keyboardModifiers() == Qt::ControlModifier) {
-        if (DataManager::instance()->m_setIndex.contains(m_index)) {
+
+    if (!CamApp->isPanelEnvironment()) {
+        //当按下Ctrl键，多选，鼠标右键弹出右键菜单后松开Ctrl键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
+        //此处补充获取Ctrl键盘状态，以避免继续选择图元，应用处于多选状态的问题
+        if (DataManager::instance()->getMultiType() == Ctrl && QGuiApplication::keyboardModifiers() == Qt::ControlModifier) {
+            if (DataManager::instance()->m_setIndex.contains(m_index)) {
+                if (ev->button() == Qt::LeftButton) {
+                    DataManager::instance()->m_setIndex.remove(m_index);
+                    if (DataManager::instance()->m_setIndex.size() > 0) {
+                        DataManager::instance()->setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
+                    }
+                }
+            } else {
+                DataManager::instance()->setindexNow(m_index);
+                DataManager::instance()->m_setIndex.insert(m_index);
+            }
+
+        } else if (DataManager::instance()->getMultiType() == Shift && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
             if (ev->button() == Qt::LeftButton) {
-                DataManager::instance()->m_setIndex.remove(m_index);
-                if (DataManager::instance()->m_setIndex.size() > 0) {
-                    DataManager::instance()->setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
+                if (DataManager::instance()->getLastIndex() == -1) {//没有上一次的按键记录就添加
+                    DataManager::instance()->setLastIndex(DataManager::instance()->getindexNow());
+                } else {
+                    static int nCount = 0;//确保不会本次和上次重复填导致ui选中效果错误
+                    if (0 == nCount) {
+                        DataManager::instance()->setindexNow(m_index);
+                        nCount ++;
+                    } else {
+                        DataManager::instance()->setLastIndex(m_index);
+                        nCount = 0;
+                    }
+                    DataManager::instance()->m_setIndex.clear();
+                    int nLast = DataManager::instance()->getLastIndex();
+                    int nNow = DataManager::instance()->getindexNow();
+                    if (nLast == nNow) {
+                        DataManager::instance()->setindexNow(m_index);
+                        DataManager::instance()->m_setIndex.clear();
+                        update();
+                        return;
+                    }
+                    emit shiftMulti();
                 }
             }
         } else {
-            DataManager::instance()->setindexNow(m_index);
-            DataManager::instance()->m_setIndex.insert(m_index);
-        }
-
-    } else if (DataManager::instance()->getMultiType() == Shift && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
-        if (ev->button() == Qt::LeftButton) {
-            if (DataManager::instance()->getLastIndex() == -1) {//没有上一次的按键记录就添加
-                DataManager::instance()->setLastIndex(DataManager::instance()->getindexNow());
-            } else {
-                static int nCount = 0;//确保不会本次和上次重复填导致ui选中效果错误
-                if (0 == nCount) {
-                    DataManager::instance()->setindexNow(m_index);
-                    nCount ++;
-                } else {
-                    DataManager::instance()->setLastIndex(m_index);
-                    nCount = 0;
-                }
+            if (ev->button() == Qt::LeftButton) {
+                //左键点击，清空之前的多选和单选，重新开始选择
+                DataManager::instance()->setindexNow(m_index);
                 DataManager::instance()->m_setIndex.clear();
-                int nLast = DataManager::instance()->getLastIndex();
-                int nNow = DataManager::instance()->getindexNow();
-                if (nLast == nNow) {
-                    DataManager::instance()->setindexNow(m_index);
-                    DataManager::instance()->m_setIndex.clear();
-                    update();
-                    return;
-                }
-                emit shiftMulti();
+                DataManager::instance()->m_setIndex.insert(m_index);
             }
         }
     } else {
@@ -354,11 +366,10 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
             DataManager::instance()->setindexNow(m_index);
             DataManager::instance()->m_setIndex.clear();
             DataManager::instance()->m_setIndex.insert(m_index);
+            m_bMousePress = true;
         }
     }
-
     update();
-
     if (DataManager::instance()->m_setIndex.size() <= 1) {
         emit showDuration(m_strDuratuion);
 
@@ -507,7 +518,46 @@ void ImageItem::paintEvent(QPaintEvent *event)
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    qDebug() << "mapToParent(event->pos()).x():" << mapToParent(event->pos()).x() << endl;
+    qDebug() << "x():" << x() << endl;
+    qDebug() << "x()+ width():" << x() + width() << endl;
+    qDebug() << "mapToParent(event->pos()).y():" << mapToParent(event->pos()).y() << endl;
+    qDebug() << "y():" << y() << endl;
+    qDebug() << "y()+ height():" << y() + height() << endl;
+    if (mapToParent(event->pos()).x() < x() || mapToParent(event->pos()).x() > (x() + width()))
+        m_bMousePress = false;
+
+    if (mapToParent(event->pos()).y() < y() || mapToParent(event->pos()).y() > (y() + height()))
+        m_bMousePress = false;
+}
+
+void ImageItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (m_bMousePress == true) {
+        if (event->button() == Qt::LeftButton) {
+            QFileInfo fileInfo(m_path);
+            QString program;
+            if (fileInfo.suffix() == "jpg") {
+                program = "deepin-album"; //用相册打开
+                qDebug() << "Open it with deepin-image-viewer";
+            } else {
+                program = "deepin-movie"; //用影院打开
+                qDebug() << "Open it with deepin-movie";
+            }
+
+            QStringList arguments;
+            //表示本地文件
+            arguments << QUrl::fromLocalFile(m_path).toString();
+            qInfo() << QUrl::fromLocalFile(m_path).toString();
+            QProcess *myProcess = new QProcess(this);
+            bool bOK = myProcess->startDetached(program, arguments);
+            CamApp->getMainWindow()->showMinimized();
+
+            if (!bOK)
+                qWarning() << "QProcess startDetached error";
+            m_bMousePress = false;
+        }
+    }
 }
 
 void ImageItem::showMenu()

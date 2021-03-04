@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
     }
 
     CMainWindow w;
+    a.setMainWindow(&w);
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
