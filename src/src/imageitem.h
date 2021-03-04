@@ -33,6 +33,7 @@
 #include <dprintpreviewdialog.h>
 #define private public
 #else
+
 #include <dprintpreviewwidget.h>
 #include <dprintpreviewdialog.h>
 #endif
@@ -176,6 +177,12 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
 
     /**
+     * @brief mouseReleaseEvent 鼠标释放事件
+     * @param event
+     */
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
+    /**
      * @brief showPrintDialog 显示打印对话框
      */
     void showPrintDialog(const QStringList &paths, QWidget *parent);
@@ -198,19 +205,20 @@ private slots:
     void paintRequestSync(DPrinter *_printer);
 
 private:
-    bool     m_bVideo;//是否视频
-    int      m_index;//索引
-    int64_t  m_nDuration = 0; //视频文件时长,int形式时间
-    QList<QImage> m_imgs;//需要打印的图片
-    QString  m_path;//文件路径
-    QPixmap  m_pixmap;//缩略图
-    QString  m_pixmapstring;//缩略图路径
-    QString  m_strDuratuion;//视频文件时长,形式为00：00：00
-    QMenu    *m_menu;//菜单
-    QAction  *m_actCopy;//复制
-    QAction  *m_actDel;//删除
-    QAction  *m_actOpenFolder;//打开文件夹
-    QAction  *m_actPrint;//打印
+    bool            m_bVideo;//是否视频
+    bool            m_bMousePress;//鼠标按下事件
+    int             m_index;//索引
+    int64_t         m_nDuration = 0; //视频文件时长,int形式时间
+    QList<QImage>   m_imgs;//需要打印的图片
+    QString         m_path;//文件路径
+    QPixmap         m_pixmap;//缩略图
+    QString         m_pixmapstring;//缩略图路径
+    QString         m_strDuratuion;//视频文件时长,形式为00：00：00
+    QMenu           *m_menu;//菜单
+    QAction         *m_actCopy;//复制
+    QAction         *m_actDel;//删除
+    QAction         *m_actOpenFolder;//打开文件夹
+    QAction         *m_actPrint;//打印
 
 };
 

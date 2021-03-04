@@ -29,7 +29,7 @@ CApplication::CApplication(int &argc, char **argv)
     m_mainwindow = nullptr;
 #ifndef TABLE_ENVIRONMENT
     m_bpanel = false;
-#elif
+#else
     m_bpanel = true;
 #endif
 
