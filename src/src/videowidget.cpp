@@ -75,8 +75,10 @@ videowidget::videowidget(DWidget *parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
-    m_flashLabel->resize(parentWidget()->size());
-    m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
+    if(parentWidget()) {
+        m_flashLabel->resize(parentWidget()->size());
+        m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
+    }
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_pNormalView->setFocusPolicy(Qt::ClickFocus);
     forbidScrollBar(m_pNormalView);
