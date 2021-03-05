@@ -1645,12 +1645,18 @@ void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    if (windowState() == Qt::WindowMinimized)
-        set_capture_pause(1);
-    else if (windowState() == (Qt::WindowMinimized | Qt::WindowMaximized))
-        set_capture_pause(1);
-    else if (isVisible())
-        set_capture_pause(0);
+    if (windowState() == Qt::WindowMinimized || (windowState() == (Qt::WindowMinimized | Qt::WindowMaximized))) {
+        if (m_thumbnail->m_nStatus == STATPicIng)
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        /*锁屏取消、结束录制*/
+        else if (m_thumbnail->m_nStatus == STATVdIng) {
+            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+            if (btn->isVisible())
+                btn->click();
+            else
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        }
+    }
 }
 
 void CMainWindow::onFitToolBar()
