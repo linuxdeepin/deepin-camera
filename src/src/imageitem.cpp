@@ -612,20 +612,26 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
     || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
 
-    bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
-    //单张照片设置名称,可能多选照片，但能成功加载的可能只有一张，或从相册中选中的原图片不存在
-    if (tempExsitPaths.size() == 1) {
-        QString docName = QString(QFileInfo(tempExsitPaths.at(0)).baseName());
-        printDialog.setDocName(docName);
-    }//else 多张照片不设置名称，默认使用print模块的print.pdf
+    if (DTK_VERSION_MAJOR > 5 \
+            || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR > 4) \
+            || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10)) {
+        bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
+        //单张照片设置名称,可能多选照片，但能成功加载的可能只有一张，或从相册中选中的原图片不存在
+        if (tempExsitPaths.size() == 1) {
+            QString docName = QString(QFileInfo(tempExsitPaths.at(0)).baseName());
+            printDialog.setDocName(docName);
+        }//else 多张照片不设置名称，默认使用print模块的print.pdf
 
-    if (suc) //异步
-        connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
-                this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
-    else //同步
+        if (suc) //异步
+            connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
+                    this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
+        else //同步
+            connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
+                    this, SLOT(paintRequestSync(DPrinter *)));
+    } else {
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
                 this, SLOT(paintRequestSync(DPrinter *)));
-
+    }
 #else
     connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
             this, SLOT(paintRequestSync(DPrinter *)));
@@ -642,26 +648,31 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange)
 {
     QPainter painter(_printer);
-    if (pageRange.size() > 0) {
-        QImage img = m_imgs.at(pageRange.at(0) - 1);
+    qDebug() << pageRange.count();
+    for (int page : pageRange) {
+        if (page < m_imgs.count() + 1) {
+            QImage img = m_imgs.at(page - 1);
+            if (!img.isNull()) {
+                painter.setRenderHint(QPainter::Antialiasing);
+                painter.setRenderHint(QPainter::SmoothPixmapTransform);
+                QRect wRect  = _printer->pageRect();
+                QImage tmpMap;
 
-        if (!img.isNull()) {
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            QRect wRect  = _printer->pageRect();
-            QImage tmpMap;
+                if (img.width() > wRect.width() || img.height() > wRect.height())
+                    tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                else
+                    tmpMap = img;
 
-            if (img.width() > wRect.width() || img.height() > wRect.height())
-                tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            else
-                tmpMap = img;
+                QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
+                                          qreal(wRect.height() - tmpMap.height()) / 2,
+                                          tmpMap.width(), tmpMap.height());
 
-            QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
-                                      qreal(wRect.height() - tmpMap.height()) / 2,
-                                      tmpMap.width(), tmpMap.height());
-
-            painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
-                                     tmpMap.height()), tmpMap);
+                painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
+                                         tmpMap.height()), tmpMap);
+            }
+            if (page != m_imgs.count()) {
+                _printer->newPage();
+            }
         }
     }
     painter.end();
@@ -670,6 +681,7 @@ void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageR
 
 void ImageItem::paintRequestSync(DPrinter *_printer)
 {
+    int currentIndex = 0;
     QPainter painter(_printer);
     for (QImage img : m_imgs) {
 
@@ -691,8 +703,12 @@ void ImageItem::paintRequestSync(DPrinter *_printer)
                                      tmpMap.height()), tmpMap);
         }
 
-        if (img != m_imgs.last())
+//        if (img != m_imgs.last())
+        //不应该将多个相同的图片过滤掉
+        if (currentIndex != m_imgs.count() - 1) {
             _printer->newPage();
+            currentIndex++;
+        }
     }
 
     painter.end();
