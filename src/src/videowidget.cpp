@@ -75,6 +75,10 @@ videowidget::videowidget(DWidget *parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
+    if(parentWidget()) {
+        m_flashLabel->resize(parentWidget()->size());
+        m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
+    }
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_pNormalView->setFocusPolicy(Qt::ClickFocus);
     forbidScrollBar(m_pNormalView);
@@ -242,13 +246,11 @@ void videowidget::delayInit()
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
-    connect(this, SIGNAL(sigFlash()), this, SLOT(flash()));
 
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltFlashLabel);
     m_flashLabel->hide();
-    m_flashLabel->setFocusPolicy(Qt::ClickFocus);
     //启动视频
     int ret =  camInit("");
 
@@ -733,10 +735,13 @@ void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
     //m_pNormalView->resize(m_pNormalView->parentWidget()->size());
-    if (m_flashLabel->isVisible()) {
-        m_flashLabel->resize(parentWidget()->size());
+    if (size->size() != size->oldSize()) {
+        QSize size = QSize(parentWidget()->size().width(), parentWidget()->size().height());
+        m_flashLabel->resize(size);
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
-        m_flashLabel->update();
+    }
+    if (m_flashLabel->isVisible()) {
+        m_flashLabel->repaint();
     }
 
     //结束按钮放大缩小的显示
@@ -805,8 +810,6 @@ void videowidget::showCountdown()
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
-                m_flashLabel->resize(size());
-                m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
 #ifndef __mips__
                 m_openglwidget->hide();
 #endif
@@ -818,10 +821,9 @@ void videowidget::showCountdown()
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
-                m_flashLabel->resize(size());
-                m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
 #ifndef __mips__
                 m_openglwidget->hide();
+
 #endif
                 m_thumbnail->hide();
             }
