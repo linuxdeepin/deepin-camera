@@ -853,8 +853,8 @@ void CMainWindow::initTabOrder()
 
     //设置鼠标tab同时切换策略，有一个问题鼠标点击时也会出现一个tab选择框
     setTabOrder(picVideoBtn, takeVideoEndBtn);
-    setTabOrder(picVideoBtn, pSelectBtn);
-    setTabOrder(pSelectBtn, m_pTitlePicBtn);
+    setTabOrder(picVideoBtn, m_pSelectBtn);
+    setTabOrder(m_pSelectBtn, m_pTitlePicBtn);
     setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
     setTabOrder(m_pTitleVdBtn, windowoptionButton);
     setTabOrder(windowoptionButton, windowMinBtn);
@@ -948,6 +948,8 @@ void CMainWindow::initShortcut()
             windowCloseBtn->click();
         else if (windowQuitFullBtn == focuswidget)
             windowQuitFullBtn->click();
+        else if (m_pSelectBtn == focuswidget)
+            m_pSelectBtn->click();
         else
             return;
     });
@@ -1342,7 +1344,7 @@ void CMainWindow::initTitleBar()
     QList<DButtonBoxButton *> listButtonBox;
     m_pTitlePicBtn = new DButtonBoxButton(QString(""), this);
     m_pTitleVdBtn = new DButtonBoxButton(QString(""), this);
-    pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
+    m_pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
 
     pDButtonBox->setObjectName(BUTTOM_TITLE_BOX);
     pDButtonBox->setAccessibleName(BUTTOM_TITLE_BOX);
@@ -1379,28 +1381,28 @@ void CMainWindow::initTitleBar()
     titlebar()->addWidget(pDButtonBox);
 
     //初始化切换按钮
-    pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
-    pSelectBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
-    pSelectBtn->setFixedSize(QSize(37, 37));
-    pSelectBtn->setIconSize(QSize(37, 37));
-    pSelectBtn->hide();
-    pSelectBtn->setFocusPolicy(Qt::TabFocus);
+    m_pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
+    m_pSelectBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
+    m_pSelectBtn->setFixedSize(QSize(37, 37));
+    m_pSelectBtn->setIconSize(QSize(37, 37));
+    m_pSelectBtn->hide();
+    m_pSelectBtn->setFocusPolicy(Qt::TabFocus);
 
     //初始化主题判断
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
         if (CamApp->isPanelEnvironment())
-            pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
         else
-            pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
     } else {
         if (CamApp->isPanelEnvironment())
-            pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
         else
-            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
     }
 
     titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
-    titlebar()->addWidget(pSelectBtn, Qt::AlignLeft);
+    titlebar()->addWidget(m_pSelectBtn, Qt::AlignLeft);
 }
 
 void CMainWindow::initConnection()
@@ -1447,7 +1449,7 @@ void CMainWindow::initConnection()
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     //设备切换信号
-    connect(pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
+    connect(m_pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
     //标题栏图片按钮
@@ -1566,7 +1568,7 @@ void CMainWindow::initThumbnailsConn()
 
 void CMainWindow::setSelBtnHide()
 {
-    pSelectBtn->hide();
+    m_pSelectBtn->hide();
     qDebug() << "Hide camera selection button";
 }
 
@@ -1577,7 +1579,7 @@ void CMainWindow::onLocalTimeChanged()
 
 void CMainWindow::setSelBtnShow()
 {
-    pSelectBtn->show();
+    m_pSelectBtn->show();
     qDebug() << "Show camera selection button";
 }
 
@@ -1701,19 +1703,19 @@ void CMainWindow::onEnableTitleBar(int nType)
     switch (nType) {
     case 1:
         m_pTitleVdBtn->setEnabled(false);
-        pSelectBtn->setEnabled(false);
+        m_pSelectBtn->setEnabled(false);
         break;
     case 2:
         m_pTitlePicBtn->setEnabled(false);
-        pSelectBtn->setEnabled(false);
+        m_pSelectBtn->setEnabled(false);
         break;
     case 3:
         m_pTitleVdBtn->setEnabled(true);
-        pSelectBtn->setEnabled(true);
+        m_pSelectBtn->setEnabled(true);
         break;
     case 4:
         m_pTitlePicBtn->setEnabled(true);
-        pSelectBtn->setEnabled(true);
+        m_pSelectBtn->setEnabled(true);
         break;
     default:
         break;
@@ -1960,12 +1962,12 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        pSelectBtn->setIconSize(QSize(37, 37));
+        m_pSelectBtn->setIconSize(QSize(37, 37));
 
         if (CamApp->isPanelEnvironment())
-            pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
         else
-            pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
 
         if (m_nActTpye == ActTakePic)
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
@@ -1976,9 +1978,9 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
     if (type == DGuiApplicationHelper::DarkType) {
 
         if (CamApp->isPanelEnvironment())
-            pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
         else
-            pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+            m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
 
         if (m_nActTpye == ActTakePic)
             m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));

@@ -318,7 +318,7 @@ private:
     DButtonBox                      *pDButtonBox;//按钮盒
     DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
     DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
-    DIconButton                     *pSelectBtn; //切换按钮
+    DIconButton                     *m_pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
 
     QMenu                           *m_rightbtnmenu;//右键菜单
