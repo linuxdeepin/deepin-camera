@@ -852,8 +852,7 @@ void CMainWindow::initTabOrder()
     DPushButton *takeVideoEndBtn = m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
 
     //设置鼠标tab同时切换策略，有一个问题鼠标点击时也会出现一个tab选择框
-    setTabOrder(picVideoBtn, takeVideoEndBtn);
-    setTabOrder(picVideoBtn, m_pSelectBtn);
+
     setTabOrder(m_pSelectBtn, m_pTitlePicBtn);
     setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
     setTabOrder(m_pTitleVdBtn, windowoptionButton);
@@ -861,6 +860,8 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
     setTabOrder(windowCloseBtn, thumbLeftWidget);
+    setTabOrder(thumbLeftWidget, picVideoBtn);
+    setTabOrder(picVideoBtn, takeVideoEndBtn);
 
     titlebar()->setFocusPolicy(Qt::ClickFocus);
 }
