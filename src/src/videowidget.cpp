@@ -75,7 +75,7 @@ videowidget::videowidget(DWidget *parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
-    if(parentWidget()) {
+    if (parentWidget()) {
         m_flashLabel->resize(parentWidget()->size());
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
     }
@@ -806,6 +806,7 @@ void videowidget::showCountdown()
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime > 0) {
                 m_flashLabel->show();
+                m_flashLabel->setFocus();
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
@@ -814,10 +815,12 @@ void videowidget::showCountdown()
                 m_openglwidget->hide();
 #endif
                 m_thumbnail->hide();
+                setFocus();
             }
 
             if (m_curTakePicTime == 0 && m_nInterval == 0) {
                 m_flashLabel->show();
+                m_flashLabel->setFocus();
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
@@ -826,6 +829,7 @@ void videowidget::showCountdown()
 
 #endif
                 m_thumbnail->hide();
+                setFocus();
             }
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
@@ -978,6 +982,8 @@ void videowidget::flash()
 
 #endif
         m_thumbnail->show();
+        if (m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO))
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->setFocus();
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
         if (m_curTakePicTime == 0)
@@ -1263,9 +1269,12 @@ void videowidget::onTakePic(bool bTrue)
 
 #endif
 
-        if (!m_thumbnail->isVisible())
+        if (!m_thumbnail->isVisible()) {
             m_thumbnail->show();
 
+            if (m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO))
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->setFocus();
+        }
     }
 }
 
@@ -1369,6 +1378,7 @@ void videowidget::startTakeVideo()
         int nHeight = height();
         parentWidget()->findChild<ThumbnailsBar *>()->hide();
         m_endBtn->show();
+        m_endBtn->setFocus();
 
         m_btnVdTime->show();
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,

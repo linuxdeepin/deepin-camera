@@ -1935,6 +1935,8 @@ void CMainWindow::onTakeVdDone()
     onEnableTitleBar(4); //恢复按钮状态
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->show();
+    if (m_thumbnail->findChild<QPushButton *>("PicVdBtn"))
+        m_thumbnail->findChild<QPushButton *>("PicVdBtn")->setFocus();
     onEnableSettings(true);
 
     QTimer::singleShot(200, this, [ = ] {
