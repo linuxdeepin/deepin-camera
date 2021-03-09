@@ -23,6 +23,7 @@
 #include "mainwindow.h"
 #include "datamanager.h"
 #include "ac-deepin-camera-define.h"
+#include "capplication.h"
 
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
@@ -80,7 +81,7 @@ videowidget::videowidget(DWidget *parent)
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
     }
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
-    m_pNormalView->setFocusPolicy(Qt::ClickFocus);
+    m_pNormalView->setFocusPolicy(Qt::NoFocus);
     forbidScrollBar(m_pNormalView);
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
     m_pNormalView->setScene(m_pNormalScene);
@@ -89,11 +90,11 @@ videowidget::videowidget(DWidget *parent)
     m_pGridLayout->addWidget(m_pNormalView);
     m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
-    m_flashLabel->setFocusPolicy(Qt::ClickFocus);
+    m_flashLabel->setFocusPolicy(Qt::NoFocus);
     m_fWgtCountdown->hide(); //先隐藏
     m_fWgtCountdown->setFixedSize(160, 144);
     m_fWgtCountdown->setBlurBackgroundEnabled(true);
-    m_fWgtCountdown->setFocusPolicy(Qt::ClickFocus);
+    m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
     m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
     m_btnVdTime->setIconSize(QSize(6, 6));
     m_btnVdTime->hide(); //先隐藏
@@ -101,7 +102,7 @@ videowidget::videowidget(DWidget *parent)
     m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
     m_btnVdTime->setEnabled(false);
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
-    m_dLabel->setFocusPolicy(Qt::ClickFocus);
+    m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
 
     //wayland平台设置背景色为黑色
@@ -771,6 +772,62 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 }
 
+void videowidget::recoverTabWidget()
+{
+    if ((DataManager::instance()->getNowTabIndex() > 0 && DataManager::instance()->getNowTabIndex() < 4)
+            || DataManager::instance()->getNowTabIndex() > 7) {
+        CMainWindow *parentwidget = CamApp->getMainWindow();
+
+        if (parentwidget) {
+            DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
+            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
+            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
+            DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
+            ThumbWidget *thumbwidget = parentwidget->findChild<ThumbWidget *>("thumbLeftWidget");
+
+            if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
+                DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
+
+            switch (DataManager::instance()->getNowTabIndex()) {
+            case 1:
+                if (selectbtn) {
+                    if (selectbtn->isEnabled())
+                        selectbtn->setFocus();
+                    else
+                        setFocus();
+                }
+                break;
+            case 2:
+                if (titlepicbtn) {
+                    if (titlepicbtn->isEnabled())
+                        titlepicbtn->setFocus();
+                    else
+                        setFocus();
+                }
+                break;
+            case 3:
+                if (titlevdbtn) {
+                    if (titlevdbtn->isEnabled())
+                        titlevdbtn->setFocus();
+                    else
+                        setFocus();
+                }
+                break;
+            case 8:
+                if (picvideobtn)
+                    picvideobtn->setFocus();
+                break;
+            case 10:
+                if (thumbwidget)
+                    thumbwidget->setFocus();
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
 void videowidget::showCountdown()
 {
     if (DataManager::instance()->getdevStatus() == NOCAM) {
@@ -806,7 +863,17 @@ void videowidget::showCountdown()
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime > 0) {
                 m_flashLabel->show();
-                m_flashLabel->setFocus();
+
+                /**
+                  * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
+                  * 将焦点移到m_flashlabel
+                  */
+                if ((DataManager::instance()->m_tabIndex > 0
+                        && DataManager::instance()->m_tabIndex < 4
+                        && DataManager::instance()->m_tabIndex != 2)
+                        || DataManager::instance()->m_tabIndex > 7)
+                    m_flashLabel->setFocus();
+
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
@@ -815,12 +882,21 @@ void videowidget::showCountdown()
                 m_openglwidget->hide();
 #endif
                 m_thumbnail->hide();
-                setFocus();
             }
 
             if (m_curTakePicTime == 0 && m_nInterval == 0) {
                 m_flashLabel->show();
-                m_flashLabel->setFocus();
+
+                /**
+                  * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
+                  * 将焦点移到m_flashlabel
+                  */
+                if ((DataManager::instance()->m_tabIndex > 0
+                        && DataManager::instance()->m_tabIndex < 4
+                        && DataManager::instance()->m_tabIndex != 2)
+                        || DataManager::instance()->m_tabIndex > 7)
+                    m_flashLabel->setFocus();
+
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
@@ -829,7 +905,6 @@ void videowidget::showCountdown()
 
 #endif
                 m_thumbnail->hide();
-                setFocus();
             }
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
@@ -982,8 +1057,8 @@ void videowidget::flash()
 
 #endif
         m_thumbnail->show();
-        if (m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO))
-            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->setFocus();
+        recoverTabWidget();
+
         m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
         if (m_curTakePicTime == 0)
@@ -1027,6 +1102,19 @@ void videowidget::onEndBtnClicked()
 
     if (m_fWgtCountdown->isVisible())
         m_fWgtCountdown->hide();
+
+
+    //结束录制阶段,获取焦点的窗口索引，焦点在结束按钮，设置焦点索引为拍照/录制按钮
+    if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex) {
+
+        DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
+        if (DataManager::instance()->getNowTabIndex() == 9)
+            DataManager::instance()->setNowTabIndex(8);
+        else {
+            uint tabindex = DataManager::instance()->getNowTabIndex();
+            DataManager::instance()->setNowTabIndex(tabindex);
+        }
+    }
 
     m_btnVdTime->hide();
     m_endBtn->hide();
@@ -1271,9 +1359,7 @@ void videowidget::onTakePic(bool bTrue)
 
         if (!m_thumbnail->isVisible()) {
             m_thumbnail->show();
-
-            if (m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO))
-                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->setFocus();
+            recoverTabWidget();
         }
     }
 }
@@ -1378,7 +1464,10 @@ void videowidget::startTakeVideo()
         int nHeight = height();
         parentWidget()->findChild<ThumbnailsBar *>()->hide();
         m_endBtn->show();
-        m_endBtn->setFocus();
+
+        //录制视频开始之前，索引在拍照/录制按钮，设置焦点在结束按钮
+        if (DataManager::instance()->getNowTabIndex() == 8)
+            m_endBtn->setFocus();
 
         m_btnVdTime->show();
         m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,

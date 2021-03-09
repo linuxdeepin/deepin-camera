@@ -21,6 +21,7 @@
 */
 
 #include "datamanager.h"
+#include "../capplication.h"
 
 DataManager *DataManager::m_dataManager = nullptr;
 MultiType DataManager::getMultiType()
@@ -86,6 +87,16 @@ void DataManager::setdevStatus(enum DeviceStatus devStatus)
     m_devStatus = devStatus;
 }
 
+void DataManager::setNowTabIndex(uint tabindex)
+{
+    m_tabIndexNow = tabindex;
+}
+
+uint DataManager::getNowTabIndex()
+{
+    return m_tabIndexNow;
+}
+
 DataManager *DataManager::instance()
 {
     if (m_dataManager == nullptr) {
@@ -99,8 +110,11 @@ DataManager::DataManager()
 
     m_bCtrlMulti = false; //ctrl键多选
     m_bShitfMulti = false; //shift键连续多选
+    m_bTabEnter = false;
+    m_tabIndex = 0;
     m_indexLast = -1;
     m_indexNow = 0;
+    m_tabIndexNow = 0;
 //    QMap<int, ImageItem *> m_indexImage;
     m_strFileName.clear();
     m_videoCount = 0;
