@@ -612,9 +612,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
     || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
 
-    if (DTK_VERSION_MAJOR > 5 \
-            || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR > 4) \
-            || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10)) {
+    if (DApplication::runtimeDtkVersion() >= DTK_VERSION_CHECK(5, 4, 10, 0)) {
         bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
         //单张照片设置名称,可能多选照片，但能成功加载的可能只有一张，或从相册中选中的原图片不存在
         if (tempExsitPaths.size() == 1) {
