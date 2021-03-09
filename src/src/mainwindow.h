@@ -93,6 +93,11 @@ public:
     */
     void loadAfterShow();
 
+    /**
+     * @brief recoverTabWidget 拍照、录制触发完过后恢复tab框
+     */
+    void recoverTabWidget(uint index);
+
     ~CMainWindow() override;
 private:
     /**
@@ -134,6 +139,11 @@ private:
      * @brief initTabOrder 设置住窗口tab顺序
      */
     void initTabOrder();
+
+    /**
+     * @brief initEventFilter 安装事件过滤器
+     */
+    void initEventFilter();
 
     /**
      * @brief initShortcut 设置快捷键
@@ -302,6 +312,8 @@ protected:
      */
     void keyReleaseEvent(QKeyEvent *e) override;
 
+    bool eventFilter(QObject *obj, QEvent *e)override;
+
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
@@ -312,7 +324,6 @@ private:
     bool                            m_bWayland;
     ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
-
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
     DButtonBox                      *pDButtonBox;//按钮盒
@@ -320,7 +331,6 @@ private:
     DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
     DIconButton                     *m_pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
-
     QMenu                           *m_rightbtnmenu;//右键菜单
     QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控

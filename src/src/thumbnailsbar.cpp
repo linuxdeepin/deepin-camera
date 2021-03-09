@@ -294,6 +294,9 @@ void ThumbnailsBar::onBtnClick()
     if (DataManager::instance()->getdevStatus() != 2)
         return;
 
+    //拍照/录制按钮触发，记录当前焦点位置索引
+    DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
+
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {
             m_nStatus = STATNULL;
