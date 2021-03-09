@@ -36,12 +36,22 @@ public:
     static DataManager *instance();
 
     QSet<int> m_setIndex;
+    bool m_bTabEnter;//tab焦点Enter键触发
+    uint m_tabIndex;//tab框位置索引
     Q_DISABLE_COPY(DataManager)
 
     /**
      * @brief getMultiType 返回ctrl多选或者shift多选
      */
     MultiType getMultiType();
+
+    /**
+     * @brief getObject 获取控件
+     * @param index
+     * @return
+     */
+    QWidget *getObject(uint index);
+
     /**
      * @brief setCtrlMulti 设置ctrl多选
      * @param bCtrlMulti
@@ -113,6 +123,18 @@ public:
      * @brief setdevStatus 设置设备状态
      */
     void setdevStatus(enum DeviceStatus devStatus);
+
+    /**
+     * @brief setNowTabIndex 设置当前Tab焦点窗口的Index索引
+     * @param tabindex 索引
+     */
+    void setNowTabIndex(uint tabindex);
+
+    /**
+     * @brief getNowTabIndex 获取当前Tab焦点窗口的Index索引
+     * @return
+     */
+    uint getNowTabIndex();
 //    /**
 //     * @brief getindexImage 获得图片索引
 //     */
@@ -131,6 +153,7 @@ private:
     bool m_bShitfMulti;//shift键连续多选
     int m_indexLast;
     int m_indexNow;
+    uint m_tabIndexNow;//当前tab索引
     QString m_strFileName;
     int m_videoCount;
     volatile enum DeviceStatus m_devStatus;

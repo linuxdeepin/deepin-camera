@@ -277,6 +277,11 @@ private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
     /**
+     * @brief recoverTabWidget 恢复窗体的tab框选
+     */
+    void recoverTabWidget();
+
+    /**
     * @brief showCountDownLabel　显示录制和拍照倒计时
     * @param state 当前状态（拍照，没有设备，视频）
     */
