@@ -59,7 +59,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     m_index = index;
     m_path = path;
 
-    setScaledContents(true);
+    setScaledContents(false);
+    setMargin(0);
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
 
     QPixmap pix;
@@ -464,9 +465,9 @@ void ImageItem::paintEvent(QPaintEvent *event)
         this->setFixedSize(SELECTED_WIDTH, SELECTED_WIDTH);
     } else {
         pixmapRect.setX(backgroundRect.x() + 1);
-        pixmapRect.setY(backgroundRect.y() + 0);
+        pixmapRect.setY(backgroundRect.y() + 1);
         pixmapRect.setWidth(backgroundRect.width() - 2);
-        pixmapRect.setHeight(backgroundRect.height() - 0);
+        pixmapRect.setHeight(backgroundRect.height() - 2);
 
         QPainterPath bg0;
         bg0.addRoundedRect(pixmapRect, 4, 4);

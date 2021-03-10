@@ -44,12 +44,16 @@
 #include <QPushButton>
 
 DWIDGET_USE_NAMESPACE
-
-#define LAST_BUTTON_WIDTH 64//拍照/录制按钮宽度
-#define LAST_BUTTON_HEIGHT 50//拍照/录制按钮高度
-#define LAST_BUTTON_SPACE 14//按钮与窗体的间隔
-#define ITEM_SPACE 2//控件间距
-#define VIDEO_TIME_WIDTH 72//视频时长显示的宽度
+//拍照/录制按钮宽度
+#define LAST_BUTTON_WIDTH 65
+//拍照/录制按钮高度
+#define LAST_BUTTON_HEIGHT 51
+//按钮与窗体的间隔
+#define LAST_BUTTON_SPACE 10
+//控件间距
+#define ITEM_SPACE 2
+//视频时长显示的宽度
+#define VIDEO_TIME_WIDTH 72
 
 /**
  * @brief ActType 定义枚举类型ActType，即拍照和录像
@@ -71,7 +75,7 @@ class ThumbnailsBar : public DFloatingWidget
     Q_OBJECT
 public:
 
-    explicit ThumbnailsBar(DWidget *parent = nullptr);
+    explicit ThumbnailsBar(QWidget *parent = nullptr);
     /**
      * @brief initShortcut 初始化快捷键
      */
