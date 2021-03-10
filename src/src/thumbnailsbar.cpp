@@ -31,6 +31,8 @@
 #include <DSettingsDialog>
 #include <DSettingsOption>
 #include <DSettings>
+#include <DBlurEffectWidget>
+
 
 #include <QCollator>
 #include <QFileDialog>
@@ -57,9 +59,10 @@ QMap<int, ImageItem *> get_imageitem()
     return g_indexImage;
 }
 
-ThumbnailsBar::ThumbnailsBar(DWidget *parent)
+ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     : DFloatingWidget(parent)
 {
+    this->setFixedHeight(100);
     m_lastButton = new DPushButton(this);
     m_thumbLeftWidget = new ThumbWidget(this);
     m_lastButton->setObjectName(BUTTON_PICTURE_VIDEO);
@@ -67,7 +70,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     m_nDelTimes = 0;
     m_strFileName = "";
     setFocusPolicy(Qt::NoFocus);
-    this->setFramRadius(18);
+    setFramRadius(18);
     initShortcut();
     m_nStatus = STATNULL;
     m_nActTpye = ActTakePic;
@@ -76,15 +79,18 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     m_thumbLeftWidget->setLayout(m_hBox);
     m_thumbLeftWidget->setObjectName("thumbLeftWidget");
     m_thumbLeftWidget->setFocusPolicy(Qt::TabFocus);
-    m_hBox->setContentsMargins(0, 0, 0, 0);
-    m_hBox->setSpacing(ITEM_SPACE);
+    m_thumbLeftWidget->setMargin(0);
+
     m_mainLayout = new QHBoxLayout(this);
-    m_mainLayout->setContentsMargins(5, 0, 5, 0);
+    m_mainLayout->setContentsMargins(5, 0, 8, 0);
 
     setBlurBackgroundEnabled(true); //设置磨砂效果
 
     m_mainLayout->setObjectName(QStringLiteral("horizontalLayout_5"));
     m_mainLayout->addWidget(m_thumbLeftWidget, Qt::AlignLeft);
+
+
+    m_hBox->setAlignment(Qt::AlignLeft);
 
     m_showVdTime = new DLabel(this);
     m_mainLayout->addWidget(m_showVdTime, Qt::AlignRight);
@@ -112,7 +118,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
     m_lastButton->setFixedHeight(LAST_BUTTON_HEIGHT);
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
-    m_lastButton->setIconSize(QSize(33, 33));
+    m_lastButton->setIconSize(QSize(29, 29));
     m_lastButton->setFocusPolicy(Qt::TabFocus);
 
     DPalette pa = m_lastButton->palette();
@@ -126,7 +132,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent)
 
     connect(m_lastButton, SIGNAL(clicked()), this, SLOT(onBtnClick()));
 
-    m_mainLayout->addWidget(m_lastButton, Qt::AlignRight);
+    m_mainLayout->addWidget(m_lastButton, Qt::AlignRight | Qt::AlignVCenter);
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -276,7 +282,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         //g_indexImage.insert(tIndex, pLabel);
         tIndex++;
 
-        m_hBox->addWidget(pLabel);
+        m_hBox->addWidget(pLabel, 0, Qt::AlignLeft);
 
         if (m_hBox->count() == 1)
             strShowTime = pLabel->getDuration();
@@ -658,7 +664,7 @@ void ThumbnailsBar::ChangeActType(enum ActType nType)
     if (nType == ActTakePic) {
         QIcon iconPic(":/images/icons/light/button/photograph.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(33, 33));
+        m_lastButton->setIconSize(QSize(29, 29));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#0081FF");
@@ -669,7 +675,7 @@ void ThumbnailsBar::ChangeActType(enum ActType nType)
     } else if (nType == ActTakeVideo) {
         QIcon iconPic(":/images/icons/light/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
-        m_lastButton->setIconSize(QSize(33, 33));
+        m_lastButton->setIconSize(QSize(29, 29));
 
         DPalette pa = m_lastButton->palette();
         QColor clo("#FF0000");
