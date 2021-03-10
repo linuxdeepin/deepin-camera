@@ -1553,19 +1553,19 @@ void CMainWindow::initConnection()
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
-#else
-            closeDlg.exec();
-#endif
-            m_videoPre->onEndBtnClicked();
-#ifdef UNITTEST
+            sleep(1);
             closeDlg.close();
 #else
-            qApp->quit();
+            int ret = closeDlg.exec();
+
+            if (ret == 1) {
+                m_videoPre->onEndBtnClicked();
+                usleep(200);
+                qApp->quit();
+            }
 #endif
         } else
             qApp->quit();
-
-
     });
 
     //设置按钮信号
