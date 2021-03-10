@@ -1462,6 +1462,11 @@ void videowidget::startTakeVideo()
         m_btnVdTime->setText(QString("00:00:00"));
         int nWidth = width();
         int nHeight = height();
+
+        //判断倒计时阶段焦点位移到拍照/录制按钮，重新设置tab的索引
+        if (DataManager::instance()->m_tabIndex == 8)
+            DataManager::instance()->setNowTabIndex(8);
+
         parentWidget()->findChild<ThumbnailsBar *>()->hide();
         m_endBtn->show();
 
