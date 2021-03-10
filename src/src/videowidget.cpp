@@ -285,7 +285,6 @@ void videowidget::delayInit()
                 close_v4l2_device_handler();
                 vd = nullptr;
             }
-
         }
 
         showNocam();
@@ -319,7 +318,6 @@ void videowidget::delayInit()
                 pa_cb.setColor(QPalette::ButtonText, QColor(202, 0, 0));
                 m_btnVdTime->setPalette(pa_cb);
             }
-
         }
 
         if (m_pCamErrItem->isVisible()) {
@@ -380,7 +378,6 @@ void videowidget::delayInit()
 
             if (m_flashLabel->isVisible())
                 m_flashLabel->hide();
-
         }
 
     });
@@ -900,10 +897,11 @@ void videowidget::showCountdown()
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
+              
 #ifndef __mips__
                 m_openglwidget->hide();
-
 #endif
+              
                 m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
@@ -1462,6 +1460,11 @@ void videowidget::startTakeVideo()
         m_btnVdTime->setText(QString("00:00:00"));
         int nWidth = width();
         int nHeight = height();
+
+        //判断倒计时阶段焦点位移到拍照/录制按钮，重新设置tab的索引
+        if (DataManager::instance()->m_tabIndex == 8)
+            DataManager::instance()->setNowTabIndex(8);
+
         parentWidget()->findChild<ThumbnailsBar *>()->hide();
         m_endBtn->show();
 
