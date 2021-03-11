@@ -27,7 +27,7 @@
 ThumbWidget::ThumbWidget(QWidget *parent, int outlinewidth): DLabel(parent), m_outLineWidth(outlinewidth)
 {
     m_tabFocusStatus = false;
-    setContentsMargins(5, 0, 5, 0);
+    setContentsMargins(5, 0, 0, 0);
 }
 
 void ThumbWidget::focusInEvent(QFocusEvent *event)
@@ -62,7 +62,7 @@ void ThumbWidget::paintEvent(QPaintEvent *event)
         //初始化圆角矩形框的绘制路径
         QPainterPath roundRectPath;
         //调节圆角的大小
-        qreal cornerSize = 30;
+        qreal cornerSize = 18;
         //圆角半径
         qreal arcR = cornerSize / 2.0;
         //将圆角矩形框的长度和宽度缩小2个线框宽度
