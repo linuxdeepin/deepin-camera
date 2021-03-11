@@ -138,7 +138,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName(OPTION_FORMAT_LABER);
     lab->setAccessibleName(OPTION_FORMAT_LABER);
-    lab->setFixedHeight(15);
+    lab->setFixedHeight(25);
     lab->setText(option->value().toString());
     QFont font = lab->font();
     font.setPointSize(11);
@@ -1620,14 +1620,17 @@ void CMainWindow::initConnection()
 
 void CMainWindow::initThumbnails()
 {
-    m_thumbnail = new ThumbnailsBar(this);
+    m_thumbnail = new ThumbnailsBar;
+    m_thumbnail->setParent(this);
     m_rightbtnmenu = new QMenu(this);//添加右键打开文件夹功能
     m_actOpenfolder = new QAction(this);
 
     m_thumbnail->setObjectName(THUMBNAIL);
     m_thumbnail->setAccessibleName(THUMBNAIL);
     m_thumbnail->move(0, height() - 10);
-    m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 2);
+
+    m_thumbnail->setFixedHeight(LAST_BUTTON_HEIGHT + LAST_BUTTON_SPACE * 3);
+
     m_videoPre->setThumbnail(m_thumbnail);
     m_rightbtnmenu->setObjectName(BUTTON_RIGHT_MENU);
     m_rightbtnmenu->setAccessibleName(BUTTON_RIGHT_MENU);
@@ -1808,17 +1811,17 @@ void CMainWindow::onFitToolBar()
         int nWidth = 0;
 
         if (n <= 0) {
-            nWidth = LAST_BUTTON_SPACE * 2 + LAST_BUTTON_WIDTH;
+            nWidth = LAST_BUTTON_SPACE + LAST_BUTTON_WIDTH;
             m_thumbnail->m_showVdTime->hide();
             m_thumbnail->m_thumbLeftWidget->hide();
         } else {
             m_thumbnail->m_thumbLeftWidget->show();
             if (DataManager::instance()->getvideoCount() <= 0) {
                 m_thumbnail->m_showVdTime->hide();
-                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 3 + LAST_BUTTON_WIDTH;
+                nWidth = n * THUMBNAIL_WIDTH + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH;
             } else {
                 m_thumbnail->m_showVdTime->show();
-                nWidth = n * THUMBNAIL_WIDTH + ITEM_SPACE * (n - 1) + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
+                nWidth = n * THUMBNAIL_WIDTH + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
             }
 
             if (DataManager::instance()->m_setIndex.size() >= 1)
@@ -1829,8 +1832,11 @@ void CMainWindow::onFitToolBar()
         }
 
         qDebug() << "onFitToolBar" << nWidth;
-        m_thumbnail->resize(/*qMin(this->width(), nWidth)*/nWidth, THUMBNAIL_HEIGHT + 30);
-        m_thumbnail->m_hBox->setSpacing(ITEM_SPACE);
+        int tmpheight = m_thumbnail->height();
+        m_thumbnail->resize(nWidth, THUMBNAIL_HEIGHT + 50);
+        int mtmpheight = m_thumbnail->height();
+        m_thumbnail->m_hBox->setSpacing(0);
+        m_thumbnail->m_hBox->setMargin(0);
         m_thumbnail->move((width() - m_thumbnail->width()) / 2,
                           height() - m_thumbnail->height() - 5);
     }
