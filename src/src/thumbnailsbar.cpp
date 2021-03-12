@@ -120,6 +120,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(29, 29));
     m_lastButton->setFocusPolicy(Qt::TabFocus);
+    setMinimumWidth(LAST_BUTTON_WIDTH + 2 * (LAST_BUTTON_SPACE + 4));
 
     DPalette pa = m_lastButton->palette();
     QColor clo("#0081FF");
@@ -132,7 +133,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
 
     connect(m_lastButton, SIGNAL(clicked()), this, SLOT(onBtnClick()));
 
-    m_mainLayout->addWidget(m_lastButton, Qt::AlignRight | Qt::AlignVCenter);
+    m_mainLayout->addWidget(m_lastButton, Qt::AlignHCenter | Qt::AlignVCenter);
     this->setLayout(m_mainLayout);
 
     this->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -889,6 +890,17 @@ void ThumbnailsBar::widthChanged()
         m_fileInfoLst += fileinfo;
     }
 
+}
+
+void ThumbnailsBar::contentsMarginsChangeed(bool bvalue)
+{
+    if (bvalue) {
+        m_thumbLeftWidget->hide();
+        layout()->setContentsMargins(8, 0, 8, 0);
+    } else {
+        m_thumbLeftWidget->show();
+        layout()->setContentsMargins(5, 0, 8, 0);
+    }
 }
 
 void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理

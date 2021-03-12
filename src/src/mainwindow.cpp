@@ -42,6 +42,8 @@
 #include <DWindowMaxButton>
 #include <DWindowOptionButton>
 #include <DWindowQuitFullButton>
+#include <DStyleHelper>
+#include <DStyle>
 
 #include <QListWidgetItem>
 #include <QTextLayout>
@@ -73,8 +75,9 @@ static void workaround_updateStyle(QWidget *parent, const QString &theme)
     parent->setStyle(QStyleFactory::create(theme));
     for (auto obj : parent->children()) {
         QWidget *tmp_widget = qobject_cast<QWidget *>(obj);
-        if (tmp_widget)
+        if (tmp_widget) {
             workaround_updateStyle(tmp_widget, theme);
+        }
     }
 }
 
@@ -133,23 +136,30 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     main->setLayout(layout);
     main->setContentsMargins(0, 0, 0, 0);
     main->setMinimumWidth(240);
+    main->setMinimumHeight(20);
     layout->addWidget(lab);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName(OPTION_FORMAT_LABER);
     lab->setAccessibleName(OPTION_FORMAT_LABER);
-    lab->setFixedHeight(25);
+    lab->setMinimumHeight(20);
+
     lab->setText(option->value().toString());
-    QFont font = lab->font();
-    font.setPointSize(11);
-    lab->setFont(font);
+    QFont ft("SourceHanSansSC");
+    ft.setPixelSize(15);
+    ft.setWeight(QFont::Medium);
+    lab->setFont(ft);
     lab->setAlignment(Qt::AlignVCenter);
     lab->show();
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
+
     optionLayout->setSpacing(0);
-    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+    DLabel *dLabel = new DLabel(QObject::tr(option->name().toStdString().c_str()));
+    dLabel->setMinimumHeight(20);
+    dLabel->setAlignment(Qt::AlignVCenter);
+    optionLayout->addRow(dLabel, main);
     optionWidget->setContentsMargins(0, 0, 0, 0);
     workaround_updateStyle(optionWidget, "light");
 
@@ -163,7 +173,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     DLineEdit *picPathLineEdit = new DLineEdit;//文本框
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
-    DPushButton *icon = new DPushButton(main);
+    DSuggestButton *icon = new DSuggestButton(main);
     QWidget *optionWidget = new QWidget;
     QFormLayout *optionLayout = new QFormLayout(optionWidget);
     DDialog *optinvaliddialog = new DDialog(optionWidget);
@@ -173,10 +183,18 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     static QString lastPicPath = nullptr;
 
     main->setLayout(horboxlayout);
+    main->setContentsMargins(0, 0, 0, 0);
+    horboxlayout->setAlignment(Qt::AlignTop);
+    horboxlayout->setContentsMargins(0, 0, 0, 0);
+    QFont ft("SourceHanSansSC");
+    ft.setPixelSize(14);
+    ft.setWeight(QFont::Medium);
+    picPathLineEdit->setFont(ft);
+
     icon->setAutoDefault(false);
     icon->setObjectName(BUTTON_OPTION_PIC_LINE_EDIT);
     icon->setAccessibleName(BUTTON_OPTION_PIC_LINE_EDIT);
-    picPathLineEdit->setFixedHeight(30);
+    picPathLineEdit->setFixedHeight(37);
     picPathLineEdit->setObjectName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     picPathLineEdit->setAccessibleName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     //获取当前设置的照片保存路径
@@ -226,17 +244,26 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     } else
         lastPicPath = picStrElideText;
 
-    icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
-    icon->setIconSize(QSize(25, 25));
-    icon->setFixedHeight(30);
+    icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
+    icon->setIconSize(QSize(24, 24));
+    icon->setFixedSize(41, 37);
+
     horboxlayout->addWidget(picPathLineEdit);
     horboxlayout->addWidget(icon);
+
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
+    optionWidget->setFixedHeight(37);
+
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
+    optionLayout->setVerticalSpacing(0);
+    optionLayout->setMargin(0);
+
     main->setMinimumWidth(240);
-    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+    DLabel *lab = new DLabel(QObject::tr(option->name().toStdString().c_str()));
+    lab->setAlignment(Qt::AlignVCenter);
+    optionLayout->addRow(lab, main);
     workaround_updateStyle(optionWidget, "light");
     optinvaliddialog->setObjectName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
@@ -407,7 +434,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     DLineEdit *videoPathLineEdit = new DLineEdit;
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
-    DPushButton *icon = new DPushButton(main);
+    DSuggestButton *icon = new DSuggestButton(main);
     QWidget *optionWidget = new QWidget;
     QFormLayout *optionLayout = new QFormLayout(optionWidget);
     DDialog *optinvaliddialog = new DDialog(optionWidget);
@@ -416,10 +443,17 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     static QString lastVideoPath = nullptr;
 
     main->setLayout(horboxlayout);
+    main->setContentsMargins(0, 0, 0, 0);
+    horboxlayout->setAlignment(Qt::AlignTop);
+    horboxlayout->setContentsMargins(0, 0, 0, 0);
+    QFont ft("SourceHanSansSC");
+    ft.setPixelSize(14);
+    ft.setWeight(QFont::Medium);
+    videoPathLineEdit->setFont(ft);
     icon->setAutoDefault(false);
     icon->setObjectName(BUTTON_OPTION_VIDEO_LINE_EDIT);
     icon->setAccessibleName(BUTTON_OPTION_VIDEO_LINE_EDIT);
-    videoPathLineEdit->setFixedHeight(30);
+    videoPathLineEdit->setFixedHeight(37);
     videoPathLineEdit->setObjectName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     videoPathLineEdit->setAccessibleName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     QString curVideoSettingPath = option->value().toString();
@@ -467,17 +501,20 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     } else
         lastVideoPath = VideoStrElideText;
 
-    icon->setIcon(QIcon(":/images/icons/light/select-normal.svg"));
-    icon->setIconSize(QSize(25, 25));
-    icon->setFixedHeight(30);
+    icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
+    icon->setIconSize(QSize(24, 24));
+    icon->setFixedSize(41, 37);
     horboxlayout->addWidget(videoPathLineEdit);
     horboxlayout->addWidget(icon);
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
+    optionWidget->setFixedHeight(37);
     main->setMinimumWidth(240);
-    optionLayout->addRow(new DLabel(QObject::tr(option->name().toStdString().c_str())), main);
+    DLabel *lab = new DLabel(QObject::tr(option->name().toStdString().c_str()));
+    lab->setAlignment(Qt::AlignVCenter);
+    optionLayout->addRow(lab, main);
     workaround_updateStyle(optionWidget, "light");
     optinvaliddialog->setObjectName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
@@ -1038,6 +1075,7 @@ void CMainWindow::initShortcut()
 void CMainWindow::settingDialog()
 {
     m_SetDialog = new DSettingsDialog(this);
+    m_SetDialog->setFixedSize(820, 600);
     m_SetDialog->widgetFactory()->registerWidget("selectableEditpic", createPicSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("selectableEditvd", createVdSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
@@ -1813,9 +1851,9 @@ void CMainWindow::onFitToolBar()
         if (n <= 0) {
             nWidth = LAST_BUTTON_SPACE + LAST_BUTTON_WIDTH;
             m_thumbnail->m_showVdTime->hide();
-            m_thumbnail->m_thumbLeftWidget->hide();
+            m_thumbnail->contentsMarginsChangeed(true);
         } else {
-            m_thumbnail->m_thumbLeftWidget->show();
+            m_thumbnail->contentsMarginsChangeed(false);
             if (DataManager::instance()->getvideoCount() <= 0) {
                 m_thumbnail->m_showVdTime->hide();
                 nWidth = n * THUMBNAIL_WIDTH + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH;

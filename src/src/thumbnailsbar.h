@@ -111,6 +111,11 @@ public:
      * @brief widthChanged 改变缩略图宽度
      */
     void widthChanged();
+
+    /**
+     * @brief contentsMarginsChangeed 需要改变间距
+     */
+    void contentsMarginsChangeed(bool);
 private:
 
     /**
