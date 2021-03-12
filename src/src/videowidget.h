@@ -341,7 +341,8 @@ private:
 
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时
-    DPushButton                *m_btnVdTime;        //录制屏显时长
+    DBlurEffectWidget          *m_recordingTimeWidget;//录制时长窗口
+    DLabel                     *m_recordingTime;    //录制时长
     DPushButton                *m_endBtn;           //结束按钮
     DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 

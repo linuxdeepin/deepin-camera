@@ -27,6 +27,7 @@
 
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
+#include <DBlurEffectWidget>
 
 #include <QPixmap>
 #include <QTimer>
@@ -57,7 +58,8 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsView(this);
     m_flashLabel  = new DLabel(this);
-    m_btnVdTime = new DPushButton(this);
+    m_recordingTimeWidget = new DBlurEffectWidget(this);
+    m_recordingTime = new DLabel;
     m_fWgtCountdown = new DFloatingWidget(this);
     m_dLabel = new DLabel(m_fWgtCountdown);
     m_endBtn = new DPushButton(this);
@@ -65,6 +67,10 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalItem = new QGraphicsPixmapItem;
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
+
+//    m_recordingTimeWidget->setBlurBackgroundEnabled(true);
+    DLabel *recordingRedStatus = new DLabel;//录制状态红点
+    QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
 #ifndef __mips__
     m_openglwidget->setFocusPolicy(Qt::ClickFocus);
@@ -95,15 +101,27 @@ videowidget::videowidget(DWidget *parent)
     m_fWgtCountdown->setFixedSize(160, 144);
     m_fWgtCountdown->setBlurBackgroundEnabled(true);
     m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
-    m_btnVdTime->setIcon(QIcon(":/images/icons/light/Timer Status.svg"));
-    m_btnVdTime->setIconSize(QSize(6, 6));
-    m_btnVdTime->hide(); //先隐藏
-    m_btnVdTime->setFixedSize(92, 36);
-    m_btnVdTime->setAttribute(Qt::WA_TranslucentBackground);
-    m_btnVdTime->setEnabled(false);
+    recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignCenter);
+    recordingwidgetlay->addWidget(m_recordingTime, 0, Qt::AlignCenter);
+    recordingRedStatus->setPixmap(QPixmap(":/images/icons/light/Timer Status.svg"));
+    recordingRedStatus->setFixedSize(QSize(6, 6));
+    m_recordingTimeWidget->setLayout(recordingwidgetlay);
+    m_recordingTimeWidget->hide(); //先隐藏
+    m_recordingTimeWidget->setFixedSize(84, 35);
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
+
+    //设置高斯模糊
+    m_recordingTimeWidget->blurEnabled();
+    m_recordingTimeWidget->setMode(DBlurEffectWidget::GaussianBlur);
+    m_recordingTimeWidget->setRadius(40);
+    m_recordingTimeWidget->setBlurRectXRadius(10);
+    m_recordingTimeWidget->setBlurRectYRadius(10);
+
+//    QPalette pal = m_recordingTimeWidget->palette();
+//    pal.setColor(QPalette::Background, Qt::red);
+//    m_recordingTimeWidget->setPalette(pal);
 
     //wayland平台设置背景色为黑色
     if (get_wayland_status() == true) {
@@ -114,15 +132,15 @@ videowidget::videowidget(DWidget *parent)
     }
 
     QFont ftLabel("SourceHanSansSC-ExtraLight");
-    ftLabel.setWeight(QFont::Thin);//最小就是50,更小的设置不进去，也是bug？
-    ftLabel.setPixelSize(60);
+    ftLabel.setWeight(QFont::Normal);//最小就是50,更小的设置不进去，也是bug？
+    ftLabel.setPointSize(14);
     m_dLabel->setFont(ftLabel);
     QPalette pltLabel = m_dLabel->palette();
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
         pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
         QColor clrFill(235, 235, 235);
-        clrFill.setAlphaF(0.3);
+        clrFill.setAlphaF(0.2);
         pltLabel.setColor(QPalette::Base, clrFill);
     } else {
         pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
@@ -135,19 +153,19 @@ videowidget::videowidget(DWidget *parent)
     clrShadow.setAlphaF(0.2);
     pltLabel.setColor(QPalette::Shadow, clrShadow);
     m_dLabel->setPalette(pltLabel);
-    DPalette pa_cb = DApplicationHelper::instance()->palette(m_btnVdTime);//不用槽函数，程序打开如果是深色主题，可以正常切换颜色，其他主题不行，DTK的bug？
+    QPalette pa_cb = m_recordingTime->palette();//不用槽函数，程序打开如果是深色主题，可以正常切换颜色，其他主题不行，DTK的bug？
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType())
-        pa_cb.setColor(QPalette::ButtonText, QColor(255, 44, 44));
+        pa_cb.setColor(QPalette::WindowText, QColor(255, 44, 44));
     else
-        pa_cb.setColor(QPalette::ButtonText, QColor(202, 0, 0));
+        pa_cb.setColor(QPalette::WindowText, QColor(202, 0, 0));
 
     QFont ft("SourceHanSansSC");
     ft.setWeight(QFont::Normal);
     ft.setPixelSize(14);
-    m_btnVdTime->setPalette(pa_cb);
-    m_btnVdTime->setFont(ft);
-    m_btnVdTime->setText(QString("00:00:00"));
+    m_recordingTime->setPalette(pa_cb);
+    m_recordingTime->setFont(ft);
+    m_recordingTime->setText(QString("00:00:00"));
     m_endBtn->setObjectName(BUTTON_TAKE_VIDEO_END);
     m_endBtn->setAccessibleName(BUTTON_TAKE_VIDEO_END);
     m_endBtn->setFlat(true);
@@ -207,8 +225,8 @@ videowidget::~videowidget()
     delete m_fWgtCountdown;
     m_fWgtCountdown = nullptr;
 
-    delete m_btnVdTime;
-    m_btnVdTime = nullptr;
+    delete m_recordingTimeWidget;
+    m_recordingTimeWidget = nullptr;
 
     delete m_endBtn;
     m_endBtn = nullptr;
@@ -308,15 +326,15 @@ void videowidget::delayInit()
 
         m_dLabel->setPalette(pltLabel);
 
-        if (m_btnVdTime->isVisible()) {
+        if (m_recordingTimeWidget->isVisible()) {
             if (type == DGuiApplicationHelper::LightType) {
-                DPalette pa_cb = m_btnVdTime->palette();
+                DPalette pa_cb = m_recordingTimeWidget->palette();
                 pa_cb.setColor(QPalette::ButtonText, QColor(255, 44, 44));
-                m_btnVdTime->setPalette(pa_cb);
+                m_recordingTimeWidget->setPalette(pa_cb);
             } else {
-                DPalette pa_cb = m_btnVdTime->palette();
+                DPalette pa_cb = m_recordingTimeWidget->palette();
                 pa_cb.setColor(QPalette::ButtonText, QColor(202, 0, 0));
-                m_btnVdTime->setPalette(pa_cb);
+                m_recordingTimeWidget->setPalette(pa_cb);
             }
         }
 
@@ -653,7 +671,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
         m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
                               (height() - m_fWgtCountdown->height()) / 2);
         m_fWgtCountdown->show();
-        m_btnVdTime->hide();
+        m_recordingTimeWidget->hide();
         m_endBtn->hide();
 
         if (m_dLabel->pos() == QPoint(0, 0))
@@ -706,7 +724,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
             } else
                 strTime.append(QString::number(nSecs));
 
-            m_btnVdTime->setText(strTime);
+            m_recordingTime->setText(strTime);
 
             if ((m_nCount >= 3)) {
                 //开启多线程，每100ms读取时间并显示
@@ -722,7 +740,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     default:
         m_pCamErrItem->hide();
         m_fWgtCountdown->hide();
-        m_btnVdTime->hide();
+        m_recordingTimeWidget->hide();
         m_endBtn->hide();
         break;
     }
@@ -744,13 +762,13 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     //结束按钮放大缩小的显示
     if (m_endBtn->isVisible())
-        m_endBtn->move((width() + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
-                       height() - m_btnVdTime->height() - 10);
+        m_endBtn->move((width() + m_recordingTimeWidget->width() + 10 - m_endBtn->width()) / 2,
+                       height() - m_endBtn->height() - 11);
 
     //计时窗口放大缩小的显示
-    if (m_btnVdTime->isVisible())
-        m_btnVdTime->move((width() - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                          height() - m_btnVdTime->height() - 5);
+    if (m_recordingTimeWidget->isVisible())
+        m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10 - m_endBtn->width()) / 2,
+                                    height() - m_recordingTimeWidget->height() - 9);
 
     if (m_fWgtCountdown->isVisible()) {
         m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
@@ -897,11 +915,11 @@ void videowidget::showCountdown()
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
-              
+
 #ifndef __mips__
                 m_openglwidget->hide();
 #endif
-              
+
                 m_thumbnail->hide();
             }
             //发送就结束信号处理按钮状态
@@ -1037,7 +1055,7 @@ void videowidget::showRecTime()
         strTime.append(QString::number(nSecs));
     }
 
-    m_btnVdTime->setText(strTime);
+    m_recordingTime->setText(strTime);
 }
 
 void videowidget::flash()
@@ -1114,7 +1132,7 @@ void videowidget::onEndBtnClicked()
         }
     }
 
-    m_btnVdTime->hide();
+    m_recordingTimeWidget->hide();
     m_endBtn->hide();
 
     if (getCapStatus()) { //录制完成处理
@@ -1457,7 +1475,7 @@ void videowidget::startTakeVideo()
         }
 
         m_nCount = 0;//5184000;
-        m_btnVdTime->setText(QString("00:00:00"));
+        m_recordingTime->setText(QString("00:00:00"));
         int nWidth = width();
         int nHeight = height();
 
@@ -1472,11 +1490,11 @@ void videowidget::startTakeVideo()
         if (DataManager::instance()->getNowTabIndex() == 8)
             m_endBtn->setFocus();
 
-        m_btnVdTime->show();
-        m_btnVdTime->move((nWidth - m_btnVdTime->width() - 10 - m_endBtn->width()) / 2,
-                          nHeight - m_btnVdTime->height() - 6);
-        m_endBtn->move((nWidth + m_btnVdTime->width() + 10 - m_endBtn->width()) / 2,
-                       nHeight - m_btnVdTime->height() - 10);
+        m_recordingTimeWidget->show();
+        m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10 - m_endBtn->width()) / 2,
+                                    nHeight - m_recordingTimeWidget->height() - 9);
+        m_endBtn->move((nWidth + m_recordingTimeWidget->width() + 10 - m_endBtn->width()) / 2,
+                       nHeight - m_recordingTimeWidget->height() - 11);
     }
 }
 
