@@ -7,7 +7,7 @@ Build-Depends:
  pkg-config,qtbase5-dev,libdtkgui-dev,libdtkwidget-dev,
  libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
- libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,libpulse-dev,
+ libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,libpulse-dev,libvpx-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,
  libx11-dev,libva-dev
 Standards-Version: 4.1.3
