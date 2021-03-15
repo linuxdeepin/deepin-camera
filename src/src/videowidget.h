@@ -347,7 +347,9 @@ private:
     DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
     QSound                     *m_takePicSound;     //拍照声音
-    QPixmap                    m_pixmap;
+    QPixmap                    m_framePixmap;            //帧图片
+    QPixmap                    m_noDevStatusPixmap;      //未连接状态
+    QPixmap                    m_devTackupStatuspixmap;  //被占用状态
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器

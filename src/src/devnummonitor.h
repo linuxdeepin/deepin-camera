@@ -86,6 +86,7 @@ private slots:
 
 private:
     QTimer             *m_pTimer;
+    bool               m_noDevice;
 
 };
 

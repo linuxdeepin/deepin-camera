@@ -31,6 +31,7 @@ extern "C"
 
 DevNumMonitor::DevNumMonitor(QTimer *timer): m_pTimer(timer)
 {
+    m_noDevice = false;
 }
 
 DevNumMonitor::~DevNumMonitor()
@@ -60,13 +61,18 @@ void DevNumMonitor::timeOutSlot()
         emit seltBtnStateDisable();
         if (get_device_list()->num_devices < 1) {
             //没有设备发送信号
-            emit noDeviceFound();
+            if (!m_noDevice) {
+                emit noDeviceFound();
+                m_noDevice = true;
+            }
             qDebug() << "There is no camera connected!";
         } else {
+            m_noDevice = false;
             emit existDevice();
             qDebug() << "There is a camera connected!";
         }
     } else {
+        m_noDevice = false;
         emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();

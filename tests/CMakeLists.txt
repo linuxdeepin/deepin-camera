@@ -42,7 +42,7 @@ set(PROJECT_INCLUDE
     ${PROJECT_SOURCE_DIR}/googletest/include
     )
 # 设置Qt模块
-set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport)
+set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg)
 
 # 查找Qt相关的库链接
 find_package(Qt5 REQUIRED ${QtModule})
