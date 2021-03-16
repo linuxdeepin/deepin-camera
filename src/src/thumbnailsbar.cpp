@@ -33,7 +33,6 @@
 #include <DSettings>
 #include <DBlurEffectWidget>
 
-
 #include <QCollator>
 #include <QFileDialog>
 #include <QStandardPaths>
