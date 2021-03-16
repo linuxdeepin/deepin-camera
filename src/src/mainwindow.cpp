@@ -1523,7 +1523,7 @@ void CMainWindow::initTitleBar()
     QList<DButtonBoxButton *> listButtonBox;
     m_pTitlePicBtn = new DButtonBoxButton(QString(""), this);
     m_pTitleVdBtn = new DButtonBoxButton(QString(""), this);
-    m_pSelectBtn = new DIconButton(this/*DStyle::SP_IndicatorSearch*/);
+    m_pSelectBtn = new DIconButton(this);
 
     pDButtonBox->setObjectName(BUTTOM_TITLE_BOX);
     pDButtonBox->setAccessibleName(BUTTOM_TITLE_BOX);
@@ -1563,22 +1563,23 @@ void CMainWindow::initTitleBar()
     m_pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
     m_pSelectBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
     m_pSelectBtn->setFixedSize(QSize(37, 37));
-    m_pSelectBtn->setIconSize(QSize(37, 37));
+
     m_pSelectBtn->hide();
     m_pSelectBtn->setFocusPolicy(Qt::TabFocus);
     m_pSelectBtn->installEventFilter(this);
 
     //初始化主题判断
-    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        if (CamApp->isPanelEnvironment())
-            m_pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
-        else
+    if (!CamApp->isPanelEnvironment()) {
+        m_pSelectBtn->setIconSize(QSize(37, 37));
+        if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
             m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
-    } else {
-        if (CamApp->isPanelEnvironment())
-            m_pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
-        else
+        } else {
+
             m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
+        }
+    } else {
+        m_pSelectBtn->setIconSize(QSize(20, 20));
+        m_pSelectBtn->setIcon(QIcon::fromTheme("panel_switch_camera"));
     }
 
     titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
@@ -2189,11 +2190,7 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
     if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-        m_pSelectBtn->setIconSize(QSize(37, 37));
-
-        if (CamApp->isPanelEnvironment())
-            m_pSelectBtn->setIcon(QIcon(":/table/Icons/light/Switch camera_dark.svg"));
-        else
+        if (!CamApp->isPanelEnvironment())
             m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
 
         if (m_nActTpye == ActTakePic)
@@ -2204,9 +2201,7 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 
     if (type == DGuiApplicationHelper::DarkType) {
 
-        if (CamApp->isPanelEnvironment())
-            m_pSelectBtn->setIcon(QIcon(":/table/Icons/dark/Switch camera.svg"));
-        else
+        if (!CamApp->isPanelEnvironment())
             m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
 
         if (m_nActTpye == ActTakePic)
