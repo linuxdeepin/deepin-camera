@@ -1298,16 +1298,17 @@ void CMainWindow::recoverTabWidget(uint index)
 
 void CMainWindow::updateBlockSystem(bool bTrue)
 {
-    initBlockShutdown();
+    if (!CamApp->isPanelEnvironment()) {
+        initBlockShutdown();
 
-    if (bTrue) {
-        m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
-    } else {
-        QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
-        m_reply = QDBusReply<QDBusUnixFileDescriptor>();
-        qDebug() << "Nublock shutdown.";
+        if (bTrue) {
+            m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
+        } else {
+            QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
+            m_reply = QDBusReply<QDBusUnixFileDescriptor>();
+            qDebug() << "Nublock shutdown.";
+        }
     }
-
     if (m_bWayland) {
         initBlockSleep();
 
