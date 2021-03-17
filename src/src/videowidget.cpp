@@ -704,9 +704,10 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 
     case VIDEO:
         m_pCamErrItem->hide();
+        if (m_nCount > MAX_REC_TIME)//平板与主线保持一致最大录制时长60小时
+            onEndBtnClicked();//结束录制
 
-        if (m_nCount > MAX_REC_TIME)
-            onEndBtnClicked(); //结束录制
+
 
         m_fWgtCountdown->hide();
 

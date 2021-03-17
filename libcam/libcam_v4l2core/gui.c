@@ -62,8 +62,8 @@ static char *video_name = NULL;
 /*video path*/
 static char *video_path = NULL;
 
-/*photo format*/
-static int video_muxer = ENCODER_MUX_MP4;
+/*video format*/
+static int video_muxer = ENCODER_MUX_WEBM;
 
 /*index: 0 numerator; 1 denominator*/
 static int my_fps[2] = {0, 0};

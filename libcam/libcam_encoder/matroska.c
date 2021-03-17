@@ -816,11 +816,6 @@ static int mkv_write_packet_internal(mkv_context_t* mkv_ctx,
     double strsa = (double) mkv_ctx->duration/1000;
     set_video_time_capture(strsa);
 
-    if((int)(strsa*100) > (100*MAX_REC_TIME+30))
-    {
-        stop_encoder_thread();
-        reset_video_timer();
-    }
     //    update duration
     int64_t currentpos = io_get_offset(mkv_ctx->writer);
     io_seek(mkv_ctx->writer, mkv_ctx->duration_offset);
