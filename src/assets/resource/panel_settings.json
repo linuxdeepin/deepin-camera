@@ -1,0 +1,139 @@
+{
+    "groups": [
+        {
+            "key": "base",
+            "name": "Basic",
+            "hide": true,
+            "groups": [
+                {
+                    "key": "save",
+                    "name": "File location",
+                    "options": [
+                        {
+                            "key": "picdatapath",
+                            "name": "Photos:",
+                            "type": "selectableEditpic",
+                            "default": "~/Pictures/Camera"
+                        },
+                        {
+                            "key": "vddatapath",
+                            "name": "Videos:",
+                            "type": "selectableEditvd",
+                            "default": "~/Videos/Camera"
+                        }
+
+                    ]
+                },
+                {
+                    "key": "general",
+                    "name": "",
+                    "hide": true,
+                    "options": [
+                        {
+                            "key": "last_open_pic_path",
+                            "name": "",
+                            "type": "selectableEditpic",
+                            "default": ""
+                        },
+                        {
+                            "key": "last_open_vd_path",
+                            "name": "",
+                            "type": "selectableEditvd",
+                            "default": ""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "photosetting",
+            "name": "Shoot",
+            "groups": [
+                {
+                    "key": "audiosetting",
+                    "name": "Sound effects",
+                    "options": [
+                        {
+                            "key": "soundswitchbtn",
+                            "type": "switchbutton",
+                            "default": true,
+                            "name": "Sound effects"
+                        }
+                    ]
+                },
+                {
+                    "key": "photosnumber",
+                    "name": "Burst mode",
+                    "options": [
+                        {
+                            "key": "takephotos",
+                            "name": "",
+                            "type": "radiogroup",
+                            "items": [
+                                "None",
+                                "4 pcs",
+                                "10 pcs"
+                            ],
+                            "default": 0
+                        }
+
+                    ]
+                },
+                {
+                    "key": "photosdelay",
+                    "name": "Self-timer delay",
+                    "options": [
+                        {
+                            "key": "photodelays",
+                            "name": "",
+                            "type": "radiogroup",
+                            "items": [
+                                "None",
+                                "3s",
+                                "6s"
+                            ],
+                            "default": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "outsetting",
+            "name": "Output",
+            "hide": true,
+            "groups": [
+                {
+                    "key": "outformat",
+                    "name": "Output format",
+                    "options": [
+                        {
+                            "key": "picformat",
+                            "name": "Photo:",
+                            "type":"formatLabel",
+                            "default": "  JPG"
+                        },
+                        {
+                            "key": "vidformat",
+                            "name": "Video:",
+                            "type":"formatLabel",
+                            "default": "  webm"
+                        }
+                    ]
+                },
+                {
+                    "key": "resolutionsetting",
+                    "name": "Resolution settings",
+                    "options": [
+                        {
+                            "key": "resolution",
+                            "name": "Resolution:",
+                            "type":"combobox",
+                            "default": " "
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

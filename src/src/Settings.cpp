@@ -22,6 +22,7 @@
 #include "Settings.h"
 #include "camview.h"
 #include "gviewv4l2core.h"
+#include "capplication.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -52,11 +53,11 @@ Settings::Settings(): QObject(0)
     qInfo() << "configPath" << m_configPath;
     auto backend = new QSettingBackend(m_configPath);
 
-#if defined (__mips__) || defined (__sw_64__) || defined ( __aarch64__)
-    m_settings = DSettings::fromJsonFile(":/resource/settings.json");
-#else
-    m_settings = DSettings::fromJsonFile(":/resource/settings.json");
-#endif
+    if (CamApp->isPanelEnvironment())
+        m_settings = DSettings::fromJsonFile(":/resource/panel_settings.json");
+    else
+        m_settings = DSettings::fromJsonFile(":/resource/settings.json");
+
     m_settings->setBackend(backend);
 
     connect(m_settings, &DSettings::valueChanged, [ = ](const QString & key, const QVariant & value) {
