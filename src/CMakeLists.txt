@@ -10,8 +10,10 @@ set(TARGET_NAME deepin-camera)
 #option (__mips__ "Use UNITTEST" ON)
 #add_definitions(-D__mips__)
 
+option (TABLE_ENVIRONMENT "Use UNITTEST" ON)
+add_definitions(-DTABLE_ENVIRONMENT)
 
-# 加速编译优化参数
+# 加速编译优化参数 
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
     SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE")
     SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE")
@@ -116,7 +118,6 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
-#    portaudio
     dl
     )
 
