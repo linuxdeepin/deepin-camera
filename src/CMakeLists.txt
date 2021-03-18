@@ -10,6 +10,8 @@ set(TARGET_NAME deepin-camera)
 #option (__mips__ "Use UNITTEST" ON)
 #add_definitions(-D__mips__)
 
+option (TABLE_ENVIRONMENT "Use UNITTEST" ON)
+add_definitions(-DTABLE_ENVIRONMENT)
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
