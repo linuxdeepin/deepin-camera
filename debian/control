@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends:
  debhelper (>=9),cmake,
- pkg-config,qtbase5-dev,libdtkgui-dev,libdtkwidget-dev,qtmultimedia5-dev,
+ pkg-config,qtbase5-dev,libdtkgui-dev,libdtkwidget5.5-dev,libdtkcore5.5-dev,qtmultimedia5-dev,
  libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,qttools5-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
