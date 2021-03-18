@@ -1,4 +1,4 @@
-# 相機|../common/camera_96.svg|
+# 相機|deepin-camera|
 
 ## 概述
 

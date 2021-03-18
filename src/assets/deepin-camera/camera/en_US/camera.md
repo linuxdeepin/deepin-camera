@@ -1,4 +1,4 @@
-# Camera|../common/camera_96.svg|
+# Camera|deepin-camera|
 
 ## Overview
 
