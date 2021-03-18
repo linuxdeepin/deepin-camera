@@ -82,8 +82,6 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkgui
-        dtkwidget
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -102,6 +100,8 @@ pkg_check_modules(3rd_lib REQUIRED
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
+    dtkgui5.5
+    dtkwidget5.5
     gtest
     pthread
     Qt5Test
