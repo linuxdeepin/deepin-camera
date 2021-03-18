@@ -82,8 +82,8 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkgui
-        dtkwidget
+         dtkgui
+         dtkwidget
 #        libv4l2
 #        libudev
 #        libusb-1.0
