@@ -16,8 +16,6 @@ add_definitions(-DUNITTEST)
 execute_process(COMMAND uname -m OUTPUT_VARIABLE MACH
     ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-
-
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${CMAKE_INCLUDE_CURRENT_DIR})
@@ -82,8 +80,8 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkgui
-        dtkwidget
+         dtkgui
+         dtkwidget
 #        libv4l2
 #        libudev
 #        libusb-1.0
