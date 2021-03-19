@@ -9,7 +9,8 @@ set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
 #option (__mips__ "Use UNITTEST" ON)
 #add_definitions(-D__mips__)
-
+option (TABLE_ENVIRONMENT "Use UNITTEST" ON)
+add_definitions(-DTABLE_ENVIRONMENT)
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
@@ -73,7 +74,7 @@ file (GLOB_RECURSE HEADERS
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkcore
+
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -115,6 +116,7 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
+        dtkwidget5.5 dtkcore5.5
     pthread
 #    portaudio
     dl
