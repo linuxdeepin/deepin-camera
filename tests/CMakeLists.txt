@@ -82,8 +82,8 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkgui
-        dtkwidget
+            dtkwidget
+        dtkcore
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -104,6 +104,7 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
     gtest
     pthread
+
     Qt5Test
     dl
 #    portaudio
