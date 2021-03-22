@@ -50,14 +50,11 @@ extern "C" {
 
 extern QMap<int, ImageItem *> g_indexImage;
 
-ImageItem::ImageItem(int index, QString path, QWidget *parent)
+ImageItem::ImageItem(QWidget *parent, int index, QString path):DLabel(parent), m_index(index), m_path(path)
 {
-    Q_UNUSED(parent);
     m_bVideo = false;
     m_bMousePress = false;
     m_actPrint = nullptr;
-    m_index = index;
-    m_path = path;
 
     setScaledContents(false);
     setMargin(0);

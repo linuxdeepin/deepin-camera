@@ -273,7 +273,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         if (!m_strFileName.isEmpty() && fileInfo.fileName().compare(m_strFileName) == 0)
             continue;
 
-        ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
+        ImageItem *pLabel = new ImageItem(nullptr ,tIndex, fileInfo.filePath());
         connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
@@ -532,18 +532,19 @@ void ThumbnailsBar::onTrashFile()
 
             int nIndexSupply = nIndexMax + 1 + i;
 
-            ImageItem *pLabel = new ImageItem(nIndexSupply, fileInfo.filePath());
+            ImageItem *pLabel = new ImageItem(nullptr,nIndexSupply, fileInfo.filePath());
             qInfo() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
 
-            if (pLabel == nullptr)
+            if (pLabel != nullptr){
                 qWarning() << "error! imageitem is null!!";
 
-            connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
-            connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
-            connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
-            connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
-            g_indexImage.insert(nIndexMax + 1 + i, pLabel);
-            m_hBox->insertWidget(m_hBox->count(), pLabel);
+                connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
+                connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+                connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
+                connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
+                g_indexImage.insert(nIndexMax + 1 + i, pLabel);
+                m_hBox->insertWidget(m_hBox->count(), pLabel);
+            }
         }
         emit fitToolBar();
         //g_indexImage里边的数据是已经删掉了的
@@ -575,7 +576,7 @@ void ThumbnailsBar::onShowVdTime(QString str)
     m_showVdTime->setText(str);
 }
 
-void ThumbnailsBar::onFileName(QString strfilename)
+void ThumbnailsBar::onFileName(const QString& strfilename)
 {
     m_strFileName = strfilename;
 }
@@ -747,7 +748,7 @@ void ThumbnailsBar::addFile(QString strFile)
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
 
-    ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
+    ImageItem *pLabel = new ImageItem(nullptr, nIndexMax + 1, strFile);
     connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     qInfo() << "supply:" << nIndexMax + 1 << " filename " << strFile;
@@ -859,18 +860,19 @@ void ThumbnailsBar::delFile(QString strFile)
 
 
 
-    ImageItem *pLabel = new ImageItem(nIndexMax + 1, fileInfo.filePath());
+    ImageItem *pLabel = new ImageItem(nullptr, nIndexMax + 1, fileInfo.filePath());
     qInfo() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
 
-    if (pLabel == nullptr)
+    if (pLabel != nullptr){
         qWarning() << "error! imageitem is null!!";
 
-    connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
-    connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
-    connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
-    connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
-    g_indexImage.insert(nIndexMax + 1, pLabel);
-    m_hBox->insertWidget(m_hBox->count(), pLabel);
+        connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
+        connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
+        connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
+        connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
+        g_indexImage.insert(nIndexMax + 1, pLabel);
+        m_hBox->insertWidget(m_hBox->count(), pLabel);
+    }
 }
 
 void ThumbnailsBar::widthChanged()

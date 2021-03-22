@@ -33,6 +33,9 @@ PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     m_textureU = nullptr;
     m_textureV = nullptr;
     m_yuvPtr = nullptr;
+    m_program = nullptr;
+    m_videoWidth = 0;
+    m_videoHeight = 0;
 }
 
 PreviewOpenglWidget::~PreviewOpenglWidget()

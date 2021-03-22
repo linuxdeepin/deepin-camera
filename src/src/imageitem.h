@@ -53,7 +53,7 @@ class ImageItem : public DLabel
 {
     Q_OBJECT
 public:
-    ImageItem(int index = 0, QString path = nullptr, QWidget *parent = nullptr);
+    ImageItem(QWidget *parent = nullptr, int index = 0, QString path= QString());
 
     ~ImageItem() override;
 
@@ -80,7 +80,7 @@ public:
      * @brief SetPath 设置路径
      * @param path
      */
-    void SetPath(QString path)
+    void SetPath(QString& path)
     {
         m_path = path;
     }

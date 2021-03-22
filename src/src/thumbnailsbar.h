@@ -192,7 +192,7 @@ public slots:
     * @brief onFileName　设置文件名
     * @param strfilename　文件名
     */
-    void onFileName(QString strfilename);
+    void onFileName(const QString& strfilename);
 
     /**
     * @brief onCallMenu　调菜单

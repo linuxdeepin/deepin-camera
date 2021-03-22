@@ -28,6 +28,8 @@
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
     m_yuvPtr = nullptr;
+    m_nVdWidth = 0;
+    m_nVdHeight = 0;
     init();
 }
 

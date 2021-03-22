@@ -41,7 +41,7 @@ class PreviewOpenglWidget: public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-    PreviewOpenglWidget(QWidget *parent = nullptr);
+    explicit PreviewOpenglWidget(QWidget *parent = nullptr);
 
     ~PreviewOpenglWidget()Q_DECL_OVERRIDE;
     /**

@@ -31,6 +31,7 @@ enum MultiType {None, Ctrl, Shift, Both};
 
 class DataManager: public QObject
 {
+    Q_OBJECT
 public:
 
     static DataManager *instance();
@@ -87,22 +88,6 @@ public:
     {
         return m_indexLast;
     }
-    /**
-     * @brief getbindexNow 获得缩略图索引
-     */
-//    QSet<int> getindex();
-//    /**
-//     * @brief clearindex 清除缩略图索引
-//     */
-//    void clearindex();
-//    /**
-//     * @brief insertindex 插入缩略图索引
-//     */
-//    void insertindex(int index);
-//    /**
-//     * @brief getbindexNow 设置缩略图索引
-//     */
-//    void setindex(int index);
     /**
      * @brief getstrFileName 获得文件名
      */

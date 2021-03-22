@@ -1412,7 +1412,7 @@ void CMainWindow::onDirectoryChanged(const QString &)
     }
 }
 
-void CMainWindow::onTimeoutLock(QString serviceName, QVariantMap key2value, QStringList)
+void CMainWindow::onTimeoutLock(const QString& serviceName, QVariantMap key2value, QStringList)
 {
     qDebug() << serviceName << key2value << endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
@@ -1874,9 +1874,8 @@ void CMainWindow::onFitToolBar()
         }
 
         qDebug() << "onFitToolBar" << nWidth;
-        int tmpheight = m_thumbnail->height();
+
         m_thumbnail->resize(nWidth, THUMBNAIL_HEIGHT + 50);
-        int mtmpheight = m_thumbnail->height();
         m_thumbnail->m_hBox->setSpacing(0);
         m_thumbnail->m_hBox->setMargin(0);
         m_thumbnail->move((width() - m_thumbnail->width()) / 2,

@@ -160,7 +160,7 @@ public:
     * @brief setSaveVdFolder　设置保存视频文件夹
     * @param strVdFolder 视频文件夹路径
     */
-    void setSaveVdFolder(QString strVdFolder)
+    void setSaveVdFolder(QString& strVdFolder)
     {
         m_saveVdFolder = strVdFolder;
     }
@@ -169,7 +169,7 @@ public:
     * @brief setSavePicFolder　设置保存照片文件夹
     * @param strPicFolder 照片文件夹路径
     */
-    void setSavePicFolder(QString strPicFolder)
+    void setSavePicFolder(QString& strPicFolder)
     {
         m_savePicFolder = strPicFolder;
     }
