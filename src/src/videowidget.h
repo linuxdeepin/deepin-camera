@@ -33,6 +33,7 @@
 #include <QOpenGLBuffer>
 #include <QtMultimedia/QSound>
 #include <QDateTime>
+#include <QSvgRenderer>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
@@ -51,6 +52,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
 class QSound;
+class QGraphicsSvgItem;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 /**
@@ -325,9 +327,6 @@ private:
      * @brief m_bActive //是否录制中
      */
     bool                       m_bActive;
-#ifndef __mips__
-    PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
-#endif
     int                        m_nMaxContinuous;    //最大连拍数：0,4,10
     int                        m_curTakePicTime;    //当前连拍次数
     int                        m_Maxinterval;       //最大间隔
@@ -347,9 +346,8 @@ private:
     DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
     QSound                     *m_takePicSound;     //拍照声音
-    QPixmap                    m_framePixmap;            //帧图片
-    QPixmap                    m_noDevStatusPixmap;      //未连接状态
-    QPixmap                    m_devTackupStatuspixmap;  //被占用状态
+    QPixmap                    m_framePixmap;       //帧图片
+    QSvgRenderer               m_svg;
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器
@@ -359,7 +357,12 @@ private:
     QGridLayout                *m_pGridLayout;
     QGraphicsView              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
+    QGraphicsSvgItem           *m_pSvgItem;
+#ifndef __mips__
+    PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
+#else
     QGraphicsPixmapItem        *m_pNormalItem;
+#endif
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
 };
 
