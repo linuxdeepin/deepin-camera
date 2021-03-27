@@ -781,7 +781,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
     //结束按钮放大缩小的显示
     if (m_endBtn->isVisible())
         m_endBtn->move((width() + m_recordingTimeWidget->width() + 10 - m_endBtn->width()) / 2,
-                       height() - m_endBtn->height() - 11);
+                       height() - m_recordingTimeWidget->height() - 11);
 
     //计时窗口放大缩小的显示
     if (m_recordingTimeWidget->isVisible())
