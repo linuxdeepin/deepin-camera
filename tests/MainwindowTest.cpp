@@ -871,9 +871,13 @@ TEST_F(MainwindowTest, videowidget)
 
     //调用showCountDownLabel函数
     videowidgt->showCountDownLabel(PICTRUE);//调用PICTRUE分支
-    videowidgt->showCountDownLabel(VIDEO);//调用VIDEO分支
     videowidgt->showCountDownLabel(NODEVICE);//调用NODEVICE分支
-
+    videowidgt->showCountDownLabel(VIDEO);//调用VIDEO分支,进入视频调用0时0分0秒分支
+    videowidgt->m_nCount = 21966;
+    videowidgt->showCountDownLabel(VIDEO);//调用VIDEO分支，进入视频调用6时6分6秒分支
+    videowidgt->m_nCount = 40271;
+    videowidgt->showCountDownLabel(VIDEO);//调用VIDEO分支，进入视频调用11时11分11秒分支
+    videowidgt->m_nCount = 0;
     //调用showCountdown函数
     //无相机停止定时器
     stub.set(ADDR(QTimer, isActive), ADDR(Stub_Function, isActive));
@@ -1008,6 +1012,19 @@ TEST_F(MainwindowTest, videowidget)
 
     //调用stopEverything函数
     videowidgt->stopEverything();
+
+    //调用recoverTabWidget函数
+    DataManager::instance()->setNowTabIndex(2);
+    DataManager::instance()->m_tabIndex = 1;//选中相机选择按钮
+    videowidgt->recoverTabWidget();
+    DataManager::instance()->m_tabIndex = 2;//选中标题栏拍照按钮
+    videowidgt->recoverTabWidget();
+    DataManager::instance()->m_tabIndex = 3;//选中标题栏录像按钮
+    videowidgt->recoverTabWidget();
+    DataManager::instance()->m_tabIndex = 8;//选中缩略图部分拍照录像复合按钮
+    videowidgt->recoverTabWidget();
+    DataManager::instance()->m_tabIndex = 10;//选中缩略图框按钮
+    videowidgt->recoverTabWidget();
 
 }
 
