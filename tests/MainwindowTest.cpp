@@ -972,8 +972,20 @@ TEST_F(MainwindowTest, videowidget)
     stub.reset(get_device_list);
 
     //调用onTakePic函数
+    videowidgt->m_pCamErrItem->setVisible(true);
+    videowidgt->m_fWgtCountdown->setVisible(true);
+    videowidgt->m_imgPrcThread->m_stopped = 0;
+    videowidgt->m_flashLabel->setVisible(true);
+    videowidgt->m_openglwidget->setVisible(false);
+    videowidgt->m_thumbnail->setVisible(false);
     videowidgt->onTakePic(true);
     videowidgt->onTakePic(false);
+    videowidgt->m_pCamErrItem->setVisible(false);
+    videowidgt->m_fWgtCountdown->setVisible(false);
+    videowidgt->m_imgPrcThread->m_stopped = 1;
+    videowidgt->m_flashLabel->setVisible(false);
+    videowidgt->m_openglwidget->setVisible(true);
+    videowidgt->m_thumbnail->setVisible(true);
 
     //调用onTakeVideo函数
     //进入倒计时期间处理
@@ -990,6 +1002,14 @@ TEST_F(MainwindowTest, videowidget)
     //进入最大间隔不为0分支
     videowidgt->m_Maxinterval = 3;
     videowidgt->onTakeVideo();
+
+    videowidgt->m_bActive = true;
+    videowidgt->m_nInterval = -1;
+    videowidgt->m_pCamErrItem->setVisible(true);
+    videowidgt->onTakeVideo();
+    videowidgt->m_bActive = false;
+    videowidgt->m_nInterval = 3;
+    videowidgt->m_pCamErrItem->setVisible(false);
 
     //调用forbidScrollBar函数
     videowidgt->forbidScrollBar(videowidgt->m_pNormalView);
@@ -1011,7 +1031,13 @@ TEST_F(MainwindowTest, videowidget)
     videowidgt->itemPosChange();
 
     //调用stopEverything函数
+    videowidgt->m_flashLabel->setVisible(true);
+    videowidgt->m_pCamErrItem->setVisible(true);
+    videowidgt->m_openglwidget->setVisible(false);
     videowidgt->stopEverything();
+    videowidgt->m_flashLabel->setVisible(false);
+    videowidgt->m_pCamErrItem->setVisible(false);
+    videowidgt->m_openglwidget->setVisible(true);
 
     //调用recoverTabWidget函数
     DataManager::instance()->setNowTabIndex(2);
@@ -1047,6 +1073,10 @@ TEST_F(MainwindowTest, majorimageprocessingthread)
     stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     stub.set(set_device_name, ADDR(Stub_Function, set_device_name));
     videowidgt->m_imgPrcThread->run();
+    stub.set(v4l2core_get_decoded_frame, ADDR(Stub_Function, v4l2core_get_decoded_frame_null));
+    videowidgt->m_imgPrcThread->run();
+    stub.reset(ADDR(Stub_Function, v4l2core_get_decoded_frame_null));
+
     //录像分支
     //设置暂停时长,进入解码任务调度分支
     stub.reset(v4l2core_update_current_format);

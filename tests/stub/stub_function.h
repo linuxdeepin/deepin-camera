@@ -63,6 +63,7 @@ public:
     int v4l2core_stop_stream(v4l2_dev_t *vd);
     //获得解码数据库帧
     v4l2_frame_buff_t *v4l2core_get_decoded_frame(v4l2_dev_t *vd);
+    v4l2_frame_buff_t *v4l2core_get_decoded_frame_null(v4l2_dev_t *vd);
     //获取重启状态
     int get_resolution_status();
     //清理缓存区

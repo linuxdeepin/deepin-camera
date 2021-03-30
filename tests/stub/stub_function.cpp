@@ -204,6 +204,11 @@ v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame(v4l2_dev_t *vd)
     return m_v4l2_frame_buff;
 }
 
+v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame_null(v4l2_dev_t *vd)
+{
+    return nullptr;
+}
+
 int Stub_Function::get_resolution_status()
 {
     return 1;
