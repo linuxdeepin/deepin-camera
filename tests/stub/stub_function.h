@@ -51,6 +51,8 @@ public:
     v4l2_device_list_t *get_device_list_1();
     //获取设备列表，进入设备数目为2分支
     v4l2_device_list_t *get_device_list_2();
+    //获取设备列表，进入设备数目为3分支
+    v4l2_device_list_t *get_device_list_3();
     //开启线程打桩
     int start_encoder_thread();
     //MajorImageProcessingThread开始函数打桩
@@ -99,6 +101,7 @@ public:
     static v4l2_stream_formats_t *m_list_stream_formats;//流格式列表
     static v4l2_device_list_t *m_v4l2_device_list1;//一个摄像头
     static v4l2_device_list_t *m_v4l2_device_list2;//两个摄像头
+    static v4l2_device_list_t *m_v4l2_device_list3;//三个摄像头
     static v4l2_frame_buff_t *m_v4l2_frame_buff;//帧缓冲器
 };
 

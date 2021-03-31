@@ -9,6 +9,7 @@ v4l2_dev_t *Stub_Function::m_v4l2_dev = nullptr;
 v4l2_stream_formats_t *Stub_Function::m_list_stream_formats = nullptr;
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list1 = nullptr;
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list2 = nullptr;
+v4l2_device_list_t *Stub_Function::m_v4l2_device_list3 = nullptr;
 v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff = nullptr;
 
 Stub_Function::Stub_Function()
@@ -25,6 +26,9 @@ v4l2_dev_t *Stub_Function::get_v4l2_device_handler()
         m_v4l2_dev->list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_cap_t));
         m_v4l2_dev->list_stream_formats[0].list_stream_cap[0].width = 640;
         m_v4l2_dev->list_stream_formats[0].list_stream_cap[0].width = 480;
+        QString str1 = "/dev/video0";
+        m_v4l2_dev->videodevice = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
+        strcpy(m_v4l2_dev->videodevice, str1.toLatin1().data());
         m_v4l2_dev->this_device = 0;
     }
     return m_v4l2_dev;
@@ -171,6 +175,28 @@ v4l2_device_list_t *Stub_Function::get_device_list_2()
     }
 
     return m_v4l2_device_list2;
+
+}
+
+v4l2_device_list_t *Stub_Function::get_device_list_3()
+{
+
+    if (m_v4l2_device_list3 == nullptr) {
+        m_v4l2_device_list3 = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
+        m_v4l2_device_list3->list_devices = new v4l2_dev_sys_data_t[3];
+        m_v4l2_device_list3->num_devices = 3;
+        QString str1 = "/dev/video0";
+        QString str2 = "/dev/video1";
+        QString str3 = "/dev/video2";
+        m_v4l2_device_list3->list_devices[0].device = (char *)malloc(strlen(str1.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list3->list_devices[0].device, str1.toLatin1().data());
+        m_v4l2_device_list3->list_devices[1].device = (char *)malloc(strlen(str2.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list3->list_devices[1].device, str2.toLatin1().data());
+        m_v4l2_device_list3->list_devices[2].device = (char *)malloc(strlen(str3.toLatin1().data()) + 1);
+        strcpy(m_v4l2_device_list3->list_devices[2].device, str3.toLatin1().data());
+    }
+
+    return m_v4l2_device_list3;
 
 }
 

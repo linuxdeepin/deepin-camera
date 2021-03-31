@@ -71,6 +71,13 @@ MainwindowTest::~MainwindowTest()
         Stub_Function::m_v4l2_device_list2 = nullptr;
     }
 
+    if (Stub_Function::m_v4l2_device_list3 != nullptr) {
+        free(Stub_Function::m_v4l2_device_list3->list_devices[0].device);
+        delete []Stub_Function::m_v4l2_device_list3->list_devices;
+        free(Stub_Function::m_v4l2_device_list3);
+        Stub_Function::m_v4l2_device_list3 = nullptr;
+    }
+
     if (Stub_Function::m_v4l2_frame_buff != nullptr) {
         free(Stub_Function::m_v4l2_frame_buff->yuv_frame);
         free(Stub_Function::m_v4l2_frame_buff);
@@ -934,13 +941,12 @@ TEST_F(MainwindowTest, videowidget)
     DataManager::instance()->setdevStatus(NOCAM);
     //调用onEndBtnClicked函数
     videowidgt->setCapStatus(true);
+    DataManager::instance()->m_tabIndex = 9;
     //录像标志函数打桩
     stub.set(video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
     videowidgt->onEndBtnClicked();
+    DataManager::instance()->m_tabIndex = 2;
     stub.reset(video_capture_get_save_video);
-
-    //调用onRestartDevices函数
-    videowidgt->onRestartDevices();
 
     //调用onChangeDev函数
     //进入设备数为2的无设备分支
@@ -949,7 +955,6 @@ TEST_F(MainwindowTest, videowidget)
     //进入设备数为2启动失败分支
     stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
     videowidgt->onChangeDev();
-    stub.reset(camInit);
     //进入设备数为2启动成功分支
     stub.set(camInit, ADDR(Stub_Function, camInit_OK));
     stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
@@ -957,23 +962,63 @@ TEST_F(MainwindowTest, videowidget)
     //桩函数还原
     stub.reset(camInit);
     stub.reset(get_device_list);
-    stub.reset(ADDR(MajorImageProcessingThread, start));
-    stub.reset(get_device_list);
-    //进入设备数为1的无设备分支
-    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_1));
+    //进入设备数为1和3的无设备分支
+    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    for (int i = 0; i < 2; i++) {
+        if (i == 0) {
+            stub.set(get_device_list, ADDR(Stub_Function, get_device_list_1));//设备数为1
+        }
+        if (i == 1) {
+            stub.set(get_device_list, ADDR(Stub_Function, get_device_list_3));//设备数为2
+        }
+        stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
+        videowidgt->onChangeDev();
+        stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//E_FORMAT_ERR分支
+        videowidgt->onChangeDev();
+        stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//E_NO_DEVICE_ERR分支
+        videowidgt->onChangeDev();
+    }
+
+    stub.reset(get_v4l2_device_handler);
+    //进入设备数为3,str为空
+    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//设备数为1,str=str1,OK分支
     videowidgt->onChangeDev();
-    //进入设备数为1启动失败分支
-    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
+    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//设备数为1,str=str1,E_FORMAT_ERR分支
+    videowidgt->onChangeDev();
+    stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//设备数为1,str=str1,E_NO_DEVICE_ERR分支
     videowidgt->onChangeDev();
     stub.reset(camInit);
+
     //还原桩函数
     stub.reset(camInit);
     stub.reset(ADDR(MajorImageProcessingThread, start));
     stub.reset(get_device_list);
 
+    //调用onRestartDevices函数
+    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
+    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
+    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
+    videowidgt->onRestartDevices();
+    stub.reset(camInit);
+    stub.reset(ADDR(MajorImageProcessingThread, start));
+    stub.reset(get_device_list);
+    videowidgt->onChangeDev();//无相机状态还原
+
     //调用onTakePic函数
+    videowidgt->m_pCamErrItem->setVisible(true);
+    videowidgt->m_fWgtCountdown->setVisible(true);
+    videowidgt->m_imgPrcThread->m_stopped = 0;
+    videowidgt->m_flashLabel->setVisible(true);
+    videowidgt->m_openglwidget->setVisible(false);
+    videowidgt->m_thumbnail->setVisible(false);
     videowidgt->onTakePic(true);
     videowidgt->onTakePic(false);
+    videowidgt->m_pCamErrItem->setVisible(false);
+    videowidgt->m_fWgtCountdown->setVisible(false);
+    videowidgt->m_imgPrcThread->m_stopped = 1;
+    videowidgt->m_flashLabel->setVisible(false);
+    videowidgt->m_openglwidget->setVisible(true);
+    videowidgt->m_thumbnail->setVisible(true);
 
     //调用onTakeVideo函数
     //进入倒计时期间处理
@@ -1011,7 +1056,13 @@ TEST_F(MainwindowTest, videowidget)
     videowidgt->itemPosChange();
 
     //调用stopEverything函数
+    videowidgt->m_flashLabel->setVisible(true);
+    videowidgt->m_pCamErrItem->setVisible(true);
+    videowidgt->m_openglwidget->setVisible(false);
     videowidgt->stopEverything();
+    videowidgt->m_flashLabel->setVisible(false);
+    videowidgt->m_pCamErrItem->setVisible(false);
+    videowidgt->m_openglwidget->setVisible(true);
 
     //调用recoverTabWidget函数
     DataManager::instance()->setNowTabIndex(2);
