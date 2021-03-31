@@ -99,7 +99,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     ft.setWeight(QFont::Normal);
     m_showVdTime->setFont(ft);
 
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
         QPalette pltLabel = m_showVdTime->palette();
 
