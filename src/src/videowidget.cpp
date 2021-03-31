@@ -321,7 +321,7 @@ void videowidget::delayInit()
         showNocam();
         qWarning() << "No webcam found" << endl;
     }
-    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::paletteTypeChanged,
+    QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
         QPalette pltLabel = m_dLabel->palette();
 
