@@ -381,7 +381,7 @@ void videowidget::delayInit()
                     str = tr("No webcam found");//未连接摄像头
                 } else {//仅CAM_CANNOT_USE
                     qDebug() << "changed theme 4";
-                   m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
+                    m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
                     m_pSvgItem->setSharedRenderer(&m_svg);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
@@ -562,7 +562,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
         if (m_pCamErrItem->isVisible())
             m_pCamErrItem->hide();
 
-        if(m_pSvgItem->isVisible())
+        if (m_pSvgItem->isVisible())
             m_pSvgItem->hide();
 
         if (m_pNormalView->isVisible())
@@ -611,10 +611,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
 
-                m_pNormalView->show();
-                m_pCamErrItem->hide();
-                m_pSvgItem->hide();
-                m_pNormalItem->show();
+            m_pNormalView->show();
+            m_pCamErrItem->hide();
+            m_pSvgItem->hide();
+            m_pNormalItem->show();
 
             {
                 int widgetwidth = width();
@@ -909,7 +909,7 @@ void videowidget::showCountdown()
 
                 m_fWgtCountdown->hide();
                 //立即闪光，500ms后关闭
-                 m_flashTimer->start(500);
+                m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
                 m_openglwidget->hide();
@@ -1369,7 +1369,7 @@ void videowidget::onTakePic(bool bTrue)
         if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pCamErrItem->hide();
 
-        if (m_pSvgItem->isVisible()&& (m_imgPrcThread->getStatus() == 0))
+        if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pSvgItem->hide();
 
         if (m_fWgtCountdown->isVisible())
@@ -1556,7 +1556,7 @@ void videowidget::stopEverything()
     if (m_pCamErrItem->isVisible())
         m_pCamErrItem->hide();
 
-    if(m_pSvgItem->isVisible())
+    if (m_pSvgItem->isVisible())
         m_pSvgItem->hide();
 
     if (m_fWgtCountdown->isVisible())
