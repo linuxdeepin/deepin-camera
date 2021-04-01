@@ -144,7 +144,7 @@ TEST_F(MainwindowTest, RightMenushortCut)
     emit shortcutPrint->activated();
 
 }
-
+ 
 /**
  *  @brief 快捷键
  */
@@ -786,37 +786,36 @@ TEST_F(MainwindowTest, Setting)
 TEST_F(MainwindowTest, thumbarnail)
 {
     Stub stub;
-    ThumbnailsBar *thumbnailsBarNew = new ThumbnailsBar();
+    ThumbnailsBar *thumbnailsBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
     //调用setBtntooltip()
-    thumbnailsBarNew->setBtntooltip();
+    thumbnailsBar->setBtntooltip();
     //调用设备不可用状态分支
-    thumbnailsBarNew->onBtnClick();
+    thumbnailsBar->onBtnClick();
     //调用onBtnClick（）设备可用状态分支
     stub.set(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getdevStatus));
     //调用拍照分支的非正在拍照状态
-    thumbnailsBarNew->onBtnClick();
+    thumbnailsBar->onBtnClick();
     //调用拍照分支的正在拍照状态
     CMainWindow *mw = new CMainWindow();
-    thumbnailsBarNew->onBtnClick();
+    thumbnailsBar->onBtnClick();
     //调用录像分支但不处于正在录像分支
     mw->m_nActTpye = ActTakeVideo;
-    thumbnailsBarNew->ChangeActType(mw->m_nActTpye);
-    thumbnailsBarNew->onBtnClick();
+    thumbnailsBar->ChangeActType(mw->m_nActTpye);
+    thumbnailsBar->onBtnClick();
     //调用录像分支但处于正在录像分支
-    thumbnailsBarNew->onBtnClick();
+    thumbnailsBar->onBtnClick();
     //还原
     stub.reset(ADDR(DataManager, getdevStatus));
     //调用onShortcutDel删除太快分支
     stub.set(ADDR(QDateTime, msecsTo), ADDR(Stub_Function, msecsTo));
-    thumbnailsBarNew->onShortcutDel();
-    delete thumbnailsBarNew;
+    thumbnailsBar->onShortcutDel();
+
     //还原
     stub.reset(ADDR(QDateTime, msecsTo));
 
     //调用addFile()
     QString str = QString(QDir::homePath() + "/Pictures/" + QObject::tr("Camera"));
     qWarning() << QDir(str).exists();
-    ThumbnailsBar *thumbnailsBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
     thumbnailsBar->addFile(str);
     //调用onTrashFile()
     QMap<int, ImageItem *> it = get_imageitem();
@@ -898,7 +897,9 @@ TEST_F(MainwindowTest, videowidget)
     DataManager::instance()->setdevStatus(CAM_CANUSE);
     videowidgt->m_curTakePicTime = 0;
     videowidgt->m_nInterval = 0;
+    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     videowidgt->showCountdown();
+    stub.reset(start_encoder_thread);
     //调用相机可用分支下的拍照连拍次数不为0分支
     videowidgt->m_curTakePicTime = 1;
     videowidgt->showCountdown();
@@ -928,7 +929,9 @@ TEST_F(MainwindowTest, videowidget)
     stub.reset(get_video_time_capture);
 
     //调用flash函数
+    videowidgt->m_flashLabel->setVisible(true);
     videowidgt->flash();
+    videowidgt->m_flashLabel->setVisible(false);
 
     //调用slotresolutionchanged函数
     //调用相机不可用，则直接返回
