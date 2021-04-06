@@ -16,6 +16,24 @@
       "revId": "2e292317bcbaf5fbac44684c26ecb521feaeaca3",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed674ba3_91a5257d",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-04-06T05:35:08Z",
+      "side": 1,
+      "message": "建议保持良好的代码习惯",
+      "parentUuid": "ac0b8a0d_6b2ba962",
+      "revId": "2e292317bcbaf5fbac44684c26ecb521feaeaca3",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
     }
   ]
 }
