@@ -301,7 +301,7 @@ static QWidget *createSelectableLineEditOptionHandle(QObject *opt)
         auto pi = ElideText(value.toString(), {285, fm.height()}, QTextOption::WrapAnywhere,
                             le->font(), Qt::ElideMiddle, fm.height(), 285);
         le->setText(pi);
-        Settings::get().settings()->setOption("base.general.last_open_path",pi);
+        Settings::get().settings()->setOption("base.general.last_open_path", pi);
         le->update();
     });
 
@@ -336,14 +336,14 @@ void CMainWindow::setWayland(bool bTrue)
     connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(restartDevices()));
 
     if (bTrue) {
-        m_pDBus = new QDBusInterface("org.freedesktop.login1","/org/freedesktop/login1",
-                                     "org.freedesktop.login1.Manager",QDBusConnection::systemBus());
+        m_pDBus = new QDBusInterface("org.freedesktop.login1", "/org/freedesktop/login1",
+                                     "org.freedesktop.login1.Manager", QDBusConnection::systemBus());
 
 //        m_pDBusLockFront = new QDBusInterface("com.deepin.dde.lockFront","/com/deepin/dde/lockFront",
 //                                              "com.deepin.dde.lockFront",QDBusConnection::sessionBus());
 
-        m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager","/com/deepin/SessionManager",
-                                              "com.deepin.SessionManager",QDBusConnection::sessionBus());
+        m_pDBusSessionMgr = new QDBusInterface("com.deepin.SessionManager", "/com/deepin/SessionManager",
+                                               "com.deepin.SessionManager", QDBusConnection::sessionBus());
 
         m_pLockTimer = new QTimer;
         m_pLockTimer->setInterval(300);
@@ -415,6 +415,7 @@ void CMainWindow::slotPopupSettingsDialog()
                         (list_stream_formats[format_index].list_stream_cap[i].width < 7680
                          && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
                         ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+                         && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString( "%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
@@ -807,7 +808,8 @@ void CMainWindow::initConnection()
                 m_videoPre->endBtnClicked();
                 qApp->quit();
             }
-        } else {
+        } else
+        {
             qApp->quit();
         }
     });
