@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3606e371_2c45c606",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-06T07:12:51Z",
+      "side": 1,
+      "message": "Fix大小写错误",
+      "revId": "39d56abb40f09ec970efc570fd9a5c7061af6c88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0af614d_7407cd49",
         "filename": "src/src/Settings.cpp",
         "patchSetId": 1
