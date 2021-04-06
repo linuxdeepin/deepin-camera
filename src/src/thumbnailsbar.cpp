@@ -767,10 +767,13 @@ void ThumbnailsBar::addFile(QString strFile)
         DataManager::instance()->setindexNow(itemNow->getIndex());
         m_showVdTime->setText(itemNow->getDuration());
     } else {
-        if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
+        if (bSelectedFirst) {//拍照或录制完成后，焦点聚集在新照片或新视频上，即第一张上
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(tmp->getIndex());
+            DataManager::instance()->clearIndex();
+            DataManager::instance()->insertIndex(tmp->getIndex());
             m_showVdTime->setText(tmp->getDuration());
+            update();
             QFile file(tmp->getPath());
 
             if (!file.exists())
