@@ -88,6 +88,24 @@ public:
     {
         return m_indexLast;
     }
+
+    /**
+     * @brief clearIndex 清除所有选中索引
+     */
+    void clearIndex()
+    {
+        m_setIndex.clear();
+    }
+
+    /**
+     * @brief insertIndex 插入索引
+     * @brief index 索引
+     */
+    void insertIndex(int index)
+    {
+        m_setIndex.insert(index);
+    }
+
     /**
      * @brief getstrFileName 获得文件名
      */
