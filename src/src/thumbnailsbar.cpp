@@ -770,12 +770,13 @@ void ThumbnailsBar::addFile(QString strFile)
         if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(tmp->getIndex());
+            DataManager::instance()->clearIndex();
+            DataManager::instance()->insertIndex(tmp->getIndex());
             m_showVdTime->setText(tmp->getDuration());
             QFile file(tmp->getPath());
-
+            update();
             if (!file.exists())
                 qWarning() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
-
         }
 
     }
