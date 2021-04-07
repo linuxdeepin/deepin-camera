@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a68ec5c3_84262ff0",
+        "filename": "src/src/basepub/datamanager.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-07T08:48:39Z",
+      "side": 1,
+      "message": "注释行数: 7; 改动行数(修改和新增): 15; 注释率: 46.7%",
+      "revId": "8fcd917ddbec40953f4b083303397858eb458c05",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38171467_d7825f88",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-07T08:48:39Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 4; 注释率: 25.0%",
+      "revId": "8fcd917ddbec40953f4b083303397858eb458c05",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
