@@ -175,7 +175,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     /**
     *缩略图右键打开菜单栏
     **/
-    connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+    if (!CamApp->isPanelEnvironment())
+        connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         m_menu->exec(QCursor::pos());
         DataManager::instance()->setCtrlMulti(false);

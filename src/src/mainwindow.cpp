@@ -1680,7 +1680,8 @@ void CMainWindow::initThumbnails()
     m_rightbtnmenu->addAction(m_actOpenfolder);
     m_thumbnail->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
+    if (!CamApp->isPanelEnvironment())
+        connect(m_thumbnail, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         m_rightbtnmenu->exec(QCursor::pos());
     });
