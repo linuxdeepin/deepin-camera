@@ -118,6 +118,7 @@ void Settings::setNewResolutionList()
                         (list_stream_formats[format_index].list_stream_cap[i].width < 7680
                          && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
                         ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+                         && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
                     //加入分辨率的字符串
                     QString res_str = QString("%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
