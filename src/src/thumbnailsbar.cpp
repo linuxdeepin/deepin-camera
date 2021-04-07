@@ -767,15 +767,16 @@ void ThumbnailsBar::addFile(QString strFile)
         DataManager::instance()->setindexNow(itemNow->getIndex());
         m_showVdTime->setText(itemNow->getDuration());
     } else {
-        if (bSelectedFirst) {//当选中的是第一个，就永远是第一个，如果不是，则一直框住前面那个
+        if (bSelectedFirst) {//当录制视频或拍照后，选中第一张缩略图，即新生成的视频或图片
             ImageItem *tmp = dynamic_cast<ImageItem *>(m_hBox->itemAt(0)->widget());
             DataManager::instance()->setindexNow(tmp->getIndex());
+            DataManager::instance()->clearIndex();
+            DataManager::instance()->insertIndex(tmp->getIndex());
             m_showVdTime->setText(tmp->getDuration());
             QFile file(tmp->getPath());
-
+            update();
             if (!file.exists())
                 qWarning() << "file not exist,delete error";//说明DataManager::instance()->getindexNow()还有问题
-
         }
 
     }
