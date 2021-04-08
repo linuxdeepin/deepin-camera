@@ -540,7 +540,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
             QString program;
             if (fileInfo.suffix() == "jpg") {
                 program = "deepin-album"; //用相册打开
-                qDebug() << "Open it with deepin-image-viewer";
+                qDebug() << "Open it with deepin-album";
             } else {
                 program = "deepin-movie"; //用影院打开
                 qDebug() << "Open it with deepin-movie";
@@ -548,10 +548,10 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 
             QStringList arguments;
             //表示本地文件
-            arguments << QUrl::fromLocalFile(m_path).toString();
+            arguments << fileInfo.filePath();
             qInfo() << QUrl::fromLocalFile(m_path).toString();
-            QProcess *myProcess = new QProcess(this);
-            bool bOK = myProcess->startDetached(program, arguments);
+            QProcess mProcess;
+            bool bOK = mProcess.startDetached(program, arguments);
             CamApp->getMainWindow()->showMinimized();
 
             if (!bOK)
