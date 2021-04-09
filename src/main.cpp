@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
     w.setWayland(bWayland);
     //判断是否是平板环境
     if (CamApp->isPanelEnvironment())
-        w.showMaximized();
+        w.showFullScreen();
     else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
