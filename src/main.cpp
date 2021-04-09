@@ -23,6 +23,7 @@ extern "C"
 {
 #include "camview.h"
 }
+
 #include "mainwindow.h"
 #include "capplication.h"
 #include "dbus_adpator.h"
@@ -38,11 +39,37 @@ extern "C"
 #include <QSharedMemory>
 
 #include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 DWIDGET_USE_NAMESPACE
 
+static bool runSingleInstance()
+{
+    QString userName = QDir::homePath().section("/", -1, -1);
+    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-camera/").toStdString();
+    QDir tdir(path.c_str());
+    if (!tdir.exists()) {
+        tdir.mkpath(path.c_str());
+    }
+
+    path += "single";
+    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
+    int flock = lockf(fd, F_TLOCK, 0);
+
+    if (fd == -1) {
+        qInfo() << strerror(errno);
+        return false;
+    }
+    if (flock == -1) {
+        qInfo() << strerror(errno);
+        return false;
+    }
+    return true;
+}
+
 //判断是否采用wayland显示服务器
-bool CheckWayland()
+static bool CheckWayland()
 {
     auto e = QProcessEnvironment::systemEnvironment();
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
@@ -103,14 +130,7 @@ int main(int argc, char *argv[])
 
     DApplicationSettings saveTheme;
 
-    //一个用户仅允许打开一个相机
-    QString userpath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    QSharedMemory shared_memory(userpath + "deepincamera");
-
-    if (shared_memory.attach())
-        shared_memory.detach();
-
-    if (!shared_memory.create(1)) {
+    if (!runSingleInstance()) {
         qDebug() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
