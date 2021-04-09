@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 
 //    bool bLoaded = translator->load("deepin-camera.qm", ":/translations");
 //    if (!bLoaded) {
-//        qDebug() << "load transfile error";
+//        qInfo() << "load transfile error";
 //    }
 
 //    a.installTranslator(translator);
@@ -72,12 +72,12 @@ int main(int argc, char *argv[])
     qApp->setOrganizationName("deepin");
     qApp->setApplicationName("deepin-camera");
     qApp->loadTranslator(QList<QLocale>() << QLocale::system());
-  
+
     qApp->setProductName(QObject::tr("Camera"));
-  
+
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-    qDebug() << "LogFile:" << DLogManager::getlogFilePath();
+    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
 
     qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(QDate::currentDate()).replace("  ", " 0"), "MMM dd yyyy");
@@ -101,10 +101,10 @@ int main(int argc, char *argv[])
     }
 
     if (!shared_memory.create(1)) {
-        qDebug() << "another deepin camera instance has started";
+        qInfo() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", "/", "com.deepin.camera");
         if (iface.isValid()) {
-             qWarning() << "deepin-camera raise";
+            qWarning() << "deepin-camera raise";
             iface.asyncCall("Raise");
         }
         exit(0);

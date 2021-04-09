@@ -372,7 +372,7 @@ CMainWindow::CMainWindow(DWidget *w): DMainWindow (w)
 
 CMainWindow::~CMainWindow()
 {
-    qDebug() << "stop_encoder_thread";
+    qInfo() << "stop_encoder_thread";
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -495,7 +495,7 @@ void CMainWindow::slotPopupSettingsDialog()
 void CMainWindow::initBlockShutdown()
 {
     if (!m_arg.isEmpty() || m_reply.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_reply.value().isValid();
+        qInfo() << "m_reply.value().isValid():" << m_reply.value().isValid();
         return;
     }
 
@@ -519,14 +519,14 @@ void CMainWindow::initBlockShutdown()
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
         //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-        qDebug() << "init Nublock shutdown.";
+        qInfo() << "init Nublock shutdown.";
     }
 }
 
 void CMainWindow::initBlockSleep()
 {
     if (!m_argSleep.isEmpty() || m_replySleep.value().isValid()) {
-        qDebug() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
+        qInfo() << "m_reply.value().isValid():" << m_replySleep.value().isValid();
         return;
     }
 
@@ -549,7 +549,7 @@ void CMainWindow::initBlockSleep()
     if (m_replySleep.isValid()) {
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-        qDebug() << "init Nublock sleep.";
+        qInfo() << "init Nublock sleep.";
     }
 }
 
@@ -563,7 +563,7 @@ void CMainWindow::updateBlockSystem(bool bTrue)
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
         //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-        qDebug() << "Nublock shutdown.";
+        qInfo() << "Nublock shutdown.";
     }
 
     if (m_bWayland) {
@@ -575,7 +575,7 @@ void CMainWindow::updateBlockSystem(bool bTrue)
             QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
             m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
             //m_pLoginManager->callWithArgumentList(QDBus::NoBlock, "Inhibit", m_arg);
-            qDebug() << "Nublock sleep.";
+            qInfo() << "Nublock sleep.";
         }
     }
 }
@@ -593,29 +593,29 @@ void CMainWindow::onNoCam()
 void CMainWindow::onSleepWhenTaking(bool bTrue)
 {
     if (m_bWayland && bTrue) {
-        qDebug() << "onSleepWhenTaking(bool)";
+        qInfo() << "onSleepWhenTaking(bool)";
         m_videoPre->endBtnClicked();
-        qDebug() << "onSleepWhenTaking(over)";
+        qInfo() << "onSleepWhenTaking(over)";
     }
 }
 
 void CMainWindow::onVisible(bool bTrue)
 {
-    qDebug() << "onVisible " << bTrue;
+    qInfo() << "onVisible " << bTrue;
     if (bTrue) {
-        qDebug() << "locked";
+        qInfo() << "locked";
         if (m_videoPre->getCapstatus()) {
             m_videoPre->endBtnClicked();
         }
         m_videoPre->m_imgPrcThread->stop();
         m_bLocked = true;
-        qDebug() << "lock end";
+        qInfo() << "lock end";
     }
     if (!bTrue && m_bLocked) {
-        qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+        qInfo() << "restart use camera cause ScreenBlack or PoweerLock";
         //打开摄像头
         m_videoPre->changeDev();
-        qDebug() << "v4l2core_start_stream OK";
+        qInfo() << "v4l2core_start_stream OK";
     }
 }
 
@@ -623,19 +623,19 @@ void CMainWindow::onTimeoutLock()
 {
     if (m_pDBusSessionMgr) {
         if (m_pDBusSessionMgr->property("Locked").value<bool>()) {
-            qDebug() << "locked";
+            qInfo() << "locked";
             if (m_videoPre->getCapstatus()) {
                 m_videoPre->endBtnClicked();
             }
             m_videoPre->m_imgPrcThread->stop();
             m_bLocked = true;
-            qDebug() << "lock end";
+            qInfo() << "lock end";
         } else {
             if (m_bLocked) {
-                qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+                qInfo() << "restart use camera cause ScreenBlack or PoweerLock";
                 //打开摄像头
                 m_videoPre->changeDev();
-                qDebug() << "v4l2core_start_stream OK";
+                qInfo() << "v4l2core_start_stream OK";
                 m_bLocked = false;
             }
         }
@@ -917,7 +917,7 @@ void CMainWindow::closeEvent(QCloseEvent *event)
 void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
-    //    qDebug() << this->windowState() << endl;
+    //    qInfo() << this->windowState() << endl;
     if (this->windowState() == Qt::WindowMinimized) {
         set_capture_pause(1);
     } else if (this->windowState() == (Qt::WindowMinimized | Qt::WindowMaximized)) {
@@ -1114,7 +1114,7 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
-    qDebug() << "onTakePicDone";
+    qInfo() << "onTakePicDone";
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
@@ -1125,7 +1125,7 @@ void CMainWindow::onTakePicDone()
 
 void CMainWindow::onTakePicOnce()
 {
-    qDebug() << "onTakePicOnce";
+    qInfo() << "onTakePicOnce";
     m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
 }
 
@@ -1189,7 +1189,7 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
-        qDebug() << "shift pressed";
+        qInfo() << "shift pressed";
         g_bMultiSlt = true;
         g_setIndex.insert(g_indexNow);
     }
@@ -1198,7 +1198,7 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
-        qDebug() << "shift released";
+        qInfo() << "shift released";
         g_bMultiSlt = false;
         //g_setIndex.clear();
         //g_setIndex.insert(g_indexNow);

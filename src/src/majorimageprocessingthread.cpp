@@ -38,13 +38,13 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
         }
         stopped = 1;
         if (video_capture_get_save_video() > 0) {
-            qDebug() << "stop_encoder_thread";
+            qInfo() << "stop_encoder_thread";
             stop_encoder_thread();
         }
-        qDebug() << "close_v4l2_device_handler";
+        qInfo() << "close_v4l2_device_handler";
         close_v4l2_device_handler();
     }
-    qDebug() << "~MajorImageProcessingThread";
+    qInfo() << "~MajorImageProcessingThread";
 }
 
 void MajorImageProcessingThread::stop()
@@ -196,7 +196,7 @@ void MajorImageProcessingThread::run()
         if (m_bTake) {
             int nRet = v4l2core_save_image(frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
             if (nRet < 0) {
-                qDebug() << "保存照片失败";
+                qInfo() << "保存照片失败";
             }
             m_bTake = false;
         }

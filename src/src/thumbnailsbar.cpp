@@ -136,7 +136,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     Q_UNUSED(strDirectory);
     m_nItemCount = 0;
     QString strShowTime = "";
-    qDebug() << m_nMaxWidth;
+    qInfo() << m_nMaxWidth;
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (THUMBNAIL_WIDTH + 2) - 1;
 
     QLayoutItem *child;
@@ -212,7 +212,7 @@ void ThumbnailsBar::onBtnClick()
             emit enableTitleBar(3);
             emit takePic(false);
             emit enableSettings(true);
-            qDebug() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
+            qInfo() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
         } else {
             m_nStatus = STATPicIng;
             m_lastButton->setToolTip(tr("Stop taking photos"));
@@ -221,7 +221,7 @@ void ThumbnailsBar::onBtnClick()
             emit enableTitleBar(1);
             emit takePic(true);
             emit enableSettings(false);
-            qDebug() << "***Take photo";
+            qInfo() << "***Take photo";
         }
     } else if (m_nActTpye == ActTakeVideo) {
         if (m_nStatus == STATVdIng) {
@@ -250,12 +250,12 @@ void ThumbnailsBar::onShortcutCopy()
     QStringList paths;
     if (g_setIndex.isEmpty()) {
         paths = QStringList(g_indexImage.value(g_indexNow)->getPath());
-        qDebug() << "sigle way";
+        qInfo() << "sigle way";
     } else {
         QSet<int>::iterator it;
         for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
             paths << g_indexImage.value(*it)->getPath();
-            qDebug() << g_indexImage.value(*it)->getPath();
+            qInfo() << g_indexImage.value(*it)->getPath();
         }
     }
 
@@ -283,13 +283,13 @@ void ThumbnailsBar::onShortcutCopy()
 
 void ThumbnailsBar::onShortcutDel()
 {
-    qDebug() << "onShortcutDel";
+    qInfo() << "onShortcutDel";
     //改用datetime，避免跨天之后判断错误
     QDateTime timeNow = QDateTime::currentDateTime();
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
-        qDebug() << "del too fast";
-        qDebug() << timeNow;
-        qDebug() << m_lastDelTime;
+        qInfo() << "del too fast";
+        qInfo() << timeNow;
+        qInfo() << m_lastDelTime;
         return;
     }
     m_lastDelTime = timeNow;
@@ -299,15 +299,15 @@ void ThumbnailsBar::onShortcutDel()
 
 void ThumbnailsBar::onTrashFile()
 {
-    qDebug() << "onTrashFile";
+    qInfo() << "onTrashFile";
     if (g_setIndex.isEmpty()) { //删除
         if (g_indexImage.size() <= 0) {
             return;
         }
         ImageItem *tmp = g_indexImage.value(g_indexNow);
         if (tmp == nullptr) {
-            qDebug() << "ImageItem not exist !";
-            qDebug() << "g_indexNow=" << g_indexNow;
+            qInfo() << "ImageItem not exist !";
+            qInfo() << "g_indexNow=" << g_indexNow;
 
             ImageItem *itemNow = dynamic_cast<ImageItem *>(m_hBOx->itemAt(0)->widget());
             g_indexNow = itemNow->getIndex();
@@ -316,14 +316,14 @@ void ThumbnailsBar::onTrashFile()
         QString strPath = tmp->getPath();
         QFile file(strPath);
         if (!file.exists()) {
-            qDebug() << "file not exist !";
-            qDebug() << g_indexNow << " " << strPath;
+            qInfo() << "file not exist !";
+            qInfo() << g_indexNow << " " << strPath;
         }
 
         bool bTrashed = DDesktopServices::trash(strPath);
         if (!bTrashed) {
-            qDebug() << "trash failed!";
-            qDebug() << "path is " << strPath;
+            qInfo() << "trash failed!";
+            qInfo() << "path is " << strPath;
         }
         delFile(strPath);
     } else {//边删边加会乱掉，先删完再加
@@ -346,8 +346,8 @@ void ThumbnailsBar::onTrashFile()
         for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
             bool bTrashed = DDesktopServices::trash(g_indexImage.value(*it)->getPath());
             if (!bTrashed) {
-                qDebug() << "trash failed!";
-                qDebug() << "path is " << g_indexImage.value(*it)->getPath();
+                qInfo() << "trash failed!";
+                qInfo() << "path is " << g_indexImage.value(*it)->getPath();
             }
             for (int i = 0; i < m_hBOx->count(); i ++) {
                 ImageItem *itemDel = dynamic_cast<ImageItem *>(m_hBOx->itemAt(i)->widget());
@@ -375,7 +375,7 @@ void ThumbnailsBar::onTrashFile()
                     m_showVdTime->setText(itemExist->getDuration());
                     QFile file1(itemExist->getPath());
                     if (!file1.exists()) {
-                        qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
+                        qInfo() << "file not exist,delete error";//说明g_indexNow还有问题
                     }
                 }
                 g_setIndex.clear();
@@ -385,9 +385,9 @@ void ThumbnailsBar::onTrashFile()
             int nIndexSupply = nIndexMax + 1 + i;
             m_fileInfoLst.removeAt(0);
             ImageItem *pLabel = new ImageItem(nIndexSupply, fileInfo.filePath());
-            qDebug() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
+            qInfo() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
             if (pLabel == nullptr) {
-                qDebug() << "error! imageitem is null!!";
+                qInfo() << "error! imageitem is null!!";
             }
             connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
             connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
@@ -408,11 +408,11 @@ void ThumbnailsBar::onTrashFile()
         m_showVdTime->setText(itemNow->getDuration());
         QFile file2(itemNow->getPath());
         if (!file2.exists()) {
-            qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
-            qDebug() << "path : " << itemNow->getPath();
+            qInfo() << "file not exist,delete error";//说明g_indexNow还有问题
+            qInfo() << "path : " << itemNow->getPath();
         }
     }
-    //qDebug() << "g_indexNow=" << g_indexNow;
+    //qInfo() << "g_indexNow=" << g_indexNow;
 }
 
 void ThumbnailsBar::onShowVdTime(QString str)
@@ -496,7 +496,7 @@ void ThumbnailsBar::addFile(QString strFile)
     }
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, strFile);
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
-    qDebug() << "supply:" << nIndexMax + 1 << " filename " << strFile;
+    qInfo() << "supply:" << nIndexMax + 1 << " filename " << strFile;
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
 
@@ -528,7 +528,7 @@ void ThumbnailsBar::addFile(QString strFile)
     }
 
     if (pLabel == nullptr) {
-        qDebug() << "error! imageitem is null!!";
+        qInfo() << "error! imageitem is null!!";
     }
     m_hBOx->insertWidget(0, pLabel);
 
@@ -553,11 +553,11 @@ void ThumbnailsBar::addFile(QString strFile)
 //            m_showVdTime->setText(tmp->getDuration());
 //            QFile file(tmp->getPath());
 //            if (!file.exists()) {
-//                qDebug() << "file not exist,delete error";//说明g_indexNow还有问题
+//                qInfo() << "file not exist,delete error";//说明g_indexNow还有问题
 //            }
 //        }
     }
-    qDebug() << "m_nItemCount " << m_nItemCount;
+    qInfo() << "m_nItemCount " << m_nItemCount;
     emit fitToolBar();
 }
 
@@ -593,7 +593,7 @@ void ThumbnailsBar::delFile(QString strFile)
         }
     }
     if (!bRemoved) {
-        qDebug() << "warning: item didn't removed!!!";
+        qInfo() << "warning: item didn't removed!!!";
     }
 
     //g_indexImage里边的数据是已经删掉了的
@@ -607,9 +607,9 @@ void ThumbnailsBar::delFile(QString strFile)
     m_fileInfoLst.removeAt(0);
 
     ImageItem *pLabel = new ImageItem(nIndexMax + 1, fileInfo.filePath());
-    qDebug() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
+    qInfo() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
     if (pLabel == nullptr) {
-        qDebug() << "error! imageitem is null!!";
+        qInfo() << "error! imageitem is null!!";
     }
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));

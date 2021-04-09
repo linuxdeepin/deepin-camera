@@ -1,4 +1,4 @@
-/* 
+/*
  * (c) 2017, Deepin Technology Co., Ltd. <support@deepin.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -29,15 +29,16 @@
  */
 #include "dbus_adpator.h"
 
-ApplicationAdaptor::ApplicationAdaptor(CMainWindow* mw)
-    :QDBusAbstractAdaptor(mw), _mw(mw) 
+ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
+    : QDBusAbstractAdaptor(mw), _mw(mw)
 {
     oldTime = QTime::currentTime();
 }
 
 
-void ApplicationAdaptor::Raise(){
-    qDebug()<<"raise window from dbus";
+void ApplicationAdaptor::Raise()
+{
+    qInfo() << "raise window from dbus";
     _mw->showNormal();
     _mw->raise();
     _mw->activateWindow();
@@ -50,7 +51,7 @@ QVariant ApplicationAdaptor::redDBusProperty(const QString &service, const QStri
                               interface,
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) {
-        qDebug() << qPrintable(QDBusConnection::sessionBus().lastError().message());
+        qInfo() << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
         return  v;
     }
@@ -66,7 +67,7 @@ QVariant ApplicationAdaptor::redDBusMethod(const QString &service, const QString
                               interface,
                               QDBusConnection::sessionBus());
     if (!ainterface.isValid()) {
-        qDebug() <<  "error:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
+        qInfo() <<  "error:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
         return  v;
     }
@@ -77,7 +78,7 @@ QVariant ApplicationAdaptor::redDBusMethod(const QString &service, const QString
         QVariant v(0) ;
         return  v;
     } else {
-        qDebug() << "error1:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
+        qInfo() << "error1:" << qPrintable(QDBusConnection::sessionBus().lastError().message());
         QVariant v(0) ;
         return  v;
     }

@@ -66,11 +66,11 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
                 thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
 
                 QImage img = QImage::fromData(buf.data(), int(buf.size()), "png");
-                img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
+                img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
-                qDebug() << "generateThumbnail failed";
+                qInfo() << "generateThumbnail failed";
             }
         }
         g_videoCount ++;
@@ -126,7 +126,7 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         m_strDuratuion = "";
         QImage img(path);
         //修改缩略图缩放比例https://pms.uniontech.com/zentao/task-view-45804.html
-        img = img.scaled(THUMBNAIL_PIXMAP_SIZE,THUMBNAIL_PIXMAP_SIZE);
+        img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
@@ -161,13 +161,13 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         if (g_setIndex.isEmpty())
         {
             paths = QStringList(path);
-            qDebug() << "sigle way";
+            qInfo() << "sigle way";
         } else
         {
             QSet<int>::iterator it;
             for (it = g_setIndex.begin(); it != g_setIndex.end(); ++it) {
                 paths << g_indexImage.value(*it)->getPath();
-                qDebug() << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
             }
         }
 
@@ -206,10 +206,12 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
             strtmp.replace(0, 1, QDir::homePath());
         }
 
-        if (g_setIndex.size() <= 1) {
+        if (g_setIndex.size() <= 1)
+        {
             QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
             Dtk::Widget::DDesktopServices::showFileItem(url);
-        } else {
+        } else
+        {
             //多选待定义,先打开文件夹吧，可以用showFileItems都选中
             //https://pms.uniontech.com/zentao/bug-view-41745.html
             Dtk::Widget::DDesktopServices::showFolder(strtmp);
@@ -253,7 +255,7 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     QStringList arguments;
     //表示本地文件
     arguments << QUrl::fromLocalFile(m_path).toString();
-    qDebug() << QUrl::fromLocalFile(m_path).toString();
+    qInfo() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
     myProcess->startDetached(program, arguments);
 }
@@ -312,7 +314,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
-    //qDebug() << "paint this index" << m_index << "indexnow " << m_indexNow  << "setsize " << m_setIndex.size();
+    //qInfo() << "paint this index" << m_index << "indexnow " << m_indexNow  << "setsize " << m_setIndex.size();
     QPainter painter(this);
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
