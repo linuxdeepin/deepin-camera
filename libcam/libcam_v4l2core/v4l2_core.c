@@ -218,7 +218,7 @@ static int check_v4l2_dev(v4l2_dev_t *vd)
 	/*enumerate device controls*/
 	enumerate_v4l2_control(vd);
 	/*gets the current control values and sets their flags*/
-	get_v4l2_control_values(vd);
+//	get_v4l2_control_values(vd);
 
 	/*if we have a focus control initiate the software autofocus*/
 	if(vd->has_focus_control_id)
