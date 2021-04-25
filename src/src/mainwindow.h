@@ -235,6 +235,11 @@ private slots:
     void onSettingsDlgClose();
 
     /**
+     * @brief onTableLockScreen 平板锁屏
+     */
+    void onTableLockScreen(bool );
+
+    /**
      * @brief onEnableSettings 设置可用调节
      * @param bTrue
      */

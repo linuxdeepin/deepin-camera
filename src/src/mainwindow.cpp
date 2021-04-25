@@ -1646,6 +1646,9 @@ void CMainWindow::initConnection()
                                           "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
                                           SLOT(onTimeoutLock(QString, QVariantMap, QStringList)));
 
+    QDBusConnection::sessionBus().connect("com.deepin.dde.lockFront", "/com/deepin/dde/lockFront",
+                                          "com.deepin.dde.lockFront", "VisibleChanged", this,
+                                          SLOT(onTableLockScreen(bool)));
 
     //控制中心更改了本地时间，及时更新当前时间
     //避免时间往前切换过后，需要点击两次才能结束录制
@@ -2122,6 +2125,24 @@ void CMainWindow::onSettingsDlgClose()
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     Settings::get().settings()->sync();
+}
+
+void CMainWindow::onTableLockScreen(bool lockstatus)
+{
+    if (CamApp->isPanelEnvironment()) {
+
+        if (m_thumbnail->m_nStatus == STATPicIng && lockstatus)
+            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+        /*锁屏取消、结束录制*/
+        else if (m_thumbnail->m_nStatus == STATVdIng && lockstatus) {
+            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+            if (btn->isVisible())
+                btn->click();
+            else
+                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+
+        }
+    }
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
