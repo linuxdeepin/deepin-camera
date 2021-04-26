@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5db637e_fdae52d0",
+        "filename": "tests/MainwindowTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-26T08:00:07Z",
+      "side": 1,
+      "message": "注释行数: 24; 改动行数(修改和新增): 75; 注释率: 32.0%",
+      "revId": "3c820b67f18a99f8303923269aeeea51a8225e66",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6181993a_45deb290",
+        "filename": "tests/stub/stub_function.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-26T08:00:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 12; 注释率: 0.0%",
+      "revId": "3c820b67f18a99f8303923269aeeea51a8225e66",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df76d6b2_e8c19f79",
+        "filename": "tests/stub/stub_function.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-04-26T08:00:07Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 4; 注释率: 100.0%",
+      "revId": "3c820b67f18a99f8303923269aeeea51a8225e66",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
