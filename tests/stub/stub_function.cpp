@@ -11,7 +11,7 @@ v4l2_device_list_t *Stub_Function::m_v4l2_device_list1 = nullptr;
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list2 = nullptr;
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list3 = nullptr;
 v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff = nullptr;
-
+ 
 Stub_Function::Stub_Function()
 {
 
@@ -80,6 +80,11 @@ qint64 Stub_Function::msecsTo(const QDateTime &)
 }
 
 int Stub_Function::get_wayland_status()
+{
+    return true;
+}
+
+bool Stub_Function::isVisible()
 {
     return true;
 }
@@ -298,6 +303,16 @@ bool Stub_Function::mkdir(const QString &dirName)
 QString Stub_Function::currentPath()
 {
     return "~/a";
+}
+
+QString Stub_Function::suffix()
+{
+    return "webm";
+}
+
+bool Stub_Function::parseFromFile()
+{
+    return true;
 }
 
 
