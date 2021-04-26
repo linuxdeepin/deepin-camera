@@ -1,5 +1,7 @@
 rm -f ~/Pictures/相机/*.jpg
 cp -r ~/Pictures/Wallpapers/*.jpg ~/Pictures/相机/
+rm -f ~/Pictures/*.jpg
+cp -r ~/Pictures/Wallpapers/*.jpg ~/Pictures/
 rm -rf ../build-ut
 mkdir ../build-ut
 cd ../build-ut
