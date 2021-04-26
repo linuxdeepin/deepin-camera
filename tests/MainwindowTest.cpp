@@ -12,6 +12,7 @@
 #include <QShortcut>
 #include <QMap>
 #include <QVariantMap>
+#include <QStandardPaths>
 
 #include <DWindowMaxButton>
 #include <DWindowMinButton>
@@ -750,6 +751,36 @@ TEST_F(MainwindowTest, reachMaxDelayedFrames)
 }
 
 /**
+ *  @brief 右键打开文件夹
+ */
+TEST_F(MainwindowTest, OpenFolder)
+{
+    //右键菜单打开文件夹
+    QMap<int, ImageItem *> it = get_imageitem();
+    ImageItem *imgit = nullptr;
+
+    if (it.count() > 0) {
+        QAction *actOpenFolder = mainwindow->findChild<QAction *>("OpenFolderAction");
+        actOpenFolder->trigger();
+    }
+}
+
+/**
+ *  @brief 双击缩略图
+ */
+TEST_F(MainwindowTest, mouseDoubleClickEvent)
+{
+    //右键菜单打开文件夹
+    QMap<int, ImageItem *> it = get_imageitem();
+    ImageItem *imgit = nullptr;
+
+    if (it.count() > 0) {
+        QMap<int, ImageItem *> imgitem = get_imageitem();
+        QTest::mouseDClick(imgitem[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    }
+}
+
+/**
  *  @brief Setting类打桩
  */
 TEST_F(MainwindowTest, Setting)
@@ -851,13 +882,20 @@ TEST_F(MainwindowTest, videowidget)
     QTest::qWait(500);
     //调用无设备状态分支
     DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+    stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));
     videowidgetTest->delayInit();
     //启动失败分支
     stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
     videowidgetTest->delayInit();
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
     videowidgetTest->delayInit();
+    //启动成功分支
+    stub.set(camInit, ADDR(Stub_Function, camInit_OK));
+    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
+    videowidgetTest->delayInit();
+
     stub.reset(camInit);
+    stub.reset(ADDR(MajorImageProcessingThread, start));
 
     //调用showNocam函数
     QTest::qWait(500);
@@ -1230,6 +1268,49 @@ TEST_F(MainwindowTest, CMainWindow)
     stub.reset(ADDR(QVariant, toString));
     stub.reset(ADDR(QDir, mkdir));
     stub.reset(ADDR(QDir, currentPath));
+}
+
+/**
+ * @brief imageitem与thumbnails类未覆盖部分打桩（构造函数存在connect函数，这些未覆盖部分需要尽量往后面放，以免影响其他case）
+ */
+TEST_F(MainwindowTest, imageitem_thumbnails)
+{
+    Stub stub;
+    stub.set(ADDR(QFileInfo, suffix), ADDR(Stub_Function, suffix));
+    ImageItem *imageitem1 = new ImageItem(nullptr, 0, "/a");
+    stub.set(ADDR(ImageItem, parseFromFile), ADDR(Stub_Function, parseFromFile));
+    ImageItem *imageitem2 = new ImageItem(nullptr, 0, QString(QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)));
+    delete imageitem1;
+    delete imageitem2;
+    stub.reset(ADDR(QFileInfo, suffix));
+    stub.reset(ADDR(ImageItem, parseFromFile));
+
+    ThumbnailsBar *thumbnailsBarNew = new ThumbnailsBar();
+    //调用setBtntooltip()
+    thumbnailsBarNew->setBtntooltip();
+    //调用设备不可用状态分支
+    thumbnailsBarNew->onBtnClick();
+    //调用onBtnClick（）设备可用状态分支
+    stub.set(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getdevStatus));
+    //调用拍照分支的非正在拍照状态
+    thumbnailsBarNew->onBtnClick();
+    //调用拍照分支的正在拍照状态
+    CMainWindow *mw = new CMainWindow();
+    thumbnailsBarNew->onBtnClick();
+    //调用录像分支但不处于正在录像分支
+    mw->m_nActTpye = ActTakeVideo;
+    thumbnailsBarNew->ChangeActType(mw->m_nActTpye);
+    thumbnailsBarNew->onBtnClick();
+    //调用录像分支但处于正在录像分支
+    thumbnailsBarNew->onBtnClick();
+    //还原
+    stub.reset(ADDR(DataManager, getdevStatus));
+    //调用onShortcutDel删除太快分支
+    stub.set(ADDR(QDateTime, msecsTo), ADDR(Stub_Function, msecsTo));
+    thumbnailsBarNew->onShortcutDel();
+    delete thumbnailsBarNew;
+    //还原
+    stub.reset(ADDR(QDateTime, msecsTo));
 }
 
 /**

@@ -30,6 +30,7 @@ public:
 
     //videowidget
     int get_wayland_status();//获取wayland状态函数打桩
+    bool isVisible();//可见函数打桩
     //调用delayInit分支
     int camInit_OK(const char *devicename);//返回值为E_OK(进入该分支会出现错误)
     int camInit_FORMAT_ERR(const char *devicename);//返回值为E_FORMAT_ERR
@@ -94,6 +95,11 @@ public:
     bool mkdir(const QString &dirName);
     //获得当前路径，此处需要获得一个以～开头的的路径
     static QString currentPath();
+
+    //imageitem
+    QString suffix();//获得文件后缀函数打桩
+    bool parseFromFile();//解析文件函数打桩
+
 
 public:
     //定义静态成员变量用于打桩时多次调用

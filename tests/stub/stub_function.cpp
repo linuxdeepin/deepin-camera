@@ -84,6 +84,11 @@ int Stub_Function::get_wayland_status()
     return true;
 }
 
+bool Stub_Function::isVisible()
+{
+    return true;
+}
+
 int Stub_Function::camInit_OK(const char *devicename)
 {
     return E_OK;
@@ -298,6 +303,16 @@ bool Stub_Function::mkdir(const QString &dirName)
 QString Stub_Function::currentPath()
 {
     return "~/a";
+}
+
+QString Stub_Function::suffix()
+{
+    return "webm";
+}
+
+bool Stub_Function::parseFromFile()
+{
+    return true;
 }
 
 
