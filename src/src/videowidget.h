@@ -33,6 +33,7 @@
 #include <QOpenGLBuffer>
 #include <QtMultimedia/QSound>
 #include <QDateTime>
+#include <QSvgRenderer>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
@@ -51,6 +52,8 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
 class QSound;
+class QGraphicsSvgItem;
+
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 /**
@@ -348,8 +351,7 @@ private:
 
     QSound                     *m_takePicSound;     //拍照声音
     QPixmap                    m_framePixmap;            //帧图片
-    QPixmap                    m_noDevStatusPixmap;      //未连接状态
-    QPixmap                    m_devTackupStatuspixmap;  //被占用状态
+    QSvgRenderer               m_svg;
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器
@@ -359,6 +361,7 @@ private:
     QGridLayout                *m_pGridLayout;
     QGraphicsView              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
+    QGraphicsSvgItem           *m_pSvgItem;
     QGraphicsPixmapItem        *m_pNormalItem;
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
 };

@@ -42,7 +42,7 @@
 #include <QDir>
 #include <QGraphicsProxyWidget>
 #include <QStandardPaths>
-#include <QSvgRenderer>
+#include <QGraphicsSvgItem>
 
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
@@ -51,6 +51,8 @@ videowidget::videowidget(DWidget *parent)
 {
 #ifndef __mips__
     m_openglwidget = new PreviewOpenglWidget(this);
+#else
+    m_pNormalItem = new QGraphicsPixmapItem;
 #endif
     m_bActive = false;   //是否录制中
     m_takePicSound = new QSound(":/resource/Camera.wav");
@@ -65,13 +67,9 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel = new DLabel(m_fWgtCountdown);
     m_endBtn = new DPushButton(this);
     m_pNormalScene = new QGraphicsScene();
-    m_pNormalItem = new QGraphicsPixmapItem;
+    m_pSvgItem = new QGraphicsSvgItem;
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
-    m_noDevStatusPixmap = QPixmap(140, 140);
-    m_noDevStatusPixmap.fill(Qt::transparent);
-    m_devTackupStatuspixmap = QPixmap(140, 140);
-    m_devTackupStatuspixmap.fill(Qt::transparent);
 //    m_recordingTimeWidget->setBlurBackgroundEnabled(true);
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
@@ -95,10 +93,12 @@ videowidget::videowidget(DWidget *parent)
     forbidScrollBar(m_pNormalView);
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
     m_pNormalView->setScene(m_pNormalScene);
-    m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
     m_pGridLayout->addWidget(m_pNormalView);
+    m_pNormalScene->addItem(m_pSvgItem);
+#ifdef __mips__
     m_pNormalScene->addItem(m_pNormalItem);
+#endif
     m_pNormalScene->addItem(m_pCamErrItem);
     m_flashLabel->setFocusPolicy(Qt::NoFocus);
     m_fWgtCountdown->hide(); //先隐藏
@@ -115,6 +115,7 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
+    m_pSvgItem->setCacheMode(QGraphicsItem::NoCache);
 
     //设置高斯模糊
     m_recordingTimeWidget->blurEnabled();
@@ -137,7 +138,7 @@ videowidget::videowidget(DWidget *parent)
 
     QFont ftLabel("SourceHanSansSC-ExtraLight");
     ftLabel.setWeight(QFont::Normal);//最小就是50,更小的设置不进去，也是bug？
-    ftLabel.setPointSize(14);
+    ftLabel.setPointSize(50);
     m_dLabel->setFont(ftLabel);
     QPalette pltLabel = m_dLabel->palette();
 
@@ -278,7 +279,8 @@ void videowidget::delayInit()
     int ret =  camInit("");
 
     if (ret == E_OK) {
-        m_pCamErrItem->hide();;
+        m_pCamErrItem->hide();
+        m_pSvgItem->hide();
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
     } else if (ret == E_FORMAT_ERR) {
@@ -342,21 +344,16 @@ void videowidget::delayInit()
             }
         }
 
-        if (m_pCamErrItem->isVisible()) {
+        if (m_pSvgItem->isVisible()) {
             QString str;
-            QSize size;
             if (type == DGuiApplicationHelper::LightType) {
                 if (DataManager::instance()->getdevStatus() == NOCAM) {
-                    QSvgRenderer svg(QString(":/images/icons/light/Not connected.svg"));
-                    size = svg.defaultSize();
-                    QPainter paint(&m_noDevStatusPixmap);
-                    svg.render(&paint);
+                    m_svg.load(QString(":/images/icons/light/Not connected.svg"));
+                    m_pSvgItem->setSharedRenderer(&m_svg);
                     str = tr("No webcam found");//未连接摄像头
                 } else {//仅CAM_CANNOT_USE
-                    QSvgRenderer svg(QString(":/images/icons/light/Take up.svg"));
-                    size = svg.defaultSize();
-                    QPainter paint(&m_devTackupStatuspixmap);
-                    svg.render(&paint);
+                    m_svg.load(QString(":/images/icons/light/Take up.svg"));
+                    m_pSvgItem->setSharedRenderer(&m_svg);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
 
@@ -372,17 +369,13 @@ void videowidget::delayInit()
             } else if (type == DGuiApplicationHelper::DarkType) {
                 if (DataManager::instance()->getdevStatus() == NOCAM) {
                     qDebug() << "changed theme 3";
-                    QSvgRenderer svg(QString(":/images/icons/dark/Not connected_dark.svg"));
-                    size = svg.defaultSize();
-                    QPainter paint(&m_noDevStatusPixmap);
-                    svg.render(&paint);
+                    m_svg.load(QString(":/images/icons/dark/Not connected_dark.svg"));
+                    m_pSvgItem->setSharedRenderer(&m_svg);
                     str = tr("No webcam found");//未连接摄像头
                 } else {//仅CAM_CANNOT_USE
                     qDebug() << "changed theme 4";
-                    QSvgRenderer svg(QString(":/images/icons/dark/Take up_dark.svg"));
-                    size = svg.defaultSize();
-                    QPainter paint(&m_devTackupStatuspixmap);
-                    svg.render(&paint);
+                    m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
+                    m_pSvgItem->setSharedRenderer(&m_svg);
                     str = tr("The webcam is in use");//摄像头已被占用
                 }
 
@@ -402,13 +395,11 @@ void videowidget::delayInit()
             ft.setPixelSize(17);
             m_pCamErrItem->setFont(ft);
             if (DataManager::instance()->getdevStatus() == NOCAM) {
-                m_pNormalScene->setSceneRect(m_noDevStatusPixmap.rect());
+                m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
                 itemPosChange();
-                m_pNormalItem->setPixmap(m_noDevStatusPixmap);
             } else {
-                m_pNormalScene->setSceneRect(m_devTackupStatuspixmap.rect());
+                m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
                 itemPosChange();
-                m_pNormalItem->setPixmap(m_devTackupStatuspixmap);
             }
 
             if (m_flashLabel->isVisible())
@@ -421,28 +412,29 @@ void videowidget::delayInit()
 
 void videowidget::showNocam()
 {
-    if (!m_pNormalView->isVisible()) {
+    if (!m_pNormalView->isVisible())
         m_pNormalView->show();
-    }
 
-    if (!m_pNormalItem->isVisible()) {
-        m_pNormalItem->show();
-    }
 
-    if (!m_pCamErrItem->isVisible()) {
+
+    if (!m_pCamErrItem->isVisible())
         m_pCamErrItem->show();
-    }
+
+    if (!m_pSvgItem->isVisible())
+        m_pSvgItem->show();
 
 #ifndef __mips__
     m_openglwidget->hide();
+#else
+    if (!m_pNormalItem->isVisible())
+        m_pNormalItem->show();
 #endif
 
     emit sigDeviceChange();
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        QSvgRenderer svg(QString(":/images/icons/light/Not connected.svg"));
-        QPainter paint(&m_noDevStatusPixmap);
-        svg.render(&paint);
+        m_svg.load(QString(":/images/icons/light/Not connected.svg"));
+        m_pSvgItem->setSharedRenderer(&m_svg);
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -453,9 +445,8 @@ void videowidget::showNocam()
         plt.setColor(QPalette::Base, clrBase);
         setPalette(plt);
     } else {
-        QSvgRenderer svg(QString(":/images/icons/dark/Not connected_dark.svg"));
-        QPainter paint(&m_noDevStatusPixmap);
-        svg.render(&paint);
+        m_svg.load(QString(":/images/icons/dark/Not connected_dark.svg"));
+        m_pSvgItem->setSharedRenderer(&m_svg);
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -473,14 +464,16 @@ void videowidget::showNocam()
     m_pCamErrItem->setFont(ft);
     QString str(tr("No webcam found"));//未连接摄像头
     m_pCamErrItem->setPlainText(str);
-    m_pNormalScene->setSceneRect(m_noDevStatusPixmap.rect());
-    m_pNormalItem->setPixmap(m_noDevStatusPixmap);
+    m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
 
     if (m_flashLabel->isVisible())
         m_flashLabel->hide();
 
     itemPosChange();
     m_pCamErrItem->show();
+#ifdef __mips__
+    m_pNormalItem->hide();
+#endif
     emit noCam();
 
     if (getCapStatus())  //录制完成处理
@@ -501,22 +494,18 @@ void videowidget::showCamUsed()
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
-    if (!m_pNormalItem->isVisible())
-        m_pNormalItem->show();
-
-    if (!m_pCamErrItem->isVisible())
-        m_pCamErrItem->show();
-
 #ifndef __mips__
     m_openglwidget->hide();
+#else
+    if (!m_pNormalItem->isVisible())
+        m_pNormalItem->show();
 #endif
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        QSvgRenderer svg(QString(":/images/icons/light/Take up.svg"));
-        QPainter paint(&m_devTackupStatuspixmap);
-        svg.render(&paint);
+        m_svg.load(QString(":/images/icons/light/Take up.svg"));
+        m_pSvgItem->setSharedRenderer(&m_svg);
         QColor clrText(Qt::white);
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);//浅色主题文字和图片是白色，特殊处理
@@ -527,9 +516,8 @@ void videowidget::showCamUsed()
         plt.setColor(QPalette::Base, clrBackGRD);
         setPalette(plt);
     } else {
-        QSvgRenderer svg(QString(":/images/icons/dark/Take up_dark.svg"));
-        QPainter paint(&m_devTackupStatuspixmap);
-        svg.render(&paint);
+        m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
+        m_pSvgItem->setSharedRenderer(&m_svg);
         QColor clrText(Qt::black);
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);
@@ -545,14 +533,14 @@ void videowidget::showCamUsed()
     ft.setWeight(QFont::DemiBold);
     ft.setPixelSize(17);
     m_pCamErrItem->setFont(ft);
-    m_pNormalScene->setSceneRect(m_devTackupStatuspixmap.rect());
-    m_pNormalItem->setPixmap(m_devTackupStatuspixmap);
+    m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
 
     if (m_flashLabel->isVisible())
         m_flashLabel->hide();
 
     itemPosChange();
     m_pCamErrItem->show();
+    m_pSvgItem->show();
     emit noCamAvailable();
 
     if (getCapStatus())//录制完成处理
@@ -567,11 +555,11 @@ void videowidget::ReceiveOpenGLstatus(bool result)
         if (m_pCamErrItem->isVisible())
             m_pCamErrItem->hide();
 
+        if (m_pSvgItem->isVisible())
+            m_pSvgItem->hide();
+
         if (m_pNormalView->isVisible())
             m_pNormalView->hide();
-
-        if (m_pNormalItem->isVisible())
-            m_pNormalItem->hide();
 
         m_pNormalScene->update();
 
@@ -616,11 +604,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
 
-            if (m_pCamErrItem->isVisible())
-                m_pCamErrItem->hide();
-
-            if (!m_pNormalView->isVisible())
-                m_pNormalView->show();
+            m_pNormalView->show();
+            m_pCamErrItem->hide();
+            m_pSvgItem->hide();
+            m_pNormalItem->show();
 
             {
                 int widgetwidth = width();
@@ -675,11 +662,13 @@ void videowidget::onReachMaxDelayedFrames()
     DataManager::instance()->setdevStatus(NOCAM);
     stopEverything();
     showNocam();
+
 #ifndef __mips__
 
     if (m_openglwidget->isVisible())
         m_openglwidget->hide();//隐藏opengl窗口
-
+#else
+    m_pNormalItem->hide();
 #endif
     emit setBtnStatues(false);
 }
@@ -704,6 +693,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 
     case VIDEO:
         m_pCamErrItem->hide();
+        m_pSvgItem->hide();
         if (m_nCount > MAX_REC_TIME)//平板与主线保持一致最大录制时长60小时
             onEndBtnClicked();//结束录制
 
@@ -761,6 +751,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 
     default:
         m_pCamErrItem->hide();
+        m_pSvgItem->hide();
         m_fWgtCountdown->hide();
         m_recordingTimeWidget->hide();
         m_endBtn->hide();
@@ -802,6 +793,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
     if (m_pCamErrItem->isVisible()) {
         itemPosChange();
         m_pCamErrItem->show();
+        m_pSvgItem->show();
     } else {
         itemPosChange();
         m_pCamErrItem->hide();
@@ -917,6 +909,8 @@ void videowidget::showCountdown()
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
                 m_openglwidget->hide();
+#else
+                m_pNormalView->hide();
 #endif
                 m_thumbnail->hide();
             }
@@ -940,6 +934,8 @@ void videowidget::showCountdown()
 
 #ifndef __mips__
                 m_openglwidget->hide();
+#else
+                m_pNormalView->hide();
 #endif
 
                 m_thumbnail->hide();
@@ -1015,6 +1011,7 @@ void videowidget::showCountdown()
                 m_countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);
 
             m_pCamErrItem->hide();
+            m_pSvgItem->hide();
             m_fWgtCountdown->hide();
             m_pNormalView->hide();
         }
@@ -1137,6 +1134,9 @@ void videowidget::onEndBtnClicked()
 
     if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
         m_pCamErrItem->hide();
+
+    if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
+        m_pSvgItem->hide();
 
     if (m_fWgtCountdown->isVisible())
         m_fWgtCountdown->hide();
@@ -1365,6 +1365,9 @@ void videowidget::onTakePic(bool bTrue)
         if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pCamErrItem->hide();
 
+        if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
+            m_pSvgItem->hide();
+
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
 
@@ -1416,6 +1419,9 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         if (m_pCamErrItem->isVisible())
             m_pCamErrItem->hide();
 
+        if (m_pSvgItem->isVisible())
+            m_pSvgItem->hide();
+
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
@@ -1432,6 +1438,9 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
         if (m_pCamErrItem->isVisible())
             m_pCamErrItem->hide();
+
+        if (m_pSvgItem->isVisible())
+            m_pSvgItem->hide();
 
         if (m_fWgtCountdown->isVisible())
             m_fWgtCountdown->hide();
@@ -1524,12 +1533,9 @@ void videowidget::startTakeVideo()
 
 void videowidget::itemPosChange()
 {
-    if (DataManager::instance()->getdevStatus() == NOCAM)
-        m_pCamErrItem->setPos((m_noDevStatusPixmap.width() - static_cast<int>(m_pCamErrItem->boundingRect().width())) / 2, m_noDevStatusPixmap.height());
-    else
-        m_pCamErrItem->setPos((m_devTackupStatuspixmap.width() - static_cast<int>(m_pCamErrItem->boundingRect().width())) / 2, m_devTackupStatuspixmap.height());
+    m_pCamErrItem->setPos((m_pSvgItem->boundingRect().width() - static_cast<int>(m_pCamErrItem->boundingRect().width())) / 2, m_pSvgItem->boundingRect().height());
 
-    m_pNormalItem->update();
+    m_pSvgItem->update();
     m_pCamErrItem->update();
 }
 
@@ -1546,6 +1552,8 @@ void videowidget::stopEverything()
     if (m_pCamErrItem->isVisible())
         m_pCamErrItem->hide();
 
+    if (m_pSvgItem->isVisible())
+        m_pSvgItem->hide();
 
     if (m_fWgtCountdown->isVisible())
         m_fWgtCountdown->hide();
