@@ -14,8 +14,10 @@ X-MultipleArgs=false
 
 # Translations:
 # Do not manually modify!
+Comment[ar]=الكاميرا هي أداة التقاط الصور والفيديو باستخدام كاميرا الحاسوب أو كاميرا الويب.
+Comment[az]=Kamera, PC kameranızdan və ya vebkameranızı istifadə edərək bir şəkil və video çəkmə yardımçıdır.
 Comment[bg]=Камера е приложение за заснемане на видео и снимки с уеб камера или камерата на вашият компютър.
-Comment[bo]=པར་ཆས་ནི་སྤྱོད་ཐབས་བདེ་བའི་པར་ལེན་ཡོ་བྱད་ཞིག་ཡིན་པ་དང་།པར་ལེན་དང་བཪྙན་ཕབ་སོགས་བྱེད་ནུས་མངོན་གྱུར་བྱེད་ཐུབ།
+Comment[bo]=པར་ཆས་ནི་སྤྱོད་ཐབས་བདེ་བའི་པར་ལེན་ཡོ་བྱད་ཞིག་ཡིན་པ་དང་། དེས་པར་ལེན་དང་བཪྙན་ཕབ་སོགས་བྱ་ཐུབ།
 Comment[ca]=La Càmera és una utilitat de captura d’imatges i vídeos que usa la càmera o la càmera web del PC.
 Comment[cs]=Kamera je nástroj pro zachytávání obrazu a videa pomocí kamery počítače.
 Comment[en_US]=Camera is an image and video capture utility using your PC camera or webcam.
@@ -41,6 +43,8 @@ Comment[uk]=«Камера» — допоміжна програма для за
 Comment[zh_CN]=相机是一款简单易用的摄像头应用工具，可实现拍照、录制视频等功能。
 Comment[zh_HK]=相機是一款簡單易用的鏡頭應用工具，可實現拍照、錄製影片等功能。
 Comment[zh_TW]=相機是一款簡單易用的攝影機應用工具，可實現拍照、錄製影片等功能。
+GenericName[ar]=كاميرا
+GenericName[az]=Kamera
 GenericName[bg]=Камера
 GenericName[bo]=པར་ཆས།
 GenericName[ca]=Càmera
@@ -68,6 +72,8 @@ GenericName[uk]=Камера
 GenericName[zh_CN]=相机
 GenericName[zh_HK]=相機
 GenericName[zh_TW]=相機
+Name[ar]=ديبين كاميرا
+Name[az]=Deepin kamera
 Name[bg]=Deepin Камера
 Name[bo]=གཏིང་ཟབ་པར་ཆས།
 Name[ca]=Càmera del Deepin

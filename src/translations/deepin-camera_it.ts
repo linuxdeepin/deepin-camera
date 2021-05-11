@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -156,6 +154,10 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     <message>
         <source>Sound effects</source>
         <translation>Effetti sonori</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

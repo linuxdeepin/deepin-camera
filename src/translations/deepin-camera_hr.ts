@@ -1,158 +1,158 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="hr" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Снимање видеа је у току. Затворити прозор?</translation>
+        <translation>Video snimanje je u tijeku. Zatvoriti prozor?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>Otvori mapu</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>NIjedan</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Откажи</translation>
+        <translation>Otkaži</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Затвори</translation>
+        <translation>Zatvori</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Копирај</translation>
+        <translation>Kopiraj</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Обриши</translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>Otvori mapu</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Штампај</translation>
+        <translation>Ispis</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Немате дозволу да управљате овом фасциклом</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Close</source>
-        <translation>Затвори</translation>
+        <translation>Zatvori</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Неважећа фасцикла</translation>
+        <translation type="vanished">Neispravna mapa</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>Otvori mapu</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Основно</translation>
+        <translation>Osnovno</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Локација датотеке</translation>
+        <translation>Lokacija datoteke</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Снимање</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Рафални режим</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Одлагање снимања</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Output</source>
-        <translation>Испис</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Излазни формат</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 сли</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 сли</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>NIjedan</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Камера је алат за снимање видеа и слика помоћу камаре рачунара или мрежне камере.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Датотека није сачувана</translation>
+        <translation>Datoteka nije spremljena</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Сачувај у:</translation>
+        <translation type="vanished">Spremi u:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Слика:</translation>
+        <translation>Fotografija:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Видео:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Подешавање резолуције</translation>
+        <translation>Postavke razlučivosti</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Резолуција:</translation>
+        <translation>Razlučivost:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Слике:</translation>
+        <translation>Fotografije:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Видео:</translation>
+        <translation>Videa:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Звучни ефекти</translation>
+        <translation>Zvučni efekti</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -163,84 +163,84 @@
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>Postavke</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Заустави снимање</translation>
+        <translation>Prestani snimati</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копирај</translation>
+        <translation>Kopiraj</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Обриши</translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Отвори</translation>
+        <translation>Otvori</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Штампај</translation>
+        <translation>Ispis</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Помоћ</translation>
+        <translation>Pomoć</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Прикажи пречице</translation>
+        <translation>Prikaži prečace</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Заустави усликавање</translation>
+        <translation>Prestani fotografirati</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Приручни изборник</translation>
+        <translation>Kontekstualni izbornik</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Усликај</translation>
+        <translation>Fotografiraj</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Сними видео</translation>
+        <translation>Snimi video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Заустави усликавање</translation>
+        <translation>Prestani fotografirati</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>NIjedan</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Није пронађена мрежна камера</translation>
+        <translation>Web kamera nije nađena</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Мрежна камера је заузета</translation>
+        <translation>Web kamera je u uporabi</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Заустави снимање</translation>
+        <translation>Prestani snimati</translation>
     </message>
 </context>
 </TS>
