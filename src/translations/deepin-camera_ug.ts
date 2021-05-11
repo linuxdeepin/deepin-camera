@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ug">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ug" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -155,6 +153,10 @@
     <message>
         <source>Sound effects</source>
         <translation>ئاۋاز ئۈنۈمى</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

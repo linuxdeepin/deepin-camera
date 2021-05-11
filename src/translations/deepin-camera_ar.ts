@@ -1,158 +1,158 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="sr" version="2.1">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ar" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Снимање видеа је у току. Затворити прозор?</translation>
+        <translation>تسجيل الفيديو قيد التقدم. إغلاق النافذة؟</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>فتح مجلد</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>الإعدادات</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>لا أحد</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Откажи</translation>
+        <translation>إلغاء</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Затвори</translation>
+        <translation>إغلاق</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Копирај</translation>
+        <translation>نسخ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Обриши</translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>فتح مجلد</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Штампај</translation>
+        <translation>طباعة</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Немате дозволу да управљате овом фасциклом</translation>
+        <translation>ليس لديك إذن لتشغيل هذا المجلد</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Затвори</translation>
+        <translation>إغلاق</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Неважећа фасцикла</translation>
+        <translation type="vanished">مجلد غير صالح</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Отвори фасциклу</translation>
+        <translation>فتح مجلد</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>الإعدادات</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Основно</translation>
+        <translation>الأساسية</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Локација датотеке</translation>
+        <translation>موقع الملف</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Снимање</translation>
+        <translation>التقط</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Рафални режим</translation>
+        <translation>صور سريعة متتالية</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Одлагање снимања</translation>
+        <translation>مؤقت التقاط صورة شخصية</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Испис</translation>
+        <translation>الناتج</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Излазни формат</translation>
+        <translation>نوع امتداد الناتج</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 сли</translation>
+        <translation>4 قطع</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 сли</translation>
+        <translation>10 قطع</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>لا أحد</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>كاميرا</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Камера је алат за снимање видеа и слика помоћу камаре рачунара или мрежне камере.</translation>
+        <translation>الكاميرا هي أداة التقاط الصور والفيديو باستخدام كاميرا الحاسوب أو كاميرا الويب.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Датотека није сачувана</translation>
+        <translation>لم يتم حفظ المِلَفّ</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Сачувај у:</translation>
+        <translation type="vanished">حفظ ل:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Слика:</translation>
+        <translation>صورة:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Видео:</translation>
+        <translation>فيديو:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Подешавање резолуције</translation>
+        <translation>إعدادات الدِّقَّة</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Резолуција:</translation>
+        <translation>الدِّقَّة:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Слике:</translation>
+        <translation>صور:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Видео:</translation>
+        <translation>مقاطع فيديو:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Звучни ефекти</translation>
+        <translation>مؤثرات صوتية</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -163,84 +163,84 @@
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>كاميرا</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Подешавања</translation>
+        <translation>العدادات</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Заустави снимање</translation>
+        <translation>إيقاف التسجيل</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копирај</translation>
+        <translation>نسخ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Обриши</translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Отвори</translation>
+        <translation>فتح</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Штампај</translation>
+        <translation>طباعة</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Помоћ</translation>
+        <translation>مساعدة</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Прикажи пречице</translation>
+        <translation>عرض الاختصارات</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Заустави усликавање</translation>
+        <translation>إيقاف التقاط الصور</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Приручни изборник</translation>
+        <translation>قائمة السياق</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Усликај</translation>
+        <translation>التقاط صورة</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Сними видео</translation>
+        <translation>تسجيل فيديو</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Заустави усликавање</translation>
+        <translation>إيقاف التقاط الصور</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Ништа</translation>
+        <translation>لا أحد</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Није пронађена мрежна камера</translation>
+        <translation>لم يتم العثور على أية كاميرا ويب</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Мрежна камера је заузета</translation>
+        <translation>كاميرا ويب قيد الاستخدام</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Заустави снимање</translation>
+        <translation>إيقاف التسجيل</translation>
     </message>
 </context>
 </TS>
