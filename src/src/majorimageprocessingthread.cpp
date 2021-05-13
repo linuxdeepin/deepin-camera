@@ -124,10 +124,10 @@ void MajorImageProcessingThread::run()
             }
             continue;
         }
-        if(get_wayland_status() == 1 && QString::compare(QString(vd1->videodevice),"/dev/video0") == 0)
-        {
-            render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
-        }
+        //if(get_wayland_status() == 1 && QString::compare(QString(vd1->videodevice),"/dev/video0") == 0)
+        //{
+        //    render_fx_apply(frame->yuv_frame,frame->width, frame->height,REND_FX_YUV_MIRROR);
+        //}
 
         uint8_t *rgb = static_cast<uint8_t*>(calloc( frame->width * frame->height * 3, sizeof(uint8_t)));
         yu12_to_rgb24(rgb, frame->yuv_frame, frame->width, frame->height);
