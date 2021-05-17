@@ -76,6 +76,7 @@ struct _v4l2_dev_t
 
     int this_device;                    // index of this device in device list
 
+
     v4l2_ctrl_t* list_device_controls;    //null terminated linked list of available device controls
     int num_controls;                   //number of controls in list
 
