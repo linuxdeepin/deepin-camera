@@ -154,6 +154,7 @@ int main(int argc, char *argv[])
     w.show();
     w.loadAfterShow();
 
+    //ssh test
     //最小化后双击桌面恢复画面
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
