@@ -65,6 +65,8 @@ static LoadLibs *newClass(void)
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
     pLibs->m_avcodec_alloc_context3 = (uos_avcodec_alloc_context3)dlsym(handle, "avcodec_alloc_context3");
     PrintError();
+    pLibs->m_avcodec_free_context = (uos_avcodec_free_context)dlsym(handle,"avcodec_free_context");
+    PrintError();
     pLibs->m_avcodec_get_context_defaults3 = (uos_avcodec_get_context_defaults3)dlsym(handle, "avcodec_get_context_defaults3");
     PrintError();
 #else
@@ -123,11 +125,10 @@ static LoadLibs *newClass(void)
     PrintError();
     pLibs->m_avcodec_parameters_from_context = (uos_avcodec_parameters_from_context)dlsym(handle, "avcodec_parameters_from_context");
     PrintError();
+    pLibs->m_avcodec_parameters_to_context = (uos_avcodec_parameters_to_context)dlsym(handle, "avcodec_parameters_to_context");
+    PrintError();
 #if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
     dlsym(handle, "avcodec_find_decoder");
-    PrintError();
-#else
-    dlsym(handle, "avcodec_parameters_to_context");
     PrintError();
 #endif
     pLibs->m_avcodec_send_packet = (uos_avcodec_send_packet)dlsym(handle, "avcodec_send_packet");
