@@ -226,7 +226,7 @@ void MajorImageProcessingThread::run()
 #else
             emit sigRenderYuv(true);
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
-            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
                 m_nVdWidth = static_cast<unsigned int>(m_frame->width);
                 m_nVdHeight = static_cast<unsigned int>(m_frame->height);
                 if (m_yuvPtr != nullptr) {

@@ -1118,7 +1118,7 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     int nWidth = v4l2core_get_frame_width(get_v4l2_device_handler());
     int nHeight = v4l2core_get_frame_height(get_v4l2_device_handler());
 
-    if (newwidth != nWidth && newheight != nHeight) {
+    if (newwidth != nWidth || newheight != nHeight) {
         //设置刷新率
         v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
         //设置新的分辨率
