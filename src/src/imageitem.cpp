@@ -50,7 +50,7 @@ extern "C" {
 
 extern QMap<int, ImageItem *> g_indexImage;
 
-ImageItem::ImageItem(QWidget *parent, int index, QString path):DLabel(parent), m_index(index), m_path(path)
+ImageItem::ImageItem(QWidget *parent, int index, QString path): DLabel(parent), m_index(index), m_path(path)
 {
     m_bVideo = false;
     m_bMousePress = false;
@@ -636,7 +636,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 #endif
     printDialog.exec();
 #else
-    printDialog.show();
+    //printDialog.show();
 #endif
 }
 
@@ -737,7 +737,7 @@ static int open_codec_context(int *stream_idx, AVCodecParameters **dec_par, AVFo
 
     if (!dec) {
         fprintf(stderr, "Failed to find %s codec\n",
-                av_get_media_type_string(type));
+                getAvutil()->m_av_get_media_type_string(type));
         return AVERROR(EINVAL);
     }
 
@@ -747,7 +747,7 @@ static int open_codec_context(int *stream_idx, AVCodecParameters **dec_par, AVFo
     //*dec_par = getLoadLibsInstance()->m_avcodec_parameters_alloc();
     if (!dec_ctx) {
         fprintf(stderr, "Failed to allocate the %s codec context\n",
-                av_get_media_type_string(type));
+                getAvutil()->m_av_get_media_type_string(type));
         return AVERROR(ENOMEM);
     }
 
@@ -757,7 +757,7 @@ static int open_codec_context(int *stream_idx, AVCodecParameters **dec_par, AVFo
     /* Copy codec parameters from input stream to output codec context */
     if ((ret = getLoadLibsInstance()->m_avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
         fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
-                av_get_media_type_string(type));
+                getAvutil()->m_av_get_media_type_string(type));
         return ret;
     }
 
