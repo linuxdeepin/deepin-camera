@@ -15,7 +15,7 @@ Deepin camera is Deepin Desktop Environment Camera Software.
 
 * Qt5 (>= 5.3)
 * Qt5-X11extras
-* mpv
+* Dtk
 
 ## Installation 
 
