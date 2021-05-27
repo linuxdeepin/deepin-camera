@@ -30,7 +30,7 @@ using namespace Dtk::Core;
 
 extern QMap<int, ImageItem *> g_indexImage;
 
-MainwindowTest::MainwindowTest() 
+MainwindowTest::MainwindowTest()
 {
     if (!mainwindow)
         mainwindow = CamApp->getMainWindow();
@@ -110,6 +110,82 @@ TEST_F(MainwindowTest, CamUsed)
     }
 
     proclist.clear();
+}
+
+/**
+ *  @brief thumbnailsbar类打桩
+ */
+TEST_F(MainwindowTest, thumbonfolderchange)
+{
+    QVariant picpath = dc::Settings::get().settings()->option("base.save.picdatapath")->defaultValue();
+    QVariant vdpath = dc::Settings::get().settings()->option("base.save.vddatapath")->defaultValue();
+    dc::Settings::get().setPathOption("picdatapath", QVariant(picpath));
+    dc::Settings::get().setPathOption("vddatapath", QVariant(vdpath));
+    dc::Settings::get().settings()->sync();
+
+    ThumbnailsBar *thumbnailsBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
+
+    thumbnailsBar->m_nDelTimes = 1;
+    thumbnailsBar->onFoldersChanged("");
+
+    QStringList strlstFolderstmp = thumbnailsBar->m_strlstFolders;
+    thumbnailsBar->m_strlstFolders.clear();
+    thumbnailsBar->onFoldersChanged("");
+
+    thumbnailsBar->m_strlstFolders = strlstFolderstmp;
+    thumbnailsBar->onFoldersChanged("");
+
+    QDir dir1(thumbnailsBar->m_strlstFolders[0]);
+    QStringList filters1;
+    QFileInfoList fileinfolist1;
+    filters1 << QString("*.jpg") << QString("*.webm");
+    dir1.setNameFilters(filters1);
+    dir1.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir1.exists())
+        fileinfolist1 += dir1.entryInfoList();
+    for (int i = 0; i < fileinfolist1.size(); i++) {
+        QFile file1(fileinfolist1.at(i).filePath());
+        file1.open(QFile::Append);
+        file1.setFileTime(QDateTime::currentDateTime().addDays(-2 * i), QFileDevice::FileModificationTime);
+        file1.close();
+    }
+
+    QDir dir2(thumbnailsBar->m_strlstFolders[1]);
+    QStringList filters2;
+    QFileInfoList fileinfolist2;
+    filters2 << QString("*.jpg") << QString("*.webm");
+    dir2.setNameFilters(filters2);
+    dir2.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir2.exists())
+        fileinfolist2 += dir2.entryInfoList();
+    for (int i = 0; i < fileinfolist2.size(); i++) {
+        QFile file2(fileinfolist2.at(i).filePath());
+        file2.open(QFile::Append);
+        file2.setFileTime(QDateTime::currentDateTime().addDays(-2 * i + 1), QFileDevice::FileModificationTime);
+        file2.close();
+    }
+    QFileInfoList result;
+    QFileInfoList fileinfolist2tmp, fileinfolist1tmp;
+    int nLetAddCount = 10;
+    while (result.size() < nLetAddCount) {
+        if (result.size() == 3) {
+            fileinfolist2tmp = fileinfolist2;
+            fileinfolist2.clear();
+        }
+        if (result.size() == 6) {
+            fileinfolist1tmp = fileinfolist1;
+            fileinfolist2 = fileinfolist2tmp;
+            fileinfolist1.clear();
+        }
+        if (result.size() == 9) {
+            fileinfolist2.clear();
+            fileinfolist1.clear();
+        }
+        if (thumbnailsBar->sortFileInfoList(fileinfolist1, fileinfolist2, result) == false)
+            break;
+    }
+    thumbnailsBar->onFoldersChanged("");
+    //调用onBtnClick（）设备可用状态分支
 }
 
 /**
@@ -822,6 +898,24 @@ TEST_F(MainwindowTest, thumbarnail)
     thumbnailsBar->setBtntooltip();
     //调用设备不可用状态分支
     thumbnailsBar->onBtnClick();
+    //onFolderChanged()
+
+    thumbnailsBar->m_nDelTimes = 1;
+    thumbnailsBar->onFoldersChanged("");
+
+    QStringList strlstFolderstmp = thumbnailsBar->m_strlstFolders;
+    thumbnailsBar->m_strlstFolders.clear();
+    thumbnailsBar->onFoldersChanged("");
+
+    thumbnailsBar->m_strlstFolders = strlstFolderstmp;
+    thumbnailsBar->onFoldersChanged("");
+
+    QFileInfoList lstPicFoldertmp = thumbnailsBar->m_lstPicFolder;
+    thumbnailsBar->m_lstPicFolder = thumbnailsBar->m_lstVdFolder;
+
+    thumbnailsBar->m_lstPicFolder = lstPicFoldertmp;
+    thumbnailsBar->onFoldersChanged("");
+
     //调用onBtnClick（）设备可用状态分支
     stub.set(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getdevStatus));
     //调用拍照分支的非正在拍照状态
@@ -859,11 +953,15 @@ TEST_F(MainwindowTest, thumbarnail)
         QTest::mouseMove(imgit, QPoint(0, 0), 1000);
         QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
         QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-        thumbnailsBar->onTrashFile();
-        //调用delFile
-        thumbnailsBar->delFile(str);
-        //调用widthChanged
-        thumbnailsBar->widthChanged();
+        QFileInfo filestr(imgit->getPath());
+
+        if (filestr.isReadable() && filestr.isWritable() && filestr.isExecutable()) {
+            thumbnailsBar->onTrashFile();
+            //调用delFile
+            thumbnailsBar->delFile(str);
+            //调用widthChanged
+            thumbnailsBar->widthChanged();
+        }
     }
 }
 

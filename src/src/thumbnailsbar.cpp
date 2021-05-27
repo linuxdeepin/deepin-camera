@@ -168,6 +168,37 @@ void ThumbnailsBar::setBtntooltip()
     m_lastButton->setToolTipDuration(500);
 }
 
+bool ThumbnailsBar::sortFileInfoList(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut)
+{
+    if (firstIn.size() > 0) {
+        if (secondIn.size() > 0) {
+            QFileInfo fileInfo1 = firstIn.first();
+            QFileInfo fileInfo2 = secondIn.first();
+
+            if (fileInfo1.fileTime(QFileDevice::FileModificationTime).secsTo(fileInfo2.fileTime(QFileDevice::FileModificationTime)) > 0) {
+                resultOut += fileInfo2;
+                secondIn.removeFirst();
+            } else {
+                resultOut += fileInfo1;
+                firstIn.removeFirst();
+            }
+        } else {
+            QFileInfo fileInfo1 = firstIn.first();
+            resultOut += fileInfo1;
+            firstIn.removeFirst();
+        }
+    } else {
+        //两个都为空，结束while循环
+        if (secondIn.size() <= 0) {
+            return false;
+        }
+        QFileInfo fileInfo2 = secondIn.first();
+        resultOut += fileInfo2;
+        secondIn.removeFirst();
+    }
+    return true;
+}
+
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 {
     Q_UNUSED(strDirectory);
@@ -232,32 +263,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
     //将两个tmpLst合并排序，赋值给m_fileInfoLst
     while (m_fileInfoLst.size() < nLetAddCount) {
-        if (m_lstPicFolder.size() > 0) {
-            if (m_lstVdFolder.size() > 0) {
-                QFileInfo fileInfo1 = m_lstPicFolder.at(0);
-                QFileInfo fileInfo2 = m_lstVdFolder.at(0);
-
-                if (fileInfo1.fileTime(QFileDevice::FileModificationTime).secsTo(fileInfo2.fileTime(QFileDevice::FileModificationTime)) > 0) {
-                    m_fileInfoLst += fileInfo2;
-                    m_lstVdFolder.removeAt(0);
-                } else {
-                    m_fileInfoLst += fileInfo1;
-                    m_lstPicFolder.removeAt(0);
-                }
-            } else {
-                QFileInfo fileInfo1 = m_lstPicFolder.at(0);
-                m_fileInfoLst += fileInfo1;
-                m_lstPicFolder.removeAt(0);
-            }
-        } else {
-            //两个都为空，结束while循环
-            if (m_lstVdFolder.size() <= 0) {
-                break;
-            }
-            QFileInfo fileInfo2 = m_lstVdFolder.at(0);
-            m_fileInfoLst += fileInfo2;
-            m_lstVdFolder.removeAt(0);
-        }
+        if (sortFileInfoList(m_lstPicFolder, m_lstVdFolder, m_fileInfoLst) == false)
+            break;
     }
 
     QString strFileName = "";
@@ -266,8 +273,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         if (nLetAddCount <= m_hBox->count())
             break;
 
-        QFileInfo fileInfo = m_fileInfoLst.at(0);
-        m_fileInfoLst.removeAt(0);
+        QFileInfo fileInfo = m_fileInfoLst.first();
+        m_fileInfoLst.removeFirst();
         strFileName = fileInfo.fileName();
 
         if (!m_strFileName.isEmpty() && fileInfo.fileName().compare(m_strFileName) == 0)

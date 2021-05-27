@@ -52,7 +52,7 @@ typedef void (*uos_avcodec_flush_buffers)(AVCodecContext *avctx);
 //int avcodec_close(AVCodecContext *avctx);
 typedef int (*uos_avcodec_close)(AVCodecContext *avctx);
 //int avcodec_parameters_from_context(AVCodecParameters *par,const AVCodecContext *codec);
-typedef int (*uos_avcodec_parameters_from_context)(AVCodecParameters *par,const AVCodecContext *codec);
+typedef int (*uos_avcodec_parameters_from_context)(AVCodecParameters *par, const AVCodecContext *codec);
 //int avcodec_parameters_to_context(AVCodecContext *codec, const AVCodecParameters *par);
 typedef int (*uos_avcodec_parameters_to_context)(AVCodecContext *codec, const AVCodecParameters *par);
 //int avcodec_send_packet(AVCodecContext *avctx, const AVPacket *avpkt);
@@ -93,8 +93,7 @@ typedef void (*uos_swr_free)(struct SwrContext **s);
 //void sws_freeContext(struct SwsContext *swsContext);
 typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
 
-typedef struct _LoadLibNames
-{
+typedef struct _LoadLibNames {
     char *chAvcodec;
     char *chFfmpegthumbnailer;
     char *chSwresample;
@@ -105,12 +104,11 @@ typedef struct _LoadLibNames
     char *chUsb;
     char *chPortaudio;
     char *chV4l2;
-}LoadLibNames;
+} LoadLibNames;
 
 void setLibNames(LoadLibNames tmp);
 
-typedef struct _LoadLibs
-{
+typedef struct _LoadLibs {
     uos_avcodec_find_encoder m_avcodec_find_encoder;
     uos_avcodec_find_decoder m_avcodec_find_decoder;
     uos_avcodec_find_encoder_by_name m_avcodec_find_encoder_by_name;
@@ -157,7 +155,7 @@ typedef int (*uos_av_find_best_stream)(AVFormatContext *ic, enum AVMediaType typ
 typedef void (*uos_av_dump_format)(AVFormatContext *ic, int index, const char *url, int is_output);
 typedef void (*uos_avformat_close_input)(AVFormatContext **s);
 //int avformat_alloc_output_context2(AVFormatContext **ctx, AVOutputFormat *oformat,const char *format_name, const char *filename);
-typedef int (*uos_avformat_alloc_output_context2)(AVFormatContext **ctx, AVOutputFormat *oformat,const char *format_name, const char *filename);
+typedef int (*uos_avformat_alloc_output_context2)(AVFormatContext **ctx, AVOutputFormat *oformat, const char *format_name, const char *filename);
 //AVStream *avformat_new_stream(AVFormatContext *s, const AVCodec *c);
 typedef AVStream *(*uos_avformat_new_stream)(AVFormatContext *s, const AVCodec *c);
 //void avformat_free_context(AVFormatContext *s);
@@ -173,8 +171,7 @@ typedef int (*uos_av_write_trailer)(AVFormatContext *s);
 //int avio_closep(AVIOContext **s);
 typedef int (*uos_avio_closep)(AVIOContext **s);
 
-typedef struct _LoadAvformat
-{
+typedef struct _LoadAvformat {
     uos_avformat_open_input m_avformat_open_input;
     uos_avformat_find_stream_info m_avformat_find_stream_info;
     uos_av_find_best_stream m_av_find_best_stream;
@@ -188,7 +185,7 @@ typedef struct _LoadAvformat
     uos_av_write_frame m_av_write_frame;
     uos_av_write_trailer m_av_write_trailer;
     uos_avio_closep m_avio_closep;
-}LoadAvformat;
+} LoadAvformat;
 LoadAvformat *getAvformat();
 
 //libavutil不到1M
@@ -209,8 +206,8 @@ typedef void (*uos_av_log_set_level)(int level);
 const uint8_t * const src_data[4], const int src_linesize[4],
 enum AVPixelFormat pix_fmt, int width, int height, int align);*/
 typedef int (*uos_av_image_copy_to_buffer)(uint8_t *dst, int dst_size,
-const uint8_t * const src_data[4], const int src_linesize[4],
-enum AVPixelFormat pix_fmt, int width, int height, int align);
+                                           const uint8_t *const src_data[4], const int src_linesize[4],
+                                           enum AVPixelFormat pix_fmt, int width, int height, int align);
 //void av_frame_free(AVFrame **frame);
 typedef void (*uos_av_frame_free)(AVFrame **frame);
 //AVFrame *av_frame_alloc(void);
@@ -224,13 +221,13 @@ typedef void (*uos_av_free)(void *ptr);
 /*int av_samples_get_buffer_size(int *linesize, int nb_channels, int nb_samples,
                                enum AVSampleFormat sample_fmt, int align);*/
 typedef int (*uos_av_samples_get_buffer_size)(int *linesize, int nb_channels, int nb_samples,
-                               enum AVSampleFormat sample_fmt, int align);
+                                              enum AVSampleFormat sample_fmt, int align);
 //const char *av_get_media_type_string(enum AVMediaType media_type);
 typedef const char *(*uos_av_get_media_type_string)(enum AVMediaType media_type);
 //int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align);
 typedef int (*uos_av_image_get_buffer_size)(enum AVPixelFormat pix_fmt, int width, int height, int align);
-typedef struct _LoadAvutil
-{
+
+typedef struct _LoadAvutil {
     uos_av_dict_get m_av_dict_get;
     uos_av_strerror m_av_strerror;
     uos_av_dict_copy m_av_dict_copy;
@@ -247,7 +244,8 @@ typedef struct _LoadAvutil
     uos_av_samples_get_buffer_size m_av_samples_get_buffer_size;
     uos_av_get_media_type_string m_av_get_media_type_string;//
     uos_av_image_get_buffer_size m_av_image_get_buffer_size;
-}LoadAvutil;
+
+} LoadAvutil;
 LoadAvutil *getAvutil();
 
 //struct udev_enumerate *udev_enumerate_new(struct udev *udev);
@@ -269,7 +267,7 @@ typedef const char *(*uos_udev_device_get_devnode)(struct udev_device *udev_devi
 /*struct udev_device *udev_device_get_parent_with_subsystem_devtype(struct udev_device *udev_device,
                                                                   const char *subsystem, const char *devtype);*/
 typedef struct udev_device *(*uos_udev_device_get_parent_with_subsystem_devtype)(struct udev_device *udev_device,
-                                                                  const char *subsystem, const char *devtype);
+                                                                                 const char *subsystem, const char *devtype);
 //const char *udev_device_get_sysattr_value(struct udev_device *udev_device, const char *sysattr);
 typedef const char *(*uos_udev_device_get_sysattr_value)(struct udev_device *udev_device, const char *sysattr);
 //struct udev_device *udev_device_unref(struct udev_device *udev_device);
@@ -283,7 +281,7 @@ typedef struct udev_monitor *(*uos_udev_monitor_new_from_netlink)(struct udev *u
 /*int udev_monitor_filter_add_match_subsystem_devtype(struct udev_monitor *udev_monitor,
                                                     const char *subsystem, const char *devtype);*/
 typedef int (*uos_udev_monitor_filter_add_match_subsystem_devtype)(struct udev_monitor *udev_monitor,
-                                                    const char *subsystem, const char *devtype);
+                                                                   const char *subsystem, const char *devtype);
 //int udev_monitor_enable_receiving(struct udev_monitor *udev_monitor);
 typedef int (*uos_udev_monitor_enable_receiving)(struct udev_monitor *udev_monitor);
 //int udev_monitor_get_fd(struct udev_monitor *udev_monitor);
@@ -301,7 +299,7 @@ typedef struct udev *(*uos_udev_unref)(struct udev *udev);
 //struct udev_list_entry *udev_list_entry_get_next(struct udev_list_entry *list_entry);
 typedef struct udev_list_entry *(*uos_udev_list_entry_get_next)(struct udev_list_entry *list_entry);
 
-typedef struct _LoadUdev{
+typedef struct _LoadUdev {
     uos_udev_enumerate_new m_udev_enumerate_new;
     uos_udev_enumerate_get_udev m_udev_enumerate_get_udev;
     uos_udev_enumerate_add_match_subsystem m_udev_enumerate_add_match_subsystem;
@@ -325,7 +323,7 @@ typedef struct _LoadUdev{
     uos_udev_device_get_action m_udev_device_get_action;
     uos_udev_unref m_udev_unref;
     uos_udev_list_entry_get_next m_udev_list_entry_get_next;
-}LoadUdev;
+} LoadUdev;
 LoadUdev *getUdev();
 
 
@@ -334,29 +332,29 @@ typedef int LIBUSB_CALL (*uos_libusb_init)(libusb_context **ctx);
 /*ssize_t LIBUSB_CALL libusb_get_device_list(libusb_context *ctx,
     libusb_device ***list);*/
 typedef ssize_t LIBUSB_CALL (*uos_libusb_get_device_list)(libusb_context *ctx,
-    libusb_device ***list);
+                                                          libusb_device ***list);
 //uint8_t LIBUSB_CALL libusb_get_bus_number(libusb_device *dev);
 typedef uint8_t LIBUSB_CALL (*uos_libusb_get_bus_number)(libusb_device *dev);
 //uint8_t LIBUSB_CALL libusb_get_device_address(libusb_device *dev);
 typedef uint8_t LIBUSB_CALL (*uos_libusb_get_device_address)(libusb_device *dev);
 //libusb_device * LIBUSB_CALL libusb_ref_device(libusb_device *dev);
-typedef libusb_device * LIBUSB_CALL (*uos_libusb_ref_device)(libusb_device *dev);
+typedef libusb_device *LIBUSB_CALL (*uos_libusb_ref_device)(libusb_device *dev);
 /*void LIBUSB_CALL libusb_free_device_list(libusb_device **list,
     int unref_devices);*/
 typedef void LIBUSB_CALL (*uos_libusb_free_device_list)(libusb_device **list,
-    int unref_devices);
+                                                        int unref_devices);
 /*int LIBUSB_CALL libusb_get_device_descriptor(libusb_device *dev,
     struct libusb_device_descriptor *desc);*/
 typedef int LIBUSB_CALL (*uos_libusb_get_device_descriptor)(libusb_device *dev,
-    struct libusb_device_descriptor *desc);
+                                                            struct libusb_device_descriptor *desc);
 /*int LIBUSB_CALL libusb_get_config_descriptor(libusb_device *dev,
     uint8_t config_index, struct libusb_config_descriptor **config);*/
 typedef int LIBUSB_CALL (*uos_libusb_get_config_descriptor)(libusb_device *dev,
-    uint8_t config_index, struct libusb_config_descriptor **config);
+                                                            uint8_t config_index, struct libusb_config_descriptor **config);
 //void LIBUSB_CALL libusb_unref_device(libusb_device *dev);
 typedef void LIBUSB_CALL (*uos_libusb_unref_device)(libusb_device *dev);
 
-typedef struct _LoadUSB{
+typedef struct _LoadUSB {
     uos_libusb_init m_libusb_init;
     uos_libusb_get_device_list m_libusb_get_device_list;
     uos_libusb_get_bus_number m_libusb_get_bus_number;
@@ -366,7 +364,7 @@ typedef struct _LoadUSB{
     uos_libusb_get_device_descriptor m_libusb_get_device_descriptor;
     uos_libusb_get_config_descriptor m_libusb_get_config_descriptor;
     uos_libusb_unref_device m_libusb_unref_device;
-}LoadUSB;
+} LoadUSB;
 
 LoadUSB *getUSB();
 
@@ -375,7 +373,7 @@ typedef PaDeviceIndex (*uos_Pa_GetDeviceCount)( void );
 //PaError Pa_IsStreamStopped( PaStream *stream );
 typedef PaError (*uos_Pa_IsStreamStopped)( PaStream *stream );
 //const PaDeviceInfo* Pa_GetDeviceInfo( PaDeviceIndex device );
-typedef const PaDeviceInfo* (*uos_Pa_GetDeviceInfo)( PaDeviceIndex device );
+typedef const PaDeviceInfo *(*uos_Pa_GetDeviceInfo)( PaDeviceIndex device );
 //PaError Pa_Initialize( void );
 typedef PaError (*uos_Pa_Initialize)( void );
 //PaError Pa_IsStreamActive( PaStream *stream );
@@ -391,7 +389,7 @@ typedef PaError (*uos_Pa_CloseStream)( PaStream *stream );
 //PaDeviceIndex Pa_GetDefaultInputDevice( void );
 typedef PaDeviceIndex (*uos_Pa_GetDefaultInputDevice)( void );
 //const PaHostApiInfo * Pa_GetHostApiInfo( PaHostApiIndex hostApi );
-typedef const PaHostApiInfo * (*uos_Pa_GetHostApiInfo)( PaHostApiIndex hostApi );
+typedef const PaHostApiInfo *(*uos_Pa_GetHostApiInfo)( PaHostApiIndex hostApi );
 //PaDeviceIndex Pa_GetDefaultOutputDevice( void );
 typedef PaDeviceIndex (*uos_Pa_GetDefaultOutputDevice)( void );
 /*PaError Pa_OpenStream( PaStream** stream,
@@ -402,22 +400,22 @@ typedef PaDeviceIndex (*uos_Pa_GetDefaultOutputDevice)( void );
                        PaStreamFlags streamFlags,
                        PaStreamCallback *streamCallback,
                        void *userData );*/
-typedef PaError (*uos_Pa_OpenStream)( PaStream** stream,
-                       const PaStreamParameters *inputParameters,
-                       const PaStreamParameters *outputParameters,
-                       double sampleRate,
-                       unsigned long framesPerBuffer,
-                       PaStreamFlags streamFlags,
-                       PaStreamCallback *streamCallback,
-                       void *userData );
+typedef PaError (*uos_Pa_OpenStream)( PaStream **stream,
+                                      const PaStreamParameters *inputParameters,
+                                      const PaStreamParameters *outputParameters,
+                                      double sampleRate,
+                                      unsigned long framesPerBuffer,
+                                      PaStreamFlags streamFlags,
+                                      PaStreamCallback *streamCallback,
+                                      void *userData );
 //PaError Pa_StartStream( PaStream *stream );
 typedef PaError (*uos_Pa_StartStream)( PaStream *stream );
 //const PaStreamInfo* Pa_GetStreamInfo( PaStream *stream );
-typedef const PaStreamInfo* (*uos_Pa_GetStreamInfo)( PaStream *stream );
+typedef const PaStreamInfo *(*uos_Pa_GetStreamInfo)( PaStream *stream );
 //const char *Pa_GetErrorText( PaError errorCode );
 typedef const char *(*uos_Pa_GetErrorText)( PaError errorCode );
 
-typedef struct _LoadPortAudio{
+typedef struct _LoadPortAudio {
     uos_Pa_GetDeviceCount m_Pa_GetDeviceCount;
     uos_Pa_IsStreamStopped m_Pa_IsStreamStopped;
     uos_Pa_GetDeviceInfo m_Pa_GetDeviceInfo;
@@ -434,7 +432,7 @@ typedef struct _LoadPortAudio{
     uos_Pa_StartStream m_Pa_StartStream;
     uos_Pa_GetStreamInfo m_Pa_GetStreamInfo;
     uos_Pa_GetErrorText m_Pa_GetErrorText;
-}LoadPortAudio;
+} LoadPortAudio;
 
 LoadPortAudio *getPortAudio();
 
@@ -446,7 +444,7 @@ typedef LIBV4L_PUBLIC int (*uos_v4l2_munmap)(void *_start, size_t length);
 /*LIBV4L_PUBLIC void *v4l2_mmap(void *start, size_t length, int prot, int flags,
 int fd, int64_t offset);*/
 typedef LIBV4L_PUBLIC void *(*uos_v4l2_mmap)(void *start, size_t length, int prot, int flags,
-        int fd, int64_t offset);
+                                             int fd, int64_t offset);
 //LIBV4L_PUBLIC ssize_t v4l2_read(int fd, void *buffer, size_t n);
 typedef LIBV4L_PUBLIC ssize_t (*uos_v4l2_read)(int fd, void *buffer, size_t n);
 //LIBV4L_PUBLIC int v4l2_close(int fd);
@@ -454,14 +452,14 @@ typedef LIBV4L_PUBLIC int (*uos_v4l2_close)(int fd);
 //LIBV4L_PUBLIC int v4l2_open(const char *file, int oflag, ...);
 typedef LIBV4L_PUBLIC int (*uos_v4l2_open)(const char *file, int oflag, ...);
 
-typedef struct _LoadV4l2{
+typedef struct _LoadV4l2 {
     uos_v4l2_ioctl m_v4l2_ioctl;
     uos_v4l2_munmap m_v4l2_munmap;
     uos_v4l2_mmap m_v4l2_mmap;
     uos_v4l2_read m_v4l2_read;
     uos_v4l2_close m_v4l2_close;
     uos_v4l2_open m_v4l2_open;
-}LoadV4l2;
+} LoadV4l2;
 
 LoadV4l2 *getV4l2();
 #endif//LOAD_LIBS_H

@@ -1,7 +1,7 @@
-rm -f ~/Pictures/相机/*.jpg
-cp -r ~/Pictures/Wallpapers/*.jpg ~/Pictures/相机/
-rm -f ~/Pictures/*.jpg
-cp -r ~/Pictures/Wallpapers/*.jpg ~/Pictures/
+rm -rf ~/Pictures/相机/*.jpg
+cp -r ~/Pictures/jpgtest/*.jpg ~/Pictures/相机/
+rm -rf ~/Videos/相机/*.webm
+cp -r ~/Videos/webmtest/*.webm ~/Videos/相机/
 rm -rf ../build-ut
 mkdir ../build-ut
 cd ../build-ut

@@ -116,7 +116,7 @@ public:
      * @brief contentsMarginsChangeed 需要改变间距
      */
     void contentsMarginsChangeed(bool);
-private:
+protected:
 
     /**
     * @brief mousePressEvent 缩略图按下事件
@@ -129,6 +129,9 @@ private:
     * @param event 事件
     */
     void mouseMoveEvent(QMouseEvent *event) override;
+
+private:
+    bool sortFileInfoList(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut);
 
 signals:
     /**
@@ -192,7 +195,7 @@ public slots:
     * @brief onFileName　设置文件名
     * @param strfilename　文件名
     */
-    void onFileName(const QString& strfilename);
+    void onFileName(const QString &strfilename);
 
     /**
     * @brief onCallMenu　调菜单

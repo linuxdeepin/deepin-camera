@@ -372,7 +372,8 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
 
         if (!m_bVideo) {
             emit showDuration("");
-            m_actPrint->setVisible(true);
+            if (m_actPrint)
+                m_actPrint->setVisible(true);
         }
 
     } else {
