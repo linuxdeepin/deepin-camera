@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "92df6e6a_dbd0f9a1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-05-31T07:32:30Z",
+      "side": 1,
+      "message": "详细信息下方缺少空行",
+      "revId": "8bdcf977dbbdb1e5db5056474a47f1482d4bc948",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "53a4626c_5ef10cd3",
         "filename": "src/src/imageitem.h",
         "patchSetId": 1
