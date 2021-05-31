@@ -297,7 +297,7 @@ private slots:
     /**
      * @brief onVisible 是否是锁屏
      */
-    void onTimeoutLock(const QString&, QVariantMap, QStringList);
+    void onTimeoutLock(const QString &, QVariantMap, QStringList);
 protected:
 
     /**
@@ -317,9 +317,9 @@ protected:
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
-private:
     static QString                  lastVdFileName;//上次打开的视频文件
     static QString                  lastPicFileName;//上次打开的照片文件
+private:
     enum ActType                    m_nActTpye;
     bool                            m_bWayland;
     ThumbnailsBar                   *m_thumbnail;//缩略图
