@@ -36,11 +36,7 @@ DevNumMonitor::DevNumMonitor(QTimer *timer): m_pTimer(timer)
 
 DevNumMonitor::~DevNumMonitor()
 {
-    if (m_pTimer != nullptr) {
-        m_pTimer->stop();
-        m_pTimer->deleteLater();
-        m_pTimer = nullptr;
-    }
+
 }
 
 void DevNumMonitor::run()
@@ -48,6 +44,7 @@ void DevNumMonitor::run()
     m_pTimer = new QTimer;
     m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
+    QObject::connect(this, &QThread::destroyed, m_pTimer, &QTimer::deleteLater);
     m_pTimer->start();
     this->exec();
     qDebug() << "Start monitoring the number of devices!";

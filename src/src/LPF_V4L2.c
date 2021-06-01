@@ -94,8 +94,11 @@ int camInit(const char *devicename)
     if (my_vd == NULL) {
         int i;
         v4l2_device_list_t *devlist = get_device_list();
-        if (devlist == NULL)
+        if (devlist == NULL){
+            if (config_file)
+                free(config_file);
             return E_NO_DEVICE_ERR;
+        }
 
         for (i = 0; i < devlist->num_devices; i++) {
             my_vd = create_v4l2_device_handler(devlist->list_devices[i].device);
@@ -109,10 +112,10 @@ int camInit(const char *devicename)
         if (my_vd == NULL) {
             char message[150];
             sprintf(message, "no video device (%s) found", my_options->device);
+            if (config_file)
+                free(config_file);
             return E_NO_DEVICE_ERR;
         }
-
-    } else {
     }
 
     if (my_options->disable_libv4l2)
@@ -209,8 +212,11 @@ int camInit(const char *devicename)
         int ret = E_NO_DATA;
         v4l2_device_list_t *devlist = get_device_list();
 
-        if (devlist == NULL)
+        if (devlist == NULL){
+            if (config_file)
+                free(config_file);
             return E_NO_DEVICE_ERR;
+        }
 
         v4l2core_prepare_new_format(my_vd, (int)my_config->format);
 
@@ -246,6 +252,9 @@ int camInit(const char *devicename)
             free(config_file);
         return ret;
     }
+
+    if (config_file)
+        free(config_file);
     return E_OK;
 }
 
