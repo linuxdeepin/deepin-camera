@@ -27,7 +27,6 @@ extern "C"
 #include "capplication.h"
 #include "dbus_adpator.h"
 #include "cameraconfig.h"
-#include "config.h"
 #include "acobjectlist.h"
 
 #include <DMainWindow>
@@ -41,7 +40,15 @@ extern "C"
 #include <fcntl.h>
 #include <stdio.h>
 
+#ifndef DEEPIN_CAMERA_PRO
+#include "config.h"
+#else
+#define VERSION ""
+#endif
+
 DWIDGET_USE_NAMESPACE
+
+
 
 static bool runSingleInstance()
 {
