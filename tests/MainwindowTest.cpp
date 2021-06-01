@@ -47,6 +47,8 @@ ACCESS_PRIVATE_FUN(CMainWindow, void(bool bTrue), stopCancelContinuousRecording)
 ACCESS_PRIVATE_FUN(CMainWindow, void(const QString &), onDirectoryChanged);
 ACCESS_PRIVATE_FUN(CMainWindow, void(int nType), onEnableTitleBar);
 
+ACCESS_PRIVATE_FUN(ThumbnailsBar, bool(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut), sortFileInfoList);
+
 ACCESS_PRIVATE_FIELD(videowidget, QGraphicsTextItem *, m_pCamErrItem);
 ACCESS_PRIVATE_FIELD(videowidget, DFloatingWidget *, m_fWgtCountdown);
 ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_flashLabel);
@@ -57,8 +59,15 @@ ACCESS_PRIVATE_FIELD(videowidget, int, m_nInterval);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_Maxinterval);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_nCount);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_curTakePicTime);
+
 ACCESS_PRIVATE_FIELD(MajorImageProcessingThread, QAtomicInt, m_stopped);
+
 ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
+
+ACCESS_PRIVATE_FIELD(ThumbnailsBar, int, m_nDelTimes);
+ACCESS_PRIVATE_FIELD(ThumbnailsBar, QStringList, m_strlstFolders);
+ACCESS_PRIVATE_FIELD(ThumbnailsBar, QFileInfoList, m_lstPicFolder);
+ACCESS_PRIVATE_FIELD(ThumbnailsBar, QFileInfoList, m_lstVdFolder);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
 ACCESS_PRIVATE_FIELD(CMainWindow, ThumbnailsBar *, m_thumbnail);
@@ -163,17 +172,17 @@ TEST_F(MainwindowTest, thumbonfolderchange)
 
     ThumbnailsBar *thumbnailsBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
 
-    thumbnailsBar->m_nDelTimes = 1;
+    access_private_field::ThumbnailsBarm_nDelTimes(*thumbnailsBar) = 1;
     thumbnailsBar->onFoldersChanged("");
 
-    QStringList strlstFolderstmp = thumbnailsBar->m_strlstFolders;
-    thumbnailsBar->m_strlstFolders.clear();
+    QStringList strlstFolderstmp = access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar);
+    access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar).clear();
     thumbnailsBar->onFoldersChanged("");
 
-    thumbnailsBar->m_strlstFolders = strlstFolderstmp;
+    access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar) = strlstFolderstmp;
     thumbnailsBar->onFoldersChanged("");
 
-    QDir dir1(thumbnailsBar->m_strlstFolders[0]);
+    QDir dir1(access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar)[0]);
     QStringList filters1;
     QFileInfoList fileinfolist1;
     filters1 << QString("*.jpg") << QString("*.webm");
@@ -188,7 +197,7 @@ TEST_F(MainwindowTest, thumbonfolderchange)
         file1.close();
     }
 
-    QDir dir2(thumbnailsBar->m_strlstFolders[1]);
+    QDir dir2(access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar)[1]);
     QStringList filters2;
     QFileInfoList fileinfolist2;
     filters2 << QString("*.jpg") << QString("*.webm");
@@ -219,7 +228,7 @@ TEST_F(MainwindowTest, thumbonfolderchange)
             fileinfolist2.clear();
             fileinfolist1.clear();
         }
-        if (thumbnailsBar->sortFileInfoList(fileinfolist1, fileinfolist2, result) == false)
+        if (call_private_fun::ThumbnailsBarsortFileInfoList(*thumbnailsBar, fileinfolist1, fileinfolist2, result) == false)
             break;
     }
     thumbnailsBar->onFoldersChanged("");
@@ -871,7 +880,6 @@ TEST_F(MainwindowTest, OpenFolder)
 {
     //右键菜单打开文件夹
     QMap<int, ImageItem *> it = get_imageitem();
-    ImageItem *imgit = nullptr;
 
     if (it.count() > 0) {
         QAction *actOpenFolder = mainwindow->findChild<QAction *>("OpenFolderAction");
@@ -886,7 +894,6 @@ TEST_F(MainwindowTest, mouseDoubleClickEvent)
 {
     //右键菜单打开文件夹
     QMap<int, ImageItem *> it = get_imageitem();
-    ImageItem *imgit = nullptr;
 
     if (it.count() > 0) {
         QMap<int, ImageItem *> imgitem = get_imageitem();
@@ -938,20 +945,20 @@ TEST_F(MainwindowTest, thumbarnail)
     thumbnailsBar->onBtnClick();
     //onFolderChanged()
 
-    thumbnailsBar->m_nDelTimes = 1;
+    access_private_field::ThumbnailsBarm_nDelTimes(*thumbnailsBar) = 1;
     thumbnailsBar->onFoldersChanged("");
 
-    QStringList strlstFolderstmp = thumbnailsBar->m_strlstFolders;
-    thumbnailsBar->m_strlstFolders.clear();
+    QStringList strlstFolderstmp = access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar);
+    access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar).clear();
     thumbnailsBar->onFoldersChanged("");
 
-    thumbnailsBar->m_strlstFolders = strlstFolderstmp;
+    access_private_field::ThumbnailsBarm_strlstFolders(*thumbnailsBar) = strlstFolderstmp;
     thumbnailsBar->onFoldersChanged("");
 
-    QFileInfoList lstPicFoldertmp = thumbnailsBar->m_lstPicFolder;
-    thumbnailsBar->m_lstPicFolder = thumbnailsBar->m_lstVdFolder;
+    QFileInfoList lstPicFoldertmp = access_private_field::ThumbnailsBarm_lstPicFolder(*thumbnailsBar);
+    access_private_field::ThumbnailsBarm_lstPicFolder(*thumbnailsBar) = access_private_field::ThumbnailsBarm_lstVdFolder(*thumbnailsBar);
 
-    thumbnailsBar->m_lstPicFolder = lstPicFoldertmp;
+    access_private_field::ThumbnailsBarm_lstPicFolder(*thumbnailsBar) = lstPicFoldertmp;
     thumbnailsBar->onFoldersChanged("");
 
     //调用onBtnClick（）设备可用状态分支
