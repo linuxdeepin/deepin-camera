@@ -239,7 +239,6 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     } else if (picStrElideText[0] == '~' && picStrElideText.compare(option->defaultValue().toString())) {
         picStrElideText = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
                           + QDir::separator() + QObject::tr("Camera");
-
         lastPicPath = picStrElideText;
     } else
         lastPicPath = picStrElideText;
@@ -2215,7 +2214,7 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 void CMainWindow::keyPressEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
-        qDebug() << "shift pressed";
+        qInfo() << "shift pressed";
         DataManager::instance()->setShiftMulti(true);
         int nIndex = DataManager::instance()->getindexNow();
         //按下shift键就要更新第一个索引值
@@ -2224,7 +2223,7 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
         }
     }
     if (e->key() == Qt::Key_Control) {
-        qDebug() << "ctrl pressed";
+        qInfo() << "ctrl pressed";
         DataManager::instance()->setCtrlMulti(true);
         DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
     }
@@ -2233,13 +2232,15 @@ void CMainWindow::keyPressEvent(QKeyEvent *e)
 void CMainWindow::keyReleaseEvent(QKeyEvent *e)
 {
     if (e->key() == Qt::Key_Shift) {
-        qDebug() << "shift released";
+        qInfo() << "shift released";
         DataManager::instance()->setShiftMulti(false);
+        DataManager::instance()->setCtrlMulti(false);
         DataManager::instance()->setLastIndex(-1);
     }
     if (e->key() == Qt::Key_Control) {
-        qDebug() << "ctrl pressed";
+        qInfo() << "ctrl released";
         DataManager::instance()->setCtrlMulti(false);
+        DataManager::instance()->setShiftMulti(false);
     }
 }
 
