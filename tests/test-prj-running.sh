@@ -1,11 +1,11 @@
 rm -rf ~/Pictures/相机/*.jpg
 rm -rf ~/Pictures/Camera/*.jpg
-cp -r ~/Pictures/jpgtest/*.jpg ~/Pictures/相机/
-cp -r ~/Pictures/jpgtest/*.jpg ~/Pictures/Camera/
+cp -r /data/source/deepin-camera/jpegtest/*.jpg ~/Pictures/相机/
+cp -r /data/source/deepin-camera/jpegtest/*.jpg ~/Pictures/Camera/
 rm -rf ~/Videos/相机/*.webm
 rm -rf ~/Videos/Camera/*.webm
-cp -r ~/Videos/webmtest/*.webm ~/Videos/相机/
-cp -r ~/Videos/webmtest/*.webm ~/Videos/Camera/
+cp -r /data/source/deepin-camera/webmtest/*.webm ~/Videos/相机/
+cp -r /data/source/deepin-camera/webmtest/*.webm ~/Videos/Camera/
 rm -rf ../build-ut
 mkdir ../build-ut
 cd ../build-ut
@@ -31,4 +31,10 @@ mkdir -p report
      mv ./html/index.html ./html/cov_${PROJECT_REALNAME}.html
      mv asan.log* asan_${PROJECT_REALNAME}.log
 #    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+
+rm -rf ~/Pictures/相机/*.jpg
+rm -rf ~/Pictures/Camera/*.jpg
+
+rm -rf ~/Videos/相机/*.webm
+rm -rf ~/Videos/Camera/*.webm
 exit 0
