@@ -20,6 +20,7 @@
 */
 
 #include "previewopenglwidget.h"
+#include "capplication.h"
 
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
@@ -119,7 +120,7 @@ void PreviewOpenglWidget::initializeGL()
 
     const char *fsrc;
 
-    if (get_wayland_status() == 0) {
+    if (get_wayland_status() == 0 || CamApp->isPanelEnvironment()) {
         fsrc = "varying vec2 textureOut; \
         uniform sampler2D tex_y; \
         uniform sampler2D tex_u; \
@@ -193,7 +194,7 @@ void PreviewOpenglWidget::paintGL()
 {
     if (m_yuvPtr == nullptr)
         return;
-  
+
     glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
     glBindTexture(GL_TEXTURE_2D, m_idY); //绑定y分量纹理对象id到激活的纹理单元
 

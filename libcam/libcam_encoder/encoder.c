@@ -544,9 +544,13 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
         break;
     case AV_CODEC_ID_VP8:
         {
-            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
-            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
-            getAvutil()->m_av_dict_set(&video_codec_data->private_options, "speed","10",0);
+#ifdef DTABLE_ENVIRONMENT
+        getAvutil()->m_av_dict_set(&video_codec_data->private_options, "quality", "realtime", 0);
+#else
+        getAvutil()->m_av_dict_set(&video_codec_data->private_options, "quality", "good", 0);
+        getAvutil()->m_av_dict_set(&video_codec_data->private_options, "cpu-used","-10",0);
+        getAvutil()->m_av_dict_set(&video_codec_data->private_options, "speed","10",0);
+#endif
         }
         break;
     default:
