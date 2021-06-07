@@ -95,9 +95,14 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
         set_wayland_status(1);
     }
-
+  
+#ifdef TABLE_ENVIRONMENT
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
+    format.setDefaultFormat(format);
+#endif
+  
     CApplication a(argc, argv);
-
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
