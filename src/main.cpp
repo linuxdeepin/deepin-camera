@@ -96,6 +96,11 @@ int main(int argc, char *argv[])
         set_wayland_status(1);
     }
 
+    if (CamApp->isPanelEnvironment()) {
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
+    }
     CApplication a(argc, argv);
 
     qApp->setObjectName("deepin-camera");
