@@ -96,12 +96,14 @@ int main(int argc, char *argv[])
         set_wayland_status(1);
     }
 
+
+    CApplication a(argc, argv);
+
     if (CamApp->isPanelEnvironment()) {
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
     }
-    CApplication a(argc, argv);
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
@@ -110,7 +112,6 @@ int main(int argc, char *argv[])
     qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
 #endif
 
-    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setOrganizationName("deepin");
     //设置应用名称
     qApp->setApplicationName("deepin-camera");
