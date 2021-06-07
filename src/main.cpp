@@ -85,11 +85,11 @@ static bool CheckWayland()
 int main(int argc, char *argv[])
 {
     QAccessible::installFactory(accessibleFactory);
-    bool bWayland = CheckWayland();
+    bool bWayland = true;
 
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+//        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
@@ -99,11 +99,11 @@ int main(int argc, char *argv[])
 
     CApplication a(argc, argv);
 
-    if (CamApp->isPanelEnvironment()) {
-        QSurfaceFormat format;
-        format.setRenderableType(QSurfaceFormat::OpenGLES);
-        format.setDefaultFormat(format);
-    }
+//    if (CamApp->isPanelEnvironment()) {
+//        QSurfaceFormat format;
+//        format.setRenderableType(QSurfaceFormat::OpenGLES);
+//        format.setDefaultFormat(format);
+//    }
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
