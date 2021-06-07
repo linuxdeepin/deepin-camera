@@ -97,6 +97,11 @@ int main(int argc, char *argv[])
     }
 
     CApplication a(argc, argv);
+    if (CamApp->isPanelEnvironment()) {
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
+    }
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
