@@ -1325,10 +1325,12 @@ TEST_F(MainwindowTest, ThumbWidget)
 {
     ThumbnailsBar *thumbnailBar = mainwindow->findChild<ThumbnailsBar *>(THUMBNAIL);
 
-    access_private_field::ThumbWidgetm_tabFocusStatus(*thumbnailBar->m_thumbLeftWidget) = true;
-
-    //调用paintEvent函数
+    QFocusEvent focusOut(QEvent::FocusOut);
+    QFocusEvent focusIn(QEvent::FocusIn);
     QPaintEvent paintevent(QRect(0, 0, 0, 0));
+
+    qApp->sendEvent(thumbnailBar->m_thumbLeftWidget, &focusOut);
+    qApp->sendEvent(thumbnailBar->m_thumbLeftWidget, &focusIn);
     qApp->sendEvent(thumbnailBar->m_thumbLeftWidget, &paintevent);
 }
 
