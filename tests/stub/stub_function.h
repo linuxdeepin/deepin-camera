@@ -73,6 +73,8 @@ public:
     //更新当前格式
     int v4l2core_update_current_format_OK(v4l2_dev_t *vd);//返回零
     int v4l2core_update_current_format_Not_OK(v4l2_dev_t *vd);//返回非零
+    //释放帧数据
+    int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame);
     //有效格式
     void v4l2core_prepare_valid_format(v4l2_dev_t *vd);
     //宽度高度获取

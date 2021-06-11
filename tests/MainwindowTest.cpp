@@ -49,6 +49,8 @@ ACCESS_PRIVATE_FUN(CMainWindow, void(int nType), onEnableTitleBar);
 
 ACCESS_PRIVATE_FUN(ThumbnailsBar, bool(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut), sortFileInfoList);
 
+ACCESS_PRIVATE_FUN(CApplication, void(), QuitAction);
+
 ACCESS_PRIVATE_FIELD(videowidget, QGraphicsTextItem *, m_pCamErrItem);
 ACCESS_PRIVATE_FIELD(videowidget, DFloatingWidget *, m_fWgtCountdown);
 ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_flashLabel);
@@ -72,8 +74,6 @@ ACCESS_PRIVATE_FIELD(ThumbnailsBar, QFileInfoList, m_lstVdFolder);
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
 ACCESS_PRIVATE_FIELD(CMainWindow, ThumbnailsBar *, m_thumbnail);
 ACCESS_PRIVATE_FIELD(CMainWindow, videowidget *, m_videoPre);
-
-ACCESS_PRIVATE_FUN(MajorImageProcessingThread, void(), run);
 
 extern QMap<int, ImageItem *> g_indexImage;
 
@@ -518,6 +518,14 @@ TEST_F(MainwindowTest, rightbtn)
  */
 TEST_F(MainwindowTest, ImageItemContinuousChoose)
 {
+    mainwindow->settingDialog();
+    QVariant picpath = dc::Settings::get().settings()->option("base.save.picdatapath")->defaultValue();
+    QVariant vdpath = dc::Settings::get().settings()->option("base.save.vddatapath")->defaultValue();
+    dc::Settings::get().setPathOption("picdatapath", QVariant(picpath));
+    dc::Settings::get().setPathOption("vddatapath", QVariant(vdpath));
+    dc::Settings::get().settings()->sync();
+    mainwindow->settingDialogDel();
+
     //Ctrl多选
     QTest::keyPress(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
     QMap<int, ImageItem *> ImageMap = get_imageitem();
@@ -1155,6 +1163,7 @@ TEST_F(MainwindowTest, videowidget)
         }
         if (i == 1) {
             stub.set(get_device_list, ADDR(Stub_Function, get_device_list_3));//设备数为2
+            QTest::qWait(1010);
         }
         stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
         videowidgt->onChangeDev();
@@ -1262,7 +1271,6 @@ TEST_F(MainwindowTest, videowidget)
     call_private_fun::videowidgetrecoverTabWidget(*videowidgt);
     DataManager::instance()->m_tabIndex = 10;//选中缩略图框按钮
     call_private_fun::videowidgetrecoverTabWidget(*videowidgt);
-
 }
 
 /**
@@ -1283,24 +1291,36 @@ TEST_F(MainwindowTest, majorimageprocessingthread)
     stub.set(v4l2core_prepare_valid_resolution, ADDR(Stub_Function, v4l2core_prepare_valid_resolution));
     stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     stub.set(set_device_name, ADDR(Stub_Function, set_device_name));
-    call_private_fun::MajorImageProcessingThreadrun(*videowidgt->m_imgPrcThread);
-    //videowidgt->m_imgPrcThread->run();
+    stub.set(v4l2core_release_frame, ADDR(Stub_Function, v4l2core_release_frame));
+    videowidgt->m_imgPrcThread->start();
+    QTest::qWait(500);
+    videowidgt->m_imgPrcThread->stop();
+
     //录像分支
     //设置暂停时长,进入解码任务调度分支
     stub.reset(v4l2core_update_current_format);
+    stub.set(v4l2core_update_current_format, ADDR(Stub_Function, v4l2core_update_current_format_OK));
     access_private_field::MajorImageProcessingThreadm_stopped(*videowidgt->m_imgPrcThread) = 0;
     stub.set(get_capture_pause, ADDR(Stub_Function, get_capture_pause));
     stub.set(video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
     stub.set(encoder_buff_scheduler, ADDR(Stub_Function, encoder_buff_scheduler));
-    call_private_fun::MajorImageProcessingThreadrun(*videowidgt->m_imgPrcThread);
-    //videowidgt->m_imgPrcThread->run();
+    stub.set(get_wayland_status, ADDR(Stub_Function, get_wayland_status));
+    videowidgt->m_imgPrcThread->start();
+    QTest::qWait(500);
+    videowidgt->m_imgPrcThread->stop();
+    stub.reset(get_wayland_status);
+
     //进入H264分支
     access_private_field::MajorImageProcessingThreadm_stopped(*videowidgt->m_imgPrcThread) = 0;
     stub.set(v4l2core_get_requested_frame_format, ADDR(Stub_Function, v4l2core_get_requested_frame_format));
     stub.set(v4l2core_set_h264_frame_rate_config, ADDR(Stub_Function, v4l2core_set_h264_frame_rate_config));
-    call_private_fun::MajorImageProcessingThreadrun(*videowidgt->m_imgPrcThread);
-    //videowidgt->m_imgPrcThread->run();
+    videowidgt->m_imgPrcThread->start();
+    QTest::qWait(500);
+    videowidgt->m_imgPrcThread->stop();
+    while (videowidgt->m_imgPrcThread->isRunning());
+
     //还原
+    stub.reset(v4l2core_update_current_format);
     stub.reset(v4l2core_start_stream);
     stub.reset(v4l2core_stop_stream);
     stub.reset(v4l2core_get_decoded_frame);
@@ -1466,6 +1486,15 @@ TEST_F(MainwindowTest, imageitem_thumbnails)
     delete thumbnailsBarNew;
     //还原
     stub.reset(ADDR(QDateTime, msecsTo));
+}
+
+/**
+ *  @brief 应用退出
+ */
+TEST_F(MainwindowTest, QuitAction)
+{
+    call_private_fun::CApplicationQuitAction(*CamApp);
+    QTest::qWait(1000);
 }
 
 /**
