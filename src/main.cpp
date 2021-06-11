@@ -95,13 +95,13 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
         set_wayland_status(1);
     }
-  
+
 #ifdef TABLE_ENVIRONMENT
     QSurfaceFormat format;
     format.setRenderableType(QSurfaceFormat::OpenGLES);
     format.setDefaultFormat(format);
 #endif
-  
+
     CApplication a(argc, argv);
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
@@ -152,9 +152,12 @@ int main(int argc, char *argv[])
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
     //判断是否是平板环境
-    if (CamApp->isPanelEnvironment())
+    if (CamApp->isPanelEnvironment()) {
         w.showMaximized();
-    else
+        w.setWindowFlag(Qt::WindowMinMaxButtonsHint, false);
+        w.setWindowFlag(Qt::WindowCloseButtonHint, false);
+
+    } else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
     w.show();
