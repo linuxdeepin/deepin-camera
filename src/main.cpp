@@ -93,6 +93,11 @@ int main(int argc, char *argv[])
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
 
+    //root login for this application
+    if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
+        setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
+    }
+
     if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
