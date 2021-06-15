@@ -95,6 +95,7 @@ MainwindowTest::~MainwindowTest()
     if (Stub_Function::m_v4l2_dev != nullptr) {
         free(Stub_Function::m_v4l2_dev->list_stream_formats[0].list_stream_cap);
         free(Stub_Function::m_v4l2_dev->list_stream_formats);
+        free(Stub_Function::m_v4l2_dev->videodevice);
         free(Stub_Function::m_v4l2_dev);
         Stub_Function::m_v4l2_dev = nullptr;
     }
@@ -114,6 +115,7 @@ MainwindowTest::~MainwindowTest()
 
     if (Stub_Function::m_v4l2_device_list2 != nullptr) {
         free(Stub_Function::m_v4l2_device_list2->list_devices[0].device);
+        free(Stub_Function::m_v4l2_device_list2->list_devices[1].device);
         delete []Stub_Function::m_v4l2_device_list2->list_devices;
         free(Stub_Function::m_v4l2_device_list2);
         Stub_Function::m_v4l2_device_list2 = nullptr;
@@ -121,6 +123,8 @@ MainwindowTest::~MainwindowTest()
 
     if (Stub_Function::m_v4l2_device_list3 != nullptr) {
         free(Stub_Function::m_v4l2_device_list3->list_devices[0].device);
+        free(Stub_Function::m_v4l2_device_list3->list_devices[1].device);
+        free(Stub_Function::m_v4l2_device_list3->list_devices[2].device);
         delete []Stub_Function::m_v4l2_device_list3->list_devices;
         free(Stub_Function::m_v4l2_device_list3);
         Stub_Function::m_v4l2_device_list3 = nullptr;
@@ -526,47 +530,38 @@ TEST_F(MainwindowTest, ImageItemContinuousChoose)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    //Ctrl多选
-    QTest::keyPress(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
     QMap<int, ImageItem *> ImageMap = get_imageitem();
     QList<ImageItem *> ImageList;
     ImageList.clear();
     int number = ImageMap.count();
     if (number > 0) {
         ImageList = ImageMap.values();
-        if (ImageList.count() > 3) {
-            for (int i = 1; i < 3; i++) {
-                QTest::mouseMove(ImageList[i], QPoint(0, 0), 500);
-                QTest::mouseClick(ImageList[i], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-                QTest::qWait(1000);
-            }
 
-        } else {
-            for (int i = 0; i < ImageList.count(); i++) {
-                QTest::mouseMove(ImageList[i], QPoint(0, 0), 500);
-                QTest::mouseClick(ImageList[i], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-                QTest::qWait(1000);
-            }
+        //Ctrl多选
+        for (int i = 0; i < ImageList.count() / 2; i++) {
+            QTest::mouseMove(ImageList[i], QPoint(0, 0), 100);
+            QTest::keyPress(ImageList[i], Qt::Key_Control, Qt::ControlModifier, 200);
+            QTest::mouseClick(ImageList[i], Qt::LeftButton, Qt::ControlModifier, QPoint(0, 0), 200);
         }
-
         QTest::keyRelease(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
+
         //Shift多选
-        if (get_imageitem().count() > 2) {
-            if (ImageMap[1]) {
-                QTest::mouseMove(ImageMap[1], QPoint(0, 0), 500);
-                QTest::mousePress(ImageMap[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-                QTest::mouseRelease(ImageMap[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
+        if (ImageList.count() > 0) {
+            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
+            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
+            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+            for (int i = 0; i < ImageList.count() / 2; i++) {
+                QTest::mouseMove(ImageList[i], QPoint(0, 0), 200);
+                QTest::keyPress(ImageList[i], Qt::Key_Shift, Qt::ShiftModifier, 300);
+                QTest::mousePress(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+                QTest::mouseRelease(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
             }
-            if (ImageMap[2]) {
-                QTest::keyPress(ImageMap[2], Qt::Key_Shift, Qt::ShiftModifier, 500);
-                QTest::mousePress(ImageMap[2], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-                QTest::mouseRelease(ImageMap[2], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-            }
-            if (ImageMap[0]) {
-                QTest::mouseMove(ImageMap[0], QPoint(0, 0), 500);
-                QTest::mousePress(ImageMap[0], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-                QTest::mouseRelease(ImageMap[0], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
-            }
+            QTest::qWait(1000);
+            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
+            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
+            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
         }
 
         QAction *copyact = mainwindow->findChild<QAction *>("CopyAction");
