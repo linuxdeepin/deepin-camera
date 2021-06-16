@@ -899,8 +899,38 @@ void videowidget::manualClicked()
     qDebug() << "manual clicked endbtn";
 }
 
-void videowidget::restartDevices()
+void videowidget::restartDevices(bool restartCurrent)
 {
+    //重启当前摄像头
+    if (restartCurrent)
+    {
+        if (g_devStatus == CAM_CANUSE)//restart
+         {
+             v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+             if (m_imgPrcThread != nullptr) {
+                 m_imgPrcThread->stop();
+                 while (m_imgPrcThread->isRunning());
+             }
+
+             int tmpStatus = CAM_CANNOT_USE;
+
+             if (vd != nullptr) {
+                 QString str = QString(vd->videodevice);
+                 close_v4l2_device_handler();
+
+                 int ret = camInit(str.toStdString().c_str());
+
+                 if ( ret == E_OK) {
+                     m_imgPrcThread->init();
+                     m_imgPrcThread->start();
+                     tmpStatus = CAM_CANUSE;
+                 }
+             }
+            g_devStatus = tmpStatus;
+         }
+    }
+
     if (g_devStatus != CAM_CANUSE) {
         changeDev();
         if (g_devStatus == CAM_CANUSE) {

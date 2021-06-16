@@ -105,7 +105,7 @@ public slots:
     void changeDev();
     void endBtnClicked();
     void manualClicked();
-    void restartDevices();
+    void restartDevices(bool restartCurrent = false);//一般情况都不重新启动
 
 
 private slots:

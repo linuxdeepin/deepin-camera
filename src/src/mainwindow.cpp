@@ -632,8 +632,8 @@ void CMainWindow::onTimeoutLock()
         } else {
             if (m_bLocked) {
                 qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
-                //打开摄像头
-                m_videoPre->changeDev();
+                //重新打开摄像头
+                m_videoPre->restartDevices(true);
                 qDebug() << "v4l2core_start_stream OK";
                 m_bLocked = false;
             }
