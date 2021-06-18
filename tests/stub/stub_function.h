@@ -102,7 +102,9 @@ public:
     QString suffix();//获得文件后缀函数打桩
     bool parseFromFile();//解析文件函数打桩
 
-
+    //add by wuzhigang 2021-06-11 添加释放函数，保持类封装
+    //release all statuc members
+    static void Release();
 public:
     //定义静态成员变量用于打桩时多次调用
     static v4l2_dev_t *m_v4l2_dev;//设备属性
