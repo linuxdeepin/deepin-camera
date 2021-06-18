@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "fe2661e6_5cc7e438",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-18T05:47:44Z",
+      "side": 1,
+      "message": "fix:后必须存在一个空格",
+      "revId": "a0e516df9502115e0c35a4681b8c87fd8f6eb48e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "560fa534_9a743933",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-18T05:47:44Z",
+      "side": 1,
+      "message": "Bug: 后请输入正确网址, 例Bug: https://pms.uniontech/xxxxx/xxx.html",
+      "revId": "a0e516df9502115e0c35a4681b8c87fd8f6eb48e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "56401785_2865cd56",
         "filename": "src/src/videowidget.cpp",
         "patchSetId": 1
