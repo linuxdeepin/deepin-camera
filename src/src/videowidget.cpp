@@ -1112,6 +1112,11 @@ void videowidget::slotresolutionchanged(const QString &resolution)
         return ;
 
     QStringList ResStr = resolution.split("x");
+    //解决传人参数不正确时崩溃问题 by wuzhigang 2021-06-17
+    if (2 > ResStr.size()) {
+        return;
+    }
+    
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
 
