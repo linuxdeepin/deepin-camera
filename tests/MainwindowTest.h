@@ -28,11 +28,12 @@
 
 DWIDGET_USE_NAMESPACE
 
-class MainwindowTest : public ::testing::Test
+//最后执行用例
+class ZMainwindowTest : public ::testing::Test
 {
 public:
-    MainwindowTest();
-    ~MainwindowTest();
+    ZMainwindowTest();
+    ~ZMainwindowTest();
     virtual void SetUp()
     {
 

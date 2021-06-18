@@ -324,6 +324,48 @@ bool Stub_Function::parseFromFile()
     return true;
 }
 
+void Stub_Function::Release()
+{
+if (m_v4l2_dev != nullptr) {
+        free(m_v4l2_dev->list_stream_formats[0].list_stream_cap);
+        free(m_v4l2_dev->list_stream_formats);
+        free(m_v4l2_dev);
+        m_v4l2_dev = nullptr;
+    }
+
+    if (m_list_stream_formats != nullptr) {
+        free(m_list_stream_formats[0].list_stream_cap);
+        free(m_list_stream_formats);
+        m_list_stream_formats = nullptr;
+    }
+
+    if (m_v4l2_device_list1 != nullptr) {
+        free(m_v4l2_device_list1->list_devices[0].device);
+        delete []m_v4l2_device_list1->list_devices;
+        free(m_v4l2_device_list1);
+        m_v4l2_device_list1 = nullptr;
+    }
+
+    if (m_v4l2_device_list2 != nullptr) {
+        free(m_v4l2_device_list2->list_devices[0].device);
+        delete []m_v4l2_device_list2->list_devices;
+        free(m_v4l2_device_list2);
+        m_v4l2_device_list2 = nullptr;
+    }
+
+    if (m_v4l2_device_list3 != nullptr) {
+        free(m_v4l2_device_list3->list_devices[0].device);
+        delete []m_v4l2_device_list3->list_devices;
+        free(m_v4l2_device_list3);
+        m_v4l2_device_list3 = nullptr;
+    }
+
+    if (m_v4l2_frame_buff != nullptr) {
+        free(m_v4l2_frame_buff->yuv_frame);
+        free(m_v4l2_frame_buff);
+        m_v4l2_frame_buff = nullptr;
+    }
+}
 
 
 

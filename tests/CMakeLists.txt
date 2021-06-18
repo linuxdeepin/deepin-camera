@@ -49,9 +49,7 @@ find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
 file (GLOB_RECURSE CXXSOURCES
-    ./main.cpp
-    ./MainwindowTest.cpp
-    ./ClosedialogTest.cpp
+    ./*.cpp
     ../src/src/basepub/*.cpp
     ../src/src/*.cpp
     ../src/src/qtsingleapplication/*.cpp
