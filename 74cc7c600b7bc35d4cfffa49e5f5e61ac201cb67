@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "30fb4a1a_d126b12a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-06-21T08:43:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "975548b8_82aabf74",
+      "revId": "74cc7c600b7bc35d4cfffa49e5f5e61ac201cb67",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99ca69ac_f200d1c6",
         "filename": "tests/DevNumTest.cpp",
         "patchSetId": 2
