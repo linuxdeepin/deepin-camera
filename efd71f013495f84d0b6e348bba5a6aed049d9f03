@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "6ca9e7ba_a9da4bdb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:18Z",
+      "side": 1,
+      "message": "Bug: 后请输入正确网址, 例Bug: https://pms.uniontech/xxxxx/xxx.html",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "44ccfd13_a1f6b638",
         "filename": "libcam/libcam/cameraconfig.c",
         "patchSetId": 1
