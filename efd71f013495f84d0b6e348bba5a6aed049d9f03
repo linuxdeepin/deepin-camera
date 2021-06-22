@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44ccfd13_a1f6b638",
+        "filename": "libcam/libcam/cameraconfig.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 22; 注释率: 0.0%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fa24f16_c99d6569",
+        "filename": "libcam/libcam/cameraconfig.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37e4cb79_b76eeeee",
+        "filename": "libcam/libcam_v4l2core/gui.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 10; 注释率: 0.0%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51940292_071a5558",
+        "filename": "src/src/LPF_V4L2.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95328b36_a8c847b0",
+        "filename": "src/src/devnummonitor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 15; 改动行数(修改和新增): 23; 注释率: 65.2%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55147b3f_735f9864",
+        "filename": "src/src/devnummonitor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 7; 注释率: 57.1%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc829421_8d954351",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cba5377_8bb5f126",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-22T13:59:17Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 19; 注释率: 10.5%",
+      "revId": "efd71f013495f84d0b6e348bba5a6aed049d9f03",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
