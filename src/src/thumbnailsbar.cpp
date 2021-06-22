@@ -139,6 +139,24 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     m_lastDelTime = QDateTime::currentDateTime();
 }
 
+ThumbnailsBar::~ThumbnailsBar()
+{
+    QLayoutItem *child;
+    while ((child = m_hBox->takeAt(0)) != nullptr) {
+        ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
+        //tmp->deleteLater();
+        delete tmp;
+        tmp = nullptr;
+
+        //setParent为NULL，防止删除之后界面不消失
+        if (child->widget())
+            child->widget()->setParent(nullptr);
+
+    }
+
+    g_indexImage.clear();
+}
+
 void ThumbnailsBar::initShortcut()
 {
     QShortcut *shortcutCopy = new QShortcut(QKeySequence("ctrl+c"), this);
