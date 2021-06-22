@@ -43,14 +43,18 @@ extern "C" {
 /**
 * @brief DevNumMonitor　设备数目监视器
 */
-class DevNumMonitor: public QThread
+class DevNumMonitor: public QObject
 {
     Q_OBJECT
 public:
-    explicit DevNumMonitor(QTimer *timer = nullptr);
+    explicit DevNumMonitor();
 
     ~DevNumMonitor();
 
+    /**
+    * @brief startCheck 开始检测
+    */
+    void startCheck();
 signals:
     /**
     * @brief seltBtnStateEnable 相机选择按钮可用信号
@@ -76,7 +80,7 @@ protected:
     /**
     * @brief run 运行
     */
-    void run();
+    //void run();
 
 private slots:
     /**
