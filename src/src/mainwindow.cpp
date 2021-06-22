@@ -745,10 +745,7 @@ CMainWindow::~CMainWindow()
     }
 
     if (m_devnumMonitor) {
-        while (m_devnumMonitor->isRunning()) {
-            m_devnumMonitor->exit();
-            m_devnumMonitor->deleteLater();
-        }
+        m_devnumMonitor->deleteLater();
         m_devnumMonitor = nullptr;
     }
 
@@ -1214,7 +1211,7 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
-    m_devnumMonitor->start();
+    m_devnumMonitor->startCheck();
     initTitleBar();
     initConnection();
     //后续修改为标准Qt用法

@@ -246,15 +246,13 @@ int config_load(const char *filename)
 			my_config.height = (int) strtoul(value, NULL, 10);
         else if(strcmp(token, "device_name") == 0 && strlen(value) > 0)
         {
-            if(my_config.device_name)
-                free(my_config.device_name);
+            deepin_safe_free(my_config.device_name);
             my_config.device_name = strdup(value);
             set_device_name(value);
         }
         else if(strcmp(token, "device_location") == 0 && strlen(value) > 0)
         {
-            if(my_config.device_location)
-                free(my_config.device_location);
+            deepin_safe_free(my_config.device_location);
             my_config.device_location = strdup(value);
             set_device_location(value);
         }
@@ -288,26 +286,22 @@ int config_load(const char *filename)
 //		}
         else if(strcmp(token, "video_name") == 0  && strlen(value) > 2)
         {
-            if(my_config.video_name)
-                free(my_config.video_name);
+            deepin_safe_free(my_config.video_name);
             my_config.video_name = strdup(value);
         }
         else if(strcmp(token, "video_path") == 0)
         {
-            if(my_config.video_path)
-                free(my_config.video_path);
+            deepin_safe_free(my_config.video_path);
             my_config.video_path = strdup(value);
         }
         else if(strcmp(token, "photo_name") == 0  && strlen(value) > 2)
         {
-            if(my_config.photo_name)
-                free(my_config.photo_name);
+            deepin_safe_free(my_config.photo_name);
             my_config.photo_name = strdup(value);
         }
         else if(strcmp(token, "photo_path") == 0)
         {
-            if(my_config.photo_path)
-                free(my_config.photo_path);
+            deepin_safe_free(my_config.photo_path);
             my_config.photo_path = strdup(value);
         }
 //		else if(strcmp(token, "video_sufix") == 0)
@@ -336,11 +330,8 @@ int config_load(const char *filename)
 //			my_config.crosshair_color = (uint32_t) strtoul(value, NULL, 16);
 //		else
 //            fprintf(stderr, "deepin-camera: (config) skiping invalid entry at line %i ('%s', '%s')\n", line, token, value);
-
-		if(token)
-			free(token);
-		if(value)
-			free(value);
+        deepin_safe_free(token);
+        deepin_safe_free(value);
 	}
 
 	//if(errno)
@@ -416,42 +407,36 @@ void config_update(options_t *my_options)
 	/*profile*/
 	if(my_options->profile_name)
 	{
-		if(my_config.profile_name)
-			free(my_config.profile_name);
+        deepin_safe_free(my_config.profile_name);
 		my_config.profile_name = strdup(my_options->profile_name);
 	}
 	if(my_options->profile_path)
 	{
-		if(my_config.profile_path)
-			free(my_config.profile_path);
+        deepin_safe_free(my_config.profile_path);
 		my_config.profile_path = strdup(my_options->profile_path);
 	}
 
 	/*video file*/
 	if(my_options->video_name)
 	{
-		if(my_config.video_name)
-			free(my_config.video_name);
+        deepin_safe_free(my_config.video_name);
 		my_config.video_name = strdup(my_options->video_name);
 	}
 	if(my_options->video_path)
 	{
-		if(my_config.video_path)
-			free(my_config.video_path);
+        deepin_safe_free(my_config.video_path);
 		my_config.video_path = strdup(my_options->video_path);
 	}
 
 	/*photo*/
 	if(my_options->photo_name)
 	{
-		if(my_config.photo_name)
-			free(my_config.photo_name);
+        deepin_safe_free(my_config.photo_name);
 		my_config.photo_name = strdup(my_options->photo_name);
 	}
 	if(my_options->photo_path)
 	{
-		if(my_config.photo_path)
-			free(my_config.photo_path);
+        deepin_safe_free(my_config.photo_path);
 		my_config.photo_path = strdup(my_options->photo_path);
 	}
 
@@ -469,31 +454,14 @@ void config_update(options_t *my_options)
  */
 void config_clean()
 {
-	if(my_config.profile_name != NULL)
-		free(my_config.profile_name);
-
-	if(my_config.profile_path != NULL)
-		free(my_config.profile_path);
-
-	if(my_config.video_name != NULL)
-		free(my_config.video_name);
-
-	if(my_config.video_path != NULL)
-		free(my_config.video_path);
-
-	if(my_config.photo_name != NULL)
-		free(my_config.photo_name);
-
-	if(my_config.photo_path != NULL)
-		free(my_config.photo_path);
-    if(my_config.device_name != NULL)
-        {
-            free(my_config.device_name);
-        }
-    if(my_config.device_location != NULL)
-        {
-            free(my_config.device_location);
-        }
+    deepin_safe_free(my_config.profile_name);
+    deepin_safe_free(my_config.profile_path);
+    deepin_safe_free(my_config.video_name);
+    deepin_safe_free(my_config.video_path);
+    deepin_safe_free(my_config.photo_name);
+    deepin_safe_free(my_config.photo_path);
+    deepin_safe_free(my_config.device_location);
+    deepin_safe_free(my_config.device_name);
 }
 
 /*

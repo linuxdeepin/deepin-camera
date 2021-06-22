@@ -217,10 +217,11 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
             QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
             QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
             QFileInfo filestr(imgit->getPath());
+            QString filename = filestr->fileName();
 
             m_thumbnails->onTrashFile();
             //调用delFile
-            m_thumbnails->delFile(str);
+            m_thumbnails->delFile(filename);
             //调用widthChanged
             m_thumbnails->widthChanged();
             removeImage = true;
@@ -230,10 +231,10 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
             QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
             QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
             QFileInfo filestr(imgit->getPath());
-
+            QString filename = filestr->fileName();
             m_thumbnails->onTrashFile();
             //调用delFile
-            m_thumbnails->delFile(str);
+            m_thumbnails->delFile(filename);
             //调用widthChanged
             m_thumbnails->widthChanged();
             removeVideo = true;
