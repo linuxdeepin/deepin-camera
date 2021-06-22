@@ -240,6 +240,8 @@ int camInit(const char *devicename)
 
         }
 
+        deepin_safe_free(my_config->device_name);
+        deepin_safe_free(my_config->device_location);
         my_config->device_name = strdup(get_device_list()->list_devices[my_vd->this_device].name);
         my_config->device_location = strdup(my_vd->videodevice);
         my_config->format = (unsigned int)v4l2core_get_requested_frame_format(my_vd);
