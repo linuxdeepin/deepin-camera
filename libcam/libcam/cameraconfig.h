@@ -37,6 +37,8 @@
 #define GETTEXT_PACKAGE_V4L2CORE "gview_v4l2core"
 #endif
 
+#define deepin_safe_free(p) if(p){free(p); p=NULL;}
+
 typedef struct _config_t {
     int  width;      /*width*/
     int  height;     /*height*/

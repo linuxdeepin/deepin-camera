@@ -121,6 +121,8 @@ void MajorImageProcessingThread::run()
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
                 close_v4l2_device_handler();
+                m_videoDevice = NULL;
+                return ;
             }
 
             continue;
