@@ -76,6 +76,7 @@ class ThumbnailsBar : public DFloatingWidget
 public:
 
     explicit ThumbnailsBar(QWidget *parent = nullptr);
+    ~ThumbnailsBar();
     /**
      * @brief initShortcut 初始化快捷键
      */
