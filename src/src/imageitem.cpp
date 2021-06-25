@@ -82,6 +82,11 @@ ImageItem::ImageItem(QWidget *parent, int index, QString path): DLabel(parent), 
 
         }
 
+        getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
+        getLoadLibsInstance()->m_video_thumbnailer_destroy(m_video_thumbnailer);
+        m_image_data = nullptr;
+        m_video_thumbnailer = nullptr;
+
         DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount() + 1);
         QString strTime = "";
 
