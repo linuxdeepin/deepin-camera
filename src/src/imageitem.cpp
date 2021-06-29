@@ -56,7 +56,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
     setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
     QPixmap pix;
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    //录像格式只有"webm"
+    if (fileInfo.suffix() == "webm") {
         m_bVideo = true;
         VideoThumbnailer thumber;
         thumber.setThumbnailSize(100);
@@ -231,7 +232,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
 ImageItem::~ImageItem()
 {
     QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+    //录像格式只有"webm"
+    if (fileInfo.suffix() == "webm") {
         g_videoCount --;
     }
     //    m_menu->deleteLater();

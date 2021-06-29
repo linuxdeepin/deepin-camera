@@ -177,7 +177,8 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
         QFileInfo fileInfo = m_fileInfoLst.at(0);
         m_fileInfoLst.removeAt(0);
-        if (fileInfo.suffix() == "mp4" || fileInfo.suffix() == "webm") {
+        //录像格式只有"webm"
+        if (fileInfo.suffix() == "webm") {
             QString strFileName = fileInfo.fileName();
         }
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
