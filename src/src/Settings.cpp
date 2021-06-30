@@ -28,8 +28,6 @@
 #include <QtGui>
 #include <QComboBox>
 
-#include <qsettingbackend.h>
-
 namespace dc {
 using namespace Dtk::Core;
 
@@ -51,16 +49,16 @@ Settings::Settings(): QObject(0)
                         .arg(qApp->organizationName())
                         .arg(qApp->applicationName()));
     qInfo() << "configPath" << m_configPath;
-    auto backend = new QSettingBackend(m_configPath);
+    m_backend = new QSettingBackend(m_configPath);
 
     if (CamApp->isPanelEnvironment())
         m_settings = DSettings::fromJsonFile(":/resource/panel_settings.json");
     else
         m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 
-    m_settings->setBackend(backend);
+    m_settings->setBackend(m_backend);
 
-    connect(m_settings, &DSettings::valueChanged, [ = ](const QString & key, const QVariant & value) {
+    connect(m_settings, &DSettings::valueChanged, this, [ = ](const QString & key, const QVariant & value) {
         if (key.startsWith("outsetting.resolutionsetting.resolution")) {
             auto mode_opt = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
             if (value >= 0) {
@@ -73,6 +71,18 @@ Settings::Settings(): QObject(0)
 
     qInfo() << "keys" << m_settings->keys();
     setNewResolutionList();
+}
+
+Settings::~Settings()
+{
+    if (m_backend) {
+        delete m_backend;
+        m_backend = nullptr;
+    }
+    if (m_settings) {
+        delete m_settings;
+        m_settings = nullptr;
+    }
 }
 
 QVariant Settings::generalOption(const QString &opt)

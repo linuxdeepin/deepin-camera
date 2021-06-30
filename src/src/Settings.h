@@ -31,6 +31,8 @@
 #include <QObject>
 #include <QPointer>
 
+
+#include <qsettingbackend.h>
 /**
 * @brief dc　相机设置界面命名空间
 */
@@ -44,6 +46,7 @@ class Settings: public QObject
 {
     Q_OBJECT
 public:
+     ~Settings();
     /**
     * @brief get　获取设置对象
     */
@@ -121,6 +124,7 @@ private:
 
     QString             m_configPath;
     QPointer<DSettings> m_settings;
+    QSettingBackend*    m_backend;
 };
 
 }

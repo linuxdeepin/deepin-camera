@@ -142,6 +142,9 @@ public:
         //start
         pstub->fn = fn;
 
+        //设置桩函数之前，删除之前的桩函数，以免上层多次设置导致内存泄露
+        reset(addr);
+
         if(distanceof(fn, fn_stub))
         {
             pstub->far_jmp = true;

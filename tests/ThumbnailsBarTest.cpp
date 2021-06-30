@@ -216,11 +216,8 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
             QTest::mouseMove(imgit, QPoint(0, 0), 1000);
             QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
             QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-            QFileInfo filestr(imgit->getPath());
-
-            m_thumbnails->onTrashFile();
             //调用delFile
-            m_thumbnails->delFile(str);
+            m_thumbnails->delFile(imgit->getPath());
             //调用widthChanged
             m_thumbnails->widthChanged();
             removeImage = true;
@@ -229,11 +226,9 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
             QTest::mouseMove(imgit, QPoint(0, 0), 1000);
             QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
             QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-            QFileInfo filestr(imgit->getPath());
-
             m_thumbnails->onTrashFile();
             //调用delFile
-            m_thumbnails->delFile(str);
+            //m_thumbnails->delFile(imgit->getPath());
             //调用widthChanged
             m_thumbnails->widthChanged();
             removeVideo = true;
@@ -242,7 +237,7 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
             break;
         }
     }
-
+    
     // if (it.count() > 0) {
     //     imgit = it.value(0);
     //     if (!imgit)

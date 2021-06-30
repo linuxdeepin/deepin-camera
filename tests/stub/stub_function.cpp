@@ -329,6 +329,7 @@ void Stub_Function::Release()
 if (m_v4l2_dev != nullptr) {
         free(m_v4l2_dev->list_stream_formats[0].list_stream_cap);
         free(m_v4l2_dev->list_stream_formats);
+        free(m_v4l2_dev->videodevice);
         free(m_v4l2_dev);
         m_v4l2_dev = nullptr;
     }
@@ -348,6 +349,7 @@ if (m_v4l2_dev != nullptr) {
 
     if (m_v4l2_device_list2 != nullptr) {
         free(m_v4l2_device_list2->list_devices[0].device);
+        free(m_v4l2_device_list2->list_devices[1].device);
         delete []m_v4l2_device_list2->list_devices;
         free(m_v4l2_device_list2);
         m_v4l2_device_list2 = nullptr;
@@ -355,6 +357,8 @@ if (m_v4l2_dev != nullptr) {
 
     if (m_v4l2_device_list3 != nullptr) {
         free(m_v4l2_device_list3->list_devices[0].device);
+        free(m_v4l2_device_list3->list_devices[1].device);
+        free(m_v4l2_device_list3->list_devices[2].device);
         delete []m_v4l2_device_list3->list_devices;
         free(m_v4l2_device_list3);
         m_v4l2_device_list3 = nullptr;
