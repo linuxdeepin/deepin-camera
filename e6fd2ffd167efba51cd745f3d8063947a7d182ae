@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "2bee2875_c5e8c930",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-30T07:57:29Z",
+      "side": 1,
+      "message": "详细信息下方缺少空行",
+      "revId": "e6fd2ffd167efba51cd745f3d8063947a7d182ae",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "463059fb_a2a4a77e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-06-30T07:57:29Z",
+      "side": 1,
+      "message": "详细信息上方缺少空行",
+      "revId": "e6fd2ffd167efba51cd745f3d8063947a7d182ae",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6857ff7_3327efd0",
         "filename": "src/src/Settings.cpp",
         "patchSetId": 1
