@@ -315,6 +315,55 @@ bool Stub_Function::parseFromFile()
     return true;
 }
 
+<<<<<<< HEAD   (b446b6 fix: 修复root用户启动截图录屏，界面图标显示错误问题)
+=======
+void Stub_Function::Release()
+{
+if (m_v4l2_dev != nullptr) {
+        free(m_v4l2_dev->list_stream_formats[0].list_stream_cap);
+        free(m_v4l2_dev->list_stream_formats);
+        free(m_v4l2_dev->videodevice);
+        free(m_v4l2_dev);
+        m_v4l2_dev = nullptr;
+    }
+
+    if (m_list_stream_formats != nullptr) {
+        free(m_list_stream_formats[0].list_stream_cap);
+        free(m_list_stream_formats);
+        m_list_stream_formats = nullptr;
+    }
+
+    if (m_v4l2_device_list1 != nullptr) {
+        free(m_v4l2_device_list1->list_devices[0].device);
+        delete []m_v4l2_device_list1->list_devices;
+        free(m_v4l2_device_list1);
+        m_v4l2_device_list1 = nullptr;
+    }
+
+    if (m_v4l2_device_list2 != nullptr) {
+        free(m_v4l2_device_list2->list_devices[0].device);
+        free(m_v4l2_device_list2->list_devices[1].device);
+        delete []m_v4l2_device_list2->list_devices;
+        free(m_v4l2_device_list2);
+        m_v4l2_device_list2 = nullptr;
+    }
+
+    if (m_v4l2_device_list3 != nullptr) {
+        free(m_v4l2_device_list3->list_devices[0].device);
+        free(m_v4l2_device_list3->list_devices[1].device);
+        free(m_v4l2_device_list3->list_devices[2].device);
+        delete []m_v4l2_device_list3->list_devices;
+        free(m_v4l2_device_list3);
+        m_v4l2_device_list3 = nullptr;
+    }
+
+    if (m_v4l2_frame_buff != nullptr) {
+        free(m_v4l2_frame_buff->yuv_frame);
+        free(m_v4l2_frame_buff);
+        m_v4l2_frame_buff = nullptr;
+    }
+}
+>>>>>>> CHANGE (e6fd2f fix: 内存泄露 Description: 修复测试用例内存泄露 Log:  修复已知内存泄露 Bug: https:)
 
 
 
