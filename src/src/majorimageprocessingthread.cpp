@@ -244,7 +244,8 @@ void MajorImageProcessingThread::run()
 
             static int index = 0;
             index++;
-            std::string filename = "/media/" + std::to_string(index) + "_" + std::to_string(m_frame->width) + "_" + std::to_string(m_frame->height) + ".dat";
+            std::string homePath = QDir::homePath().toStdString();
+            std::string filename = homePath +"/" + std::to_string(index) + "_" + std::to_string(m_frame->width) + "_" + std::to_string(m_frame->height) + ".dat";
             FILE *Fp = fopen(filename.c_str(),"wb");
             fwrite(m_yuvPtr, 1, yuvsize, Fp);
             fclose(Fp);
