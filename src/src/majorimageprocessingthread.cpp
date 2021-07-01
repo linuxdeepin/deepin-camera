@@ -240,6 +240,15 @@ void MajorImageProcessingThread::run()
                 memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
             }
 
+
+            static int index = 0;
+            index++;
+            std::string homePath = QDir::homePath().toStdString();
+            std::string filename = homePath +"/" + std::to_string(index) + "_" + std::to_string(m_frame->width) + "_" + std::to_string(m_frame->height) + ".dat";
+            FILE *Fp = fopen(filename.c_str(),"wb");
+            fwrite(m_yuvPtr, 1, yuvsize, Fp);
+            fclose(Fp);
+
             emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
 #endif
             malloc_trim(0);
