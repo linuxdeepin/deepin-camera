@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6518770c_b5d3029d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-01T12:02:25Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 7; 注释率: 0.0%",
+      "revId": "7fb9feaff6272a52f8cfc866bb2075510899aa49",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
