@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "92ce9b9e_00329f62",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-01T08:53:58Z",
+      "side": 1,
+      "message": "fix:后必须存在一个空格",
+      "revId": "e0d555460ea527a8ec4f9189203da0ae0c459de3",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6998fb1f_1de79023",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-01T08:53:58Z",
+      "side": 1,
+      "message": "Bug:后面必须存在一个空格",
+      "revId": "e0d555460ea527a8ec4f9189203da0ae0c459de3",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0314942d_0a6e03be",
         "filename": "src/src/majorimageprocessingthread.cpp",
         "patchSetId": 1
