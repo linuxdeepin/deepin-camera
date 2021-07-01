@@ -102,6 +102,10 @@ INSTALLS = target desktop dbus_service icon_files translations manual_dir
 QMAKE_CXXFLAGS += -Wl,-as-need -fPIE
 QMAKE_LFLAGS+=-pie
 
+QMAKE_CXXFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+QMAKE_CFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+QMAKE_LFLAGS+="-fsanitize=undefined,address,leak -fno-omit-frame-pointer"
+
 host_sw_64: {
 # 在 sw_64 平台上添加此参数，否则会在旋转图片时崩溃
     QMAKE_CFLAGS += -mieee
