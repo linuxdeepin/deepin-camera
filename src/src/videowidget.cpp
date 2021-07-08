@@ -1203,15 +1203,28 @@ void videowidget::onChangeDev()
 
     if (devicehandler != nullptr) {
         str = QString(devicehandler->videodevice);
+        qInfo() << "last device is :" << str;
         close_v4l2_device_handler();
     }
 
     v4l2_device_list_t *devlist = get_device_list();
+    qInfo() << "device number :" << devlist->num_devices;
+      qInfo() << "device1 name is :" << devlist->list_devices[0].name << "\n"
+            << "device1 device is :" << devlist->list_devices[0].device << "\n"
+            << "device1 driver is :" << devlist->list_devices[0].driver << "\n"
+            << "device1 location is :" << devlist->list_devices[0].location;
+    qInfo() << "device2 name is :" << devlist->list_devices[1].name << "\n"
+            << "device2 device is :" << devlist->list_devices[1].device << "\n"
+            << "device2 driver is :" << devlist->list_devices[1].driver << "\n"
+            << "device2 location is :" << devlist->list_devices[1].location;
     if (devlist->num_devices == 2) {
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
+            qInfo() << "device is :" << str1;
             if (str != str1) {
                 int ret = camInit(devlist->list_devices[i].device);
+                if (ret < 0)
+                    qInfo() << "create" << str1 << "failed!";
                 if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
