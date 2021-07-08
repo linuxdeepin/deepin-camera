@@ -1203,15 +1203,20 @@ void videowidget::onChangeDev()
 
     if (devicehandler != nullptr) {
         str = QString(devicehandler->videodevice);
+        qInfo() << "last device is :" << str;
         close_v4l2_device_handler();
     }
 
     v4l2_device_list_t *devlist = get_device_list();
+    qInfo() << "device number :" << devlist->num_devices;
     if (devlist->num_devices == 2) {
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
+            qInfo() << "device is :" << str1;
             if (str != str1) {
                 int ret = camInit(devlist->list_devices[i].device);
+                if (ret < 0)
+                    qInfo() << "create" << str1 << "failed!";
                 if (ret == E_OK) {
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
