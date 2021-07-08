@@ -62,6 +62,11 @@ void MajorImageProcessingThread::run()
 {
     m_videoDevice = get_v4l2_device_handler();
     v4l2core_start_stream(m_videoDevice);
+    v4l2_device_list_t *dev_list = get_device_list();
+    qInfo() << "list name is :" << QString(dev_list->list_devices->name)
+            << "list device is :" << QString(dev_list->list_devices->device)
+            << "list driver is :" << QString(dev_list->list_devices->driver)
+            << "list location is :" << QString(dev_list->list_devices->location);
     int framedely = 0;
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
