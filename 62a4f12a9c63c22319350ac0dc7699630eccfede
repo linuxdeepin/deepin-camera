@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "b81d84f5_94ec4648",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-13T03:25:10Z",
+      "side": 1,
+      "message": "详细信息下方缺少空行",
+      "revId": "62a4f12a9c63c22319350ac0dc7699630eccfede",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31006996_0e56f24e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-13T03:25:10Z",
+      "side": 1,
+      "message": "详细信息上方缺少空行",
+      "revId": "62a4f12a9c63c22319350ac0dc7699630eccfede",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cf4afd43_902655ee",
         "filename": "src/src/imageitem.cpp",
         "patchSetId": 1
