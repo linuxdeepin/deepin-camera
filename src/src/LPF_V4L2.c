@@ -85,6 +85,7 @@ int camInit(const char *devicename)
     if (!my_config->device_location)
         my_config->device_location = strdup("");
 
+    close_v4l2_device_handler();
     v4l2_dev_t *my_vd;
     if (strcmp(devicename, "") == 0)
         my_vd = create_v4l2_device_handler(my_config->device_location);
