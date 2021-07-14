@@ -759,9 +759,6 @@ CMainWindow::~CMainWindow()
         m_thumbnail = nullptr;
     }
 
-    //此时不再使用Setting单列，delete
-    Settings* CutSeeting = &Settings::get();
-    delete CutSeeting;
     qDebug() << "stop_encoder_thread";
 }
 
