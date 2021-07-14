@@ -801,20 +801,24 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
 
     if (getAvformat()->m_avformat_find_stream_info(av_ctx, nullptr) < 0) {
         qWarning() << "av_find_stream_info failed";
+        getAvformat()->m_avformat_close_input(&av_ctx);
         return mi;
     }
 
     if (av_ctx->nb_streams == 0) {
+        getAvformat()->m_avformat_close_input(&av_ctx);
         return mi;
     }
 
     if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
+        getAvformat()->m_avformat_close_input(&av_ctx);
         return mi;
     }
 
     m_nDuration = av_ctx->duration;
 
     if (m_nDuration < 0) {
+        getAvformat()->m_avformat_close_input(&av_ctx);
         return mi;
     }
 

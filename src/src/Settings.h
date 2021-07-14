@@ -121,7 +121,8 @@ signals:
 
 private:
     Settings();
-
+    void init();
+    static Settings     m_instance;
     QString             m_configPath;
     QPointer<DSettings> m_settings;
     QSettingBackend*    m_backend;

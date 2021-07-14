@@ -383,8 +383,10 @@ void ThumbnailsBar::onShortcutCopy()
     } else {
         QSet<int>::iterator it;
         for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
-            paths << g_indexImage.value(*it)->getPath();
-            qInfo() << g_indexImage.value(*it)->getPath();
+            if(g_indexImage.value(*it)){
+                paths << g_indexImage.value(*it)->getPath();
+                qInfo() << g_indexImage.value(*it)->getPath();
+            }
         }
 
     }
@@ -483,6 +485,9 @@ void ThumbnailsBar::onTrashFile()
         int nCount = DataManager::instance()->m_setIndex.size();
         QSet<int>::iterator it;
         for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
+            if (!g_indexImage.value(*it)){
+                continue;
+            }
             bool bTrashed = DDesktopServices::trash(g_indexImage.value(*it)->getPath());
 
             if (!bTrashed) {
