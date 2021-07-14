@@ -734,7 +734,13 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
+
+    titlebar()->deleteLater();
+
+    initOperationArea();
     setupTitlebar();
+    m_pTitlebar->raise();
+    m_pTitlebar->titlebar()->raise();
 }
 
 CMainWindow::~CMainWindow()
@@ -786,7 +792,6 @@ QString CMainWindow::libPath(const QString &strlib)
     Q_ASSERT(list.size() > 0);
     return list.last();
 }
-
 
 void CMainWindow::initDynamicLibPath()
 {
@@ -880,10 +885,10 @@ void CMainWindow::initTabOrder()
     /*
      *主窗口tab循序切换
     */
-    DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
     DPushButton *picVideoBtn = m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
     DPushButton *takeVideoEndBtn = m_thumbnail->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
@@ -899,7 +904,7 @@ void CMainWindow::initTabOrder()
     setTabOrder(picVideoBtn, takeVideoEndBtn);
 
 
-    titlebar()->setFocusPolicy(Qt::NoFocus);
+    m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 }
 
 void CMainWindow::initEventFilter()
@@ -907,28 +912,28 @@ void CMainWindow::initEventFilter()
     /**
      * @brief windowMinBtn 最小化按钮
      */
-    DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
     if (windowMinBtn)
         windowMinBtn->installEventFilter(this);
 
     /**
      * @brief windowoptionButton 菜单栏按钮
      */
-    DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
     if (windowoptionButton)
         windowoptionButton->installEventFilter(this);
 
     /**
      * @brief windowMaxBtn  最大化按钮
      */
-    DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     if (windowMaxBtn)
         windowMaxBtn->installEventFilter(this);
 
     /**
      * @brief windowCloseBtn 关闭按钮
      */
-    DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     if (windowCloseBtn)
         windowCloseBtn->installEventFilter(this);
 
@@ -965,8 +970,8 @@ void CMainWindow::initEventFilter()
     if (m_pTitleVdBtn)
         m_pTitleVdBtn->installEventFilter(this);
 
-    if (titlebar())
-        titlebar()->installEventFilter(this);
+    if (m_pTitlebar->titlebar())
+        m_pTitlebar->titlebar()->installEventFilter(this);
 
 }
 
@@ -1019,10 +1024,10 @@ void CMainWindow::initShortcut()
 
     //根据tab焦点进行Enter键操作
     connect(scEnterShortcut, &QShortcut::activated, this, [ = ] {
-        DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-        DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-        DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-        DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+        DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+        DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+        DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+        DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
         QWidget *focuswidget = focusWidget();
 
 
@@ -1246,10 +1251,10 @@ void CMainWindow::loadAfterShow()
  */
 void CMainWindow::recoverTabWidget(uint index)
 {
-    DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     switch (index) {
     case 0:
         if (findChild<videowidget *>())
@@ -1520,6 +1525,14 @@ void CMainWindow::initUI()
 
 void CMainWindow::initTitleBar()
 {
+    m_pTitlebar->titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
+    m_pTitlebar->raise();
+    m_pTitlebar->titlebar()->raise();
+}
+
+void CMainWindow::initOperationArea()
+{
+    QVBoxLayout * vLayout = new QVBoxLayout(this);
     DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
     pDButtonBox = new DButtonBox(this);
     QList<DButtonBoxButton *> listButtonBox;
@@ -1559,7 +1572,7 @@ void CMainWindow::initTitleBar()
     listButtonBox.append(m_pTitlePicBtn);
     listButtonBox.append(m_pTitleVdBtn);
     pDButtonBox->setButtonList(listButtonBox, false);
-    titlebar()->addWidget(pDButtonBox);
+    vLayout->addWidget(pDButtonBox);
 
     //初始化切换按钮
     m_pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
@@ -1583,9 +1596,7 @@ void CMainWindow::initTitleBar()
         m_pSelectBtn->setIconSize(QSize(20, 20));
         m_pSelectBtn->setIcon(QIcon::fromTheme("panel_switch_camera"));
     }
-
-    titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
-    titlebar()->addWidget(m_pSelectBtn, Qt::AlignLeft);
+        vLayout->addWidget(m_pSelectBtn, Qt::AlignLeft);
 }
 
 void CMainWindow::initConnection()
@@ -1771,17 +1782,23 @@ void CMainWindow::setSelBtnShow()
 
 void CMainWindow::setupTitlebar()
 {
+    m_pTitlebar = new Titlebar(this);
     m_titlemenu = new DMenu(this);
     m_actionSettings = new QAction(tr("Settings"), this);
 
-    titlebar()->setObjectName(TITLEBAR);
-    titlebar()->setAccessibleName(TITLEBAR);
+    m_pTitlebar->setObjectName(TITLEBAR);
+    m_pTitlebar->setAccessibleName(TITLEBAR);
+
     m_titlemenu->setObjectName(TITLE_MUNE);
     m_titlemenu->setAccessibleName(TITLE_MUNE);
+
     m_actionSettings->setObjectName("SettingAction");
     m_titlemenu->addAction(m_actionSettings);
-    titlebar()->setMenu(m_titlemenu);
-    titlebar()->setParent(this);
+    m_pTitlebar->titlebar()->setMenu(m_titlemenu);
+    m_pTitlebar->titlebar()->setParent(this);
+
+    m_pTitlebar->move(0,0);
+    m_pTitlebar->setFixedHeight(50);
 }
 
 void CMainWindow::resizeEvent(QResizeEvent *event)
@@ -1798,6 +1815,8 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     if (m_videoPre)
         m_videoPre->update();
 
+    m_pTitlebar->setFixedWidth(this->size().width());
+    m_pTitlebar->titlebar()->setFixedWidth(this->size().width());
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
@@ -2245,8 +2264,6 @@ void CMainWindow::keyReleaseEvent(QKeyEvent *e)
     }
 }
 
-
-
 bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 {
     /**
@@ -2255,10 +2272,10 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
      * 鼠标点击：焦点移入预览界面，并将下标设置为0
      */
 
-    DWindowMinButton *windowMinBtn = titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
+    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     DPushButton *picvideobtn = findChild<DPushButton *>("PicVdBtn");
     DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
     ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
