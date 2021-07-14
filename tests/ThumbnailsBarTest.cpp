@@ -1,5 +1,3 @@
-<<<<<<< HEAD   (b446b6 fix: 修复root用户启动截图录屏，界面图标显示错误问题)
-=======
 /*
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
@@ -259,4 +257,3 @@ TEST_F(ThumbnailsBarTest, thumbarnail)
     //     // }
     // }
 }
->>>>>>> CHANGE (e6fd2f fix: 内存泄露 Description: 修复测试用例内存泄露 Log:  修复已知内存泄露 Bug: https:)

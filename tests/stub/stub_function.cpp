@@ -228,8 +228,12 @@ int Stub_Function::v4l2core_stop_stream(v4l2_dev_t *vd)
 v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame(v4l2_dev_t *vd)
 {
     if (m_v4l2_frame_buff == nullptr) {
-        m_v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof (v4l2_frame_buff_t));
-        m_v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(sizeof (uint8_t));
+        m_v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof(v4l2_frame_buff_t));
+
+        m_v4l2_frame_buff->width = 1920;
+        m_v4l2_frame_buff->height = 1080;
+        uint yuvsize = m_v4l2_frame_buff->width * m_v4l2_frame_buff->height * 3 / 2;
+        m_v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(size_t(yuvsize));
     }
 
     return m_v4l2_frame_buff;
@@ -253,6 +257,11 @@ int Stub_Function::v4l2core_update_current_format_OK(v4l2_dev_t *vd)
 int Stub_Function::v4l2core_update_current_format_Not_OK(v4l2_dev_t *vd)
 {
     return -10;
+}
+
+int Stub_Function::v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
+{
+    return 0;
 }
 
 void Stub_Function::v4l2core_prepare_valid_format(v4l2_dev_t *vd)
@@ -315,11 +324,9 @@ bool Stub_Function::parseFromFile()
     return true;
 }
 
-<<<<<<< HEAD   (b446b6 fix: 修复root用户启动截图录屏，界面图标显示错误问题)
-=======
 void Stub_Function::Release()
 {
-if (m_v4l2_dev != nullptr) {
+    if (m_v4l2_dev != nullptr) {
         free(m_v4l2_dev->list_stream_formats[0].list_stream_cap);
         free(m_v4l2_dev->list_stream_formats);
         free(m_v4l2_dev->videodevice);
@@ -363,7 +370,6 @@ if (m_v4l2_dev != nullptr) {
         m_v4l2_frame_buff = nullptr;
     }
 }
->>>>>>> CHANGE (e6fd2f fix: 内存泄露 Description: 修复测试用例内存泄露 Log:  修复已知内存泄露 Bug: https:)
 
 
 

@@ -73,6 +73,8 @@ public:
     //更新当前格式
     int v4l2core_update_current_format_OK(v4l2_dev_t *vd);//返回零
     int v4l2core_update_current_format_Not_OK(v4l2_dev_t *vd);//返回非零
+    //释放帧数据
+    int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame);
     //有效格式
     void v4l2core_prepare_valid_format(v4l2_dev_t *vd);
     //宽度高度获取
@@ -99,8 +101,8 @@ public:
     //imageitem
     QString suffix();//获得文件后缀函数打桩
     bool parseFromFile();//解析文件函数打桩
-
-
+    //release all statuc members
+    static void Release();
 public:
     //定义静态成员变量用于打桩时多次调用
     static v4l2_dev_t *m_v4l2_dev;//设备属性
