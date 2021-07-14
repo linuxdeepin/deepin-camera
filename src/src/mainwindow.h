@@ -27,6 +27,7 @@
 #include "closedialog.h"
 #include "camview.h"
 #include "Settings.h"
+#include "titlebar.h"
 
 #include <DMainWindow>
 #include <DTitlebar>
@@ -109,6 +110,8 @@ private:
     * @brief initTitleBar　初始化标题栏
     */
     void initTitleBar();
+
+    void initOperationArea();
 
     /**
     * @brief initConnection　初始化连接状态
@@ -345,6 +348,7 @@ private:
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     qint64                          m_SpaceKeyInterval;//空格按键时间间隔
+    Titlebar                        *m_pTitlebar;
 };
 
 #endif // MAINWINDOW_H
