@@ -342,7 +342,7 @@ public:
 private:
     enum ActType                    m_nActTpye;
     bool                            m_bWayland;
-    //ThumbnailsBar                   *m_thumbnail;//缩略图
+//    ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控

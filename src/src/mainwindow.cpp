@@ -74,7 +74,7 @@ const int CMainWindow::minWindowHeight = 600;
 const int rightOffset = 10;
 const int SwitchcameraDiam = 40; //切换摄像头直径
 const int photeRecordDiam = 64;
-const int snapLabelDiam = 50;
+const int snapLabelDiam = 52;
 const int switchBtnWidth = 50;
 const int switchBtnHeight = 26;
 
@@ -431,8 +431,6 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
     return  optionWidget;
 }
-
-
 
 static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 {
@@ -1526,103 +1524,6 @@ void CMainWindow::initTitleBar()
     m_pTitlebar->titlebar()->raise();
 }
 
-
-//void CMainWindow::initOperationArea()
-//{
-//    QVBoxLayout * vLayout = new QVBoxLayout(this);
-//    DGuiApplicationHelper::ColorType type = DGuiApplicationHelper::instance()->themeType();
-//    //pDButtonBox = new DButtonBox(this);
-//    QList<DButtonBoxButton *> listButtonBox;
-////    m_pTitlePicBtn = new DButtonBoxButton(QString(""), this);
-////    m_pTitleVdBtn = new DButtonBoxButton(QString(""), this);
-////    m_pSelectBtn = new DIconButton(this);
-
-////    pDButtonBox->setObjectName(BUTTOM_TITLE_BOX);
-////    pDButtonBox->setAccessibleName(BUTTOM_TITLE_BOX);
-////    pDButtonBox->setFixedWidth(120);
-////    pDButtonBox->setFixedHeight(36);
-//    //初始化标题栏拍照按钮
-//    QIcon iconPic(":/images/icons/light/button/photograph.svg");
-////    m_pTitlePicBtn->setObjectName(BUTTOM_TITLE_PICTURE);
-////    m_pTitlePicBtn->setAccessibleName(BUTTOM_TITLE_PICTURE);
-////    m_pTitlePicBtn->setIcon(iconPic);
-////    m_pTitlePicBtn->setIconSize(QSize(26, 26));
-////    DPalette pa = m_pTitlePicBtn->palette();
-////    QColor clo("#0081FF");
-////    pa.setColor(DPalette::Dark, clo);
-////    pa.setColor(DPalette::Light, clo);
-////    pa.setColor(DPalette::Button, clo);
-////    m_pTitlePicBtn->setPalette(pa);
-//    QIcon iconVd;
-
-//    //初始化主题判断
-//    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType)
-//        iconVd = QIcon(":/images/icons/light/record video.svg");
-//    else
-//        iconVd = QIcon(":/images/icons/dark/button/record video_dark.svg");
-
-//    //初始化标题栏录像按钮
-
-//    m_pTitleVdBtn->setObjectName(BUTTOM_TITLE_VEDIO);
-//    m_pTitleVdBtn->setAccessibleName(BUTTOM_TITLE_VEDIO);
-//    m_pTitleVdBtn->setIcon(iconVd);
-//    m_pTitleVdBtn->setIconSize(QSize(26, 26));
-//    listButtonBox.append(m_pTitlePicBtn);
-//    listButtonBox.append(m_pTitleVdBtn);
-//    pDButtonBox->setButtonList(listButtonBox, false);
-//    vLayout->addWidget(pDButtonBox);
-
-////    m_pTitleVdBtn->setObjectName(BUTTOM_TITLE_VEDIO);
-////    m_pTitleVdBtn->setAccessibleName(BUTTOM_TITLE_VEDIO);
-////    m_pTitleVdBtn->setIcon(iconVd);
-////    m_pTitleVdBtn->setIconSize(QSize(26, 26));
-////    listButtonBox.append(m_pTitlePicBtn);
-////    listButtonBox.append(m_pTitleVdBtn);
-////    pDButtonBox->setButtonList(listButtonBox, false);
-////    titlebar()->addWidget(pDButtonBox);
-
-
-//    //初始化切换按钮
-////    m_pSelectBtn->setObjectName(BUTTOM_TITLE_SELECT);
-////    m_pSelectBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
-////    m_pSelectBtn->setFixedSize(QSize(37, 37));
-
-////    m_pSelectBtn->hide();
-////    m_pSelectBtn->setFocusPolicy(Qt::TabFocus);
-////    m_pSelectBtn->installEventFilter(this);
-
-//    //初始化主题判断
-//    if (!CamApp->isPanelEnvironment()) {
-//        m_pSelectBtn->setIconSize(QSize(37, 37));
-//        if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-//            m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
-//        } else {
-
-//            m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
-//        }
-//    } else {
-//        m_pSelectBtn->setIconSize(QSize(20, 20));
-//        m_pSelectBtn->setIcon(QIcon::fromTheme("panel_switch_camera"));
-//    }
-//        vLayout->addWidget(m_pSelectBtn, Qt::AlignLeft);
-////    if (!CamApp->isPanelEnvironment()) {
-////        m_pSelectBtn->setIconSize(QSize(37, 37));
-////        if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-////            m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
-////        } else {
-
-////            m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
-////        }
-////    } else {
-////        m_pSelectBtn->setIconSize(QSize(20, 20));
-////        m_pSelectBtn->setIcon(QIcon::fromTheme("panel_switch_camera"));
-////    }
-
-//    titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
-////    titlebar()->addWidget(m_pSelectBtn, Qt::AlignLeft);
-//>>>>>>> Stashed changes
-//}
-
 void CMainWindow::initConnection()
 {
     connect(CamApp, &CApplication::popupConfirmDialog, this, [ = ] {
@@ -1705,7 +1606,6 @@ void CMainWindow::initRightButtons()
     m_switchBtn = new DPushButton(this);
     m_snapshotLabel = new ImageItem(this);
 
-
     m_cameraSwitchBtn->setFixedSize(SwitchcameraDiam,SwitchcameraDiam);
     m_photoRecordBtn->setFixedSize(photeRecordDiam,photeRecordDiam);
     m_switchBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
@@ -1716,7 +1616,7 @@ void CMainWindow::initRightButtons()
     m_cameraSwitchBtn->setStyleSheet(cameraSwitchBtnStyle);
     m_photoRecordBtn->setStyleSheet(photoRecordBtnStyle);
     m_switchBtn->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 13px;");
-    m_snapshotLabel->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 25px;");
+//    m_snapshotLabel->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 25px;");
 
     m_switchBtn->setText(tr("Record"));
     m_cameraSwitchBtn->setText(tr("camera"));
@@ -1735,7 +1635,6 @@ void CMainWindow::initRightButtons()
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     locateRightButtons();
-
 }
 
 void CMainWindow::locateRightButtons()
