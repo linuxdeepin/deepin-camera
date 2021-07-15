@@ -53,6 +53,11 @@ public:
     static Settings &get();
 
     /**
+    * @brief init　初始化
+    */
+    void init();
+
+    /**
     * @brief configPath　获取设置路径
     */
     QString configPath() const
@@ -121,11 +126,11 @@ signals:
 
 private:
     Settings();
-    void init();
+
     static Settings     m_instance;
     QString             m_configPath;
-    QPointer<DSettings> m_settings;
-    QSettingBackend*    m_backend;
+    QPointer<DSettings> m_settings = nullptr;
+    QSettingBackend*    m_backend = nullptr;
 };
 
 }

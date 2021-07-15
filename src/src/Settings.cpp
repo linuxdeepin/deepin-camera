@@ -35,7 +35,6 @@ Settings Settings::m_instance;
 
 Settings &Settings::get()
 {
-    m_instance.init();
     return m_instance;
 }
 
@@ -78,10 +77,11 @@ void Settings::init()
 
     connect(m_settings, &DSettings::valueChanged, this, [ = ](const QString & key, const QVariant & value) {
         if (key.startsWith("outsetting.resolutionsetting.resolution")) {
-            auto mode_opt = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
-            if (value >= 0) {
-                QString mode = mode_opt->data("items").toStringList()[value.toInt()];
-                emit resolutionchanged(mode);
+            auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
+            QStringList dataList = mode_opt->data("items").toStringList();
+            if (dataList.size() > value.toInt()
+               && value.toInt() >= 0) {
+                emit resolutionchanged(dataList[value.toInt()]);
             }
         }
 
@@ -93,12 +93,12 @@ void Settings::init()
 
 QVariant Settings::generalOption(const QString &opt)
 {
-    return settings()->getOption(QString("base.general.%1").arg(opt));
+    return m_settings->getOption(QString("base.general.%1").arg(opt));
 }
 
 QVariant Settings::getOption(const QString &opt)
 {
-    return settings()->getOption(opt);
+    return m_settings->getOption(opt);
 }
 
 void Settings::setNewResolutionList()
@@ -183,11 +183,11 @@ void Settings::setNewResolutionList()
             resolutionmodeFamily->setData("items", resolutionDatabase);
 
             //设置当前分辨率的索引
-            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
+            m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         } else {
             resolutionDatabase.clear();
             resolutionDatabase.append(QString(tr("None")));
-            settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+            m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
             resolutionmodeFamily->setData("items", resolutionDatabase);
         }
     } else {
@@ -199,17 +199,17 @@ void Settings::setNewResolutionList()
 
         resolutionDatabase.clear();
         resolutionDatabase.append(QString(tr("None")));
-        settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+        m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
 
-    settings()->sync();
+    m_settings->sync();
 }
 
 void Settings::setPathOption(const QString &opt, const QVariant &v)
 {
-    settings()->setOption(QString("base.save.%1").arg(opt), v);
-    settings()->sync();
+    m_settings->setOption(QString("base.save.%1").arg(opt), v);
+    m_settings->sync();
 }
 
 }

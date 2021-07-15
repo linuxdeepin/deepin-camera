@@ -28,6 +28,7 @@ extern "C"
 #include "dbus_adpator.h"
 #include "cameraconfig.h"
 #include "acobjectlist.h"
+#include "Settings.h"
 
 #include <DMainWindow>
 #include <DWidgetUtil>
@@ -139,6 +140,7 @@ int main(int argc, char *argv[])
     //应用描述
     qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
+    dc::Settings::get().init();
     DApplicationSettings saveTheme;
 
     if (!runSingleInstance()) {

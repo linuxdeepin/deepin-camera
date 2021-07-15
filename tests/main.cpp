@@ -11,6 +11,7 @@
 #include <QCameraInfo>
 #include "src/mainwindow.h"
 #include "src/capplication.h"
+#include "src/Settings.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -88,6 +89,8 @@ int main(int argc, char *argv[])
     qApp->setProductIcon(QIcon(":/images/logo/deepin-camera-96px.svg")); //用于显示关于窗口的应用图标
 
     qApp->setApplicationDescription("This is camera.");
+
+    dc::Settings::get().init();
 
     DApplicationSettings saveTheme;
 
