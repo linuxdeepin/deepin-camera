@@ -60,9 +60,21 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     Q_D(const Titlebar);
 
     if(DataManager::instance()->getdevStatus() != NOCAM) {
-        QPalette palette = this->palette();
-        palette.setColor(QPalette::Background, QColor(0, 0, 0, 0));
-        this->setPalette(palette);
+        QPainter painter(this);
+//        QPalette palette = this->palette();
+        QPen pen(QColor(0, 0, 0, 0));
+        QLinearGradient linearGradient(width(), 0, width(), height());
+
+        linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
+        linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
+
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        painter.setBrush(QBrush(linearGradient));
+        painter.setPen(pen);
+        painter.drawRect(rect());
+
+//        palette.setColor(QPalette::Background, QColor(0, 0, 0, 0));
+//        this->setPalette(palette);
     } else {
         DBlurEffectWidget::paintEvent(pe);
     }
