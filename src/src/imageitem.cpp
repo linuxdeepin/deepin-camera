@@ -58,10 +58,9 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 
     setScaledContents(false);
     setMargin(0);
-    //setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
 
     m_menu = new QMenu(this);
+
     QAction *actCopy = new QAction(this);
     actCopy->setObjectName("CopyAction");
     actCopy->setText(tr("Copy"));
@@ -76,7 +75,6 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 
     m_menu->addAction(actCopy);
     m_menu->addAction(actDel);
-
     if (!m_bVideo) {
         m_actPrint = new QAction(this);
         m_actPrint->setText(tr("Print"));
@@ -87,8 +85,8 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
          */
         connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
     }
-
     m_menu->addAction(actOpenFolder);
+
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     /**
@@ -108,20 +106,6 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     connect(actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
         paths << m_path;
-//        if (DataManager::instance()->m_setIndex.isEmpty())
-//        {
-//            paths = QStringList(path);
-//            qDebug() << "sigle way";
-//        } else
-//        {
-//            QSet<int>::iterator it;
-
-////            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
-////                paths << g_indexImage.value(*it)->getPath();
-////                qInfo() << g_indexImage.value(*it)->getPath();
-////            }
-
-//        }
 
         QClipboard *cb = qApp->clipboard();
         QMimeData *newMimeData = new QMimeData();
@@ -129,8 +113,7 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
         QString text;
         QList<QUrl> dataUrls;
 
-        for (QString path : paths)
-        {
+        for (QString path : paths) {
             if (!path.isEmpty())
                 text += path + '\n';
             dataUrls << QUrl::fromLocalFile(path);
@@ -164,7 +147,7 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
      *右键菜单删除
     **/
     connect(actDel, &QAction::triggered, this, [ = ] {
-        emit trashFile();
+        onTrashFile();
     }, Qt::QueuedConnection);
 }
 
@@ -404,92 +387,97 @@ void ImageItem::mousePressEvent(QMouseEvent *ev)
 void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-    DGuiApplicationHelper::ColorType themeType = DGuiApplicationHelper::instance()->themeType();
     QPainter painter(this);
-
-    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
-    QRect backgroundRect = rect();
-    QRect pixmapRect;
+    QRect backgroundRect;
+    QRect pixmapRect = rect();
+    QRect foregroundRect;
     QFileInfo fileinfo(m_path);
     QString str = fileinfo.suffix();
 
-//    if (DataManager::instance()->m_setIndex.contains(m_index)
-//            || (DataManager::instance()->m_setIndex.isEmpty()
-//                && m_index == DataManager::instance()->getindexNow())) {
-//        QPainterPath backgroundBp;
-//        QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
-//                                 backgroundRect.width() - 2, backgroundRect.height() - 2);
-//        backgroundBp.addRoundedRect(reduceRect, 8, 8);
-//        painter.setClipPath(backgroundBp);
-//        painter.fillRect(
-//            reduceRect,
-//            QBrush(DGuiApplicationHelper::instance()->applicationPalette().highlight().color()));
+    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
 
-//        if (m_pixmap.width() > m_pixmap.height()) {
-//            m_pixmap = m_pixmap.copy((m_pixmap.width() - m_pixmap.height()) / 2, 0, m_pixmap.height(),
-//                                     m_pixmap.height());
-//        } else if (m_pixmap.width() < m_pixmap.height()) {
-//            m_pixmap = m_pixmap.copy(0, (m_pixmap.height() - m_pixmap.width()) / 2, m_pixmap.width(),
-//                                     m_pixmap.width());
-//        }
+    /*if (DataManager::instance()->m_setIndex.contains(m_index)
+            || (DataManager::instance()->m_setIndex.isEmpty()
+                && m_index == DataManager::instance()->getindexNow())) {
+        QPainterPath backgroundBp;
+        QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
+                                 backgroundRect.width() - 2, backgroundRect.height() - 2);
+        backgroundBp.addRoundedRect(reduceRect, 8, 8);
+        painter.setClipPath(backgroundBp);
+        painter.fillRect(
+            reduceRect,
+            QBrush(DGuiApplicationHelper::instance()->applicationPalette().highlight().color()));
 
-//        pixmapRect.setX(backgroundRect.x() + 5);
-//        pixmapRect.setY(backgroundRect.y() + 5);
-//        pixmapRect.setWidth(backgroundRect.width() - 10);
-//        pixmapRect.setHeight(backgroundRect.height() - 10);
+        if (m_pixmap.width() > m_pixmap.height()) {
+            m_pixmap = m_pixmap.copy((m_pixmap.width() - m_pixmap.height()) / 2, 0, m_pixmap.height(),
+                                     m_pixmap.height());
+        } else if (m_pixmap.width() < m_pixmap.height()) {
+            m_pixmap = m_pixmap.copy(0, (m_pixmap.height() - m_pixmap.width()) / 2, m_pixmap.width(),
+                                     m_pixmap.width());
+        }
 
-//        //修复透明图片被选中后透明地方变成绿色
-//        QPainterPath bg0;
-//        bg0.addRoundedRect(pixmapRect, 4, 4);
-//        painter.setClipPath(bg0);
+        pixmapRect.setX(backgroundRect.x() + 5);
+        pixmapRect.setY(backgroundRect.y() + 5);
+        pixmapRect.setWidth(backgroundRect.width() - 10);
+        pixmapRect.setHeight(backgroundRect.height() - 10);
 
-//        if (themeType == DGuiApplicationHelper::LightType)
-//            painter.fillRect(pixmapRect, QBrush(Qt::white));
-//        else if (themeType == DGuiApplicationHelper::DarkType)
-//            painter.fillRect(pixmapRect, QBrush(Qt::black));
+        //修复透明图片被选中后透明地方变成绿色
+        QPainterPath bg0;
+        bg0.addRoundedRect(pixmapRect, 4, 4);
+        painter.setClipPath(bg0);
 
-//        QPainterPath bg;
-//        bg.addRoundedRect(pixmapRect, 4, 4);
+        if (themeType == DGuiApplicationHelper::LightType)
+            painter.fillRect(pixmapRect, QBrush(Qt::white));
+        else if (themeType == DGuiApplicationHelper::DarkType)
+            painter.fillRect(pixmapRect, QBrush(Qt::black));
 
-//        if (m_pixmap.isNull()) {
-//            painter.setClipPath(bg);
-//            QIcon icon(m_pixmapstring);
-//            icon.paint(&painter, pixmapRect);
-//        }
+        QPainterPath bg;
+        bg.addRoundedRect(pixmapRect, 4, 4);
 
-//        this->setFixedSize(SELECTED_WIDTH, SELECTED_WIDTH);
-//    } else {
+        if (m_pixmap.isNull()) {
+            painter.setClipPath(bg);
+            QIcon icon(m_pixmapstring);
+            icon.paint(&painter, pixmapRect);
+        }
 
-//    }
+        this->setFixedSize(SELECTED_WIDTH, SELECTED_WIDTH);
+    } else {
 
-    pixmapRect.setX(backgroundRect.x() + 1);
-    pixmapRect.setY(backgroundRect.y() + 1);
-    pixmapRect.setWidth(backgroundRect.width() - 2);
-    pixmapRect.setHeight(backgroundRect.height() - 2);
+    }*/
 
-    QPainterPath bg0;
-    bg0.addRoundedRect(pixmapRect, 25, 25);
-    painter.setClipPath(bg0);
+    pixmapRect.setX(rect().x() + 1);
+    pixmapRect.setY(rect().y() + 1);
+    pixmapRect.setWidth(rect().width() - 2);
+    pixmapRect.setHeight(rect().height() - 2);
+
+    foregroundRect.setX(rect().x() + 2);
+    foregroundRect.setY(rect().y() + 2);
+    foregroundRect.setWidth(rect().width() - 4);
+    foregroundRect.setHeight(rect().height() - 4);
 
     QPainterPath bg;
-    bg.addRoundedRect(pixmapRect, 25, 25);
+    bg.addRoundedRect(rect(), 26, 26);
+    painter.fillPath(bg, QBrush(QColor(0, 0, 0, 0.1 * 255)));
 
+    QPainterPath fg;
+    fg.addRoundedRect(pixmapRect, 25, 25);
     if (m_pixmap.isNull()) {
-        painter.setClipPath(bg);
+        painter.setClipPath(fg);
         QIcon icon(m_pixmapstring);
         icon.paint(&painter, pixmapRect);
     }
+    painter.setBrush(QBrush(m_pixmap));
+    painter.setPen(Qt::NoPen);
+    painter.drawPath(fg);
 
-    this->setFixedSize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-
-    QPainterPath bg1;
-    bg1.addRoundedRect(pixmapRect, 25, 25);
-    painter.setClipPath(bg1);
-
-    painter.drawPixmap(pixmapRect, m_pixmap);
+    QPainterPath inside;
+    inside.addRoundedRect(foregroundRect, 24, 24);
+    painter.setBrush(Qt::transparent);
+    painter.setPen(QColor(255, 255, 255, 0.2 * 255));
+    painter.drawPath(inside);
 
     //加入图标
-    if (m_bVideo) {
+    /*if (m_bVideo) {
         QRect iconRect;
         iconRect.setX((width() - 14) / 2);
         iconRect.setY((height() - 14) / 2);
@@ -510,7 +498,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setPen(
         QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
     painter.drawRoundedRect(pixmapRect, 4, 4);
-    painter.restore();
+    painter.restore();*/
 }
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
@@ -566,25 +554,32 @@ void ImageItem::showMenu()
 #endif
 }
 
-void ImageItem::onPrint()
+void ImageItem::onTrashFile()
 {
 
-//    if (!m_bVideo) {
-//        QStringList paths;
+}
 
-//        if (DataManager::instance()->m_setIndex.isEmpty()) {
-//            paths = QStringList(m_path);
-//            qDebug() << "sigle print";
-//        } else {
-//            QSet<int>::iterator it;
+void ImageItem::delFile(QString strFile)
+{
+}
+void ImageItem::onPrint()
+{
+    if (!m_bVideo) {
+        QStringList paths;
 
-//            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
+        if (DataManager::instance()->m_setIndex.isEmpty()) {
+            paths = QStringList(m_path);
+            qDebug() << "sigle print";
+        } else {
+            QSet<int>::iterator it;
+
+            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
 //                paths << g_indexImage.value(*it)->getPath();
 //                qInfo() << g_indexImage.value(*it)->getPath();
-//            }
-//        }
-//        showPrintDialog(QStringList(paths), this);
-//    }
+            }
+        }
+        showPrintDialog(QStringList(paths), this);
+    }
 
 }
 
