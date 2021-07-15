@@ -31,17 +31,33 @@
 namespace dc {
 using namespace Dtk::Core;
 
-static Settings *_theSettings = nullptr;
-
+Settings Settings::m_instance;
 Settings &Settings::get()
 {
-    if (!_theSettings)
-        _theSettings = new Settings;
-
-    return *_theSettings;
+    return m_instance;
 }
 
-Settings::Settings(): QObject(0)
+Settings::Settings()
+    : QObject(0),
+      m_backend(nullptr),
+      m_settings(nullptr)
+{
+
+}
+
+Settings::~Settings()
+{
+    if (m_backend) {
+        delete m_backend;
+        m_backend = nullptr;
+    }
+    if (m_settings) {
+        delete m_settings;
+        m_settings = nullptr;
+    }
+}
+
+void Settings::init()
 {
     m_configPath.clear();
     m_configPath.append(QString("%1/%2/%3/config.conf")
@@ -71,18 +87,6 @@ Settings::Settings(): QObject(0)
 
     qInfo() << "keys" << m_settings->keys();
     setNewResolutionList();
-}
-
-Settings::~Settings()
-{
-    if (m_backend) {
-        delete m_backend;
-        m_backend = nullptr;
-    }
-    if (m_settings) {
-        delete m_settings;
-        m_settings = nullptr;
-    }
 }
 
 QVariant Settings::generalOption(const QString &opt)

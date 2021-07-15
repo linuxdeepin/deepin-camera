@@ -252,8 +252,8 @@ videowidget::~videowidget()
     delete m_recordingTimer;
     m_recordingTimer = nullptr;
 
-    delete m_thumbnail;
-    m_thumbnail = nullptr;
+//    delete m_thumbnail;
+//    m_thumbnail = nullptr;
 
     delete m_endBtn;
     m_endBtn = nullptr;
@@ -488,12 +488,12 @@ void videowidget::showNocam()
         onEndBtnClicked();
 }
 
-void videowidget::setThumbnail(ThumbnailsBar *thumb)
-{
-    if (thumb != nullptr) {
-        m_thumbnail = thumb;
-    }
-}
+//void videowidget::setThumbnail(ThumbnailsBar *thumb)
+//{
+//    if (thumb != nullptr) {
+//        m_thumbnail = thumb;
+//    }
+//}
 
 void videowidget::showCamUsed()
 {
@@ -916,7 +916,8 @@ void videowidget::showCountdown()
 #else
                 m_pNormalView->hide();
 #endif
-                m_thumbnail->hide();
+//                m_thumbnail->hide();
+                emit toolbarShow(false);
             }
 
             if (m_curTakePicTime == 0 && m_nInterval == 0) {
@@ -942,7 +943,8 @@ void videowidget::showCountdown()
                 m_pNormalView->hide();
 #endif
 
-                m_thumbnail->hide();
+//                m_thumbnail->hide();
+                emit toolbarShow(false);
             }
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
@@ -1095,7 +1097,8 @@ void videowidget::flash()
             m_openglwidget->show();
 
 #endif
-        m_thumbnail->show();
+//        m_thumbnail->show();
+        emit toolbarShow(true);
         recoverTabWidget();
 
 //        m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
@@ -1408,11 +1411,12 @@ void videowidget::onTakePic(bool bTrue)
             m_openglwidget->show();
 
 #endif
-
-        if (!m_thumbnail->isVisible()) {
-            m_thumbnail->show();
-            recoverTabWidget();
-        }
+        emit toolbarShow(true);
+        recoverTabWidget();
+//        if (!m_thumbnail->isVisible()) {
+//            m_thumbnail->show();
+//            recoverTabWidget();
+//        }
     }
 }
 

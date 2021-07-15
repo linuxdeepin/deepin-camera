@@ -39,8 +39,8 @@
 //#endif
 DWIDGET_USE_NAMESPACE
 
-#define THUMBNAIL_WIDTH 32//缩略图图元宽度
-#define THUMBNAIL_HEIGHT 42//缩略图图元高度
+#define THUMBNAIL_WIDTH 50//缩略图图元宽度
+#define THUMBNAIL_HEIGHT 50//缩略图图元高度
 #define THUMBNAIL_PIXMAP_SIZE 200//缩略图图像缩放前尺寸,考虑了内存占用和清晰度两方面情况的取值
 #define SELECTED_WIDTH 58//选中的缩略图图元宽高
 
@@ -53,9 +53,16 @@ class ImageItem : public DLabel
 {
     Q_OBJECT
 public:
-    ImageItem(QWidget *parent = nullptr, int index = 0, QString path = QString());
+    ImageItem(QWidget *parent = nullptr);
 
     ~ImageItem() override;
+
+    /**
+     * @brief updatePicPath 更新文件路径
+     * @param filePath 文件路径
+     */
+    void updatePicPath(const QString &filePath);
+
 
     /**
      * @brief updatePic 更新图片

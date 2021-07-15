@@ -135,6 +135,12 @@ signals:
     */
     void filename(QString strFilename);
 
+    /**
+    * @brief toolbarShow　显示与隐藏界面按钮
+    * @param bShow 是否显示
+    */
+    void toolbarShow(bool bShow);
+
 public:
     /**
     * @brief setCapStatus　设置相机状态
@@ -195,11 +201,11 @@ public:
         m_nMaxContinuous = m_curTakePicTime = nContinuous;
     }
 
-    /**
-    * @brief setthumbnail　设置缩略图
-    * @param thumb
-    */
-    void setThumbnail(ThumbnailsBar *thumb);
+//    /**
+//    * @brief setthumbnail　设置缩略图
+//    * @param thumb
+//    */
+//    void setThumbnail(ThumbnailsBar *thumb);
 
     /**
     * @brief delayInit　延迟加载
@@ -336,7 +342,7 @@ private:
     int                        m_nFileID;           //文件id
     int                        m_nFastClick;        //快速点击次数，小于200ms计入
 
-    ThumbnailsBar              *m_thumbnail;        //缩略图
+    //ThumbnailsBar              *m_thumbnail;        //缩略图
 
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时

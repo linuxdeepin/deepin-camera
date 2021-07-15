@@ -53,6 +53,7 @@
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
+class ImageItem;
 class QGridLayout;
 const int TOP_TOOLBAR_HEIGHT = 50;
 
@@ -111,25 +112,20 @@ private:
     */
     void initTitleBar();
 
-   /**
-    * @brief initOperationArea　初始化右侧操作区域
-    */
-    void initOperationArea();
-
     /**
     * @brief initConnection　初始化连接状态
     */
     void initConnection();
 
     /**
-    * @brief initThumbnails　初始化缩略图
+    * @brief initRightButtons　初始化右侧功能按钮键
     */
-    void initThumbnails();
+    void initRightButtons();
 
     /**
-    * @brief initThumbnailsConn　初始化缩略图信号槽
+    * @brief locateRightButtons　右侧功能键位置设置
     */
-    void initThumbnailsConn();
+    void locateRightButtons();
 
     /**
      * @brief initBlockShutdown 阻塞关机
@@ -197,6 +193,16 @@ private:
     * @param strlib 路径的字符串
     */
     QString libPath(const QString &strlib);
+
+    /**
+    * @brief reflushMediaFileList　刷新媒体文件列表
+    */
+    void reflushMediaFileList();
+
+    /**
+    * @brief getMediaFileInfoList　获得录像、图片文件列表
+    */
+    void getMediaFileInfoList(const QString &path, QFileInfoList& fileList);
 
 private slots:
     /**
@@ -304,6 +310,11 @@ private slots:
      * @brief onVisible 是否是锁屏
      */
     void onTimeoutLock(const QString &, QVariantMap, QStringList);
+
+    /**
+     * @brief onToolbarShow 是否显示上层按钮
+     */
+    void onToolbarShow(bool bShow);
 protected:
 
     /**
@@ -320,25 +331,28 @@ protected:
 
     bool eventFilter(QObject *obj, QEvent *e)override;
 
+private:
+    void showWidget(DWidget* widget, bool bShow);
+
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
-    static QString                  lastVdFileName;//上次打开的视频文件
-    static QString                  lastPicFileName;//上次打开的照片文件
+//    static QString                  lastVdFileName;//上次打开的视频文件
+//    static QString                  lastPicFileName;//上次打开的照片文件
 private:
     enum ActType                    m_nActTpye;
     bool                            m_bWayland;
-    ThumbnailsBar                   *m_thumbnail;//缩略图
+    //ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
-    DButtonBox                      *pDButtonBox;//按钮盒
-    DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
-    DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
-    DIconButton                     *m_pSelectBtn; //切换按钮
+//    DButtonBox                      *pDButtonBox;//按钮盒
+//    DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
+//    DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
+//    DIconButton                     *m_pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
-    QMenu                           *m_rightbtnmenu;//右键菜单
-    QAction                         *m_actOpenfolder;//打开文件
+//    QMenu                           *m_rightbtnmenu;//右键菜单
+//    QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控
     QFileSystemWatcher              m_fileWatcherUp;//文件夹监控，当前视频、照片文件夹的上级路径监控
     QString                         m_strCfgPath;//配置文件路径
@@ -351,7 +365,17 @@ private:
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     qint64                          m_SpaceKeyInterval;//空格按键时间间隔
+
     Titlebar                        *m_pTitlebar; //标题栏
+    //右侧
+    DPushButton    *m_cameraSwitchBtn;    //摄像头切换按钮
+    DPushButton    *m_photoRecordBtn;     //拍照，录像按钮
+    DPushButton    *m_switchBtn;          //活动按钮
+    ImageItem      *m_snapshotLabel;      //缩略图
+
+    QString         m_videoPath;             //配置的视频路径
+    QString         m_picPath;               //配置图片路径
+    QMultiMap<QDateTime, QString> m_mapFile; //缩略图图像 时间排序
 };
 
 #endif // MAINWINDOW_H

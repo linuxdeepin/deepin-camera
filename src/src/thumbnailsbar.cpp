@@ -298,7 +298,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
         if (!m_strFileName.isEmpty() && fileInfo.fileName().compare(m_strFileName) == 0)
             continue;
 
-        ImageItem *pLabel = new ImageItem(nullptr, tIndex, fileInfo.filePath());
+        ImageItem *pLabel = new ImageItem(nullptr);
         connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
@@ -557,7 +557,7 @@ void ThumbnailsBar::onTrashFile()
 
             int nIndexSupply = nIndexMax + 1 + i;
 
-            ImageItem *pLabel = new ImageItem(nullptr, nIndexSupply, fileInfo.filePath());
+            ImageItem *pLabel = new ImageItem(nullptr);
             qInfo() << "supply:" << nIndexSupply << " filename " << fileInfo.fileName();
 
             if (pLabel != nullptr) {
@@ -773,7 +773,7 @@ void ThumbnailsBar::addFile(QString strFile)
         nIndexMax = nIndex0 > nIndex1 ? nIndex0 : nIndex1;
     }
 
-    ImageItem *pLabel = new ImageItem(nullptr, nIndexMax + 1, strFile);
+    ImageItem *pLabel = new ImageItem(nullptr);
     connect(pLabel, SIGNAL(needFit()), this, SIGNAL(fitToolBar()));
     connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
     qInfo() << "supply:" << nIndexMax + 1 << " filename " << strFile;
@@ -886,7 +886,7 @@ void ThumbnailsBar::delFile(QString strFile)
 
 
 
-    ImageItem *pLabel = new ImageItem(nullptr, nIndexMax + 1, fileInfo.filePath());
+    ImageItem *pLabel = new ImageItem(nullptr);
     qInfo() << "supply:" << nIndexMax + 1 << " filename " << fileInfo.fileName();
 
     if (pLabel != nullptr) {
