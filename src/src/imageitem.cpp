@@ -61,32 +61,27 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 
     m_menu = new QMenu(this);
 
-    QAction *actCopy = new QAction(this);
-    actCopy->setObjectName("CopyAction");
-    actCopy->setText(tr("Copy"));
+    m_actCopy = new QAction(this);
+    m_actCopy->setObjectName("CopyAction");
+    m_actCopy->setText(tr("Copy"));
 
-    QAction *actDel = new QAction(this);
-    actDel->setObjectName("DelAction");
-    actDel->setText(tr("Delete"));
+    m_actDel = new QAction(this);
+    m_actDel->setObjectName("DelAction");
+    m_actDel->setText(tr("Delete"));
 
-    QAction *actOpenFolder = new QAction(this);
-    actOpenFolder->setObjectName("OpenFolderAction");
-    actOpenFolder->setText(tr("Open folder"));
+    m_actOpenFolder = new QAction(this);
+    m_actOpenFolder->setObjectName("OpenFolderAction");
+    m_actOpenFolder->setText(tr("Open folder"));
 
-    m_menu->addAction(actCopy);
-    m_menu->addAction(actDel);
-    if (!m_bVideo) {
-        m_actPrint = new QAction(this);
-        m_actPrint->setText(tr("Print"));
-        m_actPrint->setObjectName("PrinterAction");
-        m_menu->addAction(m_actPrint);
-        /**
-         * @brief 右键菜单打印
-         */
-        connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
-    }
-    m_menu->addAction(actOpenFolder);
+    m_actPrint = new QAction(this);
+    m_actPrint->setText(tr("Print"));
+    m_actPrint->setObjectName("PrinterAction");
+    connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
 
+    m_menu->addAction(m_actCopy);
+    m_menu->addAction(m_actDel);
+    m_menu->addAction(m_actPrint);
+    m_menu->addAction(m_actOpenFolder);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     /**
@@ -94,6 +89,12 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     **/
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
+        if (m_bVideo){
+            m_menu->removeAction(m_actPrint);
+        }
+        else {
+            m_menu->insertAction(m_actOpenFolder, m_actPrint);
+        }
         m_menu->exec(QCursor::pos());
         DataManager::instance()->setCtrlMulti(false);
         DataManager::instance()->setShiftMulti(false);
@@ -103,10 +104,9 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     /**
      *右键菜单复制
     **/
-    connect(actCopy, &QAction::triggered, this, [ = ] {
+    connect(m_actCopy, &QAction::triggered, this, [ = ] {
         QStringList paths;
         paths << m_path;
-
         QClipboard *cb = qApp->clipboard();
         QMimeData *newMimeData = new QMimeData();
         QByteArray gnomeFormat = QByteArray("copy\n");
@@ -133,7 +133,7 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     /**
      *右键菜单打开文件夹
     **/
-    connect(actOpenFolder, &QAction::triggered, this, [ = ] {
+    connect(m_actOpenFolder, &QAction::triggered, this, [ = ] {
         if (!m_path.isEmpty()
             && m_path == '~') {
             //这里不能直接使用strFolder调replace函数
@@ -146,8 +146,8 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     /**
      *右键菜单删除
     **/
-    connect(actDel, &QAction::triggered, this, [ = ] {
-        onTrashFile();
+    connect(m_actDel, &QAction::triggered, this, [ = ] {
+        emit trashFile(m_path);
     }, Qt::QueuedConnection);
 }
 
@@ -234,6 +234,7 @@ void ImageItem::updatePicPath(const QString &filePath)
 
         m_strDuratuion = strTime;
     } else if (fileInfo.suffix() == "jpg") {
+        m_bVideo = false;
         m_strDuratuion = "";
         QImage img(filePath);
         img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
@@ -549,38 +550,23 @@ void ImageItem::showMenu()
 {
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
+    if (m_bVideo){
+        m_menu->removeAction(m_actPrint);
+    }
+    else {
+        m_menu->insertAction(m_actOpenFolder, m_actPrint);
+    }
 #ifndef UNITTEST
     m_menu->exec(screen_centerpos);
 #endif
 }
 
-void ImageItem::onTrashFile()
-{
 
-}
-
-void ImageItem::delFile(QString strFile)
-{
-}
 void ImageItem::onPrint()
 {
     if (!m_bVideo) {
-        QStringList paths;
-
-        if (DataManager::instance()->m_setIndex.isEmpty()) {
-            paths = QStringList(m_path);
-            qDebug() << "sigle print";
-        } else {
-            QSet<int>::iterator it;
-
-            for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
-//                paths << g_indexImage.value(*it)->getPath();
-//                qInfo() << g_indexImage.value(*it)->getPath();
-            }
-        }
-        showPrintDialog(QStringList(paths), this);
+        showPrintDialog(QStringList(m_path), this);
     }
-
 }
 
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)

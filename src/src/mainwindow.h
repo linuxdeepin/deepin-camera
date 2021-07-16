@@ -302,9 +302,9 @@ private slots:
 
     /**
      * @brief onDirectoryChanged 文件夹删除、重命名监控
-     * @param 当前文件夹路径
+     * @param filePath 当前文件夹路径
      */
-    void onDirectoryChanged(const QString &);
+    void onDirectoryChanged(const QString &filePath);
 
     /**
      * @brief onVisible 是否是锁屏
@@ -315,6 +315,24 @@ private slots:
      * @brief onToolbarShow 是否显示上层按钮
      */
     void onToolbarShow(bool bShow);
+
+    /**
+     * @brief onTrashFile 删除文件
+     * @param fileName 删除文件路径
+     */
+    void onTrashFile(const QString &fileName);
+
+    /**
+     * @brief onSwitchBtnClked 切换按钮点击事件
+     */
+    void onSwitchBtnClked();
+
+    /**
+     * @brief onPhotoRecordBtnClked 拍照/录像按钮点击事件
+     */
+    void onPhotoRecordBtnClked();
+
+
 protected:
 
     /**
@@ -332,7 +350,22 @@ protected:
     bool eventFilter(QObject *obj, QEvent *e)override;
 
 private:
+    /**
+     * @brief showRightButtons 显示右侧控件
+     */
+    void showRightButtons(bool bShow);
+
+    /**
+     * @brief showWidget 显示/隐藏控件
+     * @param widget 需要操作控件
+     * @param bShow 是否显示
+     */
     void showWidget(DWidget* widget, bool bShow);
+
+    /**
+     * @brief reflushSnapshotLabel 刷新缩略图控件的显示
+     */
+    void reflushSnapshotLabel();
 
 public:
     static const int                minWindowWidth;//最小窗口宽度
@@ -366,16 +399,21 @@ private:
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     qint64                          m_SpaceKeyInterval;//空格按键时间间隔
 
-    Titlebar                        *m_pTitlebar; //标题栏
-    //右侧
-    DPushButton    *m_cameraSwitchBtn;    //摄像头切换按钮
-    DPushButton    *m_photoRecordBtn;     //拍照，录像按钮
-    DPushButton    *m_switchBtn;          //活动按钮
-    ImageItem      *m_snapshotLabel;      //缩略图
+    Titlebar                        *m_pTitlebar;           //标题栏
 
-    QString         m_videoPath;             //配置的视频路径
-    QString         m_picPath;               //配置图片路径
-    QMultiMap<QDateTime, QString> m_mapFile; //缩略图图像 时间排序
+    //右侧按钮
+    DPushButton                     *m_cameraSwitchBtn;     //摄像头切换按钮
+    DPushButton                     *m_photoRecordBtn;      //拍照，录像按钮
+    DPushButton                     *m_switchBtn;           //活动按钮
+    ImageItem                       *m_snapshotLabel;       //缩略图
+
+    bool                            m_bInPhotoState;        //是否拍照状态，否为录像状态
+    bool                            m_bPhotoing;            //是否正在拍照
+    bool                            m_bRecording;           //是否正在录像
+    bool                            m_bSwitchCameraShowEnable; //是否可显示摄像头切换
+    QString                         m_videoPath;            //配置的视频路径
+    QString                         m_picPath;              //配置图片路径
+    QMultiMap<QDateTime, QString>   m_mapFile;              //缩略图图像 时间排序
 };
 
 #endif // MAINWINDOW_H

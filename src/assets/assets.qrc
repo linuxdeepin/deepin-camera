@@ -30,6 +30,9 @@
         <file>panel/Icons/dark/Switch camera.svg</file>
         <file>panel/Icons/light/Switch camera_dark.svg</file>
         <file>resource/panel_settings.json</file>
+        <file>images/icons/light/switch_camera_press.svg</file>
+        <file>images/icons/light/switch_camera.svg</file>
+        <file>images/icons/light/circular.svg</file>
     </qresource>
     <qresource prefix="/icons/deepin/builtin">
         <file>texts/panel_switch_camera_20px.svg</file>

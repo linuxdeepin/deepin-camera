@@ -141,8 +141,9 @@ signals:
 
     /**
      * @brief trashFile 删除文件信号
+     * @param filePath  删除文件路径
      */
-    void trashFile();
+    void trashFile(const QString &filePath);
 
     /**
      * @brief showDuration 录像时长信号
