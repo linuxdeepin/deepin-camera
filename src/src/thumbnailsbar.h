@@ -239,7 +239,6 @@ private:
     QFileInfoList  m_lstPicFolder;//图片文件夹文件信息列表
     QFileInfoList  m_lstVdFolder;//视频文件夹文件信息列表
     QString        m_strFileName;//当前拍照或录制视频的文件名
-
 };
 
 #endif // THUMBNAILSBAR_H

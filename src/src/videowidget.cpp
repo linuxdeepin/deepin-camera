@@ -72,9 +72,6 @@ videowidget::videowidget(DWidget *parent)
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
 
-
-
-
 //    m_recordingTimeWidget->setBlurBackgroundEnabled(true);
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;

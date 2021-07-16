@@ -27,6 +27,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileInfo>
+#include <QDateTime>
 //#ifdef private
 //#undef private
 //#include <dprintpreviewwidget.h>
@@ -41,7 +42,7 @@ DWIDGET_USE_NAMESPACE
 
 //#define THUMBNAIL_WIDTH 50//缩略图图元宽度
 //#define THUMBNAIL_HEIGHT 50//缩略图图元高度
-#define THUMBNAIL_PIXMAP_SIZE 200//缩略图图像缩放前尺寸,考虑了内存占用和清晰度两方面情况的取值
+#define THUMBNAIL_PIXMAP_SIZE 50//缩略图图像缩放前尺寸,考虑了内存占用和清晰度两方面情况的取值
 #define SELECTED_WIDTH 58//选中的缩略图图元宽高
 
 /**
@@ -131,14 +132,11 @@ public:
     }
 
     /**
-     * @brief showMenu 显示菜单
+     * @brief initShortcut 初始化快捷键
      */
-    void showMenu();
+    void initShortcut();
 
-    void onTrashFile();
-    void delFile(QString);
 signals:
-
     /**
      * @brief trashFile 删除文件信号
      * @param filePath  删除文件路径
@@ -166,6 +164,26 @@ public slots:
      */
     void onPrint();
 
+    /**
+     * @brief showMenu 显示菜单
+     */
+    void showMenu();
+
+    /**
+     * @brief onOpenFolder 打开文件夹
+     */
+    void onOpenFolder();
+
+    /**
+    * @brief onCopy　右键菜单复制
+    */
+    void onCopy();
+
+    /**
+    * @brief onShortcutDel　delete按下
+    */
+    void onShortcutDel();
+
 protected:
     /**
      * @brief mouseDoubleClickEvent 鼠标双击事件
@@ -178,7 +196,7 @@ protected:
     void mousePressEvent(QMouseEvent *ev) override;
 
     /**
-     * @brief paintEvent 鼠标弹起事件
+     * @brief paintEvent 控件绘制事件
      */
     void paintEvent(QPaintEvent *event) override;
 
@@ -225,12 +243,12 @@ private:
     QPixmap         m_pixmap;//缩略图
     QString         m_pixmapstring;//缩略图路径
     QString         m_strDuratuion;//视频文件时长,形式为00：00：00
-    QMenu           *m_menu;//菜单
+    QMenu           *m_menu;//右键菜单
     QAction         *m_actCopy;//复制
     QAction         *m_actDel;//删除
     QAction         *m_actOpenFolder;//打开文件夹
     QAction         *m_actPrint;//打印
-
+    QDateTime       m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
 };
 
 #endif // IMAGEITEM_H

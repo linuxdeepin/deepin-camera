@@ -813,8 +813,10 @@ void CMainWindow::reflushMediaFileList()
     for (int i=0; i< videoPathList.size(); i++) {
         m_mapFile.insert(videoPathList[i].fileTime(QFileDevice::FileModificationTime), videoPathList[i].filePath());
     }
-
     reflushSnapshotLabel();
+
+//    if (!m_mapFile.empty())
+//        m_snapshotLabel->updatePicPath(m_mapFile.first());
 }
 
 void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileList)
@@ -828,7 +830,7 @@ void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileL
     filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
     dir.setNameFilters(filters);
     dir.setSorting(QDir::Time /*| QDir::Reversed*/);     //按时间逆序排序
-    if (dir.exists()){
+    if (dir.exists()) {
         fileList = dir.entryInfoList();
     }
 }
@@ -2314,8 +2316,7 @@ void CMainWindow::showRightButtons(bool bShow)
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchBtn,false);
-    }
-    else {
+    } else {
         showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
         showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
         showWidget(m_switchBtn,true);
@@ -2341,8 +2342,7 @@ void CMainWindow::reflushSnapshotLabel()
     m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
     if (false == m_mapFile.isEmpty()){
         m_snapshotLabel->updatePicPath(m_mapFile.last());
-    }
-    else {
+    } else {
         //set default image
     }
 }

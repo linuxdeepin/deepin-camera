@@ -37,6 +37,7 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
+#include <QShortcut>
 
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 
@@ -53,11 +54,12 @@ extern "C" {
 ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 {
     m_bVideo = false;
-    m_bMousePress = false;
     m_actPrint = nullptr;
 
     setScaledContents(false);
     setMargin(0);
+
+    initShortcut();
 
     m_menu = new QMenu(this);
 
@@ -76,17 +78,15 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
     m_actPrint = new QAction(this);
     m_actPrint->setText(tr("Print"));
     m_actPrint->setObjectName("PrinterAction");
-    connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
 
     m_menu->addAction(m_actCopy);
     m_menu->addAction(m_actDel);
-    m_menu->addAction(m_actPrint);
+    if (!m_bVideo)
+        m_menu->addAction(m_actPrint);
     m_menu->addAction(m_actOpenFolder);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
-    /**
-    *缩略图右键打开菜单栏
-    **/
+    //右键菜单
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
         if (m_bVideo){
@@ -100,55 +100,14 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
         DataManager::instance()->setShiftMulti(false);
         qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
-
-    /**
-     *右键菜单复制
-    **/
-    connect(m_actCopy, &QAction::triggered, this, [ = ] {
-        QStringList paths;
-        paths << m_path;
-        QClipboard *cb = qApp->clipboard();
-        QMimeData *newMimeData = new QMimeData();
-        QByteArray gnomeFormat = QByteArray("copy\n");
-        QString text;
-        QList<QUrl> dataUrls;
-
-        for (QString path : paths) {
-            if (!path.isEmpty())
-                text += path + '\n';
-            dataUrls << QUrl::fromLocalFile(path);
-            gnomeFormat.append(QUrl::fromLocalFile(path).toEncoded()).append("\n");
-        }
-
-        newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
-        newMimeData->setUrls(dataUrls);
-
-        gnomeFormat.remove(gnomeFormat.length() - 1, 1);
-        //本系统(UOS)特有
-        newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
-
-        cb->setMimeData(newMimeData, QClipboard::Clipboard);
-    });
-
-    /**
-     *右键菜单打开文件夹
-    **/
-    connect(m_actOpenFolder, &QAction::triggered, this, [ = ] {
-        if (!m_path.isEmpty()
-            && m_path == '~') {
-            //这里不能直接使用strFolder调replace函数
-            m_path.replace(0, 1, QDir::homePath());
-        }
-        Dtk::Widget::DDesktopServices::showFolder(m_path);
-        qDebug() << "Click the right mouse to open the folder";
-    });
-
-    /**
-     *右键菜单删除
-    **/
+    connect(m_actCopy, &QAction::triggered, this, &ImageItem::onCopy);
+    connect(m_actOpenFolder, &QAction::triggered, this, &ImageItem::onOpenFolder);
+    connect(m_actPrint, &QAction::triggered, this, &ImageItem::onPrint);
     connect(m_actDel, &QAction::triggered, this, [ = ] {
         emit trashFile(m_path);
     }, Qt::QueuedConnection);
+
+    m_lastDelTime = QDateTime::currentDateTime();
 }
 
 ImageItem::~ImageItem()
@@ -250,30 +209,30 @@ void ImageItem::updatePicPath(const QString &filePath)
 
 void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
-    if (!CamApp->isPanelEnvironment()) {
-        if (ev->button() == Qt::RightButton)
-            return;
+//    if (!CamApp->isPanelEnvironment()) {
+//        if (ev->button() == Qt::RightButton)
+//            return;
 
-        QFileInfo fileInfo(m_path);
-        QString program;
-        if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer"; //用看图打开
-            qDebug() << "Open it with deepin-image-viewer";
-        } else {
-            program = "deepin-movie"; //用影院打开
-            qDebug() << "Open it with deepin-movie";
-        }
+//        QFileInfo fileInfo(m_path);
+//        QString program;
+//        if (fileInfo.suffix() == "jpg") {
+//            program = "deepin-image-viewer"; //用看图打开
+//            qDebug() << "Open it with deepin-image-viewer";
+//        } else {
+//            program = "deepin-movie"; //用影院打开
+//            qDebug() << "Open it with deepin-movie";
+//        }
 
-        QStringList arguments;
-        //表示本地文件
-        arguments << QUrl::fromLocalFile(m_path).toString();
-        qInfo() << QUrl::fromLocalFile(m_path).toString();
-        QProcess *myProcess = new QProcess(this);
-        bool bOK = myProcess->startDetached(program, arguments);
+//        QStringList arguments;
+//        //表示本地文件
+//        arguments << QUrl::fromLocalFile(m_path).toString();
+//        qInfo() << QUrl::fromLocalFile(m_path).toString();
+//        QProcess *myProcess = new QProcess(this);
+//        bool bOK = myProcess->startDetached(program, arguments);
 
-        if (!bOK)
-            qWarning() << "QProcess startDetached error";
-    }
+//        if (!bOK)
+//            qWarning() << "QProcess startDetached error";
+//    }
 }
 
 void ImageItem::mousePressEvent(QMouseEvent *ev)
@@ -389,7 +348,6 @@ void ImageItem::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    QRect backgroundRect;
     QRect pixmapRect = rect();
     QRect foregroundRect;
     QFileInfo fileinfo(m_path);
@@ -519,30 +477,28 @@ void ImageItem::mouseMoveEvent(QMouseEvent *event)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (m_bMousePress == true) {
-        if (event->button() == Qt::LeftButton) {
-            QFileInfo fileInfo(m_path);
-            QString program;
-            if (fileInfo.suffix() == "jpg") {
-                program = "deepin-album"; //用相册打开
-                qDebug() << "Open it with deepin-image-viewer";
-            } else {
-                program = "deepin-movie"; //用影院打开
-                qDebug() << "Open it with deepin-movie";
-            }
+    if (event->button() == Qt::LeftButton) {
+        QFileInfo fileInfo(m_path);
+        QString program;
+        if (fileInfo.suffix() == "jpg") {
+            program = "deepin-image-viewer"; //用看图打开
+            qDebug() << "Open it with deepin-image-viewer";
+        } else {
+            program = "deepin-movie"; //用影院打开
+            qDebug() << "Open it with deepin-movie";
+        }
 
-            QStringList arguments;
-            //表示本地文件
-            arguments << QUrl::fromLocalFile(m_path).toString();
-            qInfo() << QUrl::fromLocalFile(m_path).toString();
-            QProcess *myProcess = new QProcess(this);
-            bool bOK = myProcess->startDetached(program, arguments);
+        QStringList arguments;
+        //表示本地文件
+        arguments << QUrl::fromLocalFile(m_path).toString();
+        qInfo() << QUrl::fromLocalFile(m_path).toString();
+        QProcess *myProcess = new QProcess(this);
+        bool bOK = myProcess->startDetached(program, arguments);
+        if (CamApp->isPanelEnvironment())
             CamApp->getMainWindow()->showMinimized();
 
-            if (!bOK)
-                qWarning() << "QProcess startDetached error";
-            m_bMousePress = false;
-        }
+        if (!bOK)
+            qWarning() << "QProcess startDetached error";
     }
 }
 
@@ -561,6 +517,83 @@ void ImageItem::showMenu()
 #endif
 }
 
+void ImageItem::onOpenFolder()
+{
+    if (!m_path.isEmpty() && m_path == '~') {
+        //这里不能直接使用strFolder调replace函数
+        m_path.replace(0, 1, QDir::homePath());
+    }
+    Dtk::Widget::DDesktopServices::showFolder(m_path);
+    qDebug() << "Click the right mouse or press the shortcut to open the folder";
+}
+
+void ImageItem::initShortcut()
+{
+    QShortcut *shortcutCopy = new QShortcut(QKeySequence("ctrl+c"), this);
+    shortcutCopy->setObjectName(SHORTCUT_COPY);
+    connect(shortcutCopy, SIGNAL(activated()), this, SLOT(onCopy()));
+    //也可以用Qt::Key_Delete
+    QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
+    shortcutDel->setObjectName(SHORTCUT_DELETE);
+    connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
+    //唤起右键菜单
+    QShortcut *shortcutMenu = new QShortcut(QKeySequence("Alt+M"), this);
+    shortcutMenu->setObjectName(SHORTCUT_CALLMENU);
+    connect(shortcutMenu, SIGNAL(activated()), this, SLOT(showMenu()));
+    //打开文件夹
+    QShortcut *shortcutOpenFolder = new QShortcut(QKeySequence("Ctrl+O"), this);
+    shortcutOpenFolder->setObjectName(SHORTCUT_OPENFOLDER);
+    connect(shortcutOpenFolder, &QShortcut::activated, this, &ImageItem::onOpenFolder);
+    //打印
+    QShortcut *shortcutPrint = new QShortcut(QKeySequence("Ctrl+P"), this);
+    shortcutPrint->setObjectName(SHORTCUT_PRINT);
+    connect(shortcutPrint, SIGNAL(activated()), this, SLOT(onPrint()));
+}
+
+void ImageItem::onCopy()
+{
+    QStringList paths;
+    paths << m_path;
+
+    QClipboard *cb = qApp->clipboard();
+    QMimeData *newMimeData = new QMimeData();
+    QByteArray gnomeFormat = QByteArray("copy\n");
+    QString text;
+    QList<QUrl> dataUrls;
+
+    for (QString path : paths) {
+        if (!path.isEmpty())
+            text += path + '\n';
+        dataUrls << QUrl::fromLocalFile(path);
+        gnomeFormat.append(QUrl::fromLocalFile(path).toEncoded()).append("\n");
+    }
+
+    newMimeData->setText(text.endsWith('\n') ? text.left(text.length() - 1) : text);
+    newMimeData->setUrls(dataUrls);
+
+    gnomeFormat.remove(gnomeFormat.length() - 1, 1);
+    //本系统(UOS)特有
+    newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
+
+    cb->setMimeData(newMimeData, QClipboard::Clipboard);
+}
+
+void ImageItem::onShortcutDel()
+{
+    qDebug() << "onShortcutDel";
+    //改用datetime，避免跨天之后判断错误
+    QDateTime timeNow = QDateTime::currentDateTime();
+
+    if (m_lastDelTime.msecsTo(timeNow) < 100) {
+        qDebug() << "del too fast";
+        qInfo() << timeNow;
+        qInfo() << m_lastDelTime;
+        return;
+    }
+
+    m_lastDelTime = timeNow;
+    emit trashFile(m_path);
+}
 
 void ImageItem::onPrint()
 {

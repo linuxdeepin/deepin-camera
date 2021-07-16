@@ -321,11 +321,9 @@ private:
 
 public:
     MajorImageProcessingThread *m_imgPrcThread;
+
 private:
-    /**
-     * @brief m_bActive //是否录制中
-     */
-    bool                       m_bActive;
+    bool                       m_bActive;           //是否录制中
     int                        m_nMaxContinuous;    //最大连拍数：0,4,10
     int                        m_curTakePicTime;    //当前连拍次数
     int                        m_Maxinterval;       //最大间隔
