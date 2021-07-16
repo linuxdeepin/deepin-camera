@@ -6,6 +6,8 @@ class TitlebarPrivate
 public:
     explicit TitlebarPrivate(Titlebar *parent) : q_ptr(parent) {}
 
+    QColor          lightColor                  = QColor(255, 255, 255, 204);
+    QColor          darkColor                   = QColor(98, 110, 136, 225);
     QColor          darkEffectColor             = QColor(30, 30, 30, 50);
     qreal           offsetX                     = 0;
     qreal           offsetY                     = 15;
@@ -42,6 +44,8 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
 //    d->m_shadowEffect->setBlurRadius(d->offsetY);
 //    d->m_shadowEffect->setColor(d->darkEffectColor);
 //    this->setGraphicsEffect(d->m_shadowEffect);
+
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
 }
 
 Titlebar::~Titlebar()
@@ -55,26 +59,44 @@ DTitlebar *Titlebar::titlebar()
     return d->m_titlebar;
 }
 
+void Titlebar::slotThemeTypeChanged()
+{
+    Q_D(const Titlebar);
+    QPalette pa;
+    if(DataManager::instance()->getdevStatus() != NOCAM) {
+        pa.setColor(QPalette::ButtonText, d->lightColor);
+        d->m_titlebar->setPalette(pa);
+    } else{
+        if(DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
+            pa.setColor(QPalette::ButtonText, d->lightColor);
+            d->m_titlebar->setPalette(pa);
+        } else {
+            pa.setColor(QPalette::ButtonText, d->darkColor);
+            d->m_titlebar->setPalette(pa);
+        }
+    }
+}
+
 void Titlebar::paintEvent(QPaintEvent *pe)
 {
     Q_D(const Titlebar);
 
     if(DataManager::instance()->getdevStatus() != NOCAM) {
         QPainter painter(this);
-//        QPalette palette = this->palette();
+        QPalette pa;
         QPen pen(QColor(0, 0, 0, 0));
         QLinearGradient linearGradient(width(), 0, width(), height());
 
         linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
         linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
+        pa.setColor(QPalette::ButtonText, d->lightColor);
+        d->m_titlebar->setPalette(pa);
+
         painter.setRenderHint(QPainter::Antialiasing, true);
         painter.setBrush(QBrush(linearGradient));
         painter.setPen(pen);
         painter.drawRect(rect());
-
-//        palette.setColor(QPalette::Background, QColor(0, 0, 0, 0));
-//        this->setPalette(palette);
     } else {
         DBlurEffectWidget::paintEvent(pe);
     }
