@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9bbd267_aafec06e",
+        "filename": "src/src/titlebar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-16T01:51:06Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 23; 注释率: 0.0%",
+      "revId": "ce7b1b30bead995e840a8b1d6c8ab407482e3c13",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e63e359e_980e06ce",
+        "filename": "src/src/titlebar.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-16T01:51:06Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 5; 注释率: 60.0%",
+      "revId": "ce7b1b30bead995e840a8b1d6c8ab407482e3c13",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
