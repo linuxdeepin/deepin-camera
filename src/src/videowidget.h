@@ -37,7 +37,6 @@
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
-#include "thumbnailsbar.h"
 #include "previewopenglwidget.h"
 
 DWIDGET_USE_NAMESPACE
@@ -201,12 +200,6 @@ public:
         m_nMaxContinuous = m_curTakePicTime = nContinuous;
     }
 
-//    /**
-//    * @brief setthumbnail　设置缩略图
-//    * @param thumb
-//    */
-//    void setThumbnail(ThumbnailsBar *thumb);
-
     /**
     * @brief delayInit　延迟加载
     */
@@ -346,9 +339,9 @@ private:
 
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时
-    DBlurEffectWidget          *m_recordingTimeWidget;//录制时长窗口
+    DLabel                     *m_recordingTimeWidget;//录制时长窗口
     DLabel                     *m_recordingTime;    //录制时长
-    DPushButton                *m_endBtn;           //结束按钮
+    //DPushButton                *m_endBtn;           //结束按钮
     DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
     QSound                     *m_takePicSound;     //拍照声音

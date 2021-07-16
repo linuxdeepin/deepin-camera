@@ -729,7 +729,12 @@ void CMainWindow::setWayland(bool bTrue)
     m_bWayland = bTrue;
 }
 
-CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
+CMainWindow::CMainWindow(QWidget *parent)
+    : DMainWindow(parent),
+      m_bInPhotoState(true),
+      m_bPhotoing(false),
+      m_bRecording(false),
+      m_bSwitchCameraShowEnable(false)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
@@ -810,7 +815,8 @@ void CMainWindow::reflushMediaFileList()
     for (int i=0; i< videoPathList.size(); i++) {
         m_mapFile.insert(videoPathList[i].fileTime(QFileDevice::FileModificationTime), videoPathList[i].filePath());
     }
-    m_snapshotLabel->updatePicPath(m_mapFile.first());
+
+    reflushSnapshotLabel();
 }
 
 void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileList)
@@ -1326,6 +1332,7 @@ void CMainWindow::onNoCam()
 {
     onEnableTitleBar(3); //恢复按钮状态
     onEnableTitleBar(4); //恢复按钮状态
+    showRightButtons(true);
     onEnableSettings(true);
 }
 
@@ -1344,65 +1351,68 @@ void CMainWindow::stopCancelContinuousRecording(bool bTrue)
     }
 }
 
-void CMainWindow::onDirectoryChanged(const QString &)
+void CMainWindow::onDirectoryChanged(const QString &filePath)
 {
-    QDir dirChangePic(m_picPath);
-    QDir dirChangeVd(m_videoPath);
-    bool bPic = dirChangePic.exists();
-    bool bVd = dirChangeVd.exists();
-    if (bPic && bVd) {
-        return;
-    } else {
-        if (!bVd) {
-            //录制状态下文件夹不存在需要停止录制
-            DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-            if (tabkevdent->isVisible()) {
-                tabkevdent->click();
-            }
-            m_videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-            QDir dirDefaultVd(m_videoPath);
-            if (!dirDefaultVd.exists()) {
-                bool bMakeDir = dirDefaultVd.mkdir(m_videoPath);
-                if (!bMakeDir) {
-                    qWarning() << "make dir error:" << m_videoPath;
-                }
-            }
-            m_videoPre->setSaveVdFolder(m_videoPath);
-            Settings::get().settings()->setOption("base.save.vddatapath", m_videoPath);
-        }
+    reflushMediaFileList();
 
-        if (!bPic) {
-            //连拍状态下文件夹不存在需要关掉连拍
-//            if (m_thumbnail->m_nStatus == STATPicIng)
-//                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-            m_picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-            QDir dirDefaultPic(m_picPath);
-            if (!dirDefaultPic.exists()) {
-                bool bMakeDir = dirDefaultPic.mkdir(m_picPath);
-                if (!bMakeDir) {
-                    qWarning() << "make dir error:" << m_picPath;
-                }
-            }
-            m_videoPre->setSavePicFolder(m_picPath);
-            Settings::get().settings()->setOption("base.save.picdatapath", m_picPath);
-        }
-        //更新文件夹监控
-        QDir dirVd(m_videoPath);
-        dirVd.cdUp();
-        QDir dirPic(m_picPath);
-        dirPic.cdUp();
-        QString strVd = dirVd.path();
-        m_fileWatcher.removePaths(m_fileWatcher.directories());
-        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
-        m_fileWatcher.addPath(m_videoPath);
-        m_fileWatcher.addPath(m_picPath);
-        QString strPic = dirPic.path();
-        m_fileWatcherUp.addPath(strVd);
-        if (strVd.compare(strPic) != 0) {
-            m_fileWatcherUp.addPath(strPic);
-        }
-        //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
-    }
+//    qDebug() << filePath <<endl;
+//    QDir dirChangePic(m_picPath);
+//    QDir dirChangeVd(m_videoPath);
+//    bool bPic = dirChangePic.exists();
+//    bool bVd = dirChangeVd.exists();
+//    if (bPic && bVd) {
+//        return;
+//    } else {
+//        if (!bVd) {
+//            //录制状态下文件夹不存在需要停止录制
+//            DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+//            if (tabkevdent->isVisible()) {
+//                tabkevdent->click();
+//            }
+//            m_videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+//            QDir dirDefaultVd(m_videoPath);
+//            if (!dirDefaultVd.exists()) {
+//                bool bMakeDir = dirDefaultVd.mkdir(m_videoPath);
+//                if (!bMakeDir) {
+//                    qWarning() << "make dir error:" << m_videoPath;
+//                }
+//            }
+//            m_videoPre->setSaveVdFolder(m_videoPath);
+//            Settings::get().settings()->setOption("base.save.vddatapath", m_videoPath);
+//        }
+
+//        if (!bPic) {
+//            //连拍状态下文件夹不存在需要关掉连拍
+////            if (m_thumbnail->m_nStatus == STATPicIng)
+////                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
+//            m_picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+//            QDir dirDefaultPic(m_picPath);
+//            if (!dirDefaultPic.exists()) {
+//                bool bMakeDir = dirDefaultPic.mkdir(m_picPath);
+//                if (!bMakeDir) {
+//                    qWarning() << "make dir error:" << m_picPath;
+//                }
+//            }
+//            m_videoPre->setSavePicFolder(m_picPath);
+//            Settings::get().settings()->setOption("base.save.picdatapath", m_picPath);
+//        }
+//        //更新文件夹监控
+//        QDir dirVd(m_videoPath);
+//        dirVd.cdUp();
+//        QDir dirPic(m_picPath);
+//        dirPic.cdUp();
+//        QString strVd = dirVd.path();
+//        m_fileWatcher.removePaths(m_fileWatcher.directories());
+//        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
+//        m_fileWatcher.addPath(m_videoPath);
+//        m_fileWatcher.addPath(m_picPath);
+//        QString strPic = dirPic.path();
+//        m_fileWatcherUp.addPath(strVd);
+//        if (strVd.compare(strPic) != 0) {
+//            m_fileWatcherUp.addPath(strPic);
+//        }
+//        //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
+//    }
 }
 
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
@@ -1446,10 +1456,62 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 
 void CMainWindow::onToolbarShow(bool bShow)
 {
-    showWidget(m_cameraSwitchBtn,bShow);
-    showWidget(m_photoRecordBtn, bShow);
-    showWidget(m_switchBtn,bShow);
-    showWidget(m_snapshotLabel, bShow);
+    showRightButtons(bShow);
+}
+
+void CMainWindow::onTrashFile(const QString &fileName)
+{
+    QFile file(fileName);
+    if (!file.exists()){
+        return;
+    }
+    QStringList tmpList = m_mapFile.values(file.fileTime(QFileDevice::FileModificationTime));
+    QPair<QMultiMap<QDateTime, QString>::iterator,QMultiMap<QDateTime, QString>::iterator>ps;
+    ps = m_mapFile.equal_range(file.fileTime(QFileDevice::FileModificationTime));
+
+    QMultiMap<QDateTime, QString>::iterator it = ps.first;
+    while (it != ps.second){
+        if (fileName == it.value()){
+            m_mapFile.erase(it);
+            file.remove();
+            break;
+        }
+        it++;
+    }
+
+    reflushSnapshotLabel();
+}
+
+void CMainWindow::onSwitchBtnClked()
+{
+    if (tr("Record") == m_switchBtn->text()){
+        m_switchBtn->setText(tr("Photo"));
+        m_bInPhotoState = false;
+    }
+    else{
+        m_switchBtn->setText(tr("Record"));
+        m_bInPhotoState = true;
+    }
+}
+
+void CMainWindow::onPhotoRecordBtnClked()
+{
+    //拍照模式下
+    if (true == m_bInPhotoState){
+        //正在拍照
+        if (true == m_bPhotoing){
+            m_videoPre->onTakePic(false);
+            m_bPhotoing = false;
+        }
+        else{
+            m_videoPre->onTakePic(true);
+            m_bPhotoing = true;
+        }
+    }
+    else{  //录像模式下
+        m_bRecording = true;
+        m_videoPre->onTakeVideo();
+    }
 }
 
 void CMainWindow::initUI()
@@ -1719,8 +1781,8 @@ void CMainWindow::initRightButtons()
     m_snapshotLabel->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 25px;");
 
     m_switchBtn->setText(tr("Record"));
-    m_cameraSwitchBtn->setText(tr("camera"));
-    m_photoRecordBtn->setText(tr("snap"));
+    m_cameraSwitchBtn->setText(tr("switch"));
+    m_photoRecordBtn->setText(tr("photo"));
 
     m_cameraSwitchBtn->setVisible(true);
     m_photoRecordBtn->setVisible(true);
@@ -1728,14 +1790,26 @@ void CMainWindow::initRightButtons()
     m_snapshotLabel->setVisible(true);
 
 
-    m_cameraSwitchBtn->show();
-    m_photoRecordBtn->show();
-    m_switchBtn->show();
-    m_snapshotLabel->show();
+//    m_cameraSwitchBtn->hide();
+//    m_photoRecordBtn->show();
+//    m_switchBtn->show();
+//    m_snapshotLabel->hide();
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
-    locateRightButtons();
+    connect(m_switchBtn, SIGNAL(clicked()), this, SLOT(onSwitchBtnClked()));
+    connect(m_photoRecordBtn, SIGNAL(clicked()), this, SLOT(onPhotoRecordBtnClked()));
+    connect(m_snapshotLabel,SIGNAL(trashFile(const QString&)), SLOT(onTrashFile(const QString&)));
 
+    //系统文件夹变化信号
+    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    //系统文件变化信号
+    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    //系统文件夹变化信号
+    connect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    //系统文件夹变化信号
+    connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    locateRightButtons();
+    showRightButtons(true);
 }
 
 void CMainWindow::locateRightButtons()
@@ -1771,8 +1845,10 @@ void CMainWindow::locateRightButtons()
 
 void CMainWindow::setSelBtnHide()
 {
-//    m_pSelectBtn->hide();
-    qDebug() << "Hide camera selection button";
+    m_bSwitchCameraShowEnable = false;
+    if (!m_cameraSwitchBtn->isHidden()){
+        showRightButtons(true);
+    }
 }
 
 void CMainWindow::onLocalTimeChanged()
@@ -1782,8 +1858,10 @@ void CMainWindow::onLocalTimeChanged()
 
 void CMainWindow::setSelBtnShow()
 {
-//    m_pSelectBtn->show();
-    qDebug() << "Show camera selection button";
+    m_bSwitchCameraShowEnable = true;
+    if (m_cameraSwitchBtn->isHidden()){
+        showRightButtons(true);
+    }
 }
 
 void CMainWindow::setupTitlebar()
@@ -2066,48 +2144,53 @@ void CMainWindow::onSettingsDlgClose()
 //    if (m_picPath.size() && m_picPath[0] == '~')
 //        m_picPath.replace(0, 1, QDir::homePath());
 
+    bool bPathChanged = false;
     QString setVideoPath = lastOpenedPath(QStandardPaths::MoviesLocation);
     QString setPicPath  = lastOpenedPath(QStandardPaths::PicturesLocation);
-    /***next，发现这个路径已经不存在了，需要设置后台路径为默认，其他地方方法同***/
+
+    //判断图片路径是否改变
     if (m_picPath != setPicPath){  //图片路径修改了
+        QDir setPicDir(setPicPath);
+        QDir lastPicDir(m_picPath);
+        setPicDir.cdUp();
+        lastPicDir.cdUp();
         m_videoPre->setSavePicFolder(setPicPath);
         m_fileWatcher.removePath(m_picPath);
-        m_fileWatcher.addPath(setPicPath);
-        m_fileWatcherUp.removePath(m_picPath);
-        m_fileWatcherUp.addPath(setPicPath);
+        if (false == m_fileWatcher.directories().contains(setPicPath)){
+            m_fileWatcher.addPath(setPicPath);
+        }
+
+        if (setPicDir.path() != lastPicDir.path()){
+            m_fileWatcherUp.removePath(lastPicDir.path());
+            if (false == m_fileWatcherUp.directories().contains(setPicDir.path())){
+                m_fileWatcherUp.addPath(setPicDir.path());
+            }
+        }
         m_picPath = setPicPath;
+        bPathChanged = true;
     }
 
-
-    m_videoPre->setSaveVdFolder(m_videoPath);
-
-    //关闭设置时，先删除原有的文件监控（需求上不再需要），再添加保存路径下图片和视频的缩略图
-    bool bContainVd = m_fileWatcher.directories().contains(m_videoPath);
-    bool bContainPic = m_fileWatcher.directories().contains(m_picPath);
-    QDir dirVd(m_videoPath);
-    dirVd.cdUp();
-    QDir dirPic(m_picPath);
-    dirPic.cdUp();
-    QString strVd = dirVd.path();
-    if (!bContainVd || !bContainPic) {
-        m_fileWatcher.removePaths(m_fileWatcher.directories());
-        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
-        m_fileWatcher.addPath(m_videoPath);
-        m_fileWatcher.addPath(m_picPath);
-
-        QString strPic = dirPic.path();
-        m_fileWatcherUp.addPath(strVd);
-        if (strVd.compare(strPic) != 0) {
-            m_fileWatcherUp.addPath(strPic);
+    if (m_videoPath != setVideoPath){
+        QDir setVideoDir(setVideoPath);
+        QDir lastVideoDir(m_videoPath);
+        setVideoDir.cdUp();
+        lastVideoDir.cdUp();
+        m_videoPre->setSaveVdFolder(setVideoPath);
+        m_fileWatcher.removePath(m_videoPath);
+        if (false == m_fileWatcher.directories().contains(setVideoPath)){
+            m_fileWatcher.addPath(setVideoPath);
         }
-    } else {
-        if (QString::compare(m_videoPath, m_picPath) == 0) {
-            m_fileWatcher.removePaths(m_fileWatcher.directories());
-            m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
-            m_fileWatcher.addPath(m_videoPath);
-            m_fileWatcherUp.addPath(strVd);
+
+        if (setVideoDir.path() != lastVideoDir.path()){
+            m_fileWatcherUp.removePath(lastVideoDir.path());
+            if (false == m_fileWatcherUp.directories().contains(setVideoDir.path())){
+                m_fileWatcherUp.addPath(setVideoDir.path());
+            }
         }
+        m_videoPath = setVideoPath;
+        bPathChanged = true;
     }
+
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -2146,6 +2229,10 @@ void CMainWindow::onSettingsDlgClose()
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     Settings::get().settings()->sync();
+
+    if (bPathChanged){
+        reflushMediaFileList();
+    }
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
@@ -2155,8 +2242,9 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
-    qDebug() << "onTakePicDone";
+    m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
+    showRightButtons(true);
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
 }
@@ -2168,18 +2256,22 @@ void CMainWindow::onTakePicOnce()
 
 void CMainWindow::onTakePicCancel()
 {
+    m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
+    showRightButtons(true);
     onEnableSettings(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     //m_thumbnail->m_nStatus = STATNULL;
+
     qDebug() << "Cancel taking photo!";
 }
 
 void CMainWindow::onTakeVdDone()
 {
+    m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
-    //m_thumbnail->m_nStatus = STATNULL;
+    showRightButtons(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
@@ -2193,12 +2285,14 @@ void CMainWindow::onTakeVdDone()
 
     });
     qDebug() << "Taking video completed!";
-
+    reflushMediaFileList();
 }
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
+    m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
+    showRightButtons(true);
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2307,6 +2401,28 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     return QWidget::eventFilter(obj, e);
 }
 
+void CMainWindow::showRightButtons(bool bShow)
+{
+    if (!bShow){
+        showWidget(m_cameraSwitchBtn,false);
+        showWidget(m_snapshotLabel,false);
+        showWidget(m_switchBtn,false);
+        showWidget(m_photoRecordBtn,false);
+        return;
+    }
+    if (m_bRecording){  //正在录像
+        showWidget(m_cameraSwitchBtn,false);
+        showWidget(m_snapshotLabel,false);
+        showWidget(m_switchBtn,false);
+    }
+    else {
+        showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
+        showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
+        showWidget(m_switchBtn,true);
+    }
+    showWidget(m_photoRecordBtn, true);
+}
+
 void CMainWindow::showWidget(DWidget* widget, bool bShow)
 {
     if (widget){
@@ -2314,10 +2430,20 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
             widget->hide();
         }
 
-        if (widget->isVisible()
-           && bShow) {
+        if (bShow) {
             widget->show();
         }
+    }
+}
+
+void CMainWindow::reflushSnapshotLabel()
+{
+    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
+    if (false == m_mapFile.isEmpty()){
+        m_snapshotLabel->updatePicPath(m_mapFile.last());
+    }
+    else {
+        //set default image
     }
 }
 
