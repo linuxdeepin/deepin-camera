@@ -55,6 +55,8 @@ DWIDGET_USE_NAMESPACE
 
 class ImageItem;
 class QGridLayout;
+class takePhotoSettingAreaWidget;
+
 const int TOP_TOOLBAR_HEIGHT = 50;
 
 //应用层界面通信站，与底层通信通过proxy代理类
@@ -414,6 +416,7 @@ private:
     QString                         m_videoPath;            //配置的视频路径
     QString                         m_picPath;              //配置图片路径
     QMultiMap<QDateTime, QString>   m_mapFile;              //缩略图图像 时间排序
+    takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
 };
 
 #endif // MAINWINDOW_H
