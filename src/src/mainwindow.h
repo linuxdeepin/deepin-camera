@@ -55,7 +55,10 @@ DWIDGET_USE_NAMESPACE
 
 class ImageItem;
 class QGridLayout;
+class button;
+class photoRecordBtn;
 const int TOP_TOOLBAR_HEIGHT = 50;
+
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -353,7 +356,7 @@ private:
     /**
      * @brief showRightButtons 显示右侧控件
      */
-    void showRightButtons(bool bShow);
+    void showRightButtons();
 
     /**
      * @brief showWidget 显示/隐藏控件
@@ -402,8 +405,8 @@ private:
     Titlebar                        *m_pTitlebar;           //标题栏
 
     //右侧按钮
-    DPushButton                     *m_cameraSwitchBtn;     //摄像头切换按钮
-    DPushButton                     *m_photoRecordBtn;      //拍照，录像按钮
+    button                          *m_cameraSwitchBtn;     //摄像头切换按钮
+    photoRecordBtn                  *m_photoRecordBtn;      //拍照，录像按钮
     DPushButton                     *m_switchBtn;           //活动按钮
     ImageItem                       *m_snapshotLabel;       //缩略图
 

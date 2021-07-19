@@ -26,6 +26,7 @@
 #include "shortcut.h"
 #include "ac-deepin-camera-define.h"
 #include "imageitem.h"
+#include "button.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -1332,7 +1333,7 @@ void CMainWindow::onNoCam()
 {
     onEnableTitleBar(3); //恢复按钮状态
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
+    showRightButtons();
     onEnableSettings(true);
 }
 
@@ -1456,7 +1457,8 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 
 void CMainWindow::onToolbarShow(bool bShow)
 {
-    showRightButtons(bShow);
+    Q_UNUSED(bShow);
+    showRightButtons();
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
@@ -1509,8 +1511,13 @@ void CMainWindow::onPhotoRecordBtnClked()
         }
     }
     else{  //录像模式下
-        m_bRecording = true;
-        m_videoPre->onTakeVideo();
+        if (true == m_bRecording){
+            m_videoPre->onEndBtnClicked();
+        }
+        else{
+            m_bRecording = true;
+            m_videoPre->onTakeVideo();
+        }
     }
 }
 
@@ -1665,8 +1672,8 @@ void CMainWindow::initConnection()
 
 void CMainWindow::initRightButtons()
 {
-    m_cameraSwitchBtn = new DPushButton(this);
-    m_photoRecordBtn = new DPushButton(this);
+    m_cameraSwitchBtn = new button(this);
+    m_photoRecordBtn = new photoRecordBtn(this);
     m_switchBtn = new DPushButton(this);
     m_snapshotLabel = new ImageItem(this);
 
@@ -1683,8 +1690,9 @@ void CMainWindow::initRightButtons()
 //    m_snapshotLabel->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 25px;");
 
     m_switchBtn->setText(tr("Record"));
-    m_cameraSwitchBtn->setText(tr("switch"));
-    m_photoRecordBtn->setText(tr("photo"));
+    m_cameraSwitchBtn->setbackground(QColor(0,0,0,40));
+    m_cameraSwitchBtn->setPixmap(":/images/icons/light/switch_camera.svg",":/images/icons/light/switch_camera.svg", ":/images/icons/light/switch_camera_press.svg");
+    //m_photoRecordBtn->setText(tr("photo"));
 
 //    m_cameraSwitchBtn->setVisible(true);
 //    m_photoRecordBtn->setVisible(true);
@@ -1696,6 +1704,8 @@ void CMainWindow::initRightButtons()
 //    m_photoRecordBtn->show();
 //    m_switchBtn->show();
 //    m_snapshotLabel->hide();
+    m_photoRecordBtn->setState(false);
+    m_photoRecordBtn->setRecordState(photoRecordBtn::preRecord);
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     connect(m_switchBtn, SIGNAL(clicked()), this, SLOT(onSwitchBtnClked()));
@@ -1711,7 +1721,7 @@ void CMainWindow::initRightButtons()
     //系统文件夹变化信号
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     locateRightButtons();
-    showRightButtons(true);
+    showRightButtons();
 }
 
 void CMainWindow::locateRightButtons()
@@ -1749,7 +1759,7 @@ void CMainWindow::setSelBtnHide()
 {
     m_bSwitchCameraShowEnable = false;
     if (!m_cameraSwitchBtn->isHidden()){
-        showRightButtons(true);
+        showRightButtons();
     }
 }
 
@@ -1762,7 +1772,7 @@ void CMainWindow::setSelBtnShow()
 {
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()){
-        showRightButtons(true);
+        showRightButtons();
     }
 }
 
@@ -2146,7 +2156,6 @@ void CMainWindow::onTakePicDone()
 {
     m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
-    showRightButtons(true);
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
 }
@@ -2160,7 +2169,6 @@ void CMainWindow::onTakePicCancel()
 {
     m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
-    showRightButtons(true);
     onEnableSettings(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2173,7 +2181,6 @@ void CMainWindow::onTakeVdDone()
 {
     m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
@@ -2194,7 +2201,6 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
 {
     m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2303,24 +2309,34 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     return QWidget::eventFilter(obj, e);
 }
 
-void CMainWindow::showRightButtons(bool bShow)
+/*
+ * 右侧按钮显示状态
+ * 1、正在拍照，闪光灯，全部不显示
+ * 2、正在录像，只显示拍照按钮
+ * 3、无摄像头或者只有一个摄像头不显示切换摄像机状态
+ * 4、没有图片，不显示缩略图label
+*/
+
+
+void CMainWindow::showRightButtons()
 {
-    if (!bShow){
+    if (m_bPhotoing) {
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchBtn,false);
         showWidget(m_photoRecordBtn,false);
         return;
     }
-    if (m_bRecording){  //正在录像
+    if (m_bRecording) {  //正在录像
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchBtn,false);
-    } else {
-        showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
-        showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
-        showWidget(m_switchBtn,true);
+        showWidget(m_photoRecordBtn, true);
+        return;
     }
+    showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
+    showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
+    showWidget(m_switchBtn,true);
     showWidget(m_photoRecordBtn, true);
 }
 
@@ -2339,12 +2355,12 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
 
 void CMainWindow::reflushSnapshotLabel()
 {
-    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
     if (false == m_mapFile.isEmpty()){
         m_snapshotLabel->updatePicPath(m_mapFile.last());
     } else {
         //set default image
     }
+    showRightButtons();
 }
 
 void CMainWindow::SettingPathsave()
