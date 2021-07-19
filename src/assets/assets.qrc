@@ -33,6 +33,25 @@
         <file>images/icons/light/switch_camera_press.svg</file>
         <file>images/icons/light/switch_camera.svg</file>
         <file>images/icons/light/circular.svg</file>
+        <file>images/camera/close-flashlight-hover.svg</file>
+        <file>images/camera/close-flashlight-press.svg</file>
+        <file>images/camera/close-flashlight.svg</file>
+        <file>images/camera/delay-3s-press.svg</file>
+        <file>images/camera/delay-6S-hover.svg</file>
+        <file>images/camera/delay-6S-press.svg</file>
+        <file>images/camera/delay-hover.svg</file>
+        <file>images/camera/delay-press.svg</file>
+        <file>images/camera/delay.svg</file>
+        <file>images/camera/delay3s.svg</file>
+        <file>images/camera/delay6S.svg</file>
+        <file>images/camera/flashlight-press.svg</file>
+        <file>images/camera/flashlight.svg</file>
+        <file>images/camera/flashlight-hover.svg</file>
+        <file>images/camera/fold-press.svg</file>
+        <file>images/camera/fold.svg</file>
+        <file>images/camera/dalay-3s-hover.svg</file>
+        <file>images/camera/switch_camera-press.svg</file>
+        <file>images/camera/switch_camera.svg</file>
     </qresource>
     <qresource prefix="/icons/deepin/builtin">
         <file>texts/panel_switch_camera_20px.svg</file>
