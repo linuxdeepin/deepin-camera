@@ -28,6 +28,7 @@
 #include "camview.h"
 #include "Settings.h"
 #include "titlebar.h"
+#include "takephotosettingareawidget.h"
 
 #include <DMainWindow>
 #include <DTitlebar>
@@ -414,6 +415,7 @@ private:
     QString                         m_videoPath;            //配置的视频路径
     QString                         m_picPath;              //配置图片路径
     QMultiMap<QDateTime, QString>   m_mapFile;              //缩略图图像 时间排序
+    takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
 };
 
 #endif // MAINWINDOW_H
