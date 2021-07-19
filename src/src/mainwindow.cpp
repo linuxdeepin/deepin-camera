@@ -26,6 +26,7 @@
 #include "shortcut.h"
 #include "ac-deepin-camera-define.h"
 #include "imageitem.h"
+#include "takephotosettingareawidget.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -1524,6 +1525,10 @@ void CMainWindow::initUI()
     paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
 
+    m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
+    m_takePhotoSettingArea->init();
+    m_takePhotoSettingArea->move(20, height() / 2 - m_takePhotoSettingArea->height() / 2);
+    m_takePhotoSettingArea->setVisible(true);
     m_videoPath = lastOpenedPath(QStandardPaths::MoviesLocation);//如果路径不存在会自动使用并创建默认路径
     m_picPath = lastOpenedPath(QStandardPaths::PicturesLocation);
 
