@@ -28,6 +28,7 @@
 #include "camview.h"
 #include "Settings.h"
 #include "titlebar.h"
+#include "takephotosettingareawidget.h"
 
 #include <DMainWindow>
 #include <DTitlebar>
