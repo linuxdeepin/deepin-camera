@@ -27,6 +27,8 @@
 #include "ac-deepin-camera-define.h"
 #include "imageitem.h"
 #include "takephotosettingareawidget.h"
+#include "photorecordbtn.h"
+#include "switchcamerabtn.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -730,14 +732,14 @@ void CMainWindow::setWayland(bool bTrue)
 
 CMainWindow::CMainWindow(QWidget *parent)
     : DMainWindow(parent),
-      m_bInPhotoState(true),
       m_bPhotoing(false),
       m_bRecording(false),
       m_bSwitchCameraShowEnable(false)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
-    m_switchBtn = nullptr;
+    m_switchPhotoBtn = nullptr;
+    m_switchRecordBtn = nullptr;
     m_snapshotLabel = nullptr;
     m_SetDialog = nullptr;
     //m_thumbnail = nullptr;
@@ -1332,7 +1334,7 @@ void CMainWindow::onNoCam()
 {
     onEnableTitleBar(3); //恢复按钮状态
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
+    showRightButtons();
     onEnableSettings(true);
 }
 
@@ -1456,7 +1458,8 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 
 void CMainWindow::onToolbarShow(bool bShow)
 {
-    showRightButtons(bShow);
+    Q_UNUSED(bShow);
+    showRightButtons();
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
@@ -1482,22 +1485,30 @@ void CMainWindow::onTrashFile(const QString &fileName)
     reflushSnapshotLabel();
 }
 
-void CMainWindow::onSwitchBtnClked()
+void CMainWindow::onSwitchPhotoBtnClked()
 {
-    if (tr("Record") == m_switchBtn->text()){
-        m_switchBtn->setText(tr("Photo"));
-        m_bInPhotoState = false;
-    }
-    else{
-        m_switchBtn->setText(tr("Record"));
-        m_bInPhotoState = true;
-    }
+    m_photoRecordBtn->setState(true);
+    m_switchRecordBtn->setEnabled(true);
+    m_switchPhotoBtn->setEnabled(false);
+    m_switchPhotoBtn->setFlat(false);
+    m_switchRecordBtn->setFlat(true);
+    locateRightButtons();
+}
+
+void CMainWindow::onSwitchRecordBtnClked()
+{
+    m_photoRecordBtn->setState(false);
+    m_switchRecordBtn->setEnabled(false);
+    m_switchPhotoBtn->setEnabled(true);
+    m_switchPhotoBtn->setFlat(true);
+    m_switchRecordBtn->setFlat(false);
+    locateRightButtons();
 }
 
 void CMainWindow::onPhotoRecordBtnClked()
 {
     //拍照模式下
-    if (true == m_bInPhotoState){
+    if (true == m_photoRecordBtn->photoState()){
         //正在拍照
         if (true == m_bPhotoing){
             m_videoPre->onTakePic(false);
@@ -1509,8 +1520,15 @@ void CMainWindow::onPhotoRecordBtnClked()
         }
     }
     else{  //录像模式下
-        m_bRecording = true;
-        m_videoPre->onTakeVideo();
+        if (true == m_bRecording){
+            m_videoPre->onEndBtnClicked();
+            m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
+        }
+        else{
+            m_bRecording = true;
+            m_videoPre->onTakeVideo();
+            m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
+        }
     }
 }
 
@@ -1678,26 +1696,17 @@ void CMainWindow::initConnection()
 
 void CMainWindow::initRightButtons()
 {
-    m_cameraSwitchBtn = new DPushButton(this);
-    m_photoRecordBtn = new DPushButton(this);
-    m_switchBtn = new DPushButton(this);
+    m_cameraSwitchBtn = new SwitchCameraBtn(this);
+    m_photoRecordBtn = new photoRecordBtn(this);
+    m_switchPhotoBtn = new DPushButton(this);
+    m_switchRecordBtn = new DPushButton(this);
     m_snapshotLabel = new ImageItem(this);
 
     m_cameraSwitchBtn->setFixedSize(SwitchcameraDiam,SwitchcameraDiam);
     m_photoRecordBtn->setFixedSize(photeRecordDiam,photeRecordDiam);
-    m_switchBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
+    m_switchPhotoBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
+    m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
-
-    QString cameraSwitchBtnStyle = "background: rgba(0,0,0,0.40); border-radius: 19px;";
-    QString photoRecordBtnStyle = "background: rgba(0,0,0,0.40); border-radius: 32px;";
-    m_cameraSwitchBtn->setStyleSheet(cameraSwitchBtnStyle);
-    m_photoRecordBtn->setStyleSheet(photoRecordBtnStyle);
-    m_switchBtn->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 13px;");
-//    m_snapshotLabel->setStyleSheet("background: rgba(0,0,0,0.40); border-radius: 25px;");
-
-    m_switchBtn->setText(tr("Record"));
-    m_cameraSwitchBtn->setText(tr("switch"));
-    m_photoRecordBtn->setText(tr("photo"));
 
     m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
@@ -1705,19 +1714,16 @@ void CMainWindow::initRightButtons()
     m_cameraSwitchBtn->setObjectName(BUTTOM_TITLE_SELECT);
     m_cameraSwitchBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
 
-//    m_cameraSwitchBtn->setVisible(true);
-//    m_photoRecordBtn->setVisible(true);
-//    m_switchBtn->setVisible(true);
-//    m_snapshotLabel->setVisible(true);
+    m_switchPhotoBtn->setText(tr("photo"));
+    m_switchRecordBtn->setText(tr("record"));
+    m_switchRecordBtn->setEnabled(true);
+    m_switchPhotoBtn->setEnabled(false);
+    m_switchRecordBtn->setFlat(true);
 
-
-//    m_cameraSwitchBtn->hide();
-//    m_photoRecordBtn->show();
-//    m_switchBtn->show();
-//    m_snapshotLabel->hide();
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
-    connect(m_switchBtn, SIGNAL(clicked()), this, SLOT(onSwitchBtnClked()));
+    connect(m_switchPhotoBtn, SIGNAL(clicked()), this, SLOT(onSwitchPhotoBtnClked()));
+    connect(m_switchRecordBtn, SIGNAL(clicked()), this, SLOT(onSwitchRecordBtnClked()));
     connect(m_photoRecordBtn, SIGNAL(clicked()), this, SLOT(onPhotoRecordBtnClked()));
     connect(m_snapshotLabel,SIGNAL(trashFile(const QString&)), SLOT(onTrashFile(const QString&)));
 
@@ -1730,7 +1736,7 @@ void CMainWindow::initRightButtons()
     //系统文件夹变化信号
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     locateRightButtons();
-    showRightButtons(true);
+    showRightButtons();
 }
 
 void CMainWindow::locateRightButtons()
@@ -1742,25 +1748,31 @@ void CMainWindow::locateRightButtons()
     int buttonCenterY = height()/2;
     int photoRecordLeftX = buttonCenterX - photeRecordDiam/2;
     int photoRecordLeftY = buttonCenterY - photeRecordDiam/2;
-//    photoRecordLeftY = photoRecordLeftX =100;
     m_photoRecordBtn->move(photoRecordLeftX,photoRecordLeftY);
 
     int switchCameraOffset = height()/15;
     int switchCameraX = buttonCenterX - SwitchcameraDiam/2;
     int switchCameraY = photoRecordLeftY - SwitchcameraDiam - switchCameraOffset;
-//    switchCameraY = switchCameraX = 200;
     m_cameraSwitchBtn->move(switchCameraX, switchCameraY);
 
     int switchBtnOffset = height()/15;
     int switchBtnX = buttonCenterX - switchBtnWidth/2;
     int switchBtnY = photoRecordLeftY + switchBtnOffset + photeRecordDiam;
-//    switchBtnX = switchBtnY =300;
-    m_switchBtn->move(switchBtnX,switchBtnY);
+    //拍照模式
+    if (true == m_photoRecordBtn->photoState()){
+        m_switchPhotoBtn->move(switchBtnX,switchBtnY);
+        int RecordY = switchBtnY + switchBtnHeight;
+        m_switchRecordBtn->move(switchBtnX,RecordY);
+    }
+    else{
+        int PhotoY = switchBtnY - switchBtnHeight;
+        m_switchPhotoBtn->move(switchBtnX,PhotoY);
+        m_switchRecordBtn->move(switchBtnX,switchBtnY);
+    }
 
     int snapLabelOffset = height()/10;
     int snapLabelX = buttonCenterX - snapLabelDiam/2;
     int snapLabelY = switchBtnY + switchBtnHeight + snapLabelOffset;
-//    snapLabelX = snapLabelY = 400;
     m_snapshotLabel->move(snapLabelX,snapLabelY);
 }
 
@@ -1768,7 +1780,7 @@ void CMainWindow::setSelBtnHide()
 {
     m_bSwitchCameraShowEnable = false;
     if (!m_cameraSwitchBtn->isHidden()){
-        showRightButtons(true);
+        showRightButtons();
     }
 }
 
@@ -1781,7 +1793,7 @@ void CMainWindow::setSelBtnShow()
 {
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()){
-        showRightButtons(true);
+        showRightButtons();
     }
 }
 
@@ -2165,7 +2177,6 @@ void CMainWindow::onTakePicDone()
 {
     m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
-    showRightButtons(true);
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
 }
@@ -2179,7 +2190,6 @@ void CMainWindow::onTakePicCancel()
 {
     m_bPhotoing = false;
     onEnableTitleBar(3); //恢复按钮状态
-    showRightButtons(true);
     onEnableSettings(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2192,7 +2202,6 @@ void CMainWindow::onTakeVdDone()
 {
     m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
@@ -2213,7 +2222,6 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
 {
     m_bRecording = false;
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons(true);
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2322,24 +2330,37 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     return QWidget::eventFilter(obj, e);
 }
 
-void CMainWindow::showRightButtons(bool bShow)
+/*
+ * 右侧按钮显示状态
+ * 1、正在拍照，闪光灯，全部不显示
+ * 2、正在录像，只显示拍照按钮
+ * 3、无摄像头或者只有一个摄像头不显示切换摄像机状态
+ * 4、没有图片，不显示缩略图label
+*/
+
+
+void CMainWindow::showRightButtons()
 {
-    if (!bShow){
+    if (m_bPhotoing) {
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
-        showWidget(m_switchBtn,false);
+        showWidget(m_switchPhotoBtn,false);
+        showWidget(m_switchRecordBtn,false);
         showWidget(m_photoRecordBtn,false);
         return;
     }
-    if (m_bRecording){  //正在录像
+    if (m_bRecording) {  //正在录像
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
-        showWidget(m_switchBtn,false);
-    } else {
-        showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
-        showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
-        showWidget(m_switchBtn,true);
+        showWidget(m_switchPhotoBtn,false);
+        showWidget(m_switchRecordBtn,false);
+        showWidget(m_photoRecordBtn, true);
+        return;
     }
+    showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
+    showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
+    showWidget(m_switchRecordBtn,true);
+    showWidget(m_switchPhotoBtn,true);
     showWidget(m_photoRecordBtn, true);
 }
 
@@ -2358,12 +2379,12 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
 
 void CMainWindow::reflushSnapshotLabel()
 {
-    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
     if (false == m_mapFile.isEmpty()){
         m_snapshotLabel->updatePicPath(m_mapFile.last());
     } else {
         //set default image
     }
+    showRightButtons();
 }
 
 void CMainWindow::SettingPathsave()
