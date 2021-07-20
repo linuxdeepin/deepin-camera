@@ -69,7 +69,7 @@ void circlePushButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
     int distance = 2;
     int tmpWidth = width();
@@ -94,6 +94,14 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         focusWhite.setSize(QSize(tmpWidth - 2 * distance, tmpHeight - 2 * distance));
         painter.setPen(QPen(QColor(Qt::white), distance));
         painter.drawEllipse(focusWhite);
+    } else if (m_mousePress) {
+        QRect grayRect = this->rect();
+        grayRect.setTopLeft(QPoint(3, 3));
+        grayRect.setSize(QSize(36, 36));
+        path.addEllipse(grayRect);
+        painter.setBrush(QBrush(QColor(0, 0, 0, 255 * 0.4)));
+        painter.setPen(Qt::NoPen);
+        painter.drawEllipse(grayRect);
     }
 
     //设置绘制的图案
