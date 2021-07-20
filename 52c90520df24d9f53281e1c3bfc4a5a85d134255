@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b76e2a6d_f1eb0bce",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-20T06:54:07Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 9; 注释率: 0.0%",
+      "revId": "52c90520df24d9f53281e1c3bfc4a5a85d134255",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "658a3851_4f2b58a8",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-20T06:54:07Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 25; 注释率: 12.0%",
+      "revId": "52c90520df24d9f53281e1c3bfc4a5a85d134255",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "daba6ec9_2f5215ec",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-20T06:54:07Z",
+      "side": 1,
+      "message": "注释行数: 6; 改动行数(修改和新增): 8; 注释率: 75.0%",
+      "revId": "52c90520df24d9f53281e1c3bfc4a5a85d134255",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
