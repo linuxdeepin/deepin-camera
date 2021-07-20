@@ -347,7 +347,7 @@ private:
     DLabel                     *m_recordingTimeWidget;//录制时长窗口
     DLabel                     *m_recordingTime;    //录制时长
     //DPushButton                *m_endBtn;           //结束按钮
-    DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
+//    DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
     QSound                     *m_takePicSound;     //拍照声音
     QPixmap                    m_framePixmap;       //帧图片

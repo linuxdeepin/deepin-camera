@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ar" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>فتح مجلد</translation>
+        <translation type="vanished">فتح مجلد</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,22 @@
     <message>
         <source>None</source>
         <translation>لا أحد</translation>
+    </message>
+    <message>
+        <source>Record</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>switch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +172,6 @@
         <source>Sound effects</source>
         <translation>مؤثرات صوتية</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -240,7 +254,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>إيقاف التسجيل</translation>
+        <translation type="vanished">إيقاف التسجيل</translation>
     </message>
 </context>
 </TS>
