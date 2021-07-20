@@ -40,7 +40,7 @@ ACCESS_PRIVATE_FUN(videowidget, void(PRIVIEW_ENUM_STATE state), showCountDownLab
 ACCESS_PRIVATE_FUN(videowidget, void(const QString &resolution), slotresolutionchanged);
 
 ACCESS_PRIVATE_FIELD(videowidget, QGraphicsTextItem *, m_pCamErrItem);
-ACCESS_PRIVATE_FIELD(videowidget, DFloatingWidget *, m_fWgtCountdown);
+ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_dLabel);
 ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_flashLabel);
 ACCESS_PRIVATE_FIELD(videowidget, PreviewOpenglWidget *, m_openglwidget);
 //ACCESS_PRIVATE_FIELD(videowidget, ThumbnailsBar *, m_thumbnail);
@@ -257,7 +257,7 @@ TEST_F(VideoWidgetTest, videowidget)
     //调用onTakePic函数
 
     access_private_field::videowidgetm_pCamErrItem(*videowidgt)->setVisible(true);
-    access_private_field::videowidgetm_fWgtCountdown(*videowidgt)->setVisible(true);
+    access_private_field::videowidgetm_dLabel(*videowidgt)->setVisible(true);
     access_private_field::MajorImageProcessingThreadm_stopped(*videowidgt->m_imgPrcThread) = 0;
     access_private_field::videowidgetm_flashLabel(*videowidgt)->setVisible(true);
     access_private_field::videowidgetm_openglwidget(*videowidgt)->setVisible(false);
@@ -265,7 +265,7 @@ TEST_F(VideoWidgetTest, videowidget)
     videowidgt->onTakePic(true);
     videowidgt->onTakePic(false);
     access_private_field::videowidgetm_pCamErrItem(*videowidgt)->setVisible(false);
-    access_private_field::videowidgetm_fWgtCountdown(*videowidgt)->setVisible(false);
+    access_private_field::videowidgetm_dLabel(*videowidgt)->setVisible(false);
     access_private_field::MajorImageProcessingThreadm_stopped(*videowidgt->m_imgPrcThread) = 1;
     access_private_field::videowidgetm_flashLabel(*videowidgt)->setVisible(false);
     access_private_field::videowidgetm_openglwidget(*videowidgt)->setVisible(true);

@@ -81,7 +81,15 @@ void circlePushButton::paintEvent(QPaintEvent *event)
     painter.fillPath(path, QBrush(QColor(m_color)));
 
     //绘制点击效果
-    if (m_hover && !m_mousePress) {
+    if (m_mousePress) {
+        QRect grayRect = this->rect();
+        grayRect.setTopLeft(QPoint(3, 3));
+        grayRect.setSize(QSize(36, 36));
+        path.addEllipse(grayRect);
+        painter.setBrush(QBrush(QColor(0, 0, 0, 255 * 0.4)));
+        painter.setPen(Qt::NoPen);
+        painter.drawEllipse(grayRect);
+    } else if (m_hover) {
         QRect focusBlue = this->rect();
         focusBlue.setTopLeft(QPoint(0, 0));
         focusBlue.setSize(QSize(tmpWidth, tmpHeight));
@@ -94,14 +102,13 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         focusWhite.setSize(QSize(tmpWidth - 2 * distance, tmpHeight - 2 * distance));
         painter.setPen(QPen(QColor(Qt::white), distance));
         painter.drawEllipse(focusWhite);
-    } else if (m_mousePress) {
-        QRect grayRect = this->rect();
-        grayRect.setTopLeft(QPoint(3, 3));
-        grayRect.setSize(QSize(36, 36));
-        path.addEllipse(grayRect);
-        painter.setBrush(QBrush(QColor(0, 0, 0, 255 * 0.4)));
+    } else if (m_isSelected && !m_disableSelect) {
+        QRect selectedRect = this->rect();
+        selectedRect.setTopLeft(QPoint(2, 2));
+        selectedRect.setSize(QSize(36, 36));
         painter.setPen(Qt::NoPen);
-        painter.drawEllipse(grayRect);
+        painter.setBrush(QBrush(QColor(255, 255, 255, 0.4 * 255)));
+        painter.drawEllipse(selectedRect);
     }
     
     if (m_disableSelect) {//禁用悬浮只绘制选中与正常

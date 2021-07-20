@@ -39,6 +39,7 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_delay6SecondBtn(nullptr)
 {
     m_delayGroupDisplay = false;
+  m_flashGroupDisplay = false;
     m_buttonGroupColor.setRgb(0, 0, 0, 255 * 0.4);
 }
 
