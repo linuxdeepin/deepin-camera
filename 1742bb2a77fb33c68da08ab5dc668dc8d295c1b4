@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65e9c133_a2367223",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-20T01:17:46Z",
+      "side": 1,
+      "message": "添加文件头和注释",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 8
+      },
+      "revId": "1742bb2a77fb33c68da08ab5dc668dc8d295c1b4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "775f5708_cfb7fae2",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-20T01:17:46Z",
+      "side": 1,
+      "message": "文件头",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 1
+      },
+      "revId": "1742bb2a77fb33c68da08ab5dc668dc8d295c1b4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c3eb46e_b37db15a",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-20T01:17:46Z",
+      "side": 1,
+      "message": "文件有未添加，函数注释统一风格",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 7
+      },
+      "revId": "1742bb2a77fb33c68da08ab5dc668dc8d295c1b4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    }
+  ]
+}
