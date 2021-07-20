@@ -311,6 +311,12 @@ private slots:
     void onDirectoryChanged(const QString &filePath);
 
     /**
+     * @brief onSwitchCameraSuccess 切换摄像机成功处理
+     * @param cameraName 摄像机名称
+     */
+    void onSwitchCameraSuccess(const QString& cameraName);
+
+    /**
      * @brief onVisible 是否是锁屏
      */
     void onTimeoutLock(const QString &, QVariantMap, QStringList);
@@ -341,7 +347,10 @@ private slots:
      */
     void onPhotoRecordBtnClked();
 
-
+    /**
+     * @brief onShowCameraNameTimer 显示摄像机名称定时器
+     */
+    void onShowCameraNameTimer();
 protected:
 
     /**
@@ -416,6 +425,8 @@ private:
     DPushButton                     *m_switchPhotoBtn;      //活动按钮
     DPushButton                     *m_switchRecordBtn;     //活动按钮
     ImageItem                       *m_snapshotLabel;       //缩略图
+    DLabel                          *m_labelCameraName;     //摄像机名称提示label
+    QTimer                          *m_showCameraNameTimer; //显示摄像机名称Timer
 
     bool                            m_bPhotoing;            //是否正在拍照
     bool                            m_bRecording;           //是否正在录像

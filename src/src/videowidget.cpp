@@ -1225,6 +1225,7 @@ void videowidget::onChangeDev()
             if (str != str1) {
                 int ret = camInit(devlist->list_devices[i].device);
                 if (ret == E_OK) {
+                    emit switchCameraSuccess(devlist->list_devices[i].name);
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     DataManager::instance()->setdevStatus(CAM_CANUSE);
@@ -1269,6 +1270,7 @@ void videowidget::onChangeDev()
                     int ret = camInit(devlist->list_devices[0].device);
 
                     if (ret == E_OK) {
+                        emit switchCameraSuccess(devlist->list_devices[0].name);
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
@@ -1297,6 +1299,7 @@ void videowidget::onChangeDev()
                     int ret = camInit(devlist->list_devices[i + 1].device);
 
                     if (ret == E_OK) {
+                        emit switchCameraSuccess(devlist->list_devices[i+1].name);
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
@@ -1329,6 +1332,7 @@ void videowidget::onChangeDev()
                 int ret = camInit(devlist->list_devices[0].device);
 
                 if (ret == E_OK) {
+                    emit switchCameraSuccess(devlist->list_devices[0].name);
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     DataManager::instance()->setdevStatus(CAM_CANUSE);

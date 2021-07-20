@@ -26,7 +26,7 @@
 #include <QSvgRenderer>
 
 SwitchCameraBtn::SwitchCameraBtn(QWidget *parent/* = nullptr*/)
-    :QWidget (parent),
+    :QPushButton (parent),
       m_bFocus(false),
       m_bPressed(false)
 {
@@ -84,11 +84,17 @@ void SwitchCameraBtn::paintEvent(QPaintEvent *event)
     }
 }
 
+#include <QEnterEvent>
+#include <QToolTip>
 void SwitchCameraBtn::enterEvent(QEvent *event)
 {
     Q_UNUSED(event);
     m_bFocus = true;
     update();
+    QEnterEvent *enterEvent = static_cast<QEnterEvent*>(event);
+//    QString sss = toolTip();
+    QToolTip::showText(enterEvent->globalPos(), toolTip(),this);
+//    qDebug() << "SwitchCameraBtn::enterEvent" << endl;
 }
 
 void SwitchCameraBtn::leaveEvent(QEvent *event)
@@ -118,4 +124,15 @@ void SwitchCameraBtn::focusInEvent(QFocusEvent *event)
     Q_UNUSED(event);
     m_bFocus = true;
     update();
+}
+
+#include <QEvent>
+bool SwitchCameraBtn::eventFilter(QObject *obj, QEvent *e)
+{
+    if(e->type() == QEvent::ToolTip) {
+        QString ss=(static_cast<QPushButton*>(obj))->toolTip();
+        QString bb=obj->metaObject()->className();
+        qDebug() << ss << bb <<endl;
+    }
+    return QWidget::eventFilter(obj, e);
 }

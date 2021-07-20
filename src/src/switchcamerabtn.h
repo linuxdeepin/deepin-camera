@@ -26,7 +26,7 @@
 
 class QColor;
 class QSvgRenderer;
-class SwitchCameraBtn : public QWidget
+class SwitchCameraBtn : public QPushButton
 {
     Q_OBJECT
 public:
@@ -41,6 +41,7 @@ protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void focusInEvent(QFocusEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *e) override;
 
 private:
     bool                m_bFocus;          //焦点   hover或者tab键选中
