@@ -55,6 +55,8 @@ DWIDGET_USE_NAMESPACE
 
 class ImageItem;
 class QGridLayout;
+class photoRecordBtn;
+class SwitchCameraBtn;
 class takePhotoSettingAreaWidget;
 
 const int TOP_TOOLBAR_HEIGHT = 50;
@@ -325,9 +327,14 @@ private slots:
     void onTrashFile(const QString &fileName);
 
     /**
-     * @brief onSwitchBtnClked 切换按钮点击事件
+     * @brief onSwitchPhotoBtnClked 拍照按钮点击
      */
-    void onSwitchBtnClked();
+    void onSwitchPhotoBtnClked();
+
+    /**
+     * @brief onSwitchRecordBtnClked 拍照按钮点击
+     */
+    void onSwitchRecordBtnClked();
 
     /**
      * @brief onPhotoRecordBtnClked 拍照/录像按钮点击事件
@@ -355,7 +362,7 @@ private:
     /**
      * @brief showRightButtons 显示右侧控件
      */
-    void showRightButtons(bool bShow);
+    void showRightButtons();
 
     /**
      * @brief showWidget 显示/隐藏控件
@@ -404,12 +411,12 @@ private:
     Titlebar                        *m_pTitlebar;           //标题栏
 
     //右侧按钮
-    DPushButton                     *m_cameraSwitchBtn;     //摄像头切换按钮
-    DPushButton                     *m_photoRecordBtn;      //拍照，录像按钮
-    DPushButton                     *m_switchBtn;           //活动按钮
+    SwitchCameraBtn                 *m_cameraSwitchBtn;     //摄像头切换按钮
+    photoRecordBtn                  *m_photoRecordBtn;      //拍照，录像按钮
+    DPushButton                     *m_switchPhotoBtn;      //活动按钮
+    DPushButton                     *m_switchRecordBtn;     //活动按钮
     ImageItem                       *m_snapshotLabel;       //缩略图
 
-    bool                            m_bInPhotoState;        //是否拍照状态，否为录像状态
     bool                            m_bPhotoing;            //是否正在拍照
     bool                            m_bRecording;           //是否正在录像
     bool                            m_bSwitchCameraShowEnable; //是否可显示摄像头切换
