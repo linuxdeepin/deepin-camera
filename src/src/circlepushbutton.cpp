@@ -33,6 +33,7 @@ circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radi
     m_hover = false;
     m_mousePress = false;
     m_isSelected = false;
+    m_disableSelect = false;
 
     m_normalSvg = nullptr;
     m_hoverSvg = nullptr;
@@ -40,7 +41,6 @@ circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radi
     setButtonRadius(m_radius);
 
 }
-
 
 void circlePushButton::setbackground(QColor color)
 {
@@ -103,6 +103,15 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.drawEllipse(grayRect);
     }
+	
+	if (m_disableSelect) {//禁用悬浮只绘制选中与正常
+        if (m_mousePress)
+            m_pressSvg->render(&painter);
+        else
+            m_normalSvg->render(&painter);
+
+        return;
+    }
 
     //设置绘制的图案
     if (!m_mousePress && m_isSelected) {
@@ -153,4 +162,16 @@ void circlePushButton::setButtonRadius(int radius)
 
     m_radius = radius;
     resize(2 * m_radius, 2 * m_radius);
+}
+
+void circlePushButton::copyPixmap(const circlePushButton &other)
+{
+    m_normalSvg = other.m_normalSvg;
+    m_hoverSvg = other.m_hoverSvg;
+    m_pressSvg = other.m_pressSvg;
+}
+
+void circlePushButton::setDisableSelect(bool disable)
+{
+    m_disableSelect = disable;
 }

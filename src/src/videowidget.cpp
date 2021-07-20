@@ -1576,3 +1576,13 @@ void videowidget::stopEverything()
         m_openglwidget->show();
 #endif
 }
+
+void videowidget::onSetFlash(bool bFlashOn)
+{
+    m_flashLabel->setVisible(bFlashOn);
+}
+
+bool videowidget::getFlashStatus()
+{
+    return m_flashLabel->isVisible();
+}

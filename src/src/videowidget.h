@@ -204,7 +204,11 @@ public:
     * @brief delayInit　延迟加载
     */
     void delayInit();
-
+    /**
+    * @brief getFlashStatus　获取闪光灯状态
+    * @return 闪光灯是否开启
+    */
+    bool getFlashStatus();
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -241,7 +245,10 @@ public slots:
     * @brief restartDevices　重启设备
     */
     void onRestartDevices();
-
+    /**
+    * @brief onCloseFlash　设置闪光
+    */
+    void onSetFlash(bool bFlashOn);
 private slots:
 #ifdef __mips__
     /**
