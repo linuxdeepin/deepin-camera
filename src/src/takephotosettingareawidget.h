@@ -69,6 +69,13 @@ private:
     */
     void hideAll();
 
+protected:
+    /**
+    * @brief paintEvent 绘制事件
+    * @param  event 事件参数
+    */
+    void paintEvent(QPaintEvent *event) override;
+
 signals:
 
 public slots:
@@ -112,6 +119,10 @@ private:
     circlePushButton        *m_delay6SecondBtn;//延迟6s
 
     int                      m_butHeightOffset;//按钮之间的间隔
+
+    QColor                   m_buttonGroupColor;//按钮组展开后背景颜色
+
+    bool                     m_delayGroupDisplay;//延迟按钮组是否显示
 
 
 };
