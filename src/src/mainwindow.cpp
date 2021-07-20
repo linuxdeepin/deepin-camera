@@ -2336,7 +2336,7 @@ void CMainWindow::showRightButtons(bool bShow)
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchBtn,false);
     } else {
-        showWidget(m_snapshotLabel, !m_mapFile.isEmpty());
+        showWidget(m_snapshotLabel, true);
         showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
         showWidget(m_switchBtn,true);
     }
@@ -2358,11 +2358,12 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
 
 void CMainWindow::reflushSnapshotLabel()
 {
-    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
+//    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
     if (false == m_mapFile.isEmpty()){
         m_snapshotLabel->updatePicPath(m_mapFile.last());
     } else {
         //set default image
+        m_snapshotLabel->updatePicPath(QString());
     }
 }
 
