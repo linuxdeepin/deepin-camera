@@ -55,6 +55,7 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 {
     m_bVideo = false;
     m_actPrint = nullptr;
+    m_pAniWidget = new AnimationWidget(QPixmap(), this);
 
     setScaledContents(false);
     setMargin(0);
@@ -91,8 +92,7 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
         Q_UNUSED(pos);
         if (m_bVideo){
             m_menu->removeAction(m_actPrint);
-        }
-        else {
+        } else {
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
         m_menu->exec(QCursor::pos());
@@ -201,7 +201,8 @@ void ImageItem::updatePicPath(const QString &filePath)
         malloc_trim(0);
     } else {
         m_strDuratuion = "";
-        return;
+        pix = QPixmap();
+//        return;
     }
     updatePic(pix);
     pix.scaled(this->size(), Qt::KeepAspectRatio);

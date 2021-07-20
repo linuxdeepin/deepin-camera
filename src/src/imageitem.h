@@ -28,6 +28,7 @@
 #include <QAction>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QPropertyAnimation>
 //#ifdef private
 //#undef private
 //#include <dprintpreviewwidget.h>
@@ -44,6 +45,46 @@ DWIDGET_USE_NAMESPACE
 //#define THUMBNAIL_HEIGHT 50//缩略图图元高度
 #define THUMBNAIL_PIXMAP_SIZE 50//缩略图图像缩放前尺寸,考虑了内存占用和清晰度两方面情况的取值
 #define SELECTED_WIDTH 58//选中的缩略图图元宽高
+
+#define ANIMATION_DURATION 160 //动画时长
+
+class AnimationWidget : public DLabel
+{
+    Q_OBJECT
+public:
+    AnimationWidget(QPixmap pixmap, QWidget * parent = nullptr) : m_animatePix(pixmap)
+    {
+        this->setParent(parent);
+        setMargin(0);
+        setContentsMargins(0, 0, 0, 0);
+        resize(50, 50);
+    }
+    ~AnimationWidget()
+    {
+    }
+
+    void setPixmap(QPixmap pixmap)
+    {
+        m_animatePix = pixmap;
+    }
+
+protected:
+    void paintEvent(QPaintEvent *e) override
+    {
+        Q_UNUSED(e);
+        QRect pixmapRect = rect();
+        QPainter painter(this);
+        QPainterPath path;
+
+        painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+
+        path.addRoundedRect(pixmapRect, width(), height());
+        painter.fillPath(path, QBrush(m_animatePix));
+    }
+
+private:
+    QPixmap m_animatePix;      //缩略图
+};
 
 /**
  * @brief ImageItem 处理图片视频相关的内容
@@ -64,15 +105,33 @@ public:
      */
     void updatePicPath(const QString &filePath);
 
-
     /**
      * @brief updatePic 更新图片
      * @param pixmap
      */
     void updatePic(QPixmap pixmap)
     {
-        m_pixmap = pixmap;
-        update();
+        m_pAniWidget->setVisible(true);
+        m_pAniWidget->setPixmap(pixmap);
+
+
+        m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry");
+        m_pAnimation->setEasingCurve(QEasingCurve::Linear);
+        m_pAnimation->setDuration(ANIMATION_DURATION);
+//        m_pAnimation->setStartValue(QRect(width() / 2, height() / 2, 0, 0));
+//        m_pAnimation->setEndValue(rect());
+//        qInfo() << rect() <<endl;
+        m_pAnimation->setKeyValueAt(0, QRect(width() / 2, height() / 2, 0, 0));
+        m_pAnimation->setKeyValueAt(0.3, QRect((width() - 40) / 2, (height() - 40) / 2, 40, 40));
+        m_pAnimation->setKeyValueAt(1, QRect(1, 1, width() - 1, height() - 1)); //去除1像素外边框
+        m_pAnimation->start(/*QAbstractAnimation::DeleteWhenStopped*/);
+        connect(m_pAnimation, &QPropertyAnimation::finished, [ = ]() {
+            m_pAnimation->deleteLater();
+            m_pAnimation = nullptr;
+            m_pixmap = pixmap;
+            update();
+            m_pAniWidget->setVisible(false);
+        });
     }
 
     /**
@@ -234,21 +293,23 @@ private slots:
     void paintRequestSync(DPrinter *_printer);
 
 private:
-    bool            m_bVideo;//是否视频
-    bool            m_bMousePress;//鼠标按下事件
-    int             m_index;//索引
-    int64_t         m_nDuration = 0; //视频文件时长,int形式时间
-    QList<QImage>   m_imgs;//需要打印的图片
-    QString         m_path;//文件路径
-    QPixmap         m_pixmap;//缩略图
-    QString         m_pixmapstring;//缩略图路径
-    QString         m_strDuratuion;//视频文件时长,形式为00：00：00
-    QMenu           *m_menu;//右键菜单
-    QAction         *m_actCopy;//复制
-    QAction         *m_actDel;//删除
-    QAction         *m_actOpenFolder;//打开文件夹
-    QAction         *m_actPrint;//打印
-    QDateTime       m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
+    bool                m_bVideo;//是否视频
+    bool                m_bMousePress;//鼠标按下事件
+    int                 m_index;//索引
+    int64_t             m_nDuration = 0; //视频文件时长,int形式时间
+    QList<QImage>       m_imgs;//需要打印的图片
+    QString             m_path;//文件路径
+    QPixmap             m_pixmap;//缩略图
+    QString             m_pixmapstring;//缩略图路径
+    QString             m_strDuratuion;//视频文件时长,形式为00：00：00
+    QMenu               *m_menu;//右键菜单
+    QAction             *m_actCopy;//复制
+    QAction             *m_actDel;//删除
+    QAction             *m_actOpenFolder;//打开文件夹
+    QAction             *m_actPrint;//打印
+    QDateTime           m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
+    AnimationWidget     *m_pAniWidget;//动画控件
+    QPropertyAnimation  *m_pAnimation;
 };
 
 #endif // IMAGEITEM_H
