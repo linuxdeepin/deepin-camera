@@ -26,7 +26,7 @@
 
 class QColor;
 class QSvgRenderer;
-class SwitchCameraBtn : public QWidget
+class SwitchCameraBtn : public QPushButton
 {
     Q_OBJECT
 public:
