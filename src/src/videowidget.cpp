@@ -45,6 +45,10 @@
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
 
+#define COUNTDOWN_WIDTH 30
+#define COUNTDOWN_HEIGHT 61
+#define COUNTDOWN_OFFECT 20
+
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
 videowidget::videowidget(DWidget *parent)
@@ -64,8 +68,9 @@ videowidget::videowidget(DWidget *parent)
     m_flashLabel  = new DLabel(this);
     m_recordingTimeWidget = new DLabel(this);
     m_recordingTime = new DLabel;
-    m_fWgtCountdown = new DFloatingWidget(this);
-    m_dLabel = new DLabel(m_fWgtCountdown);
+//    m_fWgtCountdown = new DFloatingWidget(this);
+    m_dLabel = new DLabel(this);
+    m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
     //m_endBtn = new DPushButton(this);
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
@@ -104,10 +109,10 @@ videowidget::videowidget(DWidget *parent)
 #endif
     m_pNormalScene->addItem(m_pCamErrItem);
     m_flashLabel->setFocusPolicy(Qt::NoFocus);
-    m_fWgtCountdown->hide(); //先隐藏
-    m_fWgtCountdown->setFixedSize(160, 144);
-    m_fWgtCountdown->setBlurBackgroundEnabled(true);
-    m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
+    m_dLabel->hide(); //先隐藏
+//    m_fWgtCountdown->setFixedSize(160, 144);
+//    m_fWgtCountdown->setBlurBackgroundEnabled(true);
+//    m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
     recordingwidgetlay->setSpacing(0);
     recordingwidgetlay->setContentsMargins(0,0,0,0);
     recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignBottom);
@@ -155,17 +160,21 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setFont(ftLabel);
     QPalette pltLabel = m_dLabel->palette();
 
-    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
-        QColor clrFill(235, 235, 235);
-        clrFill.setAlphaF(0.2);
-        pltLabel.setColor(QPalette::Base, clrFill);
-    } else {
-        pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
-        QColor clrFill(25, 25, 25);
-        clrFill.setAlphaF(0.8);
-        pltLabel.setColor(QPalette::Base, clrFill);
-    }
+//    if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
+//        pltLabel.setColor(QPalette::WindowText, QColor("#000000"));
+//        QColor clrFill(235, 235, 235);
+//        clrFill.setAlphaF(0.2);
+//        pltLabel.setColor(QPalette::Base, clrFill);
+//    } else {
+//        pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
+//        QColor clrFill(25, 25, 25);
+//        clrFill.setAlphaF(0.8);
+//        pltLabel.setColor(QPalette::Base, clrFill);
+//    }
+
+    pltLabel.setColor(QPalette::WindowText, QColor("#ffffff"));
+    QColor clrFill(25, 25, 25);
+    pltLabel.setColor(QPalette::Base, clrFill);
 
     QColor clrShadow(0, 0, 0);
     clrShadow.setAlphaF(0.2);
@@ -241,8 +250,8 @@ videowidget::~videowidget()
     delete m_pGridLayout;
     m_pGridLayout = nullptr;
 
-    delete m_fWgtCountdown;
-    m_fWgtCountdown = nullptr;
+    delete m_dLabel;
+    m_dLabel = nullptr;
 
     delete m_recordingTimeWidget;
     m_recordingTimeWidget = nullptr;
@@ -685,17 +694,15 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     QString str;
     switch (state) {
     case PICTRUE:
-        m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
-                              (height() - m_fWgtCountdown->height()) / 2);
-        m_fWgtCountdown->show();
         m_recordingTimeWidget->hide();
         //m_endBtn->hide();
 
         if (m_dLabel->pos() == QPoint(0, 0))
-            m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
-                           (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
+            m_dLabel->move((width() - m_dLabel->width()) / 2,
+                           (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
 
         m_dLabel->setText(QString::number(m_nInterval));
+        m_dLabel->show();
         break;
 
     case VIDEO:
@@ -704,7 +711,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
         if (m_nCount > MAX_REC_TIME)//平板与主线保持一致最大录制时长60小时
             onEndBtnClicked();//结束录制
 
-        m_fWgtCountdown->hide();
+        m_dLabel->hide();
 
         if (!get_capture_pause()) {//判断是否是暂停状态
             QString strTime = "";
@@ -757,7 +764,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     default:
         m_pCamErrItem->hide();
         m_pSvgItem->hide();
-        m_fWgtCountdown->hide();
+        m_dLabel->hide();
         m_recordingTimeWidget->hide();
         //m_endBtn->hide();
         break;
@@ -788,11 +795,9 @@ void videowidget::resizeEvent(QResizeEvent *size)
         m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10 /*- m_endBtn->width()*/) / 2,
                                     height() - m_recordingTimeWidget->height() - 9);
 
-    if (m_fWgtCountdown->isVisible()) {
-        m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
-                              (height() - m_fWgtCountdown->height()) / 2);
-        m_dLabel->move((m_fWgtCountdown->width() - m_dLabel->width()) / 2,
-                       (m_fWgtCountdown->height() - m_dLabel->height()) / 2);
+    if (m_dLabel->isVisible()) {
+        m_dLabel->move((width() - m_dLabel->width()) / 2,
+                       (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
     }
 
     if (m_pCamErrItem->isVisible()) {
@@ -871,8 +876,8 @@ void videowidget::showCountdown()
         if (m_countTimer->isActive())
             m_countTimer->stop();
 
-        if (m_fWgtCountdown->isVisible())
-            m_fWgtCountdown->hide();
+        if (m_dLabel->isVisible())
+            m_dLabel->hide();
 
         if (m_flashLabel->isVisible())
             m_flashLabel->hide();
@@ -907,7 +912,7 @@ void videowidget::showCountdown()
                         || DataManager::instance()->m_tabIndex > 7)
                     m_flashLabel->setFocus();
 
-                m_fWgtCountdown->hide();
+                m_dLabel->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
@@ -933,7 +938,7 @@ void videowidget::showCountdown()
                         || DataManager::instance()->m_tabIndex > 7)
                     m_flashLabel->setFocus();
 
-                m_fWgtCountdown->hide();
+                m_dLabel->hide();
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
 
@@ -1018,7 +1023,7 @@ void videowidget::showCountdown()
 
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
-            m_fWgtCountdown->hide();
+            m_dLabel->hide();
             m_pNormalView->hide();
         }
 
@@ -1150,8 +1155,8 @@ void videowidget::onEndBtnClicked()
     if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
         m_pSvgItem->hide();
 
-    if (m_fWgtCountdown->isVisible())
-        m_fWgtCountdown->hide();
+    if (m_dLabel->isVisible())
+        m_dLabel->hide();
 
 
     //结束录制阶段,获取焦点的窗口索引，焦点在结束按钮，设置焦点索引为拍照/录制按钮
@@ -1365,9 +1370,9 @@ void videowidget::onTakePic(bool bTrue)
     g_Enum_Camera_State = PICTRUE;
 
     if (bTrue) {
-        if (m_fWgtCountdown) {
-            m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
-                                  (height() - m_fWgtCountdown->height()) / 2);
+        if (m_dLabel) {
+            m_dLabel->move((width() - m_dLabel->width()) / 2,
+                           (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
         }
 
         //1、重置状态
@@ -1380,8 +1385,8 @@ void videowidget::onTakePic(bool bTrue)
         if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pSvgItem->hide();
 
-        if (m_fWgtCountdown->isVisible())
-            m_fWgtCountdown->hide();
+        if (m_dLabel->isVisible())
+            m_dLabel->hide();
 
         m_nInterval = m_nMaxInterval = m_Maxinterval;
         m_curTakePicTime = m_nMaxContinuous;
@@ -1396,8 +1401,8 @@ void videowidget::onTakePic(bool bTrue)
         if (m_countTimer->isActive())
             m_countTimer->stop();
 
-        if (m_fWgtCountdown->isVisible())
-            m_fWgtCountdown->hide();
+        if (m_dLabel->isVisible())
+            m_dLabel->hide();
 
         if (m_flashLabel->isVisible())
             m_flashLabel->hide();
@@ -1435,8 +1440,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         if (m_pSvgItem->isVisible())
             m_pSvgItem->hide();
 
-        if (m_fWgtCountdown->isVisible())
-            m_fWgtCountdown->hide();
+        if (m_dLabel->isVisible())
+            m_dLabel->hide();
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
 
@@ -1455,8 +1460,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         if (m_pSvgItem->isVisible())
             m_pSvgItem->hide();
 
-        if (m_fWgtCountdown->isVisible())
-            m_fWgtCountdown->hide();
+        if (m_dLabel->isVisible())
+            m_dLabel->hide();
         return;
     }
 
@@ -1568,8 +1573,8 @@ void videowidget::stopEverything()
     if (m_pSvgItem->isVisible())
         m_pSvgItem->hide();
 
-    if (m_fWgtCountdown->isVisible())
-        m_fWgtCountdown->hide();
+    if (m_dLabel->isVisible())
+        m_dLabel->hide();
 
 #ifndef __mips__
     if (!m_openglwidget->isVisible())
