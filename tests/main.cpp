@@ -127,6 +127,8 @@ int main(int argc, char *argv[])
         }
     }
 
+    dc::Settings::get().init();
+
     CMainWindow *w = new CMainWindow;
     w->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(w);
