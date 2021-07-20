@@ -20,13 +20,15 @@
 */
 
 #include "switchcamerabtn.h"
+#include <QEnterEvent>
+#include <QToolTip>
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
 #include <QSvgRenderer>
 
 SwitchCameraBtn::SwitchCameraBtn(QWidget *parent/* = nullptr*/)
-    :QWidget (parent),
+    :QPushButton (parent),
       m_bFocus(false),
       m_bPressed(false)
 {
@@ -89,6 +91,10 @@ void SwitchCameraBtn::enterEvent(QEvent *event)
     Q_UNUSED(event);
     m_bFocus = true;
     update();
+    QEnterEvent *enterEvent = static_cast<QEnterEvent*>(event);
+//    QString sss = toolTip();
+    QToolTip::showText(enterEvent->globalPos(), toolTip(),this);
+//    qDebug() << "SwitchCameraBtn::enterEvent" << endl;
 }
 
 void SwitchCameraBtn::leaveEvent(QEvent *event)
