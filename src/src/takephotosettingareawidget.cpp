@@ -25,7 +25,7 @@
 #include <QPainter>
 
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
-    , m_butHeightOffset(20)//暂时间隔设定为20,需确定后修改
+    , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
     , m_foldBtn(nullptr)
     , m_unfoldBtn(nullptr)
     , m_flashlightFoldBtn(nullptr)
@@ -44,15 +44,23 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
 
 void takePhotoSettingAreaWidget::initButtons()
 {
+    QColor tmpColor;
+    tmpColor.setRgb(1, 1, 1);
+
     m_foldBtn = new circlePushButton(this);
+    m_foldBtn->setDisableSelect(true);
     m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold-press.svg");
     m_unfoldBtn = new circlePushButton(this);
     m_unfoldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold-press.svg");
+    m_unfoldBtn->setDisableSelect(true);
 
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
+    m_flashlightFoldBtn->setDisableSelect(true);
+    m_flashlightFoldBtn->setbackground(tmpColor);
     m_flashlightUnfoldBtn = new circlePushButton(this);
     m_flashlightUnfoldBtn->setPixmap(":/images/camera/close-flashlight.svg", ":/images/camera/close-flashlight-hover.svg", ":/images/camera/close-flashlight-press.svg");
+    m_flashlightUnfoldBtn->setDisableSelect(true);
     m_flashlightOnBtn = new circlePushButton(this);
     m_flashlightOnBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightOffBtn = new circlePushButton(this);
@@ -60,9 +68,11 @@ void takePhotoSettingAreaWidget::initButtons()
 
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
+    m_delayFoldBtn->setDisableSelect(true);
+    m_delayFoldBtn->setbackground(tmpColor);
     m_delayUnfoldBtn = new circlePushButton(this);
     m_delayUnfoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
-
+    m_delayUnfoldBtn->setDisableSelect(true);
     m_noDelayBtn = new circlePushButton(this);
     m_noDelayBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
 
@@ -81,17 +91,17 @@ void takePhotoSettingAreaWidget::initLayout()
     QPoint pos = m_flashlightUnfoldBtn->pos();
     int btnHeight = m_foldBtn->height();
 
-    m_delayUnfoldBtn->move(pos.x(), pos.y() + btnHeight + m_butHeightOffset);
-    m_foldBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_butHeightOffset);
+    m_delayUnfoldBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
+    m_foldBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
 
     pos = m_delayFoldBtn->pos();
-    m_noDelayBtn->move(pos.x(), pos.y() + btnHeight + m_butHeightOffset);
-    m_delay3SecondBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_butHeightOffset);
-    m_delay6SecondBtn->move(pos.x(), pos.y() + 3 * btnHeight + 3 * m_butHeightOffset);
+    m_noDelayBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
+    m_delay3SecondBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
+    m_delay6SecondBtn->move(pos.x(), pos.y() + 3 * btnHeight + 3 * m_btnHeightOffset);
 
     pos = m_flashlightFoldBtn->pos();
-    m_flashlightOnBtn->move(pos.x(), pos.y() + btnHeight + m_butHeightOffset);
-    m_flashlightOffBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_butHeightOffset);
+    m_flashlightOnBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
+    m_flashlightOffBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
 }
 
 void takePhotoSettingAreaWidget::init()
@@ -107,6 +117,13 @@ void takePhotoSettingAreaWidget::init()
 
     connect(m_delayUnfoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::delayUnfoldBtnClicked);
     connect(m_delayFoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::delayfoldBtnClicked);
+
+    connect(m_noDelayBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+    connect(m_delay3SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+    connect(m_delay6SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+
+    connect(m_flashlightOnBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
+    connect(m_flashlightOffBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
 
     showFold(true);
 }
@@ -124,7 +141,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow)
     m_foldBtn->setVisible(bShow);
     m_flashlightUnfoldBtn->setVisible(bShow);
     m_delayUnfoldBtn->setVisible(bShow);
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_butHeightOffset));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
     update();
 }
 
@@ -140,7 +157,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
     m_delay3SecondBtn->setbackground(Qt::transparent);
     m_delay6SecondBtn->setbackground(Qt::transparent);
 
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + 3 * m_butHeightOffset));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + 3 * m_btnHeightOffset));
     update();
 }
 
@@ -149,7 +166,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
     m_flashlightFoldBtn->setVisible(bShow);
     m_flashlightOnBtn->setVisible(bShow);
     m_flashlightOffBtn->setVisible(bShow);
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_butHeightOffset));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
     update();
 }
 
@@ -244,3 +261,71 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
     }
 }
 
+void takePhotoSettingAreaWidget::onDelayBtnsClicked()
+{
+    auto pBtn = static_cast<circlePushButton *>(sender());
+    if (nullptr == pBtn)
+        return;
+    pBtn == m_noDelayBtn ? m_noDelayBtn->setSelected(true) : m_noDelayBtn->setSelected(false);
+    pBtn == m_delay3SecondBtn ? m_delay3SecondBtn->setSelected(true) : m_delay3SecondBtn->setSelected(false);
+    pBtn == m_delay6SecondBtn ? m_delay6SecondBtn->setSelected(true) : m_delay6SecondBtn->setSelected(false);
+
+    int delayTime = 0;
+    auto bCopyBtn = m_noDelayBtn;
+
+    if (m_delay3SecondBtn->getButtonState()) {
+        delayTime = 3;
+        bCopyBtn = m_delay3SecondBtn;
+    }
+
+    if (m_delay6SecondBtn->getButtonState()) {
+        delayTime = 6;
+        bCopyBtn = m_delay6SecondBtn;
+    }
+
+    m_delayUnfoldBtn->copyPixmap(*bCopyBtn);
+    m_delayFoldBtn->copyPixmap(*bCopyBtn);
+    emit sngSetDelayTakePhoto(delayTime);
+    update();
+
+}
+
+void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
+{
+    auto pBtn = static_cast<circlePushButton *>(sender());
+    if (nullptr == pBtn)
+        return;
+
+    pBtn == m_flashlightOnBtn ? m_flashlightOnBtn->setSelected(true) : m_flashlightOnBtn->setSelected(false);
+    pBtn == m_flashlightOffBtn ? m_flashlightOffBtn->setSelected(true) : m_flashlightOffBtn->setSelected(false);
+
+    setFlashlight(m_flashlightOnBtn->getButtonState());
+    emit sngSetFlashlight(m_flashlightOnBtn->getButtonState());
+}
+
+void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
+{
+    switch (delayTime) {
+    case 0:
+        emit m_noDelayBtn->clicked();
+        break;
+    case 3:
+        emit m_delay3SecondBtn->clicked();
+        break;
+    case 6:
+        emit m_delay3SecondBtn->clicked();
+        break;
+    default:
+        ;
+    }
+}
+
+void takePhotoSettingAreaWidget::setFlashlight(bool bFlashOn)
+{
+    m_flashlightOnBtn->setSelected(bFlashOn);
+    m_flashlightOffBtn->setSelected(!bFlashOn);
+    auto p = bFlashOn ? m_flashlightOnBtn : m_flashlightOffBtn;
+    m_flashlightUnfoldBtn->copyPixmap(*p);
+    m_flashlightFoldBtn->copyPixmap(*p);
+    update();
+}

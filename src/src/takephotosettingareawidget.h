@@ -55,6 +55,16 @@ public:
     * @param bShow 是否显示
     */
     void showFlashlights(bool bShow);
+    /**
+    * @brief setDelayTime 设置延时拍照时间
+    * @param delayTime 延迟的时间
+    */
+    void setDelayTime(int delayTime);
+    /**
+    * @brief setDelayTime 设置是否打开了闪光灯
+    * @param bFlashOn 是否打开闪光
+    */
+    void setFlashlight(bool bFlashOn);
 private:
     /**
     * @brief initButtons 初始化所有的按钮
@@ -77,7 +87,8 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
 signals:
-
+    void sngSetDelayTakePhoto(int delayTime);
+    void sngSetFlashlight(bool bFlashlightOn);
 public slots:
     /**
     * @brief foldBtnClicked 折叠按钮点击槽函数
@@ -103,6 +114,14 @@ public slots:
     * @brief delayfoldBtnClicked 延时折叠按钮点击槽函数
     */
     void delayfoldBtnClicked();
+    /**
+    * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
+    */
+    void onDelayBtnsClicked();
+    /**
+    * @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
+    */
+    void onFlashlightBtnsClicked();
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
     circlePushButton        *m_unfoldBtn;//展开按钮
@@ -118,7 +137,7 @@ private:
     circlePushButton        *m_delay3SecondBtn;//延迟3s
     circlePushButton        *m_delay6SecondBtn;//延迟6s
 
-    int                      m_butHeightOffset;//按钮之间的间隔
+    int                      m_btnHeightOffset;//按钮之间的间隔
 
     QColor                   m_buttonGroupColor;//按钮组展开后背景颜色
 
