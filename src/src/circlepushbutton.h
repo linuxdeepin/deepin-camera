@@ -60,7 +60,16 @@ public:
     * @param  radius 按钮半径
     */
     void setButtonRadius(int radius);
-
+    /**
+    * @brief copyPixmap 拷贝另一个按钮的图标
+    * @param  other 另外一个按钮
+    */
+    void copyPixmap(const circlePushButton &other);
+    /**
+    * @brief copyPixmap 禁用选中
+    * @param  disable 是否禁用选中
+    */
+    void setDisableSelect(bool disable);
 signals:
 
 public slots:
@@ -104,6 +113,7 @@ private:
     QSvgRenderer *m_pressSvg;//点击SVG
 
     int           m_radius;//半径
+    bool          m_disableSelect;//禁用选中
 };
 
 #endif // CIRCLEPUSHBUTTON_H

@@ -1503,6 +1503,12 @@ void CMainWindow::initUI()
     m_videoPre->setPalette(paletteTime);
 
     m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
+
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetDelayTakePhoto, this, [ = ](int delaytime) {
+        m_videoPre->setInterval(delaytime);
+    });
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, m_videoPre, &videowidget::onSetFlash);
+
     m_takePhotoSettingArea->init();
     m_takePhotoSettingArea->move(20, height() / 2 - m_takePhotoSettingArea->height() / 2);
     m_takePhotoSettingArea->setVisible(true);
@@ -1574,6 +1580,9 @@ void CMainWindow::initUI()
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     resize(minWindowWidth, minWindowHeight);
+
+    m_takePhotoSettingArea->setDelayTime(nDelayTime);
+    m_takePhotoSettingArea->setFlashlight(m_videoPre->getFlashStatus());
 }
 
 void CMainWindow::initTitleBar()
