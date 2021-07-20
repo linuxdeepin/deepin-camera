@@ -1005,7 +1005,6 @@ void CMainWindow::initEventFilter()
 
     if (m_pTitlebar->titlebar())
         m_pTitlebar->titlebar()->installEventFilter(this);
-
 }
 
 void CMainWindow::initShortcut()
@@ -1690,6 +1689,12 @@ void CMainWindow::initRightButtons()
     m_switchBtn->setText(tr("Record"));
     m_cameraSwitchBtn->setText(tr("switch"));
     m_photoRecordBtn->setText(tr("photo"));
+
+    m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
+    m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
+
+    m_cameraSwitchBtn->setObjectName(BUTTOM_TITLE_SELECT);
+    m_cameraSwitchBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
 
 //    m_cameraSwitchBtn->setVisible(true);
 //    m_photoRecordBtn->setVisible(true);
