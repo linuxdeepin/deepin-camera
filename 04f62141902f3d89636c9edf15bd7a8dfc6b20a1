@@ -36,6 +36,75 @@
     },
     {
       "key": {
+        "uuid": "1f2b9618_60264b16",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1000222
+      },
+      "writtenOn": "2021-07-21T07:55:23Z",
+      "side": 1,
+      "message": "这里要加类的注释",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 37
+      },
+      "revId": "04f62141902f3d89636c9edf15bd7a8dfc6b20a1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d81717d3_72e0a57d",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1000222
+      },
+      "writtenOn": "2021-07-21T07:55:23Z",
+      "side": 1,
+      "message": "不要直接写数字常量",
+      "range": {
+        "startLine": 60,
+        "startChar": 8,
+        "endLine": 60,
+        "endChar": 23
+      },
+      "revId": "04f62141902f3d89636c9edf15bd7a8dfc6b20a1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cf6a6ef_e0f59e1e",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000222
+      },
+      "writtenOn": "2021-07-21T07:55:23Z",
+      "side": 1,
+      "message": "需要添加函数注释，参考下面类",
+      "range": {
+        "startLine": 66,
+        "startChar": 9,
+        "endLine": 66,
+        "endChar": 18
+      },
+      "revId": "04f62141902f3d89636c9edf15bd7a8dfc6b20a1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2ec45673_9f025d39",
         "filename": "src/src/mainwindow.cpp",
         "patchSetId": 1
