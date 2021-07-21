@@ -108,6 +108,19 @@ public:
     */
     QVariant getOption(const QString &opt);
 
+    /**
+    * @brief setBackOption 设置config.ini下的opt的值
+    * @param opt
+    * @param v
+    */
+    void setBackOption(const QString &opt, const QVariant &v);
+
+    /**
+    * @brief setBackOption 获取config.ini下的值
+    * @param opt
+    */
+    QVariant getBackOption(const QString &opt);
+
 public slots:
 
     /**

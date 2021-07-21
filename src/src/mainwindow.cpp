@@ -80,6 +80,8 @@ const int photeRecordDiam = 64;
 const int snapLabelDiam = 52;
 const int switchBtnWidth = 50;
 const int switchBtnHeight = 26;
+const int labelCameraNameWidth = 150;
+const int labelCameraNameHeight = 26;
 
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
@@ -1355,67 +1357,20 @@ void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 
 void CMainWindow::onDirectoryChanged(const QString &filePath)
 {
+    Q_UNUSED(filePath);
     reflushMediaFileList();
-
-//    qDebug() << filePath <<endl;
-//    QDir dirChangePic(m_picPath);
-//    QDir dirChangeVd(m_videoPath);
-//    bool bPic = dirChangePic.exists();
-//    bool bVd = dirChangeVd.exists();
-//    if (bPic && bVd) {
-//        return;
-//    } else {
-//        if (!bVd) {
-//            //录制状态下文件夹不存在需要停止录制
-//            DPushButton *tabkevdent =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-//            if (tabkevdent->isVisible()) {
-//                tabkevdent->click();
-//            }
-//            m_videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-//            QDir dirDefaultVd(m_videoPath);
-//            if (!dirDefaultVd.exists()) {
-//                bool bMakeDir = dirDefaultVd.mkdir(m_videoPath);
-//                if (!bMakeDir) {
-//                    qWarning() << "make dir error:" << m_videoPath;
-//                }
-//            }
-//            m_videoPre->setSaveVdFolder(m_videoPath);
-//            Settings::get().settings()->setOption("base.save.vddatapath", m_videoPath);
-//        }
-
-//        if (!bPic) {
-//            //连拍状态下文件夹不存在需要关掉连拍
-////            if (m_thumbnail->m_nStatus == STATPicIng)
-////                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-//            m_picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-//            QDir dirDefaultPic(m_picPath);
-//            if (!dirDefaultPic.exists()) {
-//                bool bMakeDir = dirDefaultPic.mkdir(m_picPath);
-//                if (!bMakeDir) {
-//                    qWarning() << "make dir error:" << m_picPath;
-//                }
-//            }
-//            m_videoPre->setSavePicFolder(m_picPath);
-//            Settings::get().settings()->setOption("base.save.picdatapath", m_picPath);
-//        }
-//        //更新文件夹监控
-//        QDir dirVd(m_videoPath);
-//        dirVd.cdUp();
-//        QDir dirPic(m_picPath);
-//        dirPic.cdUp();
-//        QString strVd = dirVd.path();
-//        m_fileWatcher.removePaths(m_fileWatcher.directories());
-//        m_fileWatcherUp.removePaths(m_fileWatcherUp.directories());
-//        m_fileWatcher.addPath(m_videoPath);
-//        m_fileWatcher.addPath(m_picPath);
-//        QString strPic = dirPic.path();
-//        m_fileWatcherUp.addPath(strVd);
-//        if (strVd.compare(strPic) != 0) {
-//            m_fileWatcherUp.addPath(strPic);
-//        }
-//        //用于刷新ui,当某个路径切换为默认路径，并且默认路径有文件时，可能会觉得奇怪（比如感觉没删掉），但实际是没问题的
-//    }
 }
+
+void CMainWindow::onSwitchCameraSuccess(const QString& cameraName)
+{
+    QStringList tmpList = cameraName.split(":");
+    if (!tmpList.isEmpty()){
+        m_labelCameraName->setText(tmpList[0]);
+    }
+    m_labelCameraName->show();
+    m_showCameraNameTimer->start();
+}
+
 
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
 {
@@ -1532,6 +1487,12 @@ void CMainWindow::onPhotoRecordBtnClked()
     }
 }
 
+void CMainWindow::onShowCameraNameTimer()
+{
+    m_showCameraNameTimer->stop();
+    m_labelCameraName->hide();
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1557,6 +1518,24 @@ void CMainWindow::initUI()
 
     m_fileWatcher.addPath(m_videoPath);
     m_fileWatcher.addPath(m_picPath);
+
+    m_labelCameraName = new DLabel(this);
+    m_showCameraNameTimer = new QTimer(this);
+    m_labelCameraName->hide();
+    m_showCameraNameTimer->setInterval(2000);
+    m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
+    QPalette paletteName = m_labelCameraName->palette();
+    paletteName.setColor(QPalette::Background, QColor(0,0,0, 30)); //深色
+    paletteName.setColor(QPalette::WindowText, QColor(255,255,255, 255));
+    m_labelCameraName->setAutoFillBackground(true);
+    m_labelCameraName->setPalette(paletteName);
+    QFont ft;
+   ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
+   ft.setWeight(20);
+   ft.setPointSize(18);
+   m_labelCameraName->setFont(ft);
+    m_labelCameraName->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+    m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
 
     QDir dirVd(m_videoPath);
     dirVd.cdUp();
@@ -1672,6 +1651,8 @@ void CMainWindow::initConnection()
 //    connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
 //    //标题栏视频按钮
 //    connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
+
+    connect(m_showCameraNameTimer, SIGNAL(timeout()),this, SLOT(onShowCameraNameTimer()));
     //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 
@@ -1713,6 +1694,7 @@ void CMainWindow::initRightButtons()
 
     m_cameraSwitchBtn->setObjectName(BUTTOM_TITLE_SELECT);
     m_cameraSwitchBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
+    m_cameraSwitchBtn->setToolTip(QString("SwitchCamera"));
 
     m_switchPhotoBtn->setText(tr("photo"));
     m_switchRecordBtn->setText(tr("record"));
@@ -1735,6 +1717,8 @@ void CMainWindow::initRightButtons()
     connect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //系统文件夹变化信号
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    //摄像头切换成功信号
+    connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString&)), this, SLOT(onSwitchCameraSuccess(const QString&)));
     locateRightButtons();
     showRightButtons();
 }
@@ -1821,7 +1805,9 @@ void CMainWindow::setupTitlebar()
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event);
-    //int width = this->width();
+    if (m_labelCameraName) {
+        m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
+    }
     locateRightButtons();
     if (m_videoPre)
         m_videoPre->update();
