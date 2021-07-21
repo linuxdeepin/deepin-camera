@@ -53,6 +53,52 @@
     },
     {
       "key": {
+        "uuid": "bfbc697f_e1ac2f2c",
+        "filename": "src/src/photorecordbtn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-21T04:45:21Z",
+      "side": 1,
+      "message": "深色主题考虑了么？",
+      "range": {
+        "startLine": 58,
+        "startChar": 54,
+        "endLine": 58,
+        "endChar": 55
+      },
+      "revId": "813a23ddddca12e7a7b8dff7b2889cc6a0ebc948",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "251c5995_96fdfea5",
+        "filename": "src/src/photorecordbtn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-21T04:45:21Z",
+      "side": 1,
+      "message": "建议搞成成员变量为了以后扩展",
+      "range": {
+        "startLine": 79,
+        "startChar": 30,
+        "endLine": 79,
+        "endChar": 45
+      },
+      "revId": "813a23ddddca12e7a7b8dff7b2889cc6a0ebc948",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4f1f296_e4b75842",
         "filename": "src/src/photorecordbtn.h",
         "patchSetId": 1
@@ -84,6 +130,29 @@
       "revId": "813a23ddddca12e7a7b8dff7b2889cc6a0ebc948",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cc99a13_038e222f",
+        "filename": "src/src/switchcamerabtn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-21T04:45:21Z",
+      "side": 1,
+      "message": "建议把深色主题考虑进去",
+      "range": {
+        "startLine": 33,
+        "startChar": 22,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "813a23ddddca12e7a7b8dff7b2889cc6a0ebc948",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
     },
     {
       "key": {
