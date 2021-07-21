@@ -65,6 +65,11 @@ public:
     * @param bFlashOn 是否打开闪光
     */
     void setFlashlight(bool bFlashOn);
+
+    /**
+    * @brief moveToParentLeft 移动到父窗口左边
+    */
+    void moveToParentLeft();
 private:
     /**
     * @brief initButtons 初始化所有的按钮
@@ -85,7 +90,11 @@ protected:
     * @param  event 事件参数
     */
     void paintEvent(QPaintEvent *event) override;
-
+    /**
+    * @brief resizeEvent 尺寸大小改变事件
+    * @param  event 事件参数
+    */
+    void resizeEvent(QResizeEvent *event);
 signals:
     void sngSetDelayTakePhoto(int delayTime);
     void sngSetFlashlight(bool bFlashlightOn);

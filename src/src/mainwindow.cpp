@@ -1550,7 +1550,7 @@ void CMainWindow::initUI()
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, m_videoPre, &videowidget::onSetFlash);
 
     m_takePhotoSettingArea->init();
-    m_takePhotoSettingArea->move(20, height() / 2 - m_takePhotoSettingArea->height() / 2);
+    m_takePhotoSettingArea->moveToParentLeft();
     m_takePhotoSettingArea->setVisible(true);
     m_videoPath = lastOpenedPath(QStandardPaths::MoviesLocation);//如果路径不存在会自动使用并创建默认路径
     m_picPath = lastOpenedPath(QStandardPaths::PicturesLocation);
@@ -1828,6 +1828,11 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 
     m_pTitlebar->setFixedWidth(this->size().width());
     m_pTitlebar->titlebar()->setFixedWidth(this->size().width());
+
+    QTimer::singleShot(1, this, [ = ] {
+        if (nullptr != m_takePhotoSettingArea)
+            m_takePhotoSettingArea->moveToParentLeft();
+    });
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)

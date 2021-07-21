@@ -39,7 +39,7 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_delay6SecondBtn(nullptr)
 {
     m_delayGroupDisplay = false;
-  m_flashGroupDisplay = false;
+    m_flashGroupDisplay = false;
     m_buttonGroupColor.setRgb(0, 0, 0, 255 * 0.4);
 }
 
@@ -329,4 +329,23 @@ void takePhotoSettingAreaWidget::setFlashlight(bool bFlashOn)
     m_flashlightUnfoldBtn->copyPixmap(*p);
     m_flashlightFoldBtn->copyPixmap(*p);
     update();
+}
+
+void takePhotoSettingAreaWidget::resizeEvent(QResizeEvent *event)
+{
+    moveToParentLeft();
+    return QWidget::resizeEvent(event);
+}
+
+void takePhotoSettingAreaWidget::moveToParentLeft()
+{
+    if (nullptr == parent())
+        return;
+
+    auto pParentWidget = static_cast<QWidget *>(parent());
+
+    if (nullptr == pParentWidget)
+        return;
+
+    move(20, pParentWidget->height() / 2 - height() / 2);
 }
