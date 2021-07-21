@@ -289,8 +289,9 @@ void videowidget::delayInit()
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltFlashLabel);
     m_flashLabel->hide();
+    QVariant device = dc::Settings::get().getbackOption(QString("device"));
     //启动视频
-    int ret =  camInit("");
+    int ret =  camInit(device.toString().toStdString().c_str());
 
     if (ret == E_OK) {
         m_pCamErrItem->hide();
@@ -1225,10 +1226,11 @@ void videowidget::onChangeDev()
             if (str != str1) {
                 int ret = camInit(devlist->list_devices[i].device);
                 if (ret == E_OK) {
-                    emit switchCameraSuccess(devlist->list_devices[i].name);
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     DataManager::instance()->setdevStatus(CAM_CANUSE);
+                    emit switchCameraSuccess(devlist->list_devices[i].name);
+                    dc::Settings::get().setbackOption(QString("device"),QString(devlist->list_devices[i].device));
                     break;
 
                 } else if (ret == E_FORMAT_ERR) {
@@ -1270,10 +1272,11 @@ void videowidget::onChangeDev()
                     int ret = camInit(devlist->list_devices[0].device);
 
                     if (ret == E_OK) {
-                        emit switchCameraSuccess(devlist->list_devices[0].name);
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
+                        emit switchCameraSuccess(devlist->list_devices[0].name);
+                        dc::Settings::get().setbackOption(QString("device"), QVariant(devlist->list_devices[0].device));
                     } else if (ret == E_FORMAT_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
@@ -1299,10 +1302,11 @@ void videowidget::onChangeDev()
                     int ret = camInit(devlist->list_devices[i + 1].device);
 
                     if (ret == E_OK) {
-                        emit switchCameraSuccess(devlist->list_devices[i+1].name);
                         m_imgPrcThread->init();
                         m_imgPrcThread->start();
                         DataManager::instance()->setdevStatus(CAM_CANUSE);
+                        emit switchCameraSuccess(devlist->list_devices[i+1].name);
+                        dc::Settings::get().setbackOption(QString("device"), QVariant(devlist->list_devices[i+1].device));
                     } else if (ret == E_FORMAT_ERR) {
                         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
@@ -1332,10 +1336,11 @@ void videowidget::onChangeDev()
                 int ret = camInit(devlist->list_devices[0].device);
 
                 if (ret == E_OK) {
-                    emit switchCameraSuccess(devlist->list_devices[0].name);
                     m_imgPrcThread->init();
                     m_imgPrcThread->start();
                     DataManager::instance()->setdevStatus(CAM_CANUSE);
+                    emit switchCameraSuccess(devlist->list_devices[0].name);
+                    dc::Settings::get().setbackOption(QString("device"), QVariant(devlist->list_devices[0].device));
                 } else if (ret == E_FORMAT_ERR) {
                     v4l2_dev_t *vd =  get_v4l2_device_handler();
 

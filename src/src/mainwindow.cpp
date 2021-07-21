@@ -80,8 +80,8 @@ const int photeRecordDiam = 64;
 const int snapLabelDiam = 52;
 const int switchBtnWidth = 50;
 const int switchBtnHeight = 26;
-const int labelCameraNameWidth = 200;
-const int labelCameraNameHeight = 30;
+const int labelCameraNameWidth = 150;
+const int labelCameraNameHeight = 26;
 
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
@@ -1524,11 +1524,17 @@ void CMainWindow::initUI()
     m_showCameraNameTimer->setInterval(2000);
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
-    paletteName.setColor(QPalette::Background, QColor(255,255,255, 150)); //深色
+    paletteName.setColor(QPalette::Background, QColor(0,0,0, 30)); //黑色
+    paletteName.setColor(QPalette::WindowText, QColor(255,255,255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
-    m_labelCameraName->setAlignment(Qt::AlignCenter);
-    m_labelCameraName->move((width()-labelCameraNameWidth)/2,m_pTitlebar->height() + 10);
+    QFont ft;
+    ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
+    ft.setWeight(20);
+    ft.setPointSize(18);
+    m_labelCameraName->setFont(ft);
+    m_labelCameraName->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+    m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
 
 
     QDir dirVd(m_videoPath);
@@ -1800,7 +1806,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event);
     if (m_labelCameraName) {
-        m_labelCameraName->move((width()-labelCameraNameWidth)/2,m_pTitlebar->height() + 10);
+        m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
     }
 
     locateRightButtons();
