@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "c74ff02c_b08d4b29",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-21T04:52:54Z",
+      "side": 1,
+      "message": "是否可以支撑深色",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 8
+      },
+      "revId": "a982cf951a78a2e1d348f067f518a9764e1e97aa",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c441cff_9e5df4d1",
         "filename": "src/src/takephotosettingareawidget.cpp",
         "patchSetId": 2
