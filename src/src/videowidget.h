@@ -140,6 +140,11 @@ signals:
     */
     void toolbarShow(bool bShow);
 
+    /**
+    * @brief switchCameraSuccess　摄像头切换成功通知
+    */
+    void switchCameraSuccess(const QString& devName);
+
 public:
     /**
     * @brief setCapStatus　设置相机状态
