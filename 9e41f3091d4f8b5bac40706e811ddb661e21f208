@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "51307f51_a588c6d1",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-07-21T04:50:04Z",
+      "side": 1,
+      "message": "没有看到释放",
+      "range": {
+        "startLine": 58,
+        "startChar": 23,
+        "endLine": 58,
+        "endChar": 38
+      },
+      "revId": "9e41f3091d4f8b5bac40706e811ddb661e21f208",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e2c6d521_f60ac013",
         "filename": "src/src/imageitem.h",
         "patchSetId": 1
