@@ -749,6 +749,8 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_videoPre = nullptr;
     m_pLoginManager = nullptr;
     m_pLoginMgrSleep = nullptr;
+    m_labelCameraName = nullptr;
+    m_takePhotoSettingArea = nullptr;
     m_pDBus = nullptr;
     m_bWayland = false;
     m_nActTpye = ActTakePic;
@@ -1508,8 +1510,30 @@ void CMainWindow::initUI()
 
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetDelayTakePhoto, this, [ = ](int delaytime) {
         m_videoPre->setInterval(delaytime);
+
+        int setIndex = 0;
+        if (3 == delaytime)
+            setIndex = 1;
+        else if (6 == delaytime)
+            setIndex = 2;
+
+        auto curIndex = dc::Settings::get().settings()->getOption(QString("photosetting.photosdelay.photodelays"));
+
+        if (curIndex.toInt() != setIndex)//防止循环设置
+            dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), setIndex);
     });
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, m_videoPre, &videowidget::onSetFlash);
+    connect(&Settings::get(), &Settings::delayTimeChanged, this, [ = ](const QString & str) {
+
+        int delayTime = 0;
+        if (str == "3s") {
+            delayTime = 3;
+        } else if (str == "6s") {
+            delayTime = 6;
+        }
+
+        m_takePhotoSettingArea->setDelayTime(delayTime);
+    });
 
     m_takePhotoSettingArea->init();
     m_takePhotoSettingArea->moveToParentLeft();

@@ -77,9 +77,17 @@ void Settings::init()
     connect(m_settings, &DSettings::valueChanged, this, [ = ](const QString & key, const QVariant & value) {
         if (key.startsWith("outsetting.resolutionsetting.resolution")) {
             auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
-            if (value >= 0) {
+            if (value >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
                 QString mode = mode_opt->data("items").toStringList()[value.toInt()];
                 emit resolutionchanged(mode);
+            }
+        }
+
+        if (key.startsWith("photosetting.photosdelay.photodelays")) {
+            auto mode_opt1 = m_settings->option("photosetting.photosdelay.photodelays");
+            if (value >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {
+                QString mode1 = mode_opt1->data("items").toStringList()[value.toInt()];
+                emit delayTimeChanged(mode1);
             }
         }
 
