@@ -207,7 +207,7 @@ TEST_F(VideoWidgetTest, videowidget)
     //进入设备数为2启动成功分支
     stub.set(camInit, ADDR(Stub_Function, camInit_OK));
     stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
-    videowidgt->onChangeDev();
+//    videowidgt->onChangeDev();
     //桩函数还原
     stub.reset(camInit);
     stub.reset(get_device_list);
@@ -221,38 +221,38 @@ TEST_F(VideoWidgetTest, videowidget)
             stub.set(get_device_list, ADDR(Stub_Function, get_device_list_3));//设备数为2
             QTest::qWait(1010);
         }
-        stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
-        videowidgt->onChangeDev();
-        stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//E_FORMAT_ERR分支
-        videowidgt->onChangeDev();
-        stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//E_NO_DEVICE_ERR分支
-        videowidgt->onChangeDev();
+//        stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
+//        videowidgt->onChangeDev();
+//        stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//E_FORMAT_ERR分支
+//        videowidgt->onChangeDev();
+//        stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//E_NO_DEVICE_ERR分支
+//        videowidgt->onChangeDev();
     }
 
-    stub.reset(get_v4l2_device_handler);
-    //进入设备数为3,str为空
-    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//设备数为1,str=str1,OK分支
-    videowidgt->onChangeDev();
-    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//设备数为1,str=str1,E_FORMAT_ERR分支
-    videowidgt->onChangeDev();
-    stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//设备数为1,str=str1,E_NO_DEVICE_ERR分支
-    videowidgt->onChangeDev();
-    stub.reset(camInit);
+//    stub.reset(get_v4l2_device_handler);
+//    //进入设备数为3,str为空
+//    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//设备数为1,str=str1,OK分支
+//    videowidgt->onChangeDev();
+//    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));//设备数为1,str=str1,E_FORMAT_ERR分支
+//    videowidgt->onChangeDev();
+//    stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));//设备数为1,str=str1,E_NO_DEVICE_ERR分支
+//    videowidgt->onChangeDev();
+//    stub.reset(camInit);
 
     //还原桩函数
     stub.reset(camInit);
     stub.reset(ADDR(MajorImageProcessingThread, start));
     stub.reset(get_device_list);
 
-    //调用onRestartDevices函数
-    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
-    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
-    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
-    videowidgt->onRestartDevices();
-    stub.reset(camInit);
-    stub.reset(ADDR(MajorImageProcessingThread, start));
-    stub.reset(get_device_list);
-    videowidgt->onChangeDev();//无相机状态还原
+//    //调用onRestartDevices函数
+//    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
+//    stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
+//    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
+//    videowidgt->onRestartDevices();
+//    stub.reset(camInit);
+//    stub.reset(ADDR(MajorImageProcessingThread, start));
+//    stub.reset(get_device_list);
+//    videowidgt->onChangeDev();//无相机状态还原
 
     //调用onTakePic函数
 
