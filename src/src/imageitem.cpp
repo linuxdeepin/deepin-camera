@@ -256,8 +256,8 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
     }
     QStringList arguments;
     //表示本地文件
-    arguments << QUrl::fromLocalFile(m_path).toString();
-    qInfo() << QUrl::fromLocalFile(m_path).toString();
+    arguments << m_path;
+    qInfo() << m_path;
     QProcess *myProcess = new QProcess(this);
     myProcess->startDetached(program, arguments);
 }
