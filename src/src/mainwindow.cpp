@@ -736,7 +736,8 @@ CMainWindow::CMainWindow(QWidget *parent)
     : DMainWindow(parent),
       m_bPhotoing(false),
       m_bRecording(false),
-      m_bSwitchCameraShowEnable(false)
+      m_bSwitchCameraShowEnable(false),
+      m_bUIinit(false)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
@@ -936,7 +937,7 @@ void CMainWindow::initTabOrder()
     DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
     DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
+//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
 
 
 //    setTabOrder(m_pSelectBtn, m_pTitlePicBtn);
@@ -945,7 +946,7 @@ void CMainWindow::initTabOrder()
     setTabOrder(windowoptionButton, windowMinBtn);
     setTabOrder(windowMinBtn, windowMaxBtn);
     setTabOrder(windowMaxBtn, windowCloseBtn);
-    setTabOrder(windowCloseBtn, thumbLeftWidget);
+//    setTabOrder(windowCloseBtn, thumbLeftWidget);
 
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
@@ -981,12 +982,12 @@ void CMainWindow::initEventFilter()
     if (windowCloseBtn)
         windowCloseBtn->installEventFilter(this);
 
-    /**
-     * @brief thumbLeftWidget 缩略图左边窗口
-     */
-    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
-    if (thumbLeftWidget)
-        thumbLeftWidget->installEventFilter(this);
+//    /**
+//     * @brief thumbLeftWidget 缩略图左边窗口
+//     */
+//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
+//    if (thumbLeftWidget)
+//        thumbLeftWidget->installEventFilter(this);
 
     /**
      * @brief takeVideoEndBtn 结束按钮
@@ -1589,6 +1590,7 @@ void CMainWindow::initUI()
 
     m_takePhotoSettingArea->setDelayTime(nDelayTime);
     m_takePhotoSettingArea->setFlashlight(m_videoPre->getFlashStatus());
+    m_bUIinit = true;
 }
 
 void CMainWindow::initTitleBar()
@@ -1805,7 +1807,7 @@ void CMainWindow::setupTitlebar()
 void CMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event);
-    if (m_labelCameraName) {
+    if (m_labelCameraName && m_bUIinit) {
         m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
     }
     locateRightButtons();
@@ -2243,38 +2245,38 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 //    }
 }
 
-void CMainWindow::keyPressEvent(QKeyEvent *e)
-{
-    if (e->key() == Qt::Key_Shift) {
-        qInfo() << "shift pressed";
-        DataManager::instance()->setShiftMulti(true);
-        int nIndex = DataManager::instance()->getindexNow();
-        //按下shift键就要更新第一个索引值
-        if (-1 == DataManager::instance()->getLastIndex()) {
-            DataManager::instance()->setLastIndex(nIndex);
-        }
-    }
-    if (e->key() == Qt::Key_Control) {
-        qInfo() << "ctrl pressed";
-        DataManager::instance()->setCtrlMulti(true);
-        DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
-    }
-}
+//void CMainWindow::keyPressEvent(QKeyEvent *e)
+//{
+//    if (e->key() == Qt::Key_Shift) {
+//        qInfo() << "shift pressed";
+//        DataManager::instance()->setShiftMulti(true);
+//        int nIndex = DataManager::instance()->getindexNow();
+//        //按下shift键就要更新第一个索引值
+//        if (-1 == DataManager::instance()->getLastIndex()) {
+//            DataManager::instance()->setLastIndex(nIndex);
+//        }
+//    }
+//    if (e->key() == Qt::Key_Control) {
+//        qInfo() << "ctrl pressed";
+//        DataManager::instance()->setCtrlMulti(true);
+//        DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
+//    }
+//}
 
-void CMainWindow::keyReleaseEvent(QKeyEvent *e)
-{
-    if (e->key() == Qt::Key_Shift) {
-        qInfo() << "shift released";
-        DataManager::instance()->setShiftMulti(false);
-        DataManager::instance()->setCtrlMulti(false);
-        DataManager::instance()->setLastIndex(-1);
-    }
-    if (e->key() == Qt::Key_Control) {
-        qInfo() << "ctrl released";
-        DataManager::instance()->setCtrlMulti(false);
-        DataManager::instance()->setShiftMulti(false);
-    }
-}
+//void CMainWindow::keyReleaseEvent(QKeyEvent *e)
+//{
+//    if (e->key() == Qt::Key_Shift) {
+//        qInfo() << "shift released";
+//        DataManager::instance()->setShiftMulti(false);
+//        DataManager::instance()->setCtrlMulti(false);
+//        DataManager::instance()->setLastIndex(-1);
+//    }
+//    if (e->key() == Qt::Key_Control) {
+//        qInfo() << "ctrl released";
+//        DataManager::instance()->setCtrlMulti(false);
+//        DataManager::instance()->setShiftMulti(false);
+//    }
+//}
 
 bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 {
@@ -2290,7 +2292,7 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     DPushButton *picvideobtn = findChild<DPushButton *>("PicVdBtn");
     DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
-    ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
+//    ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
 
     /*if ((obj == m_pSelectBtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 1;
@@ -2310,9 +2312,9 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         DataManager::instance()->m_tabIndex = 8;
     } else if ((obj == endbtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 9;
-    } else if ((obj == thumbwidget) && (e->type() == QEvent::FocusIn)) {
+    }/* else if ((obj == thumbwidget) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 10;
-    } else if (e->type() == QEvent::MouseButtonPress) {
+    }*/ else if (e->type() == QEvent::MouseButtonPress) {
         DataManager::instance()->m_tabIndex = 0;
         m_videoPre->setFocus();
     } else {

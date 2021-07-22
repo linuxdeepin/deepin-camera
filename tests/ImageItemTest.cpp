@@ -55,144 +55,144 @@ void ImageItemTest::TearDown()
 }
 
 
-/**
- *  @brief 打印窗口
- */
-TEST_F(ImageItemTest, printdialog)
-{
-    QMap<int, ImageItem *> it = get_imageitem();
+///**
+// *  @brief 打印窗口
+// */
+//TEST_F(ImageItemTest, printdialog)
+//{
+//    QMap<int, ImageItem *> it = get_imageitem();
 
-    if (it.count() > 0) {
-        ImageItem* pItem = it.value(0);
-        QAction *print = mainwindow->findChild<QAction *>("PrinterAction");
-        if (print)
-            print->trigger();
-        QTest::qWait(1000);
-    }
-}
+//    if (it.count() > 0) {
+//        ImageItem* pItem = it.value(0);
+//        QAction *print = mainwindow->findChild<QAction *>("PrinterAction");
+//        if (print)
+//            print->trigger();
+//        QTest::qWait(1000);
+//    }
+//}
 
 
 
-/**
- *  @brief 右键打开文件夹
- */
-TEST_F(ImageItemTest, OpenFolder)
-{
-    //右键菜单打开文件夹
-    QMap<int, ImageItem *> it = get_imageitem();
-    QAction *actOpenFolder = mainwindow->findChild<QAction *>("OpenFolderAction");
-    if (it.count() > 0
-        && actOpenFolder) {
-        actOpenFolder->trigger();
-    }
-}
+///**
+// *  @brief 右键打开文件夹
+// */
+//TEST_F(ImageItemTest, OpenFolder)
+//{
+//    //右键菜单打开文件夹
+//    QMap<int, ImageItem *> it = get_imageitem();
+//    QAction *actOpenFolder = mainwindow->findChild<QAction *>("OpenFolderAction");
+//    if (it.count() > 0
+//        && actOpenFolder) {
+//        actOpenFolder->trigger();
+//    }
+//}
 
-/**
- *  @brief 双击缩略图
- */
-TEST_F(ImageItemTest, mouseDoubleClickEvent)
-{
-    //右键菜单打开文件夹
-    QMap<int, ImageItem *> it = get_imageitem();
+///**
+// *  @brief 双击缩略图
+// */
+//TEST_F(ImageItemTest, mouseDoubleClickEvent)
+//{
+//    //右键菜单打开文件夹
+//    QMap<int, ImageItem *> it = get_imageitem();
 
-    if (it.count() > 0) {
-        QMap<int, ImageItem *> imgitem = get_imageitem();
-        QTest::mouseDClick(imgitem[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-    }
-}
+//    if (it.count() > 0) {
+//        QMap<int, ImageItem *> imgitem = get_imageitem();
+//        QTest::mouseDClick(imgitem[1], Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//    }
+//}
 
-/**
- *  @brief 删除单张缩略图
- */
-TEST_F(ImageItemTest, ImageItemDel)
-{
+///**
+// *  @brief 删除单张缩略图
+// */
+//TEST_F(ImageItemTest, ImageItemDel)
+//{
 
-//    QTest::qWait(1000);
-    QMap<int, ImageItem *> it = get_imageitem();
-    ImageItem *imgit = nullptr;
+////    QTest::qWait(1000);
+//    QMap<int, ImageItem *> it = get_imageitem();
+//    ImageItem *imgit = nullptr;
 
-    if (it.count() > 0) {
-        imgit = it.value(0);
-        if (!imgit)
-            return;
+//    if (it.count() > 0) {
+//        imgit = it.value(0);
+//        if (!imgit)
+//            return;
 
-        //点击鼠标右键
-        QTest::qWait(1000);
-        QTest::mouseMove(imgit, QPoint(0, 0), 500);
-        QTest::mousePress(imgit, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(imgit, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 0);
+//        //点击鼠标右键
+//        QTest::qWait(1000);
+//        QTest::mouseMove(imgit, QPoint(0, 0), 500);
+//        QTest::mousePress(imgit, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 500);
+//        QTest::mouseRelease(imgit, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-        //点击鼠标左键
-        QTest::qWait(1000);
-        QTest::mouseMove(imgit, QPoint(0, 0), 500);
-        QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-    }
+//        //点击鼠标左键
+//        QTest::qWait(1000);
+//        QTest::mouseMove(imgit, QPoint(0, 0), 500);
+//        QTest::mousePress(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//        QTest::mouseRelease(imgit, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//    }
 
-    if (!it.isEmpty()) {
-        imgit = it.value(0);
-        QTest::keyPress(imgit, Qt::Key_C, Qt::ControlModifier, 500);
-        QTest::keyRelease(imgit, Qt::Key_C, Qt::ControlModifier, 500);
-        QTest::keyClick(imgit, Qt::Key_Delete, Qt::NoModifier, 0);
-    }
-}
+//    if (!it.isEmpty()) {
+//        imgit = it.value(0);
+//        QTest::keyPress(imgit, Qt::Key_C, Qt::ControlModifier, 500);
+//        QTest::keyRelease(imgit, Qt::Key_C, Qt::ControlModifier, 500);
+//        QTest::keyClick(imgit, Qt::Key_Delete, Qt::NoModifier, 0);
+//    }
+//}
 
-/**
- *  @brief 缩略图多选和复制，删除
- */
-TEST_F(ImageItemTest, ImageItemContinuousChoose)
-{
-    mainwindow->settingDialog();
-    QVariant picpath = dc::Settings::get().settings()->option("base.save.picdatapath")->defaultValue();
-    QVariant vdpath = dc::Settings::get().settings()->option("base.save.vddatapath")->defaultValue();
-    dc::Settings::get().setPathOption("picdatapath", QVariant(picpath));
-    dc::Settings::get().setPathOption("vddatapath", QVariant(vdpath));
-    dc::Settings::get().settings()->sync();
-    mainwindow->settingDialogDel();
+///**
+// *  @brief 缩略图多选和复制，删除
+// */
+//TEST_F(ImageItemTest, ImageItemContinuousChoose)
+//{
+//    mainwindow->settingDialog();
+//    QVariant picpath = dc::Settings::get().settings()->option("base.save.picdatapath")->defaultValue();
+//    QVariant vdpath = dc::Settings::get().settings()->option("base.save.vddatapath")->defaultValue();
+//    dc::Settings::get().setPathOption("picdatapath", QVariant(picpath));
+//    dc::Settings::get().setPathOption("vddatapath", QVariant(vdpath));
+//    dc::Settings::get().settings()->sync();
+//    mainwindow->settingDialogDel();
 
-    QMap<int, ImageItem *> ImageMap = get_imageitem();
-    QList<ImageItem *> ImageList;
-    ImageList.clear();
-    int number = ImageMap.count();
-    if (number > 0) {
-        ImageList = ImageMap.values();
+//    QMap<int, ImageItem *> ImageMap = get_imageitem();
+//    QList<ImageItem *> ImageList;
+//    ImageList.clear();
+//    int number = ImageMap.count();
+//    if (number > 0) {
+//        ImageList = ImageMap.values();
 
-        //Ctrl多选
-        for (int i = 0; i < ImageList.count() / 2; i++) {
-            QTest::mouseMove(ImageList[i], QPoint(0, 0), 100);
-            QTest::keyPress(ImageList[i], Qt::Key_Control, Qt::ControlModifier, 200);
-            QTest::mouseClick(ImageList[i], Qt::LeftButton, Qt::ControlModifier, QPoint(0, 0), 200);
-        }
-        QTest::keyRelease(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
+//        //Ctrl多选
+//        for (int i = 0; i < ImageList.count() / 2; i++) {
+//            QTest::mouseMove(ImageList[i], QPoint(0, 0), 100);
+//            QTest::keyPress(ImageList[i], Qt::Key_Control, Qt::ControlModifier, 200);
+//            QTest::mouseClick(ImageList[i], Qt::LeftButton, Qt::ControlModifier, QPoint(0, 0), 200);
+//        }
+//        QTest::keyRelease(mainwindow, Qt::Key_Control, Qt::NoModifier, 500);
 
-        //Shift多选
-        if (ImageList.count() > 0) {
-            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
-            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
-            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-            for (int i = 0; i < ImageList.count() / 2; i++) {
-                QTest::mouseMove(ImageList[i], QPoint(0, 0), 200);
-                QTest::keyPress(ImageList[i], Qt::Key_Shift, Qt::ShiftModifier, 300);
-                QTest::mousePress(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-                QTest::mouseRelease(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-            }
-            QTest::qWait(1000);
-            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
-            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
-            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
-        }
+//        //Shift多选
+//        if (ImageList.count() > 0) {
+//            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
+//            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
+//            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//            for (int i = 0; i < ImageList.count() / 2; i++) {
+//                QTest::mouseMove(ImageList[i], QPoint(0, 0), 200);
+//                QTest::keyPress(ImageList[i], Qt::Key_Shift, Qt::ShiftModifier, 300);
+//                QTest::mousePress(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//                QTest::mouseRelease(ImageList[i], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//            }
+//            QTest::qWait(1000);
+//            QTest::mouseMove(ImageList[0], QPoint(0, 0), 200);
+//            QTest::keyPress(ImageList[0], Qt::Key_Shift, Qt::ShiftModifier, 300);
+//            QTest::mousePress(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//            QTest::mouseRelease(ImageList[0], Qt::LeftButton, Qt::ShiftModifier, QPoint(0, 0), 200);
+//        }
 
-        QAction *copyact = mainwindow->findChild<QAction *>("CopyAction");
-        if (copyact)
-            copyact->trigger();
+//        QAction *copyact = mainwindow->findChild<QAction *>("CopyAction");
+//        if (copyact)
+//            copyact->trigger();
 
-        QAction *delact = mainwindow->findChild<QAction *>("DelAction");
-        if (delact)
-            delact->trigger();
-    }
-}
+//        QAction *delact = mainwindow->findChild<QAction *>("DelAction");
+//        if (delact)
+//            delact->trigger();
+//    }
+//}
 
 // /**
 //  * @brief imageitem与thumbnails类未覆盖部分打桩（构造函数存在connect函数，这些未覆盖部分需要尽量往后面放，以免影响其他case）

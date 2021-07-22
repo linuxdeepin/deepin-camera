@@ -44,7 +44,7 @@ public:
     /**
      * @brief getMultiType 返回ctrl多选或者shift多选
      */
-    MultiType getMultiType();
+//    MultiType getMultiType();
 
     /**
      * @brief getObject 获取控件
@@ -57,37 +57,37 @@ public:
      * @brief setCtrlMulti 设置ctrl多选
      * @param bCtrlMulti
      */
-    void setCtrlMulti(bool bCtrlMulti);
+//    void setCtrlMulti(bool bCtrlMulti);
     /**
      * @brief setShiftMulti 设置shift连续多选
      * @param bShiftMultiSlt
      */
-    void setShiftMulti(bool bShiftMultiSlt);
+//    void setShiftMulti(bool bShiftMultiSlt);
     /**
      * @brief getbindexNow 获得当前索引
      */
-    int getindexNow();
+//    int getindexNow();
     /**
      * @brief setindexNow 设置当前索引
      * @param indexNow
      */
-    void setindexNow(int indexNow);
+//    void setindexNow(int indexNow);
     /**
      * @brief setLastIndex 设置上一次图片索引
      * @param index
      */
-    void setLastIndex(int index)
-    {
-        m_indexLast = index;
-    }
+//    void setLastIndex(int index)
+//    {
+//        m_indexLast = index;
+//    }
 
     /**
      * @brief getLastIndex 获取图片索引
      */
-    int getLastIndex()
-    {
-        return m_indexLast;
-    }
+//    int getLastIndex()
+//    {
+//        return m_indexLast;
+//    }
 
     /**
      * @brief clearIndex 清除所有选中索引
@@ -152,10 +152,10 @@ public:
 private:
     DataManager();
     static DataManager *m_dataManager;
-    bool m_bCtrlMulti;//ctrl键多选
-    bool m_bShitfMulti;//shift键连续多选
-    int m_indexLast;
-    int m_indexNow;
+//    bool m_bCtrlMulti;//ctrl键多选
+//    bool m_bShitfMulti;//shift键连续多选
+//    int m_indexLast;
+//    int m_indexNow;
     uint m_tabIndexNow;//当前tab索引
     QString m_strFileName;
     int m_videoCount;

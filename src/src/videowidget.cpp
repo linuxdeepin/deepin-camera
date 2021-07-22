@@ -820,10 +820,10 @@ void videowidget::recoverTabWidget()
 
         if (parentwidget) {
             DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
-            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
-            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
+//            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
+//            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
             DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
-            ThumbWidget *thumbwidget = parentwidget->findChild<ThumbWidget *>("thumbLeftWidget");
+//            ThumbWidget *thumbwidget = parentwidget->findChild<ThumbWidget *>("thumbLeftWidget");
 
             if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
                 DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
@@ -837,30 +837,30 @@ void videowidget::recoverTabWidget()
                         setFocus();
                 }
                 break;
-            case 2:
-                if (titlepicbtn) {
-                    if (titlepicbtn->isEnabled())
-                        titlepicbtn->setFocus();
-                    else
-                        setFocus();
-                }
-                break;
-            case 3:
-                if (titlevdbtn) {
-                    if (titlevdbtn->isEnabled())
-                        titlevdbtn->setFocus();
-                    else
-                        setFocus();
-                }
-                break;
+//            case 2:
+//                if (titlepicbtn) {
+//                    if (titlepicbtn->isEnabled())
+//                        titlepicbtn->setFocus();
+//                    else
+//                        setFocus();
+//                }
+//                break;
+//            case 3:
+//                if (titlevdbtn) {
+//                    if (titlevdbtn->isEnabled())
+//                        titlevdbtn->setFocus();
+//                    else
+//                        setFocus();
+//                }
+//                break;
             case 8:
                 if (picvideobtn)
                     picvideobtn->setFocus();
                 break;
-            case 10:
-                if (thumbwidget)
-                    thumbwidget->setFocus();
-                break;
+//            case 10:
+//                if (thumbwidget)
+//                    thumbwidget->setFocus();
+//                break;
             default:
                 break;
             }

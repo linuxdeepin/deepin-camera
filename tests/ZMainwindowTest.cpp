@@ -43,7 +43,7 @@ ACCESS_PRIVATE_FUN(CApplication, void(), QuitAction);
 
 ACCESS_PRIVATE_FIELD(MajorImageProcessingThread, QAtomicInt, m_stopped);
 
-ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
+//ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
 //ACCESS_PRIVATE_FIELD(CMainWindow, ThumbnailsBar *, m_thumbnail);
@@ -185,10 +185,10 @@ TEST_F(ZMainwindowTest, TakePicture)
 //    QTest::mousePress(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
 //    QTest::mouseRelease(iconpixBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
 
-    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
-    QTest::mouseMove(PixVdBtn, QPoint(0, 0), 500);
-    QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-    QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//    PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
+//    QTest::mouseMove(PixVdBtn, QPoint(0, 0), 500);
+//    QTest::mousePress(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//    QTest::mouseRelease(PixVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
 
     QTest::qWait(500);
 
@@ -374,12 +374,12 @@ TEST_F(ZMainwindowTest, TakeVideo1)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
-    if (iconVdBtn) {
-        QTest::mouseMove(iconVdBtn, QPoint(0, 0), 500);
-        QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-    }
+//    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
+//    if (iconVdBtn) {
+//        QTest::mouseMove(iconVdBtn, QPoint(0, 0), 500);
+//        QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//        QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
+//    }
 
     PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
     if (PixVdBtn) {
@@ -440,13 +440,13 @@ TEST_F(ZMainwindowTest, TakeVideoDelay)
     dc::Settings::get().settings()->sync();
     mainwindow->settingDialogDel();
 
-    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
+//    iconVdBtn =  mainwindow->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
 
-    if (iconVdBtn) {
-        QTest::mouseMove(iconVdBtn, QPoint(0, 0), 500);
-        QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
-    }
+//    if (iconVdBtn) {
+//        QTest::mouseMove(iconVdBtn, QPoint(0, 0), 500);
+//        QTest::mousePress(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+//        QTest::mouseRelease(iconVdBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 0);
+//    }
     PixVdBtn = mainwindow->findChild<QPushButton *>(BUTTON_PICTURE_VIDEO);
 
     if (PixVdBtn) {

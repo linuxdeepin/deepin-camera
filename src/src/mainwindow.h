@@ -49,6 +49,8 @@
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 #include <QStandardPaths>
+#include <QFileSystemWatcher>
+#include <QFileInfo>
 
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
@@ -60,6 +62,11 @@ class SwitchCameraBtn;
 class takePhotoSettingAreaWidget;
 
 const int TOP_TOOLBAR_HEIGHT = 50;
+
+/**
+ * @brief ActType 定义枚举类型ActType，即拍照和录像
+ */
+enum ActType {ActTakePic, ActTakeVideo};
 
 //应用层界面通信站，与底层通信通过proxy代理类
 class CMainWindow : public DMainWindow
@@ -357,13 +364,13 @@ protected:
      * @brief onSleepWhenTaking 键盘按下事件
      * @param e
      */
-    void keyPressEvent(QKeyEvent *e) override;
+//    void keyPressEvent(QKeyEvent *e) override;
 
     /**
      * @brief onSleepWhenTaking 键盘弹起事件
      * @param e
      */
-    void keyReleaseEvent(QKeyEvent *e) override;
+//    void keyReleaseEvent(QKeyEvent *e) override;
 
     bool eventFilter(QObject *obj, QEvent *e)override;
 
@@ -435,6 +442,7 @@ private:
     QString                         m_picPath;              //配置图片路径
     QMultiMap<QDateTime, QString>   m_mapFile;              //缩略图图像 时间排序
     takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
+    bool                            m_bUIinit;              //UI初始化是否完成
 };
 
 #endif // MAINWINDOW_H

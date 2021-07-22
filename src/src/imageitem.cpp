@@ -96,8 +96,8 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
         m_menu->exec(QCursor::pos());
-        DataManager::instance()->setCtrlMulti(false);
-        DataManager::instance()->setShiftMulti(false);
+//        DataManager::instance()->setCtrlMulti(false);
+//        DataManager::instance()->setShiftMulti(false);
         qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
     connect(m_actCopy, &QAction::triggered, this, &ImageItem::onCopy);
