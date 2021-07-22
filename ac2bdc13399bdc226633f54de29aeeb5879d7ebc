@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5c3bf97_60d163ad",
+        "filename": "src/src/Settings.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-22T06:41:40Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 8; 注释率: 0.0%",
+      "revId": "ac2bdc13399bdc226633f54de29aeeb5879d7ebc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca272610_d0b94104",
+        "filename": "src/src/Settings.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-22T06:41:40Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "ac2bdc13399bdc226633f54de29aeeb5879d7ebc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f775991_fac0121d",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-22T06:41:40Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 19; 注释率: 5.3%",
+      "revId": "ac2bdc13399bdc226633f54de29aeeb5879d7ebc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bc3ae98_299077ec",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-22T06:41:40Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "ac2bdc13399bdc226633f54de29aeeb5879d7ebc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
