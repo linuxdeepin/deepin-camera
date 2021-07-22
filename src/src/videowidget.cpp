@@ -188,6 +188,11 @@ videowidget::videowidget(DWidget *parent)
     m_endBtn->setGraphicsEffect(effect);        //给那个控件设置阴影，这里需要注意的是所有此控件的子控件，也都继承这个阴影。
     m_endBtn->hide();
 
+    m_switchTimer = new QTimer(this);
+    m_switchTimer->setInterval(2000);
+    m_switchTimer->setSingleShot(true);
+
+    connect(m_switchTimer,SIGNAL(timeout()), this, SLOT(onSwitchCameraTimer()));
     connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
     connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
@@ -959,7 +964,7 @@ void videowidget::showCountdown()
             m_imgPrcThread->m_bTake = true; //保存图片标志
             m_nFileID++;
             m_curTakePicTime -= 1;
-
+m_switchTimer->stop();
             if (m_curTakePicTime == 0) {
                 //拍照结束，恢复按钮状态和缩略图标志位
                 QThread *thread = QThread::create([ = ]() {
@@ -1191,7 +1196,7 @@ void videowidget::onRestartDevices()
 
 }
 
-void videowidget::onChangeDev()
+void videowidget::onSwitchCameraTimer()
 {
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
@@ -1346,6 +1351,24 @@ void videowidget::onChangeDev()
             }
         }
     }
+}
+
+void videowidget::onChangeDev()
+{
+    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+    QString str;
+
+    if (devicehandler != nullptr) {
+        str = QString(devicehandler->videodevice);
+    }
+
+    str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
+
+    char pCmd[100]={0};
+    snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
+    //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
+    system(pCmd);
+    m_switchTimer->start();
 }
 
 void videowidget::onTakePic(bool bTrue)

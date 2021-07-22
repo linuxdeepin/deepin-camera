@@ -20,7 +20,7 @@ DEFINES += LIBCHEESE_LIBRARY
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DEPRECATED_WARNINGS LINUX
 
 #SUBDIRS += src
 include(src/src/basepub/basepub.pri)
@@ -30,8 +30,7 @@ include(src/src/qtsingleapplication/qtsingleapplication.pri)
 SOURCES += \
     $$PWD/src/src/*.cpp \
     $$PWD/src/src/*.c \
-    $$PWD/src/*.cpp \
-
+    $$PWD/src/*.cpp
 
 HEADERS += \
     $$PWD/src/src/*.h \
@@ -53,7 +52,7 @@ INCLUDEPATH +=/usr/include/libusb-1.0\
                 $$PWD/src/src/qtsingleapplication
 
 LIBS += -L/lib/x86_64-linux-gnu\
-        -ldl
+        -ldl -lrga
 
 LIBS += -LSYSTEMLIBDIR
 

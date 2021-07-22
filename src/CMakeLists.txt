@@ -77,6 +77,7 @@ file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 pkg_check_modules(3rd_lib REQUIRED
          dtkcore
          dtkwidget
+         librga
 #        libv4l2
 #        libudev
 #        libusb-1.0

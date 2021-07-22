@@ -21,6 +21,9 @@
 
 #include "majorimageprocessingthread.h"
 
+#include "rga/im2d.h"
+#include "rga/rga.h"
+
 #include <QFile>
 #include <QDate>
 #include <QDir>
@@ -124,6 +127,70 @@ void MajorImageProcessingThread::run()
             continue;
         }
 
+        if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+            m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+            m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+            if (m_yuvPtr != nullptr) {
+                delete [] m_yuvPtr;
+                m_yuvPtr = nullptr;
+            }
+
+            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+            m_yuvPtr = new uchar[yuvsize];
+        } else {
+            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+            if (!m_yuvPtr){
+                m_yuvPtr = new uchar[yuvsize];
+            }
+        }
+
+        //旋转
+
+        rga_buffer_t 	src;
+        rga_buffer_t 	dst;
+        RgaSURF_FORMAT format = RK_FORMAT_YCbCr_420_P;
+        int w = m_frame->width;
+        int h = m_frame->height;
+        src = wrapbuffer_virtualaddr(m_frame->yuv_frame, w, h, format);
+        //dst = wrapbuffer_virtualaddr(m_frame->yuv_frame, h, w, format);
+        dst = wrapbuffer_virtualaddr(m_yuvPtr, h, w, format);
+        IM_USAGE age = IM_HAL_TRANSFORM_ROT_270;
+        uint8_t *preframe = m_frame->yuv_frame;
+        if(IM_STATUS_SUCCESS == imrotate(src, dst, age)){
+            m_frame->width = src.height;
+            m_frame->height = src.width;
+            qDebug() << "imrote :" << age <<"-----------" << endl;
+            qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
+//            memcpy(m_frame->yuv_frame, m_yuvPtr, w*h*3/2);
+            m_frame->yuv_frame = (uint8_t *)m_yuvPtr;
+        }
+
+
+//        rga_buffer_t 	src;
+//        rga_buffer_t 	dst;
+//        RgaSURF_FORMAT format = RK_FORMAT_YCbCr_420_P;
+//        int w = m_frame->width;
+//        int h = m_frame->height;
+//        uint8_t *dst_buf = (uint8_t*)malloc(w*h*3/2);
+//        if (dst_buf){
+//            src = wrapbuffer_virtualaddr(m_frame->yuv_frame, w, h, format);
+//            //dst = wrapbuffer_virtualaddr(m_frame->yuv_frame, h, w, format);
+//            dst = wrapbuffer_virtualaddr(dst_buf, h, w, format);
+//            IM_USAGE age = IM_HAL_TRANSFORM_ROT_270;
+//            if(IM_STATUS_SUCCESS == imrotate(src, dst, age)){
+//                m_frame->width = src.height;
+//                m_frame->height = src.width;
+//                qDebug() << "imrote :" << age <<"-----------" << endl;
+//                qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
+//                m_nVdWidth = src.height;
+//                m_nVdHeight = src.width;
+//                memcpy(m_frame->yuv_frame,dst_buf, w*h*3/2);
+//            }
+//            free(dst_buf);
+//        }
+
+        //end 旋转
+
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
@@ -203,10 +270,12 @@ void MajorImageProcessingThread::run()
 
         /*拍照*/
         if (m_bTake) {
-            int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+            int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_BMP);
             if (nRet < 0) {
                 qWarning() << "保存照片失败";
             }
+            QImage img(m_strPath,"QImage::Format_RGB888");
+            img.save(m_strPath,"jpg");
 
             m_bTake = false;
         }
@@ -224,23 +293,26 @@ void MajorImageProcessingThread::run()
 #else
             emit sigRenderYuv(true);
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
-            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
-                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
-                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
-                if (m_yuvPtr != nullptr) {
-                    delete [] m_yuvPtr;
-                    m_yuvPtr = nullptr;
-                }
+//            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+//                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+//                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+//                if (m_yuvPtr != nullptr) {
+//                    delete [] m_yuvPtr;
+//                    m_yuvPtr = nullptr;
+//                }
 
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                m_yuvPtr = new uchar[yuvsize];
-                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-            } else {
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-            }
+//                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+//                m_yuvPtr = new uchar[yuvsize];
+//                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+//            } else {
+//                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+//                if (!m_yuvPtr){
+//                    m_yuvPtr = new uchar[yuvsize];
+//                }
+//                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+//            }
 
-            emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
+            emit sigYUVFrame(m_yuvPtr, m_frame->width, m_frame->height);
 #endif
             malloc_trim(0);
         }
@@ -256,6 +328,7 @@ void MajorImageProcessingThread::run()
 #ifdef __mips__
         free(rgb);
 #endif
+        m_frame->yuv_frame = preframe;
         v4l2core_release_frame(m_videoDevice, m_frame);
     }
 

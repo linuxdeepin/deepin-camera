@@ -244,6 +244,11 @@ public slots:
     */
     void onRestartDevices();
 
+    /**
+    * @brief onSwitchCameraTimer　切换相机timer
+    */
+    void onSwitchCameraTimer();
+
 private slots:
 #ifdef __mips__
     /**
@@ -364,6 +369,8 @@ private:
     QGraphicsSvgItem           *m_pSvgItem;
     QGraphicsPixmapItem        *m_pNormalItem;
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
+
+    QTimer                     *m_switchTimer;
 };
 
 #endif // VIDEOWIDGET_H

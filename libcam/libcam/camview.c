@@ -791,8 +791,8 @@ static void *encoder_loop(__attribute__((unused))void *data)
         get_video_codec_ind(),
         get_audio_codec_ind(),
         get_video_muxer(),
-        v4l2core_get_frame_width(my_vd),
         v4l2core_get_frame_height(my_vd),
+        v4l2core_get_frame_width(my_vd),  //平板相机旋转 yuv 270度，录制初始化时，将宽高对换
         v4l2core_get_fps_num(my_vd),
         v4l2core_get_fps_denom(my_vd),
         channels,
