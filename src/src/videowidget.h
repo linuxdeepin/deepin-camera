@@ -337,6 +337,14 @@ private:
     */
     void stopEverything();
 
+    /**
+    * @brief switchCamera　切换摄像机
+    * @param device     设备识别号 /dev/video*
+    * @param devName    设备名称
+    * @return 0 成功 其他 失败
+    */
+    int switchCamera(const char* device, const char* devName);
+
 public:
     MajorImageProcessingThread *m_imgPrcThread;
 
