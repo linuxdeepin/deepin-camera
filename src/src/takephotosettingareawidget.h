@@ -22,6 +22,8 @@
 #define TAKEPHOTOSETTINGAREAWIDGET_H
 
 #include <QWidget>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 class QPalette;
 class circlePushButton;
@@ -152,7 +154,6 @@ private:
 
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
-
 
 };
 
