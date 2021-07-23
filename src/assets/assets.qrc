@@ -10,7 +10,6 @@
         <file>images/icons/light/photograph.svg</file>
         <file>images/icons/light/record video.svg</file>
         <file>images/icons/light/select-hover.svg</file>
-        <file>images/icons/light/select-normal.svg</file>
         <file>images/icons/light/select-press.svg</file>
         <file>images/icons/light/Take up.svg</file>
         <file>images/icons/light/button/photograph.svg</file>
@@ -47,11 +46,13 @@
         <file>images/camera/flashlight-press.svg</file>
         <file>images/camera/flashlight.svg</file>
         <file>images/camera/flashlight-hover.svg</file>
-        <file>images/camera/fold-press.svg</file>
         <file>images/camera/fold.svg</file>
         <file>images/camera/dalay-3s-hover.svg</file>
         <file>images/camera/switch_camera-press.svg</file>
         <file>images/camera/switch_camera.svg</file>
+        <file>images/icons/light/select-normal.svg</file>
+        <file>images/camera/old_fold.svg</file>
+        <file>images/camera/unfold.svg</file>
     </qresource>
     <qresource prefix="/icons/deepin/builtin">
         <file>texts/panel_switch_camera_20px.svg</file>
