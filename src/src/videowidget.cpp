@@ -302,44 +302,8 @@ void videowidget::delayInit()
 
     QString device = dc::Settings::get().getBackOption("device").toString();
     //启动视频
-    int ret =  camInit(device.toStdString().c_str());
+    switchCamera(device.toStdString().c_str(), "");
 
-    if (ret == E_OK) {
-        m_pCamErrItem->hide();
-        m_pSvgItem->hide();
-        m_imgPrcThread->start();
-        DataManager::instance()->setdevStatus(CAM_CANUSE);
-    } else if (ret == E_FORMAT_ERR) {
-        //启动失败
-        v4l2_dev_t *vd = get_v4l2_device_handler();
-
-        //如果不为空，则关闭vd
-        if (vd != nullptr) {
-            close_v4l2_device_handler();
-            vd = nullptr;
-        }
-
-        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-            DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-
-        showCamUsed();
-        qDebug() << "cam in use" << endl;
-    } else if (ret == E_NO_DEVICE_ERR) {
-        if (DataManager::instance()->getdevStatus() != NOCAM) {
-            DataManager::instance()->setdevStatus(NOCAM);
-            //启动失败
-            v4l2_dev_t *vd = get_v4l2_device_handler();
-
-            //如果不为空，则关闭vd
-            if (vd != nullptr) {
-                close_v4l2_device_handler();
-                vd = nullptr;
-            }
-        }
-
-        showNocam();
-        qWarning() << "No webcam found" << endl;
-    }
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
     [ = ](DGuiApplicationHelper::ColorType type) {
         QPalette pltLabel = m_dLabel->palette();
@@ -1234,41 +1198,11 @@ void videowidget::onChangeDev()
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
-                int ret = camInit(devlist->list_devices[i].device);
-                if (ret == E_OK) {
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
-                    DataManager::instance()->setdevStatus(CAM_CANUSE);
-                    //切换摄像机成功，发送设备名称信号到主界面。
-                    emit switchCameraSuccess(devlist->list_devices[i].name);
-                    dc::Settings::get().setBackOption("device",devlist->list_devices[i].device);
+                if(E_OK == switchCamera(devlist->list_devices[i].device,devlist->list_devices[i].name)){
                     break;
-
-                } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                        showCamUsed();
-
-                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-
-                } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    DataManager::instance()->setdevStatus(NOCAM);
-                    showNocam();
                 }
-
             }
-
         }
-
     } else {
         if (devlist->num_devices == 0) {
             DataManager::instance()->setdevStatus(NOCAM);
@@ -1280,107 +1214,59 @@ void videowidget::onChangeDev()
 
             if (str == str1) {
                 if (i == devlist->num_devices - 1) {
-                    int ret = camInit(devlist->list_devices[0].device);
-
-                    if (ret == E_OK) {
-                        m_imgPrcThread->init();
-                        m_imgPrcThread->start();
-                        DataManager::instance()->setdevStatus(CAM_CANUSE);
-                        //切换摄像机成功，发送设备名称信号到主界面。
-                        emit switchCameraSuccess(devlist->list_devices[0].name);
-                        dc::Settings::get().setBackOption("device",devlist->list_devices[0].device);
-                    } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                            showCamUsed();
-
-                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                    } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        DataManager::instance()->setdevStatus(NOCAM);
-                        showNocam();
-                    }
-
+                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
                     break;
                 } else {
-                    int ret = camInit(devlist->list_devices[i + 1].device);
-
-                    if (ret == E_OK) {
-                        m_imgPrcThread->init();
-                        m_imgPrcThread->start();
-                        DataManager::instance()->setdevStatus(CAM_CANUSE);
-                        //切换摄像机成功，发送设备名称信号到主界面。
-                        emit switchCameraSuccess(devlist->list_devices[i + 1].name);
-                        dc::Settings::get().setBackOption("device",devlist->list_devices[i + 1].device);
-                    } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                            showCamUsed();
-
-                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                    } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        DataManager::instance()->setdevStatus(NOCAM);
-                        showNocam();
-                    }
-
+                    switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
                     break;
                 }
-
             }
 
             if (str.isEmpty()) {
-                int ret = camInit(devlist->list_devices[0].device);
-
-                if (ret == E_OK) {
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
-                    DataManager::instance()->setdevStatus(CAM_CANUSE);
-                    //切换摄像机成功，发送设备名称信号到主界面。
-                    emit switchCameraSuccess(devlist->list_devices[0].name);
-                    dc::Settings::get().setBackOption("device",devlist->list_devices[0].device);
-                } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    qWarning() << "camInit failed";
-
-                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                        showCamUsed();
-
-                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    DataManager::instance()->setdevStatus(NOCAM);
-                    showNocam();
-                }
-
+                switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
                 break;
             }
         }
     }
+}
+
+int videowidget::switchCamera(const char* device, const char* devName)
+{
+    if (NULL == device){
+        return -1;
+    }
+    int ret = camInit(device);
+    if (ret == E_OK) {
+        m_imgPrcThread->init();
+        m_imgPrcThread->start();
+        DataManager::instance()->setdevStatus(CAM_CANUSE);
+        //切换摄像机成功，发送设备名称信号到主界面。
+        if (devName && strlen(devName)){
+            emit switchCameraSuccess(devName);
+        }
+        dc::Settings::get().setBackOption("device",device);
+    } else if (ret == E_FORMAT_ERR) {
+        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+        if (vd != nullptr)
+            close_v4l2_device_handler();
+
+        qWarning() << "camInit failed";
+
+        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
+            showCamUsed();
+
+        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+    } else if (ret == E_NO_DEVICE_ERR) {
+        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+        if (vd != nullptr)
+            close_v4l2_device_handler();
+
+        DataManager::instance()->setdevStatus(NOCAM);
+        showNocam();
+    }
+    return ret;
 }
 
 void videowidget::onTakePic(bool bTrue)
