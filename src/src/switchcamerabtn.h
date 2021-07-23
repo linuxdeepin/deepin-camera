@@ -31,7 +31,7 @@ class SwitchCameraBtn : public QWidget
     Q_OBJECT
 public:
     explicit SwitchCameraBtn(QWidget *parent = nullptr);
-
+    ~SwitchCameraBtn();
 signals:
     void clicked();
 protected:

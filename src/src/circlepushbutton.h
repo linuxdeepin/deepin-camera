@@ -33,6 +33,7 @@ class circlePushButton : public QPushButton
     Q_OBJECT
 public:
     explicit circlePushButton(QWidget *parent = nullptr);
+    ~circlePushButton();
     /**
     * @brief setbackground 设置背景色
     * @param color 背景色
@@ -100,7 +101,11 @@ protected:
     * @param  event 事件参数
     */
     void mouseReleaseEvent(QMouseEvent *event) override;
-
+private:
+    /**
+    * @brief releaseSvg 释放所有SVG
+    */
+    void releaseSvg();
 private:
     bool m_hover;//是否悬浮
     bool m_mousePress;//是否点击
