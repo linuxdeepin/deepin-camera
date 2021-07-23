@@ -136,6 +136,7 @@ signals:
      */
     void resolutionchanged(const QString &);
 
+    void delayTimeChanged(const QString &);
 
 private:
     Settings();
