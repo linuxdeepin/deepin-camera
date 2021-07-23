@@ -145,6 +145,12 @@ signals:
     */
     void switchCameraSuccess(const QString& devName);
 
+    /**
+    * @brief updateRecordState　更新录制状态
+    * @param state 状态
+    */
+    void updateRecordState(int state);
+
 public:
     /**
     * @brief setCapStatus　设置相机状态
