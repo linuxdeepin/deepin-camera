@@ -358,6 +358,12 @@ private slots:
      * @brief onShowCameraNameTimer 显示摄像机名称定时器
      */
     void onShowCameraNameTimer();
+
+    /**
+     * @brief onUpdateRecordState 更新录像状态
+     * @param state  录像状态
+     */
+    void onUpdateRecordState(int state);
 protected:
 
     /**

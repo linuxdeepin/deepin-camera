@@ -19,7 +19,7 @@ class QTestMain : public QObject
     Q_OBJECT
 
 public:
-    QTestMain();
+    QTestMain(int argc, char **argv);
     ~QTestMain();
 
 private slots:
@@ -28,11 +28,16 @@ private slots:
 
     void testGTest();
     int runtest();
+
+private:
+    int    m_argc;
+    char** m_argv;
 };
 
-QTestMain::QTestMain()
+QTestMain::QTestMain(int argc, char **argv)
 {
-
+    m_argc = argc;
+    m_argv = argv;
 }
 
 QTestMain::~QTestMain()
@@ -53,7 +58,7 @@ void QTestMain::cleanupTestCase()
 void QTestMain::testGTest()
 {
 //    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-camera.xml";
-    testing::InitGoogleTest();
+    testing::InitGoogleTest(&m_argc, m_argv);
     runtest();
     __sanitizer_set_report_path("asan.log");
     exit(0);
@@ -139,9 +144,9 @@ int main(int argc, char *argv[])
     //将界面移至屏幕中央
     Dtk::Widget::moveToCenter(w);
 
-    QTestMain testMain;
-    QTest::qExec(&testMain, argc, argv);
-    return qApp->exec();
+    //QTestMain testMain(argc, argv);
+    //QTest::qExec(&testMain, argc, argv);
+    return RUN_ALL_TESTS();//qApp->exec();
 }
 
 #include "main.moc"

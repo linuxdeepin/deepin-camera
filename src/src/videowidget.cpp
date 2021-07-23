@@ -24,6 +24,7 @@
 #include "datamanager.h"
 #include "ac-deepin-camera-define.h"
 #include "capplication.h"
+#include "photorecordbtn.h"
 
 #include <DGuiApplicationHelper>
 #include <DApplicationHelper>
@@ -898,6 +899,8 @@ void videowidget::showCountdown()
 
             //显示录制时长
             showCountDownLabel(g_Enum_Camera_State);
+            //向mainwindow 发送录像状态为正在录像
+            emit updateRecordState(photoRecordBtn::Recording);
         }
 
         if (g_Enum_Camera_State == PICTRUE) {
@@ -1160,7 +1163,8 @@ void videowidget::onEndBtnClicked()
     if (m_dLabel->isVisible())
         m_dLabel->hide();
 
-
+    //取消拍照或者停止拍照，发送按钮状态普通
+    emit updateRecordState(photoRecordBtn::Normal);
     //结束录制阶段,获取焦点的窗口索引，焦点在结束按钮，设置焦点索引为拍照/录制按钮
     if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex) {
 
@@ -1442,6 +1446,8 @@ void videowidget::onTakePic(bool bTrue)
 void videowidget::onTakeVideo() //点一次开，再点一次关
 {
     if (m_nInterval >= 0 && m_countTimer->isActive()) { //倒计时期间的处理
+        //向mainwindow 发送录像状态通知信号
+        emit updateRecordState(photoRecordBtn::Normal);
         m_nInterval = 0; //下次可开启
         set_video_time_capture(0);
         emit takeVdCancel(); //用于恢复缩略图
@@ -1461,6 +1467,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
+        //向mainwindow 发送录像状态通知信号
+        emit updateRecordState(photoRecordBtn::Normal);
         stop_encoder_thread();
         setCapStatus(false);
         reset_video_timer();
@@ -1487,6 +1495,8 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
     } else {
         m_nInterval = m_Maxinterval;
         m_countTimer->start(1000);
+        //向mainwindow 发送录像倒计时状态
+        emit updateRecordState(photoRecordBtn::preRecord);
     }
 
 }
