@@ -1198,18 +1198,8 @@ void videowidget::onRestartDevices()
 
 void videowidget::onSwitchCameraTimer()
 {
-    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
-
-    if (m_imgPrcThread != nullptr)
-        m_imgPrcThread->stop();
-
-    while (m_imgPrcThread->isRunning());
-    QString str;
-
-    if (devicehandler != nullptr) {
-        str = QString(devicehandler->videodevice);
-        close_v4l2_device_handler();
-    }
+    QString str = m_preVideoDevice;
+    m_preVideoDevice = "";
 
     v4l2_device_list_t *devlist = get_device_list();
     if (devlist->num_devices == 2) {
@@ -1356,10 +1346,17 @@ void videowidget::onSwitchCameraTimer()
 void videowidget::onChangeDev()
 {
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+    if (m_imgPrcThread != nullptr)
+        m_imgPrcThread->stop();
+
+    while (m_imgPrcThread->isRunning());
     QString str;
 
     if (devicehandler != nullptr) {
         str = QString(devicehandler->videodevice);
+        m_preVideoDevice = str;
+        close_v4l2_device_handler();
     }
 
     str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";

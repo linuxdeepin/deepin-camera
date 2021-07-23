@@ -371,6 +371,7 @@ private:
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
 
     QTimer                     *m_switchTimer;
+    QString                     m_preVideoDevice;
 };
 
 #endif // VIDEOWIDGET_H

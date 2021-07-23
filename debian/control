@@ -24,6 +24,6 @@ Depends:
  libqt5dbus5 (>= 5.0.2), libqt5gui5 (>= 5.8.0), libqt5network5 (>= 5.0.2), libqt5printsupport5 (>= 5.0.2), 
  libqt5widgets5 (>= 5.2.0~alpha1), libqt5x11extras5 (>= 5.6.0), libqt5xml5 (>= 5.0.2), libsdl2-2.0-0 (>= 2.0.9), 
  libstdc++6 (>= 7), libswresample3 (>= 7:4.0), libswscale5 (>= 7:4.0), libudev1 (>= 183), libusb-1.0-0 (>= 2:1.0.8), 
- libv4l-0 (>= 0.5.0), zlib1g (>= 1:1.1.4), dde-api
+ libv4l-0 (>= 0.5.0), zlib1g (>= 1:1.1.4), dde-api,librga2 (>= 2.1.0)
 Description:this package software for  UOS
  deepin-camera is a tool to view camera, and also a smart take photo and video in life.

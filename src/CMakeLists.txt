@@ -150,6 +150,12 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/sh
 #debus_service
 install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/share/dbus-1/services)
 
+#debus_service
+install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.sh DESTINATION /usr/bin)
+
+#switch_camera
+install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.service DESTINATION /usr/lib/systemd/system)
+
 ##translations
 #install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION /usr/share/${PROJECT_SOURCE_DIR}/translations)
 

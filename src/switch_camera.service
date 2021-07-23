@@ -1,0 +1,18 @@
+[Unit]
+
+Description=switch_camera
+After=syslog.target network.target
+After=rc-local.service
+
+[Service]
+Type=fork
+PIDFile=/run/switch_camera.pid
+ExecStartPre=/usr/bin/rm -f /run/switch_camera.pid
+WorkingDirectory=/home/user/
+ExecStart=/usr/bin/switch_camera.sh
+ExecReload=/bin/kill -s HUP $MAINPID
+StartLimitIntervalSec=0
+Restart=always
+RestartSec=1
+[Install]
+WantedBy=multi-user.target
