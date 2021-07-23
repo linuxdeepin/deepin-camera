@@ -314,7 +314,7 @@ void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
         emit m_delay3SecondBtn->clicked();
         break;
     case 6:
-        emit m_delay3SecondBtn->clicked();
+        emit m_delay6SecondBtn->clicked();
         break;
     default:
         ;

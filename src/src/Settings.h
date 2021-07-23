@@ -135,7 +135,11 @@ signals:
      * @param
      */
     void resolutionchanged(const QString &);
-
+     /**
+     * @brief delayTimeChanged 延迟拍照时间改变信号
+     * @param
+     */
+    void delayTimeChanged(const QString &);
 
 private:
     Settings();
