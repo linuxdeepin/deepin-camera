@@ -75,6 +75,14 @@ public:
     {
         m_animatePix = pixmap;
     }
+    /**
+     * @brief getPixmap 获取缩略图
+     * @return 缩略图
+     */
+    QPixmap getPixmap()
+    {
+        return m_animatePix;
+    }
 
 protected:
     /**
@@ -126,7 +134,7 @@ public:
         m_pAniWidget->setPixmap(pixmap);
 
 
-        m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry");
+        m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry", this);
         m_pAnimation->setEasingCurve(QEasingCurve::Linear);
         m_pAnimation->setDuration(ANIMATION_DURATION);
 //        m_pAnimation->setStartValue(QRect(width() / 2, height() / 2, 0, 0));
@@ -136,10 +144,10 @@ public:
         m_pAnimation->setKeyValueAt(0.3, QRect((width() - 40) / 2, (height() - 40) / 2, 40, 40));
         m_pAnimation->setKeyValueAt(1, QRect(1, 1, width() - 1, height() - 1)); //去除1像素外边框
         m_pAnimation->start(/*QAbstractAnimation::DeleteWhenStopped*/);
-        connect(m_pAnimation, &QPropertyAnimation::finished, [ = ]() {
+        connect(m_pAnimation, &QPropertyAnimation::finished, [ & ]() {
             m_pAnimation->deleteLater();
             m_pAnimation = nullptr;
-            m_pixmap = pixmap;
+            m_pixmap = m_pAniWidget->getPixmap();
             update();
             m_pAniWidget->setVisible(false);
         });
