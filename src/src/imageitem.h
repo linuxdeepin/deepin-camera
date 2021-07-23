@@ -125,7 +125,6 @@ public:
         m_pAniWidget->setVisible(true);
         m_pAniWidget->setPixmap(pixmap);
 
-
         m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry");
         m_pAnimation->setEasingCurve(QEasingCurve::Linear);
         m_pAnimation->setDuration(ANIMATION_DURATION);
