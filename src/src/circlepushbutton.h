@@ -31,6 +31,7 @@ class QSvgRenderer;
 class circlePushButton : public QPushButton
 {
     Q_OBJECT
+    Q_PROPERTY(int opacity READ getOpacity WRITE setOpacity)//自定义透明度属性
 public:
     explicit circlePushButton(QWidget *parent = nullptr);
     /**
@@ -70,6 +71,15 @@ public:
     * @param  disable 是否禁用选中
     */
     void setDisableSelect(bool disable);
+
+    int getOpacity() { return m_opacity; };
+    void setOpacity(int opacity) //set方法，动画会通过这个函数输入插值，修改透明度。
+    {
+        m_opacity = opacity;
+        m_color.setAlpha(opacity);
+        update();
+    };
+
 signals:
 
 public slots:
@@ -114,6 +124,7 @@ private:
 
     int           m_radius;//半径
     bool          m_disableSelect;//禁用选中
+    int           m_opacity = 102;    //不透明度 默认值102
 };
 
 #endif // CIRCLEPUSHBUTTON_H

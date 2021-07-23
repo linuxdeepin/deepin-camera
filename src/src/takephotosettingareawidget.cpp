@@ -24,6 +24,9 @@
 #include <QColor>
 #include <QPainter>
 
+#define HIDE_NIMATION_DURATION 100
+#define ANIMATION_DURATION 200
+
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
     , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
     , m_foldBtn(nullptr)
@@ -50,9 +53,9 @@ void takePhotoSettingAreaWidget::initButtons()
 
     m_foldBtn = new circlePushButton(this);
     m_foldBtn->setDisableSelect(true);
-    m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold-press.svg");
+    m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold.svg");
     m_unfoldBtn = new circlePushButton(this);
-    m_unfoldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold-press.svg");
+    m_unfoldBtn->setPixmap(":/images/camera/unfold.svg", ":/images/camera/unfold.svg", ":/images/camera/unfold.svg");
     m_unfoldBtn->setDisableSelect(true);
 
     m_flashlightFoldBtn = new circlePushButton(this);
@@ -132,31 +135,122 @@ void takePhotoSettingAreaWidget::init()
 
 void takePhotoSettingAreaWidget::showFold(bool bShow)
 {
-    m_unfoldBtn->setVisible(bShow);
-    setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
-    update();
+//    m_unfoldBtn->setVisible(bShow);
+//    setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
+//    update();
+
+
+    QPropertyAnimation *animate1 = new QPropertyAnimation(m_foldBtn, "pos", this);
+    animate1->setDuration(ANIMATION_DURATION);
+    animate1->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+    animate1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    QPropertyAnimation *animate2 = new QPropertyAnimation(m_flashlightUnfoldBtn, "pos", this);
+    animate2->setDuration(ANIMATION_DURATION);
+    animate2->setStartValue(QPoint(0, 0));
+    animate2->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    pPosGroup->addAnimation(animate1);
+    pPosGroup->addAnimation(animate2);
+
+    pPosGroup->start();
+
+//    QPropertyAnimation *animate3 = new QPropertyAnimation(m_unfoldBtn, "opacity");
+//    animate3->setDuration(HIDE_NIMATION_DURATION);
+//    animate3->setStartValue(10);
+//    animate3->setEndValue(102);
+
+    connect(pPosGroup, &QParallelAnimationGroup::finished, [=](){
+        m_foldBtn->setVisible(false);
+        m_flashlightUnfoldBtn->setVisible(false);
+        m_unfoldBtn->setVisible(true);
+        setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
+        update();
+    });
 }
 
 void takePhotoSettingAreaWidget::showUnfold(bool bShow)
 {
+//    QPropertyAnimation *animate3 = new QPropertyAnimation(m_unfoldBtn, "opacity");
+//    animate3->setDuration(HIDE_NIMATION_DURATION);
+//    animate3->setStartValue(102);
+//    animate3->setEndValue(10);
+//    m_unfoldBtn->setVisible(true);
+//    m_unfoldBtn->move(0, m_delayFoldBtn->height() + m_btnHeightOffset);
+//    animate3->start();
+
+    QPropertyAnimation *animate1 = new QPropertyAnimation(m_foldBtn, "pos", this);
+    animate1->setDuration(ANIMATION_DURATION);
+    animate1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+    animate1->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+
+    QPropertyAnimation *animate2 = new QPropertyAnimation(m_flashlightUnfoldBtn, "pos", this);
+    animate2->setDuration(ANIMATION_DURATION);
+    animate2->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+    animate2->setEndValue(QPoint(0, 0));
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    pPosGroup->addAnimation(animate1);
+    pPosGroup->addAnimation(animate2);
+
     m_foldBtn->setVisible(bShow);
     m_flashlightUnfoldBtn->setVisible(bShow);
     m_delayUnfoldBtn->setVisible(bShow);
+    m_unfoldBtn->setVisible(false);
+    pPosGroup->start();
+
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
     update();
 }
 
 void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
 {
+//    m_delayFoldBtn->setVisible(bShow);
+//    m_noDelayBtn->setVisible(bShow);
+//    m_delay3SecondBtn->setVisible(bShow);
+//    m_delay6SecondBtn->setVisible(bShow);
+
+//    //normal状态下设置按钮透明，只显示背景颜色
+//    m_noDelayBtn->setbackground(Qt::transparent);
+//    m_delay3SecondBtn->setbackground(Qt::transparent);
+//    m_delay6SecondBtn->setbackground(Qt::transparent);
+
+//    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + 3 * m_btnHeightOffset));
+//    update();
+
+
+
+    QPropertyAnimation *animate1 = new QPropertyAnimation(m_noDelayBtn, "pos", this);
+    animate1->setDuration(ANIMATION_DURATION);
+    animate1->setStartValue(QPoint(0, 0));
+    animate1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    QPropertyAnimation *animate2 = new QPropertyAnimation(m_delay3SecondBtn, "pos", this);
+    animate2->setDuration(ANIMATION_DURATION);
+    animate2->setStartValue(QPoint(0, 0));
+    animate2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+
+    QPropertyAnimation *animate3 = new QPropertyAnimation(m_delay6SecondBtn, "pos", this);
+    animate3->setDuration(ANIMATION_DURATION);
+    animate3->setStartValue(QPoint(0, 0));
+    animate3->setEndValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_btnHeightOffset * 3));
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    pPosGroup->addAnimation(animate1);
+    pPosGroup->addAnimation(animate2);
+    pPosGroup->addAnimation(animate3);
+
     m_delayFoldBtn->setVisible(bShow);
     m_noDelayBtn->setVisible(bShow);
     m_delay3SecondBtn->setVisible(bShow);
     m_delay6SecondBtn->setVisible(bShow);
-
     //normal状态下设置按钮透明，只显示背景颜色
     m_noDelayBtn->setbackground(Qt::transparent);
     m_delay3SecondBtn->setbackground(Qt::transparent);
     m_delay6SecondBtn->setbackground(Qt::transparent);
+
+    pPosGroup->start();
 
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + 3 * m_btnHeightOffset));
     update();
@@ -164,9 +258,30 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
 
 void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
 {
+//    m_flashlightFoldBtn->setVisible(bShow);
+//    m_flashlightOnBtn->setVisible(bShow);
+//    m_flashlightOffBtn->setVisible(bShow);
+//    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
+//    update();
+
+    QPropertyAnimation *animate1 = new QPropertyAnimation(m_flashlightOnBtn, "pos", this);
+    animate1->setDuration(ANIMATION_DURATION);
+    animate1->setStartValue(QPoint(0, 0));
+    animate1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    QPropertyAnimation *animate2 = new QPropertyAnimation(m_flashlightOffBtn, "pos", this);
+    animate2->setDuration(ANIMATION_DURATION);
+    animate2->setStartValue(QPoint(0, 0));
+    animate2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    pPosGroup->addAnimation(animate1);
+    pPosGroup->addAnimation(animate2);
+
     m_flashlightFoldBtn->setVisible(bShow);
     m_flashlightOnBtn->setVisible(bShow);
     m_flashlightOffBtn->setVisible(bShow);
+    pPosGroup->start();
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
     update();
 }
@@ -211,7 +326,7 @@ void takePhotoSettingAreaWidget::delayfoldBtnClicked()
 
 void takePhotoSettingAreaWidget::foldBtnClicked()
 {
-    hideAll();
+//    hideAll();
     showFold(true);
 }
 

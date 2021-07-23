@@ -28,7 +28,7 @@
 
 circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radius(20)
 {
-    m_color.setRgb(0, 0, 0, 102);
+    m_color.setRgb(0, 0, 0, m_opacity);
 
     m_hover = false;
     m_mousePress = false;
