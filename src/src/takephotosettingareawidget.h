@@ -22,6 +22,8 @@
 #define TAKEPHOTOSETTINGAREAWIDGET_H
 
 #include <QWidget>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 class QPalette;
 class circlePushButton;
