@@ -1478,12 +1478,12 @@ void CMainWindow::onPhotoRecordBtnClked()
     else{  //录像模式下
         if (true == m_bRecording){
             m_videoPre->onEndBtnClicked();
-            m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
+            //m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
         }
         else{
             m_bRecording = true;
             m_videoPre->onTakeVideo();
-            m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
+            //m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
         }
     }
 }
@@ -1492,6 +1492,13 @@ void CMainWindow::onShowCameraNameTimer()
 {
     m_showCameraNameTimer->stop();
     m_labelCameraName->hide();
+}
+
+void CMainWindow::onUpdateRecordState(int state)
+{
+    m_photoRecordBtn->setRecordState(state);
+    m_bRecording = (photoRecordBtn::Normal != state);
+    showRightButtons();
 }
 
 void CMainWindow::initUI()
@@ -1653,6 +1660,7 @@ void CMainWindow::initConnection()
 //    connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
 //    //标题栏视频按钮
 //    connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
+    connect(m_videoPre, SIGNAL(updateRecordState(int)), this, SLOT(onUpdateRecordState(int)));
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()),this, SLOT(onShowCameraNameTimer()));
     //主题变换
