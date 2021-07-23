@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c044de8a_ac00c1d6",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-23T03:57:36Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 21; 注释率: 0.0%",
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a598aff_536b3c37",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-23T03:57:36Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 6; 注释率: 50.0%",
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60f02e52_2d8780ff",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-23T03:57:36Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 11; 注释率: 36.4%",
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66fe4fba_77229eaf",
+        "filename": "src/src/switchcamerabtn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-23T03:57:36Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 11; 注释率: 0.0%",
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46f50bbc_fe8a5ec1",
+        "filename": "src/src/switchcamerabtn.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-23T03:57:36Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
