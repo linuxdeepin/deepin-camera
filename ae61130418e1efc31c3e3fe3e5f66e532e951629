@@ -53,6 +53,29 @@
     },
     {
       "key": {
+        "uuid": "7754398b_413b376c",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-07-23T08:31:06Z",
+      "side": 1,
+      "message": "updatePic 函数处理较多，建议放在cpp实现",
+      "range": {
+        "startLine": 136,
+        "startChar": 0,
+        "endLine": 136,
+        "endChar": 0
+      },
+      "revId": "ae61130418e1efc31c3e3fe3e5f66e532e951629",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66fe4fba_77229eaf",
         "filename": "src/src/switchcamerabtn.cpp",
         "patchSetId": 1
