@@ -948,7 +948,11 @@ void videowidget::showCountdown()
 
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime > 0) {
-                m_flashLabel->show();
+
+                 if ("/dev/video0" == m_preVideoDevice)
+                {
+                    m_flashLabel->show();
+                } 
 
                 /**
                   * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
