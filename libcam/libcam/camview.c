@@ -108,6 +108,7 @@ static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
 
+extern int g_exchangeWidthHeight;
 
 void set_video_time_capture(double video_time)
 {
@@ -786,7 +787,11 @@ static void *encoder_loop(__attribute__((unused))void *data)
             channels, samprate);
 
     /*create the encoder context*/
-    encoder_context_t *encoder_ctx = encoder_init(
+    encoder_context_t *encoder_ctx = NULL;
+
+    printf("------------------init encoder %d-----------------------\n",g_exchangeWidthHeight);
+    if (1 == g_exchangeWidthHeight){
+        encoder_ctx = encoder_init(
         v4l2core_get_requested_frame_format(my_vd),
         get_video_codec_ind(),
         get_audio_codec_ind(),
@@ -797,6 +802,21 @@ static void *encoder_loop(__attribute__((unused))void *data)
         v4l2core_get_fps_denom(my_vd),
         channels,
         samprate);
+     } else {
+	encoder_ctx = encoder_init(
+        v4l2core_get_requested_frame_format(my_vd),
+        get_video_codec_ind(),
+        get_audio_codec_ind(),
+        get_video_muxer(),
+        v4l2core_get_frame_width(my_vd),
+        v4l2core_get_frame_height(my_vd),  
+	v4l2core_get_fps_num(my_vd),
+        v4l2core_get_fps_denom(my_vd),
+        channels,
+        samprate);
+     }
+
+
 
     /*store external SPS and PPS data if needed*/
     if(encoder_ctx->video_codec_ind == 0 && /*raw - direct input*/

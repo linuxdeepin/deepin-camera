@@ -303,6 +303,7 @@ private slots:
      * @brief onVisible 是否是锁屏
      */
     void onTimeoutLock(QString, QVariantMap, QStringList);
+
 protected:
 
     /**

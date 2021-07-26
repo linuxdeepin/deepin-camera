@@ -43,6 +43,7 @@
 #include <QGraphicsProxyWidget>
 #include <QStandardPaths>
 #include <QGraphicsSvgItem>
+#include <QDBusInterface>
 
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
@@ -192,11 +193,40 @@ videowidget::videowidget(DWidget *parent)
     m_switchTimer->setInterval(2000);
     m_switchTimer->setSingleShot(true);
 
+    m_rotationCheckTimer = new QTimer(this);
+    m_rotationCheckTimer->setInterval(1000);
+
+    connect(m_rotationCheckTimer,SIGNAL(timeout()), this, SLOT(onTimerCheckRotation()));
     connect(m_switchTimer,SIGNAL(timeout()), this, SLOT(onSwitchCameraTimer()));
     connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
     connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
     connect(m_endBtn, SIGNAL(clicked()), this, SLOT(onEndBtnClicked()));
+    
+    /*
+    m_displayBus = new QDBusInterface("com.deepin.daemon.Display",
+                                         "/com/deepin/daemon/Display",
+                                         "com.deepin.daemon.Display",
+                                         QDBusConnection::sessionBus());
+    if (nullptr == m_displayBus){
+	qDebug() << "display bus is null---------------";
+        return;
+    }
+
+    QVariant varPath  = m_displayBus->property("Monitors");
+    QList<QDBusObjectPath> listPath = varPath.value<QList<QDBusObjectPath>>();
+    if (listPath.isEmpty()){
+	qDebug() << "list path is empty---------------";
+        return;
+    }
+
+    m_rotationBus = new QDBusInterface("com.deepin.daemon.Display",
+                                         listPath.at(0).path(),
+                                         "com.deepin.daemon.Display.Monitor",
+                                         QDBusConnection::sessionBus());
+    qDebug() << "get rotation bus" << m_rotationBus;
+    //m_rotationCheckTimer->start();
+    onTimerCheckRotation();*/
 }
 
 videowidget::~videowidget()
@@ -412,7 +442,29 @@ void videowidget::delayInit()
         }
 
     });
+    m_displayBus = new QDBusInterface("com.deepin.daemon.Display",
+                                         "/com/deepin/daemon/Display",
+                                         "com.deepin.daemon.Display",
+                                         QDBusConnection::sessionBus());
+    if (nullptr == m_displayBus){
+	qDebug() << "display bus is null---------------";
+        return;
+    }
 
+    QVariant varPath  = m_displayBus->property("Monitors");
+    QList<QDBusObjectPath> listPath = varPath.value<QList<QDBusObjectPath>>();
+    if (listPath.isEmpty()){
+	qDebug() << "list path is empty---------------";
+        return;
+    }
+
+    m_rotationBus = new QDBusInterface("com.deepin.daemon.Display",
+                                         listPath.at(0).path(),
+                                         "com.deepin.daemon.Display.Monitor",
+                                         QDBusConnection::sessionBus());
+    qDebug() << "get rotation bus" << m_rotationBus;
+    //m_rotationCheckTimer->start();
+    onTimerCheckRotation();
 }
 
 void videowidget::showNocam()
@@ -1366,6 +1418,13 @@ void videowidget::onChangeDev()
     //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
     system(pCmd);
     m_switchTimer->start();
+}
+
+void videowidget::onTimerCheckRotation()
+{
+    if (m_rotationBus){
+        m_imgPrcThread->setRotation(m_rotationBus->property("Rotation").value<unsigned short>());
+    }
 }
 
 void videowidget::onTakePic(bool bTrue)

@@ -27,11 +27,12 @@
 #include <QFile>
 #include <QDate>
 #include <QDir>
-
+int g_exchangeWidthHeight =0;
 MajorImageProcessingThread::MajorImageProcessingThread()
 {
     m_yuvPtr = nullptr;
     init();
+    m_rotation = IM_HAL_TRANSFORM_ROT_270;
 }
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
@@ -59,6 +60,29 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
+}
+void MajorImageProcessingThread::setRotation(int rotation)
+{
+    g_exchangeWidthHeight=1;
+    switch (rotation) {
+    case 1:
+        m_rotation = IM_HAL_TRANSFORM_ROT_270;
+        break;
+    case 2:
+	g_exchangeWidthHeight = 0;
+        m_rotation = 0;
+        break;
+    case 4:
+        m_rotation = IM_HAL_TRANSFORM_ROT_90;
+        break;
+    case 8:
+//	g_exchangeWidthHeight = 0;
+        m_rotation = IM_HAL_TRANSFORM_ROT_180;
+        break;
+    default:
+        break;
+    }
+    qDebug() << "------------------- "  << rotation << "------------------";
 }
 
 void MajorImageProcessingThread::run()
@@ -145,50 +169,31 @@ void MajorImageProcessingThread::run()
         }
 
         //旋转
-
-        rga_buffer_t 	src;
-        rga_buffer_t 	dst;
-        RgaSURF_FORMAT format = RK_FORMAT_YCbCr_420_P;
-        int w = m_frame->width;
-        int h = m_frame->height;
-        src = wrapbuffer_virtualaddr(m_frame->yuv_frame, w, h, format);
-        //dst = wrapbuffer_virtualaddr(m_frame->yuv_frame, h, w, format);
-        dst = wrapbuffer_virtualaddr(m_yuvPtr, h, w, format);
-        IM_USAGE age = IM_HAL_TRANSFORM_ROT_270;
         uint8_t *preframe = m_frame->yuv_frame;
-        if(IM_STATUS_SUCCESS == imrotate(src, dst, age)){
-            m_frame->width = src.height;
-            m_frame->height = src.width;
-            qDebug() << "imrote :" << age <<"-----------" << endl;
-            qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
-//            memcpy(m_frame->yuv_frame, m_yuvPtr, w*h*3/2);
-            m_frame->yuv_frame = (uint8_t *)m_yuvPtr;
+        if ( 0 != m_rotation)
+        {
+            rga_buffer_t 	src;
+            rga_buffer_t 	dst;
+            RgaSURF_FORMAT format = RK_FORMAT_YCbCr_420_P;
+            int w = m_frame->width;
+            int h = m_frame->height;
+            src = wrapbuffer_virtualaddr(m_frame->yuv_frame, w, h, format);
+            //dst = wrapbuffer_virtualaddr(m_frame->yuv_frame, h, w, format);
+            dst = wrapbuffer_virtualaddr(m_yuvPtr, h, w, format);
+            //IM_USAGE age = IM_HAL_TRANSFORM_ROT_270;
+            if(IM_STATUS_SUCCESS == imrotate(src, dst, m_rotation)){
+                m_frame->width = src.height;
+                m_frame->height = src.width;
+                //qDebug() << "imrote :" << m_rotation <<"-----------" << endl;
+                //qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
+
+                m_frame->yuv_frame = (uint8_t *)m_yuvPtr;
+            }
         }
-
-
-//        rga_buffer_t 	src;
-//        rga_buffer_t 	dst;
-//        RgaSURF_FORMAT format = RK_FORMAT_YCbCr_420_P;
-//        int w = m_frame->width;
-//        int h = m_frame->height;
-//        uint8_t *dst_buf = (uint8_t*)malloc(w*h*3/2);
-//        if (dst_buf){
-//            src = wrapbuffer_virtualaddr(m_frame->yuv_frame, w, h, format);
-//            //dst = wrapbuffer_virtualaddr(m_frame->yuv_frame, h, w, format);
-//            dst = wrapbuffer_virtualaddr(dst_buf, h, w, format);
-//            IM_USAGE age = IM_HAL_TRANSFORM_ROT_270;
-//            if(IM_STATUS_SUCCESS == imrotate(src, dst, age)){
-//                m_frame->width = src.height;
-//                m_frame->height = src.width;
-//                qDebug() << "imrote :" << age <<"-----------" << endl;
-//                qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
-//                m_nVdWidth = src.height;
-//                m_nVdHeight = src.width;
-//                memcpy(m_frame->yuv_frame,dst_buf, w*h*3/2);
-//            }
-//            free(dst_buf);
-//        }
-
+        else
+        {
+            memcpy(m_yuvPtr, m_frame->yuv_frame , m_frame->width*m_frame->height*3/2);
+        }
         //end 旋转
 
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
@@ -274,8 +279,8 @@ void MajorImageProcessingThread::run()
             if (nRet < 0) {
                 qWarning() << "保存照片失败";
             }
-            QImage img(m_strPath,"QImage::Format_RGB888");
-            img.save(m_strPath,"jpg");
+            //QImage img(m_strPath,"QImage::Format_RGB888");
+            //img.save(m_strPath,"jpg");
 
             m_bTake = false;
         }

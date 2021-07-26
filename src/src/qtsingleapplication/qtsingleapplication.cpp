@@ -36,11 +36,11 @@
 QtSingleApplication::QtSingleApplication(int &argc, char **argv)
     : QObject(nullptr)
 {
-#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
+//#if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
     _app = new DApplication(argc, argv);
-#else
-    _app = DApplication::globalApplication(argc, argv);
-#endif
+//#else
+//    _app = DApplication::globalApplication(argc, argv);
+//#endif
 }
 
 DApplication *QtSingleApplication::dApplication()

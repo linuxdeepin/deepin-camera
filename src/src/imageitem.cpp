@@ -131,8 +131,8 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         m_strDuratuion = strTime;
     } else if (fileInfo.suffix() == "jpg") {
         m_strDuratuion = "";
-        QImage img(path);
-        img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
+        QImage img(path, "Format_RGB888");
+	img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {

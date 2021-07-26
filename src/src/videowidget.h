@@ -53,7 +53,7 @@ class QHBoxLayout;
 class QSpacerItem;
 class QSound;
 class QGraphicsSvgItem;
-
+class QDBusInterface;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 /**
@@ -249,6 +249,11 @@ public slots:
     */
     void onSwitchCameraTimer();
 
+
+    /**
+    * @brief onTimerCheckRotation 　检测屏幕角度timer
+    */
+    void onTimerCheckRotation();
 private slots:
 #ifdef __mips__
     /**
@@ -372,6 +377,10 @@ private:
 
     QTimer                     *m_switchTimer;
     QString                     m_preVideoDevice;
+
+    QTimer                     *m_rotationCheckTimer;
+    QDBusInterface             *m_displayBus;
+    QDBusInterface             *m_rotationBus;
 };
 
 #endif // VIDEOWIDGET_H

@@ -28,7 +28,7 @@ extern "C"
 #include "capplication.h"
 #include "dbus_adpator.h"
 #include "cameraconfig.h"
-//#include "config.h"
+#include "config.h"
 #include "acobjectlist.h"
 
 #include <DMainWindow>
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     DLogManager::registerFileAppender();
     qInfo() << "LogFile:" << DLogManager::getlogFilePath();
     //版本
-//    qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
+    qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     qApp->setWindowIcon(myIcon);
     qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取

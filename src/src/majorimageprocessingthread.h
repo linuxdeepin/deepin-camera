@@ -66,6 +66,8 @@ public:
      */
     void init();
 
+    void setRotation(int rotation);
+
     /**
      * @brief getStatus 获取状态
      */
@@ -128,7 +130,7 @@ private:
 #ifdef __mips__
     QImage             m_Img;
 #endif
-
+    int               m_rotation;
 };
 
 #endif // MajorImageProcessingThread_H
