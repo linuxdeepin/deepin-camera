@@ -154,7 +154,7 @@ install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/s
 install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.sh DESTINATION /usr/bin)
 
 #switch_camera
-install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.service DESTINATION /usr/lib/systemd/system)
+install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.service DESTINATION /lib/systemd/system)
 
 ##translations
 #install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION /usr/share/${PROJECT_SOURCE_DIR}/translations)
