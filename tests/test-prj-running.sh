@@ -24,6 +24,8 @@ copy_test_files() {
 }
 
 build_exe(){
+     export QT_QPA_PLATFORM=
+     echo $QT_QPA_PLATFORM
      cd ../build-ut
      cmake -DCMAKE_BUILD_TYPE=Debug ..
      make -j16

@@ -101,11 +101,7 @@ protected:
     * @param  event 事件参数
     */
     void mouseReleaseEvent(QMouseEvent *event) override;
-private:
-    /**
-    * @brief releaseSvg 释放所有SVG
-    */
-    void releaseSvg();
+
 private:
     bool m_hover;//是否悬浮
     bool m_mousePress;//是否点击
@@ -113,9 +109,9 @@ private:
 
     QColor m_color;//背景色
 
-    QSvgRenderer *m_normalSvg;//正常SVG
-    QSvgRenderer *m_hoverSvg;//悬浮SVG
-    QSvgRenderer *m_pressSvg;//点击SVG
+    QSharedPointer<QSvgRenderer> m_normalSvg;//正常SVG
+    QSharedPointer<QSvgRenderer> m_hoverSvg;//悬浮SVG
+    QSharedPointer<QSvgRenderer> m_pressSvg;//点击SVG
 
     int           m_radius;//半径
     bool          m_disableSelect;//禁用选中
