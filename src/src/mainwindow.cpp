@@ -731,6 +731,8 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_pDBus = nullptr;
     m_bWayland = false;
     m_nActTpye = ActTakePic;
+    m_nLastCookie = 0;
+    m_nPowerCookie = 0;
     m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
@@ -742,6 +744,15 @@ CMainWindow::~CMainWindow()
     if (m_rightbtnmenu) {
         delete m_rightbtnmenu;
         m_rightbtnmenu = nullptr;
+    }
+
+    if (m_nLastCookie > 0) {
+        UnInhibitStandby(m_nLastCookie);
+        m_nLastCookie = 0;
+    }
+    if (m_nPowerCookie > 0) {
+        UnInhibitPower(m_nPowerCookie);
+        m_nPowerCookie = 0;
     }
 
     if (m_devnumMonitor) {
@@ -787,6 +798,51 @@ QString CMainWindow::libPath(const QString &strlib)
     return list.last();
 }
 
+uint32_t CMainWindow::InhibitStandby()
+{
+    QDBusInterface iface("org.freedesktop.ScreenSaver",
+                         "/org/freedesktop/ScreenSaver",
+                         "org.freedesktop.ScreenSaver");
+    QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    qInfo() << reply.error().message();
+    return 0;
+}
+
+void CMainWindow::UnInhibitStandby(uint32_t cookie)
+{
+    QDBusInterface iface("org.freedesktop.ScreenSaver",
+                         "/org/freedesktop/ScreenSaver",
+                         "org.freedesktop.ScreenSaver");
+    iface.call("UnInhibit", cookie);
+}
+
+uint32_t CMainWindow::InhibitPower()
+{
+    QDBusInterface iface("org.freedesktop.PowerManagement",
+                         "/org/freedesktop/PowerManagement",
+                         "org.freedesktop.PowerManagement");
+    QDBusReply<uint32_t> reply = iface.call("Inhibit", "deepin-movie", "playing in fullscreen");
+
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    qInfo() << reply.error().message();
+    return 0;
+}
+
+void CMainWindow::UnInhibitPower(uint32_t cookie)
+{
+    QDBusInterface iface("org.freedesktop.PowerManagement",
+                         "/org/freedesktop/PowerManagement",
+                         "org.freedesktop.PowerManagement");
+    iface.call("UnInhibit", cookie);
+}
 
 void CMainWindow::initDynamicLibPath()
 {
@@ -1746,13 +1802,29 @@ void CMainWindow::initThumbnailsConn()
     //修改标题栏按钮状态
     connect(m_thumbnail, SIGNAL(enableTitleBar(int)), this, SLOT(onEnableTitleBar(int)));
     //录像信号
-    connect(m_thumbnail, SIGNAL(takeVd()), m_videoPre, SLOT(onTakeVideo()));
+    connect(m_thumbnail, SIGNAL(takeVd()), this, SLOT(takeVideoSlot()));
     //禁用设置
     connect(m_thumbnail, SIGNAL(enableSettings(bool)), this, SLOT(onEnableSettings(bool)));
     //拍照信号--显示倒计时
     connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
     //传递文件名，在拍照录制开始的时候，创建的文件不用于更新缩略图
     connect(m_videoPre, SIGNAL(filename(QString)), m_thumbnail, SLOT(onFileName(QString)));
+}
+
+void CMainWindow::takeVideoSlot()
+{
+    //这里注册一下待机休眠保持的状态
+    qInfo() << "m_nLastCookie is:" << m_nLastCookie
+            << "m_nPowerCookie is:" << m_nPowerCookie;
+    if(m_nLastCookie <= 0) {
+        m_nLastCookie = InhibitStandby();
+    }
+
+    if (m_nPowerCookie <= 0) {
+        m_nPowerCookie = InhibitPower();
+    }
+
+    m_videoPre->onTakeVideo();
 }
 
 void CMainWindow::setSelBtnHide()
@@ -2186,6 +2258,19 @@ void CMainWindow::onTakeVdDone()
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
 
+    //这里注销一下待机休眠保持的状态
+    qInfo() << "m_nLastCookie is:" << m_nLastCookie
+            << "m_nPowerCookie is:" << m_nPowerCookie;
+    if(m_nLastCookie > 0) {
+        UnInhibitStandby(m_nLastCookie);
+        m_nLastCookie = 0;
+    }
+
+    if (m_nPowerCookie > 0) {
+        UnInhibitPower(m_nPowerCookie);
+        m_nPowerCookie = 0;
+    }
+  
     QTimer::singleShot(200, this, [ = ] {
         QString strFileName = lastVdFileName + QDir::separator() + DataManager::instance()->getstrFileName();
         QFile file(strFileName);

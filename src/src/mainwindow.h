@@ -99,6 +99,9 @@ public:
     void recoverTabWidget(uint index);
 
     ~CMainWindow() override;
+public slots:
+
+    void takeVideoSlot();
 private:
     /**
     * @brief initUI　初始化界面
@@ -191,6 +194,23 @@ private:
     * @param strlib 路径的字符串
     */
     QString libPath(const QString &strlib);
+
+    /**
+    * @brief InhibitStandby 初始化待机保持
+    */
+    uint32_t InhibitStandby();
+    /**
+    * @brief UnInhibitStandby 卸载待机保持
+    */
+    void UnInhibitStandby(uint32_t cookie);
+    /**
+    * @brief InhibitPower 初始化休眠保持
+    */
+    uint32_t InhibitPower();
+    /**
+    * @brief UnInhibitPower 卸载休眠保持
+    */
+    void UnInhibitPower(uint32_t cookie);
 
 private slots:
     /**
@@ -351,6 +371,9 @@ private:
     QList<QVariant>                 m_argSleep;
     QDBusInterface                  *m_pDBus;//接收休眠信号，仅wayland使用
     qint64                          m_SpaceKeyInterval;//空格按键时间间隔
+
+    uint32_t                        m_nLastCookie; //待机保持状态
+    uint32_t                        m_nPowerCookie; //休眠保持状态
 };
 
 #endif // MAINWINDOW_H
