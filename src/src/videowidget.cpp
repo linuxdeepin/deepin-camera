@@ -947,9 +947,17 @@ void videowidget::showCountdown()
         }
 
         if (g_Enum_Camera_State == PICTRUE) {
-            if (m_nInterval == 0 && m_curTakePicTime > 0) {
+            
+          QString str;
+            v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+            if (devicehandler != nullptr) {
+                str = QString(devicehandler->videodevice);
+            }
+          
+            if (m_nInterval == 0 && m_curTakePicTime > 0 && "/dev/video0" == str) {
+              
                 m_flashLabel->show();
-
+               
                 /**
                   * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
                   * 将焦点移到m_flashlabel
@@ -971,8 +979,9 @@ void videowidget::showCountdown()
 #endif
                 m_thumbnail->hide();
             }
-
-            if (m_curTakePicTime == 0 && m_nInterval == 0) {
+            
+            
+            if (m_curTakePicTime == 0 && m_nInterval == 0 && "/dev/video0" == str) {
                 m_flashLabel->show();
 
                 /**
