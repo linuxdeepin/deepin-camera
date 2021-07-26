@@ -539,8 +539,8 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
             QFileInfo fileInfo(m_path);
             QString program;
             if (fileInfo.suffix() == "jpg") {
-                program = "deepin-album"; //用相册打开
-                qDebug() << "Open it with deepin-album";
+                program = "deepin-image-viewer"; //用看图打开
+                qDebug() << "Open it with deepin-image-viewer";
             } else {
                 program = "deepin-movie"; //用影院打开
                 qDebug() << "Open it with deepin-movie";
