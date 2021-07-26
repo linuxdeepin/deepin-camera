@@ -1088,7 +1088,7 @@ void videowidget::showCountdown()
 void videowidget::showRecTime()
 {
     //获取写video的时间
-    m_nCount = static_cast<int>(get_video_time_capture());
+    m_nCount = static_cast<int>(get_video_time_capture() + 0.5);
 
     //过滤不正常的时间
     if (m_nCount <= 3) {
