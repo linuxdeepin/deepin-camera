@@ -170,8 +170,14 @@ int enum_v4l2_devices()
 //             list_entry; \
 //             list_entry = udev_list_entry_get_next(list_entry))
     //udev_list_entry_foreach(dev_list_entry, devices)
+    int count = 0;
     for (dev_list_entry = devices;dev_list_entry;dev_list_entry = getUdev()->m_udev_list_entry_get_next(dev_list_entry))
     {
+        if (count++ >= 2)//max read two devices
+        {
+            break;
+        }
+        
         const char *path;
 
         /*
@@ -293,7 +299,7 @@ int enum_v4l2_devices()
     /* Free the enumerator object */
     getUdev()->m_udev_enumerate_unref(enumerate);
 
-    my_device_list.num_devices = num_dev;
+    my_device_list.num_devices = count;
 
     return(E_OK);
 }

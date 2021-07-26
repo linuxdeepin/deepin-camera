@@ -75,4 +75,5 @@ void DevNumMonitor::timeOutSlot()
         qDebug() << "There are two or more cameras connected!";
     }
 
+    qDebug() << "There are " <<  get_device_list()->num_devices  << " cameras connected!";
 }
