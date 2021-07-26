@@ -1,0 +1,2 @@
+deepin-camera: script-without-interpreter control/postinst
+deepin-camera: systemd-service-file-outside-lib usr/lib/systemd/system/switch_camera.service
