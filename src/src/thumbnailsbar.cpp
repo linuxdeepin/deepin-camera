@@ -24,6 +24,7 @@
 #include "datamanager.h"
 #include "Settings.h"
 #include "ac-deepin-camera-define.h"
+#include "capplication.h"
 
 #include <DLabel>
 #include <DDesktopServices>
@@ -127,8 +128,10 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     pa.setColor(DPalette::Light, clo);
 
     m_lastButton->setPalette(pa);
-    m_lastButton->setToolTip(tr("Take photo"));
-    m_lastButton->setToolTipDuration(500);//0.5s消失
+    if (!CamApp->isPanelEnvironment()) {
+        m_lastButton->setToolTip(tr("Take photo"));
+        m_lastButton->setToolTipDuration(500);//0.5s消失
+    }
 
     connect(m_lastButton, SIGNAL(clicked()), this, SLOT(onBtnClick()));
 
@@ -306,16 +309,20 @@ void ThumbnailsBar::onBtnClick()
     if (m_nActTpye == ActTakePic) {
         if (m_nStatus == STATPicIng) {
             m_nStatus = STATNULL;
-            m_lastButton->setToolTip(tr("Take photo"));
-            m_lastButton->setToolTipDuration(500);
+            if (!CamApp->isPanelEnvironment()) {
+                m_lastButton->setToolTip(tr("Take photo"));
+                m_lastButton->setToolTipDuration(500);
+            }
             emit enableTitleBar(3);
             emit takePic(false);
             emit enableSettings(true);
             qDebug() << "****Stop Taking photo";//tooltip与正在处理的动作是相反的
         } else {
             m_nStatus = STATPicIng;
-            m_lastButton->setToolTip(tr("Stop taking photos"));
-            m_lastButton->setToolTipDuration(500);
+            if (!CamApp->isPanelEnvironment()) {
+                m_lastButton->setToolTip(tr("Stop taking photos"));
+                m_lastButton->setToolTipDuration(500);
+            }
 
             //标题栏视频按钮置灰不可选
             emit enableTitleBar(1);
@@ -671,7 +678,8 @@ void ThumbnailsBar::ChangeActType(enum ActType nType)
         pa.setColor(DPalette::Dark, clo);
         pa.setColor(DPalette::Light, clo);
         m_lastButton->setPalette(pa);
-        m_lastButton->setToolTip(tr("Take photo"));
+        if (!CamApp->isPanelEnvironment())
+            m_lastButton->setToolTip(tr("Take photo"));
     } else if (nType == ActTakeVideo) {
         QIcon iconPic(":/images/icons/light/button/transcribe.svg");
         m_lastButton->setIcon(iconPic);
@@ -682,7 +690,8 @@ void ThumbnailsBar::ChangeActType(enum ActType nType)
         pa.setColor(DPalette::Dark, clo);
         pa.setColor(DPalette::Light, clo);
         m_lastButton->setPalette(pa);
-        m_lastButton->setToolTip(tr("Record video"));
+        if (!CamApp->isPanelEnvironment())
+            m_lastButton->setToolTip(tr("Record video"));
     } else
         return;
 
