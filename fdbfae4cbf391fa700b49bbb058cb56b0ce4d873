@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d220e614_b8860c52",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-26T07:19:40Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 3; 注释率: 0.0%",
+      "revId": "fdbfae4cbf391fa700b49bbb058cb56b0ce4d873",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc4a78ff_531ccf08",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-26T07:19:40Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 3; 注释率: 100.0%",
+      "revId": "fdbfae4cbf391fa700b49bbb058cb56b0ce4d873",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
