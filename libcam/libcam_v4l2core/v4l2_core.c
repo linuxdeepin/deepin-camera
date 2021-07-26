@@ -78,7 +78,7 @@ static uint8_t flag_fps_change = 0; /*set to 1 to request a fps change*/
 
 static uint8_t disable_libv4l2 = 0; /*set to 1 to disable libv4l2 calls*/
 
-static int frame_queue_size = 1; /*just one frame in queue (enough for a single thread)*/
+static int frame_queue_size = 10; /*just one frame in queue (enough for a single thread)*/
 
 /*
  * ioctl with a number of retries in the case of I/O failure

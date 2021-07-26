@@ -186,14 +186,14 @@ void MajorImageProcessingThread::run()
                 m_frame->height = src.width;
                 //qDebug() << "imrote :" << m_rotation <<"-----------" << endl;
                 //qDebug() << "imrotate success h:" << dst.height << "w: " << dst.width << "oldh: " <<src.height << " oldw: "<< src.width <<  "\n";
-
-                m_frame->yuv_frame = (uint8_t *)m_yuvPtr;
+                memcpy(m_frame->yuv_frame, m_yuvPtr, yuvsize);
+                //m_frame->yuv_frame = (uint8_t *)m_yuvPtr;
             }
         }
-        else
-        {
-            memcpy(m_yuvPtr, m_frame->yuv_frame , m_frame->width*m_frame->height*3/2);
-        }
+//        else
+//        {
+//            memcpy(m_yuvPtr, m_frame->yuv_frame , m_frame->width*m_frame->height*3/2);
+//        }
         //end 旋转
 
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
@@ -281,7 +281,7 @@ void MajorImageProcessingThread::run()
             }
             //QImage img(m_strPath,"QImage::Format_RGB888");
             //img.save(m_strPath,"jpg");
-
+            emit takePicture(m_strPath);
             m_bTake = false;
         }
 
@@ -317,7 +317,7 @@ void MajorImageProcessingThread::run()
 //                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
 //            }
 
-            emit sigYUVFrame(m_yuvPtr, m_frame->width, m_frame->height);
+            emit sigYUVFrame(m_frame->yuv_frame, m_frame->width, m_frame->height);
 #endif
             malloc_trim(0);
         }

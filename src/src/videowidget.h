@@ -96,7 +96,7 @@ signals:
     /**
     * @brief takePicOnce　多连拍时，除最后一次，每次提交一个信号
     */
-    void takePicOnce();
+    void takePicOnce(const QString& fileName);
 
     /**
     * @brief takeVdCancel　录制倒计时期间取消

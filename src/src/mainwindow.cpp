@@ -2157,14 +2157,13 @@ void CMainWindow::onTakePicDone()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    QString strPath = m_videoPre->m_imgPrcThread->m_strPath;
-    m_thumbnail->addFile(strPath);
+    //m_thumbnail->addFile(fileName);
 }
 
-void CMainWindow::onTakePicOnce()
+void CMainWindow::onTakePicOnce(const QString& fileName)
 {
     qDebug() << "onTakePicOnce";
-    m_thumbnail->addFile(m_videoPre->m_imgPrcThread->m_strPath);
+    m_thumbnail->addFile(fileName);
 }
 
 void CMainWindow::onTakePicCancel()

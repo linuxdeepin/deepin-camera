@@ -305,6 +305,7 @@ void videowidget::delayInit()
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
+    connect(m_imgPrcThread, SIGNAL(takePicture(const QString&)), this,SIGNAL(takePicOnce(const QString&)));
 
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
@@ -1016,53 +1017,56 @@ void videowidget::showCountdown()
             m_imgPrcThread->m_bTake = true; //保存图片标志
             m_nFileID++;
             m_curTakePicTime -= 1;
-m_switchTimer->stop();
-            if (m_curTakePicTime == 0) {
-                //拍照结束，恢复按钮状态和缩略图标志位
-                QThread *thread = QThread::create([ = ]() {
-                    int nCount = 0;
-
-                    while (true) {
-                        if (nCount > 50) {
-                            qWarning() << "too long to emit takePicDone";
-                            break;
-                        }
-
-                        if (!m_imgPrcThread->m_bTake)
-                            break;
-
-                        nCount ++;
-                        QThread::msleep(100);
-                    }
-                    emit takePicDone();
-                    QThread::currentThread()->quit();
-                    emit updateBlockSystem(false);//连拍结束，取消阻止关机
-                });
-                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
-                thread->start();
-            } else {
-                QThread *thread = QThread::create([ = ]() {
-                    int nCount = 0;
-
-                    while (true) {
-                        if (nCount > 50) {
-                            qWarning() << "too long to emit takePicOnce";
-                            break;
-                        }
-
-                        if (!m_imgPrcThread->m_bTake)
-                            break;
-                        nCount ++;
-                        QThread::msleep(100);
-                    }
-
-                    emit takePicOnce();
-                    QThread::currentThread()->quit();
-                });
-                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
-                thread->start();
-
+            m_switchTimer->stop();
+            if(0 >= m_curTakePicTime){
+                emit takePicDone();
             }
+//            if (m_curTakePicTime == 0) {
+//                //拍照结束，恢复按钮状态和缩略图标志位
+//                QThread *thread = QThread::create([ = ]() {
+//                    int nCount = 0;
+
+//                    while (true) {
+//                        if (nCount > 50) {
+//                            qWarning() << "too long to emit takePicDone";
+//                            break;
+//                        }
+
+//                        if (!m_imgPrcThread->m_bTake)
+//                            break;
+
+//                        nCount ++;
+//                        QThread::msleep(100);
+//                    }
+//                    emit takePicDone();
+//                    QThread::currentThread()->quit();
+//                    emit updateBlockSystem(false);//连拍结束，取消阻止关机
+//                });
+//                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+//                thread->start();
+//            } else {
+//                QThread *thread = QThread::create([ = ]() {
+//                    int nCount = 0;
+
+//                    while (true) {
+//                        if (nCount > 50) {
+//                            qWarning() << "too long to emit takePicOnce";
+//                            break;
+//                        }
+
+//                        if (!m_imgPrcThread->m_bTake)
+//                            break;
+//                        nCount ++;
+//                        QThread::msleep(100);
+//                    }
+
+//                    emit takePicOnce();
+//                    QThread::currentThread()->quit();
+//                });
+//                connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+//                thread->start();
+
+//            }
 
             if (m_curTakePicTime > 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE)
                 m_countTimer->start(m_nMaxInterval == 34 ? 0 : 1000);

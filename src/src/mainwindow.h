@@ -253,7 +253,7 @@ private slots:
     /**
      * @brief onTakePicOnce 设置多连拍属性
      */
-    void onTakePicOnce();
+    void onTakePicOnce(const QString& fileName);
 
     /**
      * @brief onTakePicCancel 取消拍照

@@ -75,6 +75,8 @@ public:
     {
         return m_stopped;
     }
+signals:
+    void takePicture(const QString& fileName);
 
 protected:
     /**
