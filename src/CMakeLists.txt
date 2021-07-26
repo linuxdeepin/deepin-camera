@@ -75,8 +75,9 @@ file (GLOB_RECURSE HEADERS
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
-         dtkcore
-         dtkwidget
+         dtkcore5.5
+         dtkwidget5.5
+         dtkgui5.5
          librga
 #        libv4l2
 #        libudev
