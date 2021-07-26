@@ -1,4 +1,6 @@
 remove_cache(){
+    export DISPLAY=":0"
+    export QT_QPA_PLATFORM=
     rm -rf ~/Pictures/相机/*.jpg
     rm -rf ~/Pictures/Camera/*.jpg
     rm -rf ~/Videos/相机/*.webm
