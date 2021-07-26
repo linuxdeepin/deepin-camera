@@ -170,8 +170,14 @@ int enum_v4l2_devices()
 //             list_entry; \
 //             list_entry = udev_list_entry_get_next(list_entry))
     //udev_list_entry_foreach(dev_list_entry, devices)
+
     for (dev_list_entry = devices;dev_list_entry;dev_list_entry = getUdev()->m_udev_list_entry_get_next(dev_list_entry))
     {
+        if (num_dev >= 2)//max read two devices
+        {
+            break;
+        }
+        
         const char *path;
 
         /*
