@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b07886cc_42877e2a",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-26T10:29:32Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 17; 注释率: 5.9%",
+      "revId": "ea17524627a082070a63ec6dc5354177f1b0a617",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
