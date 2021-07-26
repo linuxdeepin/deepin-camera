@@ -5,10 +5,11 @@ Exec=deepin-camera
 GenericName=Camera
 Icon=deepin-camera
 Name=Deepin Camera
-StartupNotify=false
-Terminal=false
+StartupNotify=true
+TryExec=deepin-camera
 Type=Application
-#X-Deepin-TurboType=dtkwidget
+X-Deepin-ManualID=deepin-camera
+X-Deepin-TurboType=dtkwidget
 X-Deepin-Vendor=deepin
 X-MultipleArgs=false
 
