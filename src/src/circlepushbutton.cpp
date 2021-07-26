@@ -44,7 +44,7 @@ circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radi
 
 circlePushButton::~circlePushButton()
 {
-    releaseSvg();
+
 }
 
 void circlePushButton::setbackground(QColor color)
@@ -54,10 +54,9 @@ void circlePushButton::setbackground(QColor color)
 
 void circlePushButton::setPixmap(QString normalPath, QString hoverPath, QString pressPath)
 {
-    releaseSvg();
-    m_normalSvg = new QSvgRenderer(normalPath);
-    m_hoverSvg = new QSvgRenderer(hoverPath);
-    m_pressSvg = new QSvgRenderer(pressPath);
+    m_normalSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(normalPath));
+    m_hoverSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(hoverPath));
+    m_pressSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(pressPath));
 }
 
 void circlePushButton::setSelected(bool selected)
@@ -179,8 +178,6 @@ void circlePushButton::setButtonRadius(int radius)
 
 void circlePushButton::copyPixmap(const circlePushButton &other)
 {
-    releaseSvg();
-
     m_normalSvg = other.m_normalSvg;
     m_hoverSvg = other.m_hoverSvg;
     m_pressSvg = other.m_pressSvg;
@@ -191,21 +188,3 @@ void circlePushButton::setDisableSelect(bool disable)
     m_disableSelect = disable;
 }
 
-
-void circlePushButton::releaseSvg()
-{
-    if (nullptr != m_normalSvg) {
-        m_normalSvg->deleteLater();
-        m_normalSvg = nullptr;
-    }
-
-    if (nullptr != m_hoverSvg) {
-        m_hoverSvg->deleteLater();
-        m_hoverSvg = nullptr;
-    }
-
-    if (nullptr != m_pressSvg) {
-        m_pressSvg->deleteLater();
-        m_pressSvg = nullptr;
-    }
-}
