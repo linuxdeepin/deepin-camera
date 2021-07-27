@@ -1486,6 +1486,10 @@ void CMainWindow::onSwitchRecordBtnClked()
 
 void CMainWindow::onPhotoRecordBtnClked()
 {
+    //没有摄像机，不进行任何操作
+    if (NOCAM == DataManager::instance()->getdevStatus()){
+        return;
+    }
     //拍照模式下
     if (true == m_photoRecordBtn->photoState()){
         //正在拍照
