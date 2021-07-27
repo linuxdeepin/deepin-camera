@@ -1671,7 +1671,7 @@ void CMainWindow::initConnection()
     //切换分辨率
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
     //拍照
-    connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
+    connect(m_videoPre, SIGNAL(takePicOnce(const QString&)), this, SLOT(onTakePicOnce(const QString&)));
     //拍照取消
     connect(m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
     //拍照结束
