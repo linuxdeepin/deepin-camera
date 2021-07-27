@@ -784,7 +784,7 @@ void videowidget::recoverTabWidget()
         CMainWindow *parentwidget = CamApp->getMainWindow();
 
         if (parentwidget) {
-            DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
+//            DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
 //            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
 //            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
             DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
@@ -794,14 +794,14 @@ void videowidget::recoverTabWidget()
                 DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
 
             switch (DataManager::instance()->getNowTabIndex()) {
-            case 1:
-                if (selectbtn) {
-                    if (selectbtn->isEnabled())
-                        selectbtn->setFocus();
-                    else
-                        setFocus();
-                }
-                break;
+//            case 1:
+//                if (selectbtn) {
+//                    if (selectbtn->isEnabled())
+//                        selectbtn->setFocus();
+//                    else
+//                        setFocus();
+//                }
+//                break;
 //            case 2:
 //                if (titlepicbtn) {
 //                    if (titlepicbtn->isEnabled())

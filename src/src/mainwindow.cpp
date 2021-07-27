@@ -1721,12 +1721,20 @@ void CMainWindow::initRightButtons()
     m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
 
+    m_cameraSwitchBtn->setObjectName(CAMERA_SWITCH_BTN);
+    m_cameraSwitchBtn->setAccessibleName(CAMERA_SWITCH_BTN);
+    m_cameraSwitchBtn->setToolTip(QString("SwitchCamera"));
+
     m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
 
-    m_cameraSwitchBtn->setObjectName(BUTTOM_TITLE_SELECT);
-    m_cameraSwitchBtn->setAccessibleName(BUTTOM_TITLE_SELECT);
-    m_cameraSwitchBtn->setToolTip(QString("SwitchCamera"));
+    m_switchPhotoBtn->setObjectName(SWITCH_BTN_PHOTO);
+    m_switchPhotoBtn->setAccessibleName(SWITCH_BTN_PHOTO);
+    m_switchRecordBtn->setObjectName(SWITCH_BTN_RECOD);
+    m_switchRecordBtn->setAccessibleName(SWITCH_BTN_RECOD);
+
+    m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
+    m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
     m_switchPhotoBtn->setText(tr("photo"));
     m_switchRecordBtn->setText(tr("record"));
