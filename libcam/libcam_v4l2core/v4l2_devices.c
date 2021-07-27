@@ -177,7 +177,7 @@ int enum_v4l2_devices()
         {
             break;
         }
-        
+
         const char *path;
 
         /*
@@ -190,6 +190,10 @@ int enum_v4l2_devices()
         /* usb_device_get_devnode() returns the path to the device node
             itself in /dev. */
         const char *v4l2_device = getUdev()->m_udev_device_get_devnode(dev);
+        if (strcmp("/dev/video0", v4l2_device)
+                && strcmp("/dev/video1",v4l2_device)){
+            continue;
+        }
         if (verbosity > 0)
             printf("V4L2_CORE: Device Node Path: %s\n", v4l2_device);
 
