@@ -167,8 +167,11 @@ void ThumbnailsBar::initShortcut()
 
 void ThumbnailsBar::setBtntooltip()
 {
-    m_lastButton->setToolTip(tr("Take photo"));
-    m_lastButton->setToolTipDuration(500);
+
+    if (!CamApp->isPanelEnvironment()) {
+        m_lastButton->setToolTip(tr("Take photo"));
+        m_lastButton->setToolTipDuration(500);
+    }
 }
 
 void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
