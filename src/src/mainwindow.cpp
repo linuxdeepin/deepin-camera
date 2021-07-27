@@ -1137,6 +1137,7 @@ void CMainWindow::settingDialog()
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
     m_SetDialog->setObjectName(SETTING_DIALOG);
     m_SetDialog->setAccessibleName(SETTING_DIALOG);
+    m_SetDialog->setWindowModality(Qt::WindowModal);
 
     connect(m_SetDialog, SIGNAL(destroyed()), this, SLOT(onSettingsDlgClose()));
 

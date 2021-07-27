@@ -54,7 +54,7 @@ Settings::Settings(): QObject(0)
     auto backend = new QSettingBackend(m_configPath);
 
     if (CamApp->isPanelEnvironment())
-        m_settings = DSettings::fromJsonFile(":/resource/panel_settings.json");
+        m_settings = DSettings::fromJsonFile(":/resource/settings.json");
     else
         m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 
