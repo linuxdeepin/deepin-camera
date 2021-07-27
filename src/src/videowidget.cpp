@@ -312,7 +312,7 @@ void videowidget::delayInit()
     m_flashLabel->setPalette(pltFlashLabel);
     m_flashLabel->hide();
     //启动视频
-    int ret =  camInit("");
+    int ret =  camInit("/dev/video0");
 
     if (ret == E_OK) {
         m_pCamErrItem->hide();

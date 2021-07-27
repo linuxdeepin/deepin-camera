@@ -191,6 +191,7 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     while ((child = m_hBox->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
         //tmp->deleteLater();
+        disconnect(tmp);
         delete tmp;
         tmp = nullptr;
 

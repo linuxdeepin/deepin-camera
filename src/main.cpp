@@ -84,6 +84,7 @@ static bool CheckWayland()
 
 int main(int argc, char *argv[])
 {
+    system("echo /dev/video0 > /tmp/pipe_camera");
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
 
