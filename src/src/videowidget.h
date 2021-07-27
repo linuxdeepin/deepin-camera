@@ -381,6 +381,7 @@ private:
     QTimer                     *m_rotationCheckTimer;
     QDBusInterface             *m_displayBus;
     QDBusInterface             *m_rotationBus;
+    unsigned short             m_lastRotation;
 };
 
 #endif // VIDEOWIDGET_H

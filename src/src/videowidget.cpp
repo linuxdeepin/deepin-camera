@@ -1389,7 +1389,12 @@ void videowidget::onChangeDev()
 void videowidget::onTimerCheckRotation()
 {
     if (m_rotationBus){
-        m_imgPrcThread->setRotation(m_rotationBus->property("Rotation").value<unsigned short>());
+        unsigned short Rotation = m_rotationBus->property("Rotation").value<unsigned short>();
+        m_imgPrcThread->setRotation(Rotation);
+        if (Rotation != m_lastRotation){ //录制中，旋转，停止录像
+            m_lastRotation = Rotation;
+            onEndBtnClicked();
+        }
     }
 }
 
