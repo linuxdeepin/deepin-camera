@@ -48,8 +48,6 @@ extern "C"
 
 DWIDGET_USE_NAMESPACE
 
-
-
 static bool runSingleInstance()
 {
     QString userName = QDir::homePath().section("/", -1, -1);
