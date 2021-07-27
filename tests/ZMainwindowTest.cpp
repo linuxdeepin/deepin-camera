@@ -687,11 +687,11 @@ TEST_F(ZMainwindowTest, CMainWindow)
     stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     mainwindow->settingDialog();
     //进入settingDialog有效分辨率分支
-    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
-    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
-    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
-    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
-    mainwindow->settingDialog();
+//    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
+//    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
+//    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
+//    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
+//    mainwindow->settingDialog();
 
     //进入settingDialog无效分辨率分支
     stub.reset(ADDR(QString, toInt));
