@@ -19,6 +19,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "takephotosettingareawidget.h"
+#include "ac-deepin-camera-define.h"
 #include "circlepushbutton.h"
 
 #include <QColor>
@@ -51,44 +52,74 @@ void takePhotoSettingAreaWidget::initButtons()
     QColor tmpColor;
     tmpColor.setRgb(1, 1, 1);
 
+    this->setObjectName(RIGHT_BTNS_BOX);
+    this->setAccessibleName(RIGHT_BTNS_BOX);
+
     m_foldBtn = new circlePushButton(this);
     m_foldBtn->setDisableSelect(true);
     m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold.svg");
+    m_foldBtn->setObjectName(UNFOLD_BTN);
+    m_foldBtn->setAccessibleName(UNFOLD_BTN);
+
     m_unfoldBtn = new circlePushButton(this);
     m_unfoldBtn->setPixmap(":/images/camera/unfold.svg", ":/images/camera/unfold.svg", ":/images/camera/unfold.svg");
     m_unfoldBtn->setDisableSelect(true);
+    m_unfoldBtn->setObjectName(FOLD_BTN);
+    m_unfoldBtn->setAccessibleName(FOLD_BTN);
 
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightFoldBtn->setDisableSelect(true);
     m_flashlightFoldBtn->setbackground(tmpColor);
+    m_flashlightFoldBtn->setObjectName(FLASHLITE_FOLD_BTN);
+    m_flashlightFoldBtn->setAccessibleName(FLASHLITE_FOLD_BTN);
+
     m_flashlightUnfoldBtn = new circlePushButton(this);
     m_flashlightUnfoldBtn->setPixmap(":/images/camera/close-flashlight.svg", ":/images/camera/close-flashlight-hover.svg", ":/images/camera/close-flashlight-press.svg");
     m_flashlightUnfoldBtn->setDisableSelect(true);
+    m_flashlightUnfoldBtn->setObjectName(FLASHLITE_UNFOLD_BTN);
+    m_flashlightUnfoldBtn->setAccessibleName(FLASHLITE_UNFOLD_BTN);
+
     m_flashlightOnBtn = new circlePushButton(this);
     m_flashlightOnBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
+    m_flashlightOnBtn->setObjectName(FLASHLITE_ON_BTN);
+    m_flashlightOnBtn->setAccessibleName(FLASHLITE_ON_BTN);
+
     m_flashlightOffBtn = new circlePushButton(this);
     m_flashlightOffBtn->setPixmap(":/images/camera/close-flashlight.svg", ":/images/camera/close-flashlight-hover.svg", ":/images/camera/close-flashlight-press.svg");
+    m_flashlightOffBtn->setObjectName(FLASHLITE_OFF_BTN);
+    m_flashlightOffBtn->setAccessibleName(FLASHLITE_OFF_BTN);
 
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_delayFoldBtn->setDisableSelect(true);
     m_delayFoldBtn->setbackground(tmpColor);
+    m_delayFoldBtn->setObjectName(DELAY_FOLD_BTN);
+    m_delayFoldBtn->setAccessibleName(DELAY_FOLD_BTN);
+
     m_delayUnfoldBtn = new circlePushButton(this);
     m_delayUnfoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_delayUnfoldBtn->setDisableSelect(true);
+    m_delayUnfoldBtn->setObjectName(DELAY_FOLD_BTN);
+    m_delayUnfoldBtn->setAccessibleName(DELAY_FOLD_BTN);
+
     m_noDelayBtn = new circlePushButton(this);
     m_noDelayBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
+    m_noDelayBtn->setObjectName(DELAY_UNFOLD_BTN);
+    m_noDelayBtn->setAccessibleName(DELAY_UNFOLD_BTN);
 
     m_delay3SecondBtn = new circlePushButton(this);
     m_delay3SecondBtn->setPixmap(":/images/camera/delay3s.svg", ":/images/camera/dalay-3s-hover.svg", ":/images/camera/delay-3s-press.svg");
+    m_delay3SecondBtn->setObjectName(DELAY_3S_BTN);
+    m_delay3SecondBtn->setAccessibleName(DELAY_3S_BTN);
 
     m_delay6SecondBtn = new circlePushButton(this);
     m_delay6SecondBtn->setPixmap(":/images/camera/delay6S.svg", ":/images/camera/delay-6S-hover.svg", ":/images/camera/delay-6S-press.svg");
+    m_delay6SecondBtn->setObjectName(DELAY_6S_BTN);
+    m_delay6SecondBtn->setAccessibleName(DELAY_6S_BTN);
 
     hideAll();
 }
-
 
 void takePhotoSettingAreaWidget::initLayout()
 {
