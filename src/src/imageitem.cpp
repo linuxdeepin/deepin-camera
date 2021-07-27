@@ -93,6 +93,13 @@ ImageItem::ImageItem(int index, QString path, QWidget *parent)
         }
 
         int nDuration = static_cast<int>(m_nDuration / 1000000);
+        int msDuration = static_cast<int>(m_nDuration % 1000000 /1000);
+
+        if (msDuration >= 500) {
+            //剩余毫秒数大于500,增加一秒
+            nDuration += 1;
+        }
+
         int nHour = nDuration / 3600;
 
         if (nHour == 0)
