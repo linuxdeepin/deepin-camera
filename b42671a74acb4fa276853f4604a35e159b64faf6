@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c43a3083_313020b4",
+        "filename": "libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-27T01:10:12Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 8; 注释率: 12.5%",
+      "revId": "b42671a74acb4fa276853f4604a35e159b64faf6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b04bbe6c_202919ec",
+        "filename": "src/src/devnummonitor.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-27T01:10:12Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "b42671a74acb4fa276853f4604a35e159b64faf6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
