@@ -275,10 +275,14 @@ void MajorImageProcessingThread::run()
 
         /*拍照*/
         if (m_bTake) {
-            int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_BMP);
-            if (nRet < 0) {
-                qWarning() << "保存照片失败";
-            }
+            //int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_BMP);
+            uint8_t *bmp = (uint8_t *)calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t));
+            yu12_to_dib24(bmp, m_frame->yuv_frame, m_frame->width, m_frame->height);
+            QImage curImg(bmp,m_frame->width, m_frame->height,QImage::Format_RGB888);
+            curImg.save(m_strPath,"JPG");
+//            if (nRet < 0) {
+//                qWarning() << "保存照片失败";
+//            }
             //QImage img(m_strPath,"QImage::Format_RGB888");
             //img.save(m_strPath,"jpg");
             emit takePicture(m_strPath);
