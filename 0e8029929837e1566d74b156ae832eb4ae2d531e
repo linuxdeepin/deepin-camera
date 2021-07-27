@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fd6b564_8c47bbfc",
+        "filename": "tests/ZMainwindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-27T03:46:03Z",
+      "side": 1,
+      "message": "注释行数: 5; 改动行数(修改和新增): 5; 注释率: 100.0%",
+      "revId": "0e8029929837e1566d74b156ae832eb4ae2d531e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
