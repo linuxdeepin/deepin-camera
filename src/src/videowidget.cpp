@@ -979,6 +979,9 @@ void videowidget::showCountdown()
                 m_pNormalView->hide();
 #endif
                 m_thumbnail->hide();
+            } else {
+                if (get_sound_of_takeing_photo() && "/dev/video1" == str)
+                    m_takePicSound->play();
             }
             
             
@@ -1006,6 +1009,9 @@ void videowidget::showCountdown()
 #endif
 
                 m_thumbnail->hide();
+            } else {
+                if (get_sound_of_takeing_photo() && "/dev/video1" == str)
+                    m_takePicSound->play();
             }
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
