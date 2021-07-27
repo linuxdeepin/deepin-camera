@@ -1132,6 +1132,7 @@ void CMainWindow::settingDialog()
 {
     m_SetDialog = new DSettingsDialog(this);
     m_SetDialog->setFixedSize(820, 600);
+    m_SetDialog->setWindowFlags(m_SetDialog->windowFlags() | Qt::WindowStaysOnBottomHint);
     m_SetDialog->widgetFactory()->registerWidget("selectableEditpic", createPicSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("selectableEditvd", createVdSelectableLineEditOptionHandle);
     m_SetDialog->widgetFactory()->registerWidget("formatLabel", createFormatLabelOptionHandle);
