@@ -187,11 +187,12 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     qInfo() << m_nMaxWidth;
     int nLetAddCount = (m_nMaxWidth - LAST_BUTTON_WIDTH - VIDEO_TIME_WIDTH - LAST_BUTTON_SPACE * 3) / (SELECTED_WIDTH + 2) - 1;//+SELECTED_WIDTH是为了适配多选，避免多选后无法容纳的情况
 
+    g_indexImage.clear();
     QLayoutItem *child;
     while ((child = m_hBox->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
-        //tmp->deleteLater();
         disconnect(tmp);
+        tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
 
@@ -201,7 +202,6 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
 
     }
 
-    g_indexImage.clear();
     m_fileInfoLst.clear();
     m_lstPicFolder.clear();
     m_lstVdFolder.clear();
