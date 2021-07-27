@@ -299,13 +299,13 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
-    connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
+    connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)),Qt::QueuedConnection);
     connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
-            m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
+            m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)),Qt::QueuedConnection);
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
-            this, SLOT(onReachMaxDelayedFrames()));
-    connect(m_imgPrcThread, SIGNAL(takePicture(const QString&)), this,SIGNAL(takePicOnce(const QString&)));
+            this, SLOT(onReachMaxDelayedFrames()),Qt::QueuedConnection);
+    connect(m_imgPrcThread, SIGNAL(takePicture(const QString&)), this,SIGNAL(takePicOnce(const QString&)),Qt::QueuedConnection);
 
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
