@@ -418,6 +418,9 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
 
 }
 
+/**
+* @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
+*/
 void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
 {
     auto pBtn = static_cast<circlePushButton *>(sender());
@@ -475,4 +478,18 @@ void takePhotoSettingAreaWidget::moveToParentLeft()
         return;
 
     move(20, pParentWidget->height() / 2 - height() / 2);
+}
+
+/**
+* @brief closeAllGroup 关闭所有的按钮弹出组
+*/
+void takePhotoSettingAreaWidget::closeAllGroup()
+{
+    //判断延迟拍照组是否显示
+    if (m_delayGroupDisplay)
+        delayfoldBtnClicked();
+
+    //判断闪光灯拍照组是否显示
+    if (m_flashGroupDisplay)
+        flashlightFoldBtnClicked();
 }

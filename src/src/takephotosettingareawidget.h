@@ -67,11 +67,14 @@ public:
     * @param bFlashOn 是否打开闪光
     */
     void setFlashlight(bool bFlashOn);
-
     /**
     * @brief moveToParentLeft 移动到父窗口左边
     */
     void moveToParentLeft();
+    /**
+    * @brief closeAllGroup 关闭所有的按钮弹出组
+    */
+    void closeAllGroup();
 private:
     /**
     * @brief initButtons 初始化所有的按钮

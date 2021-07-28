@@ -996,8 +996,29 @@ void CMainWindow::initEventFilter()
     if (takeVideoEndBtn)
         takeVideoEndBtn->installEventFilter(this);
 
+    //预览画面添加过滤
     if (m_videoPre)
         m_videoPre->installEventFilter(this);
+
+    //摄像头切换控件添加过滤
+    if (m_cameraSwitchBtn)
+        m_cameraSwitchBtn->installEventFilter(this);
+
+    //拍照/录像控件添加过滤
+    if (m_photoRecordBtn)
+        m_photoRecordBtn->installEventFilter(this);
+
+    //切换拍照控件添加过滤
+    if (m_switchPhotoBtn)
+        m_switchPhotoBtn->installEventFilter(this);
+
+    //切换录像控件添加过滤
+    if (m_switchRecordBtn)
+        m_switchRecordBtn->installEventFilter(this);
+
+    //缩略图控件添加过滤
+    if (m_snapshotLabel)
+        m_snapshotLabel->installEventFilter(this);
 
 //    if (m_pSelectBtn)
 //        m_pSelectBtn->installEventFilter(this);
@@ -2332,6 +2353,9 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
 //    ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
 
+    if (e->type() == QEvent::MouseButtonPress) {
+        m_takePhotoSettingArea->closeAllGroup();
+    }
     /*if ((obj == m_pSelectBtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 1;
     } else if ((obj == m_pTitlePicBtn) && (e->type() == QEvent::FocusIn)) {
