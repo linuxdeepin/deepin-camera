@@ -1469,6 +1469,7 @@ void CMainWindow::onSwitchPhotoBtnClked()
     m_switchPhotoBtn->setEnabled(false);
     m_switchPhotoBtn->setFlat(false);
     m_switchRecordBtn->setFlat(true);
+    m_photoRecordBtn->setToolTip(tr("Photo"));
     locateRightButtons();
 }
 
@@ -1479,11 +1480,16 @@ void CMainWindow::onSwitchRecordBtnClked()
     m_switchPhotoBtn->setEnabled(true);
     m_switchPhotoBtn->setFlat(true);
     m_switchRecordBtn->setFlat(false);
+    m_photoRecordBtn->setToolTip(tr("Video"));
     locateRightButtons();
 }
 
 void CMainWindow::onPhotoRecordBtnClked()
 {
+    //没有摄像机，不进行任何操作
+    if (NOCAM == DataManager::instance()->getdevStatus()){
+        return;
+    }
     //拍照模式下
     if (true == m_photoRecordBtn->photoState()){
         //正在拍照
@@ -1731,38 +1737,36 @@ void CMainWindow::initConnection()
 void CMainWindow::initRightButtons()
 {
     m_cameraSwitchBtn = new SwitchCameraBtn(this);
-    m_photoRecordBtn = new photoRecordBtn(this);
-    m_switchPhotoBtn = new DPushButton(this);
-    m_switchRecordBtn = new DPushButton(this);
-    m_snapshotLabel = new ImageItem(this);
-
     m_cameraSwitchBtn->setFixedSize(SwitchcameraDiam,SwitchcameraDiam);
-    m_photoRecordBtn->setFixedSize(photeRecordDiam,photeRecordDiam);
-    m_switchPhotoBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
-    m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
-    m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
-
     m_cameraSwitchBtn->setObjectName(CAMERA_SWITCH_BTN);
     m_cameraSwitchBtn->setAccessibleName(CAMERA_SWITCH_BTN);
-    m_cameraSwitchBtn->setToolTip(QString("SwitchCamera"));
+    m_cameraSwitchBtn->setToolTip(tr("Switch Cameras"));
 
+    m_photoRecordBtn = new photoRecordBtn(this);
+    m_photoRecordBtn->setFixedSize(photeRecordDiam,photeRecordDiam);
     m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
+    m_photoRecordBtn->setToolTip(tr("Photo"));
 
+    m_switchPhotoBtn = new DPushButton(this);
+    m_switchPhotoBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_switchPhotoBtn->setObjectName(SWITCH_BTN_PHOTO);
     m_switchPhotoBtn->setAccessibleName(SWITCH_BTN_PHOTO);
+    m_switchPhotoBtn->setText(tr("photo"));
+    m_switchPhotoBtn->setEnabled(false);
+
+    m_switchRecordBtn = new DPushButton(this);
+    m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_switchRecordBtn->setObjectName(SWITCH_BTN_RECOD);
     m_switchRecordBtn->setAccessibleName(SWITCH_BTN_RECOD);
-
-    m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
-    m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
-
-    m_switchPhotoBtn->setText(tr("photo"));
     m_switchRecordBtn->setText(tr("record"));
     m_switchRecordBtn->setEnabled(true);
-    m_switchPhotoBtn->setEnabled(false);
     m_switchRecordBtn->setFlat(true);
 
+    m_snapshotLabel = new ImageItem(this);
+    m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
+    m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
+    m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     connect(m_switchPhotoBtn, SIGNAL(clicked()), this, SLOT(onSwitchPhotoBtnClked()));
