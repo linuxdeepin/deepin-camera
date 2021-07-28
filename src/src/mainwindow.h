@@ -364,6 +364,11 @@ private slots:
      * @param state  录像状态
      */
     void onUpdateRecordState(int state);
+
+    /**
+     * @brief onTitleBarMinBtnClicked 标题栏的最小化按钮点击事件
+     */
+    void onTitleBarMinBtnClicked();
 protected:
 
     /**
@@ -435,8 +440,8 @@ private:
     //右侧按钮
     SwitchCameraBtn                 *m_cameraSwitchBtn;     //摄像头切换按钮
     photoRecordBtn                  *m_photoRecordBtn;      //拍照，录像按钮
-    DPushButton                     *m_switchPhotoBtn;      //活动按钮
-    DPushButton                     *m_switchRecordBtn;     //活动按钮
+    DPushButton                     *m_switchPhotoBtn;      //切换拍照按钮
+    DPushButton                     *m_switchRecordBtn;     //切换录像按钮
     ImageItem                       *m_snapshotLabel;       //缩略图
     DLabel                          *m_labelCameraName;     //摄像机名称提示label
     QTimer                          *m_showCameraNameTimer; //显示摄像机名称Timer
