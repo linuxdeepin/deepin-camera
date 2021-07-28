@@ -9,6 +9,10 @@ cp -r /data/source/deepin-camera/webmtest/*.webm ~/Videos/Camera/
 rm -rf ../build-ut
 mkdir ../build-ut
 cd ../build-ut
+
+export DISPLAY=":0"
+export QT_QPA_PLATFORM=
+
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j16
 #mv asan.log* asan_${PROJECT_REALNAME}.log
