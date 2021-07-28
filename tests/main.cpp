@@ -145,8 +145,10 @@ int main(int argc, char *argv[])
     //将界面移至屏幕中央
     Dtk::Widget::moveToCenter(w);
 
-    //QTestMain testMain(argc, argv);
-    //QTest::qExec(&testMain, argc, argv);
+    __sanitizer_set_report_path("asan.log");
+
+//    QTestMain testMain(argc, argv);
+//    QTest::qExec(&testMain, argc, argv);
     return RUN_ALL_TESTS();//qApp->exec();
 }
 
