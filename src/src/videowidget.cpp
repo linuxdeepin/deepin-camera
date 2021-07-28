@@ -1295,7 +1295,11 @@ void videowidget::onTakePic(bool bTrue)
         m_nInterval = m_nMaxInterval = m_Maxinterval;
         m_curTakePicTime = m_nMaxContinuous;
         emit updateBlockSystem(true);//连拍时开启关机阻止
-        m_countTimer->start(m_nMaxInterval == 0 ? 34 : 1000);
+        showCountdown();  //直接执行拍照动作
+        if(0 != m_nMaxInterval){
+            //连拍，启动timer
+            m_countTimer->start(1000);
+        }
     } else {
         emit takePicCancel();
         emit updateBlockSystem(false);//连拍取消时，取消阻止关机
@@ -1375,11 +1379,9 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
     g_Enum_Camera_State = VIDEO;
 
-    if (m_Maxinterval == 0) {
-        //直接录制
-        showCountdown();
-    } else {
-        m_nInterval = m_Maxinterval;
+    m_nInterval = m_Maxinterval;
+    showCountdown();
+    if (0 != m_Maxinterval){
         m_countTimer->start(1000);
         //向mainwindow 发送录像倒计时状态
         emit updateRecordState(photoRecordBtn::preRecord);
