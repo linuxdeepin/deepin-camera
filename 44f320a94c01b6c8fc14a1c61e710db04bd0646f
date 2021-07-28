@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29968026_48f1aa2a",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-28T05:32:42Z",
+      "side": 1,
+      "message": "注释行数: 6; 改动行数(修改和新增): 36; 注释率: 16.7%",
+      "revId": "44f320a94c01b6c8fc14a1c61e710db04bd0646f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bae8dcb_901d1297",
+        "filename": "src/src/mainwindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-28T05:32:42Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 7; 注释率: 0.0%",
+      "revId": "44f320a94c01b6c8fc14a1c61e710db04bd0646f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed5a57b7_c5b50708",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-28T05:32:42Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 3; 注释率: 33.3%",
+      "revId": "44f320a94c01b6c8fc14a1c61e710db04bd0646f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d1e945d_a0315900",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-28T05:32:42Z",
+      "side": 1,
+      "message": "改动行数(修改和新增): 0; 删除代码行数: 2; 注释率: 不计算",
+      "revId": "44f320a94c01b6c8fc14a1c61e710db04bd0646f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8532d199_def38618",
+        "filename": "src/src/videowidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-28T05:32:42Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "44f320a94c01b6c8fc14a1c61e710db04bd0646f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
