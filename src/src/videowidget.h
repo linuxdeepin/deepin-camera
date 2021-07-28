@@ -254,7 +254,7 @@ public slots:
     * @brief onTimerCheckRotation 　检测屏幕角度timer
     */
     void onTimerCheckRotation();
-private slots:
+public slots:
 #ifdef __mips__
     /**
     * @brief ReceiveMajorImage　处理视频帧

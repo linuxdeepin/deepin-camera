@@ -737,6 +737,10 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
     setupTitlebar();
+    m_fileWatchTimer = new QTimer(this);
+    m_fileWatchTimer->setInterval(1000);
+    m_fileWatchTimer->setSingleShot(true);
+    connect(m_fileWatchTimer, SIGNAL(timeout()), this, SLOT(onFileWatchTimer()));
 }
 
 CMainWindow::~CMainWindow()
@@ -1354,6 +1358,7 @@ void CMainWindow::recoverTabWidget(uint index)
 
 void CMainWindow::updateBlockSystem(bool bTrue)
 {
+    connectFileWatch(!bTrue);
     if (!CamApp->isPanelEnvironment()) {
         initBlockShutdown();
 
@@ -1789,14 +1794,7 @@ void CMainWindow::initThumbnails()
 
 void CMainWindow::initThumbnailsConn()
 {
-    //系统文件夹变化信号
-    connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
-    //系统文件变化信号
-    connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
-    //系统文件夹变化信号
-    connect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
-    //系统文件夹变化信号
-    connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    connectFileWatch(true);
     //增删文件修改界面
     connect(m_thumbnail, SIGNAL(fitToolBar()), this, SLOT(onFitToolBar()));
     //修改标题栏按钮状态
@@ -1809,6 +1807,25 @@ void CMainWindow::initThumbnailsConn()
     connect(m_thumbnail, SIGNAL(takePic(bool)), m_videoPre, SLOT(onTakePic(bool)));
     //传递文件名，在拍照录制开始的时候，创建的文件不用于更新缩略图
     connect(m_videoPre, SIGNAL(filename(QString)), m_thumbnail, SLOT(onFileName(QString)));
+}
+
+void CMainWindow::connectFileWatch(bool bConnect)
+{
+    if(false == bConnect){
+        disconnect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+        disconnect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    } else {
+        disconnect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+        disconnect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+        //系统文件夹变化信号
+        connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+        //系统文件变化信号
+        //connect(&m_fileWatcher, SIGNAL(fileChanged(const QString &)), m_thumbnail, SLOT(onFoldersChanged(const QString &)));
+        //系统文件夹变化信号
+        connect(&m_fileWatcherUp, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+        //系统文件夹变化信号
+       // connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
+    }
 }
 
 void CMainWindow::takeVideoSlot()
@@ -1825,6 +1842,7 @@ void CMainWindow::takeVideoSlot()
     }
 
     m_videoPre->onTakeVideo();
+    m_fileWatchTimer->start();
 }
 
 void CMainWindow::setSelBtnHide()
@@ -1870,9 +1888,10 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
         onFitToolBar();
     }
 
-    if (m_videoPre)
+    if (m_videoPre){
+        m_videoPre->ReceiveOpenGLstatus(true);
         m_videoPre->update();
-
+    }
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event)
@@ -2229,7 +2248,12 @@ void CMainWindow::onTakePicDone()
     onEnableSettings(true);
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
-    //m_thumbnail->addFile(fileName);
+    m_fileWatchTimer->start();
+}
+
+void CMainWindow::onFileWatchTimer()
+{
+    connectFileWatch(true);
 }
 
 void CMainWindow::onTakePicOnce(const QString& fileName)
@@ -2246,6 +2270,7 @@ void CMainWindow::onTakePicCancel()
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     m_thumbnail->m_nStatus = STATNULL;
     m_thumbnail->setBtntooltip();
+   m_fileWatchTimer->start();
     qDebug() << "Cancel taking photo!";
 }
 
@@ -2279,6 +2304,7 @@ void CMainWindow::onTakeVdDone()
             usleep(200000);
 
         m_thumbnail->addFile(strFileName);
+        m_fileWatchTimer->start();
     });
     qDebug() << "Taking video completed!";
 
@@ -2291,6 +2317,7 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
     m_thumbnail->show();
     onEnableSettings(true);
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
+    m_fileWatchTimer->start();
     qDebug() << "Cancel taking video!";
 }
 

@@ -129,6 +129,12 @@ private:
     void initThumbnailsConn();
 
     /**
+    * @brief connectFileWatch　关闭/开启信号
+    * @param bConnect
+    */
+    void connectFileWatch(bool bConnect);
+
+    /**
      * @brief initBlockShutdown 阻塞关机
      */
     void initBlockShutdown();
@@ -324,6 +330,7 @@ private slots:
      */
     void onTimeoutLock(QString, QVariantMap, QStringList);
 
+    void onFileWatchTimer();
 protected:
 
     /**
@@ -374,6 +381,7 @@ private:
 
     uint32_t                        m_nLastCookie; //待机保持状态
     uint32_t                        m_nPowerCookie; //休眠保持状态
+    QTimer                          *m_fileWatchTimer;
 };
 
 #endif // MAINWINDOW_H

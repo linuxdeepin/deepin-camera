@@ -82,7 +82,7 @@ void MajorImageProcessingThread::setRotation(int rotation)
     default:
         break;
     }
-    qDebug() << "------------------- "  << rotation << "------------------";
+   // qDebug() << "------------------- "  << rotation << "------------------";
 }
 
 void MajorImageProcessingThread::run()
@@ -161,10 +161,12 @@ void MajorImageProcessingThread::run()
 
             yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
             m_yuvPtr = new uchar[yuvsize];
+            emit sigRenderYuv(true);
         } else {
             yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
             if (!m_yuvPtr){
                 m_yuvPtr = new uchar[yuvsize];
+                emit sigRenderYuv(true);
             }
         }
 
@@ -296,7 +298,7 @@ void MajorImageProcessingThread::run()
                 emit SendMajorImageProcessing(&m_Img, m_result);
             }
 #else
-            emit sigRenderYuv(true);
+
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
 //            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
 //                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
@@ -319,7 +321,6 @@ void MajorImageProcessingThread::run()
 
             emit sigYUVFrame(m_yuvPtr, m_frame->width, m_frame->height);
 #endif
-            malloc_trim(0);
         }
 
 #ifndef __mips__

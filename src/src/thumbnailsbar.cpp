@@ -191,8 +191,6 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     QLayoutItem *child;
     while ((child = m_hBox->takeAt(0)) != nullptr) {
         ImageItem *tmp = dynamic_cast<ImageItem *>(child->widget());
-        disconnect(tmp);
-        tmp->deleteLater();
         delete tmp;
         tmp = nullptr;
 
