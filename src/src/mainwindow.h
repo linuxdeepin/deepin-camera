@@ -364,6 +364,12 @@ private slots:
      * @param state  录像状态
      */
     void onUpdateRecordState(int state);
+
+    /**
+     * @brief onMirrorStateChanged 更新镜像状态
+     * @param bMirror  镜像状态
+     */
+    void onMirrorStateChanged(bool bMirror);
 protected:
 
     /**

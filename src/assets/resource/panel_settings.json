@@ -95,6 +95,19 @@
                             "default": 0
                         }
                     ]
+                },
+                {
+                    "key": "mirrorMode",
+                    "name": "Mirror Mode",
+                    "hide": true,
+                    "options": [
+                        {
+                            "key": "mirrorMode",
+                            "type": "switchbutton",
+                            "name": "Mirror Mode",
+                            "default": false
+                        }
+                    ]
                 }
             ]
         },
