@@ -1,3 +1,4 @@
+<<<<<<< HEAD   (5a2ea0 feat: 修复倒计时时间多1秒问题)
 remove_cache(){
     export DISPLAY=":0"
     export QT_QPA_PLATFORM=
@@ -9,6 +10,26 @@ remove_cache(){
     rm -rf ~/Videos/Camera
     rm -rf ~/Pictures/Camera
 }
+=======
+rm -rf ~/Pictures/相机/*.jpg
+rm -rf ~/Pictures/Camera/*.jpg
+cp -r /data/source/deepin-camera/jpegtest/*.jpg ~/Pictures/相机/
+cp -r /data/source/deepin-camera/jpegtest/*.jpg ~/Pictures/Camera/
+rm -rf ~/Videos/相机/*.webm
+rm -rf ~/Videos/Camera/*.webm
+cp -r /data/source/deepin-camera/webmtest/*.webm ~/Videos/相机/
+cp -r /data/source/deepin-camera/webmtest/*.webm ~/Videos/Camera/
+rm -rf ../build-ut
+mkdir ../build-ut
+cd ../build-ut
+
+export DISPLAY=":0"
+export QT_QPA_PLATFORM=
+
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make -j16
+#mv asan.log* asan_${PROJECT_REALNAME}.log
+>>>>>>> CHANGE (c819dd fix: 修复内存泄漏无法生成报告)
 
 make_new_dir(){
      mkdir ../build-ut
