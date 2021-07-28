@@ -950,6 +950,8 @@ void CMainWindow::initTabOrder()
 
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
+
+    connect(windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
 }
 
 void CMainWindow::initEventFilter()
@@ -1499,6 +1501,19 @@ void CMainWindow::onUpdateRecordState(int state)
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
     showRightButtons();
+}
+
+void CMainWindow::onTitleBarMinBtnClicked()
+{
+    if (m_bPhotoing){
+        m_videoPre->onTakePic(false);
+        m_bPhotoing =  false;
+    }
+    if (m_bRecording){
+        m_videoPre->onEndBtnClicked();
+        m_bRecording = false;
+    }
+
 }
 
 void CMainWindow::initUI()
