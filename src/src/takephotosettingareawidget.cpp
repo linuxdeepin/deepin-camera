@@ -79,16 +79,19 @@ void takePhotoSettingAreaWidget::initButtons()
     m_flashlightUnfoldBtn->setDisableSelect(true);
     m_flashlightUnfoldBtn->setObjectName(FLASHLITE_UNFOLD_BTN);
     m_flashlightUnfoldBtn->setAccessibleName(FLASHLITE_UNFOLD_BTN);
+    m_flashlightUnfoldBtn->setToolTip(tr("Flashlight"));
 
     m_flashlightOnBtn = new circlePushButton(this);
     m_flashlightOnBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightOnBtn->setObjectName(FLASHLITE_ON_BTN);
     m_flashlightOnBtn->setAccessibleName(FLASHLITE_ON_BTN);
+    m_flashlightOnBtn->setToolTip(tr("On"));
 
     m_flashlightOffBtn = new circlePushButton(this);
     m_flashlightOffBtn->setPixmap(":/images/camera/close-flashlight.svg", ":/images/camera/close-flashlight-hover.svg", ":/images/camera/close-flashlight-press.svg");
     m_flashlightOffBtn->setObjectName(FLASHLITE_OFF_BTN);
     m_flashlightOffBtn->setAccessibleName(FLASHLITE_OFF_BTN);
+    m_flashlightOffBtn->setToolTip(tr("Off"));
 
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
@@ -102,6 +105,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_delayUnfoldBtn->setDisableSelect(true);
     m_delayUnfoldBtn->setObjectName(DELAY_FOLD_BTN);
     m_delayUnfoldBtn->setAccessibleName(DELAY_FOLD_BTN);
+    m_delayUnfoldBtn->setToolTip(tr("Delay capture"));
 
     m_noDelayBtn = new circlePushButton(this);
     m_noDelayBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
@@ -162,7 +166,6 @@ void takePhotoSettingAreaWidget::init()
 
     showFold(true);
 }
-
 
 void takePhotoSettingAreaWidget::showFold(bool bShow)
 {
