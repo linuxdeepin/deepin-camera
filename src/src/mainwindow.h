@@ -369,6 +369,13 @@ private slots:
      * @brief onTitleBarMinBtnClicked 标题栏的最小化按钮点击事件
      */
     void onTitleBarMinBtnClicked();
+
+    /**
+     * @brief onMirrorStateChanged 更新镜像状态
+     * @param bMirror  镜像状态
+     */
+    void onMirrorStateChanged(bool bMirror);
+
 protected:
 
     /**

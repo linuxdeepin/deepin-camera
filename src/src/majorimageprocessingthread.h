@@ -57,6 +57,12 @@ public:
     ~MajorImageProcessingThread();
 
     /**
+     * @brief setHorizontalMirror 设置水平镜像
+     * @param bMirror 是否镜像
+     */
+    void setHorizontalMirror(bool bMirror) {m_bHorizontalMirror = bMirror;}
+
+    /**
      * @brief stop 停止线程
      */
     void stop();
@@ -117,6 +123,9 @@ public:
     bool    m_bTake; //是否拍照
 
 private:
+    void ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height);
+
+private:
     int               m_result;
     uint              m_nVdWidth;
     uint              m_nVdHeight;
@@ -124,7 +133,8 @@ private:
     QAtomicInt        m_stopped;
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
-    uchar             *m_yuvPtr;
+    uint8_t           *m_yuvPtr;
+    bool              m_bHorizontalMirror;   //水平镜像
 #ifdef __mips__
     QImage             m_Img;
 #endif
