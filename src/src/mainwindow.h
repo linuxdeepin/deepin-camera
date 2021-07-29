@@ -206,11 +206,6 @@ private:
     QString libPath(const QString &strlib);
 
     /**
-    * @brief reflushMediaFileList　刷新媒体文件列表
-    */
-    void reflushMediaFileList();
-
-    /**
     * @brief getMediaFileInfoList　获得录像、图片文件列表
     */
     void getMediaFileInfoList(const QString &path, QFileInfoList& fileList);
@@ -458,7 +453,6 @@ private:
     bool                            m_bSwitchCameraShowEnable; //是否可显示摄像头切换
     QString                         m_videoPath;            //配置的视频路径
     QString                         m_picPath;              //配置图片路径
-    QMultiMap<QDateTime, QString>   m_mapFile;              //缩略图图像 时间排序
     takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
     bool                            m_bUIinit;              //UI初始化是否完成
 };

@@ -803,26 +803,31 @@ QString CMainWindow::libPath(const QString &strlib)
     return list.last();
 }
 
-void CMainWindow::reflushMediaFileList()
+void CMainWindow::reflushSnapshotLabel()
 {
     QFileInfoList picPathList;
     QFileInfoList videoPathList;
+    QString lastFilePath ="";
 
-    m_mapFile.clear();
     getMediaFileInfoList(m_videoPath, videoPathList);
     getMediaFileInfoList(m_picPath, picPathList);
-
-    for (int i=0; i< picPathList.size(); i++) {
-        m_mapFile.insert(picPathList[i].fileTime(QFileDevice::FileModificationTime), picPathList[i].filePath());
+    if (!videoPathList.isEmpty()
+            && picPathList.isEmpty()){
+        lastFilePath = videoPathList[0].filePath();
     }
-
-    for (int i=0; i< videoPathList.size(); i++) {
-        m_mapFile.insert(videoPathList[i].fileTime(QFileDevice::FileModificationTime), videoPathList[i].filePath());
+    else if (videoPathList.isEmpty()
+             && ! picPathList.isEmpty()){
+        lastFilePath = picPathList[0].filePath();
     }
-    reflushSnapshotLabel();
-
-//    if (!m_mapFile.empty())
-//        m_snapshotLabel->updatePicPath(m_mapFile.first());
+    else if (!videoPathList.isEmpty()
+             && !picPathList.isEmpty()){
+        lastFilePath = videoPathList[0].filePath();
+        if (videoPathList[0].fileTime(QFileDevice::FileModificationTime) < picPathList[0].fileTime(QFileDevice::FileModificationTime)){
+            lastFilePath = picPathList[0].filePath();
+        }
+    }
+    m_snapshotLabel->updatePicPath(lastFilePath);
+    showRightButtons();
 }
 
 void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileList)
@@ -1268,7 +1273,7 @@ void CMainWindow::loadAfterShow()
     initRightButtons();
     initTabOrder();
     initEventFilter();
-    reflushMediaFileList();
+    reflushSnapshotLabel();
 
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
@@ -1382,7 +1387,7 @@ void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 void CMainWindow::onDirectoryChanged(const QString &filePath)
 {
     Q_UNUSED(filePath);
-    reflushMediaFileList();
+    reflushSnapshotLabel();
 }
 
 void CMainWindow::onSwitchCameraSuccess(const QString& cameraName)
@@ -1447,21 +1452,8 @@ void CMainWindow::onTrashFile(const QString &fileName)
     if (!file.exists()){
         return;
     }
-    QStringList tmpList = m_mapFile.values(file.fileTime(QFileDevice::FileModificationTime));
-    QPair<QMultiMap<QDateTime, QString>::iterator,QMultiMap<QDateTime, QString>::iterator>ps;
-    ps = m_mapFile.equal_range(file.fileTime(QFileDevice::FileModificationTime));
-
-    QMultiMap<QDateTime, QString>::iterator it = ps.first;
-    while (it != ps.second){
-        if (fileName == it.value()){
-            m_mapFile.erase(it);
-            file.remove();
-            break;
-        }
-        it++;
-    }
-
-    reflushSnapshotLabel();
+    file.remove();
+    //删除文件后，filewatcher会自动刷新缩略图
 }
 
 void CMainWindow::onSwitchPhotoBtnClked()
@@ -2131,31 +2123,6 @@ void CMainWindow::onTitleVdBtn()
 
 void CMainWindow::onSettingsDlgClose()
 {
-    /**********************************************/
-    //先获取路径，再对路径进行修正
-//    QString setVideoPath = Settings::get().getOption("base.save.vddatapath").toString();
-//    QString setPicPath = Settings::get().getOption("base.save.picdatapath").toString();
-
-//    if (setPicPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
-//        setPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-
-//    if (setVideoPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
-//        setVideoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-
-
-//    //由于U盘、可移动磁盘的加入，如果路径不存在，可能是U盘被拔掉了，因此此时不能创建，而是恢复默认路径
-//    if (QDir(m_videoPath).exists() == false)
-//        m_videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
-
-//    if (QDir(m_picPath).exists() == false)
-//        m_picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
-
-//    if (m_videoPath.size() && m_videoPath[0] == '~')
-//        m_videoPath.replace(0, 1, QDir::homePath());
-
-//    if (m_picPath.size() && m_picPath[0] == '~')
-//        m_picPath.replace(0, 1, QDir::homePath());
-
     bool bPathChanged = false;
     QString setVideoPath = lastOpenedPath(QStandardPaths::MoviesLocation);
     QString setPicPath  = lastOpenedPath(QStandardPaths::PicturesLocation);
@@ -2243,7 +2210,7 @@ void CMainWindow::onSettingsDlgClose()
     Settings::get().settings()->sync();
 
     if (bPathChanged){
-        reflushMediaFileList();
+        reflushSnapshotLabel();
     }
 }
 
@@ -2294,7 +2261,7 @@ void CMainWindow::onTakeVdDone()
 
     });
     qDebug() << "Taking video completed!";
-    reflushMediaFileList();
+    reflushSnapshotLabel();
 }
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
@@ -2457,18 +2424,6 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
             widget->show();
         }
     }
-}
-
-void CMainWindow::reflushSnapshotLabel()
-{
-//    m_snapshotLabel->setVisible(!m_mapFile.isEmpty());
-    if (false == m_mapFile.isEmpty()){
-        m_snapshotLabel->updatePicPath(m_mapFile.last());
-    } else {
-        //set default image
-        m_snapshotLabel->updatePicPath(QString());
-    }
-    showRightButtons();
 }
 
 void CMainWindow::SettingPathsave()
