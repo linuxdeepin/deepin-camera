@@ -91,6 +91,11 @@ void Settings::init()
             }
         }
 
+        if (key.startsWith("photosetting.mirrorMode.mirrorMode")){
+            bool bMirror = m_settings->getOption("photosetting.mirrorMode.mirrorMode").toBool();
+            emit mirrorModeChanged(bMirror);
+        }
+
     });
 
     qInfo() << "keys" << m_settings->keys();
@@ -149,7 +154,6 @@ void Settings::setNewResolutionList()
                         resolutionDatabase.append(res_str);
 
                 }
-
             }
             int defres = 0;
             int tempostion = 0;
