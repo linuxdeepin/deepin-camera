@@ -31,6 +31,7 @@ class circlePushButton;
 class takePhotoSettingAreaWidget : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(int opacity READ getOpacity WRITE setOpacity)//自定义不透明度属性
 public:
     explicit takePhotoSettingAreaWidget(QWidget *parent = nullptr);
     /**
@@ -71,10 +72,23 @@ public:
     * @brief moveToParentLeft 移动到父窗口左边
     */
     void moveToParentLeft();
+
     /**
     * @brief closeAllGroup 关闭所有的按钮弹出组
     */
     void closeAllGroup();
+
+    /**
+    * @brief getOpacity 获取当前不透明度
+    */
+    int getOpacity() { return m_opacity; };
+
+    /**
+    * @brief setOpacity 设置不透明度 动画会通过这个函数输入插值，修改透明度。
+    * @param  opacity 不透明度 0～255
+    */
+    void setOpacity(int opacity);
+
 private:
     /**
     * @brief initButtons 初始化所有的按钮
@@ -157,8 +171,7 @@ private:
 
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
-
-
+    int                      m_opacity = 102;    //不透明度 默认值0.4 * 255z
 };
 
 #endif // TAKEPHOTOSETTINGAREAWIDGET_H
