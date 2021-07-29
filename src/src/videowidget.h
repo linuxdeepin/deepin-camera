@@ -220,6 +220,12 @@ public:
     * @return 闪光灯是否开启
     */
     bool getFlashStatus();
+
+    /**
+     * @brief setHorizontalMirror 设置水平镜像
+     * @param bMirror 是否镜像
+     */
+    void setHorizontalMirror(bool bMirror);
 public slots:
     /**
     * @brief onTakePic　拍照事件响应

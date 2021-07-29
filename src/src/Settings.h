@@ -141,6 +141,12 @@ signals:
      */
     void delayTimeChanged(const QString &);
 
+    /**
+    * @brief mirrorModeChanged 镜像设置改变信号
+    * @param bMirror true 镜像  false 非镜像
+    */
+    void mirrorModeChanged(bool bMirror);
+
 private:
     Settings();
     static Settings     m_instance;

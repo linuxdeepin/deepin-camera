@@ -25,7 +25,7 @@
 #include <QDate>
 #include <QDir>
 
-MajorImageProcessingThread::MajorImageProcessingThread()
+MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
     m_yuvPtr = nullptr;
     m_nVdWidth = 0;
@@ -60,6 +60,26 @@ void MajorImageProcessingThread::init()
     m_result = -1;
 }
 
+void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
+{
+    int yLineStartIndex = 0;
+    int uvLineStartIndex = width * height;
+    for (int h = 0; h < height; h++) {
+        for (int w = 0; w < width; w += 2) {
+            dst[yLineStartIndex + w] = src[yLineStartIndex + width - w];
+            dst[yLineStartIndex + w + 1] = src[yLineStartIndex + width - w - 1];
+            if ((h & 1) == 0) {
+                dst[uvLineStartIndex + w] = src[uvLineStartIndex + width - w];
+                dst[uvLineStartIndex + w + 1] = src[uvLineStartIndex + width - w - 1];
+            }
+        }
+        yLineStartIndex += width;
+        if ((h & 1) == 0) {
+            uvLineStartIndex += width;
+        }
+    }
+}
+
 void MajorImageProcessingThread::run()
 {
     m_videoDevice = get_v4l2_device_handler();
@@ -67,6 +87,7 @@ void MajorImageProcessingThread::run()
     int framedely = 0;
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
+    uint8_t* pOldYuvFrame = nullptr;
     while (m_stopped == 0) {
         if (get_resolution_status()) {
             //reset
@@ -125,6 +146,29 @@ void MajorImageProcessingThread::run()
 
             continue;
         }
+
+        if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+            m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+            m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+            if (m_yuvPtr != nullptr) {
+                delete [] m_yuvPtr;
+                m_yuvPtr = nullptr;
+            }
+
+            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+            m_yuvPtr = new uchar[yuvsize];
+        } else {
+            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+        }
+
+        if (m_bHorizontalMirror){
+            ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
+        } else {
+            memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+        }
+        pOldYuvFrame = m_frame->yuv_frame;
+        m_frame->yuv_frame = m_yuvPtr;
+
 
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
@@ -226,21 +270,8 @@ void MajorImageProcessingThread::run()
 #else
             emit sigRenderYuv(true);
             //major类使用了线程，因此数据需要在这里复制，否则会导致崩溃
-            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
-                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
-                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
-                if (m_yuvPtr != nullptr) {
-                    delete [] m_yuvPtr;
-                    m_yuvPtr = nullptr;
-                }
 
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                m_yuvPtr = new uchar[yuvsize];
-                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-            } else {
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-            }
+
 
             emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
 #endif
@@ -258,6 +289,7 @@ void MajorImageProcessingThread::run()
 #ifdef __mips__
         free(rgb);
 #endif
+        m_frame->yuv_frame = pOldYuvFrame;
         v4l2core_release_frame(m_videoDevice, m_frame);
     }
 

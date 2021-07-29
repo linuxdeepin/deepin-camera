@@ -53,7 +53,8 @@
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
 videowidget::videowidget(DWidget *parent)
-    : DWidget(parent)
+    : DWidget(parent),
+      m_imgPrcThread(nullptr)
 {
 #ifndef __mips__
     m_openglwidget = new PreviewOpenglWidget(this);
@@ -282,6 +283,9 @@ void videowidget::delayInit()
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->setParent(this);
     m_imgPrcThread->setObjectName("MajorThread");
+
+    //spring2功能
+    //m_imgPrcThread->setHorizontalMirror(dc::Settings::get().getOption("photosetting.mirrorMode.mirrorMode").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
 #ifdef __mips__
@@ -1502,4 +1506,11 @@ void videowidget::onSetFlash(bool bFlashOn)
 bool videowidget::getFlashStatus()
 {
     return m_flashLabel->isVisible();
+}
+
+void videowidget::setHorizontalMirror(bool bMirror)
+{
+    if (nullptr != m_imgPrcThread){
+        m_imgPrcThread->setHorizontalMirror(bMirror);
+    }
 }
