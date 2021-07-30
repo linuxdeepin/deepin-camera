@@ -76,7 +76,7 @@ videowidget::videowidget(DWidget *parent)
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
 #ifndef __mips__
-    m_openglwidget->setFocusPolicy(Qt::ClickFocus);
+    //m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
     m_savePicFolder = "";
