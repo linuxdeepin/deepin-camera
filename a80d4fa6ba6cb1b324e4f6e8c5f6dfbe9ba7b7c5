@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "7bd7b3e6_5b7206c0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-30T10:31:17Z",
+      "side": 1,
+      "message": "标题不存在或者名称错误, 模块名推荐使用fix|feat|chore|docs|style|refactor|perf|test|abigail 例fix: xxxxx",
+      "revId": "a80d4fa6ba6cb1b324e4f6e8c5f6dfbe9ba7b7c5",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f5091eba_4dc8256a",
         "filename": "src/src/closedialog.cpp",
         "patchSetId": 1
