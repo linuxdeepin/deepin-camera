@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "809b4095_6383b16f",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-30T09:28:19Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 12; 注释率: 0.0%",
+      "revId": "4b75b3bd61c323c3cf77061489ca28cf090d52cc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1aff6958_15b6abaa",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-30T09:28:19Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "4b75b3bd61c323c3cf77061489ca28cf090d52cc",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
