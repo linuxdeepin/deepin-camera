@@ -69,7 +69,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     m_lastButton->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_nDelTimes = 0;
     m_strFileName = "";
-    setFocusPolicy(Qt::NoFocus);
+    // setFocusPolicy(Qt::NoFocus);
     setFramRadius(18);
     initShortcut();
     m_nStatus = STATNULL;
@@ -78,7 +78,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     m_hBox = new QHBoxLayout();
     m_thumbLeftWidget->setLayout(m_hBox);
     m_thumbLeftWidget->setObjectName("thumbLeftWidget");
-    m_thumbLeftWidget->setFocusPolicy(Qt::TabFocus);
+    // m_thumbLeftWidget->setFocusPolicy(Qt::TabFocus);
     m_thumbLeftWidget->setMargin(0);
 
     m_mainLayout = new QHBoxLayout(this);
@@ -119,7 +119,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     QIcon iconPic(":/images/icons/light/button/photograph.svg");
     m_lastButton->setIcon(iconPic);
     m_lastButton->setIconSize(QSize(29, 29));
-    m_lastButton->setFocusPolicy(Qt::TabFocus);
+    // m_lastButton->setFocusPolicy(Qt::TabFocus);
     setMinimumWidth(LAST_BUTTON_WIDTH + 2 * (LAST_BUTTON_SPACE + 4));
 
     DPalette pa = m_lastButton->palette();

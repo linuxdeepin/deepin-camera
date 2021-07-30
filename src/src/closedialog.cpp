@@ -68,7 +68,7 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText)
     m_widget->setLayout(m_vlayout);
 
     DTitlebar *titlebar = findChild<DTitlebar *>();
-    titlebar->setFocusPolicy(Qt::ClickFocus);
+    //titlebar->setFocusPolicy(Qt::ClickFocus);
 
     //设置Tab顺序
     DWindowCloseButton *windowCloseBtn = findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");

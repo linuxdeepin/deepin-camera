@@ -959,7 +959,7 @@ void CMainWindow::initTabOrder()
     setTabOrder(picVideoBtn, takeVideoEndBtn);
 
 
-    titlebar()->setFocusPolicy(Qt::NoFocus);
+    // titlebar()->setFocusPolicy(Qt::NoFocus);
 }
 
 void CMainWindow::initEventFilter()
@@ -1627,7 +1627,7 @@ void CMainWindow::initTitleBar()
     m_pSelectBtn->setFixedSize(QSize(37, 37));
 
     m_pSelectBtn->hide();
-    m_pSelectBtn->setFocusPolicy(Qt::TabFocus);
+    // m_pSelectBtn->setFocusPolicy(Qt::TabFocus);
     m_pSelectBtn->installEventFilter(this);
 
     //初始化主题判断

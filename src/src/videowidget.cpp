@@ -90,7 +90,7 @@ videowidget::videowidget(DWidget *parent)
         m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
     }
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
-    m_pNormalView->setFocusPolicy(Qt::NoFocus);
+    // m_pNormalView->setFocusPolicy(Qt::NoFocus);
     forbidScrollBar(m_pNormalView);
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
     m_pNormalView->setScene(m_pNormalScene);
@@ -101,11 +101,11 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalScene->addItem(m_pNormalItem);
 #endif
     m_pNormalScene->addItem(m_pCamErrItem);
-    m_flashLabel->setFocusPolicy(Qt::NoFocus);
+    // m_flashLabel->setFocusPolicy(Qt::NoFocus);
     m_fWgtCountdown->hide(); //先隐藏
     m_fWgtCountdown->setFixedSize(160, 144);
     m_fWgtCountdown->setBlurBackgroundEnabled(true);
-    m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
+    // m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
     recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignCenter);
     recordingwidgetlay->addWidget(m_recordingTime, 0, Qt::AlignCenter);
     recordingRedStatus->setPixmap(QPixmap(":/images/icons/light/Timer Status.svg"));
@@ -114,7 +114,7 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTimeWidget->hide(); //先隐藏
     m_recordingTimeWidget->setFixedSize(84, 35);
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
-    m_dLabel->setFocusPolicy(Qt::NoFocus);
+    // m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
     m_pSvgItem->setCacheMode(QGraphicsItem::NoCache);
 
@@ -176,7 +176,7 @@ videowidget::videowidget(DWidget *parent)
     m_endBtn->setAccessibleName(BUTTON_TAKE_VIDEO_END);
     m_endBtn->setFlat(true);
     m_endBtn->setFixedSize(QSize(40, 40));
-    m_endBtn->setFocusPolicy(Qt::TabFocus);
+    // m_endBtn->setFocusPolicy(Qt::TabFocus);
     m_endBtn->setIconSize(QSize(35, 35));
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
     m_endBtn->setToolTip(tr("Stop recording"));
