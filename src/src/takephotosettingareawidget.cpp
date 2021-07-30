@@ -337,6 +337,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
     }
 
     //normal状态下设置按钮透明，只显示背景颜色
+    m_delayFoldBtn->setOpacity(255 * 0.4);
     m_noDelayBtn->setbackground(Qt::transparent);
     m_delay3SecondBtn->setbackground(Qt::transparent);
     m_delay6SecondBtn->setbackground(Qt::transparent);
@@ -451,6 +452,7 @@ void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked()
     m_flashGroupDisplay = true;
 
     //normal状态下设置按钮透明，只显示背景颜色
+    m_flashlightFoldBtn->setOpacity(255 * 0.4);
     m_flashlightOnBtn->setbackground(Qt::transparent);
     m_flashlightOffBtn->setbackground(Qt::transparent);
 }
