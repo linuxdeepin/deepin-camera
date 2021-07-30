@@ -1859,7 +1859,7 @@ void CMainWindow::onLocalTimeChanged()
 void CMainWindow::setSelBtnShow()
 {
     m_pSelectBtn->show();
-    qDebug() << "Show camera selection button";
+    //qDebug() << "Show camera selection button";
 }
 
 void CMainWindow::setupTitlebar()

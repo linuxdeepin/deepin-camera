@@ -195,5 +195,11 @@ void Settings::setPathOption(const QString &opt, const QVariant &v)
     settings()->sync();
 }
 
+void Settings::setGeneralOption(const QString &opt, const QVariant &v)
+{
+    settings()->setOption(QString("base.general.%1").arg(opt), v);
+    settings()->sync();
+}
+
 }
 

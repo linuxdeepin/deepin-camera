@@ -40,6 +40,12 @@
                             "name": "",
                             "type": "selectableEditvd",
                             "default": ""
+                        },
+                        {
+                            "key": "open_device",
+                            "name": "last open device like /dev/video0",
+                            "type": "selectableEditvd",
+                            "default": ""
                         }
                     ]
                 }

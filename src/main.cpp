@@ -30,6 +30,7 @@ extern "C"
 #include "cameraconfig.h"
 #include "config.h"
 #include "acobjectlist.h"
+#include "Settings.h"
 
 #include <DMainWindow>
 #include <DWidgetUtil>
@@ -84,7 +85,6 @@ static bool CheckWayland()
 
 int main(int argc, char *argv[])
 {
-    system("echo /dev/video0 > /tmp/pipe_camera");
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
 
@@ -115,6 +115,13 @@ int main(int argc, char *argv[])
     qApp->setOrganizationName("deepin");
     //设置应用名称
     qApp->setApplicationName("deepin-camera");
+
+    QString lastDev = dc::Settings::get().generalOption("open_device").toString();
+    if (!lastDev.isEmpty()){
+        QString Cmd = "echo " + lastDev + " > /tmp/pipe_camera";
+        system(Cmd.toStdString().c_str());
+        qDebug() << "============get device:" << lastDev << "================\n";
+    }
     //加载翻译
     qApp->loadTranslator(QList<QLocale>() << QLocale::system());
     //设置程序名称

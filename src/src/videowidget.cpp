@@ -312,7 +312,11 @@ void videowidget::delayInit()
     m_flashLabel->setPalette(pltFlashLabel);
     m_flashLabel->hide();
     //启动视频
-    int ret =  camInit("/dev/video0");
+    QString lastDev = dc::Settings::get().generalOption("open_device").toString();
+    if (lastDev.isEmpty()){
+        lastDev = "/dev/video0";
+    }
+    int ret =  camInit(lastDev.toStdString().c_str());
 
     if (ret == E_OK) {
         m_pCamErrItem->hide();
@@ -1389,6 +1393,9 @@ void videowidget::onChangeDev()
     snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
     //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
     system(pCmd);
+
+    dc::Settings::get().setGeneralOption("open_device", str);
+    qDebug() << "---------------- set device:" << str << "------------------------\n";
     m_switchTimer->start();
 }
 

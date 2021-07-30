@@ -87,6 +87,13 @@ public:
     */
     QVariant generalOption(const QString &opt);
 
+
+    /**
+    * @brief setGeneralOption 设置json下的base.general.%1
+    * @param opt
+    */
+    void setGeneralOption(const QString &opt, const QVariant &v);
+
     /**
     * @brief setPathOption 设置json下的base.save.%1的值
     * @param opt
