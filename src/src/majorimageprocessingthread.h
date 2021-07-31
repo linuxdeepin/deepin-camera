@@ -66,6 +66,7 @@ public:
      */
     void init();
 
+
     void setRotation(int rotation);
 
     /**
@@ -113,6 +114,11 @@ signals:
      * @brief reachMaxDelayedFrames 到达最大延迟信号
      */
     void reachMaxDelayedFrames();
+    
+    /**
+     * @brief changCurrent 休眠唤醒后重新激活当前摄像头
+     */
+    void changCurrent();
 
 public:
     QMutex  m_rwMtxImg;

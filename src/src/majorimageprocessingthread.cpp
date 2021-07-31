@@ -141,17 +141,21 @@ void MajorImageProcessingThread::run()
 
         if (m_frame == nullptr) {
             framedely++;
+            qInfo() << "m_frame is null" << framedely;
             if (framedely == MAX_DELAYED_FRAMES) {
-                m_stopped = 1;
+                //m_stopped = 1;
                 //发送设备中断信号
-                emit reachMaxDelayedFrames();
-                close_v4l2_device_handler();
+                //emit reachMaxDelayedFrames();
+                //close_v4l2_device_handler();
+              
+                emit changCurrent();
             }
 
             continue;
         }
 
-        if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+        if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) 
+            || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
             m_nVdWidth = static_cast<unsigned int>(m_frame->width);
             m_nVdHeight = static_cast<unsigned int>(m_frame->height);
             if (m_yuvPtr != nullptr) {

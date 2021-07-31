@@ -233,6 +233,11 @@ public slots:
     * @brief onChangeDev　设备切换
     */
     void onChangeDev();
+    
+    /**
+    * @brief onChangeCurrentDev　休眠唤醒后重新激活设备槽函数
+    */
+    void onChangeCurrentDev();
 
     /**
     * @brief onEndBtnClicked　点击结束按钮
