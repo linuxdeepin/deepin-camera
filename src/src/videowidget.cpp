@@ -1399,6 +1399,34 @@ void videowidget::onChangeDev()
     m_switchTimer->start();
 }
 
+void videowidget::onChangeCurrentDev()
+{
+    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+    if (m_imgPrcThread != nullptr)
+        m_imgPrcThread->stop();
+
+    while (m_imgPrcThread->isRunning());
+    QString str;
+
+    if (devicehandler != nullptr) {
+        str = QString(devicehandler->videodevice);
+        m_preVideoDevice = str;
+        close_v4l2_device_handler();
+    }
+
+    str = str == "/dev/video0" ? "/dev/video0":"/dev/video1";
+
+    char pCmd[100]={0};
+    snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
+    //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
+    system(pCmd);
+
+    dc::Settings::get().setGeneralOption("open_device", str);
+    qDebug() << "---------------- set device:" << str << "------------------------\n";
+    m_switchTimer->start();
+}
+
 void videowidget::onTimerCheckRotation()
 {
     if (m_rotationBus){

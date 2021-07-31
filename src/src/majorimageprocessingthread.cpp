@@ -139,7 +139,7 @@ void MajorImageProcessingThread::run()
         m_result = -1;
         m_frame = v4l2core_get_decoded_frame(m_videoDevice);
 
-        if (m_frame == nullptr) {
+        /*if (m_frame == nullptr) {
             framedely++;
             if (framedely == MAX_DELAYED_FRAMES) {
                 m_stopped = 1;
@@ -149,7 +149,7 @@ void MajorImageProcessingThread::run()
             }
 
             continue;
-        }
+        }*/
 
         if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) && m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
             m_nVdWidth = static_cast<unsigned int>(m_frame->width);
@@ -201,6 +201,7 @@ void MajorImageProcessingThread::run()
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
+        qInfo() << "frame widgth is :" << m_frame->width << "frame height is :" << m_frame->height << "yuv frame :" << m_frame->yuv_frame;
 
 #ifdef __mips__
         uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
