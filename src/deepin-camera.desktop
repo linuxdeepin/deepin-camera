@@ -9,7 +9,7 @@ StartupNotify=true
 TryExec=deepin-camera
 Type=Application
 X-Deepin-ManualID=deepin-camera
-X-Deepin-TurboType=dtkwidget
+#X-Deepin-TurboType=dtkwidget
 X-Deepin-Vendor=deepin
 X-MultipleArgs=false
 
