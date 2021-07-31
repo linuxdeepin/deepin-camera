@@ -741,6 +741,8 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_fileWatchTimer->setInterval(1000);
     m_fileWatchTimer->setSingleShot(true);
     connect(m_fileWatchTimer, SIGNAL(timeout()), this, SLOT(onFileWatchTimer()));
+    settingDialog();
+    m_SetDialog->exec();
 }
 
 CMainWindow::~CMainWindow()
