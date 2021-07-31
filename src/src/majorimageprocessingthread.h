@@ -113,6 +113,8 @@ signals:
      * @brief reachMaxDelayedFrames 到达最大延迟信号
      */
     void reachMaxDelayedFrames();
+    
+    void changCurrent();
 
 public:
     QMutex  m_rwMtxImg;

@@ -233,6 +233,7 @@ public slots:
     * @brief onChangeDev　设备切换
     */
     void onChangeDev();
+    void onChangeCurrentDev();
 
     /**
     * @brief onEndBtnClicked　点击结束按钮
