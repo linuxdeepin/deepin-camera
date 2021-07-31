@@ -1208,7 +1208,7 @@ void videowidget::onEndBtnClicked()
 void videowidget::onRestartDevices()
 {
     if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
-        onChangeDev();
+        //onChangeDev();
 
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             emit sigDeviceChange();
