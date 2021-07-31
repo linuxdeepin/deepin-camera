@@ -269,7 +269,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
     optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
-    optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
+  //  optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
     optinvaliddialog->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
 
     /**
@@ -520,7 +520,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     optinvaliddialog->setAccessibleName(OPTION_INVALID_DIALOG);
     optinvaliddialog->setIcon(QIcon(":/images/icons/warning.svg"));
     optinvaliddialog->setMessage(QObject::tr("You don't have permission to operate this folder"));
-    optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
+  //  optinvaliddialog->setWindowFlags(optinvaliddialog->windowFlags() | Qt::WindowStaysOnTopHint);
     optinvaliddialog->addButton(QObject::tr("Close"), true, DDialog::ButtonRecommend);
 
     /**

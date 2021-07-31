@@ -168,8 +168,8 @@ void PreviewOpenglWidget::initializeGL()
     m_program->bind();
     m_program->enableAttributeArray(VERTEXIN);
     m_program->enableAttributeArray(TEXTUREIN);
-    m_program->setAttributeBuffer(VERTEXIN, GL_FLOAT, 0, 2, 2 * sizeof(GLfloat));
-    m_program->setAttributeBuffer(TEXTUREIN, GL_FLOAT, 8 * sizeof(GLfloat), 2, 2 * sizeof(GLfloat));
+   // m_program->setAttributeBuffer(VERTEXIN, GL_FLOAT, 0, 2, 2 * sizeof(GLfloat));
+   // m_program->setAttributeBuffer(TEXTUREIN, GL_FLOAT, 8 * sizeof(GLfloat), 2, 2 * sizeof(GLfloat));
 
     m_textureUniformY = static_cast<uint>(m_program->uniformLocation("tex_y"));
     m_textureUniformU = static_cast<uint>(m_program->uniformLocation("tex_u"));

@@ -113,7 +113,7 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTimeWidget->setLayout(recordingwidgetlay);
     m_recordingTimeWidget->hide(); //先隐藏
     m_recordingTimeWidget->setFixedSize(84, 35);
-    m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
+ //   m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
     m_pSvgItem->setCacheMode(QGraphicsItem::NoCache);
@@ -181,7 +181,7 @@ videowidget::videowidget(DWidget *parent)
     m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
     m_endBtn->setToolTip(tr("Stop recording"));
     m_endBtn->setToolTipDuration(500); //0.5s消失
-    m_endBtn->setWindowFlags(Qt::FramelessWindowHint);
+   // m_endBtn->setWindowFlags(Qt::FramelessWindowHint);
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(10);                  // 阴影圆角的大小
     effect->setColor(QColor(202, 0, 0, 100));       //阴影的颜色

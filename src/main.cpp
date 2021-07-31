@@ -106,12 +106,12 @@ int main(int argc, char *argv[])
     CApplication a(argc, argv);
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
-    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
+  //  qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     // overwrite DApplication default value
-    qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
+  //  qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
 #endif
 
-    qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
+    //qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setOrganizationName("deepin");
     //设置应用名称
     qApp->setApplicationName("deepin-camera");
