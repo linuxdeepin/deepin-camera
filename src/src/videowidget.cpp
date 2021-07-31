@@ -1387,7 +1387,7 @@ void videowidget::onChangeDev()
         close_v4l2_device_handler();
     }
 
-    str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
+    str = str == "/dev/video0" ? "/dev/video0":"/dev/video1";
 
     char pCmd[100]={0};
     snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
