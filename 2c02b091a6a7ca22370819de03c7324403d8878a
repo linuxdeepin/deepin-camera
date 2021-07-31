@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12729867_bdb11a92",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-31T10:46:44Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 2; 注释率: 50.0%",
+      "revId": "2c02b091a6a7ca22370819de03c7324403d8878a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0dc496b_6697ee5d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-31T10:46:44Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 7; 注释率: 42.9%",
+      "revId": "2c02b091a6a7ca22370819de03c7324403d8878a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98fb03d3_726b3aab",
+        "filename": "src/src/majorimageprocessingthread.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-31T10:46:44Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "2c02b091a6a7ca22370819de03c7324403d8878a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c12f27f_ccd04468",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-31T10:46:44Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 24; 注释率: 4.2%",
+      "revId": "2c02b091a6a7ca22370819de03c7324403d8878a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cab94442_1942c5b3",
+        "filename": "src/src/videowidget.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-07-31T10:46:44Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "2c02b091a6a7ca22370819de03c7324403d8878a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
