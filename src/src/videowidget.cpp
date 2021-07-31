@@ -305,7 +305,9 @@ void videowidget::delayInit()
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()),Qt::QueuedConnection);
-    connect(m_imgPrcThread, SIGNAL(takePicture(const QString&)), this,SIGNAL(takePicOnce(const QString&)),Qt::QueuedConnection);
+    connect(m_imgPrcThread, SIGNAL(takePicture(const QString&)), this, SIGNAL(takePicOnce(const QString&)), Qt::QueuedConnection);
+    //休眠唤醒后，检测到获取图像数据超时，重新连接当前摄像头
+    connect(m_imgPrcThread, &MajorImageProcessingThread::changCurrent, this, &videowidget::onChangeCurrentDev, Qt::QueuedConnection);
 
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
@@ -1388,6 +1390,36 @@ void videowidget::onChangeDev()
     }
 
     str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
+
+    char pCmd[100]={0};
+    snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
+    //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
+    system(pCmd);
+
+    dc::Settings::get().setGeneralOption("open_device", str);
+    qDebug() << "---------------- set device:" << str << "------------------------\n";
+    m_switchTimer->start();
+}
+
+void videowidget::onChangeCurrentDev()
+{
+    qInfo() << __func__;
+    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+    if (m_imgPrcThread != nullptr)
+        m_imgPrcThread->stop();
+
+    while (m_imgPrcThread->isRunning());
+    QString str;
+
+    if (devicehandler != nullptr) {
+        str = QString(devicehandler->videodevice);
+        m_preVideoDevice = str;
+        close_v4l2_device_handler();
+    }
+
+    qInfo() << str;
+    str = str == "/dev/video0" ? "/dev/video0":"/dev/video1";
 
     char pCmd[100]={0};
     snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
