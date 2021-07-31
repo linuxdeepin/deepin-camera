@@ -741,6 +741,13 @@ CMainWindow::CMainWindow(QWidget *parent): DMainWindow(parent)
     m_fileWatchTimer->setInterval(1000);
     m_fileWatchTimer->setSingleShot(true);
     connect(m_fileWatchTimer, SIGNAL(timeout()), this, SLOT(onFileWatchTimer()));
+    settingDialog();
+    m_SetDialog->exec();
+    qInfo() << "focus widget" << focusWidget() << endl;
+
+    // if(m_SetDialog->isActiveWindow()) {
+        m_SetDialog->activateWindow();
+    // }
 }
 
 CMainWindow::~CMainWindow()
