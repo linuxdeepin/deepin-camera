@@ -1227,7 +1227,7 @@ void videowidget::onRestartDevices()
 void videowidget::onSwitchCameraTimer()
 {
     QString str = m_preVideoDevice;
-    m_preVideoDevice = "";
+    //m_preVideoDevice = "";
 
     v4l2_device_list_t *devlist = get_device_list();
     if (devlist->num_devices == 2) {
@@ -1382,9 +1382,13 @@ void videowidget::onChangeDev()
     QString str;
 
     if (devicehandler != nullptr) {
+        qInfo() << "hase device!";
         str = QString(devicehandler->videodevice);
         m_preVideoDevice = str;
         close_v4l2_device_handler();
+    } else {
+        qInfo() << m_preVideoDevice;
+        str = m_preVideoDevice;
     }
 
     str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
