@@ -1273,7 +1273,7 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
-    m_devnumMonitor->start();
+    //m_devnumMonitor->start();
     initTitleBar();
     initConnection();
     //后续修改为标准Qt用法
