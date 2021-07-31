@@ -382,6 +382,8 @@ private:
     QDBusInterface             *m_displayBus;
     QDBusInterface             *m_rotationBus;
     unsigned short             m_lastRotation;
+    
+    bool                       m_onlyOnece;
 };
 
 #endif // VIDEOWIDGET_H

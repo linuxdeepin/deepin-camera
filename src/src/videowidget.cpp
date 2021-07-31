@@ -55,6 +55,7 @@ videowidget::videowidget(DWidget *parent)
 #else
     m_pNormalItem = new QGraphicsPixmapItem;
 #endif
+    m_onlyOnece = false;
     m_bActive = false;   //是否录制中
     m_takePicSound = new QSound(":/resource/Camera.wav");
     m_countTimer = new QTimer(this);
@@ -1227,7 +1228,7 @@ void videowidget::onRestartDevices()
 void videowidget::onSwitchCameraTimer()
 {
     QString str = m_preVideoDevice;
-    m_preVideoDevice = "";
+    //m_preVideoDevice = "";
 
     v4l2_device_list_t *devlist = get_device_list();
     if (devlist->num_devices == 2) {
@@ -1382,11 +1383,21 @@ void videowidget::onChangeDev()
     QString str;
 
     if (devicehandler != nullptr) {
+        qInfo() << "hase device!";
         str = QString(devicehandler->videodevice);
         m_preVideoDevice = str;
         close_v4l2_device_handler();
+    } else {
+        qInfo() << m_preVideoDevice;
+        str = m_preVideoDevice;
     }
 
+    m_imgPrcThread->stop();
+    if (!m_onlyOnece) {
+        m_onlyOnece = true;
+    } else {
+        return;
+    }
     str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
 
     char pCmd[100]={0};
