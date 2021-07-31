@@ -141,11 +141,14 @@ void MajorImageProcessingThread::run()
 
         if (m_frame == nullptr) {
             framedely++;
+            qInfo() << "m_frame is null" << framedely;
             if (framedely == MAX_DELAYED_FRAMES) {
-                m_stopped = 1;
+                //m_stopped = 1;
                 //发送设备中断信号
-                emit reachMaxDelayedFrames();
-                close_v4l2_device_handler();
+                //emit reachMaxDelayedFrames();
+                //close_v4l2_device_handler();
+              
+                emit changCurrent();
             }
 
             continue;
@@ -201,6 +204,7 @@ void MajorImageProcessingThread::run()
         if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
+        qInfo() << "frame widgth is :" << m_frame->width << "frame height is :" << m_frame->height << "yuv frame :" << m_frame->yuv_frame;
 
 #ifdef __mips__
         uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
