@@ -1273,8 +1273,9 @@ void CMainWindow::loadAfterShow()
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
     m_devnumMonitor->setObjectName("DevMonitorThread");
-    m_devnumMonitor->start();
+    //m_devnumMonitor->start();
     initTitleBar();
+    setSelBtnShow();
     initConnection();
     //后续修改为标准Qt用法
     QString strCache = QString(getenv("HOME")) + QDir::separator() + QString(".cache")
