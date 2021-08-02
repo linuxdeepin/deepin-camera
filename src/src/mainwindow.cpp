@@ -1490,10 +1490,12 @@ void CMainWindow::onPhotoRecordBtnClked()
         if (true == m_bPhotoing){
             m_videoPre->onTakePic(false);
             m_bPhotoing = false;
+            m_switchRecordBtn->setEnabled(true);
         }
         else{
             m_videoPre->onTakePic(true);
             m_bPhotoing = true;
+             m_switchRecordBtn->setEnabled(false);
         }
     }
     else{  //录像模式下
@@ -1504,6 +1506,7 @@ void CMainWindow::onPhotoRecordBtnClked()
         else{
             m_bRecording = true;
             m_videoPre->onTakeVideo();
+            m_switchPhotoBtn->setEnabled(false);
             //m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
         }
     }
@@ -1519,6 +1522,7 @@ void CMainWindow::onUpdateRecordState(int state)
 {
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
+    m_switchPhotoBtn->setEnabled(!m_bRecording);
     showRightButtons();
 }
 
@@ -1527,10 +1531,12 @@ void CMainWindow::onTitleBarMinBtnClicked()
     if (m_bPhotoing){
         m_videoPre->onTakePic(false);
         m_bPhotoing =  false;
+         m_switchRecordBtn->setEnabled(true);
     }
     if (m_bRecording){
         m_videoPre->onEndBtnClicked();
         m_bRecording = false;
+        m_switchPhotoBtn->setEnabled(true);
     }
 }
 
@@ -2222,6 +2228,7 @@ void CMainWindow::onEnableSettings(bool bTrue)
 void CMainWindow::onTakePicDone()
 {
     m_bPhotoing = false;
+    m_switchRecordBtn->setEnabled(true);
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
@@ -2235,6 +2242,7 @@ void CMainWindow::onTakePicOnce()
 void CMainWindow::onTakePicCancel()
 {
     m_bPhotoing = false;
+    m_switchRecordBtn->setEnabled(true);
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //恢复控件焦点状态
@@ -2247,6 +2255,7 @@ void CMainWindow::onTakePicCancel()
 void CMainWindow::onTakeVdDone()
 {
     m_bRecording = false;
+    m_switchPhotoBtn->setEnabled(true);
     onEnableTitleBar(4); //恢复按钮状态
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2267,6 +2276,7 @@ void CMainWindow::onTakeVdDone()
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
     m_bRecording = false;
+    m_switchPhotoBtn->setEnabled(true);
     onEnableTitleBar(4); //恢复按钮状态
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
@@ -2377,6 +2387,18 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         QWidget::eventFilter(obj, e);//调用父类事件过滤器
     }
     return QWidget::eventFilter(obj, e);
+}
+
+void CMainWindow::wheelEvent(QWheelEvent * event)
+{
+    if (m_bPhotoing || m_bRecording){
+        return;
+    }
+    if(event->delta() > 0){
+         onSwitchPhotoBtnClked();
+     }else{
+         onSwitchRecordBtnClked();
+     }
 }
 
 /*
