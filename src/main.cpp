@@ -117,11 +117,13 @@ int main(int argc, char *argv[])
     qApp->setApplicationName("deepin-camera");
 
     QString lastDev = dc::Settings::get().generalOption("open_device").toString();
-    if (!lastDev.isEmpty()){
-        QString Cmd = "echo " + lastDev + " > /tmp/pipe_camera";
-        system(Cmd.toStdString().c_str());
-        qDebug() << "============get device:" << lastDev << "================\n";
+    if (lastDev.isEmpty()){
+        lastDev = "/dev/video1";
+        dc::Settings::get().setGeneralOption("open_device", lastDev);
     }
+    QString Cmd = "echo " + lastDev + " > /tmp/pipe_camera";
+    system(Cmd.toStdString().c_str());
+    qDebug() << "============get device:" << lastDev << "================\n";
     //加载翻译
     qApp->loadTranslator(QList<QLocale>() << QLocale::system());
     //设置程序名称
