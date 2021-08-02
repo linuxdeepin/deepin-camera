@@ -387,6 +387,12 @@ protected:
 
     bool eventFilter(QObject *obj, QEvent *e)override;
 
+    /**
+     * @brief wheelEvent 鼠标滚轮事件
+     * @param event
+     */
+    void wheelEvent(QWheelEvent * event) override;
+
 private:
     /**
      * @brief showRightButtons 显示右侧控件
