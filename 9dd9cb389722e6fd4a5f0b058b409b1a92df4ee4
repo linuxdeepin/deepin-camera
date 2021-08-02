@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2d66b7_1cd0aaef",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-02T07:33:55Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 22; 注释率: 18.2%",
+      "revId": "9dd9cb389722e6fd4a5f0b058b409b1a92df4ee4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
