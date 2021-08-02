@@ -316,7 +316,7 @@ void videowidget::delayInit()
     //启动视频
     QString lastDev = dc::Settings::get().generalOption("open_device").toString();
     if (lastDev.isEmpty()){
-        lastDev = "/dev/video0";
+        lastDev = "/dev/video1";
     }
     int ret =  camInit(lastDev.toStdString().c_str());
 
