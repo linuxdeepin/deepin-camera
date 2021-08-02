@@ -49,9 +49,6 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
 
 void takePhotoSettingAreaWidget::initButtons()
 {
-    QColor tmpColor;
-    tmpColor.setRgb(1, 1, 1);
-
     this->setObjectName(RIGHT_BTNS_BOX);
     this->setAccessibleName(RIGHT_BTNS_BOX);
 
@@ -70,7 +67,6 @@ void takePhotoSettingAreaWidget::initButtons()
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightFoldBtn->setDisableSelect(true);
-    m_flashlightFoldBtn->setbackground(tmpColor);
     m_flashlightFoldBtn->setObjectName(FLASHLITE_FOLD_BTN);
     m_flashlightFoldBtn->setAccessibleName(FLASHLITE_FOLD_BTN);
 
@@ -96,7 +92,6 @@ void takePhotoSettingAreaWidget::initButtons()
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_delayFoldBtn->setDisableSelect(true);
-    m_delayFoldBtn->setbackground(tmpColor);
     m_delayFoldBtn->setObjectName(DELAY_FOLD_BTN);
     m_delayFoldBtn->setAccessibleName(DELAY_FOLD_BTN);
 
@@ -545,6 +540,7 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
     emit sngSetDelayTakePhoto(delayTime);
     update();
 
+    showDelayButtons(false); //三级菜单选中后跳转到上一级菜单
 }
 
 /**
@@ -561,6 +557,8 @@ void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
 
     setFlashlight(m_flashlightOnBtn->getButtonState());
     emit sngSetFlashlight(m_flashlightOnBtn->getButtonState());
+
+    showFlashlights(false);
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
