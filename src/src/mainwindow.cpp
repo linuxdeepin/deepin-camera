@@ -1928,6 +1928,11 @@ void CMainWindow::changeEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
+    if (!(windowState() & Qt:: WindowFullScreen) && event->type() == QEvent::WindowStateChange) {
+        qInfo() << "want to out window fullscreen!" << windowState();
+        showFullScreen();
+        return;
+    }
     if (windowState() == Qt::WindowMinimized || (windowState() == (Qt::WindowMinimized | Qt::WindowMaximized))) {
         if (m_thumbnail->m_nStatus == STATPicIng)
             m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
