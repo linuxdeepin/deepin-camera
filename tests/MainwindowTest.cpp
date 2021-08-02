@@ -1326,7 +1326,7 @@ TEST_F(MainwindowTest, CMainWindow)
     stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
     stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
     stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
-    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
+//    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
     mainwindow->settingDialog();
 
     //进入settingDialog无效分辨率分支
