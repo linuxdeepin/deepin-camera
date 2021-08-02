@@ -49,9 +49,6 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
 
 void takePhotoSettingAreaWidget::initButtons()
 {
-    QColor tmpColor;
-    tmpColor.setRgb(1, 1, 1);
-
     this->setObjectName(RIGHT_BTNS_BOX);
     this->setAccessibleName(RIGHT_BTNS_BOX);
 
@@ -70,7 +67,6 @@ void takePhotoSettingAreaWidget::initButtons()
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightFoldBtn->setDisableSelect(true);
-    m_flashlightFoldBtn->setbackground(tmpColor);
     m_flashlightFoldBtn->setObjectName(FLASHLITE_FOLD_BTN);
     m_flashlightFoldBtn->setAccessibleName(FLASHLITE_FOLD_BTN);
 
@@ -96,7 +92,6 @@ void takePhotoSettingAreaWidget::initButtons()
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_delayFoldBtn->setDisableSelect(true);
-    m_delayFoldBtn->setbackground(tmpColor);
     m_delayFoldBtn->setObjectName(DELAY_FOLD_BTN);
     m_delayFoldBtn->setAccessibleName(DELAY_FOLD_BTN);
 
@@ -349,7 +344,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
 
     pPosGroup->start();
 
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + 3 * m_btnHeightOffset));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + m_btnHeightOffset * 3 + 2));
     update();
 }
 
@@ -404,7 +399,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
 
     pPosGroup->start();
 
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
+    setFixedSize(QSize(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height() * 3 + m_btnHeightOffset * 2 + 2));
     update();
 }
 
@@ -493,7 +488,7 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 
     if (m_delayGroupDisplay) {
         //先画一个矩形
-        QPoint topLeft = m_delayFoldBtn->pos() + QPoint(-1, m_delayFoldBtn->height() * 0.5);
+        QPoint topLeft = m_delayFoldBtn->pos() + QPoint(0, m_delayFoldBtn->height() * 0.5);
         QPoint bottomRight = m_delay6SecondBtn->pos() + QPoint(m_delayFoldBtn->width(), m_delay6SecondBtn->height() * 0.5);
 
         painter.setPen(Qt::NoPen);
@@ -520,7 +515,7 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 
 void takePhotoSettingAreaWidget::onDelayBtnsClicked()
 {
-    auto pBtn = static_cast<circlePushButton *>(sender());
+    circlePushButton *pBtn = static_cast<circlePushButton *>(sender());
     if (nullptr == pBtn)
         return;
     pBtn == m_noDelayBtn ? m_noDelayBtn->setSelected(true) : m_noDelayBtn->setSelected(false);
@@ -528,7 +523,7 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
     pBtn == m_delay6SecondBtn ? m_delay6SecondBtn->setSelected(true) : m_delay6SecondBtn->setSelected(false);
 
     int delayTime = 0;
-    auto bCopyBtn = m_noDelayBtn;
+    circlePushButton *bCopyBtn = m_noDelayBtn;
 
     if (m_delay3SecondBtn->getButtonState()) {
         delayTime = 3;
@@ -545,6 +540,7 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
     emit sngSetDelayTakePhoto(delayTime);
     update();
 
+    showDelayButtons(false); //三级菜单选中后跳转到上一级菜单
 }
 
 /**
@@ -561,19 +557,33 @@ void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
 
     setFlashlight(m_flashlightOnBtn->getButtonState());
     emit sngSetFlashlight(m_flashlightOnBtn->getButtonState());
+
+    showFlashlights(false);
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
 {
+    m_noDelayBtn->setSelected(false);
+    m_delay3SecondBtn->setSelected(false);
+    m_delay6SecondBtn->setSelected(false);
     switch (delayTime) {
     case 0:
-        emit m_noDelayBtn->clicked();
+//        emit m_noDelayBtn->clicked(); //不使用触发按钮点击方式实现，防止影响动画效果
+        m_noDelayBtn->setSelected(true);
+        m_delayUnfoldBtn->copyPixmap(*m_noDelayBtn);
+        m_delayFoldBtn->copyPixmap(*m_noDelayBtn);
         break;
     case 3:
-        emit m_delay3SecondBtn->clicked();
+//        emit m_delay3SecondBtn->clicked();
+        m_delay3SecondBtn->setSelected(true);
+        m_delayUnfoldBtn->copyPixmap(*m_delay3SecondBtn);
+        m_delayFoldBtn->copyPixmap(*m_delay3SecondBtn);
         break;
     case 6:
-        emit m_delay6SecondBtn->clicked();
+//        emit m_delay6SecondBtn->clicked();
+        m_delay6SecondBtn->setSelected(true);
+        m_delayUnfoldBtn->copyPixmap(*m_delay6SecondBtn);
+        m_delayFoldBtn->copyPixmap(*m_delay6SecondBtn);
         break;
     default:
         ;
