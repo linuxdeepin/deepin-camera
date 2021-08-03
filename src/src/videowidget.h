@@ -151,6 +151,12 @@ signals:
     */
     void updateRecordState(int state);
 
+    /**
+    * @brief updatePhotoState　更新拍照状态
+    * @param state 状态
+    */
+    void updatePhotoState(int state);
+
 public:
     /**
     * @brief setCapStatus　设置相机状态

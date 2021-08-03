@@ -215,6 +215,7 @@ videowidget::videowidget(DWidget *parent)
     connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
     connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
+    m_flashTimer->setSingleShot(true);
 //    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(onEndBtnClicked()));
 }
 
@@ -661,14 +662,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     switch (state) {
     case PICTRUE:
         m_recordingTimeWidget->hide();
-        //m_endBtn->hide();
-
-        if (m_dLabel->pos() == QPoint(0, 0))
-            m_dLabel->move((width() - m_dLabel->width()) / 2,
-                           (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
-
-        m_dLabel->setText(QString::number(m_nInterval));
-        m_dLabel->show();
         break;
 
     case VIDEO:
@@ -676,8 +669,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
         m_pSvgItem->hide();
         if (m_nCount > MAX_REC_TIME)//平板与主线保持一致最大录制时长60小时
             onEndBtnClicked();//结束录制
-
-        m_dLabel->hide();
 
         if (!get_capture_pause()) {//判断是否是暂停状态
             QString strTime = "";
@@ -730,7 +721,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     default:
         m_pCamErrItem->hide();
         m_pSvgItem->hide();
-        m_dLabel->hide();
         m_recordingTimeWidget->hide();
         //m_endBtn->hide();
         break;
@@ -747,10 +737,9 @@ void videowidget::resizeEvent(QResizeEvent *size)
         m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10 /*- m_endBtn->width()*/) / 2,
                                     height() - m_recordingTimeWidget->height() - 9);
 
-    if (m_dLabel->isVisible()) {
-        m_dLabel->move((width() - m_dLabel->width()) / 2,
-                       (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
-    }
+    m_dLabel->move((width() - m_dLabel->width()) / 2,
+                   (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
+
 
     if (m_pCamErrItem->isVisible()) {
         itemPosChange();
@@ -828,13 +817,14 @@ void videowidget::showCountdown()
         if (m_countTimer->isActive())
             m_countTimer->stop();
 
-        if (m_dLabel->isVisible())
-            m_dLabel->hide();
+        m_dLabel->hide();
         m_flashLabel->hide();
     }
+
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE) {
-
+        //倒数到最后一次，隐藏计数器
+        m_dLabel->hide();
         if (g_Enum_Camera_State == VIDEO) {
             if (!getCapStatus()) {
                 /*m_bActive录制状态判断
@@ -855,7 +845,6 @@ void videowidget::showCountdown()
                 if (m_flashEnable && m_nMaxInterval > 0){
                     m_flashLabel->show();
                 }
-                m_dLabel->hide();
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
@@ -868,6 +857,7 @@ void videowidget::showCountdown()
 
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
+            emit updatePhotoState(CMainWindow::Photoing);
 
             if (QDir(m_savePicFolder).exists() == false) {
                 QString strDefaultPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
@@ -938,11 +928,12 @@ void videowidget::showCountdown()
 
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
-            m_dLabel->hide();
             m_pNormalView->hide();
         }
 
     } else {
+        m_dLabel->setText(QString::number(m_nInterval));
+        m_dLabel->show();
         showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
         m_nInterval--;
         qInfo() << "m_nInterval:" << m_nInterval;
@@ -1022,6 +1013,11 @@ void videowidget::flash()
     if (m_curTakePicTime == 0)
         stopEverything();
 
+    //最后一次拍照完成，设置状态恢复
+    if (0 == m_curTakePicTime){
+        emit updatePhotoState(CMainWindow::photoNormal);
+    }
+
 }
 void videowidget::slotresolutionchanged(const QString &resolution)
 {
@@ -1063,9 +1059,7 @@ void videowidget::onEndBtnClicked()
 
     if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
         m_pSvgItem->hide();
-
-    if (m_dLabel->isVisible())
-        m_dLabel->hide();
+    m_dLabel->hide();
 
     //取消拍照或者停止拍照，发送按钮状态普通
     emit updateRecordState(photoRecordBtn::Normal);
@@ -1214,11 +1208,6 @@ void videowidget::onTakePic(bool bTrue)
     g_Enum_Camera_State = PICTRUE;
 
     if (bTrue) {
-        if (m_dLabel) {
-            m_dLabel->move((width() - m_dLabel->width()) / 2,
-                           (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
-        }
-
         //1、重置状态
         if (m_countTimer->isActive())
             m_countTimer->stop();
@@ -1229,18 +1218,17 @@ void videowidget::onTakePic(bool bTrue)
         if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
             m_pSvgItem->hide();
 
-        if (m_dLabel->isVisible())
-            m_dLabel->hide();
-
         m_nInterval = m_nMaxInterval = m_Maxinterval;
         m_curTakePicTime = m_nMaxContinuous;
         emit updateBlockSystem(true);//连拍时开启关机阻止
         showCountdown();  //直接执行拍照动作
         if(0 != m_nMaxInterval){
             //连拍，启动timer
+            emit updatePhotoState(CMainWindow::prePhoto);
             m_countTimer->start(1000);
         }
     } else {
+        emit updatePhotoState(CMainWindow::photoNormal);
         emit takePicCancel();
         emit updateBlockSystem(false);//连拍取消时，取消阻止关机
         m_nInterval = 0; //下次可开启
@@ -1249,10 +1237,8 @@ void videowidget::onTakePic(bool bTrue)
         if (m_countTimer->isActive())
             m_countTimer->stop();
 
-        if (m_dLabel->isVisible())
-            m_dLabel->hide();
 
-
+        m_dLabel->hide();
         m_flashLabel->hide();
 
         QEventLoop eventloop;
@@ -1266,10 +1252,6 @@ void videowidget::onTakePic(bool bTrue)
 #endif
         emit toolbarShow(true);
         recoverTabWidget();
-//        if (!m_thumbnail->isVisible()) {
-//            m_thumbnail->show();
-//            recoverTabWidget();
-//        }
     }
 }
 
@@ -1290,8 +1272,6 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         if (m_pSvgItem->isVisible())
             m_pSvgItem->hide();
 
-        if (m_dLabel->isVisible())
-            m_dLabel->hide();
         return; //return即可，这个是外部过来的信号，外部有处理相关按钮状态、恢复缩略图状态
     }
 
@@ -1311,9 +1291,6 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
         if (m_pSvgItem->isVisible())
             m_pSvgItem->hide();
-
-        if (m_dLabel->isVisible())
-            m_dLabel->hide();
         return;
     }
 
@@ -1423,8 +1400,8 @@ void videowidget::stopEverything()
     if (m_pSvgItem->isVisible())
         m_pSvgItem->hide();
 
-    if (m_dLabel->isVisible())
-        m_dLabel->hide();
+
+    m_dLabel->hide();
 
 #ifndef __mips__
     if (!m_openglwidget->isVisible())

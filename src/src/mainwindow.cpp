@@ -734,7 +734,7 @@ void CMainWindow::setWayland(bool bTrue)
 
 CMainWindow::CMainWindow(QWidget *parent)
     : DMainWindow(parent),
-      m_bPhotoing(false),
+      m_photoState(photoNormal),
       m_bRecording(false),
       m_bSwitchCameraShowEnable(false),
       m_bUIinit(false)
@@ -827,7 +827,6 @@ void CMainWindow::reflushSnapshotLabel()
         }
     }
     m_snapshotLabel->updatePicPath(lastFilePath);
-    showRightButtons();
 }
 
 void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileList)
@@ -1281,6 +1280,7 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
 
     m_videoPre->delayInit();
+    showChildWidget();
 }
 
 /**
@@ -1365,7 +1365,7 @@ void CMainWindow::onNoCam()
 {
     onEnableTitleBar(3); //恢复按钮状态
     onEnableTitleBar(4); //恢复按钮状态
-    showRightButtons();
+    showChildWidget();
     onEnableSettings(true);
 }
 
@@ -1443,7 +1443,7 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 void CMainWindow::onToolbarShow(bool bShow)
 {
     Q_UNUSED(bShow);
-    showRightButtons();
+//    showRightButtons();
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
@@ -1487,27 +1487,19 @@ void CMainWindow::onPhotoRecordBtnClked()
     //拍照模式下
     if (true == m_photoRecordBtn->photoState()){
         //正在拍照
-        if (true == m_bPhotoing){
+        if (photoNormal != m_photoState){
             m_videoPre->onTakePic(false);
-            m_bPhotoing = false;
-            m_switchRecordBtn->setEnabled(true);
         }
         else{
             m_videoPre->onTakePic(true);
-            m_bPhotoing = true;
-             m_switchRecordBtn->setEnabled(false);
         }
     }
     else{  //录像模式下
         if (true == m_bRecording){
             m_videoPre->onEndBtnClicked();
-            //m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
         }
         else{
-            m_bRecording = true;
             m_videoPre->onTakeVideo();
-            m_switchPhotoBtn->setEnabled(false);
-            //m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
         }
     }
 }
@@ -1523,20 +1515,23 @@ void CMainWindow::onUpdateRecordState(int state)
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
     m_switchPhotoBtn->setEnabled(!m_bRecording);
-    showRightButtons();
+    showChildWidget();
+}
+
+void CMainWindow::onUpdatePhotoState(int state)
+{
+    m_switchRecordBtn->setEnabled(photoNormal == state);
+    m_photoState = state;
+    showChildWidget();
 }
 
 void CMainWindow::onTitleBarMinBtnClicked()
 {
-    if (m_bPhotoing){
+    if (photoNormal != m_photoState){
         m_videoPre->onTakePic(false);
-        m_bPhotoing =  false;
-         m_switchRecordBtn->setEnabled(true);
     }
     if (m_bRecording){
         m_videoPre->onEndBtnClicked();
-        m_bRecording = false;
-        m_switchPhotoBtn->setEnabled(true);
     }
 }
 
@@ -1746,6 +1741,8 @@ void CMainWindow::initConnection()
 //    connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
     connect(m_videoPre, SIGNAL(updateRecordState(int)), this, SLOT(onUpdateRecordState(int)));
 
+    connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
+
     connect(m_showCameraNameTimer, SIGNAL(timeout()),this, SLOT(onShowCameraNameTimer()));
     //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
@@ -1820,7 +1817,6 @@ void CMainWindow::initRightButtons()
     //摄像头切换成功信号
     connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString&)), this, SLOT(onSwitchCameraSuccess(const QString&)));
     locateRightButtons();
-    showRightButtons();
 }
 
 void CMainWindow::locateRightButtons()
@@ -1864,7 +1860,7 @@ void CMainWindow::setSelBtnHide()
 {
     m_bSwitchCameraShowEnable = false;
     if (!m_cameraSwitchBtn->isHidden()){
-        showRightButtons();
+        showChildWidget();
     }
 }
 
@@ -1877,7 +1873,7 @@ void CMainWindow::setSelBtnShow()
 {
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()){
-        showRightButtons();
+        showChildWidget();
     }
 }
 
@@ -2241,8 +2237,6 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
-    m_bPhotoing = false;
-    m_switchRecordBtn->setEnabled(true);
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
@@ -2255,8 +2249,6 @@ void CMainWindow::onTakePicOnce()
 
 void CMainWindow::onTakePicCancel()
 {
-    m_bPhotoing = false;
-    m_switchRecordBtn->setEnabled(true);
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //恢复控件焦点状态
@@ -2268,8 +2260,6 @@ void CMainWindow::onTakePicCancel()
 
 void CMainWindow::onTakeVdDone()
 {
-    m_bRecording = false;
-    m_switchPhotoBtn->setEnabled(true);
     onEnableTitleBar(4); //恢复按钮状态
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
@@ -2289,8 +2279,6 @@ void CMainWindow::onTakeVdDone()
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
-    m_bRecording = false;
-    m_switchPhotoBtn->setEnabled(true);
     onEnableTitleBar(4); //恢复按钮状态
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
@@ -2405,7 +2393,8 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 
 void CMainWindow::wheelEvent(QWheelEvent * event)
 {
-    if (m_bPhotoing || m_bRecording){
+    if (photoNormal != m_photoState
+       || m_bRecording){
         return;
     }
     if(event->delta() > 0){
@@ -2418,20 +2407,22 @@ void CMainWindow::wheelEvent(QWheelEvent * event)
 /*
  * 右侧按钮显示状态
  * 1、正在拍照，闪光灯，全部不显示
- * 2、正在录像，只显示拍照按钮
- * 3、无摄像头或者只有一个摄像头不显示切换摄像机状态
- * 4、没有图片，不显示缩略图label
+ * 2、拍照倒计时 只显示拍照按钮
+ * 3、正在录像，只显示拍照按钮
+ * 4、无摄像头或者只有一个摄像头不显示切换摄像机状态
 */
 
 
-void CMainWindow::showRightButtons()
+void CMainWindow::showChildWidget()
 {
-    if (m_bPhotoing) {
+    //正在拍照过程中
+    if (photoNormal != m_photoState) {
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchPhotoBtn,false);
         showWidget(m_switchRecordBtn,false);
-        showWidget(m_photoRecordBtn,false);
+        showWidget(m_takePhotoSettingArea, false);
+        showWidget(m_photoRecordBtn, prePhoto == m_photoState);
         return;
     }
     if (m_bRecording) {  //正在录像
@@ -2439,6 +2430,7 @@ void CMainWindow::showRightButtons()
         showWidget(m_snapshotLabel,false);
         showWidget(m_switchPhotoBtn,false);
         showWidget(m_switchRecordBtn,false);
+        showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
         return;
     }
@@ -2447,6 +2439,7 @@ void CMainWindow::showRightButtons()
     showWidget(m_switchRecordBtn,true);
     showWidget(m_switchPhotoBtn,true);
     showWidget(m_photoRecordBtn, true);
+    showWidget(m_takePhotoSettingArea,true);
 }
 
 void CMainWindow::showWidget(DWidget* widget, bool bShow)
