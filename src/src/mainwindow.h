@@ -73,6 +73,12 @@ class CMainWindow : public DMainWindow
 {
     Q_OBJECT
 public:
+    typedef enum _photo_state{
+        photoNormal = 0,           //未开始
+        prePhoto    = 1,           //倒计时
+        Photoing    = 2,           //正在拍照
+    }PhotoState;
+
     explicit CMainWindow(QWidget *parent = nullptr);
 
     /**
@@ -361,6 +367,12 @@ private slots:
     void onUpdateRecordState(int state);
 
     /**
+     * @brief onUpdatePhotoState 更新拍照状态
+     * @param state  录像状态
+     */
+    void onUpdatePhotoState(int state);
+
+    /**
      * @brief onTitleBarMinBtnClicked 标题栏的最小化按钮点击事件
      */
     void onTitleBarMinBtnClicked();
@@ -401,9 +413,9 @@ protected:
 
 private:
     /**
-     * @brief showRightButtons 显示右侧控件
+     * @brief showChildWidget 显示子控件，左侧配置控件，右侧操作区域控件
      */
-    void showRightButtons();
+    void showChildWidget();
 
     /**
      * @brief showWidget 显示/隐藏控件
@@ -460,7 +472,7 @@ private:
     DLabel                          *m_labelCameraName;     //摄像机名称提示label
     QTimer                          *m_showCameraNameTimer; //显示摄像机名称Timer
 
-    bool                            m_bPhotoing;            //是否正在拍照
+    int                             m_photoState;            //拍照状态，详见PhotoState定义，由m_videoPre 控制状态，不能主动设置状态
     bool                            m_bRecording;           //是否正在录像
     bool                            m_bSwitchCameraShowEnable; //是否可显示摄像头切换
     QString                         m_videoPath;            //配置的视频路径
