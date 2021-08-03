@@ -45,6 +45,7 @@
 #include <QStandardPaths>
 #include <QSvgRenderer>
 #include <QGraphicsSvgItem>
+#include <QDesktopWidget>
 
 #define COUNTDOWN_WIDTH 30
 #define COUNTDOWN_HEIGHT 61
@@ -67,7 +68,14 @@ videowidget::videowidget(DWidget *parent)
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsView(this);
-    m_flashLabel  = new DLabel(this);
+    QDesktopWidget* desktopWidget = QApplication::desktop();
+    //获取设备屏幕大小
+    QRect screenRect = desktopWidget->screenGeometry();
+    m_flashLabel  = new DLabel(desktopWidget);
+    m_flashLabel->setWindowFlags(m_flashLabel->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    m_flashLabel->move(0,0);
+    m_flashLabel->setFixedSize(screenRect.width(), screenRect.height());
+    m_flashLabel->hide();
     m_recordingTimeWidget = new DLabel(this);
     m_recordingTime = new DLabel;
 //    m_fWgtCountdown = new DFloatingWidget(this);
@@ -93,10 +101,6 @@ videowidget::videowidget(DWidget *parent)
     m_nInterval = 0;
     m_curTakePicTime = 0;
     m_nCount = 0;
-    if (parentWidget()) {
-        m_flashLabel->resize(parentWidget()->size());
-        m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
-    }
     m_pNormalView->setFrameShape(QFrame::Shape::NoFrame);
     m_pNormalView->setFocusPolicy(Qt::NoFocus);
     forbidScrollBar(m_pNormalView);
@@ -110,11 +114,6 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalScene->addItem(m_pNormalItem);
 #endif
     m_pNormalScene->addItem(m_pCamErrItem);
-    m_flashLabel->setFocusPolicy(Qt::NoFocus);
-    m_dLabel->hide(); //先隐藏
-//    m_fWgtCountdown->setFixedSize(160, 144);
-//    m_fWgtCountdown->setBlurBackgroundEnabled(true);
-//    m_fWgtCountdown->setFocusPolicy(Qt::NoFocus);
     recordingwidgetlay->setSpacing(0);
     recordingwidgetlay->setContentsMargins(0,0,0,0);
     recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignBottom);
@@ -286,6 +285,7 @@ void videowidget::delayInit()
 
     //spring2功能
     //m_imgPrcThread->setHorizontalMirror(dc::Settings::get().getOption("photosetting.mirrorMode.mirrorMode").toBool());
+    setFlash(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
 #ifdef __mips__
@@ -395,9 +395,6 @@ void videowidget::delayInit()
                 m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
                 itemPosChange();
             }
-
-            if (m_flashLabel->isVisible())
-                m_flashLabel->hide();
         }
 
     });
@@ -458,8 +455,7 @@ void videowidget::showNocam()
     m_pCamErrItem->setPlainText(str);
     m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
 
-    if (m_flashLabel->isVisible())
-        m_flashLabel->hide();
+    m_flashLabel->hide();
 
     itemPosChange();
     m_pCamErrItem->show();
@@ -522,8 +518,7 @@ void videowidget::showCamUsed()
     m_pCamErrItem->setFont(ft);
     m_pNormalScene->setSceneRect(m_pSvgItem->boundingRect());
 
-    if (m_flashLabel->isVisible())
-        m_flashLabel->hide();
+    m_flashLabel->hide();
 
     itemPosChange();
     m_pCamErrItem->show();
@@ -746,20 +741,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 void videowidget::resizeEvent(QResizeEvent *size)
 {
     Q_UNUSED(size);
-    //m_pNormalView->resize(m_pNormalView->parentWidget()->size());
-    if (size->size() != size->oldSize()) {
-        QSize size = QSize(parentWidget()->size().width(), parentWidget()->size().height());
-        m_flashLabel->resize(size);
-        m_flashLabel->move(mapToGlobal(QPoint(0, 0)));
-    }
-    if (m_flashLabel->isVisible()) {
-        m_flashLabel->repaint();
-    }
-
-//    //结束按钮放大缩小的显示
-//    if (m_endBtn->isVisible())
-//        m_endBtn->move((width() + m_recordingTimeWidget->width() + 10 - m_endBtn->width()) / 2,
-//                       height() - m_recordingTimeWidget->height() - 11);
 
     //计时窗口放大缩小的显示
     if (m_recordingTimeWidget->isVisible())
@@ -849,9 +830,7 @@ void videowidget::showCountdown()
 
         if (m_dLabel->isVisible())
             m_dLabel->hide();
-
-        if (m_flashLabel->isVisible())
-            m_flashLabel->hide();
+        m_flashLabel->hide();
     }
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE) {
@@ -872,21 +851,11 @@ void videowidget::showCountdown()
         }
 
         if (g_Enum_Camera_State == PICTRUE) {
-            if (m_nInterval == 0 && m_curTakePicTime > 0) {
-                m_flashLabel->show();
-
-                /**
-                  * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
-                  * 将焦点移到m_flashlabel
-                  */
-                if ((DataManager::instance()->m_tabIndex > 0
-                        && DataManager::instance()->m_tabIndex < 4
-                        && DataManager::instance()->m_tabIndex != 2)
-                        || DataManager::instance()->m_tabIndex > 7)
-                    m_flashLabel->setFocus();
-
+            if (m_nInterval == 0 && m_curTakePicTime >= 0) {
+                if (m_flashEnable && m_nMaxInterval > 0){
+                    m_flashLabel->show();
+                }
                 m_dLabel->hide();
-                //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
@@ -894,36 +863,9 @@ void videowidget::showCountdown()
 #else
                 m_pNormalView->hide();
 #endif
-//                m_thumbnail->hide();
                 emit toolbarShow(false);
             }
 
-            if (m_curTakePicTime == 0 && m_nInterval == 0) {
-                m_flashLabel->show();
-
-                /**
-                  * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
-                  * 将焦点移到m_flashlabel
-                  */
-                if ((DataManager::instance()->m_tabIndex > 0
-                        && DataManager::instance()->m_tabIndex < 4
-                        && DataManager::instance()->m_tabIndex != 2)
-                        || DataManager::instance()->m_tabIndex > 7)
-                    m_flashLabel->setFocus();
-
-                m_dLabel->hide();
-                //立即闪光，500ms后关闭
-                m_flashTimer->start(500);
-
-#ifndef __mips__
-                m_openglwidget->hide();
-#else
-                m_pNormalView->hide();
-#endif
-
-//                m_thumbnail->hide();
-                emit toolbarShow(false);
-            }
             //发送就结束信号处理按钮状态
             m_countTimer->stop();
 
@@ -1063,29 +1005,23 @@ void videowidget::showRecTime()
 
 void videowidget::flash()
 {
-    if (m_flashLabel->isVisible()) {
-        //隐藏闪光窗口
-
-        if (get_sound_of_takeing_photo())
-            m_takePicSound->play();
+    if (get_sound_of_takeing_photo())
+        m_takePicSound->play();
 
 #ifndef __mips__
 
-        if (m_openglwidget->isVisible() == false)
-            m_openglwidget->show();
+    if (m_openglwidget->isVisible() == false)
+        m_openglwidget->show();
 
 #endif
-//        m_thumbnail->show();
-        emit toolbarShow(true);
-        recoverTabWidget();
+    emit toolbarShow(true);
+    recoverTabWidget();
 
-//        m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
+    m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
-        if (m_curTakePicTime == 0)
-            stopEverything();
+    if (m_curTakePicTime == 0)
+        stopEverything();
 
-        qDebug() << "m_flashLabel->hide();";
-    }
 }
 void videowidget::slotresolutionchanged(const QString &resolution)
 {
@@ -1316,8 +1252,8 @@ void videowidget::onTakePic(bool bTrue)
         if (m_dLabel->isVisible())
             m_dLabel->hide();
 
-        if (m_flashLabel->isVisible())
-            m_flashLabel->hide();
+
+        m_flashLabel->hide();
 
         QEventLoop eventloop;
         QTimer::singleShot(300, &eventloop, SLOT(quit()));
@@ -1478,9 +1414,7 @@ void videowidget::stopEverything()
     if (m_countTimer->isActive())
         m_countTimer->stop();
 
-
-    if (m_flashLabel->isVisible())
-        m_flashLabel->hide();
+    m_flashLabel->hide();
 
 
     if (m_pCamErrItem->isVisible())
@@ -1498,11 +1432,6 @@ void videowidget::stopEverything()
 #endif
 }
 
-void videowidget::onSetFlash(bool bFlashOn)
-{
-    m_flashLabel->setVisible(bFlashOn);
-}
-
 bool videowidget::getFlashStatus()
 {
     return m_flashLabel->isVisible();
@@ -1513,4 +1442,11 @@ void videowidget::setHorizontalMirror(bool bMirror)
     if (nullptr != m_imgPrcThread){
         m_imgPrcThread->setHorizontalMirror(bMirror);
     }
+}
+
+void videowidget::setFlash(bool bFlashOn)
+{
+    //spring 2 开发内容，设置为全部关闭闪光灯功能
+    m_flashEnable = false;
+    //m_flashEnable = bFlashOn;
 }

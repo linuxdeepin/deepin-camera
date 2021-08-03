@@ -371,6 +371,12 @@ private slots:
      */
     void onMirrorStateChanged(bool bMirror);
 
+    /**
+     * @brief onSetFlash 设置闪光灯
+     * @param bFlashOn  是否开启
+     */
+    void onSetFlash(bool bFlashOn);
+
 protected:
 
     /**

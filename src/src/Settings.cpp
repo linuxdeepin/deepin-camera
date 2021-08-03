@@ -96,6 +96,11 @@ void Settings::init()
             emit mirrorModeChanged(bMirror);
         }
 
+        if (key.startsWith("photosetting.Flashlight.Flashlight")){
+            bool bLight = m_settings->getOption("photosetting.Flashlight.Flashlight").toBool();
+            emit flashLightChanged(bLight);
+        }
+
     });
 
     qInfo() << "keys" << m_settings->keys();
@@ -110,6 +115,11 @@ QVariant Settings::generalOption(const QString &opt)
 QVariant Settings::getOption(const QString &opt)
 {
     return m_settings->getOption(opt);
+}
+
+void Settings::setOption(const QString &opt, const QVariant &v)
+{
+    m_settings->setOption(opt, v);
 }
 
 void Settings::setNewResolutionList()

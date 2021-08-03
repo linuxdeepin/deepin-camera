@@ -109,6 +109,12 @@ public:
     QVariant getOption(const QString &opt);
 
     /**
+    * @brief setOption 设置json下的值
+    * @param opt
+    */
+    void setOption(const QString &opt, const QVariant &v);
+
+    /**
     * @brief setBackOption 设置config.ini下的opt的值
     * @param opt
     * @param v
@@ -146,6 +152,12 @@ signals:
     * @param bMirror true 镜像  false 非镜像
     */
     void mirrorModeChanged(bool bMirror);
+
+    /**
+    * @brief flashLightChanged 闪光灯开启关闭
+    * @param bLight true 开启闪光  false 关闭闪光
+    */
+    void flashLightChanged(bool bLight);
 
 private:
     Settings();

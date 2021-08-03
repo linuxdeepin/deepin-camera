@@ -226,6 +226,12 @@ public:
      * @param bMirror 是否镜像
      */
     void setHorizontalMirror(bool bMirror);
+
+    /**
+    * @brief setFlash　设置闪光灯开启关闭
+    * @param bFlashOn  是否开启
+    */
+    void setFlash(bool bFlashOn);
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -262,10 +268,6 @@ public slots:
     * @brief restartDevices　重启设备
     */
     void onRestartDevices();
-    /**
-    * @brief onCloseFlash　设置闪光
-    */
-    void onSetFlash(bool bFlashOn);
 private slots:
 #ifdef __mips__
     /**
@@ -393,6 +395,7 @@ private:
     QGraphicsPixmapItem        *m_pNormalItem;
 #endif
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
+    bool                       m_flashEnable;       //是否闪光灯
 };
 
 #endif // VIDEOWIDGET_H
