@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae15274e_a76a1d28",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-03T09:05:00Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 92; 注释率: 0.0%",
+      "revId": "f35fed1fdda20707e02ddb22a6a2d38b064b57c1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91322094_6ed5b1fe",
+        "filename": "tests/TakePhotoSettingTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-03T09:05:00Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 16; 注释率: 0.0%",
+      "revId": "f35fed1fdda20707e02ddb22a6a2d38b064b57c1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
