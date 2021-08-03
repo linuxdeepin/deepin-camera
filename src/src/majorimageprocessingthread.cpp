@@ -143,7 +143,7 @@ void MajorImageProcessingThread::run()
             framedely++;
             qInfo() << "m_frame is null" << framedely;
             if (framedely == MAX_DELAYED_FRAMES) {
-                //m_stopped = 1;
+                m_stopped = 1;
                 //发送设备中断信号
                 //emit reachMaxDelayedFrames();
                 //close_v4l2_device_handler();
