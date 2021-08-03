@@ -68,6 +68,10 @@ public:
 
 
     void setRotation(int rotation);
+    
+    void setChangeState();
+    
+    bool getChangeState();
 
     /**
      * @brief getStatus 获取状态
@@ -139,6 +143,7 @@ private:
     QImage             m_Img;
 #endif
     int               m_rotation;
+    bool              m_isChanging;
 };
 
 #endif // MajorImageProcessingThread_H
