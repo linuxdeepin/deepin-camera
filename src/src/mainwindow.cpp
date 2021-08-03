@@ -1933,7 +1933,7 @@ void CMainWindow::changeEvent(QEvent *event)
         showFullScreen();
         return;
     }
-    if (windowState() == Qt::WindowMinimized || (windowState() == (Qt::WindowMinimized | Qt::WindowMaximized))) {
+    if (windowState() & Qt::WindowMinimized) {
         if (m_thumbnail->m_nStatus == STATPicIng)
             m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
         /*锁屏取消、结束录制*/
