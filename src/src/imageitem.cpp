@@ -49,7 +49,6 @@ extern "C" {
 #include "load_libs.h"
 }
 
-//extern QMap<int, ImageItem *> g_indexImage;
 
 ImageItem::ImageItem(QWidget *parent): DLabel(parent)
 {
@@ -96,8 +95,6 @@ ImageItem::ImageItem(QWidget *parent): DLabel(parent)
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
         m_menu->exec(QCursor::pos());
-//        DataManager::instance()->setCtrlMulti(false);
-//        DataManager::instance()->setShiftMulti(false);
         qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
     connect(m_actCopy, &QAction::triggered, this, &ImageItem::onCopy);
@@ -205,147 +202,9 @@ void ImageItem::updatePicPath(const QString &filePath)
     } else {
         m_strDuratuion = "";
         pix = QPixmap();
-//        return;
     }
     updatePic(pix);
     pix.scaled(this->size(), Qt::KeepAspectRatio);
-}
-
-void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
-{
-//    if (!CamApp->isPanelEnvironment()) {
-//        if (ev->button() == Qt::RightButton)
-//            return;
-
-//        QFileInfo fileInfo(m_path);
-//        QString program;
-//        if (fileInfo.suffix() == "jpg") {
-//            program = "deepin-image-viewer"; //用看图打开
-//            qDebug() << "Open it with deepin-image-viewer";
-//        } else {
-//            program = "deepin-movie"; //用影院打开
-//            qDebug() << "Open it with deepin-movie";
-//        }
-
-//        QStringList arguments;
-//        //表示本地文件
-//        arguments << QUrl::fromLocalFile(m_path).toString();
-//        qInfo() << QUrl::fromLocalFile(m_path).toString();
-//        QProcess *myProcess = new QProcess(this);
-//        bool bOK = myProcess->startDetached(program, arguments);
-
-//        if (!bOK)
-//            qWarning() << "QProcess startDetached error";
-//    }
-}
-
-void ImageItem::mousePressEvent(QMouseEvent *ev)
-{
-//    if (DataManager::instance()->getindexNow() != -1) {
-//        //当图片铺满缩略图，选中最后一张，拍照；此时缩略图选中的框消失，选择缩略图的某一个图元，程序崩溃
-//        //根本问题在于缩略图铺满是，继续添加图元，没有正确维护g_indexNow
-//        if (!g_indexImage.contains(DataManager::instance()->getindexNow())) {
-//            DataManager::instance()->m_setIndex.clear();
-//            DataManager::instance()->setindexNow(g_indexImage.begin().value()->getIndex());
-//        }
-
-//        g_indexImage.value(DataManager::instance()->getindexNow())->update();
-//    }
-
-
-//    if (!CamApp->isPanelEnvironment()) {
-//        //当按下Ctrl键，多选，鼠标右键弹出右键菜单后松开Ctrl键，此时mainwindow的keyReleaseEvent无法检测到按键时间，因此
-//        //此处补充获取Ctrl键盘状态，以避免继续选择图元，应用处于多选状态的问题
-//        if (DataManager::instance()->getMultiType() == Ctrl && QGuiApplication::keyboardModifiers() == Qt::ControlModifier) {
-//            if (DataManager::instance()->m_setIndex.contains(m_index)) {
-//                if (ev->button() == Qt::LeftButton) {
-//                    DataManager::instance()->m_setIndex.remove(m_index);
-//                    if (DataManager::instance()->m_setIndex.size() > 0)
-//                        DataManager::instance()->setindexNow(g_indexImage.value(*DataManager::instance()->m_setIndex.begin())->getIndex());
-//                }
-//            } else {
-//                DataManager::instance()->setindexNow(m_index);
-//                DataManager::instance()->m_setIndex.insert(m_index);
-//            }
-
-//        } else if (DataManager::instance()->getMultiType() == Shift && QGuiApplication::keyboardModifiers() == Qt::ShiftModifier) {
-//            if (ev->button() == Qt::LeftButton) {
-//                if (DataManager::instance()->getLastIndex() == -1) {//没有上一次的按键记录就添加
-//                    DataManager::instance()->setLastIndex(DataManager::instance()->getindexNow());
-//                } else {
-//                    static int nCount = 0;//确保不会本次和上次重复填导致ui选中效果错误
-//                    if (0 == nCount) {
-//                        DataManager::instance()->setindexNow(m_index);
-//                        nCount ++;
-//                    } else {
-//                        DataManager::instance()->setLastIndex(m_index);
-//                        nCount = 0;
-//                    }
-//                    DataManager::instance()->m_setIndex.clear();
-//                    int nLast = DataManager::instance()->getLastIndex();
-//                    int nNow = DataManager::instance()->getindexNow();
-//                    if (nLast == nNow) {
-//                        DataManager::instance()->setindexNow(m_index);
-//                        DataManager::instance()->m_setIndex.clear();
-//                        update();
-//                        return;
-//                    }
-//                    emit shiftMulti();
-//                }
-//            }
-//        } else {
-//            if (ev->button() == Qt::LeftButton) {
-//                //左键点击，清空之前的多选和单选，重新开始选择
-//                DataManager::instance()->setindexNow(m_index);
-//                DataManager::instance()->m_setIndex.clear();
-//                DataManager::instance()->m_setIndex.insert(m_index);
-//            }
-//        }
-//    } else {
-//        if (ev->button() == Qt::LeftButton) {
-//            //左键点击，清空之前的多选和单选，重新开始选择
-//            DataManager::instance()->setindexNow(m_index);
-//            DataManager::instance()->m_setIndex.clear();
-//            DataManager::instance()->m_setIndex.insert(m_index);
-//            m_bMousePress = true;
-//        }
-//    }
-//    update();
-//    if (DataManager::instance()->m_setIndex.size() <= 1) {
-//        emit showDuration(m_strDuratuion);
-
-//        if (!m_bVideo) {
-//            emit showDuration("");
-//            if (m_actPrint)
-//                m_actPrint->setVisible(true);
-//        }
-
-//    } else {
-//        QSet<int>::iterator it;
-//        bool bHaveVideo = false;
-
-//        for (it = DataManager::instance()->m_setIndex.begin(); it != DataManager::instance()->m_setIndex.end(); ++it) {
-//            if (g_indexImage.value(*it)->getIsVideo()) {
-//                bHaveVideo = true;
-//                break;
-//            }
-//        }
-
-//        if (bHaveVideo) {
-//            emit showDuration("... ...");
-
-//            if (!m_bVideo) //当前为视频是不会new actPrint的
-//                m_actPrint->setVisible(false);
-
-//        } else {
-//            emit showDuration("");
-//            //多选有视频存在,M_bVideo为true
-//            if (!m_bVideo)
-//                m_actPrint->setVisible(true);
-//        }
-
-//    }
-//    emit needFit();
 }
 
 void ImageItem::paintEvent(QPaintEvent *event)
@@ -358,55 +217,6 @@ void ImageItem::paintEvent(QPaintEvent *event)
     QString str = fileinfo.suffix();
 
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
-
-    /*if (DataManager::instance()->m_setIndex.contains(m_index)
-            || (DataManager::instance()->m_setIndex.isEmpty()
-                && m_index == DataManager::instance()->getindexNow())) {
-        QPainterPath backgroundBp;
-        QRect reduceRect = QRect(backgroundRect.x() + 1, backgroundRect.y() + 1,
-                                 backgroundRect.width() - 2, backgroundRect.height() - 2);
-        backgroundBp.addRoundedRect(reduceRect, 8, 8);
-        painter.setClipPath(backgroundBp);
-        painter.fillRect(
-            reduceRect,
-            QBrush(DGuiApplicationHelper::instance()->applicationPalette().highlight().color()));
-
-        if (m_pixmap.width() > m_pixmap.height()) {
-            m_pixmap = m_pixmap.copy((m_pixmap.width() - m_pixmap.height()) / 2, 0, m_pixmap.height(),
-                                     m_pixmap.height());
-        } else if (m_pixmap.width() < m_pixmap.height()) {
-            m_pixmap = m_pixmap.copy(0, (m_pixmap.height() - m_pixmap.width()) / 2, m_pixmap.width(),
-                                     m_pixmap.width());
-        }
-
-        pixmapRect.setX(backgroundRect.x() + 5);
-        pixmapRect.setY(backgroundRect.y() + 5);
-        pixmapRect.setWidth(backgroundRect.width() - 10);
-        pixmapRect.setHeight(backgroundRect.height() - 10);
-
-        //修复透明图片被选中后透明地方变成绿色
-        QPainterPath bg0;
-        bg0.addRoundedRect(pixmapRect, 4, 4);
-        painter.setClipPath(bg0);
-
-        if (themeType == DGuiApplicationHelper::LightType)
-            painter.fillRect(pixmapRect, QBrush(Qt::white));
-        else if (themeType == DGuiApplicationHelper::DarkType)
-            painter.fillRect(pixmapRect, QBrush(Qt::black));
-
-        QPainterPath bg;
-        bg.addRoundedRect(pixmapRect, 4, 4);
-
-        if (m_pixmap.isNull()) {
-            painter.setClipPath(bg);
-            QIcon icon(m_pixmapstring);
-            icon.paint(&painter, pixmapRect);
-        }
-
-        this->setFixedSize(SELECTED_WIDTH, SELECTED_WIDTH);
-    } else {
-
-    }*/
 
     pixmapRect.setX(rect().x() + 1);
     pixmapRect.setY(rect().y() + 1);
