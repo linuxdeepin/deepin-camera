@@ -153,6 +153,8 @@ void MajorImageProcessingThread::run()
 
             continue;
         }
+      
+        qInfo() << "frame is :" << m_frame << "frame width is :" << m_frame->width << "frame height is :" << m_frame->height;
 
         if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) 
             || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
