@@ -264,16 +264,6 @@ public slots:
 
 protected:
     /**
-     * @brief mouseDoubleClickEvent 鼠标双击事件
-     */
-    void mouseDoubleClickEvent(QMouseEvent *ev) override;
-
-    /**
-     * @brief mousePressEvent 鼠标按下事件
-     */
-    void mousePressEvent(QMouseEvent *ev) override;
-
-    /**
      * @brief paintEvent 控件绘制事件
      */
     void paintEvent(QPaintEvent *event) override;
