@@ -1396,6 +1396,7 @@ void videowidget::onChangeDev()
     //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
     system(pCmd);
 
+    m_imgPrcThread->setChangeState();
     dc::Settings::get().setGeneralOption("open_device", str);
     qDebug() << "---------------- set device:" << str << "------------------------\n";
     m_switchTimer->start();
@@ -1426,6 +1427,7 @@ void videowidget::onChangeCurrentDev()
     //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
     system(pCmd);
 
+    m_imgPrcThread->setChangeState();
     dc::Settings::get().setGeneralOption("open_device", str);
     qDebug() << "---------------- set device:" << str << "------------------------\n";
     m_switchTimer->start();
@@ -1448,6 +1450,12 @@ void videowidget::onTakePic(bool bTrue)
     g_Enum_Camera_State = PICTRUE;
 
     if (bTrue) {
+        //当正在切换摄像头过程中，不执行拍照
+        if (m_imgPrcThread->getChangeState()) {
+            emit takePicCancel();
+            return;
+        }
+      
         if (m_fWgtCountdown) {
             m_fWgtCountdown->move((width() - m_fWgtCountdown->width()) / 2,
                                   (height() - m_fWgtCountdown->height()) / 2);

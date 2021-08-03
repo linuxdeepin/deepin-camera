@@ -60,6 +60,7 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
+    m_isChanging = true;
 }
 void MajorImageProcessingThread::setRotation(int rotation)
 {
@@ -153,6 +154,9 @@ void MajorImageProcessingThread::run()
 
             continue;
         }
+        m_isChanging = false;
+      
+        //qInfo() << "frame is :" << m_frame << "frame width is :" << m_frame->width << "frame height is :" << m_frame->height;
 
         if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) 
             || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
@@ -343,4 +347,14 @@ void MajorImageProcessingThread::run()
     }
 
     v4l2core_stop_stream(m_videoDevice);
+}
+
+void MajorImageProcessingThread::setChangeState()
+{
+    m_isChanging = true;
+}
+
+bool MajorImageProcessingThread::getChangeState()
+{
+    return m_isChanging;
 }

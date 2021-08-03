@@ -68,6 +68,16 @@ public:
 
 
     void setRotation(int rotation);
+    
+    /**
+     * @brief setChangeState 设置切换状态
+     */    
+    void setChangeState();
+    
+    /**
+     * @brief getChangeState 获取当前的切换状态
+     */     
+    bool getChangeState();
 
     /**
      * @brief getStatus 获取状态
@@ -139,6 +149,7 @@ private:
     QImage             m_Img;
 #endif
     int               m_rotation;
+    bool              m_isChanging;          //是否在切换摄像头中
 };
 
 #endif // MajorImageProcessingThread_H
