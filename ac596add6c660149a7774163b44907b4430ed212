@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "c963ed66_d9e66872",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-03T12:01:42Z",
+      "side": 1,
+      "message": "判断一下指针不为空，直接崩溃",
+      "range": {
+        "startLine": 33,
+        "startChar": 9,
+        "endLine": 33,
+        "endChar": 19
+      },
+      "revId": "ac596add6c660149a7774163b44907b4430ed212",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42b80e58_8aeeab4a",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-03T12:01:42Z",
+      "side": 1,
+      "message": "可以根据设置状态，添加断言，看是否达到预期结果",
+      "range": {
+        "startLine": 92,
+        "startChar": 22,
+        "endLine": 92,
+        "endChar": 46
+      },
+      "revId": "ac596add6c660149a7774163b44907b4430ed212",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5826fb26_8ead42dd",
         "filename": "tests/TakePhotoSettingTest.h",
         "patchSetId": 4
