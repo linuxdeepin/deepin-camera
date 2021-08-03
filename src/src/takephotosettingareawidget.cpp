@@ -600,6 +600,11 @@ void takePhotoSettingAreaWidget::setFlashlight(bool bFlashOn)
     update();
 }
 
+bool takePhotoSettingAreaWidget::flashLight()
+{
+    return m_flashlightOnBtn->getButtonState();
+}
+
 void takePhotoSettingAreaWidget::resizeEvent(QResizeEvent *event)
 {
     moveToParentLeft();

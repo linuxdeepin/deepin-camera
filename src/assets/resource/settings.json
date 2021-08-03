@@ -107,6 +107,19 @@
                             "default": false
                         }
                     ]
+                },
+                {
+                    "key": "Flashlight",
+                    "name": "Flash Light",
+                    "hide": true,
+                    "options": [
+                        {
+                            "key": "Flashlight",
+                            "type": "switchbutton",
+                            "name": "Flash Light",
+                            "default": false
+                        }
+                    ]
                 }
             ]
         },

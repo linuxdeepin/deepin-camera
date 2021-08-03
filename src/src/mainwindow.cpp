@@ -1541,6 +1541,19 @@ void CMainWindow::onMirrorStateChanged(bool bMirror)
     }
 }
 
+void CMainWindow::onSetFlash(bool bFlashOn)
+{
+    if(m_videoPre){
+        m_videoPre->setFlash(bFlashOn);
+    }
+    if (bFlashOn != dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool()){
+        dc::Settings::get().setOption("photosetting.Flashlight.Flashlight", bFlashOn);
+    }
+    if (bFlashOn != m_takePhotoSettingArea->flashLight()){
+        m_takePhotoSettingArea->setFlashlight(bFlashOn);
+    }
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1567,7 +1580,10 @@ void CMainWindow::initUI()
         if (curIndex.toInt() != setIndex)//防止循环设置
             dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), setIndex);
     });
-    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, m_videoPre, &videowidget::onSetFlash);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
+    connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
+    //切换镜像
+    connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
     connect(&Settings::get(), &Settings::delayTimeChanged, this, [ = ](const QString & str) {
 
         int delayTime = 0;
@@ -1658,7 +1674,7 @@ void CMainWindow::initUI()
     resize(minWindowWidth, minWindowHeight);
 
     m_takePhotoSettingArea->setDelayTime(nDelayTime);
-    m_takePhotoSettingArea->setFlashlight(m_videoPre->getFlashStatus());
+    m_takePhotoSettingArea->setFlashlight(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     m_bUIinit = true;
 }
 
@@ -1696,8 +1712,6 @@ void CMainWindow::initConnection()
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //切换分辨率
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
-    //切换镜像
-    connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
     //拍照
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
     //上层按钮显示状态切换

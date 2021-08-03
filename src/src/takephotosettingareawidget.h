@@ -68,6 +68,11 @@ public:
     * @param bFlashOn 是否打开闪光
     */
     void setFlashlight(bool bFlashOn);
+
+    /**
+    * @brief setDelayTime 获取闪光灯状态
+    */
+    bool flashLight();
     /**
     * @brief moveToParentLeft 移动到父窗口左边
     */
