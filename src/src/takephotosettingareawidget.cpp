@@ -486,8 +486,10 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
+    int width, height;
+
     if (m_delayGroupDisplay) {
-        //先画一个矩形
+       /* //先画一个矩形
         QPoint topLeft = m_delayFoldBtn->pos() + QPoint(0, m_delayFoldBtn->height() * 0.5);
         QPoint bottomRight = m_delay6SecondBtn->pos() + QPoint(m_delayFoldBtn->width(), m_delay6SecondBtn->height() * 0.5);
 
@@ -498,8 +500,31 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
         //再画两个半圆
         painter.drawPie(QRect(m_delayFoldBtn->pos(), m_delayFoldBtn->pos() + QPoint(m_delayFoldBtn->width(), m_delayFoldBtn->height())), 0 * 16, 180 * 16);
         painter.drawPie(QRect(m_delay6SecondBtn->pos(), m_delay6SecondBtn->pos() + QPoint(m_delay6SecondBtn->width(), m_delay6SecondBtn->height())), 180 * 16, 180 * 16);
+        */
+
+        QPainterPath path;  //上半圆+矩形
+        QPainterPath arc1;  //下半圆
+
+        width = m_delayFoldBtn->width();
+        height = m_delayFoldBtn->height();
+
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(m_buttonGroupColor));
+
+        path.moveTo(m_delayFoldBtn->rect().center());
+        path.arcTo(m_delayFoldBtn->rect(), 0, 180);
+        path.lineTo(m_delay6SecondBtn->x(), m_delay6SecondBtn->y() + height / 2);
+        path.lineTo(m_delay6SecondBtn->x() + width, m_delay6SecondBtn->y() + height / 2);
+        path.lineTo(m_delayFoldBtn->x() + width, m_delayFoldBtn->y() + height / 2);
+
+        arc1.moveTo(m_delay6SecondBtn->x() + width / 2, m_delay6SecondBtn->y() + height / 2);
+        arc1.arcTo(QRect(m_delay6SecondBtn->x(), m_delay6SecondBtn->y(), width, height), 180, 180);
+
+        path.addPath(arc1);
+        painter.fillPath(path, QBrush(m_buttonGroupColor));
+
     } else if (m_flashGroupDisplay) {
-        //先画一个矩形
+        /* //先画一个矩形
         QPoint topLeft = m_flashlightFoldBtn->pos() + QPoint(-1, m_flashlightFoldBtn->height() * 0.5);
         QPoint bottomRight = m_flashlightOffBtn->pos() + QPoint(m_flashlightFoldBtn->width(), m_flashlightOffBtn->height() * 0.5);
 
@@ -509,7 +534,28 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 
         //再画两个半圆
         painter.drawPie(QRect(m_flashlightFoldBtn->pos(), m_flashlightFoldBtn->pos() + QPoint(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height())), 0 * 16, 180 * 16);
-        painter.drawPie(QRect(m_flashlightOffBtn->pos(), m_flashlightOffBtn->pos() + QPoint(m_flashlightOffBtn->width(), m_flashlightOffBtn->height())), 180 * 16, 180 * 16);
+        painter.drawPie(QRect(m_flashlightOffBtn->pos(), m_flashlightOffBtn->pos() + QPoint(m_flashlightOffBtn->width(), m_flashlightOffBtn->height())), 180 * 16, 180 * 16);*/
+
+        QPainterPath path;
+        QPainterPath arc1;
+
+        width = m_flashlightFoldBtn->width();
+        height = m_flashlightFoldBtn->height();
+
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(m_buttonGroupColor));
+
+        path.moveTo(m_flashlightFoldBtn->rect().center());
+        path.arcTo(m_flashlightFoldBtn->rect(), 0, 180);
+        path.lineTo(m_flashlightOffBtn->x(), m_flashlightOffBtn->y() + height / 2);
+        path.lineTo(m_flashlightOffBtn->x() + width, m_flashlightOffBtn->y() + height / 2);
+        path.lineTo(m_flashlightFoldBtn->x() + width, m_flashlightFoldBtn->y() + height / 2);
+
+        arc1.moveTo(m_flashlightOffBtn->x() + width / 2, m_flashlightOffBtn->y() + height / 2);
+        arc1.arcTo(QRect(m_flashlightOffBtn->x(), m_flashlightOffBtn->y(), width, height), 180, 180);
+
+        path.addPath(arc1);
+        painter.fillPath(path, QBrush(m_buttonGroupColor));
     }
 }
 
@@ -543,9 +589,6 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
     showDelayButtons(false); //三级菜单选中后跳转到上一级菜单
 }
 
-/**
-* @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
-*/
 void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
 {
     auto pBtn = static_cast<circlePushButton *>(sender());
@@ -619,9 +662,6 @@ void takePhotoSettingAreaWidget::moveToParentLeft()
     move(20, pParentWidget->height() / 2 - height() / 2);
 }
 
-/**
-* @brief closeAllGroup 关闭所有的按钮弹出组
-*/
 void takePhotoSettingAreaWidget::closeAllGroup()
 {
     //判断延迟拍照组是否显示
