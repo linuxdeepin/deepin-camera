@@ -27,6 +27,8 @@
 #include <DLabel>
 #include <DFontSizeManager>
 #include <DPushButton>
+#include <DGuiApplicationHelper>
+#include <DApplicationHelper>
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
@@ -232,6 +234,7 @@ public:
     * @param bFlashOn  是否开启
     */
     void setFlash(bool bFlashOn);
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -268,6 +271,17 @@ public slots:
     * @brief restartDevices　重启设备
     */
     void onRestartDevices();
+
+    /**
+    * @brief onCloseFlash　设置闪光
+    */
+    void onSetFlash(bool bFlashOn);
+
+    /**
+    * @brief onThemeTypeChanged　主题切换槽函数
+    */
+    void onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType);
+
 private slots:
 #ifdef __mips__
     /**
