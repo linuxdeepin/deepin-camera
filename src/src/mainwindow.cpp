@@ -1426,8 +1426,11 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
             qDebug() << "v4l2core_start_stream OK";
         }
 
-    } else//锁屏结束连拍
-    {}
+    } else { //锁屏结束连拍
+        if (key2value.value("Locked").value<bool>()) {
+            onTitleBarMinBtnClicked();
+         }
+    }
 //        if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
 //            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
 //    /*锁屏取消、结束录制*/
@@ -1515,12 +1518,14 @@ void CMainWindow::onUpdateRecordState(int state)
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
     m_switchPhotoBtn->setEnabled(!m_bRecording);
+    m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
 }
 
 void CMainWindow::onUpdatePhotoState(int state)
 {
     m_switchRecordBtn->setEnabled(photoNormal == state);
+    m_actionSettings->setEnabled(photoNormal == state);
     m_photoState = state;
     showChildWidget();
 }
