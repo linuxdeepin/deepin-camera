@@ -2427,7 +2427,7 @@ void CMainWindow::showChildWidget()
         showWidget(m_switchPhotoBtn,false);
         showWidget(m_switchRecordBtn,false);
         showWidget(m_takePhotoSettingArea, false);
-        showWidget(m_photoRecordBtn, prePhoto == m_photoState);
+        showWidget(m_photoRecordBtn, true);
         return;
     }
     if (m_bRecording) {  //正在录像
