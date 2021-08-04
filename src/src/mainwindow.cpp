@@ -1403,7 +1403,6 @@ void CMainWindow::onSwitchCameraSuccess(const QString& cameraName)
 
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
 {
-    qDebug() << serviceName << key2value << endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
     if (m_bWayland) {
 
@@ -1427,7 +1426,11 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
         }
 
     } else//锁屏结束连拍
-    {}
+    {
+        if (key2value.value("Locked").value<bool>()) {
+            onTitleBarMinBtnClicked();
+        }
+    }
 //        if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
 //            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
 //    /*锁屏取消、结束录制*/
@@ -1531,7 +1534,7 @@ void CMainWindow::onTitleBarMinBtnClicked()
     if (m_bPhotoing){
         m_videoPre->onTakePic(false);
         m_bPhotoing =  false;
-         m_switchRecordBtn->setEnabled(true);
+        m_switchRecordBtn->setEnabled(true);
     }
     if (m_bRecording){
         m_videoPre->onEndBtnClicked();
