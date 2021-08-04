@@ -64,6 +64,11 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     if (!m_bPhoto)
     {
         if (Normal == m_recordState){
+            rect.setTopLeft(QPoint(9, 9));
+            rect.setSize(QSize(46, 46));
+            painter.setPen(QPen(QColor(0,0,0,100), 5));
+            painter.drawEllipse(rect);
+
             rect.setTopLeft(QPoint(12, 12));
             rect.setSize(QSize(40, 40));
             painter.setPen(Qt::NoPen);
