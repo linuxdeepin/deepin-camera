@@ -995,12 +995,12 @@ void CMainWindow::initEventFilter()
 //    if (thumbLeftWidget)
 //        thumbLeftWidget->installEventFilter(this);
 
-    /**
-     * @brief takeVideoEndBtn 结束按钮
-     */
-    DPushButton *takeVideoEndBtn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-    if (takeVideoEndBtn)
-        takeVideoEndBtn->installEventFilter(this);
+//    /**
+//     * @brief takeVideoEndBtn 结束按钮
+//     */
+//    DPushButton *takeVideoEndBtn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
+//    if (takeVideoEndBtn)
+//        takeVideoEndBtn->installEventFilter(this);
 
     //预览画面添加过滤
     if (m_videoPre)
@@ -1064,8 +1064,6 @@ void CMainWindow::initShortcut()
     });
 
     connect(scSpaceShortcut, &QShortcut::activated, this, [ = ] {
-        DPushButton *takevideo =  m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-
         if (QDateTime::currentMSecsSinceEpoch() < m_SpaceKeyInterval)
             //获取录制按钮第一次点击时间(ms)
             m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
@@ -1073,15 +1071,8 @@ void CMainWindow::initShortcut()
         //第二次点击时间与第一次时间差
         if (QDateTime::currentMSecsSinceEpoch() - m_SpaceKeyInterval > 300)
         {
-            if (takevideo->isVisible()) {
-                //重置当前时间
-                m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
-                takevideo->click();
-            } else {
-                //重置当前时间
-                m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
-
-            }
+            m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
+            onPhotoRecordBtnClked();
         }
     });
 

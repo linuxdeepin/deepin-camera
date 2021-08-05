@@ -81,12 +81,14 @@ void SwitchCameraBtn::paintEvent(QPaintEvent *event)
         QRect rect3;
         rect3.setTopLeft(QPoint(rect2.x()+offset2/2, rect2.y()+offset2/2));
         rect3.setSize(QSize(rect2.width()-offset2, rect2.height()-offset2));
-        path.addEllipse(rect3);
-        painter.fillPath(path, QBrush(QColor(0,0,0,100)));
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(QColor(0,0,0,100)));
+        painter.drawEllipse(rect3);
     }
     else{
-        path.addEllipse(rect);
-        painter.fillPath(path, QBrush(QColor(0,0,0,100)));
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(QColor(0,0,0,100)));
+        painter.drawEllipse(rect);
     }
 
     if (m_bPressed)
@@ -127,11 +129,4 @@ void SwitchCameraBtn::mouseReleaseEvent(QMouseEvent *event)
     m_bPressed= false;
     update();
     emit clicked();
-}
-
-void SwitchCameraBtn::focusInEvent(QFocusEvent *event)
-{
-    Q_UNUSED(event);
-    m_bFocus = true;
-    update();
 }

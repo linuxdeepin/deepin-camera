@@ -40,7 +40,6 @@ protected:
     void leaveEvent(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-    void focusInEvent(QFocusEvent *event) override;
 
 private:
     bool                m_bFocus;          //焦点   hover或者tab键选中
