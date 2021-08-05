@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ef6f4af_04409794",
+        "filename": "tests/ClosedialogTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-05T05:11:05Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 8; 注释率: 0.0%",
+      "revId": "8c1fc331e669feaa5b3b81dbc03d9dc2211c91f0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8f9b134_8c3c36f0",
+        "filename": "tests/PhotoRecordBtnTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-05T05:11:05Z",
+      "side": 1,
+      "message": "注释行数: 18; 改动行数(修改和新增): 60; 注释率: 30.0%",
+      "revId": "8c1fc331e669feaa5b3b81dbc03d9dc2211c91f0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f5a6d31_cd753dc7",
+        "filename": "tests/PhotoRecordBtnTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-05T05:11:05Z",
+      "side": 1,
+      "message": "注释行数: 18; 改动行数(修改和新增): 35; 注释率: 51.4%",
+      "revId": "8c1fc331e669feaa5b3b81dbc03d9dc2211c91f0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79d51d6f_dffcb056",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-05T05:11:05Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 20; 注释率: 0.0%",
+      "revId": "8c1fc331e669feaa5b3b81dbc03d9dc2211c91f0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64ba3f25_5832a67e",
+        "filename": "tests/ZMainwindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-05T05:11:05Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 35; 注释率: 0.0%",
+      "revId": "8c1fc331e669feaa5b3b81dbc03d9dc2211c91f0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
