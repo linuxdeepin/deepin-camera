@@ -46,7 +46,9 @@ ACCESS_PRIVATE_FIELD(MajorImageProcessingThread, QAtomicInt, m_stopped);
 //ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
-//ACCESS_PRIVATE_FIELD(CMainWindow, ThumbnailsBar *, m_thumbnail);
+ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchPhotoBtn);
+ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchRecordBtn);
+
 ACCESS_PRIVATE_FIELD(CMainWindow, videowidget *, m_videoPre);
 
 ZMainwindowTest::ZMainwindowTest()
@@ -747,6 +749,44 @@ TEST_F(ZMainwindowTest, CMainWindow)
     stub.reset(ADDR(QVariant, toString));
     stub.reset(ADDR(QDir, mkdir));
     stub.reset(ADDR(QDir, currentPath));
+}
+
+TEST_F(ZMainwindowTest, PhotoRecordBtnEventTest)
+{
+   QWidget* btn = mainwindow->findChild<QWidget *>(BUTTON_PICTURE_VIDEO);
+   QTest::mouseMove(btn, QPoint(5, 5), 500);
+   QTest::mouseClick(btn, Qt::LeftButton);
+   QTest::mousePress(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+   QTest::mouseRelease(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+   QTest::qWait(500);
+}
+
+TEST_F(ZMainwindowTest, SwitchCameraBtnEventTest)
+{
+   QWidget* btn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+   btn->show();
+   QTest::mouseMove(btn, QPoint(5, 5), 500);
+   QTest::mouseClick(btn, Qt::LeftButton);
+   QTest::mousePress(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+   QTest::mouseRelease(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+   QTest::qWait(500);
+}
+
+TEST_F(ZMainwindowTest, ShortCurtTest)
+{
+    QTest::keyClick(mainwindow, Qt::Key_Return);
+    QTest::keySequence(mainwindow, QKeySequence("Ctrl+Shift+/"));
+    QTest::keyClick(mainwindow, Qt::Key_Space);
+}
+
+TEST_F(ZMainwindowTest, SwitchToRecord)
+{
+    emit access_private_field::CMainWindowm_switchPhotoBtn(*mainwindow)->clicked();
+}
+
+TEST_F(ZMainwindowTest, SwitchToPhoto)
+{
+    emit access_private_field::CMainWindowm_switchRecordBtn(*mainwindow)->clicked();
 }
 
 /**

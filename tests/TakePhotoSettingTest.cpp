@@ -164,4 +164,24 @@ TEST_F(TakePhotoSettingTest, foldBtnClicked)
         takePhotoSet->foldBtnClicked();
 }
 
+TEST_F(TakePhotoSettingTest, CircleBtnTest)
+{
+    circlePushButton* btn = takePhotoSet->findChild<circlePushButton *>(UNFOLD_BTN);
+    btn->setDisableSelect(true);
+    btn->setSelected(true);
+    btn->setSelected(false);
+    QTest::mouseMove(btn, QPoint(5, 5), 500);
+    QTest::mouseClick(btn, Qt::LeftButton);
+    QTest::mousePress(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(500);
+    btn->setDisableSelect(false);
+    btn->setSelected(true);
+    btn->setSelected(false);
+    QTest::mouseMove(btn, QPoint(5, 5), 500);
+    QTest::mouseClick(btn, Qt::LeftButton);
+    QTest::mousePress(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(btn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(500);
+}
 
