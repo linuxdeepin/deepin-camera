@@ -158,6 +158,7 @@ int main(int argc, char *argv[])
 
     CMainWindow w;
     a.setMainWindow(&w);
+    w.loadAfterShow();
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
@@ -167,8 +168,7 @@ int main(int argc, char *argv[])
     else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
-    w.show();
-    w.loadAfterShow();
+    // w.show();
 
     //最小化后双击桌面恢复画面
     ApplicationAdaptor adaptor(&w);
