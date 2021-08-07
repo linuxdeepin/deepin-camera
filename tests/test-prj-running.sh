@@ -38,7 +38,7 @@ create_coverage_report(){
 
      echo " ===================CREAT LCOV REPROT==================== "
      lcov --directory ./tests/CMakeFiles/${PROJECT_REALNAME}.dir --zerocounters
-     ./tests/${PROJECT_NAME} --gtest_output=xml:./report/report_deepin-camera.xml
+     ASAN_OPTIONS="fast_unwind_on_malloc=1" ./tests/${PROJECT_NAME} --gtest_output=xml:./report/report_deepin-camera.xml
      lcov --directory . --capture --output-file ./html/${PROJECT_REALNAME}_Coverage.info
      echo " =================== do filter begin ==================== "
      lcov --remove ./html/${PROJECT_REALNAME}_Coverage.info 'CMakeFiles/${PROJECT_NAME}.dir/deepin-camera-test_autogen/*/*' '${PROJECT_NAME}_autogen/*/*' 'googletest/*/*' '*/usr/include/*' '*/tests/*' '*/src/src/qtsingleapplication/*' '*/src/src/basepub/printoptionspage.cpp' '*/src/src/dbus_adpator.cpp' '*/src/src/settings_translation.cpp' '/usr/local/*' '*/config.h' '*/src/src/thumbnailsbar.*' '*/src/src/thumbwidget.*' -o ./html/${PROJECT_REALNAME}_Coverage_fileter.info
