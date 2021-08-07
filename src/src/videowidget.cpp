@@ -655,6 +655,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             m_openglwidget->resize(width(), height());
         malloc_trim(0);
     }
+    qInfo() << "m_openglwidget size is :" << width() << height();
 
 }
 
