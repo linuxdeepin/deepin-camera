@@ -158,17 +158,18 @@ int main(int argc, char *argv[])
 
     CMainWindow w;
     a.setMainWindow(&w);
+    w.loadAfterShow();
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
+    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     //判断是否是平板环境
     if (CamApp->isPanelEnvironment())
         w.showFullScreen();
     else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
-    w.show();
-    w.loadAfterShow();
+    // w.show();
 
     //最小化后双击桌面恢复画面
     ApplicationAdaptor adaptor(&w);
