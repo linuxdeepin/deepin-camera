@@ -51,7 +51,7 @@ videowidget::videowidget(DWidget *parent)
     : DWidget(parent)
 {
 #ifndef __mips__
-    m_openglwidget = new PreviewOpenglWidget(this);
+    //m_openglwidget = new PreviewOpenglWidget(this);
 #else
     m_pNormalItem = new QGraphicsPixmapItem;
 #endif
@@ -76,7 +76,7 @@ videowidget::videowidget(DWidget *parent)
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
 #ifndef __mips__
-    m_openglwidget->setFocusPolicy(Qt::ClickFocus);
+    //m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
     m_savePicFolder = "";
@@ -237,10 +237,10 @@ videowidget::~videowidget()
 
 #ifndef __mips__
 
-    if (m_openglwidget) {
-        delete m_openglwidget;
-        m_openglwidget = nullptr;
-    }
+    //if (m_openglwidget) {
+    //    delete m_openglwidget;
+    //    m_openglwidget = nullptr;
+    //}
 
 #endif
 
@@ -300,8 +300,8 @@ void videowidget::delayInit()
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
     connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)),Qt::QueuedConnection);
-    connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
-            m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)),Qt::QueuedConnection);
+    //connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
+    //        m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)),Qt::QueuedConnection);
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()),Qt::QueuedConnection);
@@ -488,7 +488,7 @@ void videowidget::showNocam()
         m_pSvgItem->show();
 
 #ifndef __mips__
-    m_openglwidget->hide();
+    //m_openglwidget->hide();
 #else
     if (!m_pNormalItem->isVisible())
         m_pNormalItem->show();
@@ -559,7 +559,7 @@ void videowidget::showCamUsed()
         m_pNormalView->show();
 
 #ifndef __mips__
-    m_openglwidget->hide();
+    //m_openglwidget->hide();
 #else
     if (!m_pNormalItem->isVisible())
         m_pNormalItem->show();
@@ -631,7 +631,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             onEndBtnClicked();
 
         //wayland平台等比例缩放画面
-        if (get_wayland_status() == true) {
+/*        if (get_wayland_status() == true) {
             int framewidth = m_openglwidget->getFrameWidth();
             int frameheight = m_openglwidget->getFrameHeight();
             int widgetwidth = width();
@@ -652,9 +652,10 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             }
 
         } else
-            m_openglwidget->resize(width(), height());
+            m_openglwidget->resize(width(), height());*/
         malloc_trim(0);
     }
+    //qInfo() << "m_openglwidget size is :" << width() << height();
 
 }
 
@@ -729,8 +730,8 @@ void videowidget::onReachMaxDelayedFrames()
 
 #ifndef __mips__
 
-    if (m_openglwidget->isVisible())
-        m_openglwidget->hide();//隐藏opengl窗口
+    //if (m_openglwidget->isVisible())
+    //    m_openglwidget->hide();//隐藏opengl窗口
 #else
     m_pNormalItem->hide();
 #endif
@@ -980,7 +981,7 @@ void videowidget::showCountdown()
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
-                m_openglwidget->hide();
+                //m_openglwidget->hide();
 #else
                 m_pNormalView->hide();
 #endif
@@ -1009,7 +1010,7 @@ void videowidget::showCountdown()
                 m_flashTimer->start(500);
 
 #ifndef __mips__
-                m_openglwidget->hide();
+                //m_openglwidget->hide();
 #else
                 m_pNormalView->hide();
 #endif
@@ -1122,8 +1123,8 @@ void videowidget::flash()
 
 #ifndef __mips__
 
-        if (m_openglwidget->isVisible() == false)
-            m_openglwidget->show();
+        //if (m_openglwidget->isVisible() == false)
+        //    m_openglwidget->show();
 
 #endif
         m_thumbnail->show();
@@ -1218,7 +1219,7 @@ void videowidget::onRestartDevices()
             plt.setColor(QPalette::Window, Qt::white);
             m_pNormalView->hide();
 #ifndef __mips__
-            m_openglwidget->show();
+            //m_openglwidget->show();
 #endif
         }
 
@@ -1498,8 +1499,8 @@ void videowidget::onTakePic(bool bTrue)
         eventloop.exec();
 #ifndef __mips__
 
-        if (!m_openglwidget->isVisible())
-            m_openglwidget->show();
+        //if (!m_openglwidget->isVisible())
+        //    m_openglwidget->show();
 
 #endif
 
@@ -1662,7 +1663,7 @@ void videowidget::stopEverything()
         m_fWgtCountdown->hide();
 
 #ifndef __mips__
-    if (!m_openglwidget->isVisible())
-        m_openglwidget->show();
+    //if (!m_openglwidget->isVisible())
+    //    m_openglwidget->show();
 #endif
 }
