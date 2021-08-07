@@ -167,7 +167,7 @@ int main(int argc, char *argv[])
     else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
-    w.show();
+    // w.show();
     w.loadAfterShow();
 
     //最小化后双击桌面恢复画面
