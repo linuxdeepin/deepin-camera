@@ -169,12 +169,12 @@ void MajorImageProcessingThread::run()
 
             yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
             m_yuvPtr = new uchar[yuvsize];
-            emit sigRenderYuv(true);
+            //emit sigRenderYuv(true);
         } else {
             yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
             if (!m_yuvPtr){
                 m_yuvPtr = new uchar[yuvsize];
-                emit sigRenderYuv(true);
+               // emit sigRenderYuv(true);
             }
         }
 
@@ -333,7 +333,7 @@ void MajorImageProcessingThread::run()
 
 #ifndef __mips__
         if (m_frame->yuv_frame == nullptr) {
-            emit sigRenderYuv(false);
+            //emit sigRenderYuv(false);
         }
 
 #endif

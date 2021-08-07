@@ -1890,7 +1890,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     }
 
     if (m_videoPre){
-        m_videoPre->ReceiveOpenGLstatus(true);
+       // m_videoPre->ReceiveOpenGLstatus(true);
         m_videoPre->update();
     }
 }
