@@ -1267,8 +1267,10 @@ void CMainWindow::loadAfterShow()
     //this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     initUI();
     initShortcut();
+    qInfo() << "start time :" << QDateTime::currentDateTime();
     gviewencoder_init();
     v4l2core_init();
+    qInfo() << "end time :" << QDateTime::currentDateTime();
 
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
