@@ -161,13 +161,14 @@ int main(int argc, char *argv[])
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
+    w.loadAfterShow();
     //判断是否是平板环境
     if (CamApp->isPanelEnvironment())
         w.showFullScreen();
     else
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
 
-    w.show();
+    //w.show();
     w.loadAfterShow();
 
     //最小化后双击桌面恢复画面
