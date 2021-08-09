@@ -145,3 +145,17 @@ void photoRecordBtn::mouseReleaseEvent(QMouseEvent *event)
     update();
     emit clicked();
 }
+
+void photoRecordBtn::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus= true;
+    update();
+}
+
+void photoRecordBtn::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus= false;
+    update();
+}

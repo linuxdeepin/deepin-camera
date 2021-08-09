@@ -93,7 +93,6 @@ public:
     * @param  opacity 不透明度 0～255
     */
     void setOpacity(int opacity);
-
 private:
     /**
     * @brief initButtons 初始化所有的按钮

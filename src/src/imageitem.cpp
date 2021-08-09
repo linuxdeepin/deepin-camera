@@ -50,7 +50,9 @@ extern "C" {
 }
 
 
-ImageItem::ImageItem(QWidget *parent): DLabel(parent)
+ImageItem::ImageItem(QWidget *parent)
+    : DLabel(parent),
+      m_bFocus(false)
 {
     m_bVideo = false;
     m_actPrint = nullptr;
@@ -228,9 +230,10 @@ void ImageItem::paintEvent(QPaintEvent *event)
     foregroundRect.setWidth(rect().width() - 4);
     foregroundRect.setHeight(rect().height() - 4);
 
+    QColor bgColor = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0, 0, 0, 25);
     QPainterPath bg;
     bg.addRoundedRect(rect(), 26, 26);
-    painter.fillPath(bg, QBrush(QColor(0, 0, 0, 0.1 * 255)));
+    painter.fillPath(bg, QBrush(bgColor));
 
     QPainterPath fg;
     fg.addRoundedRect(pixmapRect, 25, 25);
@@ -292,31 +295,22 @@ void ImageItem::mouseMoveEvent(QMouseEvent *event)
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        QFileInfo fileInfo(m_path);
-        QString program;
-        QStringList arguments;
-        if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer"; //用看图打开
-            arguments << QUrl::fromLocalFile(m_path).toString();
-            qDebug() << "Open it with deepin-image-viewer";
-        } else {
-            program = "deepin-movie"; //用影院打开
-            arguments << m_path;
-            qDebug() << "Open it with deepin-movie";
-        }
-
-
-        //表示本地文件
-
-        qInfo() << QUrl::fromLocalFile(m_path).toString();
-        QProcess *myProcess = new QProcess(this);
-        bool bOK = myProcess->startDetached(program, arguments);
-        if (CamApp->isPanelEnvironment())
-            CamApp->getMainWindow()->showMinimized();
-
-        if (!bOK)
-            qWarning() << "QProcess startDetached error";
+        openFile();
     }
+}
+
+void ImageItem::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus = true;
+    update();
+}
+
+void ImageItem::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus = false;
+    update();
 }
 
 void ImageItem::showMenu()
@@ -365,6 +359,34 @@ void ImageItem::initShortcut()
     QShortcut *shortcutPrint = new QShortcut(QKeySequence("Ctrl+P"), this);
     shortcutPrint->setObjectName(SHORTCUT_PRINT);
     connect(shortcutPrint, SIGNAL(activated()), this, SLOT(onPrint()));
+}
+
+void ImageItem::openFile()
+{
+    QFileInfo fileInfo(m_path);
+    QString program;
+    QStringList arguments;
+    if (fileInfo.suffix() == "jpg") {
+        program = "deepin-image-viewer"; //用看图打开
+        arguments << QUrl::fromLocalFile(m_path).toString();
+        qDebug() << "Open it with deepin-image-viewer";
+    } else {
+        program = "deepin-movie"; //用影院打开
+        arguments << m_path;
+        qDebug() << "Open it with deepin-movie";
+    }
+
+
+    //表示本地文件
+
+    qInfo() << QUrl::fromLocalFile(m_path).toString();
+    QProcess *myProcess = new QProcess(this);
+    bool bOK = myProcess->startDetached(program, arguments);
+    if (CamApp->isPanelEnvironment())
+        CamApp->getMainWindow()->showMinimized();
+
+    if (!bOK)
+        qWarning() << "QProcess startDetached error";
 }
 
 void ImageItem::onCopy()

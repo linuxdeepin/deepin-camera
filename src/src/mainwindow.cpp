@@ -932,30 +932,39 @@ void CMainWindow::initBlockSleep()
 
 }
 
+
 void CMainWindow::initTabOrder()
 {
     /*
      *主窗口tab循序切换
     */
-    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
+    m_takePhotoSettingArea->setFocusPolicy(Qt::TabFocus);
+    m_cameraSwitchBtn->setFocusPolicy(Qt::TabFocus);
+    m_photoRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_snapshotLabel->setFocusPolicy(Qt::TabFocus);
+
+    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
+    m_windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    m_windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    m_windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
 
 
-//    setTabOrder(m_pSelectBtn, m_pTitlePicBtn);
-//    setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
-//    setTabOrder(m_pTitleVdBtn, windowoptionButton);
-    setTabOrder(windowoptionButton, windowMinBtn);
-    setTabOrder(windowMinBtn, windowMaxBtn);
-    setTabOrder(windowMaxBtn, windowCloseBtn);
-//    setTabOrder(windowCloseBtn, thumbLeftWidget);
+    setTabOrder(m_windowoptionButton, m_windowMinBtn);
+    setTabOrder(m_windowMinBtn, m_windowMaxBtn);
+    setTabOrder(m_windowMaxBtn, m_windowCloseBtn);
+    setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
+    setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
+    setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
+    setTabOrder(m_photoRecordBtn, m_switchPhotoBtn);
+    setTabOrder(m_switchPhotoBtn, m_switchRecordBtn);
+    setTabOrder(m_switchRecordBtn, m_snapshotLabel);
 
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 
-    connect(windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
+    connect(m_windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
 }
 
 void CMainWindow::initEventFilter()
@@ -987,20 +996,6 @@ void CMainWindow::initEventFilter()
     DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     if (windowCloseBtn)
         windowCloseBtn->installEventFilter(this);
-
-//    /**
-//     * @brief thumbLeftWidget 缩略图左边窗口
-//     */
-//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
-//    if (thumbLeftWidget)
-//        thumbLeftWidget->installEventFilter(this);
-
-//    /**
-//     * @brief takeVideoEndBtn 结束按钮
-//     */
-//    DPushButton *takeVideoEndBtn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-//    if (takeVideoEndBtn)
-//        takeVideoEndBtn->installEventFilter(this);
 
     //预览画面添加过滤
     if (m_videoPre)
@@ -1044,6 +1039,15 @@ void CMainWindow::initShortcut()
     QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
     QShortcut *scSpaceShortcut = new QShortcut(Qt::Key_Space, this);
     QShortcut *scEnterShortcut = new QShortcut(Qt::Key_Return, this);
+    QShortcut *scUpShortcut = new QShortcut(Qt::Key_Up, this);
+    QShortcut *scDownShortcut = new QShortcut(Qt::Key_Down, this);
+    QShortcut *scLeftShortcut = new QShortcut(Qt::Key_Left, this);
+    QShortcut *scRightShortcut = new QShortcut(Qt::Key_Right, this);
+
+    connect(scUpShortcut, &QShortcut::activated, this, &CMainWindow::onKeyUp);
+    connect(scDownShortcut, &QShortcut::activated, this, &CMainWindow::onKeyDown);
+    connect(scLeftShortcut, &QShortcut::activated, this, &CMainWindow::onKeyLeft);
+    connect(scRightShortcut, &QShortcut::activated, this, &CMainWindow::onkeyRight);
 
     scViewShortcut->setObjectName(SHORTCUT_VIEW);
     scSpaceShortcut->setObjectName(SHORTCUT_SPACE);
@@ -1089,11 +1093,7 @@ void CMainWindow::initShortcut()
          *@brief 判断当前的焦点窗口在哪个控件上，通过enter键触发对应的点击操作
          */
 
-/*        if (m_pTitlePicBtn == focuswidget)
-            m_pTitlePicBtn->click();
-        else if (m_pTitleVdBtn == focuswidget)
-            m_pTitleVdBtn->click();
-        else */if (windowoptionButton == focuswidget)
+        if (windowoptionButton == focuswidget)
             windowoptionButton->click();
         else if (windowMinBtn == focuswidget)
             windowMinBtn->click();
@@ -1101,11 +1101,23 @@ void CMainWindow::initShortcut()
             windowMaxBtn->click();
         else if (windowCloseBtn == focuswidget)
             windowCloseBtn->click();
-//        else if (m_pSelectBtn == focuswidget)
-//            m_pSelectBtn->click();
+        else if (m_photoRecordBtn == focuswidget){
+            emit m_photoRecordBtn->clicked();
+        }
+        else if (m_switchRecordBtn == focuswidget){
+            m_switchRecordBtn->click();
+        }
+        else if (m_switchPhotoBtn == focuswidget){
+            m_switchPhotoBtn->click();
+        }
+        else if (m_snapshotLabel == focuswidget){
+            m_snapshotLabel->openFile();
+        }
         else
             return;
     });
+
+
 
 }
 
@@ -1274,58 +1286,6 @@ void CMainWindow::loadAfterShow()
     showChildWidget();
 }
 
-/**
- * @brief CMainWindow::recoverTabWidget
- * @param index
- *
- * 根据eventfilter函数设置的DataManager的m_tabindex序号对控件的tab框选效果做出恢复
- */
-void CMainWindow::recoverTabWidget(uint index)
-{
-    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-    switch (index) {
-    case 0:
-        if (findChild<videowidget *>())
-            findChild<videowidget *>()->setFocus();
-        break;
-//    case 1:
-//        if (m_pSelectBtn)
-//            m_pSelectBtn->setFocus();
-//        break;
-//    case 2:
-//        if (m_pTitlePicBtn)
-//            m_pTitlePicBtn->setFocus();
-//        break;
-//    case 3:
-//        if (m_pTitleVdBtn)
-//            m_pTitleVdBtn->setFocus();
-//        break;
-    case 4:
-        if (windowoptionButton)
-            windowoptionButton->setFocus();
-        break;
-    case 5:
-        if (windowMinBtn)
-            windowMinBtn->setFocus();
-        break;
-    case 6:
-        if (windowMaxBtn)
-            windowMaxBtn->setFocus();
-        break;
-    case 7:
-        if (windowCloseBtn)
-            windowCloseBtn->setFocus();
-        break;
-    case 9:
-        if (m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END))
-            m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END)->setFocus();
-        break;
-    }
-}
-
 void CMainWindow::updateBlockSystem(bool bTrue)
 {
     if (!CamApp->isPanelEnvironment()) {
@@ -1354,8 +1314,6 @@ void CMainWindow::updateBlockSystem(bool bTrue)
 
 void CMainWindow::onNoCam()
 {
-    onEnableTitleBar(3); //恢复按钮状态
-    onEnableTitleBar(4); //恢复按钮状态
     showChildWidget();
     onEnableSettings(true);
 }
@@ -1454,6 +1412,8 @@ void CMainWindow::onSwitchPhotoBtnClked()
 {
     m_photoRecordBtn->setState(true);
     m_switchRecordBtn->setEnabled(true);
+    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::NoFocus);
     m_switchPhotoBtn->setEnabled(false);
     m_switchPhotoBtn->setFlat(false);
     m_switchRecordBtn->setFlat(true);
@@ -1465,6 +1425,8 @@ void CMainWindow::onSwitchRecordBtnClked()
 {
     m_photoRecordBtn->setState(false);
     m_switchRecordBtn->setEnabled(false);
+    m_switchRecordBtn->setFocusPolicy(Qt::NoFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
     m_switchPhotoBtn->setEnabled(true);
     m_switchPhotoBtn->setFlat(true);
     m_switchRecordBtn->setFlat(false);
@@ -1548,6 +1510,97 @@ void CMainWindow::onSetFlash(bool bFlashOn)
     }
     if (bFlashOn != m_takePhotoSettingArea->flashLight()){
         m_takePhotoSettingArea->setFlashlight(bFlashOn);
+    }
+}
+
+void CMainWindow::onKeyUp()
+{
+    QWidget* pWidget = focusWidget();
+    if(m_cameraSwitchBtn == pWidget
+       || m_takePhotoSettingArea == pWidget){
+        m_windowoptionButton->setFocus();
+    }
+    else if (m_photoRecordBtn == pWidget){
+        if (m_cameraSwitchBtn->isHidden()){
+            m_windowoptionButton->setFocus();
+        }
+        else{
+            m_cameraSwitchBtn->setFocus();
+        }
+    }
+    else if (m_switchPhotoBtn == pWidget
+             || m_switchRecordBtn == pWidget){
+        m_photoRecordBtn->setFocus();
+    }
+    else if (m_snapshotLabel == pWidget){
+        if (m_switchPhotoBtn->isEnabled()){
+            m_switchPhotoBtn->setFocus();
+        }
+        else {
+            m_switchRecordBtn->setFocus();
+        }
+    }
+}
+
+void CMainWindow::onKeyDown()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_windowMinBtn== pWidget
+        || m_windowoptionButton == pWidget
+        || m_windowMaxBtn == pWidget
+        || m_windowCloseBtn == pWidget){
+        if (m_cameraSwitchBtn->isHidden()){
+            m_photoRecordBtn->setFocus();
+        } else {
+            m_cameraSwitchBtn->setFocus();
+        }
+    } else if (m_cameraSwitchBtn == pWidget){
+        m_photoRecordBtn->setFocus();
+    } else if (m_photoRecordBtn == pWidget){
+        if(m_switchPhotoBtn->isEnabled()){
+            m_switchPhotoBtn->setFocus();
+        } else{
+            m_switchRecordBtn->setFocus();
+        }
+    } else if(m_switchPhotoBtn == pWidget
+              || m_switchRecordBtn == pWidget){
+        m_snapshotLabel->setFocus();
+    }
+}
+
+void CMainWindow::onKeyLeft()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_cameraSwitchBtn == pWidget
+            || m_photoRecordBtn == pWidget
+            || m_switchPhotoBtn == pWidget
+            || m_switchRecordBtn == pWidget
+            || m_snapshotLabel == pWidget){
+        m_takePhotoSettingArea->setFocus();
+    } else if(m_windowCloseBtn == pWidget) {
+        m_windowMaxBtn->setFocus();
+    } else if (m_windowMaxBtn == pWidget){
+        m_windowMinBtn->setFocus();
+    } else if(m_windowMinBtn == pWidget){
+        m_windowoptionButton->setFocus();
+    }
+}
+
+void CMainWindow::onkeyRight()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_windowoptionButton == pWidget){
+        m_windowMinBtn->setFocus();
+    } else if (m_windowMinBtn == pWidget){
+        m_windowMaxBtn->setFocus();
+    } else if (m_windowMaxBtn == pWidget){
+        m_windowCloseBtn->setFocus();
+    } else if (m_takePhotoSettingArea == pWidget){
+        if(m_cameraSwitchBtn->isHidden()){
+            m_photoRecordBtn->setFocus();
+        } else {
+            m_cameraSwitchBtn->setFocus();
+        }
     }
 }
 
@@ -2000,63 +2053,6 @@ void CMainWindow::onFitToolBar()
 
 void CMainWindow::onEnableTitleBar(int nType)
 {
-    /**
-     * 获取延时时间的索引
-     * 0:不需要延迟拍照
-     * 1:延迟3秒
-     * 2:延迟6秒
-     */
-//    int delaytime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
-//    //1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
-//    switch (nType) {
-//    case 1:
-//        if (!(DataManager::instance()->getNowTabIndex() > 3
-//                && DataManager::instance()->getNowTabIndex() < 8)
-//                && !(DataManager::instance()->getNowTabIndex() == 2)
-//                && (delaytime == 0)) {
-//            /*焦点不在菜单、最小化、最大化、关闭和标题栏拍照按钮并且“延迟”索引等于0。
-//             * 立即将焦点移到主窗口，避免控件disable状态，焦点自动位移。
-//             */
-//            setFocus();
-//        }
-
-//        /*
-//         * 延迟索引大于0,并焦点在标题栏录制或摄像头切换按钮
-//         */
-////        if ((delaytime > 0) && (focusWidget() == m_pTitleVdBtn || focusWidget() == m_pSelectBtn))
-////            setFocus();
-
-////        m_pTitleVdBtn->setEnabled(false);
-////        m_pSelectBtn->setEnabled(false);
-//        break;
-//    case 2:
-//        if (!(DataManager::instance()->getNowTabIndex() > 3
-//                && DataManager::instance()->getNowTabIndex() < 8)
-//                && !(DataManager::instance()->getNowTabIndex() == 3)
-//                && (delaytime == 0)) {
-//            /*焦点不在菜单、最小化、最大化、关闭和标题栏拍照按钮并且“延迟”索引等于0。
-//             * 立即将焦点移到主窗口，避免控件disable状态，焦点自动位移。
-//             */
-//            setFocus();
-//        }
-
-//        if ((delaytime > 0) && (focusWidget() == m_pTitlePicBtn || focusWidget() == m_pSelectBtn))
-//            setFocus();
-
-//        m_pTitlePicBtn->setEnabled(false);
-//        m_pSelectBtn->setEnabled(false);
-//        break;
-//    case 3:
-//        m_pTitleVdBtn->setEnabled(true);
-//        m_pSelectBtn->setEnabled(true);
-//        break;
-//    case 4:
-//        m_pTitlePicBtn->setEnabled(true);
-//        m_pSelectBtn->setEnabled(true);
-//        break;
-//    default:
-//        break;
-//    }
 }
 
 void CMainWindow::onTitlePicBtn()
@@ -2233,7 +2229,6 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
-    onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //m_thumbnail->m_nStatus = STATNULL;
 }
@@ -2245,10 +2240,9 @@ void CMainWindow::onTakePicOnce()
 
 void CMainWindow::onTakePicCancel()
 {
-    onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
     //恢复控件焦点状态
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
+    //recoverTabWidget(DataManager::instance()->getNowTabIndex());
     //m_thumbnail->m_nStatus = STATNULL;
 
     qDebug() << "Cancel taking photo!";
@@ -2256,9 +2250,8 @@ void CMainWindow::onTakePicCancel()
 
 void CMainWindow::onTakeVdDone()
 {
-    onEnableTitleBar(4); //恢复按钮状态
     //恢复控件焦点状态
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
+    //recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
 
     QTimer::singleShot(200, this, [ = ] {
@@ -2275,10 +2268,9 @@ void CMainWindow::onTakeVdDone()
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
-    onEnableTitleBar(4); //恢复按钮状态
     //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
+    //recoverTabWidget(DataManager::instance()->getNowTabIndex());
     qDebug() << "Cancel taking video!";
 }
 
@@ -2341,48 +2333,8 @@ void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 
 bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 {
-    /**
-     * @brief 关注焦点进入事件和鼠标点击事件。
-     * 焦点进入：设置对应控件索引序号。
-     * 鼠标点击：焦点移入预览界面，并将下标设置为0
-     */
-
-    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-    DPushButton *picvideobtn = findChild<DPushButton *>("PicVdBtn");
-    DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
-//    ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
-
     if (e->type() == QEvent::MouseButtonPress) {
         m_takePhotoSettingArea->closeAllGroup();
-    }
-    /*if ((obj == m_pSelectBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 1;
-    } else if ((obj == m_pTitlePicBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 2;
-    } else if ((obj == m_pTitleVdBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 3;
-    } else */if ((obj == windowoptionButton) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 4;
-    } else if ((obj == windowMinBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 5;
-    } else if ((obj == windowMaxBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 6;
-    } else if ((obj == windowCloseBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 7;
-    } else if ((obj == picvideobtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 8;
-    } else if ((obj == endbtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 9;
-    }/* else if ((obj == thumbwidget) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 10;
-    }*/ else if (e->type() == QEvent::MouseButtonPress) {
-        DataManager::instance()->m_tabIndex = 0;
-        m_videoPre->setFocus();
-    } else {
-        QWidget::eventFilter(obj, e);//调用父类事件过滤器
     }
     return QWidget::eventFilter(obj, e);
 }

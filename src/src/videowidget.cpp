@@ -646,21 +646,21 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 void videowidget::recoverTabWidget()
 {
-    if ((DataManager::instance()->getNowTabIndex() > 0 && DataManager::instance()->getNowTabIndex() < 4)
-            || DataManager::instance()->getNowTabIndex() > 7) {
-        CMainWindow *parentwidget = CamApp->getMainWindow();
+//    if ((DataManager::instance()->getNowTabIndex() > 0 && DataManager::instance()->getNowTabIndex() < 4)
+//            || DataManager::instance()->getNowTabIndex() > 7) {
+//        CMainWindow *parentwidget = CamApp->getMainWindow();
 
-        if (parentwidget) {
+//        if (parentwidget) {
 //            DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
 //            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
 //            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
-            DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
+//            DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
 //            ThumbWidget *thumbwidget = parentwidget->findChild<ThumbWidget *>("thumbLeftWidget");
 
-            if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
-                DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
+//            if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
+//                DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
 
-            switch (DataManager::instance()->getNowTabIndex()) {
+//            switch (DataManager::instance()->getNowTabIndex()) {
 //            case 1:
 //                if (selectbtn) {
 //                    if (selectbtn->isEnabled())
@@ -685,19 +685,19 @@ void videowidget::recoverTabWidget()
 //                        setFocus();
 //                }
 //                break;
-            case 8:
-                if (picvideobtn)
-                    picvideobtn->setFocus();
-                break;
+//            case 8:
+//                if (picvideobtn)
+//                    picvideobtn->setFocus();
+//                break;
 //            case 10:
 //                if (thumbwidget)
 //                    thumbwidget->setFocus();
 //                break;
-            default:
-                break;
-            }
-        }
-    }
+//            default:
+//                break;
+//            }
+//        }
+//    }
 }
 
 void videowidget::showCountdown()
@@ -1253,8 +1253,8 @@ void videowidget::startTakeVideo()
         int nHeight = height();
 
         //判断倒计时阶段焦点位移到拍照/录制按钮，重新设置tab的索引
-        if (DataManager::instance()->m_tabIndex == 8)
-            DataManager::instance()->setNowTabIndex(8);
+//        if (DataManager::instance()->m_tabIndex == 8)
+//            DataManager::instance()->setNowTabIndex(8);
 
         emit toolbarShow(false);
 //        m_endBtn->show();
