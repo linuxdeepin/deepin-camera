@@ -20,19 +20,23 @@
         <translation>لا أحد</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Photo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>switch</source>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -224,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>التقاط صورة</translation>
+        <translation type="vanished">التقاط صورة</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>تسجيل فيديو</translation>
+        <translation type="vanished">تسجيل فيديو</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>إيقاف التقاط الصور</translation>
+        <translation type="vanished">إيقاف التقاط الصور</translation>
     </message>
 </context>
 <context>
@@ -240,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>لا أحد</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

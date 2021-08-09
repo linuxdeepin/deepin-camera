@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hu" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hu">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Mappa megnyitása</translation>
+        <translation type="vanished">Mappa megnyitása</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>Nincs</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Fénykép</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Videó</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Kamera váltása</translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +176,6 @@
         <source>Sound effects</source>
         <translation>Hang effektek</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fénykép készítése</translation>
+        <translation type="vanished">Fénykép készítése</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Videó rögzítése</translation>
+        <translation type="vanished">Videó rögzítése</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fénykép készítés megállítása</translation>
+        <translation type="vanished">Fénykép készítés megállítása</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>Nincs</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Vaku</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Be</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Ki</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Rögzítés késleltetése</translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Rögzítés megállítása</translation>
+        <translation type="vanished">Rögzítés megállítása</translation>
     </message>
 </context>
 </TS>

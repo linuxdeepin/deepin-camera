@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_HK" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_HK">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打開文件夾</translation>
+        <translation type="vanished">打開文件夾</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>無</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>拍照</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>影片</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>切換鏡頭</translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +176,6 @@
         <source>Sound effects</source>
         <translation>音效</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>拍照</translation>
+        <translation type="vanished">拍照</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>錄製影片</translation>
+        <translation type="vanished">錄製影片</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation type="vanished">結束拍照</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>無</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>閃光燈</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>開啟</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>關閉</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>延時拍攝</translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation type="vanished">結束錄製</translation>
     </message>
 </context>
 </TS>

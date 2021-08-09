@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="hi_IN" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hi_IN">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>फोल्डर खोलें</translation>
+        <translation type="vanished">फोल्डर खोलें</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>कुछ नहीं</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +176,6 @@
         <source>Sound effects</source>
         <translation>ध्वनि प्रभाव</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>चित्र लें</translation>
+        <translation type="vanished">चित्र लें</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>वीडियो रिकॉर्ड करें</translation>
+        <translation type="vanished">वीडियो रिकॉर्ड करें</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>चित्र लेना बंद करें</translation>
+        <translation type="vanished">चित्र लेना बंद करें</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>कुछ नहीं</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>रिकॉर्डिंग बंद करें</translation>
+        <translation type="vanished">रिकॉर्डिंग बंद करें</translation>
     </message>
 </context>
 </TS>

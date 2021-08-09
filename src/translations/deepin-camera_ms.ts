@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ms">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation type="vanished">Buka folder</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>Tiada</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +176,6 @@
         <source>Sound effects</source>
         <translation>Kesan bunyi</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Tangkap foto</translation>
+        <translation type="vanished">Tangkap foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Rakam video</translation>
+        <translation type="vanished">Rakam video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Henti menangkap foto</translation>
+        <translation type="vanished">Henti menangkap foto</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>Tiada</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Henti rakaman</translation>
+        <translation type="vanished">Henti rakaman</translation>
     </message>
 </context>
 </TS>

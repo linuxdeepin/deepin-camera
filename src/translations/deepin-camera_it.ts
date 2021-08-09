@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="it" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="it">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Apri cartella</translation>
+        <translation type="vanished">Apri cartella</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>No</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -155,10 +177,6 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
         <source>Sound effects</source>
         <translation>Effetti sonori</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -211,15 +229,15 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Scatta foto</translation>
+        <translation type="vanished">Scatta foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Registra video</translation>
+        <translation type="vanished">Registra video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interrompi scatti</translation>
+        <translation type="vanished">Interrompi scatti</translation>
     </message>
 </context>
 <context>
@@ -227,6 +245,25 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     <message>
         <source>None</source>
         <translation>No</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -241,7 +278,7 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interrompi video</translation>
+        <translation type="vanished">Interrompi video</translation>
     </message>
 </context>
 </TS>

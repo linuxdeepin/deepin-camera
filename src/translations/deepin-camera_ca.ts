@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ca" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ca">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Obre la carpeta</translation>
+        <translation type="vanished">Obre la carpeta</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>Cap</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Fotografia</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Vídeo</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Canvia de càmera</translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -154,10 +176,6 @@
         <source>Sound effects</source>
         <translation>Efectes de so</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fes una foto</translation>
+        <translation type="vanished">Fes una foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Gravació de vídeo</translation>
+        <translation type="vanished">Gravació de vídeo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromp la presa de fotos</translation>
+        <translation type="vanished">Interromp la presa de fotos</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>Cap</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flaix</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Actiu</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Inactiu</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Retard de la captura</translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromp la gravació</translation>
+        <translation type="vanished">Interromp la gravació</translation>
     </message>
 </context>
 </TS>

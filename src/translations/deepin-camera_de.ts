@@ -1,13 +1,15 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="de" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="de">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Ordner öffnen</translation>
+        <translation type="vanished">Ordner öffnen</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,26 @@
     <message>
         <source>None</source>
         <translation>Keine</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Foto</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Kameras wechseln</translation>
+    </message>
+    <message>
+        <source>photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>record</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -52,7 +74,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Close</source>
@@ -72,7 +94,7 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File location</source>
@@ -116,7 +138,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -153,10 +175,6 @@
     <message>
         <source>Sound effects</source>
         <translation>Klangeffekte</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -210,15 +228,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Foto machen</translation>
+        <translation type="vanished">Foto machen</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video aufnehmen</translation>
+        <translation type="vanished">Video aufnehmen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Keine Fotos mehr machen</translation>
+        <translation type="vanished">Keine Fotos mehr machen</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>Keine</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Blitzlicht</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Ein</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Aus</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Aufnahme verzögern</translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Aufnahme stoppen</translation>
+        <translation type="vanished">Aufnahme stoppen</translation>
     </message>
 </context>
 </TS>
