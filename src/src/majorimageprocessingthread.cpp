@@ -94,6 +94,7 @@ void MajorImageProcessingThread::run()
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
     while (m_stopped == 0) {
+        qInfo() << QDateTime::currentDateTime();
         if (get_resolution_status()) {
             //reset
             request_format_update(0);
@@ -327,7 +328,7 @@ void MajorImageProcessingThread::run()
 //                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
 //            }
 
-            emit sigYUVFrame(m_yuvPtr, m_frame->width, m_frame->height);
+            //emit sigYUVFrame(m_yuvPtr, m_frame->width, m_frame->height);
 #endif
         }
 
