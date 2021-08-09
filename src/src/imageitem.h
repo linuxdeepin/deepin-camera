@@ -214,6 +214,11 @@ public:
      */
     void initShortcut();
 
+    /**
+     * @brief openFile 打开文件
+     */
+    void openFile();
+
 signals:
     /**
      * @brief trashFile 删除文件信号
@@ -280,6 +285,18 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
     /**
+     * @brief focusInEvent 焦点事件
+     * @param event
+     */
+    void focusInEvent(QFocusEvent *event) override;
+
+    /**
+     * @brief focusOutEvent 失去焦点事件
+     * @param event
+     */
+    void focusOutEvent(QFocusEvent *event) override;
+
+    /**
      * @brief showPrintDialog 显示打印对话框
      */
     void showPrintDialog(const QStringList &paths, QWidget *parent);
@@ -319,6 +336,8 @@ private:
     QDateTime           m_lastDelTime;//最后一次删除文件时间，避免过快删除导致显示空白
     AnimationWidget     *m_pAniWidget;//动画控件
     QPropertyAnimation  *m_pAnimation;
+
+    bool                m_bFocus;
 };
 
 #endif // IMAGEITEM_H
