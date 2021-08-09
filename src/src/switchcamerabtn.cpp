@@ -130,3 +130,17 @@ void SwitchCameraBtn::mouseReleaseEvent(QMouseEvent *event)
     update();
     emit clicked();
 }
+
+void SwitchCameraBtn::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus= true;
+    update();
+}
+
+void SwitchCameraBtn::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus= false;
+    update();
+}

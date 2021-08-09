@@ -32,6 +32,10 @@
 #include <DMainWindow>
 #include <DTitlebar>
 #include <DSettingsDialog>
+#include <DWindowMinButton>
+#include <DWindowOptionButton>
+#include <DWindowMaxButton>
+#include <DWindowCloseButton>
 
 #include <QObject>
 #include <QPushButton>
@@ -51,7 +55,6 @@
 #include <QStandardPaths>
 #include <QFileSystemWatcher>
 #include <QFileInfo>
-
 DCORE_USE_NAMESPACE
 DWIDGET_USE_NAMESPACE
 
@@ -60,6 +63,7 @@ class QGridLayout;
 class photoRecordBtn;
 class SwitchCameraBtn;
 class takePhotoSettingAreaWidget;
+
 
 const int TOP_TOOLBAR_HEIGHT = 50;
 
@@ -111,11 +115,6 @@ public:
     * @brief loadAfterShow　延后加载
     */
     void loadAfterShow();
-
-    /**
-     * @brief recoverTabWidget 拍照、录制触发完过后恢复tab框
-     */
-    void recoverTabWidget(uint index);
 
     ~CMainWindow() override;
 private:
@@ -389,6 +388,11 @@ private slots:
      */
     void onSetFlash(bool bFlashOn);
 
+    void onKeyUp();
+    void onKeyDown();
+    void onKeyLeft();
+    void onkeyRight();
+
 protected:
 
     /**
@@ -432,22 +436,13 @@ private:
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
-//    static QString                  lastVdFileName;//上次打开的视频文件
-//    static QString                  lastPicFileName;//上次打开的照片文件
 private:
     enum ActType                    m_nActTpye;
     bool                            m_bWayland;
-//    ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
-//    DButtonBox                      *pDButtonBox;//按钮盒
-//    DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
-//    DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
-//    DIconButton                     *m_pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
-//    QMenu                           *m_rightbtnmenu;//右键菜单
-//    QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控
     QFileSystemWatcher              m_fileWatcherUp;//文件夹监控，当前视频、照片文件夹的上级路径监控
     QString                         m_strCfgPath;//配置文件路径
@@ -479,6 +474,11 @@ private:
     QString                         m_picPath;              //配置图片路径
     takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
     bool                            m_bUIinit;              //UI初始化是否完成
+
+    DWindowMinButton                *m_windowMinBtn;        //最小化按钮
+    DWindowOptionButton             *m_windowoptionButton;  //设置按钮
+    DWindowMaxButton                *m_windowMaxBtn;        //最大化按钮
+    DWindowCloseButton              *m_windowCloseBtn;      //关闭按钮
 };
 
 #endif // MAINWINDOW_H

@@ -143,6 +143,18 @@ void takePhotoSettingAreaWidget::init()
     initButtons();
     initLayout();
 
+    m_foldBtn->setFocusPolicy(Qt::NoFocus);
+    m_unfoldBtn->setFocusPolicy(Qt::NoFocus);
+    m_flashlightFoldBtn->setFocusPolicy(Qt::NoFocus);
+    m_flashlightUnfoldBtn->setFocusPolicy(Qt::NoFocus);
+    m_flashlightOnBtn->setFocusPolicy(Qt::NoFocus);
+    m_flashlightOffBtn->setFocusPolicy(Qt::NoFocus);
+    m_delayFoldBtn->setFocusPolicy(Qt::NoFocus);
+    m_delayUnfoldBtn->setFocusPolicy(Qt::NoFocus);
+    m_noDelayBtn->setFocusPolicy(Qt::NoFocus);
+    m_delay3SecondBtn->setFocusPolicy(Qt::NoFocus);
+    m_delay6SecondBtn->setFocusPolicy(Qt::NoFocus);
+
     connect(m_unfoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::unfoldBtnClicked);
     connect(m_foldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::foldBtnClicked);
 
@@ -683,4 +695,4 @@ void takePhotoSettingAreaWidget::setOpacity(int opacity)
     m_opacity = opacity;
     m_buttonGroupColor.setAlpha(opacity);
     update();
-};
+}
