@@ -30,6 +30,7 @@
 
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
     , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
+    , m_threeBtnOffset(6)
     , m_foldBtn(nullptr)
     , m_unfoldBtn(nullptr)
     , m_flashlightFoldBtn(nullptr)
@@ -291,15 +292,15 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
     if (bShow) {
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, 0));
-        position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+        position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
 
         position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, 0));
-        position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+        position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
 
         position3->setDuration(ANIMATION_DURATION);
         position3->setStartValue(QPoint(0, 0));
-        position3->setEndValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_btnHeightOffset * 3));
+        position3->setEndValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_threeBtnOffset * 3));
 
         opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(0);
@@ -311,15 +312,15 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
         m_delay6SecondBtn->setVisible(bShow);
     } else {
         position1->setDuration(ANIMATION_DURATION);
-        position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+        position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
         position1->setEndValue(QPoint(0, 0));
 
         position2->setDuration(ANIMATION_DURATION);
-        position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+        position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
         position2->setEndValue(QPoint(0, 0));
 
         position3->setDuration(ANIMATION_DURATION);
-        position3->setStartValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_btnHeightOffset * 3));
+        position3->setStartValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_threeBtnOffset * 3));
         position3->setEndValue(QPoint(0, 0));
 
         opacity->setDuration(ANIMATION_DURATION);
@@ -349,7 +350,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow)
 
     pPosGroup->start();
 
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + m_btnHeightOffset * 3 + 2));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + m_threeBtnOffset * 3 + 2));
     update();
 }
 
@@ -363,11 +364,11 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
     if (bShow) {
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, 0));
-        position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+        position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
 
         position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, 0));
-        position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+        position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
 
         opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(0);
@@ -378,11 +379,11 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
         m_flashlightOffBtn->setVisible(bShow);
     } else {
         position1->setDuration(ANIMATION_DURATION);
-        position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+        position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
         position1->setEndValue(QPoint(0, 0));
 
         position2->setDuration(ANIMATION_DURATION);
-        position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_btnHeightOffset * 2));
+        position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
         position2->setEndValue(QPoint(0, 0));
 
         opacity->setDuration(ANIMATION_DURATION);
@@ -404,7 +405,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow)
 
     pPosGroup->start();
 
-    setFixedSize(QSize(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height() * 3 + m_btnHeightOffset * 2 + 2));
+    setFixedSize(QSize(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height() * 3 + m_threeBtnOffset * 2 + 2));
     update();
 }
 

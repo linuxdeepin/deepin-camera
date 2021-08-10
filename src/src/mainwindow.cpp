@@ -1612,15 +1612,15 @@ void CMainWindow::initUI()
     m_showCameraNameTimer->setInterval(2000);
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
-    paletteName.setColor(QPalette::Background, QColor(0,0,0, 30)); //深色
+    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 30)); //深色
     paletteName.setColor(QPalette::WindowText, QColor(255,255,255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
     QFont ft;
-   ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
-   ft.setWeight(20);
-   ft.setPointSize(18);
-   m_labelCameraName->setFont(ft);
+    ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
+    ft.setWeight(20);
+    ft.setPointSize(18);
+    m_labelCameraName->setFont(ft);
     m_labelCameraName->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
     m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
 
