@@ -112,7 +112,7 @@ signals:
     * @brief setBtnStatues　设置按钮状态
     * @param status 按钮状态(enable/disable)
     */
-    void setBtnStatues(bool status);
+//    void setBtnStatues(bool status);
 
     /**
     * @brief updateBlockSystem　阻塞更新

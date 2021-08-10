@@ -538,6 +538,7 @@ void videowidget::onReachMaxDelayedFrames()
     DataManager::instance()->setdevStatus(NOCAM);
     stopEverything();
     showNocam();
+    emit updatePhotoState(CMainWindow::photoNormal);
 
 #ifndef __mips__
     if (m_openglwidget->isVisible())
@@ -546,7 +547,7 @@ void videowidget::onReachMaxDelayedFrames()
     m_pNormalItem->hide() ;
 #endif
 
-    emit setBtnStatues(false);
+//    emit setBtnStatues(false);
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
@@ -1002,7 +1003,6 @@ void videowidget::onRestartDevices()
         }
 
     }
-
 }
 
 void videowidget::onChangeDev()
