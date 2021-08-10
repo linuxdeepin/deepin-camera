@@ -32,6 +32,10 @@
 #include <DMainWindow>
 #include <DTitlebar>
 #include <DSettingsDialog>
+#include <DWindowMinButton>
+#include <DWindowOptionButton>
+#include <DWindowMaxButton>
+#include <DWindowCloseButton>
 
 #include <QObject>
 #include <QPushButton>
@@ -389,6 +393,11 @@ private slots:
      */
     void onSetFlash(bool bFlashOn);
 
+    void onKeyUp();
+    void onKeyDown();
+    void onKeyLeft();
+    void onkeyRight();
+
 protected:
 
     /**
@@ -479,6 +488,11 @@ private:
     QString                         m_picPath;              //配置图片路径
     takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
     bool                            m_bUIinit;              //UI初始化是否完成
+
+    DWindowMinButton                *m_windowMinBtn;        //最小化按钮
+    DWindowOptionButton             *m_windowoptionButton;  //设置按钮
+    DWindowMaxButton                *m_windowMaxBtn;        //最大化按钮
+    DWindowCloseButton              *m_windowCloseBtn;      //关闭按钮
 };
 
 #endif // MAINWINDOW_H

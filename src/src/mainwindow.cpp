@@ -937,25 +937,33 @@ void CMainWindow::initTabOrder()
     /*
      *主窗口tab循序切换
     */
-    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
+    m_takePhotoSettingArea->setFocusPolicy(Qt::TabFocus);
+    m_cameraSwitchBtn->setFocusPolicy(Qt::TabFocus);
+    m_photoRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_snapshotLabel->setFocusPolicy(Qt::TabFocus);
+
+    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
+    m_windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    m_windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    m_windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
 
 
-//    setTabOrder(m_pSelectBtn, m_pTitlePicBtn);
-//    setTabOrder(m_pTitlePicBtn, m_pTitleVdBtn);
-//    setTabOrder(m_pTitleVdBtn, windowoptionButton);
-    setTabOrder(windowoptionButton, windowMinBtn);
-    setTabOrder(windowMinBtn, windowMaxBtn);
-    setTabOrder(windowMaxBtn, windowCloseBtn);
-//    setTabOrder(windowCloseBtn, thumbLeftWidget);
+    setTabOrder(m_windowoptionButton, m_windowMinBtn);
+    setTabOrder(m_windowMinBtn, m_windowMaxBtn);
+    setTabOrder(m_windowMaxBtn, m_windowCloseBtn);
+    setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
+    setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
+    setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
+    setTabOrder(m_photoRecordBtn, m_switchPhotoBtn);
+    setTabOrder(m_switchPhotoBtn, m_switchRecordBtn);
+    setTabOrder(m_switchRecordBtn, m_snapshotLabel);
 
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 
-    connect(windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
+    connect(m_windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
 }
 
 void CMainWindow::initEventFilter()
@@ -1044,6 +1052,15 @@ void CMainWindow::initShortcut()
     QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
     QShortcut *scSpaceShortcut = new QShortcut(Qt::Key_Space, this);
     QShortcut *scEnterShortcut = new QShortcut(Qt::Key_Return, this);
+    QShortcut *scUpShortcut = new QShortcut(Qt::Key_Up, this);
+    QShortcut *scDownShortcut = new QShortcut(Qt::Key_Down, this);
+    QShortcut *scLeftShortcut = new QShortcut(Qt::Key_Left, this);
+    QShortcut *scRightShortcut = new QShortcut(Qt::Key_Right, this);
+
+    connect(scUpShortcut, &QShortcut::activated, this, &CMainWindow::onKeyUp);
+    connect(scDownShortcut, &QShortcut::activated, this, &CMainWindow::onKeyDown);
+    connect(scLeftShortcut, &QShortcut::activated, this, &CMainWindow::onKeyLeft);
+    connect(scRightShortcut, &QShortcut::activated, this, &CMainWindow::onkeyRight);
 
     scViewShortcut->setObjectName(SHORTCUT_VIEW);
     scSpaceShortcut->setObjectName(SHORTCUT_SPACE);
@@ -1101,8 +1118,18 @@ void CMainWindow::initShortcut()
             windowMaxBtn->click();
         else if (windowCloseBtn == focuswidget)
             windowCloseBtn->click();
-//        else if (m_pSelectBtn == focuswidget)
-//            m_pSelectBtn->click();
+        else if (m_photoRecordBtn == focuswidget){
+            emit m_photoRecordBtn->clicked();
+        }
+        else if (m_switchRecordBtn == focuswidget){
+            m_switchRecordBtn->click();
+        }
+        else if (m_switchPhotoBtn == focuswidget){
+            m_switchPhotoBtn->click();
+        }
+        else if (m_snapshotLabel == focuswidget){
+            m_snapshotLabel->openFile();
+        }
         else
             return;
     });
@@ -1456,6 +1483,8 @@ void CMainWindow::onSwitchPhotoBtnClked()
 {
     m_photoRecordBtn->setState(true);
     m_switchRecordBtn->setEnabled(true);
+    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::NoFocus);
     m_switchPhotoBtn->setEnabled(false);
     m_switchPhotoBtn->setFlat(false);
     m_switchRecordBtn->setFlat(true);
@@ -1468,6 +1497,8 @@ void CMainWindow::onSwitchRecordBtnClked()
 {
     m_photoRecordBtn->setState(false);
     m_switchRecordBtn->setEnabled(false);
+    m_switchRecordBtn->setFocusPolicy(Qt::NoFocus);
+    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
     m_switchPhotoBtn->setEnabled(true);
     m_switchPhotoBtn->setFlat(true);
     m_switchRecordBtn->setFlat(false);
@@ -1552,6 +1583,97 @@ void CMainWindow::onSetFlash(bool bFlashOn)
     }
     if (bFlashOn != m_takePhotoSettingArea->flashLight()){
         m_takePhotoSettingArea->setFlashlight(bFlashOn);
+    }
+}
+
+void CMainWindow::onKeyUp()
+{
+    QWidget* pWidget = focusWidget();
+    if(m_cameraSwitchBtn == pWidget
+       || m_takePhotoSettingArea == pWidget){
+        m_windowoptionButton->setFocus();
+    }
+    else if (m_photoRecordBtn == pWidget){
+        if (m_cameraSwitchBtn->isHidden()){
+            m_windowoptionButton->setFocus();
+        }
+        else{
+            m_cameraSwitchBtn->setFocus();
+        }
+    }
+    else if (m_switchPhotoBtn == pWidget
+             || m_switchRecordBtn == pWidget){
+        m_photoRecordBtn->setFocus();
+    }
+    else if (m_snapshotLabel == pWidget){
+        if (m_switchPhotoBtn->isEnabled()){
+            m_switchPhotoBtn->setFocus();
+        }
+        else {
+            m_switchRecordBtn->setFocus();
+        }
+    }
+}
+
+void CMainWindow::onKeyDown()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_windowMinBtn== pWidget
+        || m_windowoptionButton == pWidget
+        || m_windowMaxBtn == pWidget
+        || m_windowCloseBtn == pWidget){
+        if (m_cameraSwitchBtn->isHidden()){
+            m_photoRecordBtn->setFocus();
+        } else {
+            m_cameraSwitchBtn->setFocus();
+        }
+    } else if (m_cameraSwitchBtn == pWidget){
+        m_photoRecordBtn->setFocus();
+    } else if (m_photoRecordBtn == pWidget){
+        if(m_switchPhotoBtn->isEnabled()){
+            m_switchPhotoBtn->setFocus();
+        } else{
+            m_switchRecordBtn->setFocus();
+        }
+    } else if(m_switchPhotoBtn == pWidget
+              || m_switchRecordBtn == pWidget){
+        m_snapshotLabel->setFocus();
+    }
+}
+
+void CMainWindow::onKeyLeft()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_cameraSwitchBtn == pWidget
+            || m_photoRecordBtn == pWidget
+            || m_switchPhotoBtn == pWidget
+            || m_switchRecordBtn == pWidget
+            || m_snapshotLabel == pWidget){
+        m_takePhotoSettingArea->setFocus();
+    } else if(m_windowCloseBtn == pWidget) {
+        m_windowMaxBtn->setFocus();
+    } else if (m_windowMaxBtn == pWidget){
+        m_windowMinBtn->setFocus();
+    } else if(m_windowMinBtn == pWidget){
+        m_windowoptionButton->setFocus();
+    }
+}
+
+void CMainWindow::onkeyRight()
+{
+    QWidget* pWidget = focusWidget();
+    if (m_windowoptionButton == pWidget){
+        m_windowMinBtn->setFocus();
+    } else if (m_windowMinBtn == pWidget){
+        m_windowMaxBtn->setFocus();
+    } else if (m_windowMaxBtn == pWidget){
+        m_windowCloseBtn->setFocus();
+    } else if (m_takePhotoSettingArea == pWidget){
+        if(m_cameraSwitchBtn->isHidden()){
+            m_photoRecordBtn->setFocus();
+        } else {
+            m_cameraSwitchBtn->setFocus();
+        }
     }
 }
 
