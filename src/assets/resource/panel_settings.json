@@ -99,7 +99,7 @@
                 {
                     "key": "mirrorMode",
                     "name": "Mirror Mode",
-                    "hide": true,
+                    "hide": false,
                     "options": [
                         {
                             "key": "mirrorMode",
@@ -112,7 +112,7 @@
                 {
                     "key": "Flashlight",
                     "name": "Flash Light",
-                    "hide": true,
+                    "hide": false,
                     "options": [
                         {
                             "key": "Flashlight",

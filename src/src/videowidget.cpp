@@ -266,8 +266,7 @@ void videowidget::delayInit()
     m_imgPrcThread->setParent(this);
     m_imgPrcThread->setObjectName("MajorThread");
 
-    //spring2功能
-    //m_imgPrcThread->setHorizontalMirror(dc::Settings::get().getOption("photosetting.mirrorMode.mirrorMode").toBool());
+    m_imgPrcThread->setHorizontalMirror(dc::Settings::get().getOption("photosetting.mirrorMode.mirrorMode").toBool());
     setFlash(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
@@ -735,7 +734,7 @@ void videowidget::showCountdown()
 
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
-                if (m_flashEnable && m_nMaxInterval > 0){
+                if (m_flashEnable && 1 == m_nMaxContinuous){
                     m_flashLabel->show();
                 }
                 m_flashTimer->start(500);
@@ -1386,7 +1385,5 @@ void videowidget::setHorizontalMirror(bool bMirror)
 
 void videowidget::setFlash(bool bFlashOn)
 {
-    //spring 2 开发内容，设置为全部关闭闪光灯功能
-    m_flashEnable = false;
-    //m_flashEnable = bFlashOn;
+    m_flashEnable = bFlashOn;
 }
