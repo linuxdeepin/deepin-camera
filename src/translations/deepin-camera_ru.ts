@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Открыть папку</translation>
+        <translation type="vanished">Открыть папку</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Ничего</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -45,7 +57,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Печать</translation>
     </message>
 </context>
 <context>
@@ -144,19 +156,15 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation>Фото:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation>Видео:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
+        <translation>Звуковые эффекты</translation>
     </message>
 </context>
 <context>
@@ -183,19 +191,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation>Открыть</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation>Печать</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation>Помощь</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation>Отображение ярлыков</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -203,22 +211,22 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>Контекстное меню</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Снять фото</translation>
+        <translation type="vanished">Снять фото</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Видеозапись</translation>
+        <translation type="vanished">Видеозапись</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Остановить фотосъемку</translation>
+        <translation type="vanished">Остановить фотосъемку</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Ничего</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Остановить видеозапись</translation>
+        <translation type="vanished">Остановить видеозапись</translation>
     </message>
 </context>
 </TS>

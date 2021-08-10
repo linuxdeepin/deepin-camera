@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>قىسقۇچنى ئېچىش</translation>
+        <translation type="vanished">قىسقۇچنى ئېچىش</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>يوق</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>ئاۋاز ئۈنۈمى</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>رەسىمگە تارتىش</translation>
+        <translation type="vanished">رەسىمگە تارتىش</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>سىنغا ئېلىش</translation>
+        <translation type="vanished">سىنغا ئېلىش</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>سۈرئەتكە ئېلىشنى توختىتىش</translation>
+        <translation type="vanished">سۈرئەتكە ئېلىشنى توختىتىش</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>يوق</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>ئېلىشنى توختىتىش</translation>
+        <translation type="vanished">ئېلىشنى توختىتىش</translation>
     </message>
 </context>
 </TS>

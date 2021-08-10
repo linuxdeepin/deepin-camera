@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Відкрити теку</translation>
+        <translation type="vanished">Відкрити теку</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Немає</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Фото</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Відео</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Перемкнути камери</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Звукові ефекти</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Створити знімок</translation>
+        <translation type="vanished">Створити знімок</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Записати відео</translation>
+        <translation type="vanished">Записати відео</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Зупинити створення фотографій</translation>
+        <translation type="vanished">Зупинити створення фотографій</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Немає</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Спалах</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Увімкн.</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Вимкн.</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Затримка знімка</translation>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Зупинити записування</translation>
+        <translation type="vanished">Зупинити записування</translation>
     </message>
 </context>
 </TS>

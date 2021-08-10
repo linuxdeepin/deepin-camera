@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Klasör aç</translation>
+        <translation type="vanished">Klasör aç</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Yok</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Ses efektleri</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Fotoğraf çek</translation>
+        <translation type="vanished">Fotoğraf çek</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video kaydet</translation>
+        <translation type="vanished">Video kaydet</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Fotoğraf çekmeyi bırak</translation>
+        <translation type="vanished">Fotoğraf çekmeyi bırak</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Yok</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Kaydı durdur</translation>
+        <translation type="vanished">Kaydı durdur</translation>
     </message>
 </context>
 </TS>

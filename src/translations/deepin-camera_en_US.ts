@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Open folder</translation>
+        <translation type="vanished">Open folder</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>None</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Photo</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Switch Cameras</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Sound effects</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Take photo</translation>
+        <translation type="vanished">Take photo</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Record video</translation>
+        <translation type="vanished">Record video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop taking photos</translation>
+        <translation type="vanished">Stop taking photos</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>None</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flashlight</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>On</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Off</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Delay capture</translation>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop recording</translation>
+        <translation type="vanished">Stop recording</translation>
     </message>
 </context>
 </TS>

@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Hap dosjen</translation>
+        <translation type="vanished">Hap dosjen</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Asnjë</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Foto</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Ndërroni Kamera</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Efekte zanore</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Bëni foto</translation>
+        <translation type="vanished">Bëni foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Regjistroni video</translation>
+        <translation type="vanished">Regjistroni video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Resht së bëri foto</translation>
+        <translation type="vanished">Resht së bëri foto</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Asnjë</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flash</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>On</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Off</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Resht së regjistruari</translation>
+        <translation type="vanished">Resht së regjistruari</translation>
     </message>
 </context>
 </TS>

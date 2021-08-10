@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>打开文件夹</translation>
+        <translation type="vanished">打开文件夹</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>无</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>拍照</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>视频</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>切换摄像头</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>音效</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>拍照</translation>
+        <translation type="vanished">拍照</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>录制视频</translation>
+        <translation type="vanished">录制视频</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>结束拍照</translation>
+        <translation type="vanished">结束拍照</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>无</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>闪光灯</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>开启</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>延时拍摄</translation>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>结束录制</translation>
+        <translation type="vanished">结束录制</translation>
     </message>
 </context>
 </TS>

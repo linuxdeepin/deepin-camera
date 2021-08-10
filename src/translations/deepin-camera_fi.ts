@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Avaa kansio</translation>
+        <translation type="vanished">Avaa kansio</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Ei mitään</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Kuva</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Vaihda kameraa</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Äänitehosteet</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Ota kuva</translation>
+        <translation type="vanished">Ota kuva</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Tallenna video</translation>
+        <translation type="vanished">Tallenna video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Lopeta kuvaaminen</translation>
+        <translation type="vanished">Lopeta kuvaaminen</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Ei mitään</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Salama</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>On</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Kaappauksen viive</translation>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Lopeta tallennus</translation>
+        <translation type="vanished">Lopeta tallennus</translation>
     </message>
 </context>
 </TS>

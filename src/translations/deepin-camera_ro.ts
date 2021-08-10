@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Deschidere fișier</translation>
+        <translation type="vanished">Deschidere fișier</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Nimic</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Efecte sonore</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Faceți poza</translation>
+        <translation type="vanished">Faceți poza</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Înregistrare video</translation>
+        <translation type="vanished">Înregistrare video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop</translation>
+        <translation type="vanished">Stop</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Nimic</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop înregistrare video</translation>
+        <translation type="vanished">Stop înregistrare video</translation>
     </message>
 </context>
 </TS>

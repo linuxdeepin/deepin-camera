@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Abrir pasta</translation>
+        <translation type="vanished">Abrir pasta</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Nenhum</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Efeitos sonoros</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Capturar foto</translation>
+        <translation type="vanished">Capturar foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Gravar vídeo</translation>
+        <translation type="vanished">Gravar vídeo</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromper a captura de fotos</translation>
+        <translation type="vanished">Interromper a captura de fotos</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Nenhum</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromper a gravação</translation>
+        <translation type="vanished">Interromper a gravação</translation>
     </message>
 </context>
 </TS>
