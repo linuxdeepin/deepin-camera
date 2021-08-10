@@ -1387,6 +1387,8 @@ void CMainWindow::onSwitchCameraSuccess(const QString& cameraName)
     if (!tmpList.isEmpty()){
         m_labelCameraName->setText(tmpList[0]);
     }
+    int width = m_labelCameraName->fontMetrics().width(tmpList[0]);
+    m_labelCameraName->setFixedWidth(width);
     m_labelCameraName->show();
     m_showCameraNameTimer->start();
 }
