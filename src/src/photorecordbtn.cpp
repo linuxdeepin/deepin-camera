@@ -48,7 +48,7 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     QPainterPath path;
     QRect rect = this->rect();
 
-    QColor color = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0,0,0,100);
+    QColor color = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0, 0, 0, 0.1 * 255);
     painter.setPen(QPen(color, 2));
     painter.setBrush(Qt::NoBrush);
     rect.setTopLeft(QPoint(2, 2));
@@ -66,7 +66,7 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
         if (Normal == m_recordState){
             rect.setTopLeft(QPoint(9, 9));
             rect.setSize(QSize(46, 46));
-            painter.setPen(QPen(QColor(0,0,0,100), 5));
+            painter.setPen(QPen(QColor(255, 255, 255, 0.1 * 255), 5));
             painter.drawEllipse(rect);
 
             rect.setTopLeft(QPoint(12, 12));
@@ -79,7 +79,7 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
             rect.setTopLeft(QPoint(8, 8));
             rect.setSize(QSize(48, 48));
             painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(QColor(0,0,0,100)));
+            painter.setBrush(QBrush(QColor(255, 255, 255, 0.1 * 255)));
             painter.drawEllipse(rect);
 
             rect.setTopLeft(QPoint(22, 22));
@@ -92,21 +92,27 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
             rect.setTopLeft(QPoint(8, 8));
             rect.setSize(QSize(48, 48));
             painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(QColor(0,0,0,100)));
+            painter.setBrush(QBrush(QColor(255, 255, 255, 0.1 * 255)));
+            painter.drawEllipse(rect);
+
+            rect.setTopLeft(QPoint(12, 12));
+            rect.setSize(QSize(40, 40));
+            painter.setPen(Qt::NoPen);
+            painter.setBrush(QBrush(QColor(255, 255, 255)));
             painter.drawEllipse(rect);
 
             rect.setTopLeft(QPoint(23, 23));
             rect.setSize(QSize(18,18));
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(0xff,0x57,0x36,0xff)));
-            painter.drawRoundedRect(rect,4,4);
+            painter.drawRoundedRect(rect, 4, 4);
         }
 
     }
     else {
         rect.setTopLeft(QPoint(9, 9));
         rect.setSize(QSize(46, 46));
-        painter.setPen(QPen(QColor(0,0,0,100), 5));
+        painter.setPen(QPen(QColor(255, 255, 255, 0.1 * 255), 5));
         painter.drawEllipse(rect);
 
         rect.setTopLeft(QPoint(12, 12));

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -100,7 +102,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延时设置</translation>
+        <translation>延时拍摄</translation>
     </message>
     <message>
         <source>Output</source>

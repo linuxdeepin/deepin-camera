@@ -180,6 +180,7 @@ private:
     circlePushButton        *m_delay6SecondBtn;//延迟6s
 
     int                      m_btnHeightOffset;//按钮之间的间隔
+    int                      m_threeBtnOffset;//三级菜单按钮之间的间隔
 
     QColor                   m_buttonGroupColor;//按钮组展开后背景颜色
 
