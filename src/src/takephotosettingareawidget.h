@@ -94,6 +94,12 @@ public:
     */
     void setOpacity(int opacity);
 
+    /**
+     * @brief setState 设置拍照，录像状态
+     * @param bPhoto  true 拍照状态， false 录像状态
+     */
+    void setState(bool bPhoto);
+
 private:
     /**
     * @brief initButtons 初始化所有的按钮
@@ -119,9 +125,11 @@ protected:
     * @param  event 事件参数
     */
     void resizeEvent(QResizeEvent *event);
+
 signals:
     void sngSetDelayTakePhoto(int delayTime);
     void sngSetFlashlight(bool bFlashlightOn);
+
 public slots:
     /**
     * @brief foldBtnClicked 折叠按钮点击槽函数
@@ -155,6 +163,7 @@ public slots:
     * @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
     */
     void onFlashlightBtnsClicked();
+
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
     circlePushButton        *m_unfoldBtn;//展开按钮
@@ -176,7 +185,9 @@ private:
 
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
-    int                      m_opacity = 102;    //不透明度 默认值0.4 * 255z
+    int                      m_opacity = 102;    //不透明度 默认值0.4 * 255
+
+    bool                     m_bPhoto;          //true 拍照状态， false 录像状态
 };
 
 #endif // TAKEPHOTOSETTINGAREAWIDGET_H

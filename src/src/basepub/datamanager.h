@@ -27,7 +27,7 @@
 #include <QSet>
 
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
-enum MultiType {None, Ctrl, Shift, Both};
+//enum MultiType {None, Ctrl, Shift, Both};
 
 class DataManager: public QObject
 {

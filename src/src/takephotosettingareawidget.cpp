@@ -41,6 +41,7 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_noDelayBtn(nullptr)
     , m_delay3SecondBtn(nullptr)
     , m_delay6SecondBtn(nullptr)
+    ,m_bPhoto(true)
 {
     m_delayGroupDisplay = false;
     m_flashGroupDisplay = false;
@@ -264,7 +265,11 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow)
     pPosGroup->addAnimation(opacity3);
 
     m_foldBtn->setVisible(bShow);
-    m_flashlightUnfoldBtn->setVisible(bShow);
+    if(m_bPhoto) {
+        m_flashlightUnfoldBtn->setVisible(bShow);
+    } else {
+        m_flashlightUnfoldBtn->setVisible(!bShow);
+    }
     m_delayUnfoldBtn->setVisible(bShow);
     m_unfoldBtn->setVisible(!bShow);
     pPosGroup->start();
@@ -684,3 +689,14 @@ void takePhotoSettingAreaWidget::setOpacity(int opacity)
     m_buttonGroupColor.setAlpha(opacity);
     update();
 };
+
+void takePhotoSettingAreaWidget::setState(bool bPhoto)
+{
+    m_bPhoto = bPhoto;
+    if (bPhoto) {
+        m_flashlightUnfoldBtn->setVisible(true);
+    } else {
+        m_flashlightUnfoldBtn->setVisible(false);
+    }
+    update();
+}
