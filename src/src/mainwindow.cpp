@@ -1782,14 +1782,14 @@ void CMainWindow::initRightButtons()
     m_switchPhotoBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_switchPhotoBtn->setObjectName(SWITCH_BTN_PHOTO);
     m_switchPhotoBtn->setAccessibleName(SWITCH_BTN_PHOTO);
-    m_switchPhotoBtn->setText(tr("photo"));
+    m_switchPhotoBtn->setText(tr("Photo"));
     m_switchPhotoBtn->setEnabled(false);
 
     m_switchRecordBtn = new DPushButton(this);
     m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
     m_switchRecordBtn->setObjectName(SWITCH_BTN_RECOD);
     m_switchRecordBtn->setAccessibleName(SWITCH_BTN_RECOD);
-    m_switchRecordBtn->setText(tr("record"));
+    m_switchRecordBtn->setText(tr("Video"));
     m_switchRecordBtn->setEnabled(true);
     m_switchRecordBtn->setFlat(true);
 

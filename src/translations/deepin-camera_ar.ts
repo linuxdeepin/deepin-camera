@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ar">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="ar" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -20,20 +18,16 @@
         <translation>لا أحد</translation>
     </message>
     <message>
-        <source>Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Photo</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>switch</source>
-        <translation type="unfinished"></translation>
+        <source>Video</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <source>photo</source>
-        <translation type="unfinished"></translation>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -224,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>التقاط صورة</translation>
+        <translation type="vanished">التقاط صورة</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>تسجيل فيديو</translation>
+        <translation type="vanished">تسجيل فيديو</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>إيقاف التقاط الصور</translation>
+        <translation type="vanished">إيقاف التقاط الصور</translation>
     </message>
 </context>
 <context>
@@ -240,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>لا أحد</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

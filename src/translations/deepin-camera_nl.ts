@@ -7,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Map openen</translation>
+        <translation type="vanished">Map openen</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +16,18 @@
     <message>
         <source>None</source>
         <translation>Geen</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation>Foto</translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation>Video</translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation>Andere camera gebruiken</translation>
     </message>
 </context>
 <context>
@@ -154,10 +166,6 @@
         <source>Sound effects</source>
         <translation>Geluidseffecten</translation>
     </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
-    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -210,15 +218,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Foto maken</translation>
+        <translation type="vanished">Foto maken</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Video opnemen</translation>
+        <translation type="vanished">Video opnemen</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stoppen met foto&apos;s maken</translation>
+        <translation type="vanished">Stoppen met foto&apos;s maken</translation>
     </message>
 </context>
 <context>
@@ -226,6 +234,25 @@
     <message>
         <source>None</source>
         <translation>Geen</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation>Zaklamp</translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation>Aan</translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation>Uit</translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation>Wachttijd</translation>
     </message>
 </context>
 <context>
@@ -240,7 +267,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Opname stoppen</translation>
+        <translation type="vanished">Opname stoppen</translation>
     </message>
 </context>
 </TS>
