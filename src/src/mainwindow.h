@@ -64,6 +64,7 @@ class QGridLayout;
 class photoRecordBtn;
 class SwitchCameraBtn;
 class takePhotoSettingAreaWidget;
+class windowStateThread;
 
 const int TOP_TOOLBAR_HEIGHT = 50;
 
@@ -377,9 +378,9 @@ private slots:
     void onUpdatePhotoState(int state);
 
     /**
-     * @brief onTitleBarMinBtnClicked 标题栏的最小化按钮点击事件
+     * @brief onStopPhotoAndRecord 停止录像，拍照
      */
-    void onTitleBarMinBtnClicked();
+    void onStopPhotoAndRecord();
 
     /**
      * @brief onMirrorStateChanged 更新镜像状态
@@ -393,9 +394,24 @@ private slots:
      */
     void onSetFlash(bool bFlashOn);
 
+    /**
+     * @brief onKeyUp 键盘上键处理事件
+     */
     void onKeyUp();
+
+    /**
+     * @brief onKeyDown 键盘下键处理事件
+     */
     void onKeyDown();
+
+    /**
+     * @brief onKeyLeft 键盘左键处理事件
+     */
     void onKeyLeft();
+
+    /**
+     * @brief onkeyRight 键盘右键处理事件
+     */
     void onkeyRight();
 
 protected:
@@ -493,6 +509,7 @@ private:
     DWindowOptionButton             *m_windowoptionButton;  //设置按钮
     DWindowMaxButton                *m_windowMaxBtn;        //最大化按钮
     DWindowCloseButton              *m_windowCloseBtn;      //关闭按钮
+	windowStateThread               *m_windowStateThread;   //窗口检测线程
 };
 
 #endif // MAINWINDOW_H
