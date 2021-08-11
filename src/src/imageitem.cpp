@@ -205,8 +205,35 @@ void ImageItem::updatePicPath(const QString &filePath)
         m_strDuratuion = "";
         pix = QPixmap();
     }
-    updatePic(pix);
-    pix.scaled(this->size(), Qt::KeepAspectRatio);
+    QTimer::singleShot(500, this, [=](){
+        updatePic(pix);
+        pix.scaled(this->size(), Qt::KeepAspectRatio);
+    });
+}
+
+void ImageItem::updatePic(QPixmap pixmap)
+{
+    m_pAniWidget->setVisible(true);
+    m_pAniWidget->setPixmap(pixmap);
+
+
+    m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry", this);
+    m_pAnimation->setEasingCurve(QEasingCurve::OutQuad);
+    m_pAnimation->setDuration(ANIMATION_DURATION);
+//    m_pAnimation->setStartValue(QRect(width() / 2, height() / 2, 0, 0));
+//    m_pAnimation->setEndValue(QRect(1, 1, width() - 1, height() - 1));
+//    qInfo() << rect() <<endl;
+    m_pAnimation->setKeyValueAt(0, QRect(width() / 2, height() / 2, 0, 0));
+    m_pAnimation->setKeyValueAt(0.3, QRect((width() - 40) / 2, (height() - 40) / 2, 40, 40));
+    m_pAnimation->setKeyValueAt(1, QRect(1, 1, width() - 1, height() - 1)); //去除1像素外边框
+    m_pAnimation->start(/*QAbstractAnimation::DeleteWhenStopped*/);
+    connect(m_pAnimation, &QPropertyAnimation::finished, [ & ]() {
+        m_pAnimation->deleteLater();
+        m_pAnimation = nullptr;
+        m_pixmap = m_pAniWidget->getPixmap();
+        update();
+        m_pAniWidget->setVisible(false);
+    });
 }
 
 void ImageItem::paintEvent(QPaintEvent *event)
@@ -667,4 +694,25 @@ bool ImageItem::parseFromFile(const QFileInfo &fi)
 
     getAvformat()->m_avformat_close_input(&av_ctx);
     return true;
+}
+
+void AnimationWidget::paintEvent(QPaintEvent *e)
+{
+    Q_UNUSED(e);
+    QRect pixmapRect = rect();
+    QPainter painter(this);
+    QPainterPath path;
+
+    painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+
+    path.addRoundedRect(pixmapRect, width(), height());
+    painter.fillPath(path, QBrush(m_animatePix));
+}
+
+AnimationWidget::AnimationWidget(QPixmap pixmap, QWidget * parent) : m_animatePix(pixmap)
+{
+    this->setParent(parent);
+    setMargin(0);
+    setContentsMargins(0, 0, 0, 0);
+    resize(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
 }

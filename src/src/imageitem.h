@@ -56,13 +56,7 @@ class AnimationWidget : public DLabel
 {
     Q_OBJECT
 public:
-    AnimationWidget(QPixmap pixmap, QWidget * parent = nullptr) : m_animatePix(pixmap)
-    {
-        this->setParent(parent);
-        setMargin(0);
-        setContentsMargins(0, 0, 0, 0);
-        resize(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
-    }
+    AnimationWidget(QPixmap pixmap, QWidget * parent = nullptr);
     ~AnimationWidget()
     {
     }
@@ -88,18 +82,7 @@ protected:
     /**
      * @brief paintEvent 控件绘制事件
      */
-    void paintEvent(QPaintEvent *e) override
-    {
-        Q_UNUSED(e);
-        QRect pixmapRect = rect();
-        QPainter painter(this);
-        QPainterPath path;
-
-        painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
-
-        path.addRoundedRect(pixmapRect, width(), height());
-        painter.fillPath(path, QBrush(m_animatePix));
-    }
+    void paintEvent(QPaintEvent *e) override;
 
 private:
     QPixmap m_animatePix;      //缩略图
@@ -128,30 +111,7 @@ public:
      * @brief updatePic 更新图片
      * @param pixmap
      */
-    void updatePic(QPixmap pixmap)
-    {
-        m_pAniWidget->setVisible(true);
-        m_pAniWidget->setPixmap(pixmap);
-
-
-        m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry", this);
-        m_pAnimation->setEasingCurve(QEasingCurve::Linear);
-        m_pAnimation->setDuration(ANIMATION_DURATION);
-//        m_pAnimation->setStartValue(QRect(width() / 2, height() / 2, 0, 0));
-//        m_pAnimation->setEndValue(rect());
-//        qInfo() << rect() <<endl;
-        m_pAnimation->setKeyValueAt(0, QRect(width() / 2, height() / 2, 0, 0));
-        m_pAnimation->setKeyValueAt(0.3, QRect((width() - 40) / 2, (height() - 40) / 2, 40, 40));
-        m_pAnimation->setKeyValueAt(1, QRect(1, 1, width() - 1, height() - 1)); //去除1像素外边框
-        m_pAnimation->start(/*QAbstractAnimation::DeleteWhenStopped*/);
-        connect(m_pAnimation, &QPropertyAnimation::finished, [ & ]() {
-            m_pAnimation->deleteLater();
-            m_pAnimation = nullptr;
-            m_pixmap = m_pAniWidget->getPixmap();
-            update();
-            m_pAniWidget->setVisible(false);
-        });
-    }
+    void updatePic(QPixmap pixmap);
 
     /**
      * @brief setIndex 设置图片索引
