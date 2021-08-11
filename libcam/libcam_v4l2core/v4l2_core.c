@@ -1644,15 +1644,24 @@ void v4l2core_prepare_new_resolution(v4l2_dev_t *vd,
 
 	int format_index = v4l2core_get_frame_format_index(vd, my_pixelformat);
 
-	if(format_index < 0)
-		format_index = 0;
+    if(format_index < 0){
+        if (vd->list_stream_formats){
+            format_index = 0;
+        } else {
+            return;
+        }
+    }
 
 	int resolution_index = v4l2core_get_format_resolution_index(vd, 
 		format_index, new_width, new_height);
 
-    if(resolution_index < 0)
-		resolution_index = 0;
-
+    if(resolution_index < 0 ){
+        if (vd->list_stream_formats[format_index].list_stream_cap){
+            resolution_index = 0;
+        } else {
+            return;
+        }
+    }
 	my_width  = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].width;
 	my_height = vd->list_stream_formats[format_index].list_stream_cap[resolution_index].height;
 }
@@ -1677,7 +1686,11 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
     my_height = 0;
 
     if(format_index < 0){
-        format_index = 0;
+        if (vd->list_stream_formats){
+            format_index = 0;
+        } else {
+            return;
+        }
     }
 
     for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
