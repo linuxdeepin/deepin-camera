@@ -29,6 +29,7 @@
 #include "takephotosettingareawidget.h"
 #include "photorecordbtn.h"
 #include "switchcamerabtn.h"
+#include "windowstatethread.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -737,7 +738,8 @@ CMainWindow::CMainWindow(QWidget *parent)
       m_photoState(photoNormal),
       m_bRecording(false),
       m_bSwitchCameraShowEnable(false),
-      m_bUIinit(false)
+      m_bUIinit(false),
+      m_windowStateThread(nullptr)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
@@ -777,7 +779,11 @@ CMainWindow::~CMainWindow()
         m_videoPre->deleteLater();
         m_videoPre = nullptr;
     }
-
+    if (m_windowStateThread) {
+        m_windowStateThread->requestInterruption();
+        m_windowStateThread->wait();
+        m_windowStateThread->deleteLater();
+    }
     qDebug() << "stop_encoder_thread";
 }
 
@@ -963,7 +969,7 @@ void CMainWindow::initTabOrder()
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 
-    connect(m_windowMinBtn, SIGNAL(clicked()), this, SLOT(onTitleBarMinBtnClicked()));
+    connect(m_windowMinBtn, SIGNAL(clicked()), this, SLOT(onStopPhotoAndRecord()));
 }
 
 void CMainWindow::initEventFilter()
@@ -1299,6 +1305,8 @@ void CMainWindow::loadAfterShow()
 
     m_videoPre->delayInit();
     showChildWidget();
+    m_windowStateThread = new windowStateThread(this);
+    connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 }
 
 /**
@@ -1448,7 +1456,7 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 
     } else { //锁屏结束连拍
         if (key2value.value("Locked").value<bool>()) {
-            onTitleBarMinBtnClicked();
+            onStopPhotoAndRecord();
          }
     }
 //        if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
@@ -1520,6 +1528,9 @@ void CMainWindow::onPhotoRecordBtnClked()
             m_videoPre->onTakePic(false);
         }
         else{
+            if (!m_windowStateThread->isRunning()) {
+                m_windowStateThread->start();
+            }
             m_videoPre->onTakePic(true);
         }
     }
@@ -1529,6 +1540,9 @@ void CMainWindow::onPhotoRecordBtnClked()
         }
         else{
             m_videoPre->onTakeVideo();
+            if (!m_windowStateThread->isRunning()) {
+                m_windowStateThread->start();
+            }
         }
     }
 }
@@ -1546,6 +1560,10 @@ void CMainWindow::onUpdateRecordState(int state)
     m_switchPhotoBtn->setEnabled(!m_bRecording);
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
+    if (false == m_bRecording
+        && m_windowStateThread->isRunning()){
+        m_windowStateThread->requestInterruption();
+    }
 }
 
 void CMainWindow::onUpdatePhotoState(int state)
@@ -1554,9 +1572,13 @@ void CMainWindow::onUpdatePhotoState(int state)
     m_actionSettings->setEnabled(photoNormal == state);
     m_photoState = state;
     showChildWidget();
+    if (photoNormal == state
+        && m_windowStateThread->isRunning()){
+        m_windowStateThread->requestInterruption();
+    }
 }
 
-void CMainWindow::onTitleBarMinBtnClicked()
+void CMainWindow::onStopPhotoAndRecord()
 {
     if (photoNormal != m_photoState){
         m_videoPre->onTakePic(false);
