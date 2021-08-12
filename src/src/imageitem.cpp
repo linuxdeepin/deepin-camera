@@ -403,17 +403,19 @@ void ImageItem::openFile()
         qDebug() << "Open it with deepin-movie";
     }
 
-
-    //表示本地文件
-
     qInfo() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
     bool bOK = myProcess->startDetached(program, arguments);
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
 
-    if (!bOK)
+    if (!bOK) { //打开失败，调用文管选择“打开方式”窗口
         qWarning() << "QProcess startDetached error";
+        arguments.clear();
+        program = "dde-file-manager";
+        arguments << "-o" << m_path;
+        bOK = myProcess->startDetached(program, arguments);
+    }
 }
 
 void ImageItem::onCopy()
