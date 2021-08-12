@@ -46,8 +46,8 @@ ACCESS_PRIVATE_FIELD(MajorImageProcessingThread, QAtomicInt, m_stopped);
 //ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
-ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchPhotoBtn);
-ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchRecordBtn);
+//ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchPhotoBtn);
+//ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchRecordBtn);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, videowidget *, m_videoPre);
 
@@ -782,12 +782,12 @@ TEST_F(ZMainwindowTest, SwitchCameraBtnEventTest)
 
 TEST_F(ZMainwindowTest, SwitchToRecord)
 {
-    emit access_private_field::CMainWindowm_switchPhotoBtn(*mainwindow)->clicked();
+//    emit access_private_field::CMainWindowm_switchPhotoBtn(*mainwindow)->clicked();
 }
 
 TEST_F(ZMainwindowTest, SwitchToPhoto)
 {
-    emit access_private_field::CMainWindowm_switchRecordBtn(*mainwindow)->clicked();
+//    emit access_private_field::CMainWindowm_switchRecordBtn(*mainwindow)->clicked();
 }
 
 /**
