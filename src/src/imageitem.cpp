@@ -559,7 +559,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
             qInfo() << QUrl::fromLocalFile(m_path).toString();
             QProcess mProcess;
             bool bOK = mProcess.startDetached(program, arguments);
-            CamApp->getMainWindow()->showMinimized();
+            //CamApp->getMainWindow()->showMinimized();
 
             if (!bOK)
                 qWarning() << "QProcess startDetached error";
