@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "6abc1916_c9787f21",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1000222
+      },
+      "writtenOn": "2021-08-13T05:19:45Z",
+      "side": 1,
+      "message": "没用的直接删掉，下同",
+      "range": {
+        "startLine": 746,
+        "startChar": 0,
+        "endLine": 747,
+        "endChar": 34
+      },
+      "revId": "610b5227dcf4c1990e73fd70cbe353e762c8fc71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d08dd104_28d387a5",
         "filename": "src/src/mainwindow.h",
         "patchSetId": 3
@@ -64,6 +87,29 @@
       "writtenOn": "2021-08-13T02:50:49Z",
       "side": 1,
       "message": "注释行数: 66; 改动行数(修改和新增): 101; 注释率: 65.3%",
+      "revId": "610b5227dcf4c1990e73fd70cbe353e762c8fc71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52718152_5d133c6b",
+        "filename": "src/src/rollingbox.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000222
+      },
+      "writtenOn": "2021-08-13T05:19:45Z",
+      "side": 1,
+      "message": "这里把成员变量都加上注释说明",
+      "range": {
+        "startLine": 108,
+        "startChar": 24,
+        "endLine": 108,
+        "endChar": 35
+      },
       "revId": "610b5227dcf4c1990e73fd70cbe353e762c8fc71",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
