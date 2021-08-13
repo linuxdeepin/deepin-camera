@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "03760fbe_dd66b5fc",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1520,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-13T01:57:51Z",
+      "side": 1,
+      "message": "value 值只有0 和 1 可以更改为bool  具体代表Record 或者photo  多个使用枚举，方便理解。",
+      "range": {
+        "startLine": 1514,
+        "startChar": 0,
+        "endLine": 1520,
+        "endChar": 5
+      },
+      "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d59ef22_3fb42533",
         "filename": "src/src/mainwindow.h",
         "patchSetId": 2
@@ -30,6 +53,29 @@
       "writtenOn": "2021-08-13T01:23:48Z",
       "side": 1,
       "message": "注释行数: 4; 改动行数(修改和新增): 10; 注释率: 40.0%",
+      "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2aeab5c_9def8ce1",
+        "filename": "src/src/mainwindow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-13T01:57:51Z",
+      "side": 1,
+      "message": "注释和函数不符合，函数参数代表意思？",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 362,
+        "endChar": 42
+      },
       "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -64,6 +110,52 @@
       "writtenOn": "2021-08-13T01:23:48Z",
       "side": 1,
       "message": "注释行数: 66; 改动行数(修改和新增): 101; 注释率: 65.3%",
+      "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96dd9940_aa39d5d8",
+        "filename": "src/src/rollingbox.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-13T01:57:51Z",
+      "side": 1,
+      "message": "继承函数，添加overload 标注，方便与其他函数区别。",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 40
+      },
+      "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de91e24_2a585484",
+        "filename": "src/src/rollingbox.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1000818
+      },
+      "writtenOn": "2021-08-13T01:57:51Z",
+      "side": 1,
+      "message": "成员变量命名规则",
+      "range": {
+        "startLine": 111,
+        "startChar": 24,
+        "endLine": 111,
+        "endChar": 34
+      },
       "revId": "3feeeaf01cac3ba19fa7bfa4fa1b7a8ce8582740",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
