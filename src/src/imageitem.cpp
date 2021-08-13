@@ -287,7 +287,7 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
         QFileInfo fileInfo(m_path);
         QString program;
         if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer"; //用看图打开
+            program = "deepin-calculator"; //用看图打开
             qDebug() << "Open it with deepin-image-viewer";
         } else {
             program = "deepin-movie"; //用影院打开
@@ -296,8 +296,8 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 
         QStringList arguments;
         //表示本地文件
-        arguments << QUrl::fromLocalFile(m_path).toString();
-        qInfo() << QUrl::fromLocalFile(m_path).toString();
+        //arguments << QUrl::fromLocalFile(m_path).toString();
+        //qInfo() << QUrl::fromLocalFile(m_path).toString();
         QProcess *myProcess = new QProcess(this);
         bool bOK = myProcess->startDetached(program, arguments);
 
@@ -546,7 +546,7 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
             QFileInfo fileInfo(m_path);
             QString program;
             if (fileInfo.suffix() == "jpg") {
-                program = "deepin-image-viewer"; //用看图打开
+                program = "deepin-calculator"; //用看图打开
                 qDebug() << "Open it with deepin-image-viewer";
             } else {
                 program = "deepin-movie"; //用影院打开
@@ -555,8 +555,8 @@ void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 
             QStringList arguments;
             //表示本地文件
-            arguments << fileInfo.filePath();
-            qInfo() << QUrl::fromLocalFile(m_path).toString();
+            //arguments << fileInfo.filePath();
+            //qInfo() << QUrl::fromLocalFile(m_path).toString();
             QProcess mProcess;
             bool bOK = mProcess.startDetached(program, arguments);
             CamApp->getMainWindow()->showMinimized();
