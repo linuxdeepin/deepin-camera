@@ -743,11 +743,9 @@ CMainWindow::CMainWindow(QWidget *parent)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
-    m_switchPhotoBtn = nullptr;
-    m_switchRecordBtn = nullptr;
+    m_modeSwitchBox = nullptr;
     m_snapshotLabel = nullptr;
     m_SetDialog = nullptr;
-    //m_thumbnail = nullptr;
     m_videoPre = nullptr;
     m_pLoginManager = nullptr;
     m_pLoginMgrSleep = nullptr;
@@ -765,11 +763,6 @@ CMainWindow::CMainWindow(QWidget *parent)
 
 CMainWindow::~CMainWindow()
 {
-//    if (m_rightbtnmenu) {
-//        delete m_rightbtnmenu;
-//        m_rightbtnmenu = nullptr;
-//    }
-
     if (m_devnumMonitor) {
         m_devnumMonitor->deleteLater();
         m_devnumMonitor = nullptr;
@@ -946,8 +939,7 @@ void CMainWindow::initTabOrder()
     m_takePhotoSettingArea->setFocusPolicy(Qt::TabFocus);
     m_cameraSwitchBtn->setFocusPolicy(Qt::TabFocus);
     m_photoRecordBtn->setFocusPolicy(Qt::TabFocus);
-    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
-    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
+    m_modeSwitchBox->setFocusPolicy(Qt::TabFocus);
     m_snapshotLabel->setFocusPolicy(Qt::TabFocus);
 
     m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
@@ -962,10 +954,6 @@ void CMainWindow::initTabOrder()
     setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
     setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
     setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
-    setTabOrder(m_photoRecordBtn, m_switchPhotoBtn);
-    setTabOrder(m_switchPhotoBtn, m_switchRecordBtn);
-    setTabOrder(m_switchRecordBtn, m_snapshotLabel);
-
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 }
@@ -1000,20 +988,6 @@ void CMainWindow::initEventFilter()
     if (windowCloseBtn)
         windowCloseBtn->installEventFilter(this);
 
-//    /**
-//     * @brief thumbLeftWidget 缩略图左边窗口
-//     */
-//    ThumbWidget *thumbLeftWidget = this->findChild<ThumbWidget *>("thumbLeftWidget");
-//    if (thumbLeftWidget)
-//        thumbLeftWidget->installEventFilter(this);
-
-//    /**
-//     * @brief takeVideoEndBtn 结束按钮
-//     */
-//    DPushButton *takeVideoEndBtn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-//    if (takeVideoEndBtn)
-//        takeVideoEndBtn->installEventFilter(this);
-
     //预览画面添加过滤
     if (m_videoPre)
         m_videoPre->installEventFilter(this);
@@ -1026,26 +1000,9 @@ void CMainWindow::initEventFilter()
     if (m_photoRecordBtn)
         m_photoRecordBtn->installEventFilter(this);
 
-    //切换拍照控件添加过滤
-    if (m_switchPhotoBtn)
-        m_switchPhotoBtn->installEventFilter(this);
-
-    //切换录像控件添加过滤
-    if (m_switchRecordBtn)
-        m_switchRecordBtn->installEventFilter(this);
-
     //缩略图控件添加过滤
     if (m_snapshotLabel)
         m_snapshotLabel->installEventFilter(this);
-
-//    if (m_pSelectBtn)
-//        m_pSelectBtn->installEventFilter(this);
-
-//    if (m_pTitlePicBtn)
-//        m_pTitlePicBtn->installEventFilter(this);
-
-//    if (m_pTitleVdBtn)
-//        m_pTitleVdBtn->installEventFilter(this);
 
     if (m_pTitlebar->titlebar())
         m_pTitlebar->titlebar()->installEventFilter(this);
@@ -1109,12 +1066,7 @@ void CMainWindow::initShortcut()
         /**
          *@brief 判断当前的焦点窗口在哪个控件上，通过enter键触发对应的点击操作
          */
-
-/*        if (m_pTitlePicBtn == focuswidget)
-            m_pTitlePicBtn->click();
-        else if (m_pTitleVdBtn == focuswidget)
-            m_pTitleVdBtn->click();
-        else */if (windowoptionButton == focuswidget)
+        if (windowoptionButton == focuswidget)
             windowoptionButton->click();
         else if (windowMinBtn == focuswidget)
             windowMinBtn->click();
@@ -1124,12 +1076,6 @@ void CMainWindow::initShortcut()
             windowCloseBtn->click();
         else if (m_photoRecordBtn == focuswidget){
             emit m_photoRecordBtn->clicked();
-        }
-        else if (m_switchRecordBtn == focuswidget){
-            m_switchRecordBtn->click();
-        }
-        else if (m_switchPhotoBtn == focuswidget){
-            m_switchPhotoBtn->click();
         }
         else if (m_snapshotLabel == focuswidget){
             m_snapshotLabel->openFile();
@@ -1488,12 +1434,6 @@ void CMainWindow::onTrashFile(const QString &fileName)
 void CMainWindow::onSwitchPhotoBtnClked()
 {
     m_photoRecordBtn->setState(true);
-    m_switchRecordBtn->setEnabled(true);
-    m_switchRecordBtn->setFocusPolicy(Qt::TabFocus);
-    m_switchPhotoBtn->setFocusPolicy(Qt::NoFocus);
-    m_switchPhotoBtn->setEnabled(false);
-    m_switchPhotoBtn->setFlat(false);
-    m_switchRecordBtn->setFlat(true);
     m_photoRecordBtn->setToolTip(tr("Photo"));
     m_takePhotoSettingArea->setState(true);
     locateRightButtons();
@@ -1502,15 +1442,20 @@ void CMainWindow::onSwitchPhotoBtnClked()
 void CMainWindow::onSwitchRecordBtnClked()
 {
     m_photoRecordBtn->setState(false);
-    m_switchRecordBtn->setEnabled(false);
-    m_switchRecordBtn->setFocusPolicy(Qt::NoFocus);
-    m_switchPhotoBtn->setFocusPolicy(Qt::TabFocus);
-    m_switchPhotoBtn->setEnabled(true);
-    m_switchPhotoBtn->setFlat(true);
-    m_switchRecordBtn->setFlat(false);
     m_photoRecordBtn->setToolTip(tr("Video"));
     m_takePhotoSettingArea->setState(false);
     locateRightButtons();
+}
+
+void CMainWindow::onModeSwitchBoxValueChanged(int type)
+{
+    if (type == ActType::ActTakePic) {
+        onSwitchPhotoBtnClked();
+    } else if (type == ActType::ActTakeVideo) {
+        onSwitchRecordBtnClked();
+    } else {
+        return;
+    }
 }
 
 void CMainWindow::onPhotoRecordBtnClked()
@@ -1555,7 +1500,6 @@ void CMainWindow::onUpdateRecordState(int state)
 {
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
-    m_switchPhotoBtn->setEnabled(!m_bRecording);
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
     if (false == m_bRecording
@@ -1566,7 +1510,6 @@ void CMainWindow::onUpdateRecordState(int state)
 
 void CMainWindow::onUpdatePhotoState(int state)
 {
-    m_switchRecordBtn->setEnabled(photoNormal == state);
     m_actionSettings->setEnabled(photoNormal == state);
     m_photoState = state;
     showChildWidget();
@@ -1621,18 +1564,6 @@ void CMainWindow::onKeyUp()
             m_cameraSwitchBtn->setFocus();
         }
     }
-    else if (m_switchPhotoBtn == pWidget
-             || m_switchRecordBtn == pWidget){
-        m_photoRecordBtn->setFocus();
-    }
-    else if (m_snapshotLabel == pWidget){
-        if (m_switchPhotoBtn->isEnabled()){
-            m_switchPhotoBtn->setFocus();
-        }
-        else {
-            m_switchRecordBtn->setFocus();
-        }
-    }
 }
 
 void CMainWindow::onKeyDown()
@@ -1650,13 +1581,6 @@ void CMainWindow::onKeyDown()
     } else if (m_cameraSwitchBtn == pWidget){
         m_photoRecordBtn->setFocus();
     } else if (m_photoRecordBtn == pWidget){
-        if(m_switchPhotoBtn->isEnabled()){
-            m_switchPhotoBtn->setFocus();
-        } else{
-            m_switchRecordBtn->setFocus();
-        }
-    } else if(m_switchPhotoBtn == pWidget
-              || m_switchRecordBtn == pWidget){
         m_snapshotLabel->setFocus();
     }
 }
@@ -1666,8 +1590,6 @@ void CMainWindow::onKeyLeft()
     QWidget* pWidget = focusWidget();
     if (m_cameraSwitchBtn == pWidget
             || m_photoRecordBtn == pWidget
-            || m_switchPhotoBtn == pWidget
-            || m_switchRecordBtn == pWidget
             || m_snapshotLabel == pWidget){
         m_takePhotoSettingArea->setFocus();
     } else if(m_windowCloseBtn == pWidget) {
@@ -1922,20 +1844,12 @@ void CMainWindow::initRightButtons()
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setToolTip(tr("Photo"));
 
-    m_switchPhotoBtn = new DPushButton(this);
-    m_switchPhotoBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
-    m_switchPhotoBtn->setObjectName(SWITCH_BTN_PHOTO);
-    m_switchPhotoBtn->setAccessibleName(SWITCH_BTN_PHOTO);
-    m_switchPhotoBtn->setText(tr("Photo"));
-    m_switchPhotoBtn->setEnabled(false);
-
-    m_switchRecordBtn = new DPushButton(this);
-    m_switchRecordBtn->setFixedSize(switchBtnWidth,switchBtnHeight);
-    m_switchRecordBtn->setObjectName(SWITCH_BTN_RECOD);
-    m_switchRecordBtn->setAccessibleName(SWITCH_BTN_RECOD);
-    m_switchRecordBtn->setText(tr("Video"));
-    m_switchRecordBtn->setEnabled(true);
-    m_switchRecordBtn->setFlat(true);
+    m_modeSwitchBox = new RollingBox(this);
+    m_modeSwitchBox->setFixedSize(switchBtnWidth, switchBtnHeight * 3 + rightOffset * 2);
+    QStringList content;
+    content << tr("Photo") << tr("Video");
+    m_modeSwitchBox->setContentList(content);
+    m_modeSwitchBox->show();
 
     m_snapshotLabel = new ImageItem(this);
     m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
@@ -1943,8 +1857,7 @@ void CMainWindow::initRightButtons()
     m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
-    connect(m_switchPhotoBtn, SIGNAL(clicked()), this, SLOT(onSwitchPhotoBtnClked()));
-    connect(m_switchRecordBtn, SIGNAL(clicked()), this, SLOT(onSwitchRecordBtnClked()));
+    connect(m_modeSwitchBox, &RollingBox::currentValueChanged, this, &CMainWindow::onModeSwitchBoxValueChanged);
     connect(m_photoRecordBtn, SIGNAL(clicked()), this, SLOT(onPhotoRecordBtnClked()));
     connect(m_snapshotLabel,SIGNAL(trashFile(const QString&)), SLOT(onTrashFile(const QString&)));
 
@@ -1977,24 +1890,13 @@ void CMainWindow::locateRightButtons()
     int switchCameraY = photoRecordLeftY - SwitchcameraDiam - switchCameraOffset;
     m_cameraSwitchBtn->move(switchCameraX, switchCameraY);
 
-    int switchBtnOffset = height()/15;
     int switchBtnX = buttonCenterX - switchBtnWidth/2;
-    int switchBtnY = photoRecordLeftY + switchBtnOffset + photeRecordDiam;
-    //拍照模式
-    if (true == m_photoRecordBtn->photoState()){
-        m_switchPhotoBtn->move(switchBtnX,switchBtnY);
-        int RecordY = switchBtnY + switchBtnHeight;
-        m_switchRecordBtn->move(switchBtnX,RecordY);
-    }
-    else{
-        int PhotoY = switchBtnY - switchBtnHeight;
-        m_switchPhotoBtn->move(switchBtnX,PhotoY);
-        m_switchRecordBtn->move(switchBtnX,switchBtnY);
-    }
+    int switchBtnY = photoRecordLeftY + photeRecordDiam;
+    m_modeSwitchBox->move(switchBtnX,switchBtnY);
 
     int snapLabelOffset = height()/10;
     int snapLabelX = buttonCenterX - snapLabelDiam/2;
-    int snapLabelY = switchBtnY + switchBtnHeight + snapLabelOffset;
+    int snapLabelY = switchBtnY + switchBtnHeight * 2 + snapLabelOffset;
     m_snapshotLabel->move(snapLabelX,snapLabelY);
 }
 
@@ -2524,19 +2426,6 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     return QWidget::eventFilter(obj, e);
 }
 
-void CMainWindow::wheelEvent(QWheelEvent * event)
-{
-    if (photoNormal != m_photoState
-       || m_bRecording){
-        return;
-    }
-    if(event->delta() > 0){
-         onSwitchPhotoBtnClked();
-     }else{
-         onSwitchRecordBtnClked();
-     }
-}
-
 /*
  * 右侧按钮显示状态
  * 1、正在拍照，闪光灯，全部不显示
@@ -2552,8 +2441,7 @@ void CMainWindow::showChildWidget()
     if (photoNormal != m_photoState) {
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
-        showWidget(m_switchPhotoBtn,false);
-        showWidget(m_switchRecordBtn,false);
+        showWidget(m_modeSwitchBox, false);
         showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
         return;
@@ -2561,16 +2449,14 @@ void CMainWindow::showChildWidget()
     if (m_bRecording) {  //正在录像
         showWidget(m_cameraSwitchBtn,false);
         showWidget(m_snapshotLabel,false);
-        showWidget(m_switchPhotoBtn,false);
-        showWidget(m_switchRecordBtn,false);
+        showWidget(m_modeSwitchBox, false);
         showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
         return;
     }
     showWidget(m_snapshotLabel, true);
     showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
-    showWidget(m_switchRecordBtn,true);
-    showWidget(m_switchPhotoBtn,true);
+    showWidget(m_modeSwitchBox, true);
     showWidget(m_photoRecordBtn, true);
     showWidget(m_takePhotoSettingArea,true);
 }

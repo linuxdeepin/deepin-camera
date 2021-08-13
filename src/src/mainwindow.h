@@ -28,6 +28,7 @@
 #include "camview.h"
 #include "Settings.h"
 #include "titlebar.h"
+#include "rollingbox.h"
 
 #include <DMainWindow>
 #include <DTitlebar>
@@ -351,9 +352,15 @@ private slots:
     void onSwitchPhotoBtnClked();
 
     /**
-     * @brief onSwitchRecordBtnClked 拍照按钮点击
+     * @brief onSwitchRecordBtnClked 录像按钮点击
      */
     void onSwitchRecordBtnClked();
+
+    /**
+     * @brief onModeSwitchBoxValueChanged 拍照/视频模式切换
+     * @param 模式索引
+     */
+    void onModeSwitchBoxValueChanged(int);
 
     /**
      * @brief onPhotoRecordBtnClked 拍照/录像按钮点击事件
@@ -430,12 +437,6 @@ protected:
 
     bool eventFilter(QObject *obj, QEvent *e)override;
 
-    /**
-     * @brief wheelEvent 鼠标滚轮事件
-     * @param event
-     */
-    void wheelEvent(QWheelEvent * event) override;
-
 private:
     /**
      * @brief showChildWidget 显示子控件，左侧配置控件，右侧操作区域控件
@@ -457,22 +458,14 @@ private:
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
-//    static QString                  lastVdFileName;//上次打开的视频文件
-//    static QString                  lastPicFileName;//上次打开的照片文件
+
 private:
     enum ActType                    m_nActTpye;
     bool                            m_bWayland;
-//    ThumbnailsBar                   *m_thumbnail;//缩略图
     videowidget                     *m_videoPre;//相机预览类
     DSettingsDialog                 *m_SetDialog;//设置页面
     DevNumMonitor                   *m_devnumMonitor;//设备数量监控
-//    DButtonBox                      *pDButtonBox;//按钮盒
-//    DButtonBoxButton                *m_pTitlePicBtn;//标题栏拍照按钮
-//    DButtonBoxButton                *m_pTitleVdBtn;//标题栏视频按钮
-//    DIconButton                     *m_pSelectBtn; //切换按钮
     DMenu                           *m_titlemenu;//标题栏菜单
-//    QMenu                           *m_rightbtnmenu;//右键菜单
-//    QAction                         *m_actOpenfolder;//打开文件
     QFileSystemWatcher              m_fileWatcher;//文件监控
     QFileSystemWatcher              m_fileWatcherUp;//文件夹监控，当前视频、照片文件夹的上级路径监控
     QString                         m_strCfgPath;//配置文件路径
@@ -491,8 +484,7 @@ private:
     //右侧按钮
     SwitchCameraBtn                 *m_cameraSwitchBtn;     //摄像头切换按钮
     photoRecordBtn                  *m_photoRecordBtn;      //拍照，录像按钮
-    DPushButton                     *m_switchPhotoBtn;      //切换拍照按钮
-    DPushButton                     *m_switchRecordBtn;     //切换录像按钮
+    RollingBox                      *m_modeSwitchBox;       //拍照/录像模式切换
     ImageItem                       *m_snapshotLabel;       //缩略图
     DLabel                          *m_labelCameraName;     //摄像机名称提示label
     QTimer                          *m_showCameraNameTimer; //显示摄像机名称Timer

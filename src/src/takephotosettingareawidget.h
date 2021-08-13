@@ -186,6 +186,7 @@ private:
 
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
+    bool                     m_isBtnsFold;  //按钮组是否收起
     int                      m_opacity = 102;    //不透明度 默认值0.4 * 255
 
     bool                     m_bPhoto;          //true 拍照状态， false 录像状态
