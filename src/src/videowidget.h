@@ -235,6 +235,12 @@ public:
     */
     void setFlash(bool bFlashOn);
 
+    /**
+    * @brief setMaxRecTime　设置最大录像时长
+    * @param hour  最大录像小时数
+    */
+    void setMaxRecTime(int hour);
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -380,6 +386,7 @@ private:
     int                        m_nCount;            //录制计时
     int                        m_nFileID;           //文件id
     int                        m_nFastClick;        //快速点击次数，小于200ms计入
+    int                        m_nMaxRecTime;       //最大录像时长  小时
 
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时

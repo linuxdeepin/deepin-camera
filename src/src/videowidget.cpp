@@ -53,7 +53,8 @@ static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
-      m_imgPrcThread(nullptr)
+      m_imgPrcThread(nullptr),
+      m_nMaxRecTime(60) //默认60小时
 {
 #ifndef __mips__
     m_openglwidget = new PreviewOpenglWidget(this);
@@ -512,7 +513,7 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     case VIDEO:
         m_pCamErrItem->hide();
         m_pSvgItem->hide();
-        if (m_nCount > MAX_REC_TIME)//平板与主线保持一致最大录制时长60小时
+        if (m_nCount > m_nMaxRecTime * 60 * 60)//平板与主线保持一致最大录制时长60小时
             onEndBtnClicked();//结束录制
 
         if (!get_capture_pause()) {//判断是否是暂停状态
@@ -578,7 +579,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     //计时窗口放大缩小的显示
     if (m_recordingTimeWidget->isVisible())
-        m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10 /*- m_endBtn->width()*/) / 2,
+        m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10) / 2,
                                     height() - m_recordingTimeWidget->height() - 9);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
@@ -888,7 +889,6 @@ void videowidget::onEndBtnClicked()
     }
 
     m_recordingTimeWidget->hide();
-//    m_endBtn->hide();
 
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
@@ -1296,4 +1296,9 @@ void videowidget::setHorizontalMirror(bool bMirror)
 void videowidget::setFlash(bool bFlashOn)
 {
     m_flashEnable = bFlashOn;
+}
+
+void videowidget::setMaxRecTime(int hour)
+{
+    m_nMaxRecTime = hour;
 }
