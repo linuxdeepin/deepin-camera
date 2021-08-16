@@ -1693,10 +1693,12 @@ void CMainWindow::initUI()
 
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
+    m_videoPre->setMaxRecTime(dc::Settings::get().getOption("photosetting.maxRecordTime.maxRecordTime").toInt());
     resize(minWindowWidth, minWindowHeight);
 
     m_takePhotoSettingArea->setDelayTime(nDelayTime);
     m_takePhotoSettingArea->setFlashlight(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
+
     m_bUIinit = true;
 }
 

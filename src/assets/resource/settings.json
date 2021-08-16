@@ -120,6 +120,20 @@
                             "default": false
                         }
                     ]
+                },
+                {
+                    "key": "maxRecordTime",
+                    "name": "Recording time limit",
+                    "type": "combobox",
+                    "hide": true,
+                    "options": [
+                        {
+                            "key": "maxRecordTime",
+                            "type": "combobox",
+                            "name": "Recording time limit",
+                            "default": 60
+                        }
+                    ]
                 }
             ]
         },
