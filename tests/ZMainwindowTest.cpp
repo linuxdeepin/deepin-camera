@@ -1,7 +1,6 @@
 //#define private public
 //#define protected public
 #include "src/mainwindow.h"
-#include "src/thumbwidget.h"
 //#undef private
 //#undef protected
 #include "src/imageitem.h"

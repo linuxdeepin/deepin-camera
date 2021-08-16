@@ -72,9 +72,6 @@ using namespace dc;
 const int CMainWindow::minWindowWidth = 800;
 const int CMainWindow::minWindowHeight = 600;
 
-//QString CMainWindow::lastVdFileName = {""};
-//QString CMainWindow::lastPicFileName = {""};
-
 const int rightOffset = 10;
 const int SwitchcameraDiam = 40; //切换摄像头直径
 const int photeRecordDiam = 64;
@@ -1219,7 +1216,6 @@ void CMainWindow::loadAfterShow()
 {
     initDynamicLibPath();
     //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
-    //this->grabKeyboard();//与方法：“QGuiApplication::keyboardModifiers() == Qt::ShiftModifier”具有同等效果
     initUI();
     initShortcut();
     gviewencoder_init();
@@ -1270,18 +1266,6 @@ void CMainWindow::recoverTabWidget(uint index)
         if (findChild<videowidget *>())
             findChild<videowidget *>()->setFocus();
         break;
-//    case 1:
-//        if (m_pSelectBtn)
-//            m_pSelectBtn->setFocus();
-//        break;
-//    case 2:
-//        if (m_pTitlePicBtn)
-//            m_pTitlePicBtn->setFocus();
-//        break;
-//    case 3:
-//        if (m_pTitleVdBtn)
-//            m_pTitleVdBtn->setFocus();
-//        break;
     case 4:
         if (windowoptionButton)
             windowoptionButton->setFocus();
@@ -1342,15 +1326,6 @@ void CMainWindow::onNoCam()
 void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 {
     if (bTrue) {
-//        if (m_thumbnail->m_nStatus == STATPicIng)
-//            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-//        else if (m_thumbnail->m_nStatus == STATVdIng) {
-//            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-//            if (btn->isVisible())
-//                btn->click();
-//            else
-//                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-//        }
     }
 }
 
@@ -1385,10 +1360,6 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
             if (m_videoPre->getCapStatus())
                 m_videoPre->onEndBtnClicked();
 
-            //连拍状态下锁屏需要关掉连拍
-//            if (m_thumbnail->m_nStatus == STATPicIng)
-//                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-
             m_videoPre->m_imgPrcThread->stop();
             qDebug() << "lock end";
         } else {
@@ -1403,16 +1374,6 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
             onStopPhotoAndRecord();
          }
     }
-//        if (m_thumbnail->m_nStatus == STATPicIng && key2value.value("Locked").value<bool>())
-//            m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-//    /*锁屏取消、结束录制*/
-//        else if (m_thumbnail->m_nStatus == STATVdIng && key2value.value("Locked").value<bool>()) {
-//            QPushButton *btn = m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
-//            if (btn->isVisible())
-//                btn->click();
-//            else
-//                m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
-//        }
 }
 
 void CMainWindow::onToolbarShow(bool bShow)
@@ -1795,14 +1756,9 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
-//    //设备切换信号
-//    connect(m_pSelectBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
-//    //标题栏图片按钮
-//    connect(m_pTitlePicBtn, SIGNAL(clicked()), this, SLOT(onTitlePicBtn()));
-//    //标题栏视频按钮
-//    connect(m_pTitleVdBtn, SIGNAL(clicked()), this, SLOT(onTitleVdBtn()));
+
     connect(m_videoPre, SIGNAL(updateRecordState(int)), this, SLOT(onUpdateRecordState(int)));
 
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
@@ -2001,101 +1957,11 @@ void CMainWindow::changeEvent(QEvent *event)
 
 void CMainWindow::onFitToolBar()
 {
-//    if (m_thumbnail) {
-//        int n = m_thumbnail->m_hBox->count();
-//        int nWidth = 0;
-
-//        if (n <= 0) {
-//            nWidth = LAST_BUTTON_SPACE + LAST_BUTTON_WIDTH;
-//            m_thumbnail->m_showVdTime->hide();
-//            m_thumbnail->contentsMarginsChangeed(true);
-//        } else {
-//            m_thumbnail->contentsMarginsChangeed(false);
-//            if (DataManager::instance()->getvideoCount() <= 0) {
-//                m_thumbnail->m_showVdTime->hide();
-//                nWidth = n * THUMBNAIL_WIDTH + LAST_BUTTON_SPACE * 4 + LAST_BUTTON_WIDTH;
-//            } else {
-//                m_thumbnail->m_showVdTime->show();
-//                nWidth = n * THUMBNAIL_WIDTH + LAST_BUTTON_SPACE * 5 + LAST_BUTTON_WIDTH + VIDEO_TIME_WIDTH;
-//            }
-
-//            if (DataManager::instance()->m_setIndex.size() >= 1)
-//                nWidth += DataManager::instance()->m_setIndex.size() * (SELECTED_WIDTH - THUMBNAIL_WIDTH);
-//            else
-//                nWidth += SELECTED_WIDTH - THUMBNAIL_WIDTH;
-
-//        }
-
-//        qDebug() << "onFitToolBar" << nWidth;
-
-//        m_thumbnail->resize(nWidth, THUMBNAIL_HEIGHT + 50);
-//        m_thumbnail->m_hBox->setSpacing(0);
-//        m_thumbnail->m_hBox->setMargin(0);
-//        m_thumbnail->move((width() - m_thumbnail->width()) / 2,
-//                          height() - m_thumbnail->height() - 5);
-//    }
-
 }
 
 void CMainWindow::onEnableTitleBar(int nType)
 {
-    /**
-     * 获取延时时间的索引
-     * 0:不需要延迟拍照
-     * 1:延迟3秒
-     * 2:延迟6秒
-     */
-//    int delaytime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
-//    //1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
-//    switch (nType) {
-//    case 1:
-//        if (!(DataManager::instance()->getNowTabIndex() > 3
-//                && DataManager::instance()->getNowTabIndex() < 8)
-//                && !(DataManager::instance()->getNowTabIndex() == 2)
-//                && (delaytime == 0)) {
-//            /*焦点不在菜单、最小化、最大化、关闭和标题栏拍照按钮并且“延迟”索引等于0。
-//             * 立即将焦点移到主窗口，避免控件disable状态，焦点自动位移。
-//             */
-//            setFocus();
-//        }
 
-//        /*
-//         * 延迟索引大于0,并焦点在标题栏录制或摄像头切换按钮
-//         */
-////        if ((delaytime > 0) && (focusWidget() == m_pTitleVdBtn || focusWidget() == m_pSelectBtn))
-////            setFocus();
-
-////        m_pTitleVdBtn->setEnabled(false);
-////        m_pSelectBtn->setEnabled(false);
-//        break;
-//    case 2:
-//        if (!(DataManager::instance()->getNowTabIndex() > 3
-//                && DataManager::instance()->getNowTabIndex() < 8)
-//                && !(DataManager::instance()->getNowTabIndex() == 3)
-//                && (delaytime == 0)) {
-//            /*焦点不在菜单、最小化、最大化、关闭和标题栏拍照按钮并且“延迟”索引等于0。
-//             * 立即将焦点移到主窗口，避免控件disable状态，焦点自动位移。
-//             */
-//            setFocus();
-//        }
-
-//        if ((delaytime > 0) && (focusWidget() == m_pTitlePicBtn || focusWidget() == m_pSelectBtn))
-//            setFocus();
-
-//        m_pTitlePicBtn->setEnabled(false);
-//        m_pSelectBtn->setEnabled(false);
-//        break;
-//    case 3:
-//        m_pTitleVdBtn->setEnabled(true);
-//        m_pSelectBtn->setEnabled(true);
-//        break;
-//    case 4:
-//        m_pTitlePicBtn->setEnabled(true);
-//        m_pSelectBtn->setEnabled(true);
-//        break;
-//    default:
-//        break;
-//    }
 }
 
 void CMainWindow::onTitlePicBtn()
@@ -2105,33 +1971,6 @@ void CMainWindow::onTitlePicBtn()
 
     m_nActTpye = ActTakePic;
     qDebug() << "Switch to take picture state!";
-    //切换标题栏拍照按钮颜色
-//    DPalette pa = m_pTitlePicBtn->palette();
-//    QColor clo("#0081FF");
-//    pa.setColor(DPalette::Dark, clo);
-//    pa.setColor(DPalette::Light, clo);
-//    pa.setColor(DPalette::Button, clo);
-//    m_pTitlePicBtn->setPalette(pa);
-//    QIcon iconPic(":/images/icons/light/button/photograph.svg");
-//    m_pTitlePicBtn->setIcon(iconPic);
-//    //切换标题栏视频按钮颜色
-//    DPalette paVd = m_pTitleVdBtn->palette();
-//    QColor cloVd("#000000");
-//    cloVd.setAlpha(20);
-//    paVd.setColor(DPalette::Dark, cloVd);
-//    paVd.setColor(DPalette::Light, cloVd);
-//    paVd.setColor(DPalette::Button, cloVd);
-//    m_pTitleVdBtn->setPalette(paVd);
-
-//    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::UnknownType
-//            || DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-//        QIcon iconVd(":/images/icons/light/record video.svg");
-//        m_pTitleVdBtn->setIcon(iconVd);
-//    } else {
-//        QIcon iconVd(":/images/icons/dark/button/record video_dark.svg");
-//        m_pTitleVdBtn->setIcon(iconVd);
-//    }
-
     SettingPathsave();
 }
 
@@ -2142,33 +1981,6 @@ void CMainWindow::onTitleVdBtn()
 
     m_nActTpye = ActTakeVideo;
     qDebug() << "Switch to take video state!";
-    //切换标题栏视频按钮颜色
-//    DPalette paPic = m_pTitleVdBtn->palette();
-//    QColor cloPic("#0081FF");
-//    paPic.setColor(DPalette::Dark, cloPic);
-//    paPic.setColor(DPalette::Light, cloPic);
-//    paPic.setColor(DPalette::Button, cloPic);
-//    m_pTitleVdBtn->setPalette(paPic);
-//    QIcon defaultIconVd(":/images/icons/light/button/transcribe.svg");
-//    m_pTitleVdBtn->setIcon(defaultIconVd);
-//    //切换标题栏拍照按钮颜色
-//    DPalette paVd = m_pTitlePicBtn->palette();
-//    QColor cloVd("#000000");
-//    cloVd.setAlpha(20);
-//    paVd.setColor(DPalette::Dark, cloVd);
-//    paVd.setColor(DPalette::Light, cloVd);
-//    paVd.setColor(DPalette::Button, cloVd);
-//    m_pTitlePicBtn->setPalette(paVd);
-
-//    if (DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::UnknownType
-//            || DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::LightType) {
-//        QIcon iconVd(":/images/icons/light/photograph.svg");
-//        m_pTitlePicBtn->setIcon(iconVd);
-//    } else {
-//        QIcon iconPic(":/images/icons/dark/button/photograph_dark.svg");
-//        m_pTitlePicBtn->setIcon(iconPic);
-//    }
-
     SettingPathsave();
 }
 
@@ -2274,7 +2086,6 @@ void CMainWindow::onTakePicDone()
 {
     onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
-    //m_thumbnail->m_nStatus = STATNULL;
 }
 
 void CMainWindow::onTakePicOnce()
@@ -2288,7 +2099,6 @@ void CMainWindow::onTakePicCancel()
     onEnableSettings(true);
     //恢复控件焦点状态
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
-    //m_thumbnail->m_nStatus = STATNULL;
 
     qDebug() << "Cancel taking photo!";
 }
@@ -2315,7 +2125,6 @@ void CMainWindow::onTakeVdDone()
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
     onEnableTitleBar(4); //恢复按钮状态
-    //m_thumbnail->m_nStatus = STATNULL;
     onEnableSettings(true);
     recoverTabWidget(DataManager::instance()->getNowTabIndex());
     qDebug() << "Cancel taking video!";
@@ -2323,60 +2132,8 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
 
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
 {
-//    if (type == DGuiApplicationHelper::UnknownType || type == DGuiApplicationHelper::LightType) {
-//        if (!CamApp->isPanelEnvironment())
-//            m_pSelectBtn->setIcon(QIcon(":/images/icons/light/button/Switch camera.svg"));
 
-//        if (m_nActTpye == ActTakePic)
-//            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/light/record video.svg"));
-//        else
-//            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/light/photograph.svg"));
-//    }
-
-//    if (type == DGuiApplicationHelper::DarkType) {
-
-//        if (!CamApp->isPanelEnvironment())
-//            m_pSelectBtn->setIcon(QIcon(":/images/icons/dark/button/Switch camera_dark.svg"));
-
-//        if (m_nActTpye == ActTakePic)
-//            m_pTitleVdBtn->setIcon(QIcon(":/images/icons/dark/button/record video_dark.svg"));
-//        else
-//            m_pTitlePicBtn->setIcon(QIcon(":/images/icons/dark/button/photograph_dark.svg"));
-//    }
 }
-
-//void CMainWindow::keyPressEvent(QKeyEvent *e)
-//{
-//    if (e->key() == Qt::Key_Shift) {
-//        qInfo() << "shift pressed";
-//        DataManager::instance()->setShiftMulti(true);
-//        int nIndex = DataManager::instance()->getindexNow();
-//        //按下shift键就要更新第一个索引值
-//        if (-1 == DataManager::instance()->getLastIndex()) {
-//            DataManager::instance()->setLastIndex(nIndex);
-//        }
-//    }
-//    if (e->key() == Qt::Key_Control) {
-//        qInfo() << "ctrl pressed";
-//        DataManager::instance()->setCtrlMulti(true);
-//        DataManager::instance()->m_setIndex.insert(DataManager::instance()->getindexNow());
-//    }
-//}
-
-//void CMainWindow::keyReleaseEvent(QKeyEvent *e)
-//{
-//    if (e->key() == Qt::Key_Shift) {
-//        qInfo() << "shift released";
-//        DataManager::instance()->setShiftMulti(false);
-//        DataManager::instance()->setCtrlMulti(false);
-//        DataManager::instance()->setLastIndex(-1);
-//    }
-//    if (e->key() == Qt::Key_Control) {
-//        qInfo() << "ctrl released";
-//        DataManager::instance()->setCtrlMulti(false);
-//        DataManager::instance()->setShiftMulti(false);
-//    }
-//}
 
 bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 {
@@ -2392,18 +2149,11 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     DPushButton *picvideobtn = findChild<DPushButton *>("PicVdBtn");
     DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
-//    ThumbWidget *thumbwidget = findChild<ThumbWidget *>("thumbLeftWidget");
 
     if (e->type() == QEvent::MouseButtonPress) {
         m_takePhotoSettingArea->closeAllGroup();
     }
-    /*if ((obj == m_pSelectBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 1;
-    } else if ((obj == m_pTitlePicBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 2;
-    } else if ((obj == m_pTitleVdBtn) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 3;
-    } else */if ((obj == windowoptionButton) && (e->type() == QEvent::FocusIn)) {
+    if ((obj == windowoptionButton) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 4;
     } else if ((obj == windowMinBtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 5;
@@ -2415,9 +2165,7 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         DataManager::instance()->m_tabIndex = 8;
     } else if ((obj == endbtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 9;
-    }/* else if ((obj == thumbwidget) && (e->type() == QEvent::FocusIn)) {
-        DataManager::instance()->m_tabIndex = 10;
-    }*/ else if (e->type() == QEvent::MouseButtonPress) {
+    }else if (e->type() == QEvent::MouseButtonPress) {
         DataManager::instance()->m_tabIndex = 0;
         m_videoPre->setFocus();
     } else {

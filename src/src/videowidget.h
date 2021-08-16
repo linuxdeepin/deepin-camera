@@ -109,12 +109,6 @@ signals:
     void takeVdDone();
 
     /**
-    * @brief setBtnStatues　设置按钮状态
-    * @param status 按钮状态(enable/disable)
-    */
-//    void setBtnStatues(bool status);
-
-    /**
     * @brief updateBlockSystem　阻塞更新
     * @param bTrue
     */
@@ -387,14 +381,10 @@ private:
     int                        m_nFileID;           //文件id
     int                        m_nFastClick;        //快速点击次数，小于200ms计入
 
-    //ThumbnailsBar              *m_thumbnail;        //缩略图
-
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时
     DLabel                     *m_recordingTimeWidget;//录制时长窗口
     DLabel                     *m_recordingTime;    //录制时长
-    //DPushButton                *m_endBtn;           //结束按钮
-//    DFloatingWidget            *m_fWgtCountdown;    //显示倒计时
 
     QSound                     *m_takePicSound;     //拍照声音
     QPixmap                    m_framePixmap;       //帧图片
