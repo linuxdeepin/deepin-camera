@@ -21,7 +21,6 @@
 #include "src/videowidget.h"
 #include "src/imageitem.h"
 #include "src/Settings.h"
-#include "src/thumbnailsbar.h"
 #include "v4l2_devices.h"
 #include "src/LPF_V4L2.h"
 #include "src/majorimageprocessingthread.h"

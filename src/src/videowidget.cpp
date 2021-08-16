@@ -76,16 +76,13 @@ videowidget::videowidget(DWidget *parent)
     m_flashLabel->hide();
     m_recordingTimeWidget = new DLabel(this);
     m_recordingTime = new DLabel;
-//    m_fWgtCountdown = new DFloatingWidget(this);
     m_dLabel = new DLabel(this);
     m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
-    //m_endBtn = new DPushButton(this);
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
 
-//    m_recordingTimeWidget->setBlurBackgroundEnabled(true);
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
@@ -104,7 +101,6 @@ videowidget::videowidget(DWidget *parent)
     forbidScrollBar(m_pNormalView);
     m_pNormalView->setAlignment(Qt::AlignHCenter | Qt::AlignJustify);
     m_pNormalView->setScene(m_pNormalScene);
-//    m_pNormalView->setAttribute(Qt::WA_TranslucentBackground);
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
     m_pGridLayout->addWidget(m_pNormalView);
     m_pNormalScene->addItem(m_pSvgItem);
@@ -128,22 +124,6 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setAlignment(Qt::AlignCenter);
 
     m_pSvgItem->setCacheMode(QGraphicsItem::NoCache);
-
-//    QPalette pa;
-//    pa.setColor(QPalette::Background, QColor(0x00,0x00,0x00));
-//    m_recordingTime->setPalette(pa);
-//    m_recordingTime->setAttribute(Qt::WA_TranslucentBackground, false);
-
-    //设置高斯模糊
-//    m_recordingTimeWidget->blurEnabled();
-//    m_recordingTimeWidget->setMode(DBlurEffectWidget::GaussianBlur);
-//    m_recordingTimeWidget->setRadius(40);
-//    m_recordingTimeWidget->setBlurRectXRadius(10);
-//    m_recordingTimeWidget->setBlurRectYRadius(10);
-
-//    QPalette pal = m_recordingTimeWidget->palette();
-//    pal.setColor(QPalette::Background, Qt::red);
-//    m_recordingTimeWidget->setPalette(pal);
 
     //wayland平台设置背景色为黑色
     if (get_wayland_status() == true) {
@@ -177,28 +157,11 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTime->setPalette(pa_cb);
     m_recordingTime->setFont(ft);
     m_recordingTime->setText(QString("00:00:00"));
-//    m_endBtn->setObjectName(BUTTON_TAKE_VIDEO_END);
-//    m_endBtn->setAccessibleName(BUTTON_TAKE_VIDEO_END);
-//    m_endBtn->setFlat(true);
-//    m_endBtn->setFixedSize(QSize(40, 40));
-//    m_endBtn->setFocusPolicy(Qt::TabFocus);
-//    m_endBtn->setIconSize(QSize(35, 35));
-//    m_endBtn->setIcon(QIcon(":/images/icons/light/Stop Recording.svg"));
-//    m_endBtn->setToolTip(tr("Stop recording"));
-//    m_endBtn->setToolTipDuration(500); //0.5s消失
-//    m_endBtn->setWindowFlags(Qt::FramelessWindowHint);
-//    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
-//    effect->setBlurRadius(10);                  // 阴影圆角的大小
-//    effect->setColor(QColor(202, 0, 0, 100));       //阴影的颜色
-//    effect->setOffset(0, 2);                    //阴影的偏移量
-//    m_endBtn->setGraphicsEffect(effect);        //给那个控件设置阴影，这里需要注意的是所有此控件的子控件，也都继承这个阴影。
-//    m_endBtn->hide();
 
     connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
     connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
     m_flashTimer->setSingleShot(true);
-//    connect(m_endBtn, SIGNAL(clicked()), this, SLOT(onEndBtnClicked()));
 }
 
 videowidget::~videowidget()
@@ -240,9 +203,6 @@ videowidget::~videowidget()
     delete m_recordingTimeWidget;
     m_recordingTimeWidget = nullptr;
 
-//    delete m_endBtn;
-//    m_endBtn = nullptr;
-
     delete m_countTimer;
     m_countTimer = nullptr;
 
@@ -251,12 +211,6 @@ videowidget::~videowidget()
 
     delete m_recordingTimer;
     m_recordingTimer = nullptr;
-
-//    delete m_thumbnail;
-//    m_thumbnail = nullptr;
-
-//    delete m_endBtn;
-//    m_endBtn = nullptr;
 }
 
 //延迟加载
@@ -545,8 +499,6 @@ void videowidget::onReachMaxDelayedFrames()
 #else
     m_pNormalItem->hide() ;
 #endif
-
-//    emit setBtnStatues(false);
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
@@ -615,7 +567,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
         m_pCamErrItem->hide();
         m_pSvgItem->hide();
         m_recordingTimeWidget->hide();
-        //m_endBtn->hide();
         break;
     }
 
@@ -651,48 +602,16 @@ void videowidget::recoverTabWidget()
         CMainWindow *parentwidget = CamApp->getMainWindow();
 
         if (parentwidget) {
-//            DIconButton *selectbtn = parentwidget->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
-//            DButtonBoxButton *titlepicbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_PICTURE);
-//            DButtonBoxButton *titlevdbtn = parentwidget->findChild<DButtonBoxButton *>(BUTTOM_TITLE_VEDIO);
             DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
-//            ThumbWidget *thumbwidget = parentwidget->findChild<ThumbWidget *>("thumbLeftWidget");
 
             if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
                 DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
 
             switch (DataManager::instance()->getNowTabIndex()) {
-//            case 1:
-//                if (selectbtn) {
-//                    if (selectbtn->isEnabled())
-//                        selectbtn->setFocus();
-//                    else
-//                        setFocus();
-//                }
-//                break;
-//            case 2:
-//                if (titlepicbtn) {
-//                    if (titlepicbtn->isEnabled())
-//                        titlepicbtn->setFocus();
-//                    else
-//                        setFocus();
-//                }
-//                break;
-//            case 3:
-//                if (titlevdbtn) {
-//                    if (titlevdbtn->isEnabled())
-//                        titlevdbtn->setFocus();
-//                    else
-//                        setFocus();
-//                }
-//                break;
             case 8:
                 if (picvideobtn)
                     picvideobtn->setFocus();
                 break;
-//            case 10:
-//                if (thumbwidget)
-//                    thumbwidget->setFocus();
-//                break;
             default:
                 break;
             }
@@ -1236,13 +1155,11 @@ void videowidget::startTakeVideo()
             start_encoder_thread();
             emit updateBlockSystem(true);
             setCapStatus(true);
-            //begin_time = QDateTime::currentDateTime();
             m_countTimer->stop();
             m_countTimer->start(1000); //重新计时，否则时间与显示时间
         } else {
             reset_video_timer();//重置底层定时器
             m_countTimer->stop();
-            //countTimer->start(1000);
             setCapStatus(false);
         }
 
@@ -1256,17 +1173,10 @@ void videowidget::startTakeVideo()
             DataManager::instance()->setNowTabIndex(8);
 
         emit toolbarShow(false);
-//        m_endBtn->show();
-
-        //录制视频开始之前，索引在拍照/录制按钮，设置焦点在结束按钮
-//        if (DataManager::instance()->getNowTabIndex() == 8)
-//            m_endBtn->setFocus();
 
         m_recordingTimeWidget->show();
-        m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10 /*- m_endBtn->width()*/) / 2,
+        m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
                                     nHeight - m_recordingTimeWidget->height() - 9);
-//        m_endBtn->move((nWidth + m_recordingTimeWidget->width() + 10 - m_endBtn->width()) / 2,
-//                       nHeight - m_recordingTimeWidget->height() - 11);
     }
 }
 

@@ -220,9 +220,6 @@ void ImageItem::updatePic(QPixmap pixmap)
     m_pAnimation = new QPropertyAnimation(m_pAniWidget, "geometry", this);
     m_pAnimation->setEasingCurve(QEasingCurve::OutQuad);
     m_pAnimation->setDuration(ANIMATION_DURATION);
-//    m_pAnimation->setStartValue(QRect(width() / 2, height() / 2, 0, 0));
-//    m_pAnimation->setEndValue(QRect(1, 1, width() - 1, height() - 1));
-//    qInfo() << rect() <<endl;
     m_pAnimation->setKeyValueAt(0, QRect(width() / 2, height() / 2, 0, 0));
     m_pAnimation->setKeyValueAt(0.3, QRect((width() - 40) / 2, (height() - 40) / 2, 40, 40));
     m_pAnimation->setKeyValueAt(1, QRect(1, 1, width() - 1, height() - 1)); //去除1像素外边框
@@ -278,30 +275,6 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::transparent);
     painter.setPen(QColor(255, 255, 255, 0.2 * 255));
     painter.drawPath(inside);
-
-    //加入图标
-    /*if (m_bVideo) {
-        QRect iconRect;
-        iconRect.setX((width() - 14) / 2);
-        iconRect.setY((height() - 14) / 2);
-        iconRect.setWidth(14);
-        iconRect.setHeight(14);
-
-        if (themeType == DGuiApplicationHelper::LightType) {
-            QPixmap pix = QPixmap::fromImage(QImage(":/images/icons/light/play.svg"));
-            painter.drawPixmap(iconRect, pix);
-        } else if (themeType == DGuiApplicationHelper::DarkType) {
-            QPixmap pix = QPixmap::fromImage(QImage(":/images/icons/dark/play_dark.svg"));
-            painter.drawPixmap(iconRect, pix);
-        }
-
-    }
-
-    painter.save();
-    painter.setPen(
-        QPen(DGuiApplicationHelper::instance()->applicationPalette().frameBorder().color(), 1));
-    painter.drawRoundedRect(pixmapRect, 4, 4);
-    painter.restore();*/
 }
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
@@ -585,7 +558,6 @@ void ImageItem::paintRequestSync(DPrinter *_printer)
                                      tmpMap.height()), tmpMap);
         }
 
-//        if (img != m_imgs.last())
         //不应该将多个相同的图片过滤掉
         if (currentIndex != m_imgs.count() - 1) {
             _printer->newPage();

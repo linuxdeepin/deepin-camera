@@ -21,7 +21,6 @@
 
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "thumbnailsbar.h"
 #include "videowidget.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
@@ -424,17 +423,9 @@ private slots:
 protected:
 
     /**
-     * @brief onSleepWhenTaking 键盘按下事件
+     * @brief eventFilter 事件处理
      * @param e
      */
-//    void keyPressEvent(QKeyEvent *e) override;
-
-    /**
-     * @brief onSleepWhenTaking 键盘弹起事件
-     * @param e
-     */
-//    void keyReleaseEvent(QKeyEvent *e) override;
-
     bool eventFilter(QObject *obj, QEvent *e)override;
 
 private:
