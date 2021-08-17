@@ -11,67 +11,14 @@
 #include <QCameraInfo>
 #include "src/mainwindow.h"
 #include "src/capplication.h"
+#include "stub_function.h"
 
 DWIDGET_USE_NAMESPACE
 
-class QTestMain : public QObject
-{
-    Q_OBJECT
-
-public:
-    QTestMain(int argc, char **argv);
-    ~QTestMain();
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void testGTest();
-    int runtest();
-
-private:
-    int    m_argc;
-    char** m_argv;
-};
-
-QTestMain::QTestMain(int argc, char **argv)
-{
-    m_argc = argc;
-    m_argv = argv;
-}
-
-QTestMain::~QTestMain()
-{
-
-}
-
-void QTestMain::initTestCase()
-{
-    qDebug() << "=====start test=====";
-}
-
-void QTestMain::cleanupTestCase()
-{
-    qDebug() << "=====stop test=====";
-}
-
-void QTestMain::testGTest()
-{
-//    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-camera.xml";
-    testing::InitGoogleTest(&m_argc, m_argv);
-    runtest();
-    __sanitizer_set_report_path("asan.log");
-    exit(0);
-}
-
-int QTestMain::runtest()
-{
-    return RUN_ALL_TESTS();
-}
-
 int main(int argc, char *argv[])
 {
-
+    Stub_Function::init();
+    Stub_Function::initSub();
     CApplication a(argc, argv);
     testing::InitGoogleTest(&argc, argv);
     //加载翻译
@@ -146,9 +93,9 @@ int main(int argc, char *argv[])
 
     __sanitizer_set_report_path("asan.log");
 
-//    QTestMain testMain(argc, argv);
-//    QTest::qExec(&testMain, argc, argv);
-    return RUN_ALL_TESTS();//qApp->exec();
+    int ret = RUN_ALL_TESTS();
+    Stub_Function::release();
+    return  ret;
 }
 
 #include "main.moc"

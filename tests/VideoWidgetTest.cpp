@@ -77,30 +77,30 @@ TEST_F(VideoWidgetTest, videowidget)
     videowidget *videowidgt = mainwindow->findChild<videowidget *>(VIDEO_PREVIEW_WIDGET);
 
     //调用videowidget构造函数中的wayland平台设置背景色为黑色分支
-    Stub stub;
-    stub.set(get_wayland_status, ADDR(Stub_Function, get_wayland_status));
+//    Stub stub;
+//    stub.set(get_wayland_status, ADDR(Stub_Function, get_wayland_status));
     DGuiApplicationHelper::instance()->setThemeType(DGuiApplicationHelper::DarkType);
     videowidget *videowidgetTest = new videowidget();
-    stub.reset(get_wayland_status);
+    //stub.reset(get_wayland_status);
 
     //调用delayInit函数
     QTest::qWait(500);
     //调用无设备状态分支
     DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-    stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));
+    //stub.set(camInit, ADDR(Stub_Function, camInit_NO_DEVICE_ERR));
     videowidgetTest->delayInit();
     //启动失败分支
-    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
+    //stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
     videowidgetTest->delayInit();
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
     videowidgetTest->delayInit();
     //启动成功分支
-    stub.set(camInit, ADDR(Stub_Function, camInit_OK));
-    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
+    //stub.set(camInit, ADDR(Stub_Function, camInit_OK));
+    //stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
     videowidgetTest->delayInit();
 
-    stub.reset(camInit);
-    stub.reset(ADDR(MajorImageProcessingThread, start));
+    //stub.reset(camInit);
+    //stub.reset(ADDR(MajorImageProcessingThread, start));
 
     //调用showNocam函数
     QTest::qWait(500);
@@ -130,13 +130,13 @@ TEST_F(VideoWidgetTest, videowidget)
     access_private_field::videowidgetm_nCount(*videowidgt) = 0;
     //调用showCountdown函数
     //无相机停止定时器
-    stub.set(ADDR(QTimer, isActive), ADDR(Stub_Function, isActive));
+    //stub.set(ADDR(QTimer, isActive), ADDR(Stub_Function, isActive));
     //倒计时显示隐藏打桩
-    stub.set(ADDR(DFloatingWidget, isVisible), ADDR(Stub_Function, isVisible_Countdown));
+    //stub.set(ADDR(DFloatingWidget, isVisible), ADDR(Stub_Function, isVisible_Countdown));
     //倒计时laber显示隐藏打桩
-    stub.set(ADDR(DLabel, isVisible), ADDR(Stub_Function, isVisible_Label));
+    //stub.set(ADDR(DLabel, isVisible), ADDR(Stub_Function, isVisible_Label));
 
-    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
+    //stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     //调用无相机分支
     videowidgt->showCountdown();
     //调用相机可用分支下的拍照连拍次数为0分支
@@ -150,29 +150,29 @@ TEST_F(VideoWidgetTest, videowidget)
     access_private_field::videowidgetm_curTakePicTime(*videowidgt) = 1;
     videowidgt->showCountdown();
     //桩函数还原
-    stub.reset(ADDR(DFloatingWidget, isVisible));
-    stub.reset(ADDR(DLabel, isVisible));
-    stub.reset(ADDR(QTimer, isActive));
+//    stub.reset(ADDR(DFloatingWidget, isVisible));
+//    stub.reset(ADDR(DLabel, isVisible));
+//    stub.reset(ADDR(QTimer, isActive));
     DataManager::instance()->setdevStatus(NOCAM);
 
     //调用showCountdown函数
     //调用时长不正常分支
     videowidgt->showRecTime();
     //由于时长m_nCount小于等于3视为为不正常时长，需要调用两次调用才能进入0时0分0秒状态
-    stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_5));
+    //stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_5));
     videowidgt->showRecTime();
-    stub.reset(get_video_time_capture);
-    stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_60));
+    //stub.reset(get_video_time_capture);
+    //stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_60));
     videowidgt->showRecTime();
-    stub.reset(get_video_time_capture);
+    //stub.reset(get_video_time_capture);
     //调用6时6分6秒
-    stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_21966));
+    //stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_21966));
     videowidgt->showRecTime();
-    stub.reset(get_video_time_capture);
+    //stub.reset(get_video_time_capture);
     //调用11时11分11秒
-    stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_40271));
+    //stub.set(get_video_time_capture, ADDR(Stub_Function, get_video_time_capture_hour_40271));
     videowidgt->showRecTime();
-    stub.reset(get_video_time_capture);
+    //stub.reset(get_video_time_capture);
 
     //调用flash函数
     access_private_field::videowidgetm_flashLabel(*videowidgt)->setVisible(true);
@@ -184,41 +184,41 @@ TEST_F(VideoWidgetTest, videowidget)
     call_private_fun::videowidgetslotresolutionchanged(*videowidgt, "1184x656");
     //调用相机可用
     DataManager::instance()->setdevStatus(CAM_CANUSE);
-    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    //stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     call_private_fun::videowidgetslotresolutionchanged(*videowidgt, "1184x656");
-    stub.reset(get_v4l2_device_handler);
+    //stub.reset(get_v4l2_device_handler);
     DataManager::instance()->setdevStatus(NOCAM);
     //调用onEndBtnClicked函数
     videowidgt->setCapStatus(true);
     DataManager::instance()->m_tabIndex = 9;
     //录像标志函数打桩
-    stub.set(video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
+    //stub.set(video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
     videowidgt->onEndBtnClicked();
     DataManager::instance()->m_tabIndex = 2;
-    stub.reset(video_capture_get_save_video);
+    //stub.reset(video_capture_get_save_video);
 
     //调用onChangeDev函数
     //进入设备数为2的无设备分支
-    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
+    //stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
     videowidgt->onChangeDev();
     //进入设备数为2启动失败分支
-    stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
+    //stub.set(camInit, ADDR(Stub_Function, camInit_FORMAT_ERR));
     videowidgt->onChangeDev();
     //进入设备数为2启动成功分支
-    stub.set(camInit, ADDR(Stub_Function, camInit_OK));
-    stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
+    //stub.set(camInit, ADDR(Stub_Function, camInit_OK));
+    //stub.set(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function, start));
 //    videowidgt->onChangeDev();
     //桩函数还原
-    stub.reset(camInit);
-    stub.reset(get_device_list);
+    //stub.reset(camInit);
+    //stub.reset(get_device_list);
     //进入设备数为1和3的无设备分支
-    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    //stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     for (int i = 0; i < 2; i++) {
         if (i == 0) {
-            stub.set(get_device_list, ADDR(Stub_Function, get_device_list_1));//设备数为1
+            //stub.set(get_device_list, ADDR(Stub_Function, get_device_list_1));//设备数为1
         }
         if (i == 1) {
-            stub.set(get_device_list, ADDR(Stub_Function, get_device_list_3));//设备数为2
+            //stub.set(get_device_list, ADDR(Stub_Function, get_device_list_3));//设备数为2
             QTest::qWait(1010);
         }
 //        stub.set(camInit, ADDR(Stub_Function, camInit_OK));//OK分支
@@ -240,9 +240,9 @@ TEST_F(VideoWidgetTest, videowidget)
 //    stub.reset(camInit);
 
     //还原桩函数
-    stub.reset(camInit);
-    stub.reset(ADDR(MajorImageProcessingThread, start));
-    stub.reset(get_device_list);
+//    stub.reset(camInit);
+//    stub.reset(ADDR(MajorImageProcessingThread, start));
+//    stub.reset(get_device_list);
 
 //    //调用onRestartDevices函数
 //    stub.set(get_device_list, ADDR(Stub_Function, get_device_list_2));
@@ -292,7 +292,7 @@ TEST_F(VideoWidgetTest, videowidget)
 
     //调用startTakeVideo函数
     //录制完成处理
-    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
+    //stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     videowidgt->setCapStatus(true);
     call_private_fun::videowidgetstartTakeVideo(*videowidgt);
     videowidgt->setCapStatus(false);

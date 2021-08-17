@@ -65,7 +65,6 @@ ZMainwindowTest::ZMainwindowTest()
 
 ZMainwindowTest::~ZMainwindowTest()
 {
-    Stub_Function::Release();
 }
 
 /**
@@ -147,8 +146,8 @@ TEST_F(ZMainwindowTest, RightMenushortCut)
  */
 TEST_F(ZMainwindowTest, Themechange)
 {
-    Stub stub;
-    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
+//    Stub stub;
+//    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
     QTest::qWait(500);
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
@@ -366,8 +365,8 @@ TEST_F(ZMainwindowTest, MaxMinWindow)
  */
 TEST_F(ZMainwindowTest, TakeVideo1)
 {
-    Stub stub;
-    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
+//    Stub stub;
+//    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 0);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
@@ -432,8 +431,8 @@ TEST_F(ZMainwindowTest, TakeVideoDelay)
 {
     QString str = QDir::homePath();
     QString video = str + QString("/Music/");
-    Stub stub;
-    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
+//    Stub stub;
+//    stub.set(start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     mainwindow->settingDialog();
     dc::Settings::get().settings()->setOption(QString("photosetting.photosnumber.takephotos"), 0);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 1);
@@ -615,29 +614,29 @@ TEST_F(ZMainwindowTest, SettingDialogOpen)
 TEST_F(ZMainwindowTest, Setting)
 {
     //进入setNewResolutionList设备句柄不为空分支
-    Stub stub;
-    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+//    Stub stub;
+//    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     dc::Settings::get().setNewResolutionList();
 
     //进入setNewResolutionList有效分辨率分支
-    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
-    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
-    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
-    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
+//    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
+//    stub.set(v4l2core_get_frame_format_index, ADDR(Stub_Function, v4l2core_get_frame_format_index));
+//    stub.set(v4l2core_get_formats_list, ADDR(Stub_Function, v4l2core_get_formats_list));
+//    stub.set(ADDR(QString, toInt), ADDR(Stub_Function, toInt));
     dc::Settings::get().setNewResolutionList();
 
     //进入setNewResolutionList无效分辨率分支
-    stub.reset(ADDR(QString, toInt));
+    //stub.reset(ADDR(QString, toInt));
     dc::Settings::get().setNewResolutionList();
 
     //调用generalOption
     dc::Settings::get().generalOption("");
 
     //打桩函数全部还原
-    stub.reset(get_v4l2_device_handler);
-    stub.reset(v4l2core_get_format_resolution_index);
-    stub.reset(v4l2core_get_frame_format_index);
-    stub.reset(v4l2core_get_formats_list);
+//    stub.reset(get_v4l2_device_handler);
+//    stub.reset(v4l2core_get_format_resolution_index);
+//    stub.reset(v4l2core_get_frame_format_index);
+//    stub.reset(v4l2core_get_formats_list);
 }
 
 
@@ -664,7 +663,7 @@ TEST_F(ZMainwindowTest, Setting)
  */
 TEST_F(ZMainwindowTest, CMainWindow)
 {
-    Stub stub;
+    //Stub stub;
     //调用非wayland锁屏定时器槽函数
     QVariantMap key2value1;
     QStringList strList;
@@ -685,7 +684,7 @@ TEST_F(ZMainwindowTest, CMainWindow)
     //调用settingDialog函数
     mainwindow->settingDialog();
     //进入settingDialog设备句柄不为空分支
-    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    //stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     mainwindow->settingDialog();
     //进入settingDialog有效分辨率分支
 //    stub.set(v4l2core_get_format_resolution_index, ADDR(Stub_Function, v4l2core_get_format_resolution_index));
@@ -695,15 +694,15 @@ TEST_F(ZMainwindowTest, CMainWindow)
 //    mainwindow->settingDialog();
 
     //进入settingDialog无效分辨率分支
-    stub.reset(ADDR(QString, toInt));
+    //stub.reset(ADDR(QString, toInt));
     mainwindow->settingDialog();
-    stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
+    //stub.set(get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     mainwindow->settingDialog();
     //打桩函数全部还原
-    stub.reset(get_v4l2_device_handler);
-    stub.reset(v4l2core_get_format_resolution_index);
-    stub.reset(v4l2core_get_frame_format_index);
-    stub.reset(v4l2core_get_formats_list);
+//    stub.reset(get_v4l2_device_handler);
+//    stub.reset(v4l2core_get_format_resolution_index);
+//    stub.reset(v4l2core_get_frame_format_index);
+//    stub.reset(v4l2core_get_formats_list);
 
     //调用录制状态关闭窗口函数
     access_private_field::CMainWindowm_videoPre(*mainwindow)->setCapStatus(true);
@@ -733,9 +732,9 @@ TEST_F(ZMainwindowTest, CMainWindow)
     call_private_fun::CMainWindowonEnableTitleBar(*mainwindow, 5);
 
     //调用lastOpenedPath最后打开路径不存在分支
-    stub.set(ADDR(QVariant, toString), ADDR(Stub_Function, toString));
-    stub.set(ADDR(QDir, mkdir), ADDR(Stub_Function, mkdir));
-    stub.set(ADDR(QDir, currentPath), ADDR(Stub_Function, currentPath));
+//    stub.set(ADDR(QVariant, toString), ADDR(Stub_Function, toString));
+//    stub.set(ADDR(QDir, mkdir), ADDR(Stub_Function, mkdir));
+//    stub.set(ADDR(QDir, currentPath), ADDR(Stub_Function, currentPath));
     //删除视频文件夹的相机文件夹
     QDir dir;
     QString del_file = QString(QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
@@ -745,9 +744,9 @@ TEST_F(ZMainwindowTest, CMainWindow)
     mainwindow->lastOpenedPath(QStandardPaths::MoviesLocation);
     mainwindow->lastOpenedPath(QStandardPaths::PicturesLocation);
     //桩函数还原
-    stub.reset(ADDR(QVariant, toString));
-    stub.reset(ADDR(QDir, mkdir));
-    stub.reset(ADDR(QDir, currentPath));
+//    stub.reset(ADDR(QVariant, toString));
+//    stub.reset(ADDR(QDir, mkdir));
+//    stub.reset(ADDR(QDir, currentPath));
 }
 
 TEST_F(ZMainwindowTest, PhotoRecordBtnEventTest)

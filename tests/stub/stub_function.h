@@ -5,6 +5,7 @@
 #include "../../src/devnummonitor.h"
 #include "../../src/imageitem.h"
 #include "MainwindowTest.h"
+#include "stub.h"
 extern "C"
 {
 #include "v4l2_devices.h"
@@ -15,6 +16,7 @@ class Stub_Function
 public:
     enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
     Stub_Function();
+    ~Stub_Function();
     //Setting
     v4l2_dev_t *get_v4l2_device_handler();
     int v4l2core_get_frame_format_index(v4l2_dev_t *vd, int format);
@@ -102,10 +104,20 @@ public:
     QString suffix();//获得文件后缀函数打桩
     bool parseFromFile();//解析文件函数打桩
 
-    //add by wuzhigang 2021-06-11 添加释放函数，保持类封装
+    int config_load(const char *filename);
+
+    //重置单个桩函数
+    template<typename T,typename S>
+    static void resetSub(T addr, S addr_stub);
+
+    //初始化
+    static void init();
     //release all statuc members
-    static void Release();
-public:
+    static void release();
+
+    //初始化所有的桩函数
+    static void initSub();
+private:
     //定义静态成员变量用于打桩时多次调用
     static v4l2_dev_t *m_v4l2_dev;//设备属性
     static v4l2_stream_formats_t *m_list_stream_formats;//流格式列表
@@ -113,6 +125,7 @@ public:
     static v4l2_device_list_t *m_v4l2_device_list2;//两个摄像头
     static v4l2_device_list_t *m_v4l2_device_list3;//三个摄像头
     static v4l2_frame_buff_t *m_v4l2_frame_buff;//帧缓冲器
+    static Stub    m_stub;
 };
 
 #endif // STUB_FUNCTION_H
