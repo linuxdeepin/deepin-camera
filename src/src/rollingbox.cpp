@@ -47,7 +47,7 @@ RollingBox::RollingBox(QWidget *parent) :
         m_isDragging = true;
     });
 
-    m_homingAnimation = new QPropertyAnimation(this,"deviation");
+    m_homingAnimation = new QPropertyAnimation(this, "deviation", this);
     m_homingAnimation->setDuration(300);
     m_homingAnimation->setEasingCurve(QEasingCurve::OutQuad);
 }
