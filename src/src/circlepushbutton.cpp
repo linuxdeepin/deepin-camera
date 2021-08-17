@@ -148,6 +148,20 @@ void circlePushButton::enterEvent(QEvent *event)
     update();
 }
 
+void circlePushButton::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_hover = true;
+    update();
+}
+
+void circlePushButton::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_hover = false;
+    update();
+}
+
 void circlePushButton::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);

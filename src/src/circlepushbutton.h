@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     tanlang <tanlang@uniontech.com>
-*            
+*
 * Maintainer: tanlang <tanlang@uniontech.com>
-*            
+*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -106,21 +106,37 @@ protected:
     * @param  event 事件参数
     */
     void paintEvent(QPaintEvent *event) override;
+
     /**
     * @brief enterEvent 鼠标进入事件
     * @param  event 事件参数
     */
     void enterEvent(QEvent *event) override;
+
+    /**
+    * @brief focusInEvent 焦点进入事件
+    * @param  event 事件参数
+    */
+    void focusInEvent(QFocusEvent *event) override;
+
+    /**
+    * @brief focusOutEvent 焦点离开事件
+    * @param  event 事件参数
+    */
+    void focusOutEvent(QFocusEvent *event) override;
+
     /**
     * @brief leaveEvent 鼠标离开事件
     * @param  event 事件参数
     */
     void leaveEvent(QEvent *event) override;
+
     /**
     * @brief mousePressEvent 鼠标点击事件
     * @param  event 事件参数
     */
     void mousePressEvent(QMouseEvent *event) override;
+
     /**
     * @brief mouseReleaseEvent 鼠标释放事件
     * @param  event 事件参数

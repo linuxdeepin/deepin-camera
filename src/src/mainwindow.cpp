@@ -930,27 +930,23 @@ void CMainWindow::initBlockSleep()
 
 void CMainWindow::initTabOrder()
 {
-    /*
-     *主窗口tab循序切换
-    */
+    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
+    m_windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
+    m_windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
+    m_windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
+
     m_takePhotoSettingArea->setFocusPolicy(Qt::TabFocus);
     m_cameraSwitchBtn->setFocusPolicy(Qt::TabFocus);
     m_photoRecordBtn->setFocusPolicy(Qt::TabFocus);
     m_modeSwitchBox->setFocusPolicy(Qt::TabFocus);
     m_snapshotLabel->setFocusPolicy(Qt::TabFocus);
 
-    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
-    m_windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    m_windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    m_windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-
-
     setTabOrder(m_windowoptionButton, m_windowMinBtn);
     setTabOrder(m_windowMinBtn, m_windowMaxBtn);
     setTabOrder(m_windowMaxBtn, m_windowCloseBtn);
     setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
-    setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
-    setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
+//    setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
+//    setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 }
@@ -1071,12 +1067,12 @@ void CMainWindow::initShortcut()
             windowMaxBtn->click();
         else if (windowCloseBtn == focuswidget)
             windowCloseBtn->click();
-        else if (m_photoRecordBtn == focuswidget){
+        else if (m_photoRecordBtn == focuswidget)
             emit m_photoRecordBtn->clicked();
-        }
-        else if (m_snapshotLabel == focuswidget){
+        else if (m_snapshotLabel == focuswidget)
             m_snapshotLabel->openFile();
-        }
+        else if (m_cameraSwitchBtn == focuswidget)
+            m_videoPre->onChangeDev();
         else
             return;
     });
@@ -2147,8 +2143,8 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
     DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
     DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-    DPushButton *picvideobtn = findChild<DPushButton *>("PicVdBtn");
-    DPushButton *endbtn = findChild<DPushButton *>("TakeVdEndBtn");
+    DPushButton *picvideobtn = findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
+    DPushButton *endbtn = findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END);
 
     if (e->type() == QEvent::MouseButtonPress) {
         m_takePhotoSettingArea->closeAllGroup();

@@ -36,7 +36,7 @@ TakePhotoSettingTest::TakePhotoSettingTest(): takePhotoSet(nullptr)
     }
     if (nullptr != mainwindow) {
         QTest::qWait(2000);
-        takePhotoSet = mainwindow->findChild<takePhotoSettingAreaWidget *>(RIGHT_BTNS_BOX);
+        takePhotoSet = mainwindow->findChild<takePhotoSettingAreaWidget *>(LEFT_BTNS_BOX);
     }
 }
 

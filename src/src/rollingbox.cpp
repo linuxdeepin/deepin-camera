@@ -34,6 +34,7 @@ RollingBox::RollingBox(QWidget *parent) :
     QWidget(parent),
     m_currentIndex(0),
     m_isDragging(false),
+    m_bFocus(false),
     m_deviation(0),
     m_textSize(15)  //暂定15,后续修改
 {
@@ -131,6 +132,20 @@ void RollingBox::wheelEvent(QWheelEvent *e)
     update();
 }
 
+void RollingBox::focusInEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus = true;
+    update();
+}
+
+void RollingBox::focusOutEvent(QFocusEvent *event)
+{
+    Q_UNUSED(event);
+    m_bFocus = false;
+    update();
+}
+
 void RollingBox::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
@@ -160,9 +175,14 @@ void RollingBox::paintEvent(QPaintEvent *e)
     centerPath.arcTo(tmpRightRect, 270, 180);
     centerPath.lineTo(tmpLeftRect.topRight());
 
-    painter.setPen(Qt::NoPen);
-    painter.fillPath(centerPath, QBrush(QColor(0, 0, 0, 0.4 * 255)));
-
+    if (m_bFocus) {
+        painter.setPen(QPen(QColor("#0081FF"), 2));
+        painter.setBrush(QBrush(QColor(0, 0, 0, 0.4 * 255)));
+        painter.drawPath(centerPath);
+    } else {
+        painter.setPen(Qt::NoPen);
+        painter.fillPath(centerPath, QBrush(QColor(0, 0, 0, 0.4 * 255)));
+    }
 
     if (m_currentIndex >= 0 && m_currentIndex <= m_rangeMax)
         paintContent(painter, m_currentIndex, m_deviation);

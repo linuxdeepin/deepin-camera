@@ -38,7 +38,7 @@
 #define SWITCH_BTN_PHOTO QObject::tr("SwitchPhotoBtn")
 #define SWITCH_BTN_RECOD QObject::tr("SwitchRecordBtn")
 //左侧按钮
-#define RIGHT_BTNS_BOX QObject::tr("RightBtnsBox")
+#define LEFT_BTNS_BOX QObject::tr("LeftBtnsBox")
 #define UNFOLD_BTN QObject::tr("UnfoldBtn")
 #define FOLD_BTN QObject::tr("FoldBtn")
 #define FLASHLITE_UNFOLD_BTN QObject::tr("FlashlightUnfoldBtn")

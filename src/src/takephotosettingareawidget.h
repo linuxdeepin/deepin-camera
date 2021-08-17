@@ -2,9 +2,9 @@
 * Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
 *
 * Author:     tanlang <tanlang@uniontech.com>
-*             
+*
 * Maintainer: tanlang <tanlang@uniontech.com>
-*             
+*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -24,6 +24,8 @@
 #include <QWidget>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QEvent>
+#include <QKeyEvent>
 
 class QPalette;
 class circlePushButton;
@@ -42,22 +44,24 @@ public:
     * @brief showFold 显示收起按钮
     * @param bShow 是否显示
     */
-    void showFold(bool bShow);
+    void showFold(bool bShow, bool isShortCut = false);
     /**
     * @brief showUnfold 显示展开
     * @param bShow 是否显示
+    * @param isShortCut 是否通过快捷键触发
     */
-    void showUnfold(bool bShow);
+    void showUnfold(bool bShow, bool isShortCut = false);
     /**
     * @brief showDelayButtons 显示延时拍照按钮
     * @param bShow 是否显示
     */
-    void showDelayButtons(bool bShow);
+    void showDelayButtons(bool bShow, bool isShortCut = false);
     /**
     * @brief showFlashlights 显示闪光灯按钮
     * @param bShow 是否显示
+    * @param isShortCut 是否通过快捷键触发
     */
-    void showFlashlights(bool bShow);
+    void showFlashlights(bool bShow, bool isShortCut = false);
     /**
     * @brief setDelayTime 设置延时拍照时间
     * @param delayTime 延迟的时间
@@ -114,17 +118,34 @@ private:
     */
     void hideAll();
 
+    void keyDownClick();
+    void keyUpClick();
+    void keyEnterClick();
+
 protected:
     /**
     * @brief paintEvent 绘制事件
     * @param  event 事件参数
     */
     void paintEvent(QPaintEvent *event) override;
+
     /**
     * @brief resizeEvent 尺寸大小改变事件
     * @param  event 事件参数
     */
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+
+    /**
+    * @brief keyReleaseEvent 尺寸大小改变事件
+    * @param  event 事件参数
+    */
+    void keyReleaseEvent(QKeyEvent *event) override;
+
+    /**
+    * @brief focusInEvent 焦点进入事件
+    * @param  event 事件参数
+    */
+    void focusInEvent(QFocusEvent *event) override;
 
 signals:
     void sngSetDelayTakePhoto(int delayTime);
@@ -133,32 +154,45 @@ signals:
 public slots:
     /**
     * @brief foldBtnClicked 折叠按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void foldBtnClicked();
+    void foldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief unfoldBtnClicked 展开按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void unfoldBtnClicked();
+    void unfoldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief flashlightFoldBtnClicked 闪光灯折叠按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void flashlightFoldBtnClicked();
+    void flashlightFoldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief flashlightFoldBtnClicked 闪光灯展开按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void flashlightUnfoldBtnClicked();
+    void flashlightUnfoldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief delayUnfoldBtnClicked 延时展开按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void delayUnfoldBtnClicked();
+    void delayUnfoldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief delayfoldBtnClicked 延时折叠按钮点击槽函数
+    * @param isShortCut 是否通过键盘触发
     */
-    void delayfoldBtnClicked();
+    void delayfoldBtnClicked(bool isShortCut = false);
+
     /**
     * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
     */
     void onDelayBtnsClicked();
+
     /**
     * @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
     */
