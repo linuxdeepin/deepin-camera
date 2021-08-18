@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbb4d34c_e86f37e0",
+        "filename": "src/src/rollingbox.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-18T05:42:05Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 52; 注释率: 3.8%",
+      "revId": "677a41fe423ee98c49b1d7d553db9aced03f1e08",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0662404_8917bd2d",
+        "filename": "src/src/rollingbox.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-18T05:42:05Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 5; 注释率: 0.0%",
+      "revId": "677a41fe423ee98c49b1d7d553db9aced03f1e08",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
