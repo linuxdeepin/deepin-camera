@@ -24,6 +24,7 @@
 
 #include <QColor>
 #include <QPainter>
+#include <QPainterPath>
 
 #define HIDE_NIMATION_DURATION 100
 #define ANIMATION_DURATION 200
