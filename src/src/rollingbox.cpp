@@ -32,14 +32,13 @@
 
 RollingBox::RollingBox(QWidget *parent) :
     QWidget(parent),
+    m_rangeMin(0),
     m_currentIndex(0),
     m_isDragging(false),
     m_bFocus(false),
     m_deviation(0),
     m_textSize(15)  //暂定15,后续修改
 {
-    m_rangeMin = 0;
-
     setContentsMargins(0, 0, 0, 0);
 
     m_pressResetTimer = new QTimer(this);
@@ -47,12 +46,12 @@ RollingBox::RollingBox(QWidget *parent) :
         m_isDragging = true;
     });
 
-    m_homingAnimation = new QPropertyAnimation(this,"deviation");
+    m_homingAnimation = new QPropertyAnimation(this, "deviation");
     m_homingAnimation->setDuration(300);
     m_homingAnimation->setEasingCurve(QEasingCurve::OutQuad);
 }
 
-void RollingBox::setRange(int min,int max)
+void RollingBox::setRange(int min, int max)
 {
     m_rangeMin = min;
     m_rangeMax = max;
@@ -114,6 +113,27 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
         homing();
     } else {
         m_deviation = this->height() / 2 - e->pos().y();
+
+        if (qAbs(m_deviation) <= this->height() / 6 ||
+                qAbs(m_deviation) >= this->height() / 2 - 10) {   //点击当前选项、上下边界
+            m_deviation = 0;
+            return;
+        }
+
+        if (m_deviation < 0 && m_currentIndex >= m_rangeMax) {
+            if (qAbs(m_deviation) >= this->height() / 6) {
+                m_deviation = 0;
+                return;
+            }
+        }
+
+        if (m_deviation > 0 && m_currentIndex <= m_rangeMin) {
+            if (qAbs(m_deviation) >= this->height() / 6) {
+                m_deviation = 0;
+                return;
+            }
+        }
+
         homing();
     }
 
@@ -122,6 +142,11 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
 
 void RollingBox::wheelEvent(QWheelEvent *e)
 {
+    if (e->delta() > 0 && m_currentIndex <= m_rangeMin)
+        return;
+    if (e->delta() < 0 && m_currentIndex >= m_rangeMax)
+        return;
+
     if(e->delta() / 90 > 0) {
         m_deviation = (this->height()) / 4;
     } else {
@@ -146,22 +171,34 @@ void RollingBox::focusOutEvent(QFocusEvent *event)
     update();
 }
 
+void RollingBox::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Down:
+        if (m_currentIndex < m_rangeMax) {
+            m_currentIndex++;
+            homing();
+        } else {
+            return;
+        }
+
+        break;
+    case Qt::Key_Up:
+        if (m_currentIndex > m_rangeMin) {
+            m_currentIndex--;
+            homing();
+        } else {
+            return;
+        }
+        break;
+    }
+    QWidget::keyReleaseEvent(event);
+}
+
 void RollingBox::paintEvent(QPaintEvent *e)
 {
     QPainter painter(this);
-
     painter.setRenderHint(QPainter::Antialiasing, true);
-
-    if (m_deviation >= height() / 4 && m_currentIndex > m_rangeMin) { //偏移量大于1/4的时候，数字减一
-        m_mouseSrcPos += height() / 4;  //鼠标起始位置重新设置，即加上1/4的高度
-        m_deviation -= height() / 4;    //偏移量重新设置，即减去1/4的高度
-        m_currentIndex -= 1;
-    }
-    if (m_deviation <= -height() / 4 && m_currentIndex < m_rangeMax) {
-        m_mouseSrcPos -= height() / 4;
-        m_deviation += height() / 4;
-        m_currentIndex += 1;
-    }
 
     //中间文字背景
     QRect centerRect(0, (height() - BTN_HEIGHT) / 2, width(), BTN_HEIGHT);
@@ -193,13 +230,17 @@ void RollingBox::paintEvent(QPaintEvent *e)
         paintContent(painter, m_currentIndex - 1, m_deviation - height() / 4);
     if (m_currentIndex < m_rangeMax && m_currentIndex >= 0)
         paintContent(painter, m_currentIndex + 1, m_deviation + height() / 4);
+
+    if (m_deviation >= 0 && m_currentIndex - 2 >= m_rangeMin)
+        paintContent(painter, m_currentIndex - 2, m_deviation - height() / 2);
+    if (m_deviation <= 0 && m_currentIndex + 2 <= m_rangeMax)
+        paintContent(painter, m_currentIndex + 2, m_deviation + height() / 2);
 }
 
 void RollingBox::paintContent(QPainter &painter, int num, int deviation)
 {
-//    int size = (Height - qAbs(deviation)) / m_numSize;
-//    int transparency = 255 - 510 * qAbs(deviation) / Height;
-    int Height = height() / 2 - 3 * qAbs(deviation) / 5 +10;
+//    int transparency = 255 - 510 * qAbs(deviation) / height();
+    int Height = height() / 2 - qAbs(deviation) / 6;
     int y = height() / 2 + deviation * 1.3 - Height / 2;
 
     QFont font("SourceHanSansSC");
