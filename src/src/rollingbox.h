@@ -24,6 +24,7 @@
 
 #include <QWidget>
 #include <QPropertyAnimation>
+#include <QPainterPath>
 
 class RollingBox : public QWidget
 {
