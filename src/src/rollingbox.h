@@ -86,6 +86,12 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
 
     /**
+    * @brief keyReleaseEvent 键盘释放事件
+    * @param  event 事件参数
+    */
+    void keyReleaseEvent(QKeyEvent *event) override;
+
+    /**
     * @brief 绘制事件
     */
     void paintEvent(QPaintEvent *) override;
