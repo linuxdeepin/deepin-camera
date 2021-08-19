@@ -492,6 +492,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
     printDialog.exec();
 #else
     //printDialog.show();
+    printDialog.close();
 #endif
 }
 
