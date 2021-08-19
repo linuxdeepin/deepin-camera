@@ -59,8 +59,8 @@ void takePhotoSettingAreaWidget::initButtons()
     m_unfoldBtn = new circlePushButton(this);
     m_unfoldBtn->setPixmap(":/images/camera/unfold.svg", ":/images/camera/unfold.svg", ":/images/camera/unfold.svg");
     m_unfoldBtn->setDisableSelect(true);
-    m_unfoldBtn->setObjectName(FOLD_BTN);
-    m_unfoldBtn->setAccessibleName(FOLD_BTN);
+    m_unfoldBtn->setObjectName(UNFOLD_BTN);
+    m_unfoldBtn->setAccessibleName(UNFOLD_BTN);
 
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
@@ -125,8 +125,8 @@ void takePhotoSettingAreaWidget::initButtons()
     m_foldBtn = new circlePushButton(this);
     m_foldBtn->setDisableSelect(true);
     m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold.svg");
-    m_foldBtn->setObjectName(UNFOLD_BTN);
-    m_foldBtn->setAccessibleName(UNFOLD_BTN);
+    m_foldBtn->setObjectName(FOLD_BTN);
+    m_foldBtn->setAccessibleName(FOLD_BTN);
     m_foldBtn->setFocusPolicy(Qt::NoFocus);
 
     hideAll();

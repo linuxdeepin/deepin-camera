@@ -159,9 +159,9 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTime->setFont(ft);
     m_recordingTime->setText(QString("00:00:00"));
 
-    connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//默认
-    connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));//
-    connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//默认
+    connect(m_countTimer, SIGNAL(timeout()), this, SLOT(showCountdown()));//显示倒计时
+    connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));
+    connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//显示录制时长
     m_flashTimer->setSingleShot(true);
 }
 
@@ -513,8 +513,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
     case VIDEO:
         m_pCamErrItem->hide();
         m_pSvgItem->hide();
-        if (m_nCount > m_nMaxRecTime * 60 * 60)//平板与主线保持一致最大录制时长60小时
-            onEndBtnClicked();//结束录制
 
         if (!get_capture_pause()) {//判断是否是暂停状态
             QString strTime = "";
@@ -647,7 +645,6 @@ void videowidget::showCountdown()
                 startTakeVideo();
             }
 
-            //显示录制时长
             showCountDownLabel(g_Enum_Camera_State);
             //向mainwindow 发送录像状态为正在录像
             emit updateRecordState(photoRecordBtn::Recording);
@@ -765,6 +762,9 @@ void videowidget::showRecTime()
         return;
     }
 
+    if (m_nCount >= m_nMaxRecTime * 60 * 60)//最大录制时长，平板与主线保持一致
+        onEndBtnClicked();//结束录制
+
     QString strTime = "";
     //计算小时数
     int nHour = m_nCount / 3600;
@@ -842,7 +842,7 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     if (2 > ResStr.size()) {
         return;
     }
-    
+
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
 
