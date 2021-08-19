@@ -4,6 +4,7 @@
 //#undef private
 //#undef protected
 #include "src/imageitem.h"
+#include "src/switchcamerabtn.h"
 
 #include <QComboBox>
 #include <QAction>
@@ -28,26 +29,14 @@
 
 using namespace Dtk::Core;
 
-
-
 ACCESS_PRIVATE_FUN(CMainWindow, void(const QString &serviceName, QVariantMap key2value, QStringList), onTimeoutLock);
 ACCESS_PRIVATE_FUN(CMainWindow, void(), setSelBtnShow);
 ACCESS_PRIVATE_FUN(CMainWindow, void(bool bTrue), stopCancelContinuousRecording);
 ACCESS_PRIVATE_FUN(CMainWindow, void(const QString &), onDirectoryChanged);
 ACCESS_PRIVATE_FUN(CMainWindow, void(int nType), onEnableTitleBar);
-
 ACCESS_PRIVATE_FUN(CApplication, void(), QuitAction);
-
-
-
 ACCESS_PRIVATE_FIELD(MajorImageProcessingThread, QAtomicInt, m_stopped);
-
-//ACCESS_PRIVATE_FIELD(ThumbWidget, bool, m_tabFocusStatus);
-
 ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
-//ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchPhotoBtn);
-//ACCESS_PRIVATE_FIELD(CMainWindow, DPushButton*, m_switchRecordBtn);
-
 ACCESS_PRIVATE_FIELD(CMainWindow, videowidget *, m_videoPre);
 
 ZMainwindowTest::ZMainwindowTest()
@@ -93,9 +82,6 @@ TEST_F(ZMainwindowTest, CamUsed)
 
     proclist.clear();
 }
-
-
-
 
 /**
  *  @brief Tab键切换
@@ -198,15 +184,15 @@ TEST_F(ZMainwindowTest, TakePicture)
 /**
  *  @brief 切换摄像头
  */
-/*TEST_F(ZMainwindowTest, ChangeCamera)
+TEST_F(ZMainwindowTest, ChangeCamera)
 {
-    DIconButton *selectBtn = mainwindow->findChild<DIconButton *>(BUTTOM_TITLE_SELECT);
+    SwitchCameraBtn *switchBtn = mainwindow->findChild<SwitchCameraBtn *>(CAMERA_SWITCH_BTN);
 
-    if (selectBtn->isVisible()) {
+    if (switchBtn->isVisible()) {
         QTest::mouseClick(selectBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 200);
     }
     QTest::qWait(1000);
-}*/
+}
 
 /**
  *  @brief 三连拍
