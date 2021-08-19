@@ -51,6 +51,61 @@ void TakePhotoSettingTest::TearDown()
 }
 
 /**
+ *  @brief 键盘交互
+ */
+TEST_F(TakePhotoSettingTest, KeyEvent)
+{
+    takePhotoSettingAreaWidget *takePhotoSettingArea = mainwindow->findChild<takePhotoSettingAreaWidget *>(LEFT_BTNS_BOX);
+    circlePushButton *unfoldBtn = mainwindow->findChild<circlePushButton *>(UNFOLD_BTN);
+    circlePushButton *flashlightUnfoldBtn = mainwindow->findChild<circlePushButton *>(FLASHLITE_UNFOLD_BTN);
+    circlePushButton *flashlightFoldBtn = mainwindow->findChild<circlePushButton *>(FLASHLITE_FOLD_BTN);
+    circlePushButton *delayUnfoldBtn = mainwindow->findChild<circlePushButton *>(DELAY_UNFOLD_BTN);
+    circlePushButton *delayFoldBtn = mainwindow->findChild<circlePushButton *>(DELAY_FOLD_BTN);
+    circlePushButton *foldBtn = mainwindow->findChild<circlePushButton *>(FOLD_BTN);
+
+
+    if (unfoldBtn != nullptr) {
+        unfoldBtn->setFocus();
+        QTest::keyClick(unfoldBtn, Qt::Key_Return, Qt::NoModifier, 200);
+
+        for (int i = 0; i < 3; i++) {
+            QTest::keyClick(takePhotoSettingArea, Qt::Key_Up, Qt::NoModifier, 200);
+        }
+
+        for (int i = 0; i < 3; i++) {
+            QTest::keyClick(takePhotoSettingArea, Qt::Key_Down, Qt::NoModifier, 200);
+        }
+    }
+
+    QTest::qWait(800);
+    if (flashlightUnfoldBtn != nullptr) {
+        flashlightUnfoldBtn->setFocus();
+        QTest::keyClick(flashlightUnfoldBtn, Qt::Key_Return, Qt::NoModifier, 200);
+        if (flashlightFoldBtn != nullptr) {
+            QTest::keyClick(flashlightFoldBtn, Qt::Key_Return, Qt::NoModifier, 800);
+        } else {
+            QTest::qWait(800);
+            takePhotoSettingArea->unfoldBtnClicked();
+        }
+    }
+
+    QTest::qWait(800);
+    if (delayUnfoldBtn != nullptr) {
+        delayUnfoldBtn->setFocus();
+        QTest::keyClick(delayUnfoldBtn, Qt::Key_Return, Qt::NoModifier, 200);
+        if (delayFoldBtn != nullptr) {
+            QTest::keyClick(delayFoldBtn, Qt::Key_Return, Qt::NoModifier, 800);
+        } else {
+            QTest::qWait(800);
+            takePhotoSettingArea->unfoldBtnClicked();
+        }
+    }
+
+    QTest::qWait(800);
+    takePhotoSettingArea->foldBtnClicked();
+}
+
+/**
  *  @brief takePhotoSettingAreaWidget展开按钮点击
  */
 TEST_F(TakePhotoSettingTest, unfoldBtnClicked)
