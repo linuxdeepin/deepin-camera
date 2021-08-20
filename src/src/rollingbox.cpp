@@ -115,7 +115,7 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
         m_deviation = this->height() / 2 - e->pos().y();
 
         if (qAbs(m_deviation) <= this->height() / 6 ||
-                qAbs(m_deviation) >= this->height() / 2 - 10) {   //点击当前选项、上下边界
+                qAbs(m_deviation) >= this->height() / 2 - 10) {//点击当前选项、上下边界
             m_deviation = 0;
             return;
         }
@@ -201,7 +201,7 @@ void RollingBox::paintEvent(QPaintEvent *e)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     //中间文字背景
-    QRect centerRect(0, (height() - BTN_HEIGHT) / 2, width(), BTN_HEIGHT);
+    QRect centerRect(1, (height() - BTN_HEIGHT) / 2, width() - 1, BTN_HEIGHT);
     QRect tmpLeftRect(centerRect.topLeft(), QSize(BTN_HEIGHT, BTN_HEIGHT));
     QRect tmpRightRect(centerRect.topRight() - QPoint(BTN_HEIGHT, 0), QSize(BTN_HEIGHT, BTN_HEIGHT));
     QPainterPath centerPath;
@@ -216,6 +216,24 @@ void RollingBox::paintEvent(QPaintEvent *e)
         painter.setPen(QPen(QColor("#0081FF"), 2));
         painter.setBrush(QBrush(QColor(0, 0, 0, 0.4 * 255)));
         painter.drawPath(centerPath);
+
+        QRect focusWhite = centerRect;
+        focusWhite.setTopLeft(centerRect.topLeft() + QPoint(2, 2));
+        focusWhite.setSize(QSize(width() - 1 - 4, BTN_HEIGHT - 4));
+
+        QRect leftRect(focusWhite.topLeft(), QSize(BTN_HEIGHT - 4, BTN_HEIGHT - 4));
+        QRect rightRect(focusWhite.topRight() - QPoint(BTN_HEIGHT - 4, 0), QSize(BTN_HEIGHT - 4, BTN_HEIGHT - 4));
+
+        QPainterPath path;
+        path.moveTo(leftRect.topRight());
+        path.arcTo(leftRect, 90, 180);
+        path.lineTo(focusWhite.width() - (BTN_HEIGHT - 4) / 2, focusWhite.y() + BTN_HEIGHT - 4);
+        path.arcTo(rightRect, 270, 180);
+        path.lineTo(leftRect.topRight());
+
+        painter.setPen(Qt::white);
+        painter.setBrush(Qt::NoBrush);
+        painter.drawPath(path);
     } else {
         painter.setPen(Qt::NoPen);
         painter.fillPath(centerPath, QBrush(QColor(0, 0, 0, 0.4 * 255)));
@@ -240,29 +258,29 @@ void RollingBox::paintEvent(QPaintEvent *e)
 void RollingBox::paintContent(QPainter &painter, int num, int deviation)
 {
 //    int transparency = 255 - 510 * qAbs(deviation) / height();
-    int Height = height() / 2 - qAbs(deviation) / 6;
-    int y = height() / 2 + deviation * 1.3 - Height / 2;
+//    int Height = height() / 2 - qAbs(deviation) / 6;
+    double y = height() / 2 + deviation * 1.3 - BTN_HEIGHT / 2;
 
     QFont font("SourceHanSansSC");
     font.setPixelSize(m_textSize);
     font.setWeight(QFont::Medium);
     painter.setFont(font);
     painter.setPen(QColor(255, 255, 255));
-    painter.drawText(QRectF(0, y, width(), Height),
+    painter.drawText(QRectF(0, y, width(), BTN_HEIGHT),
                      Qt::AlignCenter, m_content.at(num));
 }
 
 void RollingBox::homing()
 {
-    if(m_deviation > height() / 8) {
-        m_homingAnimation->setStartValue((height() - 1) / 8 - m_deviation);
+    if(m_deviation > height() / 6) {
+        m_homingAnimation->setStartValue(height() / 6 - m_deviation);
         m_homingAnimation->setEndValue(0);
         m_currentIndex--;
-    } else if (m_deviation > -height() / 8) {
+    } else if (m_deviation > -height() / 6) {
         m_homingAnimation->setStartValue(m_deviation);
         m_homingAnimation->setEndValue(0);
-    } else if(m_deviation < -height() / 8) {
-        m_homingAnimation->setStartValue(-(height() - 1) / 8 - m_deviation);
+    } else if(m_deviation < -height() / 6) {
+        m_homingAnimation->setStartValue(-height() / 6 - m_deviation);
         m_homingAnimation->setEndValue(0);
         m_currentIndex++;
     }
