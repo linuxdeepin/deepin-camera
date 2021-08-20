@@ -71,16 +71,6 @@ public:
      */
     bool isPanelEnvironment();
 
-    /**
-    * @brief setprocess　设置进程列表
-    * @param process 进程表
-    */
-    void setprocess(QList<QProcess *> &process);
-
-    /**
-    * @brief getprocess　获得进程列表
-    */
-    QList<QProcess *> getprocess();
 
     /**
     * @brief getMainWindow　获得主窗口

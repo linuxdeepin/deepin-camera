@@ -59,21 +59,6 @@ bool CApplication::isPanelEnvironment()
     return m_bpanel;
 }
 
-void CApplication::setprocess(QList<QProcess *> &process)
-{
-    m_camprocesslist.clear();
-
-    if (m_camprocesslist.isEmpty()) {
-        for (QList<QProcess *>::iterator i = process.begin(); i != process.end(); ++i)
-            m_camprocesslist.append(*i);
-    }
-}
-
-QList<QProcess *> CApplication::getprocess()
-{
-    return m_camprocesslist;
-}
-
 CMainWindow *CApplication::getMainWindow()
 {
     return m_mainwindow;

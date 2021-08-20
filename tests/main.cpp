@@ -14,61 +14,6 @@
 
 DWIDGET_USE_NAMESPACE
 
-class QTestMain : public QObject
-{
-    Q_OBJECT
-
-public:
-    QTestMain(int argc, char **argv);
-    ~QTestMain();
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void testGTest();
-    int runtest();
-
-private:
-    int    m_argc;
-    char** m_argv;
-};
-
-QTestMain::QTestMain(int argc, char **argv)
-{
-    m_argc = argc;
-    m_argv = argv;
-}
-
-QTestMain::~QTestMain()
-{
-
-}
-
-void QTestMain::initTestCase()
-{
-    qDebug() << "=====start test=====";
-}
-
-void QTestMain::cleanupTestCase()
-{
-    qDebug() << "=====stop test=====";
-}
-
-void QTestMain::testGTest()
-{
-//    testing::GTEST_FLAG(output) = "xml:./report/report_deepin-camera.xml";
-    testing::InitGoogleTest(&m_argc, m_argv);
-    runtest();
-    __sanitizer_set_report_path("asan.log");
-    exit(0);
-}
-
-int QTestMain::runtest()
-{
-    return RUN_ALL_TESTS();
-}
-
 int main(int argc, char *argv[])
 {
 
@@ -108,36 +53,11 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-    QStringList cameralist;
-    QString command("ffplay -f v4l2 -video_size 1920x1080 -i ");
-    for (QList<QCameraInfo>::Iterator it = cameras.begin(); it != cameras.end(); ++it) {
-        QString tmp = command + it->deviceName();
-        cameralist.append(tmp);
-    }
-
-
-    QList<QProcess *> Processlist;
-    Processlist.clear();
-    int n = 0;
-    for (QStringList::Iterator str = cameralist.begin(); str != cameralist.end(); ++str) {
-        Processlist.append(new QProcess);
-        Processlist.at(n)->start(*str);
-        n++;
-    }
-
-    while (n > 0) {
-        if (Processlist.at(n - 1)->state() == QProcess::Starting) {
-            n--;
-        }
-    }
-
     dc::Settings::get().init();
 
     CMainWindow *w = new CMainWindow;
     w->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(w);
-    a.setprocess(Processlist);
 
     w->show();
     w->loadAfterShow();
@@ -146,9 +66,6 @@ int main(int argc, char *argv[])
 
     __sanitizer_set_report_path("asan.log");
 
-//    QTestMain testMain(argc, argv);
-//    QTest::qExec(&testMain, argc, argv);
-    return RUN_ALL_TESTS();//qApp->exec();
+    return RUN_ALL_TESTS();
 }
 
-#include "main.moc"

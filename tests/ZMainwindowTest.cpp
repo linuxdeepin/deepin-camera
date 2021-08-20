@@ -62,25 +62,9 @@ ZMainwindowTest::~ZMainwindowTest()
  */
 TEST_F(ZMainwindowTest, CamUsed)
 {
-    QList<QProcess *> proclist = CamApp->getprocess();
-
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
     QTest::qWait(500);
     DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
-    int n = proclist.count();
-
-    while (n) {
-        if (proclist.at(n - 1)->state() == QProcess::Running) {
-            proclist.at(n - 1)->start();
-            n--;
-        }
-    }
-
-    for (int i = 0; i < proclist.count(); i++) {
-        proclist.at(i)->close();
-    }
-
-    proclist.clear();
 }
 
 /**
