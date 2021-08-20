@@ -66,11 +66,11 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
     int uvLineStartIndex = width * height;
     for (int h = 0; h < height; h++) {
         for (int w = 0; w < width; w += 2) {
-            dst[yLineStartIndex + w] = src[yLineStartIndex + width - w];
-            dst[yLineStartIndex + w + 1] = src[yLineStartIndex + width - w - 1];
+            dst[yLineStartIndex + w] = src[yLineStartIndex + width - w - 1];
+            dst[yLineStartIndex + w + 1] = src[yLineStartIndex + width - w - 2];
             if ((h & 1) == 0) {
-                dst[uvLineStartIndex + w] = src[uvLineStartIndex + width - w];
-                dst[uvLineStartIndex + w + 1] = src[uvLineStartIndex + width - w - 1];
+                dst[uvLineStartIndex + w] = src[uvLineStartIndex + width - w - 1];
+                dst[uvLineStartIndex + w + 1] = src[uvLineStartIndex + width - w - 2];
             }
         }
         yLineStartIndex += width;

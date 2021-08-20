@@ -1803,6 +1803,8 @@ void CMainWindow::initRightButtons()
     QStringList content;
     content << tr("Photo") << tr("Video");
     m_modeSwitchBox->setContentList(content);
+    m_modeSwitchBox->setObjectName(MODE_SWITCH_BOX);
+    m_modeSwitchBox->setAccessibleName(MODE_SWITCH_BOX);
     m_modeSwitchBox->show();
 
     m_snapshotLabel = new ImageItem(this);
