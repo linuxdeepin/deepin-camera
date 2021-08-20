@@ -35,7 +35,7 @@ public:
     virtual void TearDown() override;
 
 protected:
-    CMainWindow* mainwindow;
+    CMainWindow* m_mainwindow;
 
 };
 

@@ -1,3 +1,6 @@
+#include "src/mainwindow.h"
+#include "src/capplication.h"
+#include "stub_function.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include <sanitizer/asan_interface.h>
@@ -9,14 +12,15 @@
 #include <DLog>
 #include <DApplicationSettings>
 #include <QCameraInfo>
-#include "src/mainwindow.h"
-#include "src/capplication.h"
+#include "SettingTest.h"
+#include "src/accessibility/ac-deepin-camera-define.h"
 
 DWIDGET_USE_NAMESPACE
 
 int main(int argc, char *argv[])
 {
-
+    Stub_Function::init();
+    Stub_Function::initSub();
     CApplication a(argc, argv);
     testing::InitGoogleTest(&argc, argv);
     //加载翻译
@@ -54,18 +58,23 @@ int main(int argc, char *argv[])
     }
 
     dc::Settings::get().init();
+    InitSetting();
+    CMainWindow *mainWnd = new CMainWindow();
+    mainWnd->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
+    a.setMainWindow(mainWnd);
+    mainWnd->setWayland(false);
 
-    CMainWindow *w = new CMainWindow;
-    w->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
-    a.setMainWindow(w);
-
-    w->show();
-    w->loadAfterShow();
+    mainWnd->show();
+    mainWnd->loadAfterShow();
     //将界面移至屏幕中央
-    Dtk::Widget::moveToCenter(w);
+    Dtk::Widget::moveToCenter(mainWnd);
 
     __sanitizer_set_report_path("asan.log");
 
-    return RUN_ALL_TESTS();
+    int ret = RUN_ALL_TESTS();
+    delete mainWnd;
+    Stub_Function::release();
+    printf("end\n");
+    return  ret;
 }
 

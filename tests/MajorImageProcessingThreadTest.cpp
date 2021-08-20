@@ -23,22 +23,22 @@
 
 MajorImagePThTest::MajorImagePThTest()
 {
-    mainwindow = CamApp->getMainWindow();
+
 }
 
 MajorImagePThTest::~MajorImagePThTest()
 {
-    mainwindow = NULL;
+
 }
 
 void MajorImagePThTest::SetUp()
 {
-
+    m_mainwindow = CamApp->getMainWindow();
 }
 
 void MajorImagePThTest::TearDown()
 {
-
+    m_mainwindow = NULL;
 }
 
 /**
@@ -46,6 +46,7 @@ void MajorImagePThTest::TearDown()
  */
 TEST_F(MajorImagePThTest, reachMaxDelayedFrames)
 {
-    MajorImageProcessingThread *processThread = mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
+    MajorImageProcessingThread *processThread = m_mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
+    processThread->getStatus();
     emit processThread->reachMaxDelayedFrames();
 }

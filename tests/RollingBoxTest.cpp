@@ -17,7 +17,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "PhotoRecordBtnTest.h"
+#include "RollingBoxTest.h"
+#include "src/rollingbox.h"
 #include "src/photorecordbtn.h"
 #include "src/videowidget.h"
 #include "stub.h"
@@ -26,38 +27,60 @@
 #include "ac-deepin-camera-define.h"
 #include "stub/addr_pri.h"
 #include "datamanager.h"
+#include <QtTest/qtest.h>
 
+RollingBoxTest::RollingBoxTest()
+{
 
+}
 
-PhotoRecordBtnTest::PhotoRecordBtnTest()
+RollingBoxTest::~RollingBoxTest()
+{
+
+}
+
+void RollingBoxTest::SetUp()
 {
     m_mainwindow = CamApp->getMainWindow();
     if (m_mainwindow){
-        m_photoRecordBtn = m_mainwindow->findChild<photoRecordBtn *>(BUTTON_PICTURE_VIDEO);
+        m_rollingBox = m_mainwindow->findChild<RollingBox *>(MODE_SWITCH_BOX);
     }
 }
 
-PhotoRecordBtnTest::~PhotoRecordBtnTest()
+void RollingBoxTest::TearDown()
 {
-    m_mainwindow = NULL;
-    m_photoRecordBtn = NULL;
+    m_mainwindow = nullptr;
+    m_rollingBox = nullptr;
 }
 
-void PhotoRecordBtnTest::SetUp()
+TEST_F(RollingBoxTest, setRange)
 {
-   
+    int curVal = m_rollingBox->getCurrentValue();
+    if (curVal == 0)
+    {
+        m_rollingBox->setRange(1,1);
+    }
+    m_rollingBox->setRange(0,0);
+
+    m_rollingBox->setFocus();
 }
 
-void PhotoRecordBtnTest::TearDown()
+TEST_F(RollingBoxTest, Event)
 {
-
+    QWidget *box = (QWidget*)m_rollingBox;
+    QTest::mouseMove(box, QPoint(5, 5), 500);
+    QTest::qWait(100);
+    QTest::mousePress(box, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(100);
+    QTest::mouseRelease(box, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(1000);
 }
 
-//TEST_F(PhotoRecordBtnTest, Photo)
-//{
-//    m_photoRecordBtn->setState(true);
-
-//}
+TEST_F(RollingBoxTest, KeyEvent)
+{
+    QTest::keyPress(m_rollingBox, Qt::Key_Down, Qt::NoModifier, 500);
+    QTest::keyPress(m_rollingBox, Qt::Key_Up, Qt::NoModifier, 500);
+}
 
 //TEST_F(PhotoRecordBtnTest, PreRecord)
 //{

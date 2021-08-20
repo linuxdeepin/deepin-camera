@@ -235,7 +235,7 @@ void /*__attribute__ ((constructor)) */gviewencoder_init()
  *
  * returns: none
  */
-void __attribute__ ((destructor)) gviewencoder_fini()
+void /*__attribute__ ((destructor))*/ gviewencoder_fini()
 {
 	if(verbosity > 1)
 		printf("ENCODER: destructor function called\n");

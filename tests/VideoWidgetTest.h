@@ -22,6 +22,7 @@
 #include <gtest/gtest.h>
 
 class CMainWindow;
+class videowidget;
 class VideoWidgetTest: public ::testing::Test
 {
 public:
@@ -32,7 +33,8 @@ public:
     virtual void TearDown() override;
 
 protected:
-    CMainWindow* mainwindow;
+    CMainWindow* m_mainwindow;
+    videowidget* m_videoWidget;
 
 };
 

@@ -33,8 +33,8 @@ public:
     virtual void TearDown() override;
 
 protected:
-    CMainWindow* mainwindow;
-    photoRecordBtn* btn;
+    CMainWindow* m_mainwindow;
+    photoRecordBtn* m_photoRecordBtn;
 
 
 };

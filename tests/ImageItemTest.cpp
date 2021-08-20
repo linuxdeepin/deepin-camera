@@ -29,19 +29,15 @@
 #include <QtTest/QTest>
 
 
-extern QMap<int, ImageItem *> g_indexImage;
-
-ACCESS_PRIVATE_FIELD(CMainWindow, ActType, m_nActTpye);
-ACCESS_PRIVATE_FIELD(ImageItem, QAction*, m_actPrint);
 
 ImageItemTest::ImageItemTest()
 {
-    mainwindow = CamApp->getMainWindow();
+    m_mainwindow = CamApp->getMainWindow();
 }
 
 ImageItemTest::~ImageItemTest()
 {
-    mainwindow = NULL;
+    m_mainwindow = NULL;
 }
 
 void ImageItemTest::SetUp()
@@ -60,8 +56,8 @@ void ImageItemTest::TearDown()
  */
 TEST_F(ImageItemTest, printdialog)
 {
-    ImageItem* pItem = mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
-    QAction *print = mainwindow->findChild<QAction *>("PrinterAction");
+    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    QAction *print = m_mainwindow->findChild<QAction *>("PrinterAction");
     if (print)
         print->trigger();
     QTest::qWait(1000);
@@ -74,11 +70,12 @@ TEST_F(ImageItemTest, printdialog)
  */
 TEST_F(ImageItemTest, OpenFolder)
 {
-    ImageItem* pItem = mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
-    QAction *actOpenFolder = mainwindow->findChild<QAction *>("OpenFolderAction");
+    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    QAction *actOpenFolder = m_mainwindow->findChild<QAction *>("OpenFolderAction");
     if (actOpenFolder) {
         actOpenFolder->trigger();
     }
+    //TODO  找到打开的文管窗口，然后关闭
 }
 
 /**
@@ -86,11 +83,13 @@ TEST_F(ImageItemTest, OpenFolder)
  */
 TEST_F(ImageItemTest, mouseClickEvent)
 {
-    ImageItem* pItem = mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
 
     if (pItem) {
         QTest::mouseClick(pItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     }
+    QTest::qWait(1000);
+    //TODO 找到打开的看图或者影院窗口，关闭
 }
 
 /**
@@ -98,7 +97,7 @@ TEST_F(ImageItemTest, mouseClickEvent)
  */
 TEST_F(ImageItemTest, ImageItemDel)
 {
-    ImageItem* pItem = mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
 
     if (pItem) {
         //点击鼠标右键
@@ -120,11 +119,11 @@ TEST_F(ImageItemTest, ImageItemDel)
  */
 TEST_F(ImageItemTest, ImageItemCopyDel)
 {
-    QAction *copyact = mainwindow->findChild<QAction *>("CopyAction");
+    QAction *copyact = m_mainwindow->findChild<QAction *>("CopyAction");
     if (copyact)
         copyact->trigger();
 
-    QAction *delact = mainwindow->findChild<QAction *>("DelAction");
+    QAction *delact = m_mainwindow->findChild<QAction *>("DelAction");
     if (delact)
         delact->trigger();
 }
