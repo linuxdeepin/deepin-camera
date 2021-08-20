@@ -62,15 +62,22 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
 {
+    /*
+    yu12
+    y1 y2 y3 y4                       y4 y3 y2 y1
+    y5 y6 y7 y8   HorizontalMirror    y8 y7 y6 y5
+    u1 u2 u3 u4  =================>   u4 u3 u2 u1
+    v1 v2 v3 v3                       v4 v3 v2 v1
+    */
     int yLineStartIndex = 0;
     int uvLineStartIndex = width * height;
     for (int h = 0; h < height; h++) {
         for (int w = 0; w < width; w += 2) {
-            dst[yLineStartIndex + w] = src[yLineStartIndex + width - w];
-            dst[yLineStartIndex + w + 1] = src[yLineStartIndex + width - w - 1];
+            dst[yLineStartIndex + w] = src[yLineStartIndex + width - w - 1];
+            dst[yLineStartIndex + w + 1] = src[yLineStartIndex + width - w - 2];
             if ((h & 1) == 0) {
-                dst[uvLineStartIndex + w] = src[uvLineStartIndex + width - w];
-                dst[uvLineStartIndex + w + 1] = src[uvLineStartIndex + width - w - 1];
+                dst[uvLineStartIndex + w] = src[uvLineStartIndex + width - w - 1];
+                dst[uvLineStartIndex + w + 1] = src[uvLineStartIndex + width - w - 2];
             }
         }
         yLineStartIndex += width;

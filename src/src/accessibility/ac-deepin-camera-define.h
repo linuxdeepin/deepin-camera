@@ -35,7 +35,7 @@
 #define BUTTON_PICTURE_VIDEO QObject::tr("PicVdBtn")    //拍照
 #define BUTTON_TAKE_VIDEO_END QObject::tr("TakeVdEndBtn")  //结束拍摄
 #define THUMBNAIL_PREVIEW QObject::tr("ThumbnailPreview")  //预览缩略图
-#define SWITCH_BTN_PHOTO QObject::tr("SwitchPhotoBtn")
+#define MODE_SWITCH_BOX QObject::tr("ModeSwitchBox")
 #define SWITCH_BTN_RECOD QObject::tr("SwitchRecordBtn")
 //左侧按钮
 #define LEFT_BTNS_BOX QObject::tr("LeftBtnsBox")
