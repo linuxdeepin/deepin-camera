@@ -168,15 +168,22 @@ void takePhotoSettingAreaWidget::init()
     connect(m_delay3SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
     connect(m_delay6SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
 
+    connect(m_noDelayBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+    connect(m_delay3SecondBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+    connect(m_delay6SecondBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
+
     connect(m_flashlightOnBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
     connect(m_flashlightOffBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
+
+    connect(m_flashlightOnBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
+    connect(m_flashlightOffBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
 
 //    showFold(true);
     setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
     m_unfoldBtn->setVisible(true);
 }
 
-void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortCut)
+void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 {
     //位移动画
     QPropertyAnimation *position1 = new QPropertyAnimation(m_foldBtn, "pos", this);
@@ -231,7 +238,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortCut)
 
     connect(group, &QParallelAnimationGroup::finished, this, [=](){
         m_isBtnsFold = true;
-        if (isShortCut)
+        if (isShortcut)
             m_unfoldBtn->setFocus();
     });
 
@@ -245,7 +252,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortCut)
     });
 }
 
-void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortCut)
+void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortcut)
 {
     //位移动画
     QPropertyAnimation *position1 = new QPropertyAnimation(m_foldBtn, "pos", this);
@@ -283,7 +290,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortCut)
 
     connect(pPosGroup, &QParallelAnimationGroup::finished, this, [=](){
         m_isBtnsFold = false;
-        if (isShortCut)
+        if (isShortcut)
             m_flashlightUnfoldBtn->setFocus();
     });
 
@@ -301,7 +308,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortCut)
     update();
 }
 
-void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortCut)
+void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
 {
     //位移动画
     QPropertyAnimation *position1 = new QPropertyAnimation(m_noDelayBtn, "pos", this);
@@ -333,7 +340,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortCut)
         m_delay3SecondBtn->setVisible(bShow);
         m_delay6SecondBtn->setVisible(bShow);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
-            if (isShortCut)
+            if (isShortcut)
                 m_delayFoldBtn->setFocus();
         });
     } else {
@@ -359,7 +366,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortCut)
             m_delay3SecondBtn->setVisible(bShow);
             m_delay6SecondBtn->setVisible(bShow);
             m_delayGroupDisplay = false;
-            showUnfold(true, isShortCut);
+            showUnfold(true, isShortcut);
         });
     }
 
@@ -380,7 +387,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortCut)
     update();
 }
 
-void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortCut)
+void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 {
     QPropertyAnimation *position1 = new QPropertyAnimation(m_flashlightOnBtn, "pos", this);
     QPropertyAnimation *position2 = new QPropertyAnimation(m_flashlightOffBtn, "pos", this);
@@ -405,7 +412,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortCut)
         m_flashlightOffBtn->setVisible(bShow);
 
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
-            if (isShortCut)
+            if (isShortcut)
                 m_flashlightFoldBtn->setFocus();
         });
     } else {
@@ -426,7 +433,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortCut)
             m_flashlightOnBtn->setVisible(bShow);
             m_flashlightOffBtn->setVisible(bShow);
             m_flashGroupDisplay = false;
-            showUnfold(true, isShortCut);
+            showUnfold(true, isShortcut);
         });
     }
 
@@ -440,13 +447,13 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortCut)
     update();
 }
 
-void takePhotoSettingAreaWidget::foldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::foldBtnClicked(bool isShortcut)
 {
 //    hideAll();
-    showFold(true, isShortCut);
+    showFold(true, isShortcut);
 }
 
-void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
 {
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
     opacity->setStartValue(102);
@@ -465,23 +472,23 @@ void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortCut)
     group->start();
 
     connect(group, &QParallelAnimationGroup::finished, this, [=](){
-        showUnfold(true, isShortCut);
+        showUnfold(true, isShortcut);
         group->deleteLater();
 
     });
 }
 
-void takePhotoSettingAreaWidget::flashlightFoldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::flashlightFoldBtnClicked(bool isShortcut)
 {
-    showFlashlights(false, isShortCut);
+    showFlashlights(false, isShortcut);
 //    showUnfold(true);
 //    m_flashGroupDisplay = false;
 }
 
-void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked(bool isShortcut)
 {
     hideAll();
-    showFlashlights(true, isShortCut);
+    showFlashlights(true, isShortcut);
     m_flashGroupDisplay = true;
 
     //normal状态下设置按钮透明，只显示背景颜色
@@ -490,16 +497,16 @@ void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked(bool isShortCut)
     m_flashlightOffBtn->setbackground(Qt::transparent);
 }
 
-void takePhotoSettingAreaWidget::delayUnfoldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::delayUnfoldBtnClicked(bool isShortcut)
 {
     hideAll();
-    showDelayButtons(true, isShortCut);
+    showDelayButtons(true, isShortcut);
     m_delayGroupDisplay = true;
 }
 
-void takePhotoSettingAreaWidget::delayfoldBtnClicked(bool isShortCut)
+void takePhotoSettingAreaWidget::delayfoldBtnClicked(bool isShortcut)
 {
-    showDelayButtons(false, isShortCut);
+    showDelayButtons(false, isShortcut);
 //    showUnfold(true);
 //    m_delayGroupDisplay = false;
 }
@@ -600,19 +607,19 @@ void takePhotoSettingAreaWidget::keyEnterClick()
     } else if (m_flashlightFoldBtn->hasFocus()) {
         flashlightFoldBtnClicked(true);
     } else if (m_flashlightOnBtn->hasFocus()) {
-        emit m_flashlightOnBtn->clicked();
+        emit m_flashlightOnBtn->clicked(true);
     } else if (m_flashlightOffBtn->hasFocus()) {
-        emit m_flashlightOffBtn->clicked();
+        emit m_flashlightOffBtn->clicked(true);
     } else if (m_delayFoldBtn->hasFocus()) {
         delayfoldBtnClicked(true);
     } else if (m_delayUnfoldBtn->hasFocus()) {
         delayUnfoldBtnClicked(true);
     } else if (m_noDelayBtn->hasFocus()) {
-        emit m_noDelayBtn->clicked();
+        emit m_noDelayBtn->clicked(true);
     } else if (m_delay3SecondBtn->hasFocus()) {
-        emit m_delay3SecondBtn->clicked();
+        emit m_delay3SecondBtn->clicked(true);
     } else if (m_delay6SecondBtn->hasFocus()) {
-        emit m_delay6SecondBtn->clicked();
+        emit m_delay6SecondBtn->clicked(true);
     }
 }
 
@@ -694,7 +701,7 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
     }
 }
 
-void takePhotoSettingAreaWidget::onDelayBtnsClicked()
+void takePhotoSettingAreaWidget::onDelayBtnsClicked(bool isShortcut)
 {
     circlePushButton *pBtn = static_cast<circlePushButton *>(sender());
     if (nullptr == pBtn)
@@ -721,10 +728,10 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked()
     emit sngSetDelayTakePhoto(delayTime);
     update();
 
-    showDelayButtons(false); //三级菜单选中后跳转到上一级菜单
+    showDelayButtons(false, isShortcut); //三级菜单选中后跳转到上一级菜单
 }
 
-void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
+void takePhotoSettingAreaWidget::onFlashlightBtnsClicked(bool isShortcut)
 {
     auto pBtn = static_cast<circlePushButton *>(sender());
     if (nullptr == pBtn)
@@ -736,7 +743,7 @@ void takePhotoSettingAreaWidget::onFlashlightBtnsClicked()
     setFlashlight(m_flashlightOnBtn->getButtonState());
     emit sngSetFlashlight(m_flashlightOnBtn->getButtonState());
 
-    showFlashlights(false);
+    showFlashlights(false, isShortcut);
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)

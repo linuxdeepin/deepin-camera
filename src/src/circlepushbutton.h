@@ -97,6 +97,7 @@ public:
     void setRotate(int rotate);
 
 signals:
+    void clicked(bool isShortcut = false);
 
 public slots:
 

@@ -44,24 +44,24 @@ public:
     * @brief showFold 显示收起按钮
     * @param bShow 是否显示
     */
-    void showFold(bool bShow, bool isShortCut = false);
+    void showFold(bool bShow, bool isShortcut = false);
     /**
     * @brief showUnfold 显示展开
     * @param bShow 是否显示
-    * @param isShortCut 是否通过快捷键触发
+    * @param isShortcut 是否通过快捷键触发
     */
-    void showUnfold(bool bShow, bool isShortCut = false);
+    void showUnfold(bool bShow, bool isShortcut = false);
     /**
     * @brief showDelayButtons 显示延时拍照按钮
     * @param bShow 是否显示
     */
-    void showDelayButtons(bool bShow, bool isShortCut = false);
+    void showDelayButtons(bool bShow, bool isShortcut = false);
     /**
     * @brief showFlashlights 显示闪光灯按钮
     * @param bShow 是否显示
-    * @param isShortCut 是否通过快捷键触发
+    * @param isShortcut 是否通过快捷键触发
     */
-    void showFlashlights(bool bShow, bool isShortCut = false);
+    void showFlashlights(bool bShow, bool isShortcut = false);
     /**
     * @brief setDelayTime 设置延时拍照时间
     * @param delayTime 延迟的时间
@@ -154,49 +154,49 @@ signals:
 public slots:
     /**
     * @brief foldBtnClicked 折叠按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void foldBtnClicked(bool isShortCut = false);
+    void foldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief unfoldBtnClicked 展开按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void unfoldBtnClicked(bool isShortCut = false);
+    void unfoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief flashlightFoldBtnClicked 闪光灯折叠按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void flashlightFoldBtnClicked(bool isShortCut = false);
+    void flashlightFoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief flashlightFoldBtnClicked 闪光灯展开按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void flashlightUnfoldBtnClicked(bool isShortCut = false);
+    void flashlightUnfoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief delayUnfoldBtnClicked 延时展开按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void delayUnfoldBtnClicked(bool isShortCut = false);
+    void delayUnfoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief delayfoldBtnClicked 延时折叠按钮点击槽函数
-    * @param isShortCut 是否通过键盘触发
+    * @param isShortcut 是否通过键盘触发
     */
-    void delayfoldBtnClicked(bool isShortCut = false);
+    void delayfoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
     */
-    void onDelayBtnsClicked();
+    void onDelayBtnsClicked(bool isShortcut = false);
 
     /**
     * @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
     */
-    void onFlashlightBtnsClicked();
+    void onFlashlightBtnsClicked(bool isShortcut = false);
 
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
