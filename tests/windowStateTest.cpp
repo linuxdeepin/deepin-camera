@@ -17,26 +17,44 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _MAJOR_IMAGE_PROCESSING_THREAD_TEST_H
-#define _MAJOR_IMAGE_PROCESSING_THREAD_TEST_H
+#include "windowStateTest.h"
+#include "src/capplication.h"
+#include "src/mainwindow.h"
+#include "src/windowstatethread.h"
+#include "stub/stub_function.h"
+#include <QtTest/qtest.h>
 
-#include <gtest/gtest.h>
-
-class CMainWindow;
-class MajorImageProcessingThread;
-class  MajorImagePThTest: public ::testing::Test
+WindowStateTest::WindowStateTest()
 {
-public:
-    MajorImagePThTest();
-    ~MajorImagePThTest();
-    virtual void SetUp() override;
 
-    virtual void TearDown() override;
+}
 
-protected:
-    CMainWindow* m_mainwindow;
-    MajorImageProcessingThread* m_processThread;
+WindowStateTest::~WindowStateTest()
+{
 
-};
+}
 
-#endif
+void WindowStateTest::SetUp()
+{
+    m_mainwindow = CamApp->getMainWindow();
+    if (m_mainwindow){
+        m_pThread = m_mainwindow->findChild<windowStateThread *>("windowStateThread");
+    }
+}
+
+void WindowStateTest::TearDown()
+{
+    m_mainwindow = NULL;
+    m_pThread= nullptr;
+}
+
+
+TEST_F(WindowStateTest, startThread)
+{
+    Stub_Function::clearSub(ADDR(windowStateThread, start));
+    m_pThread->start();
+    QTest::qWait(100);
+    m_pThread->requestInterruption();
+    m_pThread->wait();
+    m_pThread->quit();
+}
