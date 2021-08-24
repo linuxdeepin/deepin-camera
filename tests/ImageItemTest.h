@@ -25,6 +25,7 @@
 
 
 class CMainWindow;
+class ImageItem;
 class ImageItemTest: public ::testing::Test
 {
 public:
@@ -36,6 +37,7 @@ public:
 
 protected:
     CMainWindow* m_mainwindow;
+    ImageItem*  m_imageItem;
 
 };
 

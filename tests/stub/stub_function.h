@@ -50,6 +50,8 @@ public:
     double get_video_time_capture_hour_40271();//11时11分11秒
     //调用onEndBtnClicked
     int video_capture_get_save_video();
+
+    v4l2_device_list_t *get_device_list_0();
     //获取设备列表，进入设备数目为1分支
     v4l2_device_list_t *get_device_list_1();
     //获取设备列表，进入设备数目为2分支
@@ -68,6 +70,11 @@ public:
     int v4l2core_stop_stream(v4l2_dev_t *vd);
     //获得解码数据库帧
     v4l2_frame_buff_t *v4l2core_get_decoded_frame(v4l2_dev_t *vd);
+
+    //获得解码数据库帧
+    v4l2_frame_buff_t *v4l2core_get_decoded_frame_none(v4l2_dev_t *vd);
+
+    v4l2_frame_buff_t *v4l2core_get_decoded_frame_changed(v4l2_dev_t *vd);
     //获取重启状态
     int get_resolution_status();
     //清理缓存区
@@ -108,8 +115,11 @@ public:
     void v4l2core_init();
     v4l2_dev_t *create_v4l2_device_handler(const char *device);
     int camInit(const char *devicename);
+    int camInitFormatError(const char *devicename);
+    int camInitNoDevice(const char *devicename);
     int check_device_list_events(v4l2_dev_t *vd);
-
+    void devnumMonitorStartCheck();
+    int get_video_codec_ind();
 
 
     //重置单个桩函数
@@ -117,6 +127,12 @@ public:
     static void resetSub(T addr, S addr_stub)
     {
         m_stub.set(addr, addr_stub);
+    }
+
+    template<typename T>
+    static void clearSub(T addr)
+    {
+        m_stub.reset(addr);
     }
 
     //初始化
@@ -130,10 +146,12 @@ private:
     //定义静态成员变量用于打桩时多次调用
     static v4l2_dev_t *m_v4l2_dev;//设备属性
     static v4l2_stream_formats_t *m_list_stream_formats;//流格式列表
+    static v4l2_device_list_t *m_v4l2_device_list0;//一个摄像头
     static v4l2_device_list_t *m_v4l2_device_list1;//一个摄像头
     static v4l2_device_list_t *m_v4l2_device_list2;//两个摄像头
     static v4l2_device_list_t *m_v4l2_device_list3;//三个摄像头
     static v4l2_frame_buff_t *m_v4l2_frame_buff;//帧缓冲器
+    static v4l2_frame_buff_t *m_v4l2_frame_buff2;//帧缓冲器
     static Stub    m_stub;
 };
 

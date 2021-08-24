@@ -110,26 +110,28 @@ TEST_F(VideoWidgetTest, DelShortCut)
     }
 }
 
+/**
+ *  @brief 阻止关机
+ */
+TEST_F(VideoWidgetTest, updateBlockSystem)
+{
+    emit m_videoWidget->updateBlockSystem(false);
+    emit m_videoWidget->updateBlockSystem(true);
+    m_mainwindow->setWayland(true);
+    emit m_videoWidget->updateBlockSystem(false);
+    emit m_videoWidget->updateBlockSystem(true);
+    m_mainwindow->setWayland(false);
+}
+
 ///**
-// *  @brief majorimageprocessingthread类打桩
+// *  @brief 快捷方式测试
 // */
-//TEST_F(VideoWidgetTest, majorimageprocessingthread)
+//TEST_F(VideoWidgetTest, deleteFile)
 //{
-//    m_videoWidget->m_imgPrcThread->start();
-//    QTest::qWait(500);
-//    m_videoWidget->m_imgPrcThread->stop();
-
-//    //录像分支
-//    //设置暂停时长,进入解码任务调度分支
-//    access_private_field::MajorImageProcessingThreadm_stopped(*m_videoWidget->m_imgPrcThread) = 0;
-//    m_videoWidget->m_imgPrcThread->start();
-//    QTest::qWait(500);
-//    m_videoWidget->m_imgPrcThread->stop();
-
-//    //进入H264分支
-//    access_private_field::MajorImageProcessingThreadm_stopped(*m_videoWidget->m_imgPrcThread) = 0;
-//    m_videoWidget->m_imgPrcThread->start();
-//    QTest::qWait(500);
-//    m_videoWidget->m_imgPrcThread->stop();
-//    while (m_videoWidget->m_imgPrcThread->isRunning());
+////    dc::Settings::get().setOption(QString("photosetting.mirrorMode.mirrorMode"), false);
+////    QTest::qWait(5000);
+////    dc::Settings::get().setOption(QString("photosetting.mirrorMode.mirrorMode"), true);
 //}
+
+
+
