@@ -758,25 +758,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_pTitlebar->raise();
 }
 
-CMainWindow::~CMainWindow()
-{
-    if (m_devnumMonitor) {
-        m_devnumMonitor->deleteLater();
-        m_devnumMonitor = nullptr;
-    }
-
-    if (m_videoPre) {
-        m_videoPre->deleteLater();
-        m_videoPre = nullptr;
-    }
-    if (m_windowStateThread) {
-        m_windowStateThread->requestInterruption();
-        m_windowStateThread->wait();
-        m_windowStateThread->deleteLater();
-    }
-    qDebug() << "stop_encoder_thread";
-}
-
 void CMainWindow::slotPopupSettingsDialog()
 {
     settingDialog();
@@ -2225,4 +2206,24 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
 void CMainWindow::SettingPathsave()
 {
     m_videoPre->setSavePicFolder(m_picPath);
+}
+
+
+CMainWindow::~CMainWindow()
+{
+    if (m_devnumMonitor) {
+        m_devnumMonitor->deleteLater();
+        m_devnumMonitor = nullptr;
+    }
+
+    if (m_videoPre) {
+        m_videoPre->deleteLater();
+        m_videoPre = nullptr;
+    }
+    if (m_windowStateThread) {
+        m_windowStateThread->requestInterruption();
+        m_windowStateThread->wait();
+        m_windowStateThread->deleteLater();
+    }
+    qDebug() << "stop_encoder_thread";
 }

@@ -26,18 +26,18 @@ ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
 {
 }
 
-ApplicationAdaptor::~ApplicationAdaptor()
-{
-    if (m_mw) {
-        m_mw->deleteLater();
-        m_mw = nullptr;
-    }
-}
-
 void ApplicationAdaptor::Raise()
 {
     qDebug() << "raise window from dbus";
     m_mw->showNormal();
     m_mw->raise();
     m_mw->activateWindow();
+}
+
+ApplicationAdaptor::~ApplicationAdaptor()
+{
+    if (m_mw) {
+        m_mw->deleteLater();
+        m_mw = nullptr;
+    }
 }

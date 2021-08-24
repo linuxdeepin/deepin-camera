@@ -109,17 +109,6 @@ ImageItem::ImageItem(QWidget *parent)
     m_lastDelTime = QDateTime::currentDateTime();
 }
 
-ImageItem::~ImageItem()
-{
-    QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "webm")
-        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount() - 1);
-
-    delete m_pAniWidget;
-    m_pAniWidget = nullptr;
-
-}
-
 void ImageItem::updatePicPath(const QString &filePath)
 {
     m_path = filePath;
@@ -689,4 +678,20 @@ AnimationWidget::AnimationWidget(QPixmap pixmap, QWidget * parent) : m_animatePi
     setMargin(0);
     setContentsMargins(0, 0, 0, 0);
     resize(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
+}
+
+AnimationWidget::~AnimationWidget()
+{
+
+}
+
+ImageItem::~ImageItem()
+{
+    QFileInfo fileInfo(m_path);
+    if (fileInfo.suffix() == "webm")
+        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount() - 1);
+
+    delete m_pAniWidget;
+    m_pAniWidget = nullptr;
+
 }

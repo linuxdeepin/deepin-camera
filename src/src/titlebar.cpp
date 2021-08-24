@@ -48,11 +48,6 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
 }
 
-Titlebar::~Titlebar()
-{
-
-}
-
 DTitlebar *Titlebar::titlebar()
 {
     Q_D(const Titlebar);
@@ -100,4 +95,10 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     } else {
         DBlurEffectWidget::paintEvent(pe);
     }
+}
+
+
+Titlebar::~Titlebar()
+{
+
 }

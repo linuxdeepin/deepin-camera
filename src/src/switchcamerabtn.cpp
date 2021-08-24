@@ -36,19 +36,6 @@ SwitchCameraBtn::SwitchCameraBtn(QWidget *parent/* = nullptr*/)
     m_pressedSvg = new QSvgRenderer(QString(":/images/icons/light/switch_camera_press.svg"));
 }
 
-SwitchCameraBtn::~SwitchCameraBtn()
-{
-    if (nullptr != m_normalSvg) {
-        m_normalSvg->deleteLater();
-        m_normalSvg = nullptr;
-    }
-
-    if (nullptr != m_pressedSvg) {
-        m_pressedSvg->deleteLater();
-        m_pressedSvg = nullptr;
-    }
-}
-
 void SwitchCameraBtn::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -143,4 +130,17 @@ void SwitchCameraBtn::focusOutEvent(QFocusEvent *event)
     Q_UNUSED(event);
     m_bFocus= false;
     update();
+}
+
+SwitchCameraBtn::~SwitchCameraBtn()
+{
+    if (nullptr != m_normalSvg) {
+        m_normalSvg->deleteLater();
+        m_normalSvg = nullptr;
+    }
+
+    if (nullptr != m_pressedSvg) {
+        m_pressedSvg->deleteLater();
+        m_pressedSvg = nullptr;
+    }
 }

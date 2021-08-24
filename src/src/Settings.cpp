@@ -45,18 +45,6 @@ Settings::Settings()
 
 }
 
-Settings::~Settings()
-{
-    if (m_backend) {
-        delete m_backend;
-        m_backend = nullptr;
-    }
-    if (m_settings) {
-        delete m_settings;
-        m_settings = nullptr;
-    }
-}
-
 void Settings::init()
 {
     m_configPath.clear();
@@ -241,6 +229,18 @@ void Settings::setBackOption(const QString &opt, const QVariant &v)
 QVariant Settings::getBackOption(const QString &opt)
 {
     return m_backend->getOption(opt);
+}
+
+Settings::~Settings()
+{
+    if (m_backend) {
+        delete m_backend;
+        m_backend = nullptr;
+    }
+    if (m_settings) {
+        delete m_settings;
+        m_settings = nullptr;
+    }
 }
 
 }
