@@ -217,11 +217,6 @@ public:
     * @brief delayInit　延迟加载
     */
     void delayInit();
-    /**
-    * @brief getFlashStatus　获取闪光灯状态
-    * @return 闪光灯是否开启
-    */
-    bool getFlashStatus();
 
     /**
      * @brief setHorizontalMirror 设置水平镜像

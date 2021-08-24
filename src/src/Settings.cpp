@@ -95,11 +95,6 @@ void Settings::init()
     setNewResolutionList();
 }
 
-QVariant Settings::generalOption(const QString &opt)
-{
-    return m_settings->getOption(QString("base.general.%1").arg(opt));
-}
-
 QVariant Settings::getOption(const QString &opt)
 {
     return m_settings->getOption(opt);
@@ -242,6 +237,5 @@ Settings::~Settings()
         m_settings = nullptr;
     }
 }
-
 }
 

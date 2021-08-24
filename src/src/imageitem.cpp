@@ -96,7 +96,9 @@ ImageItem::ImageItem(QWidget *parent)
         } else {
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
+#ifndef UNITTEST
         m_menu->exec(QCursor::pos());
+#endif
         qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
     connect(m_actCopy, &QAction::triggered, this, &ImageItem::onCopy);

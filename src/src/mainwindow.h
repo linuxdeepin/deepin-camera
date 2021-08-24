@@ -98,11 +98,6 @@ public:
     void setWayland(bool bTrue);
 
     /**
-    * @brief noSettingPathsave　判断设置路径是否存在，当设置路径不存在时，图片默认存在～/Pictures/相机下，视频默认存在～/Videos/相机下
-    */
-    void SettingPathsave();
-
-    /**
     * @brief settingDialog　加载设置对话框
     */
     void settingDialog();
@@ -238,25 +233,10 @@ private slots:
     void setSelBtnShow();
 
     /**
-     * @brief onFitToolBar 自适应工具栏
-     */
-    void onFitToolBar();
-
-    /**
      * @brief onEnableTitleBar 标题栏的禁用与恢复
      * @param nType 1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
      */
     void onEnableTitleBar(int nType);
-
-    /**
-     * @brief onTitlePicBtn 设置标题栏拍照时按钮颜色
-     */
-    void onTitlePicBtn();
-
-    /**
-     * @brief onTitleVdBtn 设置标题栏录像时按钮颜色
-     */
-    void onTitleVdBtn();
 
     /**
      * @brief onSettingsDlgClose 连拍、延时、存储位置设置

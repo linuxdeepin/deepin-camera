@@ -1233,11 +1233,6 @@ void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
     }
 }
 
-bool videowidget::getFlashStatus()
-{
-    return m_flashLabel->isVisible();
-}
-
 void videowidget::setHorizontalMirror(bool bMirror)
 {
     if (nullptr != m_imgPrcThread){
