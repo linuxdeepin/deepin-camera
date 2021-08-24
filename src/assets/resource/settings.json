@@ -104,7 +104,7 @@
                             "key": "mirrorMode",
                             "type": "switchbutton",
                             "name": "Mirror Mode",
-                            "default": false
+                            "default": true
                         }
                     ]
                 },
