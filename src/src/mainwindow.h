@@ -122,7 +122,7 @@ public:
      */
     void recoverTabWidget(uint index);
 
-    ~CMainWindow() override;
+    ~CMainWindow();
 private:
     /**
     * @brief initUI　初始化界面

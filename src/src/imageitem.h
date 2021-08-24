@@ -48,10 +48,7 @@ class AnimationWidget : public DLabel
     Q_OBJECT
 public:
     AnimationWidget(QPixmap pixmap, QWidget * parent = nullptr);
-    ~AnimationWidget()
-    {
-    }
-
+    ~AnimationWidget();
     /**
      * @brief setPixmap 更新缩略图
      * @param pixmap
@@ -90,7 +87,7 @@ class ImageItem : public DLabel
 public:
     ImageItem(QWidget *parent = nullptr);
 
-    ~ImageItem() override;
+    ~ImageItem();
 
     /**
      * @brief updatePicPath 更新文件路径

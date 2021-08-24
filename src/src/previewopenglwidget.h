@@ -43,7 +43,7 @@ class PreviewOpenglWidget: public QOpenGLWidget, protected QOpenGLFunctions
 public:
     explicit PreviewOpenglWidget(QWidget *parent = nullptr);
 
-    ~PreviewOpenglWidget()Q_DECL_OVERRIDE;
+    ~PreviewOpenglWidget();
     /**
     * @brief getFrameHeight　获取宽度
     */

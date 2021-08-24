@@ -38,31 +38,6 @@ PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     m_videoHeight = 0;
 }
 
-PreviewOpenglWidget::~PreviewOpenglWidget()
-{
-    m_vbo.destroy();
-
-    if (m_textureY) {
-        m_textureY->destroy();
-        delete m_textureY;
-        m_textureY = nullptr;
-    }
-
-    if (m_textureU) {
-        m_textureU->destroy();
-        delete m_textureU;
-        m_textureU = nullptr;
-    }
-
-    if (m_textureV) {
-        m_textureV->destroy();
-        delete m_textureV;
-        m_textureV = nullptr;
-    }
-
-    doneCurrent();
-}
-
 int PreviewOpenglWidget::getFrameHeight()
 {
     return static_cast<int>(m_videoHeight);
@@ -238,4 +213,30 @@ void PreviewOpenglWidget::paintGL()
 
     //使用顶点数组方式绘制图形
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+
+PreviewOpenglWidget::~PreviewOpenglWidget()
+{
+    m_vbo.destroy();
+
+    if (m_textureY) {
+        m_textureY->destroy();
+        delete m_textureY;
+        m_textureY = nullptr;
+    }
+
+    if (m_textureU) {
+        m_textureU->destroy();
+        delete m_textureU;
+        m_textureU = nullptr;
+    }
+
+    if (m_textureV) {
+        m_textureV->destroy();
+        delete m_textureV;
+        m_textureV = nullptr;
+    }
+
+    doneCurrent();
 }

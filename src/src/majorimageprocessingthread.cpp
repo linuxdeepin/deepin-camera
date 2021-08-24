@@ -33,18 +33,6 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
     init();
 }
 
-MajorImageProcessingThread::~MajorImageProcessingThread()
-{
-
-    if (m_yuvPtr) {
-        delete [] m_yuvPtr;
-        m_yuvPtr = nullptr;
-    }
-
-    config_clean();
-    qDebug() << "~MajorImageProcessingThread";
-}
-
 void MajorImageProcessingThread::stop()
 {
     m_stopped = 1;
@@ -301,4 +289,17 @@ void MajorImageProcessingThread::run()
     }
 
     v4l2core_stop_stream(m_videoDevice);
+}
+
+
+MajorImageProcessingThread::~MajorImageProcessingThread()
+{
+
+    if (m_yuvPtr) {
+        delete [] m_yuvPtr;
+        m_yuvPtr = nullptr;
+    }
+
+    config_clean();
+    qDebug() << "~MajorImageProcessingThread";
 }

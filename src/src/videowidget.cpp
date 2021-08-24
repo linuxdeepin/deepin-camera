@@ -165,54 +165,6 @@ videowidget::videowidget(DWidget *parent)
     m_flashTimer->setSingleShot(true);
 }
 
-videowidget::~videowidget()
-{
-    m_imgPrcThread->stop();
-    m_imgPrcThread->wait();
-    delete m_imgPrcThread;
-
-#ifndef __mips__
-
-    if (m_openglwidget) {
-        delete m_openglwidget;
-        m_openglwidget = nullptr;
-    }
-
-#endif
-
-    delete m_flashLabel;
-    m_flashLabel = nullptr;
-
-    delete m_takePicSound;
-    m_takePicSound = nullptr;
-
-    delete m_pNormalView;
-    m_pNormalView = nullptr;
-
-    delete m_pNormalScene;
-    m_pNormalScene = nullptr;
-
-    delete m_takePicSound;
-    m_takePicSound = nullptr;
-
-    delete m_pGridLayout;
-    m_pGridLayout = nullptr;
-
-    delete m_dLabel;
-    m_dLabel = nullptr;
-
-    delete m_recordingTimeWidget;
-    m_recordingTimeWidget = nullptr;
-
-    delete m_countTimer;
-    m_countTimer = nullptr;
-
-    delete m_flashTimer;
-    m_flashTimer = nullptr;
-
-    delete m_recordingTimer;
-    m_recordingTimer = nullptr;
-}
 
 //延迟加载
 void videowidget::delayInit()
@@ -1301,4 +1253,54 @@ void videowidget::setFlash(bool bFlashOn)
 void videowidget::setMaxRecTime(int hour)
 {
     m_nMaxRecTime = hour;
+}
+
+
+videowidget::~videowidget()
+{
+    m_imgPrcThread->stop();
+    m_imgPrcThread->wait();
+    delete m_imgPrcThread;
+
+#ifndef __mips__
+
+    if (m_openglwidget) {
+        delete m_openglwidget;
+        m_openglwidget = nullptr;
+    }
+
+#endif
+
+    delete m_flashLabel;
+    m_flashLabel = nullptr;
+
+    delete m_takePicSound;
+    m_takePicSound = nullptr;
+
+    delete m_pNormalView;
+    m_pNormalView = nullptr;
+
+    delete m_pNormalScene;
+    m_pNormalScene = nullptr;
+
+    delete m_takePicSound;
+    m_takePicSound = nullptr;
+
+    delete m_pGridLayout;
+    m_pGridLayout = nullptr;
+
+    delete m_dLabel;
+    m_dLabel = nullptr;
+
+    delete m_recordingTimeWidget;
+    m_recordingTimeWidget = nullptr;
+
+    delete m_countTimer;
+    m_countTimer = nullptr;
+
+    delete m_flashTimer;
+    m_flashTimer = nullptr;
+
+    delete m_recordingTimer;
+    m_recordingTimer = nullptr;
 }

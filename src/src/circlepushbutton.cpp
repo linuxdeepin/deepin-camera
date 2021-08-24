@@ -41,11 +41,6 @@ circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radi
     setButtonRadius(m_radius);
 }
 
-circlePushButton::~circlePushButton()
-{
-
-}
-
 void circlePushButton::setbackground(QColor color)
 {
     m_color = color;
@@ -213,10 +208,15 @@ void circlePushButton::setOpacity(int opacity)
     m_opacity = opacity;
     m_color.setAlpha(opacity);
     update();
-};
+}
 
 void circlePushButton::setRotate(int rotate)
 {
     m_rotate = rotate;
     update();
-};
+}
+
+circlePushButton::~circlePushButton()
+{
+
+}
