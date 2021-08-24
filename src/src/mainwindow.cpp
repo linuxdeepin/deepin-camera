@@ -758,12 +758,16 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_pTitlebar->raise();
 }
 
+
 void CMainWindow::slotPopupSettingsDialog()
 {
+#ifndef UNITTEST
     settingDialog();
     m_SetDialog->exec();
     settingDialogDel();
+#endif
 }
+
 
 QString CMainWindow::libPath(const QString &strlib)
 {
@@ -1936,33 +1940,9 @@ void CMainWindow::changeEvent(QEvent *event)
     }
 }
 
-void CMainWindow::onFitToolBar()
-{
-}
-
 void CMainWindow::onEnableTitleBar(int nType)
 {
 
-}
-
-void CMainWindow::onTitlePicBtn()
-{
-    if (m_nActTpye == ActTakePic)
-        return;
-
-    m_nActTpye = ActTakePic;
-    qDebug() << "Switch to take picture state!";
-    SettingPathsave();
-}
-
-void CMainWindow::onTitleVdBtn()
-{
-    if (m_nActTpye == ActTakeVideo)
-        return;
-
-    m_nActTpye = ActTakeVideo;
-    qDebug() << "Switch to take video state!";
-    SettingPathsave();
 }
 
 void CMainWindow::onSettingsDlgClose()
@@ -2202,12 +2182,6 @@ void CMainWindow::showWidget(DWidget* widget, bool bShow)
         }
     }
 }
-
-void CMainWindow::SettingPathsave()
-{
-    m_videoPre->setSavePicFolder(m_picPath);
-}
-
 
 CMainWindow::~CMainWindow()
 {

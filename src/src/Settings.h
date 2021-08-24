@@ -90,12 +90,6 @@ public:
     }
 
     /**
-    * @brief generalOption 获取json下的base.general.%1
-    * @param opt
-    */
-    QVariant generalOption(const QString &opt);
-
-    /**
     * @brief setPathOption 设置json下的base.save.%1的值
     * @param opt
     * @param v
