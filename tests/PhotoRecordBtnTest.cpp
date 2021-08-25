@@ -26,7 +26,7 @@
 #include "ac-deepin-camera-define.h"
 #include "stub/addr_pri.h"
 #include "datamanager.h"
-
+#include <QtTest/qtest.h>
 
 
 PhotoRecordBtnTest::PhotoRecordBtnTest()
@@ -53,21 +53,39 @@ void PhotoRecordBtnTest::TearDown()
 
 }
 
-//TEST_F(PhotoRecordBtnTest, Photo)
-//{
-//    m_photoRecordBtn->setState(true);
+TEST_F(PhotoRecordBtnTest, Photo)
+{
+    bool state = m_photoRecordBtn->photoState();
+    m_photoRecordBtn->setState(!state);
+    m_photoRecordBtn->setState(state);
+}
 
-//}
+TEST_F(PhotoRecordBtnTest, PreRecord)
+{
+    bool state = m_photoRecordBtn->photoState();
+    m_photoRecordBtn->setState(!state);
+    m_photoRecordBtn->setRecordState(photoRecordBtn::preRecord);
 
-//TEST_F(PhotoRecordBtnTest, PreRecord)
-//{
-//    m_photoRecordBtn->setState(false);
-//    m_photoRecordBtn->setRecordState(photoRecordBtn::preRecord);
-//}
+    m_photoRecordBtn->setState(state);
+    m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
+}
 
-//TEST_F(PhotoRecordBtnTest, Recording)
-//{
-//    m_photoRecordBtn->setState(false);
-//    m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
-//}
+TEST_F(PhotoRecordBtnTest, Recording)
+{
+    bool state = m_photoRecordBtn->photoState();
+    m_photoRecordBtn->setState(!state);
+    m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
 
+    m_photoRecordBtn->setState(state);
+    m_photoRecordBtn->setRecordState(photoRecordBtn::Normal);
+}
+
+TEST_F(PhotoRecordBtnTest, Mouse)
+{
+    QTest::mouseMove(m_photoRecordBtn, QPoint(5, 5), 500);
+    QTest::qWait(100);
+    QTest::mousePress(m_photoRecordBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(100);
+    QTest::mouseRelease(m_photoRecordBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::qWait(1000);
+}

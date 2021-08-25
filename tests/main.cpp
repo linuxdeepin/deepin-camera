@@ -14,6 +14,8 @@
 #include <QCameraInfo>
 #include "SettingTest.h"
 #include "src/accessibility/ac-deepin-camera-define.h"
+#include "src/windowstatethread.h"
+#include "src/devnummonitor.h"
 
 DWIDGET_USE_NAMESPACE
 
@@ -59,6 +61,9 @@ int main(int argc, char *argv[])
 
     dc::Settings::get().init();
     InitSetting();
+    Stub_Function::resetSub(ADDR(MajorImageProcessingThread, start), ADDR(Stub_Function,start));
+    Stub_Function::resetSub(ADDR(windowStateThread, start), ADDR(Stub_Function,start));
+    Stub_Function::resetSub(ADDR(DevNumMonitor, startCheck), ADDR(Stub_Function, devnumMonitorStartCheck));
     CMainWindow *mainWnd = new CMainWindow();
     mainWnd->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(mainWnd);
@@ -72,6 +77,7 @@ int main(int argc, char *argv[])
     __sanitizer_set_report_path("asan.log");
 
     int ret = RUN_ALL_TESTS();
+    mainWnd->close();
     delete mainWnd;
     Stub_Function::release();
     printf("end\n");

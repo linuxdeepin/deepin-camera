@@ -17,26 +17,30 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _MAJOR_IMAGE_PROCESSING_THREAD_TEST_H
-#define _MAJOR_IMAGE_PROCESSING_THREAD_TEST_H
+#ifndef _WINDOWN_STATE_TEST_H
+#define _WINDOWN_STATE_TEST_H
+
 
 #include <gtest/gtest.h>
 
 class CMainWindow;
-class MajorImageProcessingThread;
-class  MajorImagePThTest: public ::testing::Test
+class windowStateThread;
+class  WindowStateTest: public ::testing::Test
 {
 public:
-    MajorImagePThTest();
-    ~MajorImagePThTest();
+    WindowStateTest();
+    ~WindowStateTest();
     virtual void SetUp() override;
 
     virtual void TearDown() override;
 
 protected:
     CMainWindow* m_mainwindow;
-    MajorImageProcessingThread* m_processThread;
+    windowStateThread* m_pThread;
 
 };
+
+
+
 
 #endif
