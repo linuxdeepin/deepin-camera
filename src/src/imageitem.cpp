@@ -97,7 +97,9 @@ ImageItem::ImageItem(QWidget *parent)
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
 #ifndef UNITTEST
-        m_menu->exec(QCursor::pos());
+        if (!m_path.isEmpty()){
+            m_menu->exec(QCursor::pos());
+        }
 #endif
         qDebug() << "Click the right mouse to open the thumbnail menu bar";
     });
@@ -315,7 +317,9 @@ void ImageItem::showMenu()
         m_menu->insertAction(m_actOpenFolder, m_actPrint);
     }
 #ifndef UNITTEST
-    m_menu->exec(screen_centerpos);
+    if (!m_path.isEmpty()){
+        m_menu->exec(screen_centerpos);
+    }
 #endif
 }
 
@@ -357,6 +361,9 @@ void ImageItem::openFile()
     QFileInfo fileInfo(m_path);
     QString program;
     QStringList arguments;
+    if (m_path.isEmpty()){
+        return;
+    }
     if (fileInfo.suffix() == "jpg") {
         program = "deepin-image-viewer"; //用看图打开
         arguments << QUrl::fromLocalFile(m_path).toString();
