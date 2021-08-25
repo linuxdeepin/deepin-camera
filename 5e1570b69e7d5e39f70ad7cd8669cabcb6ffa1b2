@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11d73dc3_08d7679d",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-25T07:01:38Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 9; 注释率: 0.0%",
+      "revId": "5e1570b69e7d5e39f70ad7cd8669cabcb6ffa1b2",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
