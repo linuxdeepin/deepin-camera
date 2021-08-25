@@ -1313,6 +1313,22 @@ void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 void CMainWindow::onDirectoryChanged(const QString &filePath)
 {
     Q_UNUSED(filePath);
+    QString videoPath = Settings::get().getOption("base.save.vddatapath").toString();
+    QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
+    QDir  dir(videoPath);
+    if (!dir.exists()){
+        m_fileWatcher.removePath(videoPath);
+        dir.mkdir(videoPath);
+        m_fileWatcher.addPath(videoPath);
+    }
+
+    dir = QDir(picPath);
+    if (!dir.exists()){
+        m_fileWatcher.removePath(picPath);
+        dir.mkdir(picPath);
+        m_fileWatcher.addPath(picPath);
+    }
+
     reflushSnapshotLabel();
 }
 
