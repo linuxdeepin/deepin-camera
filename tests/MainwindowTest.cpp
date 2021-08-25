@@ -30,6 +30,7 @@ using namespace Dtk::Core;
 
 ACCESS_PRIVATE_FUN(CMainWindow, void(const QString &serviceName, QVariantMap key2value, QStringList), onTimeoutLock);
 ACCESS_PRIVATE_FUN(CMainWindow, void(), setSelBtnShow);
+ACCESS_PRIVATE_FUN(CMainWindow, void(), onLocalTimeChanged);
 ACCESS_PRIVATE_FUN(CMainWindow, void(bool bTrue), stopCancelContinuousRecording);
 ACCESS_PRIVATE_FUN(CMainWindow, void(const QString &), onDirectoryChanged);
 ACCESS_PRIVATE_FUN(CMainWindow, void(int nType), onEnableTitleBar);
@@ -72,14 +73,49 @@ TEST_F(MainwindowTest, TabChange)
 }
 
 /**
+ *  @brief 关闭拍照，录像
+ */
+TEST_F(MainwindowTest, stopCancelContinuousRecording)
+{
+    call_private_fun::CMainWindowstopCancelContinuousRecording(*mainwindow,false);
+    call_private_fun::CMainWindowstopCancelContinuousRecording(*mainwindow,true);
+}
+
+/**
+ *  @brief onTimeoutLock
+ */
+TEST_F(MainwindowTest, onTimeoutLock)
+{
+    QVariantMap key2value1;
+    QStringList strList;
+    call_private_fun::CMainWindowonTimeoutLock(*mainwindow,"", key2value1, strList);
+    QVariantMap key2value2;
+    key2value2.insert("Locked", true);
+    mainwindow->setWayland(true);
+    call_private_fun::CMainWindowonTimeoutLock(*mainwindow,"", key2value2, strList);
+    QVariantMap key2value3;
+    key2value3.insert("Locked", false);
+    call_private_fun::CMainWindowonTimeoutLock(*mainwindow, "", key2value3, strList);
+    mainwindow->setWayland(false);
+}
+
+/**
+ *  @brief onLocalTimeChanged
+ */
+TEST_F(MainwindowTest, onLocalTimeChanged)
+{
+    call_private_fun::CMainWindowonLocalTimeChanged(*mainwindow);
+}
+
+/**
  *  @brief 上下左右键
  */
 TEST_F(MainwindowTest, UpDownLeftRight)
 {
     QTest::keyPress(mainwindow, Qt::Key_Tab, Qt::NoModifier, 100);
-    QTest::keyPress(mainwindow, Qt::Key_Down, Qt::NoModifier, 100);
-    QTest::keyPress(mainwindow, Qt::Key_Left, Qt::NoModifier, 100);
     QTest::keyPress(mainwindow, Qt::Key_Right, Qt::NoModifier, 100);
+    QTest::keyPress(mainwindow, Qt::Key_Left, Qt::NoModifier, 100);
+    QTest::keyPress(mainwindow, Qt::Key_Down, Qt::NoModifier, 100);
     QTest::keyPress(mainwindow, Qt::Key_Up, Qt::NoModifier, 100);
     QTest::mouseClick(mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
 }
@@ -93,22 +129,23 @@ TEST_F(MainwindowTest, KeySpace)
 }
 
 /**
- *  @brief 右键菜单
+ *  @brief 快捷键
  */
 TEST_F(MainwindowTest, RightMenushortCut)
 {
-    //点击鼠标右键
-    QTest::qWait(500);
-    QShortcut *shortcutCopy = mainwindow->findChild<QShortcut *>(SHORTCUT_COPY);
-    QShortcut *shortcutDel = mainwindow->findChild<QShortcut *>(SHORTCUT_DELETE);
-    QShortcut *shortcutMenu = mainwindow->findChild<QShortcut *>(SHORTCUT_CALLMENU);
-    QShortcut *shortcutOpenFolder = mainwindow->findChild<QShortcut *>(SHORTCUT_OPENFOLDER);
-    QShortcut *shortcutPrint = mainwindow->findChild<QShortcut *>(SHORTCUT_PRINT);
-    emit shortcutCopy->activated();
-    emit shortcutDel->activated();
-    emit shortcutMenu->activated();
-    emit shortcutOpenFolder->activated();
-    emit shortcutPrint->activated();
+    QShortcut *shortcutView = mainwindow->findChild<QShortcut *>(SHORTCUT_VIEW);
+//    QShortcut *shortcutCopy = mainwindow->findChild<QShortcut *>(SHORTCUT_COPY);
+//    QShortcut *shortcutDel = mainwindow->findChild<QShortcut *>(SHORTCUT_DELETE);
+//    QShortcut *shortcutMenu = mainwindow->findChild<QShortcut *>(SHORTCUT_CALLMENU);
+//    QShortcut *shortcutOpenFolder = mainwindow->findChild<QShortcut *>(SHORTCUT_OPENFOLDER);
+//    QShortcut *shortcutPrint = mainwindow->findChild<QShortcut *>(SHORTCUT_PRINT);
+    emit shortcutView->activated();
+//    emit shortcutCopy->activated();
+//    emit shortcutDel->activated();
+//    emit shortcutMenu->activated();
+//    emit shortcutOpenFolder->activated();
+//    emit shortcutPrint->activated();
+    QTest::mouseClick(mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
 }
 
 /**
@@ -191,16 +228,18 @@ TEST_F(MainwindowTest, SettingDialogShow)
  */
 TEST_F(MainwindowTest, ChangeResolution)
 {
-    mainwindow->settingDialog();
-    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
-    dialog->show();
-    QComboBox *cmbox = dialog->findChild<QComboBox *>("OptionLineEdit");
-    mainwindow->update();
-    if (cmbox->count() > 2) {
-        cmbox->setCurrentIndex(1);
-        dc::Settings::get().settings()->sync();
-    }
-    mainwindow->settingDialogDel();
+//    mainwindow->settingDialog();
+//    DSettingsDialog *dialog = mainwindow->findChild<DSettingsDialog * >(SETTING_DIALOG);
+//    dialog->show();
+//    QComboBox *cmbox = dialog->findChild<QComboBox *>("OptionLineEdit");
+//    mainwindow->update();
+//    if (cmbox->count() > 2) {
+//        cmbox->setCurrentIndex(1);
+//        dc::Settings::get().settings()->sync();
+//    }
+//    mainwindow->settingDialogDel();
+     dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 1);
+     dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
 }
 /**
  *  @brief 打开摄像头设置页面
@@ -235,8 +274,8 @@ TEST_F(MainwindowTest, Themechange)
  */
 TEST_F(MainwindowTest, settingDlgTest)
 {
-    mainwindow->settingDialog();
-    mainwindow->settingDialogDel();
+    QAction* actionSettings = mainwindow->findChild<QAction*>("SettingAction");
+    emit actionSettings->triggered();
 }
 
 /**
@@ -254,6 +293,7 @@ TEST_F(MainwindowTest, TakePicture)
  */
 TEST_F(MainwindowTest, FlashLightTakePic)
 {
+    dc::Settings::get().setOption(QString("photosetting.photosdelay.photodelays"), 0);
     dc::Settings::get().setOption(QString("photosetting.Flashlight.Flashlight"), true);
     photoRecordBtn* pBtn = mainwindow->findChild<photoRecordBtn *>(BUTTON_PICTURE_VIDEO);
     emit pBtn->clicked();
@@ -363,6 +403,109 @@ TEST_F(MainwindowTest, ChangeCamera)
     QTest::qWait(1000);
 }
 
+/**
+ *  @brief 切换摄像头
+ */
+TEST_F(MainwindowTest, InitFormatErrorChangeCamera)
+{
+    Stub_Function::resetSub(::camInit, ADDR(Stub_Function, camInitFormatError));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        dc::Settings::get().setBackOption("device","/dev/video0");
+    }
+    QTest::qWait(1000);
+    Stub_Function::resetSub(::camInit, ADDR(Stub_Function, camInit));
+}
+
+/**
+ *  @brief 切换摄像头
+ */
+TEST_F(MainwindowTest, initNodeviceErrorChangeCamera)
+{
+    Stub_Function::resetSub(::camInit, ADDR(Stub_Function, camInitNoDevice));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        dc::Settings::get().setBackOption("device","/dev/video0");
+    }
+    QTest::qWait(1000);
+    Stub_Function::resetSub(::camInit, ADDR(Stub_Function, camInit));
+}
+
+/**
+ *  @brief 没有相机时切换摄像头
+ */
+TEST_F(MainwindowTest, NoCameraChangeCamera)
+{
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_0));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        dc::Settings::get().setBackOption("device","/dev/video0");
+    }
+    QTest::qWait(1000);
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_3));
+}
+
+/**
+ *  @brief dark下没有相机时切换摄像头
+ */
+TEST_F(MainwindowTest, DarkNoCameraChangeCamera)
+{
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_0));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        dc::Settings::get().setBackOption("device","/dev/video0");
+    }
+    QTest::qWait(1000);
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_3));
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
+}
+
+/**
+ *  @brief 一个相机时切换摄像头
+ */
+TEST_F(MainwindowTest, OneCameraChangeCamera)
+{
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_1));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+        dc::Settings::get().setBackOption("device","/dev/video0");
+    }
+    QTest::qWait(1000);
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_3));
+}
+
+/**
+ *  @brief dark下一个相机时切换摄像头
+ */
+TEST_F(MainwindowTest, DarkOneCameraChangeCamera)
+{
+    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::DarkType);
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_1));
+    QWidget *switchBtn = mainwindow->findChild<QWidget *>(CAMERA_SWITCH_BTN);
+
+    if (switchBtn->isVisible()) {
+        QTest::mouseClick(switchBtn, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+    }
+    QTest::qWait(1000);
+    dc::Settings::get().setBackOption("device","/dev/video0");
+    Stub_Function::resetSub(::get_device_list, ADDR(Stub_Function, get_device_list_3));
+    DGuiApplicationHelper::instance()->setPaletteType(DGuiApplicationHelper::LightType);
+}
 
 /**
  *  @brief 录像，结束录像
@@ -371,10 +514,11 @@ TEST_F(MainwindowTest, TakeVideo1)
 {
     RollingBox* rollBox = mainwindow->findChild<RollingBox *>(MODE_SWITCH_BOX);
     //切换到录像
+    dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
     emit rollBox->currentValueChanged(ActType::ActTakeVideo);
     photoRecordBtn* pBtn = mainwindow->findChild<photoRecordBtn *>(BUTTON_PICTURE_VIDEO);
     emit pBtn->clicked();
-    QTest::qWait(2000);
+    QTest::qWait(10000);
     emit pBtn->clicked();
     //切换回拍照模式
     emit rollBox->currentValueChanged(ActType::ActTakePic);
@@ -470,7 +614,6 @@ TEST_F(MainwindowTest, HorizontalMirrorFalse)
     QTest::qWait(5000);
     dc::Settings::get().setOption(QString("photosetting.mirrorMode.mirrorMode"), true);
 }
-
 
 /**
  *  @brief 应用退出

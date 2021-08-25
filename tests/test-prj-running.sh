@@ -49,8 +49,7 @@ create_coverage_report(){
      mv ./html/index.html ./html/cov_${PROJECT_REALNAME}.html
      mv asan.log* asan_${PROJECT_REALNAME}.log
 }
-
-
+ 
 remove_cache
 make_new_dir
 copy_test_files

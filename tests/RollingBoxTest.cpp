@@ -67,12 +67,11 @@ TEST_F(RollingBoxTest, setRange)
 
 TEST_F(RollingBoxTest, Event)
 {
-    QWidget *box = (QWidget*)m_rollingBox;
-    QTest::mouseMove(box, QPoint(5, 5), 500);
+    QTest::mouseMove(m_rollingBox, QPoint(0, 0), 500);
     QTest::qWait(100);
-    QTest::mousePress(box, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mousePress(m_rollingBox, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::qWait(100);
-    QTest::mouseRelease(box, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    QTest::mouseRelease(m_rollingBox, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     QTest::qWait(1000);
 }
 
@@ -81,16 +80,3 @@ TEST_F(RollingBoxTest, KeyEvent)
     QTest::keyPress(m_rollingBox, Qt::Key_Down, Qt::NoModifier, 500);
     QTest::keyPress(m_rollingBox, Qt::Key_Up, Qt::NoModifier, 500);
 }
-
-//TEST_F(PhotoRecordBtnTest, PreRecord)
-//{
-//    m_photoRecordBtn->setState(false);
-//    m_photoRecordBtn->setRecordState(photoRecordBtn::preRecord);
-//}
-
-//TEST_F(PhotoRecordBtnTest, Recording)
-//{
-//    m_photoRecordBtn->setState(false);
-//    m_photoRecordBtn->setRecordState(photoRecordBtn::Recording);
-//}
-

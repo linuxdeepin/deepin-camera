@@ -25,29 +25,32 @@
 #include "stub_function.h"
 #include "datamanager.h"
 #include "stub/addr_pri.h"
-
+#include "src/imageitem.h"
 #include <QtTest/QTest>
 
 
 
 ImageItemTest::ImageItemTest()
 {
-    m_mainwindow = CamApp->getMainWindow();
+
 }
 
 ImageItemTest::~ImageItemTest()
 {
-    m_mainwindow = NULL;
+
 }
 
 void ImageItemTest::SetUp()
 {
-    
+    m_mainwindow = CamApp->getMainWindow();
+    if (m_mainwindow){
+         m_imageItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    }
 }
 
 void ImageItemTest::TearDown()
 {
-    
+    m_mainwindow = NULL;
 }
 
 
@@ -56,7 +59,6 @@ void ImageItemTest::TearDown()
  */
 TEST_F(ImageItemTest, printdialog)
 {
-    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
     QAction *print = m_mainwindow->findChild<QAction *>("PrinterAction");
     if (print)
         print->trigger();
@@ -64,13 +66,31 @@ TEST_F(ImageItemTest, printdialog)
 }
 
 
+/**
+ *  @brief 获取焦点
+ */
+TEST_F(ImageItemTest, Focus)
+{
+    m_imageItem->setFocus();
+    QTest::qWait(100);
+}
+
+
+/**
+ *  @brief 打开右键菜单
+ */
+TEST_F(ImageItemTest, RightMenu)
+{
+    emit m_imageItem->customContextMenuRequested(QPoint(0,0));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
 
 /**
  *  @brief 右键打开文件夹
  */
 TEST_F(ImageItemTest, OpenFolder)
 {
-    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
     QAction *actOpenFolder = m_mainwindow->findChild<QAction *>("OpenFolderAction");
     if (actOpenFolder) {
         actOpenFolder->trigger();
@@ -83,10 +103,8 @@ TEST_F(ImageItemTest, OpenFolder)
  */
 TEST_F(ImageItemTest, mouseClickEvent)
 {
-    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
-
-    if (pItem) {
-        QTest::mouseClick(pItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+    if (m_imageItem) {
+        QTest::mouseClick(m_imageItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     }
     QTest::qWait(1000);
     //TODO 找到打开的看图或者影院窗口，关闭
@@ -97,20 +115,18 @@ TEST_F(ImageItemTest, mouseClickEvent)
  */
 TEST_F(ImageItemTest, ImageItemDel)
 {
-    ImageItem* pItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
-
-    if (pItem) {
+    if (m_imageItem) {
         //点击鼠标右键
         QTest::qWait(1000);
-        QTest::mouseMove(pItem, QPoint(0, 0), 500);
-        QTest::mousePress(pItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(pItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 0);
+        QTest::mouseMove(m_imageItem, QPoint(0, 0), 500);
+        QTest::mousePress(m_imageItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 500);
+        QTest::mouseRelease(m_imageItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 0);
 
         //点击鼠标左键
         QTest::qWait(1000);
-        QTest::mouseMove(pItem, QPoint(0, 0), 500);
-        QTest::mousePress(pItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(pItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+        QTest::mouseMove(m_imageItem, QPoint(0, 0), 500);
+        QTest::mousePress(m_imageItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
+        QTest::mouseRelease(m_imageItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
     }
 }
 
