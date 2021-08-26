@@ -286,6 +286,9 @@ void MajorImageProcessingThread::run()
 #endif
         m_frame->yuv_frame = pOldYuvFrame;
         v4l2core_release_frame(m_videoDevice, m_frame);
+#ifdef UNITTEST
+        break;
+#endif
     }
 
     v4l2core_stop_stream(m_videoDevice);
