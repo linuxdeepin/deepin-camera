@@ -23,6 +23,7 @@
 #include <gtest/gtest.h>
 
 class CMainWindow;
+class MajorImageProcessingThread;
 class  MajorImagePThTest: public ::testing::Test
 {
 public:
@@ -34,6 +35,7 @@ public:
 
 protected:
     CMainWindow* m_mainwindow;
+    MajorImageProcessingThread* m_processThread;
 
 };
 
