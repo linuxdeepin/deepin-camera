@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd0c31f4_68c99385",
+        "filename": "src/src/windowstatethread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T02:48:27Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 3; 注释率: 0.0%",
+      "revId": "0a11fce78e29db184cb5a20d5e6295dd78374f7a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40d4cd4a_50a395de",
+        "filename": "tests/main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T02:48:27Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 6; 注释率: 0.0%",
+      "revId": "0a11fce78e29db184cb5a20d5e6295dd78374f7a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d536f69a_80ff19bd",
+        "filename": "tests/windowStateTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T02:48:27Z",
+      "side": 1,
+      "message": "注释行数: 18; 改动行数(修改和新增): 48; 注释率: 37.5%",
+      "revId": "0a11fce78e29db184cb5a20d5e6295dd78374f7a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61a2a9b1_95fe3ff6",
+        "filename": "tests/windowStateTest.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T02:48:27Z",
+      "side": 1,
+      "message": "注释行数: 18; 改动行数(修改和新增): 35; 注释率: 51.4%",
+      "revId": "0a11fce78e29db184cb5a20d5e6295dd78374f7a",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
