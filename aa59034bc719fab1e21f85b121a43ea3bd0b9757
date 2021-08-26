@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e70fb14e_f6d50323",
+        "filename": "tests/stub/stub_function.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T01:43:53Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 73; 注释率: 2.7%",
+      "revId": "aa59034bc719fab1e21f85b121a43ea3bd0b9757",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4756ad63_150114b4",
+        "filename": "tests/stub/stub_function.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-26T01:43:53Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 20; 注释率: 20.0%",
+      "revId": "aa59034bc719fab1e21f85b121a43ea3bd0b9757",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
