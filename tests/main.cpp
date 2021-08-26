@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
     __sanitizer_set_report_path("asan.log");
 
     int ret = RUN_ALL_TESTS();
+    mainWnd->close();
     delete mainWnd;
     Stub_Function::release();
     printf("end\n");
