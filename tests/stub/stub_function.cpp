@@ -8,10 +8,12 @@ extern "C"
 
 v4l2_dev_t *Stub_Function::m_v4l2_dev =  nullptr;//设备属性
 v4l2_stream_formats_t *Stub_Function::m_list_stream_formats =  nullptr;//流格式列表
+v4l2_device_list_t *Stub_Function::m_v4l2_device_list0 =  nullptr;//零个摄像头
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list1 =  nullptr;//一个摄像头
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list2 =  nullptr;//两个摄像头
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list3 =  nullptr;//三个摄像头
 v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff =  nullptr;//帧缓冲器
+v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff2 =  nullptr;//帧缓冲器
 Stub    Stub_Function::m_stub;
 
 
@@ -141,6 +143,11 @@ int Stub_Function::video_capture_get_save_video()
     return 1;
 }
 
+v4l2_device_list_t *Stub_Function::get_device_list_0()
+{
+    return m_v4l2_device_list0;
+}
+
 v4l2_device_list_t *Stub_Function::get_device_list_1()
 {
     return m_v4l2_device_list1;
@@ -183,6 +190,16 @@ v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame(v4l2_dev_t *vd)
     return m_v4l2_frame_buff;
 }
 
+v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame_none(v4l2_dev_t *vd)
+{
+    return nullptr;
+}
+
+v4l2_frame_buff_t *Stub_Function::v4l2core_get_decoded_frame_changed(v4l2_dev_t *vd)
+{
+    return m_v4l2_frame_buff2;
+}
+
 int Stub_Function::get_resolution_status()
 {
     return 1;
@@ -223,9 +240,14 @@ void Stub_Function::set_device_name(const char *name)
 
 }
 
-int Stub_Function::v4l2core_get_requested_frame_format(v4l2_dev_t *vd)
+int Stub_Function::v4l2core_get_requested_frame_format_264(v4l2_dev_t *vd)
 {
     return V4L2_PIX_FMT_H264;
+}
+
+int Stub_Function::v4l2core_get_requested_frame_format_yuv(v4l2_dev_t *vd)
+{
+    return V4L2_PIX_FMT_NV12;
 }
 
 int Stub_Function::get_capture_pause()
@@ -233,7 +255,17 @@ int Stub_Function::get_capture_pause()
     return 1;
 }
 
+int Stub_Function::get_capture_pause_false()
+{
+    return 0;
+}
+
 double Stub_Function::encoder_buff_scheduler(int mode, double thresh, double max_time)
+{
+    return 0;
+}
+
+double Stub_Function::encoder_buff_scheduler_one(int mode, double thresh, double max_time)
 {
     return 1;
 }
@@ -290,9 +322,31 @@ int Stub_Function::camInit(const char *devicename)
     return 0;
 }
 
+int Stub_Function::camInitFormatError(const char *devicename)
+{
+    (void*)devicename;
+    return E_FORMAT_ERR;
+}
+
+int Stub_Function::camInitNoDevice(const char *devicename)
+{
+    (void*)devicename;
+    return E_NO_DEVICE_ERR;
+}
+
 int Stub_Function::check_device_list_events(v4l2_dev_t *vd)
 {
     (void*)vd;
+    return 0;
+}
+
+void Stub_Function::devnumMonitorStartCheck()
+{
+
+}
+
+int Stub_Function::get_video_codec_ind()
+{
     return 0;
 }
 
@@ -306,7 +360,16 @@ void Stub_Function::init()
         m_v4l2_frame_buff->height = 1080;
         uint yuvsize = m_v4l2_frame_buff->width * m_v4l2_frame_buff->height * 3 / 2;
         m_v4l2_frame_buff->yuv_frame = (uint8_t *)malloc(size_t(yuvsize));
-        memset(m_v4l2_frame_buff->yuv_frame, 255, yuvsize);
+    }
+
+    if (m_v4l2_frame_buff2 == nullptr) {
+        m_v4l2_frame_buff2 = (v4l2_frame_buff_t *)malloc(sizeof(v4l2_frame_buff_t));
+        memset(m_v4l2_frame_buff2, 0, sizeof(v4l2_frame_buff_t));
+
+        m_v4l2_frame_buff2->width = 1280;
+        m_v4l2_frame_buff2->height = 720;
+        uint yuvsize = m_v4l2_frame_buff2->width * m_v4l2_frame_buff2->height * 3 / 2;
+        m_v4l2_frame_buff2->yuv_frame = (uint8_t *)malloc(size_t(yuvsize));
     }
 
     if (m_v4l2_device_list3 == nullptr) {
@@ -351,13 +414,18 @@ void Stub_Function::init()
         m_v4l2_device_list1->list_devices[0].location= strdup("/dev/video0");
     }
 
+    if (nullptr == m_v4l2_device_list0){
+        m_v4l2_device_list0 = (v4l2_device_list_t *)malloc(sizeof(v4l2_device_list_t));
+        memset(m_v4l2_device_list0, 0, sizeof(v4l2_device_list_t));
+    }
+
     if (m_list_stream_formats == nullptr) {
         m_list_stream_formats = (v4l2_stream_formats_t *)malloc(sizeof(v4l2_stream_formats_t));
         m_list_stream_formats[0].numb_res = 2;
         m_list_stream_formats[0].list_stream_cap = (v4l2_stream_cap_t *)malloc(sizeof(v4l2_stream_formats_t));
-        m_list_stream_formats[0].list_stream_cap[0].width = 640;
-        m_list_stream_formats[0].list_stream_cap[0].height = 480;
-        m_list_stream_formats[0].list_stream_cap[1].width = 960;
+        m_list_stream_formats[0].list_stream_cap[0].width = 1920;
+        m_list_stream_formats[0].list_stream_cap[0].height = 1080;
+        m_list_stream_formats[0].list_stream_cap[1].width = 1280;
         m_list_stream_formats[0].list_stream_cap[1].height = 720;
     }
 
@@ -388,6 +456,9 @@ void Stub_Function::release()
         free(m_list_stream_formats[0].list_stream_cap);
         free(m_list_stream_formats);
         m_list_stream_formats = nullptr;
+    }
+    if (m_v4l2_device_list0){
+        free(m_v4l2_device_list0);
     }
 
     if (m_v4l2_device_list1 != nullptr) {
@@ -437,6 +508,12 @@ void Stub_Function::release()
         free(m_v4l2_frame_buff);
         m_v4l2_frame_buff = nullptr;
     }
+
+    if (m_v4l2_frame_buff2 != nullptr) {
+        free(m_v4l2_frame_buff2->yuv_frame);
+        free(m_v4l2_frame_buff2);
+        m_v4l2_frame_buff2 = nullptr;
+    }
 }
 
 //初始化所有桩函数，对libcam里的函数进行打桩
@@ -463,6 +540,12 @@ void Stub_Function::initSub()
     m_stub.set(::get_device_list, ADDR(Stub_Function, get_device_list_3));
     m_stub.set(::camInit, ADDR(Stub_Function, camInit));
     m_stub.set(::check_device_list_events, ADDR(Stub_Function, check_device_list_events));
+    m_stub.set(::video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
+    m_stub.set(::get_video_codec_ind, ADDR(Stub_Function, get_video_codec_ind));
+    m_stub.set(::v4l2core_get_requested_frame_format, ADDR(Stub_Function, v4l2core_get_requested_frame_format_yuv));
+    m_stub.set(::get_capture_pause, ADDR(Stub_Function, get_capture_pause));
+    m_stub.set(::encoder_buff_scheduler, ADDR(Stub_Function, encoder_buff_scheduler));
+    m_stub.set(::v4l2core_set_h264_frame_rate_config, ADDR(Stub_Function, v4l2core_set_h264_frame_rate_config));
 }
 
 
