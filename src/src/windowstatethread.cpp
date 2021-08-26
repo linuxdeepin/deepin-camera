@@ -43,6 +43,9 @@ void windowStateThread::run()
         }
         //线程休眠1秒
         std::this_thread::sleep_for(std::chrono::seconds(1));
+#ifdef UNITTEST
+        break;
+#endif
     }
     qInfo() << "windowStateThread end";
 }
