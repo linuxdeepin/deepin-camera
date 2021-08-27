@@ -124,78 +124,28 @@ void ImageItem::updatePicPath(const QString &filePath)
         video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
         image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
 
-        if (parseFromFile(fileInfo)) {
-            try {
-                //thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
-                getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer, m_path.toUtf8().data(), m_image_data);
-                auto img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
-                img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
-                pix = QPixmap::fromImage(img);
-                malloc_trim(0);
-            } catch (...) {
-                qWarning() << "generateThumbnail failed";
-            }
-
+        try {
+            //thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
+            getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer, m_path.toUtf8().data(), m_image_data);
+            auto img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
+            img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
+            pix = QPixmap::fromImage(img);
+            malloc_trim(0);
+        } catch (...) {
+            qWarning() << "generateThumbnail failed";
         }
 
         getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
         getLoadLibsInstance()->m_video_thumbnailer_destroy(m_video_thumbnailer);
         m_image_data = nullptr;
         m_video_thumbnailer = nullptr;
-
-        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount() + 1);
-        QString strTime = "";
-
-        if (m_nDuration < 0) {
-            m_nDuration = 0;
-        }
-
-        int nDuration = static_cast<int>(m_nDuration / 1000000);
-        int nHour = nDuration / 3600;
-
-        if (nHour == 0)
-            strTime.append("00");
-        else if (nHour < 10) {
-            strTime.append("0");
-            strTime.append(QString::number(nHour));
-        } else
-            strTime.append(QString::number(nHour));
-
-        strTime.append(":");
-        int nOutHour = nDuration % 3600;
-        int nMins = nOutHour / 60;
-
-        if (nMins == 0) {
-            strTime.append("00");
-        } else if (nMins < 10) {
-            strTime.append("0");
-            strTime.append(QString::number(nMins));
-        } else {
-            strTime.append(QString::number(nMins));
-        }
-
-        strTime.append(":");
-        int nSecs = nOutHour % 60;
-
-        if (nSecs == 0) {
-            strTime.append("00");
-        } else if (nSecs < 10) {
-            strTime.append("0");
-            strTime.append(QString::number(nSecs));
-        } else {
-            strTime.append(QString::number(nSecs));
-        }
-
-        m_strDuratuion = strTime;
     } else if (fileInfo.suffix() == "jpg") {
         m_bVideo = false;
-        m_strDuratuion = "";
         QImage img(filePath);
         img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
-        m_strDuratuion = "";
         pix = QPixmap();
     }
     QTimer::singleShot(500, this, [=](){
@@ -306,7 +256,7 @@ void ImageItem::focusOutEvent(QFocusEvent *event)
     update();
 }
 
-void ImageItem::showMenu()
+void ImageItem::onShowMenu()
 {
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
@@ -345,7 +295,7 @@ void ImageItem::initShortcut()
     //唤起右键菜单
     QShortcut *shortcutMenu = new QShortcut(QKeySequence("Alt+M"), this);
     shortcutMenu->setObjectName(SHORTCUT_CALLMENU);
-    connect(shortcutMenu, SIGNAL(activated()), this, SLOT(showMenu()));
+    connect(shortcutMenu, SIGNAL(activated()), this, SLOT(onShowMenu()));
     //打开文件夹
     QShortcut *shortcutOpenFolder = new QShortcut(QKeySequence("Ctrl+O"), this);
     shortcutOpenFolder->setObjectName(SHORTCUT_OPENFOLDER);
@@ -564,108 +514,6 @@ void ImageItem::paintRequestSync(DPrinter *_printer)
     }
 
     painter.end();
-}
-
-static int open_codec_context(int *stream_idx, AVCodecParameters **dec_par, AVFormatContext *fmt_ctx, enum AVMediaType type)
-{
-    int ret, stream_index;
-    AVStream *st;
-    ret = getAvformat()->m_av_find_best_stream(fmt_ctx, type, -1, -1, nullptr, 0);
-    if (ret < 0) {
-        qWarning() << "Could not find " << getAvutil()->m_av_get_media_type_string(type)
-                   << " stream in input file";
-        return ret;
-    }
-    stream_index = ret;
-    st = fmt_ctx->streams[stream_index];
-    *dec_par = st->codecpar;
-#if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
-    getLoadLibsInstance()->m_avcodec_find_decoder((*dec_par)->codec_id);
-#else
-    /* find decoder for the stream */
-    //*dec_ctx = st->codecpar;
-    AVCodec *dec = nullptr;
-    dec = getLoadLibsInstance()->m_avcodec_find_decoder(st->codecpar->codec_id);
-
-    if (!dec) {
-        fprintf(stderr, "Failed to find %s codec\n",
-                getAvutil()->m_av_get_media_type_string(type));
-        return AVERROR(EINVAL);
-    }
-
-    /* Allocate a codec context for the decoder */
-    AVCodecContext *dec_ctx = getLoadLibsInstance()->m_avcodec_alloc_context3(dec);
-
-    //*dec_par = getLoadLibsInstance()->m_avcodec_parameters_alloc();
-    if (!dec_ctx) {
-        fprintf(stderr, "Failed to allocate the %s codec context\n",
-                getAvutil()->m_av_get_media_type_string(type));
-        return AVERROR(ENOMEM);
-    }
-
-    if (getLoadLibsInstance()->m_avcodec_open2(dec_ctx, dec, nullptr) < 0)
-        fprintf(stderr, "Could not open the codec\n");
-
-    /* Copy codec parameters from input stream to output codec context */
-    if ((ret = getLoadLibsInstance()->m_avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0) {
-        fprintf(stderr, "Failed to copy %s codec parameters to decoder context\n",
-                getAvutil()->m_av_get_media_type_string(type));
-        return ret;
-    }
-
-    ret = getLoadLibsInstance()->m_avcodec_parameters_from_context(*dec_par, dec_ctx);
-
-    if (ret < 0) {
-        fprintf(stderr, "Could not copy the stream parameters\n");
-        getLoadLibsInstance()->m_avcodec_free_context(&dec_ctx);
-        exit(1);
-    }
-
-    getLoadLibsInstance()->m_avcodec_free_context(&dec_ctx);
-#endif
-
-    *stream_idx = stream_index;
-    return 0;
-}
-
-bool ImageItem::parseFromFile(const QFileInfo &fi)
-{
-    bool mi = false;
-    AVFormatContext *av_ctx = nullptr;
-    int stream_id = -1;
-    AVCodecParameters *dec_ctx = nullptr;
-
-    if (!fi.exists()) {
-        return mi;
-    }
-
-    auto ret = getAvformat()->m_avformat_open_input(&av_ctx, fi.filePath().toUtf8().constData(), nullptr, nullptr);
-    if (ret < 0) {
-        qWarning() << "avformat: could not open input";
-        return mi;
-    }
-
-    if (getAvformat()->m_avformat_find_stream_info(av_ctx, nullptr) < 0) {
-        qWarning() << "av_find_stream_info failed";
-        return mi;
-    }
-
-    if (av_ctx->nb_streams == 0) {
-        return mi;
-    }
-
-    if (open_codec_context(&stream_id, &dec_ctx, av_ctx, AVMEDIA_TYPE_VIDEO) < 0) {
-        return mi;
-    }
-
-    m_nDuration = av_ctx->duration;
-
-    if (m_nDuration < 0) {
-        return mi;
-    }
-
-    getAvformat()->m_avformat_close_input(&av_ctx);
-    return true;
 }
 
 void AnimationWidget::paintEvent(QPaintEvent *e)
