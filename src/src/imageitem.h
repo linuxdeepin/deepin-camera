@@ -102,67 +102,6 @@ public:
     void updatePic(QPixmap pixmap);
 
     /**
-     * @brief setIndex 设置图片索引
-     * @param index
-     */
-    void setIndex(int index)
-    {
-        m_index = index;
-    }
-
-    /**
-     * @brief SetPath 设置路径
-     * @param path
-     */
-    void SetPath(QString &path)
-    {
-        m_path = path;
-    }
-
-    /**
-     * @brief getPath 获取路径
-     */
-    inline QString getPath()
-    {
-        return m_path;
-    }
-
-    /**
-     * @brief getIndex 获取图片索引
-     */
-    inline int getIndex()
-    {
-        return m_index;
-    }
-
-    /**
-     * @brief getDuration 获取录像时长
-     */
-    QString getDuration()
-    {
-        return m_strDuratuion;
-    }
-
-    /**
-     * @brief parseFromFile 解析文件
-     * @param fi
-     */
-    bool parseFromFile(const QFileInfo &fi);
-
-    /**
-     * @brief getIsVideo 判断是否为视频
-     */
-    bool getIsVideo()
-    {
-        return m_bVideo;
-    }
-
-    /**
-     * @brief initShortcut 初始化快捷键
-     */
-    void initShortcut();
-
-    /**
      * @brief openFile 打开文件
      */
     void openFile();
@@ -174,21 +113,6 @@ signals:
      */
     void trashFile(const QString &filePath);
 
-    /**
-     * @brief showDuration 录像时长信号
-     */
-    void showDuration(QString strDuration);
-
-    /**
-     * @brief needFit 图片适应界面大小信号
-     */
-    void needFit();
-
-    /**
-     * @brief ShiftMulti 多选
-     */
-    void shiftMulti();
-
 public slots:
     /**
      * @brief onPrint 打印信号
@@ -198,7 +122,7 @@ public slots:
     /**
      * @brief showMenu 显示菜单
      */
-    void showMenu();
+    void onShowMenu();
 
     /**
      * @brief onOpenFolder 打开文件夹
@@ -244,11 +168,6 @@ protected:
      */
     void focusOutEvent(QFocusEvent *event) override;
 
-    /**
-     * @brief showPrintDialog 显示打印对话框
-     */
-    void showPrintDialog(const QStringList &paths, QWidget *parent);
-
 private slots:
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
@@ -265,17 +184,23 @@ private slots:
      * @param _printer 打印机
      */
     void paintRequestSync(DPrinter *_printer);
+private:
+    /**
+     * @brief initShortcut 初始化快捷键
+     */
+    void initShortcut();
+
+    /**
+     * @brief showPrintDialog 显示打印对话框
+     */
+    void showPrintDialog(const QStringList &paths, QWidget *parent);
 
 private:
     bool                m_bVideo;//是否视频
-    bool                m_bMousePress;//鼠标按下事件
-    int                 m_index;//索引
-    int64_t             m_nDuration = 0; //视频文件时长,int形式时间
     QList<QImage>       m_imgs;//需要打印的图片
     QString             m_path;//文件路径
     QPixmap             m_pixmap;//缩略图
     QString             m_pixmapstring;//缩略图路径
-    QString             m_strDuratuion;//视频文件时长,形式为00：00：00
     QMenu               *m_menu;//右键菜单
     QAction             *m_actCopy;//复制
     QAction             *m_actDel;//删除
