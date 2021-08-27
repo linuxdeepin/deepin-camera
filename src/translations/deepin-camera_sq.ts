@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>Efekte zanore</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flash</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

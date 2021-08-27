@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Foto</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Cambia Camera</translation>
     </message>
 </context>
 <context>
@@ -167,6 +167,14 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
         <source>Sound effects</source>
         <translation>Effetti sonori</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flash</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -241,19 +249,19 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Flash</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Attivo</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Disattivo</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Ritarda scatto</translation>
     </message>
 </context>
 <context>

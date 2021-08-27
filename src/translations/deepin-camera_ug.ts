@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>سۈرەت تارتىش</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>سىن ئېلىش</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>كامېرا ئالماشتۇرۇش</translation>
     </message>
 </context>
 <context>
@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>ئاۋاز ئۈنۈمى</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>چاقماق لامپا</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -240,19 +248,19 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>چاقماق لامپا</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>ئېچىش</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>تاقاش</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>ۋاقىت بەلگىلەپ تارتىش</translation>
     </message>
 </context>
 <context>

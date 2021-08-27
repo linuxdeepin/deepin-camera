@@ -98,26 +98,26 @@
                 },
                 {
                     "key": "mirrorMode",
-                    "name": "Mirror Mode",
+                    "name": "Mirror mode",
                     "hide": false,
                     "options": [
                         {
                             "key": "mirrorMode",
                             "type": "switchbutton",
-                            "name": "Mirror Mode",
+                            "name": "Mirror mode",
                             "default": false
                         }
                     ]
                 },
                 {
                     "key": "Flashlight",
-                    "name": "Flash Light",
+                    "name": "Flashlight",
                     "hide": false,
                     "options": [
                         {
                             "key": "Flashlight",
                             "type": "switchbutton",
-                            "name": "Flash Light",
+                            "name": "Flashlight",
                             "default": false
                         }
                     ]

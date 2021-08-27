@@ -31,6 +31,8 @@ void GenerateSettingTranslate()
     auto group_photosettingName = QObject::tr("Shoot");
     auto group_photosetting_photosnumberName = QObject::tr("Burst mode");
     auto group_photosetting_photosdelayName = QObject::tr("Self-timer delay");
+    auto group_photosetting_mirrorModeName = QObject::tr("Mirror mode");
+    auto group_photosetting_FlashlightName = QObject::tr("Flashlight");
     auto group_outsettingName = QObject::tr("Output");
     auto outsetting_audiosetting_soundreminderName = QObject::tr("Sound effects");
     auto group_outsetting_outformatName = QObject::tr("Output format");
