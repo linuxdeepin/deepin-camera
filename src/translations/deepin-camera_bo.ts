@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>པར་ལེན།</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>བཪྙན་ལེན།</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>པར་ལེན་ཤེལ་སྒོ་བརྗེ་བ།</translation>
     </message>
 </context>
 <context>
@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>སྒྲ་ནུས། </translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>འཁྱུག་སྒྲོན།</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -240,19 +248,19 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>འཁྱུག་སྒྲོན།</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>སྒོ་ཕྱེ།</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>སྒོ་རྒྱག</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>དུས་འགྱངས་པར་ལེན།</translation>
     </message>
 </context>
 <context>

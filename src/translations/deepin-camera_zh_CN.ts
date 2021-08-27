@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -167,6 +165,14 @@
     <message>
         <source>Sound effects</source>
         <translation>音效</translation>
+    </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation>镜像摄像头</translation>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>闪光灯</translation>
     </message>
 </context>
 <context>

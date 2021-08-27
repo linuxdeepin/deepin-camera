@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>Sound effects</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation>Mirror mode</translation>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>Flashlight</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

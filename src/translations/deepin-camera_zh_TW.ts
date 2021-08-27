@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>音效</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation>鏡像攝影機</translation>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>閃光燈</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

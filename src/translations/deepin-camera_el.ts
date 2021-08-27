@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="el" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="el">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Άνοιγμα φακέλου</translation>
+        <translation type="vanished">Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -16,6 +18,18 @@
     <message>
         <source>None</source>
         <translation>Κανένα</translation>
+    </message>
+    <message>
+        <source>Photo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Video</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Cameras</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -45,7 +59,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -144,19 +158,23 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
-        <translation type="unfinished"/>
+        <source>Mirror mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -183,19 +201,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -203,22 +221,22 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>Λήψη φωτογραφίας</translation>
+        <translation type="vanished">Λήψη φωτογραφίας</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>Εγγραφή βίντεο</translation>
+        <translation type="vanished">Εγγραφή βίντεο</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Ακύρωση λήψης φωτογραφιών</translation>
+        <translation type="vanished">Ακύρωση λήψης φωτογραφιών</translation>
     </message>
 </context>
 <context>
@@ -226,6 +244,25 @@
     <message>
         <source>None</source>
         <translation>Κανένα</translation>
+    </message>
+</context>
+<context>
+    <name>takePhotoSettingAreaWidget</name>
+    <message>
+        <source>Flashlight</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay capture</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -240,7 +277,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Λήξη εγγραφής</translation>
+        <translation type="vanished">Λήξη εγγραφής</translation>
     </message>
 </context>
 </TS>

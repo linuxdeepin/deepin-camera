@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>Klangeffekte</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>Blitzlicht</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

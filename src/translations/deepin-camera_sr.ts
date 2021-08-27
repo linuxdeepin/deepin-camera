@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>Звучни ефекти</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>Лампа</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

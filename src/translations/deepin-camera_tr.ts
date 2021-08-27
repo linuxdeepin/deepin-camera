@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Fotoğraf</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Kameraları Değiştir</translation>
     </message>
 </context>
 <context>
@@ -166,6 +166,14 @@
         <source>Sound effects</source>
         <translation>Ses efektleri</translation>
     </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>El feneri</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -240,19 +248,19 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>El feneri</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Aç</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Kapat</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Gecikmeli yakalama</translation>
     </message>
 </context>
 <context>
