@@ -33,7 +33,6 @@ ACCESS_PRIVATE_FUN(videowidget, void(), showCamUsed);
 ACCESS_PRIVATE_FUN(videowidget, void(), startTakeVideo);
 ACCESS_PRIVATE_FUN(videowidget, void(), itemPosChange);
 ACCESS_PRIVATE_FUN(videowidget, void(), stopEverything);
-ACCESS_PRIVATE_FUN(videowidget, void(), recoverTabWidget);
 ACCESS_PRIVATE_FUN(videowidget, void(), onReachMaxDelayedFrames);
 ACCESS_PRIVATE_FUN(videowidget, void(), flash);
 ACCESS_PRIVATE_FUN(videowidget, void(QGraphicsView *view), forbidScrollBar);
@@ -65,10 +64,10 @@ VideoWidgetTest::~VideoWidgetTest()
 
 void VideoWidgetTest::SetUp()
 {
-   m_mainwindow = CamApp->getMainWindow();
-   if (m_mainwindow){
-       m_videoWidget = m_mainwindow->findChild<videowidget *>(VIDEO_PREVIEW_WIDGET);
-   }
+    m_mainwindow = CamApp->getMainWindow();
+    if (m_mainwindow) {
+        m_videoWidget = m_mainwindow->findChild<videowidget *>(VIDEO_PREVIEW_WIDGET);
+    }
 }
 
 void VideoWidgetTest::TearDown()

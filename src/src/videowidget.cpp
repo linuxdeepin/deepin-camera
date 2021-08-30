@@ -67,12 +67,12 @@ videowidget::videowidget(DWidget *parent)
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsView(this);
-    QDesktopWidget* desktopWidget = QApplication::desktop();
+    QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
     m_flashLabel  = new DLabel(desktopWidget);
     m_flashLabel->setWindowFlags(m_flashLabel->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
-    m_flashLabel->move(0,0);
+    m_flashLabel->move(0, 0);
     m_flashLabel->setFixedSize(screenRect.width(), screenRect.height());
     m_flashLabel->hide();
     m_recordingTimeWidget = new DLabel(this);
@@ -110,12 +110,12 @@ videowidget::videowidget(DWidget *parent)
 #endif
     m_pNormalScene->addItem(m_pCamErrItem);
     recordingwidgetlay->setSpacing(0);
-    recordingwidgetlay->setContentsMargins(0,0,0,0);
+    recordingwidgetlay->setContentsMargins(0, 0, 0, 0);
     recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignBottom);
     recordingwidgetlay->addWidget(m_recordingTime, 0, Qt::AlignCenter);
     recordingRedStatus->setPixmap(QPixmap(":/images/icons/light/circular.svg"));
     recordingRedStatus->setFixedSize(QSize(22, 22));
-    m_recordingTime->setFixedSize(73,26);
+    m_recordingTime->setFixedSize(73, 26);
     m_recordingTime->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     m_recordingTimeWidget->setLayout(recordingwidgetlay);
     m_recordingTimeWidget->hide(); //先隐藏
@@ -150,7 +150,7 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setPalette(pltLabel);
     QPalette pa_cb = m_recordingTime->palette();//不用槽函数，程序打开如果是深色主题，可以正常切换颜色，其他主题不行，DTK的bug？
 
-    pa_cb.setColor(QPalette::Background, QColor(255, 0, 0,30));
+    pa_cb.setColor(QPalette::Background, QColor(255, 0, 0, 30));
     pa_cb.setColor(QPalette::WindowText, QColor(255, 255, 255));
     QFont ft("SourceHanSansSC-Medium");
     ft.setWeight(QFont::Medium);
@@ -222,8 +222,7 @@ void videowidget::showNocam()
     emit sigDeviceChange();
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        m_svg.load(QString(":/images/icons/light/Not connected.svg"));
-        m_pSvgItem->setSharedRenderer(&m_svg);
+        m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/light/Not connected.svg"), this));
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -234,8 +233,7 @@ void videowidget::showNocam()
         plt.setColor(QPalette::Base, clrBase);
         setPalette(plt);
     } else {
-        m_svg.load(QString(":/images/icons/dark/Not connected_dark.svg"));
-        m_pSvgItem->setSharedRenderer(&m_svg);
+        m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Not connected_dark.svg"), this));
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
@@ -287,8 +285,7 @@ void videowidget::showCamUsed()
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
-        m_svg.load(QString(":/images/icons/light/Take up.svg"));
-        m_pSvgItem->setSharedRenderer(&m_svg);
+        m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/light/Take up.svg"), this));
         QColor clrText(Qt::white);
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);//浅色主题文字和图片是白色，特殊处理
@@ -299,8 +296,7 @@ void videowidget::showCamUsed()
         plt.setColor(QPalette::Base, clrBackGRD);
         setPalette(plt);
     } else {
-        m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
-        m_pSvgItem->setSharedRenderer(&m_svg);
+        m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Take up_dark.svg"), this));
         QColor clrText(Qt::black);
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);
@@ -528,9 +524,8 @@ void videowidget::resizeEvent(QResizeEvent *size)
     Q_UNUSED(size);
 
     //计时窗口放大缩小的显示
-    if (m_recordingTimeWidget->isVisible())
-        m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10) / 2,
-                                    height() - m_recordingTimeWidget->height() - 9);
+    m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10) / 2,
+                                height() - m_recordingTimeWidget->height() - 9);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
                    (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
@@ -543,30 +538,6 @@ void videowidget::resizeEvent(QResizeEvent *size)
     } else {
         itemPosChange();
         m_pCamErrItem->hide();
-    }
-}
-
-void videowidget::recoverTabWidget()
-{
-    if ((DataManager::instance()->getNowTabIndex() > 0 && DataManager::instance()->getNowTabIndex() < 4)
-            || DataManager::instance()->getNowTabIndex() > 7) {
-        CMainWindow *parentwidget = CamApp->getMainWindow();
-
-        if (parentwidget) {
-            DPushButton *picvideobtn = parentwidget->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO);
-
-            if (DataManager::instance()->getNowTabIndex() != DataManager::instance()->m_tabIndex)
-                DataManager::instance()->setNowTabIndex(DataManager::instance()->m_tabIndex);
-
-            switch (DataManager::instance()->getNowTabIndex()) {
-            case 8:
-                if (picvideobtn)
-                    picvideobtn->setFocus();
-                break;
-            default:
-                break;
-            }
-        }
     }
 }
 
@@ -604,7 +575,7 @@ void videowidget::showCountdown()
 
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
-                if (m_flashEnable && 1 == m_nMaxContinuous){
+                if (m_flashEnable && 1 == m_nMaxContinuous) {
                     m_flashLabel->show();
                 }
                 m_flashTimer->start(500);
@@ -614,7 +585,6 @@ void videowidget::showCountdown()
 #else
                 m_pNormalView->hide();
 #endif
-                emit toolbarShow(false);
             }
 
             //发送就结束信号处理按钮状态
@@ -770,16 +740,13 @@ void videowidget::flash()
         m_openglwidget->show();
 
 #endif
-    emit toolbarShow(true);
-    recoverTabWidget();
-
     m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
     if (m_curTakePicTime == 0)
         stopEverything();
 
     //最后一次拍照完成，设置状态恢复
-    if (0 == m_curTakePicTime){
+    if (0 == m_curTakePicTime) {
         emit updatePhotoState(CMainWindow::photoNormal);
     }
 
@@ -895,7 +862,7 @@ void videowidget::onChangeDev()
         for (int i = 0 ; i < devlist->num_devices; i++) {
             QString str1 = QString(devlist->list_devices[i].device);
             if (str != str1) {
-                if(E_OK == switchCamera(devlist->list_devices[i].device,devlist->list_devices[i].name)){
+                if (E_OK == switchCamera(devlist->list_devices[i].device, devlist->list_devices[i].name)) {
                     break;
                 }
             }
@@ -927,9 +894,9 @@ void videowidget::onChangeDev()
     }
 }
 
-int videowidget::switchCamera(const char* device, const char* devName)
+int videowidget::switchCamera(const char *device, const char *devName)
 {
-    if (NULL == device){
+    if (NULL == device) {
         return -1;
     }
     int ret = camInit(device);
@@ -938,10 +905,10 @@ int videowidget::switchCamera(const char* device, const char* devName)
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
         //切换摄像机成功，发送设备名称信号到主界面。
-        if (devName && strlen(devName)){
+        if (devName && strlen(devName)) {
             emit switchCameraSuccess(devName);
         }
-        dc::Settings::get().setBackOption("device",device);
+        dc::Settings::get().setBackOption("device", device);
     } else if (ret == E_FORMAT_ERR) {
         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
@@ -985,7 +952,7 @@ void videowidget::onTakePic(bool bTrue)
         m_curTakePicTime = m_nMaxContinuous;
         emit updateBlockSystem(true);//连拍时开启关机阻止
         showCountdown();  //直接执行拍照动作
-        if(0 != m_nMaxInterval){
+        if (0 != m_nMaxInterval) {
             //连拍，启动timer
             emit updatePhotoState(CMainWindow::prePhoto);
             m_countTimer->start(1000);
@@ -1013,8 +980,6 @@ void videowidget::onTakePic(bool bTrue)
             m_openglwidget->show();
 
 #endif
-        emit toolbarShow(true);
-        recoverTabWidget();
     }
 }
 
@@ -1061,7 +1026,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
 
     m_nInterval = m_Maxinterval;
     showCountdown();
-    if (0 != m_Maxinterval){
+    if (0 != m_Maxinterval) {
         m_countTimer->start(1000);
         //向mainwindow 发送录像倒计时状态
         emit updateRecordState(photoRecordBtn::preRecord);
@@ -1124,8 +1089,6 @@ void videowidget::startTakeVideo()
         if (DataManager::instance()->m_tabIndex == 8)
             DataManager::instance()->setNowTabIndex(8);
 
-        emit toolbarShow(false);
-
         m_recordingTimeWidget->show();
         m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
                                     nHeight - m_recordingTimeWidget->height() - 9);
@@ -1163,23 +1126,16 @@ void videowidget::stopEverything()
 #endif
 }
 
-void videowidget::onSetFlash(bool bFlashOn)
-{
-    m_flashLabel->setVisible(bFlashOn);
-}
-
 void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
 {
     if (m_pSvgItem->isVisible()) {
         QString str;
         if (themeType == DGuiApplicationHelper::LightType) {
             if (DataManager::instance()->getdevStatus() == NOCAM) {
-                m_svg.load(QString(":/images/icons/light/Not connected.svg"));
-                m_pSvgItem->setSharedRenderer(&m_svg);
+                m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/light/Not connected.svg"), this));
                 str = tr("No webcam found");//未连接摄像头
             } else {//仅CAM_CANNOT_USE
-                m_svg.load(QString(":/images/icons/light/Take up.svg"));
-                m_pSvgItem->setSharedRenderer(&m_svg);
+                m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/light/Take up.svg"), this));
                 str = tr("The webcam is in use");//摄像头已被占用
             }
 
@@ -1195,13 +1151,11 @@ void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
         } else if (themeType == DGuiApplicationHelper::DarkType) {
             if (DataManager::instance()->getdevStatus() == NOCAM) {
                 qDebug() << "changed theme 3";
-                m_svg.load(QString(":/images/icons/dark/Not connected_dark.svg"));
-                m_pSvgItem->setSharedRenderer(&m_svg);
+                m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Not connected_dark.svg"), this));
                 str = tr("No webcam found");//未连接摄像头
             } else {//仅CAM_CANNOT_USE
                 qDebug() << "changed theme 4";
-                m_svg.load(QString(":/images/icons/dark/Take up_dark.svg"));
-                m_pSvgItem->setSharedRenderer(&m_svg);
+                m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Take up_dark.svg"), this));
                 str = tr("The webcam is in use");//摄像头已被占用
             }
 
@@ -1235,7 +1189,7 @@ void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
 
 void videowidget::setHorizontalMirror(bool bMirror)
 {
-    if (nullptr != m_imgPrcThread){
+    if (nullptr != m_imgPrcThread) {
         m_imgPrcThread->setHorizontalMirror(bMirror);
     }
 }

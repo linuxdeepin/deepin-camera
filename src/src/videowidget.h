@@ -79,11 +79,6 @@ signals:
     void sigDeviceChange();
 
     /**
-    * @brief sigFlash　闪光灯信号
-    */
-    void sigFlash();
-
-    /**
     * @brief takePicCancel　取消拍照
     */
     void takePicCancel();
@@ -131,15 +126,9 @@ signals:
     void filename(QString strFilename);
 
     /**
-    * @brief toolbarShow　显示与隐藏界面按钮
-    * @param bShow 是否显示
-    */
-    void toolbarShow(bool bShow);
-
-    /**
     * @brief switchCameraSuccess　摄像头切换成功通知
     */
-    void switchCameraSuccess(const QString& devName);
+    void switchCameraSuccess(const QString &devName);
 
     /**
     * @brief updateRecordState　更新录制状态
@@ -172,15 +161,10 @@ public:
     }
 
     /**
-     * @brief stopCountTimeRecord 取消录制
-     */
-    void takeVideoCancel();
-
-    /**
     * @brief setSaveVdFolder　设置保存视频文件夹
     * @param strVdFolder 视频文件夹路径
     */
-    void setSaveVdFolder(QString& strVdFolder)
+    void setSaveVdFolder(QString &strVdFolder)
     {
         m_saveVdFolder = strVdFolder;
     }
@@ -189,7 +173,7 @@ public:
     * @brief setSavePicFolder　设置保存照片文件夹
     * @param strPicFolder 照片文件夹路径
     */
-    void setSavePicFolder(QString& strPicFolder)
+    void setSavePicFolder(QString &strPicFolder)
     {
         m_savePicFolder = strPicFolder;
     }
@@ -274,11 +258,6 @@ public slots:
     void onRestartDevices();
 
     /**
-    * @brief onCloseFlash　设置闪光
-    */
-    void onSetFlash(bool bFlashOn);
-
-    /**
     * @brief onThemeTypeChanged　主题切换槽函数
     */
     void onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType);
@@ -317,11 +296,6 @@ private slots:
 
 private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
-
-    /**
-     * @brief recoverTabWidget 恢复窗体的tab框选
-     */
-    void recoverTabWidget();
 
     /**
     * @brief showCountDownLabel　显示录制和拍照倒计时
@@ -366,7 +340,7 @@ private:
     * @param devName    设备名称
     * @return 0 成功 其他 失败
     */
-    int switchCamera(const char* device, const char* devName);
+    int switchCamera(const char *device, const char *devName);
 
 public:
     MajorImageProcessingThread *m_imgPrcThread;
@@ -389,8 +363,6 @@ private:
     DLabel                     *m_recordingTime;    //录制时长
 
     QSound                     *m_takePicSound;     //拍照声音
-    QPixmap                    m_framePixmap;       //帧图片
-    QSvgRenderer               m_svg;
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器
@@ -404,6 +376,7 @@ private:
 #ifndef __mips__
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
 #else
+    QPixmap                    m_framePixmap;       //帧图片
     QGraphicsPixmapItem        *m_pNormalItem;
 #endif
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示

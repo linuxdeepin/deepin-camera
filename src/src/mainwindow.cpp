@@ -788,31 +788,29 @@ void CMainWindow::reflushSnapshotLabel()
 {
     QFileInfoList picPathList;
     QFileInfoList videoPathList;
-    QString lastFilePath ="";
+    QString lastFilePath = "";
 
     getMediaFileInfoList(m_videoPath, videoPathList);
     getMediaFileInfoList(m_picPath, picPathList);
     if (!videoPathList.isEmpty()
-            && picPathList.isEmpty()){
+            && picPathList.isEmpty()) {
         lastFilePath = videoPathList[0].filePath();
-    }
-    else if (videoPathList.isEmpty()
-             && ! picPathList.isEmpty()){
+    } else if (videoPathList.isEmpty()
+               && ! picPathList.isEmpty()) {
         lastFilePath = picPathList[0].filePath();
-    }
-    else if (!videoPathList.isEmpty()
-             && !picPathList.isEmpty()){
+    } else if (!videoPathList.isEmpty()
+               && !picPathList.isEmpty()) {
         lastFilePath = videoPathList[0].filePath();
-        if (videoPathList[0].fileTime(QFileDevice::FileModificationTime) < picPathList[0].fileTime(QFileDevice::FileModificationTime)){
+        if (videoPathList[0].fileTime(QFileDevice::FileModificationTime) < picPathList[0].fileTime(QFileDevice::FileModificationTime)) {
             lastFilePath = picPathList[0].filePath();
         }
     }
     m_snapshotLabel->updatePicPath(lastFilePath);
 }
 
-void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList& fileList)
+void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList &fileList)
 {
-    if (path.isEmpty()){
+    if (path.isEmpty()) {
         return;
     }
 
@@ -915,7 +913,7 @@ void CMainWindow::initBlockSleep()
 
 void CMainWindow::initTabOrder()
 {
-    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton*>("DTitlebarDWindowMinButton");
+    m_windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
     m_windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
     m_windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
     m_windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
@@ -1230,46 +1228,6 @@ void CMainWindow::loadAfterShow()
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 }
 
-/**
- * @brief CMainWindow::recoverTabWidget
- * @param index
- *
- * 根据eventfilter函数设置的DataManager的m_tabindex序号对控件的tab框选效果做出恢复
- */
-void CMainWindow::recoverTabWidget(uint index)
-{
-    DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
-    DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
-    DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
-    DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
-    switch (index) {
-    case 0:
-        if (findChild<videowidget *>())
-            findChild<videowidget *>()->setFocus();
-        break;
-    case 4:
-        if (windowoptionButton)
-            windowoptionButton->setFocus();
-        break;
-    case 5:
-        if (windowMinBtn)
-            windowMinBtn->setFocus();
-        break;
-    case 6:
-        if (windowMaxBtn)
-            windowMaxBtn->setFocus();
-        break;
-    case 7:
-        if (windowCloseBtn)
-            windowCloseBtn->setFocus();
-        break;
-    case 9:
-        if (m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END))
-            m_videoPre->findChild<DPushButton *>(BUTTON_TAKE_VIDEO_END)->setFocus();
-        break;
-    }
-}
-
 void CMainWindow::updateBlockSystem(bool bTrue)
 {
     if (!CamApp->isPanelEnvironment()) {
@@ -1298,8 +1256,6 @@ void CMainWindow::updateBlockSystem(bool bTrue)
 
 void CMainWindow::onNoCam()
 {
-    onEnableTitleBar(3); //恢复按钮状态
-    onEnableTitleBar(4); //恢复按钮状态
     showChildWidget();
     onEnableSettings(true);
 }
@@ -1316,14 +1272,14 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
     QString videoPath = Settings::get().getOption("base.save.vddatapath").toString();
     QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
     QDir  dir(videoPath);
-    if (!dir.exists()){
+    if (!dir.exists()) {
         m_fileWatcher.removePath(videoPath);
         dir.mkdir(videoPath);
         m_fileWatcher.addPath(videoPath);
     }
 
     dir = QDir(picPath);
-    if (!dir.exists()){
+    if (!dir.exists()) {
         m_fileWatcher.removePath(picPath);
         dir.mkdir(picPath);
         m_fileWatcher.addPath(picPath);
@@ -1332,10 +1288,10 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
     reflushSnapshotLabel();
 }
 
-void CMainWindow::onSwitchCameraSuccess(const QString& cameraName)
+void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
 {
     QStringList tmpList = cameraName.split(":");
-    if (!tmpList.isEmpty()){
+    if (!tmpList.isEmpty()) {
         m_labelCameraName->setText(tmpList[0]);
     }
     int width = m_labelCameraName->fontMetrics().width(tmpList[0]);
@@ -1369,20 +1325,14 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
     } else { //锁屏结束连拍
         if (key2value.value("Locked").value<bool>()) {
             onStopPhotoAndRecord();
-         }
+        }
     }
-}
-
-void CMainWindow::onToolbarShow(bool bShow)
-{
-    Q_UNUSED(bShow);
-//    showRightButtons();
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
 {
     QFile file(fileName);
-    if (!file.exists()){
+    if (!file.exists()) {
         return;
     }
     file.remove();
@@ -1419,27 +1369,24 @@ void CMainWindow::onModeSwitchBoxValueChanged(int type)
 void CMainWindow::onPhotoRecordBtnClked()
 {
     //没有摄像机，不进行任何操作
-    if (NOCAM == DataManager::instance()->getdevStatus()){
+    if (NOCAM == DataManager::instance()->getdevStatus()) {
         return;
     }
     //拍照模式下
-    if (true == m_photoRecordBtn->photoState()){
+    if (true == m_photoRecordBtn->photoState()) {
         //正在拍照
-        if (photoNormal != m_photoState){
+        if (photoNormal != m_photoState) {
             m_videoPre->onTakePic(false);
-        }
-        else{
+        } else {
             if (!m_windowStateThread->isRunning()) {
                 m_windowStateThread->start();
             }
             m_videoPre->onTakePic(true);
         }
-    }
-    else{  //录像模式下
-        if (true == m_bRecording){
+    } else { //录像模式下
+        if (true == m_bRecording) {
             m_videoPre->onEndBtnClicked();
-        }
-        else{
+        } else {
             m_videoPre->onTakeVideo();
             if (!m_windowStateThread->isRunning()) {
                 m_windowStateThread->start();
@@ -1461,7 +1408,7 @@ void CMainWindow::onUpdateRecordState(int state)
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
     if (false == m_bRecording
-        && m_windowStateThread->isRunning()){
+            && m_windowStateThread->isRunning()) {
         m_windowStateThread->requestInterruption();
     }
 }
@@ -1472,53 +1419,51 @@ void CMainWindow::onUpdatePhotoState(int state)
     m_photoState = state;
     showChildWidget();
     if (photoNormal == state
-        && m_windowStateThread->isRunning()){
+            && m_windowStateThread->isRunning()) {
         m_windowStateThread->requestInterruption();
     }
 }
 
 void CMainWindow::onStopPhotoAndRecord()
 {
-    if (photoNormal != m_photoState){
+    if (photoNormal != m_photoState) {
         m_videoPre->onTakePic(false);
     }
-    if (m_bRecording){
+    if (m_bRecording) {
         m_videoPre->onEndBtnClicked();
     }
 }
 
 void CMainWindow::onMirrorStateChanged(bool bMirror)
 {
-    if(m_videoPre){
+    if (m_videoPre) {
         m_videoPre->setHorizontalMirror(bMirror);
     }
 }
 
 void CMainWindow::onSetFlash(bool bFlashOn)
 {
-    if(m_videoPre){
+    if (m_videoPre) {
         m_videoPre->setFlash(bFlashOn);
     }
-    if (bFlashOn != dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool()){
+    if (bFlashOn != dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool()) {
         dc::Settings::get().setOption("photosetting.Flashlight.Flashlight", bFlashOn);
     }
-    if (bFlashOn != m_takePhotoSettingArea->flashLight()){
+    if (bFlashOn != m_takePhotoSettingArea->flashLight()) {
         m_takePhotoSettingArea->setFlashlight(bFlashOn);
     }
 }
 
 void CMainWindow::onKeyUp()
 {
-    QWidget* pWidget = focusWidget();
-    if(m_cameraSwitchBtn == pWidget
-       || m_takePhotoSettingArea == pWidget){
+    QWidget *pWidget = focusWidget();
+    if (m_cameraSwitchBtn == pWidget
+            || m_takePhotoSettingArea == pWidget) {
         m_windowoptionButton->setFocus();
-    }
-    else if (m_photoRecordBtn == pWidget){
-        if (m_cameraSwitchBtn->isHidden()){
+    } else if (m_photoRecordBtn == pWidget) {
+        if (m_cameraSwitchBtn->isHidden()) {
             m_windowoptionButton->setFocus();
-        }
-        else{
+        } else {
             m_cameraSwitchBtn->setFocus();
         }
     }
@@ -1526,50 +1471,50 @@ void CMainWindow::onKeyUp()
 
 void CMainWindow::onKeyDown()
 {
-    QWidget* pWidget = focusWidget();
-    if (m_windowMinBtn== pWidget
-        || m_windowoptionButton == pWidget
-        || m_windowMaxBtn == pWidget
-        || m_windowCloseBtn == pWidget){
-        if (m_cameraSwitchBtn->isHidden()){
+    QWidget *pWidget = focusWidget();
+    if (m_windowMinBtn == pWidget
+            || m_windowoptionButton == pWidget
+            || m_windowMaxBtn == pWidget
+            || m_windowCloseBtn == pWidget) {
+        if (m_cameraSwitchBtn->isHidden()) {
             m_photoRecordBtn->setFocus();
         } else {
             m_cameraSwitchBtn->setFocus();
         }
-    } else if (m_cameraSwitchBtn == pWidget){
+    } else if (m_cameraSwitchBtn == pWidget) {
         m_photoRecordBtn->setFocus();
-    } else if (m_photoRecordBtn == pWidget){
+    } else if (m_photoRecordBtn == pWidget) {
         m_snapshotLabel->setFocus();
     }
 }
 
 void CMainWindow::onKeyLeft()
 {
-    QWidget* pWidget = focusWidget();
+    QWidget *pWidget = focusWidget();
     if (m_cameraSwitchBtn == pWidget
             || m_photoRecordBtn == pWidget
-            || m_snapshotLabel == pWidget){
+            || m_snapshotLabel == pWidget) {
         m_takePhotoSettingArea->setFocus();
-    } else if(m_windowCloseBtn == pWidget) {
+    } else if (m_windowCloseBtn == pWidget) {
         m_windowMaxBtn->setFocus();
-    } else if (m_windowMaxBtn == pWidget){
+    } else if (m_windowMaxBtn == pWidget) {
         m_windowMinBtn->setFocus();
-    } else if(m_windowMinBtn == pWidget){
+    } else if (m_windowMinBtn == pWidget) {
         m_windowoptionButton->setFocus();
     }
 }
 
 void CMainWindow::onkeyRight()
 {
-    QWidget* pWidget = focusWidget();
-    if (m_windowoptionButton == pWidget){
+    QWidget *pWidget = focusWidget();
+    if (m_windowoptionButton == pWidget) {
         m_windowMinBtn->setFocus();
-    } else if (m_windowMinBtn == pWidget){
+    } else if (m_windowMinBtn == pWidget) {
         m_windowMaxBtn->setFocus();
-    } else if (m_windowMaxBtn == pWidget){
+    } else if (m_windowMaxBtn == pWidget) {
         m_windowCloseBtn->setFocus();
-    } else if (m_takePhotoSettingArea == pWidget){
-        if(m_cameraSwitchBtn->isHidden()){
+    } else if (m_takePhotoSettingArea == pWidget) {
+        if (m_cameraSwitchBtn->isHidden()) {
             m_photoRecordBtn->setFocus();
         } else {
             m_cameraSwitchBtn->setFocus();
@@ -1635,7 +1580,7 @@ void CMainWindow::initUI()
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
     paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 30)); //深色
-    paletteName.setColor(QPalette::WindowText, QColor(255,255,255, 255));
+    paletteName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
     QFont ft;
@@ -1643,8 +1588,8 @@ void CMainWindow::initUI()
     ft.setWeight(20);
     ft.setPointSize(18);
     m_labelCameraName->setFont(ft);
-    m_labelCameraName->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-    m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
+    m_labelCameraName->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
 
     QDir dirVd(m_videoPath);
     dirVd.cdUp();
@@ -1739,8 +1684,6 @@ void CMainWindow::initConnection()
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
     //拍照
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
-    //上层按钮显示状态切换
-    connect(m_videoPre, SIGNAL(toolbarShow(bool)), this, SLOT(onToolbarShow(bool)));
     //拍照取消
     connect(m_videoPre, SIGNAL(takePicCancel()), this, SLOT(onTakePicCancel()));
     //拍照结束
@@ -1762,7 +1705,7 @@ void CMainWindow::initConnection()
 
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
 
-    connect(m_showCameraNameTimer, SIGNAL(timeout()),this, SLOT(onShowCameraNameTimer()));
+    connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
     //主题变换
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 
@@ -1788,13 +1731,13 @@ void CMainWindow::initConnection()
 void CMainWindow::initRightButtons()
 {
     m_cameraSwitchBtn = new SwitchCameraBtn(this);
-    m_cameraSwitchBtn->setFixedSize(SwitchcameraDiam,SwitchcameraDiam);
+    m_cameraSwitchBtn->setFixedSize(SwitchcameraDiam, SwitchcameraDiam);
     m_cameraSwitchBtn->setObjectName(CAMERA_SWITCH_BTN);
     m_cameraSwitchBtn->setAccessibleName(CAMERA_SWITCH_BTN);
     m_cameraSwitchBtn->setToolTip(tr("Switch Cameras"));
 
     m_photoRecordBtn = new photoRecordBtn(this);
-    m_photoRecordBtn->setFixedSize(photeRecordDiam,photeRecordDiam);
+    m_photoRecordBtn->setFixedSize(photeRecordDiam, photeRecordDiam);
     m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setToolTip(tr("Photo"));
@@ -1809,14 +1752,14 @@ void CMainWindow::initRightButtons()
     m_modeSwitchBox->show();
 
     m_snapshotLabel = new ImageItem(this);
-    m_snapshotLabel->setFixedSize(snapLabelDiam,snapLabelDiam);
+    m_snapshotLabel->setFixedSize(snapLabelDiam, snapLabelDiam);
     m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
     m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
     connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     connect(m_modeSwitchBox, &RollingBox::currentValueChanged, this, &CMainWindow::onModeSwitchBoxValueChanged);
     connect(m_photoRecordBtn, SIGNAL(clicked()), this, SLOT(onPhotoRecordBtnClked()));
-    connect(m_snapshotLabel,SIGNAL(trashFile(const QString&)), SLOT(onTrashFile(const QString&)));
+    connect(m_snapshotLabel, SIGNAL(trashFile(const QString &)), SLOT(onTrashFile(const QString &)));
 
     //系统文件夹变化信号
     connect(&m_fileWatcher, SIGNAL(directoryChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
@@ -1827,40 +1770,40 @@ void CMainWindow::initRightButtons()
     //系统文件夹变化信号
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //摄像头切换成功信号
-    connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString&)), this, SLOT(onSwitchCameraSuccess(const QString&)));
+    connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
     locateRightButtons();
 }
 
 void CMainWindow::locateRightButtons()
 {
-    if (nullptr == m_photoRecordBtn){
+    if (nullptr == m_photoRecordBtn) {
         return;
     }
-    int buttonCenterX = width()-rightOffset - photeRecordDiam/2;
-    int buttonCenterY = height()/2;
-    int photoRecordLeftX = buttonCenterX - photeRecordDiam/2;
-    int photoRecordLeftY = buttonCenterY - photeRecordDiam/2;
-    m_photoRecordBtn->move(photoRecordLeftX,photoRecordLeftY);
+    int buttonCenterX = width() - rightOffset - photeRecordDiam / 2;
+    int buttonCenterY = height() / 2;
+    int photoRecordLeftX = buttonCenterX - photeRecordDiam / 2;
+    int photoRecordLeftY = buttonCenterY - photeRecordDiam / 2;
+    m_photoRecordBtn->move(photoRecordLeftX, photoRecordLeftY);
 
-    int switchCameraOffset = height()/15;
-    int switchCameraX = buttonCenterX - SwitchcameraDiam/2;
+    int switchCameraOffset = height() / 15;
+    int switchCameraX = buttonCenterX - SwitchcameraDiam / 2;
     int switchCameraY = photoRecordLeftY - SwitchcameraDiam - switchCameraOffset;
     m_cameraSwitchBtn->move(switchCameraX, switchCameraY);
 
-    int switchBtnX = buttonCenterX - switchBtnWidth/2;
+    int switchBtnX = buttonCenterX - switchBtnWidth / 2;
     int switchBtnY = photoRecordLeftY + photeRecordDiam;
-    m_modeSwitchBox->move(switchBtnX,switchBtnY);
+    m_modeSwitchBox->move(switchBtnX, switchBtnY);
 
-    int snapLabelOffset = height()/10;
-    int snapLabelX = buttonCenterX - snapLabelDiam/2;
+    int snapLabelOffset = height() / 10;
+    int snapLabelX = buttonCenterX - snapLabelDiam / 2;
     int snapLabelY = switchBtnY + switchBtnHeight * 2 + snapLabelOffset;
-    m_snapshotLabel->move(snapLabelX,snapLabelY);
+    m_snapshotLabel->move(snapLabelX, snapLabelY);
 }
 
 void CMainWindow::setSelBtnHide()
 {
     m_bSwitchCameraShowEnable = false;
-    if (!m_cameraSwitchBtn->isHidden()){
+    if (!m_cameraSwitchBtn->isHidden()) {
         showChildWidget();
     }
 }
@@ -1873,7 +1816,7 @@ void CMainWindow::onLocalTimeChanged()
 void CMainWindow::setSelBtnShow()
 {
     m_bSwitchCameraShowEnable = true;
-    if (m_cameraSwitchBtn->isHidden()){
+    if (m_cameraSwitchBtn->isHidden()) {
         showChildWidget();
     }
 }
@@ -1895,7 +1838,7 @@ void CMainWindow::setupTitlebar()
     m_pTitlebar->titlebar()->setMenu(m_titlemenu);
     m_pTitlebar->titlebar()->setParent(this);
 
-    m_pTitlebar->move(0,0);
+    m_pTitlebar->move(0, 0);
     m_pTitlebar->setFixedHeight(50);
 }
 
@@ -1903,7 +1846,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event);
     if (m_labelCameraName && m_bUIinit) {
-        m_labelCameraName->move((width()-labelCameraNameWidth)/2, height() - 20 - labelCameraNameHeight);
+        m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
     }
     locateRightButtons();
     if (m_videoPre)
@@ -1956,11 +1899,6 @@ void CMainWindow::changeEvent(QEvent *event)
     }
 }
 
-void CMainWindow::onEnableTitleBar(int nType)
-{
-
-}
-
 void CMainWindow::onSettingsDlgClose()
 {
     bool bPathChanged = false;
@@ -1968,20 +1906,20 @@ void CMainWindow::onSettingsDlgClose()
     QString setPicPath  = lastOpenedPath(QStandardPaths::PicturesLocation);
 
     //判断图片路径是否改变
-    if (m_picPath != setPicPath){  //图片路径修改了
+    if (m_picPath != setPicPath) { //图片路径修改了
         QDir setPicDir(setPicPath);
         QDir lastPicDir(m_picPath);
         setPicDir.cdUp();
         lastPicDir.cdUp();
         m_videoPre->setSavePicFolder(setPicPath);
         m_fileWatcher.removePath(m_picPath);
-        if (false == m_fileWatcher.directories().contains(setPicPath)){
+        if (false == m_fileWatcher.directories().contains(setPicPath)) {
             m_fileWatcher.addPath(setPicPath);
         }
 
-        if (setPicDir.path() != lastPicDir.path()){
+        if (setPicDir.path() != lastPicDir.path()) {
             m_fileWatcherUp.removePath(lastPicDir.path());
-            if (false == m_fileWatcherUp.directories().contains(setPicDir.path())){
+            if (false == m_fileWatcherUp.directories().contains(setPicDir.path())) {
                 m_fileWatcherUp.addPath(setPicDir.path());
             }
         }
@@ -1989,20 +1927,20 @@ void CMainWindow::onSettingsDlgClose()
         bPathChanged = true;
     }
 
-    if (m_videoPath != setVideoPath){
+    if (m_videoPath != setVideoPath) {
         QDir setVideoDir(setVideoPath);
         QDir lastVideoDir(m_videoPath);
         setVideoDir.cdUp();
         lastVideoDir.cdUp();
         m_videoPre->setSaveVdFolder(setVideoPath);
         m_fileWatcher.removePath(m_videoPath);
-        if (false == m_fileWatcher.directories().contains(setVideoPath)){
+        if (false == m_fileWatcher.directories().contains(setVideoPath)) {
             m_fileWatcher.addPath(setVideoPath);
         }
 
-        if (setVideoDir.path() != lastVideoDir.path()){
+        if (setVideoDir.path() != lastVideoDir.path()) {
             m_fileWatcherUp.removePath(lastVideoDir.path());
-            if (false == m_fileWatcherUp.directories().contains(setVideoDir.path())){
+            if (false == m_fileWatcherUp.directories().contains(setVideoDir.path())) {
                 m_fileWatcherUp.addPath(setVideoDir.path());
             }
         }
@@ -2049,7 +1987,7 @@ void CMainWindow::onSettingsDlgClose()
     m_videoPre->setContinuous(nContinuous);
     Settings::get().settings()->sync();
 
-    if (bPathChanged){
+    if (bPathChanged) {
         reflushSnapshotLabel();
     }
 }
@@ -2061,7 +1999,6 @@ void CMainWindow::onEnableSettings(bool bTrue)
 
 void CMainWindow::onTakePicDone()
 {
-    onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
 }
 
@@ -2072,19 +2009,11 @@ void CMainWindow::onTakePicOnce()
 
 void CMainWindow::onTakePicCancel()
 {
-    onEnableTitleBar(3); //恢复按钮状态
     onEnableSettings(true);
-    //恢复控件焦点状态
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
-
-    qDebug() << "Cancel taking photo!";
 }
 
 void CMainWindow::onTakeVdDone()
 {
-    onEnableTitleBar(4); //恢复按钮状态
-    //恢复控件焦点状态
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
     onEnableSettings(true);
 
     QTimer::singleShot(200, this, [ = ] {
@@ -2101,10 +2030,7 @@ void CMainWindow::onTakeVdDone()
 
 void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文件检测实现缩略图恢复，这里不需要额外处理
 {
-    onEnableTitleBar(4); //恢复按钮状态
     onEnableSettings(true);
-    recoverTabWidget(DataManager::instance()->getNowTabIndex());
-    qDebug() << "Cancel taking video!";
 }
 
 void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
@@ -2142,7 +2068,7 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         DataManager::instance()->m_tabIndex = 8;
     } else if ((obj == endbtn) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 9;
-    }else if (e->type() == QEvent::MouseButtonPress) {
+    } else if (e->type() == QEvent::MouseButtonPress) {
         DataManager::instance()->m_tabIndex = 0;
         m_videoPre->setFocus();
     } else {
@@ -2164,16 +2090,16 @@ void CMainWindow::showChildWidget()
 {
     //正在拍照过程中
     if (photoNormal != m_photoState) {
-        showWidget(m_cameraSwitchBtn,false);
-        showWidget(m_snapshotLabel,false);
+        showWidget(m_cameraSwitchBtn, false);
+        showWidget(m_snapshotLabel, false);
         showWidget(m_modeSwitchBox, false);
         showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
         return;
     }
     if (m_bRecording) {  //正在录像
-        showWidget(m_cameraSwitchBtn,false);
-        showWidget(m_snapshotLabel,false);
+        showWidget(m_cameraSwitchBtn, false);
+        showWidget(m_snapshotLabel, false);
         showWidget(m_modeSwitchBox, false);
         showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
@@ -2183,13 +2109,13 @@ void CMainWindow::showChildWidget()
     showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
     showWidget(m_modeSwitchBox, true);
     showWidget(m_photoRecordBtn, true);
-    showWidget(m_takePhotoSettingArea,true);
+    showWidget(m_takePhotoSettingArea, true);
 }
 
-void CMainWindow::showWidget(DWidget* widget, bool bShow)
+void CMainWindow::showWidget(DWidget *widget, bool bShow)
 {
-    if (widget){
-        if(!bShow){
+    if (widget) {
+        if (!bShow) {
             widget->hide();
         }
 

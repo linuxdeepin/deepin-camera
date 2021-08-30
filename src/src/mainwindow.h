@@ -78,11 +78,11 @@ class CMainWindow : public DMainWindow
 {
     Q_OBJECT
 public:
-    typedef enum _photo_state{
+    typedef enum _photo_state {
         photoNormal = 0,           //未开始
         prePhoto    = 1,           //倒计时
         Photoing    = 2,           //正在拍照
-    }PhotoState;
+    } PhotoState;
 
     explicit CMainWindow(QWidget *parent = nullptr);
 
@@ -111,11 +111,6 @@ public:
     * @brief loadAfterShow　延后加载
     */
     void loadAfterShow();
-
-    /**
-     * @brief recoverTabWidget 拍照、录制触发完过后恢复tab框
-     */
-    void recoverTabWidget(uint index);
 
     ~CMainWindow();
 private:
@@ -214,7 +209,7 @@ private:
     /**
     * @brief getMediaFileInfoList　获得录像、图片文件列表
     */
-    void getMediaFileInfoList(const QString &path, QFileInfoList& fileList);
+    void getMediaFileInfoList(const QString &path, QFileInfoList &fileList);
 
 private slots:
     /**
@@ -231,12 +226,6 @@ private slots:
      * @brief setSelBtnShow 设置切换相机按钮显示
      */
     void setSelBtnShow();
-
-    /**
-     * @brief onEnableTitleBar 标题栏的禁用与恢复
-     * @param nType 1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
-     */
-    void onEnableTitleBar(int nType);
 
     /**
      * @brief onSettingsDlgClose 连拍、延时、存储位置设置
@@ -307,17 +296,12 @@ private slots:
      * @brief onSwitchCameraSuccess 切换摄像机成功处理
      * @param cameraName 摄像机名称
      */
-    void onSwitchCameraSuccess(const QString& cameraName);
+    void onSwitchCameraSuccess(const QString &cameraName);
 
     /**
      * @brief onVisible 是否是锁屏
      */
     void onTimeoutLock(const QString &, QVariantMap, QStringList);
-
-    /**
-     * @brief onToolbarShow 是否显示上层按钮
-     */
-    void onToolbarShow(bool bShow);
 
     /**
      * @brief onTrashFile 删除文件
@@ -419,7 +403,7 @@ private:
      * @param widget 需要操作控件
      * @param bShow 是否显示
      */
-    void showWidget(DWidget* widget, bool bShow);
+    void showWidget(DWidget *widget, bool bShow);
 
     /**
      * @brief reflushSnapshotLabel 刷新缩略图控件的显示
@@ -472,7 +456,7 @@ private:
     DWindowOptionButton             *m_windowoptionButton;  //设置按钮
     DWindowMaxButton                *m_windowMaxBtn;        //最大化按钮
     DWindowCloseButton              *m_windowCloseBtn;      //关闭按钮
-	windowStateThread               *m_windowStateThread;   //窗口检测线程
+    windowStateThread               *m_windowStateThread;   //窗口检测线程
 };
 
 #endif // MAINWINDOW_H
