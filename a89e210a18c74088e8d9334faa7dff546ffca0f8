@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84479369_11dc6cf3",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 100; 注释率: 2.0%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8209dac_89babe9d",
+        "filename": "src/src/mainwindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 6; 注释率: 16.7%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eda7b4d1_8e8cfe62",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 25; 注释率: 0.0%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23f24a65_4c00a746",
+        "filename": "src/src/videowidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 5; 注释率: 20.0%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e43a4dbb_b9f04f86",
+        "filename": "tests/MainwindowTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 38; 注释率: 2.6%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77f89ce6_47f037ca",
+        "filename": "tests/VideoWidgetTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-08-30T08:55:38Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 4; 注释率: 0.0%",
+      "revId": "a89e210a18c74088e8d9334faa7dff546ffca0f8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
