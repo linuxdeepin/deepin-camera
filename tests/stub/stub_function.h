@@ -95,7 +95,7 @@ public:
     //返回yuv
     int v4l2core_get_requested_frame_format_yuv(v4l2_dev_t *vd);
     //获得暂停标志
-    int get_capture_pause();
+    int get_capture_pause_true();
 
     int get_capture_pause_false();
     //编码器任务调度

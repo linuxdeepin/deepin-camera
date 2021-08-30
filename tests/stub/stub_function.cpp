@@ -250,7 +250,7 @@ int Stub_Function::v4l2core_get_requested_frame_format_yuv(v4l2_dev_t *vd)
     return V4L2_PIX_FMT_NV12;
 }
 
-int Stub_Function::get_capture_pause()
+int Stub_Function::get_capture_pause_true()
 {
     return 1;
 }
@@ -543,7 +543,7 @@ void Stub_Function::initSub()
     m_stub.set(::video_capture_get_save_video, ADDR(Stub_Function, video_capture_get_save_video));
     m_stub.set(::get_video_codec_ind, ADDR(Stub_Function, get_video_codec_ind));
     m_stub.set(::v4l2core_get_requested_frame_format, ADDR(Stub_Function, v4l2core_get_requested_frame_format_yuv));
-    m_stub.set(::get_capture_pause, ADDR(Stub_Function, get_capture_pause));
+    m_stub.set(::get_capture_pause, ADDR(Stub_Function, get_capture_pause_false));
     m_stub.set(::encoder_buff_scheduler, ADDR(Stub_Function, encoder_buff_scheduler));
     m_stub.set(::v4l2core_set_h264_frame_rate_config, ADDR(Stub_Function, v4l2core_set_h264_frame_rate_config));
 }

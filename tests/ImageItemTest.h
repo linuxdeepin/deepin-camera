@@ -22,6 +22,7 @@
 #define _IMAGE_ITEM_TEST_H
 
 #include <gtest/gtest.h>
+#include <QString>
 
 
 class CMainWindow;
@@ -34,6 +35,9 @@ public:
     virtual void SetUp() override;
 
     virtual void TearDown() override;
+
+    QString getImageFileName();
+    QString getVideoFileName();
 
 protected:
     CMainWindow* m_mainwindow;

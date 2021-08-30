@@ -36,7 +36,7 @@ DevNumberTest::~DevNumberTest()
 void DevNumberTest::SetUp()
 {
     m_mainwindow = CamApp->getMainWindow();
-    if (m_mainwindow){
+    if (m_mainwindow) {
         m_devnumMonitor = m_mainwindow->findChild<DevNumMonitor *>("DevMonitorThread");
     }
 }

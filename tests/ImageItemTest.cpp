@@ -27,7 +27,7 @@
 #include "stub/addr_pri.h"
 #include "src/imageitem.h"
 #include <QtTest/QTest>
-
+#include <QShortcut>
 
 
 ImageItemTest::ImageItemTest()
@@ -43,14 +43,44 @@ ImageItemTest::~ImageItemTest()
 void ImageItemTest::SetUp()
 {
     m_mainwindow = CamApp->getMainWindow();
-    if (m_mainwindow){
-         m_imageItem = m_mainwindow->findChild<ImageItem*>(THUMBNAIL_PREVIEW);
+    if (m_mainwindow) {
+        m_imageItem = m_mainwindow->findChild<ImageItem *>(THUMBNAIL_PREVIEW);
     }
 }
 
 void ImageItemTest::TearDown()
 {
     m_mainwindow = NULL;
+}
+
+QString ImageItemTest::getImageFileName()
+{
+    QString picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                      + QDir::separator() + QObject::tr("Camera");
+    QDir dir(picPath);
+    QStringList filters;
+    filters << QString("*.jpg");
+    dir.setNameFilters(filters);
+    QStringList Ilist = dir.entryList();
+    if (!Ilist.empty()) {
+        return  Ilist.first();
+    }
+    return "";
+}
+
+QString ImageItemTest::getVideoFileName()
+{
+    QString videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                        + QDir::separator() + QObject::tr("Camera");
+    QDir dir(videoPath);
+    QStringList filters;
+    filters << QString("*.webm");
+    dir.setNameFilters(filters);
+    QStringList Ilist = dir.entryList();
+    if (!Ilist.empty()) {
+        return  Ilist.first();
+    }
+    return "";
 }
 
 
@@ -81,7 +111,57 @@ TEST_F(ImageItemTest, Focus)
  */
 TEST_F(ImageItemTest, RightMenu)
 {
-    emit m_imageItem->customContextMenuRequested(QPoint(0,0));
+    emit m_imageItem->customContextMenuRequested(QPoint(0, 0));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
+
+/**
+ *  @brief 拷贝
+ */
+TEST_F(ImageItemTest, Copy)
+{
+    QTest::keySequence(m_imageItem, QKeySequence("ctrl+c"));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
+
+/**
+ *  @brief 删除
+ */
+TEST_F(ImageItemTest, deleteFile)
+{
+    QTest::keySequence(m_imageItem, QKeySequence("delete"));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
+
+/**
+ *  @brief 打开文件夹
+ */
+TEST_F(ImageItemTest, openFolder)
+{
+    QTest::keySequence(m_imageItem, QKeySequence("Ctrl+O"));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
+
+/**
+ *  @brief 打印
+ */
+TEST_F(ImageItemTest, print)
+{
+    QTest::keySequence(m_imageItem, QKeySequence("Ctrl+P"));
+    QTest::qWait(100);
+    QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
+}
+
+/**
+ *  @brief 菜单
+ */
+TEST_F(ImageItemTest, KeyAltAddM)
+{
+    QTest::keySequence(m_imageItem, QKeySequence("Alt+M"));
     QTest::qWait(100);
     QTest::mouseClick(m_mainwindow, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 100);
 }
@@ -113,16 +193,9 @@ TEST_F(ImageItemTest, mouseClickEvent)
 /**
  *  @brief 删除单张缩略图
  */
-TEST_F(ImageItemTest, ImageItemDel)
+TEST_F(ImageItemTest, event)
 {
     if (m_imageItem) {
-        //点击鼠标右键
-        QTest::qWait(1000);
-        QTest::mouseMove(m_imageItem, QPoint(0, 0), 500);
-        QTest::mousePress(m_imageItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 500);
-        QTest::mouseRelease(m_imageItem, Qt::RightButton, Qt::NoModifier, QPoint(0, 0), 0);
-
-        //点击鼠标左键
         QTest::qWait(1000);
         QTest::mouseMove(m_imageItem, QPoint(0, 0), 500);
         QTest::mousePress(m_imageItem, Qt::LeftButton, Qt::NoModifier, QPoint(0, 0), 500);
@@ -135,11 +208,47 @@ TEST_F(ImageItemTest, ImageItemDel)
  */
 TEST_F(ImageItemTest, ImageItemCopyDel)
 {
-    QAction *copyact = m_mainwindow->findChild<QAction *>("CopyAction");
+    QAction *copyact = m_imageItem->findChild<QAction *>("CopyAction");
     if (copyact)
         copyact->trigger();
 
-    QAction *delact = m_mainwindow->findChild<QAction *>("DelAction");
+    QAction *delact = m_imageItem->findChild<QAction *>("DelAction");
     if (delact)
         delact->trigger();
+}
+
+/**
+ *  @brief 更换为图片
+ */
+TEST_F(ImageItemTest, ChangeToPic)
+{
+    QString ImageFile = getImageFileName();
+    qInfo() << "get image:" << ImageFile;
+    if (ImageFile.isEmpty()) {
+        return;
+    }
+    m_imageItem->updatePicPath(ImageFile);
+    emit m_imageItem->customContextMenuRequested(QPoint(0, 0));
+    QTest::qWait(100);
+    m_imageItem->openFile();
+    m_imageItem->onPrint();
+    m_imageItem->onShowMenu();
+}
+
+/**
+ *  @brief 更换为视频
+ */
+TEST_F(ImageItemTest, ChangeToVideo)
+{
+    QString videoFile = getVideoFileName();
+    qInfo() << "get video:" << videoFile;
+    if (videoFile.isEmpty()) {
+        return;
+    }
+    m_imageItem->updatePicPath(videoFile);
+    emit m_imageItem->customContextMenuRequested(QPoint(0, 0));
+    QTest::qWait(100);
+    m_imageItem->openFile();
+    m_imageItem->onPrint();
+    m_imageItem->onShowMenu();
 }

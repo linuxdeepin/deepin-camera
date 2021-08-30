@@ -47,7 +47,7 @@ class AnimationWidget : public DLabel
 {
     Q_OBJECT
 public:
-    AnimationWidget(QPixmap pixmap, QWidget * parent = nullptr);
+    AnimationWidget(QPixmap pixmap, QWidget *parent = nullptr);
     ~AnimationWidget();
     /**
      * @brief setPixmap 更新缩略图
@@ -146,11 +146,6 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
     /**
-     * @brief mouseMoveEvent 用于取消鼠标拖拽，避免拖拽时窗口移动
-     */
-    void mouseMoveEvent(QMouseEvent *event) override;
-
-    /**
      * @brief mouseReleaseEvent 鼠标释放事件
      * @param event
      */
@@ -169,6 +164,7 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
 
 private slots:
+#ifndef UNITTEST
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
     || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
@@ -179,11 +175,13 @@ private slots:
      */
     void paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange);
 #endif
+
     /**
      * @brief paintRequestSync 异步打印
      * @param _printer 打印机
      */
     void paintRequestSync(DPrinter *_printer);
+#endif
 private:
     /**
      * @brief initShortcut 初始化快捷键
@@ -197,7 +195,6 @@ private:
 
 private:
     bool                m_bVideo;//是否视频
-    bool                m_bMousePress;//鼠标按下事件
     QList<QImage>       m_imgs;//需要打印的图片
     QString             m_path;//文件路径
     QPixmap             m_pixmap;//缩略图
