@@ -111,10 +111,10 @@ TEST_F(MajorImagePThTest, ChangedFrame)
 TEST_F(MajorImagePThTest, CapturePause)
 {
     m_processThread->setHorizontalMirror(false);
-    Stub_Function::resetSub(::get_capture_pause, ADDR(Stub_Function, get_capture_pause_false));
+    Stub_Function::resetSub(::get_capture_pause, ADDR(Stub_Function, get_capture_pause_true));
     m_processThread->init();
     call_private_fun::MajorImageProcessingThreadrun(*m_processThread);
-    Stub_Function::resetSub(::get_capture_pause, ADDR(Stub_Function, get_capture_pause));
+    Stub_Function::resetSub(::get_capture_pause, ADDR(Stub_Function, get_capture_pause_false));
     m_processThread->setHorizontalMirror(true);
 }
 

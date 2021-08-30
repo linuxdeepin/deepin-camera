@@ -91,13 +91,13 @@ ImageItem::ImageItem(QWidget *parent)
     //右键菜单
     connect(this, &DLabel::customContextMenuRequested, this, [ = ](QPoint pos) {
         Q_UNUSED(pos);
-        if (m_bVideo){
+        if (m_bVideo) {
             m_menu->removeAction(m_actPrint);
         } else {
             m_menu->insertAction(m_actOpenFolder, m_actPrint);
         }
 #ifndef UNITTEST
-        if (!m_path.isEmpty()){
+        if (!m_path.isEmpty()) {
             m_menu->exec(QCursor::pos());
         }
 #endif
@@ -148,7 +148,7 @@ void ImageItem::updatePicPath(const QString &filePath)
     } else {
         pix = QPixmap();
     }
-    QTimer::singleShot(500, this, [=](){
+    QTimer::singleShot(500, this, [ = ]() {
         updatePic(pix);
         pix.scaled(this->size(), Qt::KeepAspectRatio);
     });
@@ -197,7 +197,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     foregroundRect.setWidth(rect().width() - 4);
     foregroundRect.setHeight(rect().height() - 4);
 
-    QColor bgColor = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0, 0, 0, 25);
+    QColor bgColor = m_bFocus ? QColor(0, 0x81, 0xff, 255) : QColor(0, 0, 0, 25);
     QPainterPath bg;
     bg.addRoundedRect(rect(), 26, 26);
     painter.fillPath(bg, QBrush(bgColor));
@@ -245,14 +245,13 @@ void ImageItem::onShowMenu()
 {
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
-    if (m_bVideo){
+    if (m_bVideo) {
         m_menu->removeAction(m_actPrint);
-    }
-    else {
+    } else {
         m_menu->insertAction(m_actOpenFolder, m_actPrint);
     }
 #ifndef UNITTEST
-    if (!m_path.isEmpty()){
+    if (!m_path.isEmpty()) {
         m_menu->exec(screen_centerpos);
     }
 #endif
@@ -296,7 +295,7 @@ void ImageItem::openFile()
     QFileInfo fileInfo(m_path);
     QString program;
     QStringList arguments;
-    if (m_path.isEmpty()){
+    if (m_path.isEmpty()) {
         return;
     }
     if (fileInfo.suffix() == "jpg") {
@@ -428,6 +427,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 #endif
 }
 
+#ifndef UNITTEST
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
     || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
@@ -500,6 +500,7 @@ void ImageItem::paintRequestSync(DPrinter *_printer)
 
     painter.end();
 }
+#endif
 
 void AnimationWidget::paintEvent(QPaintEvent *e)
 {
@@ -514,7 +515,7 @@ void AnimationWidget::paintEvent(QPaintEvent *e)
     painter.fillPath(path, QBrush(m_animatePix));
 }
 
-AnimationWidget::AnimationWidget(QPixmap pixmap, QWidget * parent) : m_animatePix(pixmap)
+AnimationWidget::AnimationWidget(QPixmap pixmap, QWidget *parent) : m_animatePix(pixmap)
 {
     this->setParent(parent);
     setMargin(0);
