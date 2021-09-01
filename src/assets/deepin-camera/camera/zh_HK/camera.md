@@ -10,13 +10,11 @@
 
 ### 運行相機
 
-1. 單擊任務欄上的啟動器圖標 ![deepin_launcher](../common/deepin_launcher.svg) ，進入啟動器界面。
+1. 單擊任務欄上的啟動器圖標 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器界面。
 2. 上下滾動鼠標滾輪瀏覽或通過搜索找到，相機圖標 ![camera](../common/camera.svg)，單擊運行。
 3. 右鍵單擊 ![camera](../common/camera.svg)，您可以：
    - 單擊 **傳送到桌面**，在桌面創建快捷方式。
-
    - 單擊 **傳送到任務欄**，將應用程序固定到任務欄。
-
    - 單擊 **加至開機啟動**，將應用程序添加到開機啟動項，在電腦開機時自動運行該應用程序。
 
 ### 關閉相機
@@ -26,6 +24,7 @@
 - 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)，選擇 **退出** 來退出相機。
 
 ## 操作介紹
+
 使用相機的前提是電腦中自帶鏡頭或外接鏡頭，當連接多個鏡頭時，可以在多個鏡頭間切換。相機主界面可以選擇拍照或錄製影片模式。
 
 ### 拍照
@@ -37,7 +36,7 @@
 
 ### 錄製影片 
 
-在相機主界面，單擊按鈕 ![transcribe_bottom](../common/transcribe_bottom.svg)，進入影片模式。單擊錄製影片按鈕 ![transcribe](../common/transcribe.svg)進行錄製，錄製完成後單擊結束錄製按鈕![stop](../common/stop.svg)，影片文件會展示在界面，也會保存在默認路徑下。
+在相機主界面，單擊按鈕 ![transcribe_bottom](../common/transcribe_bottom.svg)，進入影片模式。單擊錄製影片按鈕 ![transcribe](../common/transcribe.svg) 進行錄製，錄製完成後單擊結束錄製按鈕![stop](../common/stop.svg)，影片文件會展示在界面，也會保存在默認路徑下。
 
 ![video](fig/video.png)
 
@@ -61,7 +60,6 @@
 ### 設置
 
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
-
 2. 單擊 **設置**，您可以進行基本設置、拍照設置及輸出設置。
 
    - 基本設置：設置照片及影片的默認保存路徑。
@@ -80,13 +78,13 @@
 
 窗口主題包含淺色主題、深色主題和系統主題。
 
-1. 在相機界面，單擊![icon_menu](../common/icon_menu.svg)。
+1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
 2. 單擊 **主題**，選擇一個主題顏色。
 
 ### 幫助
 
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
-2. 單擊 **幫助**，查看幫助手冊，讓您進一步了解和使用相機。
+2. 單擊 **幫助**，查看幫助手冊，進一步了解和使用相機。
 
 ### 關於
 

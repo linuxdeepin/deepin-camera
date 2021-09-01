@@ -11,21 +11,20 @@
 ### 运行相机
 
 1. 单击任务栏上的启动器图标 ![deepin_launcher](../common/deepin_launcher.svg)，进入启动器界面。
-2. 上下滚动鼠标滚轮浏览或通过搜索，找到相机图标 ![camera](../common/camera.svg) ，单击运行 。
-3. 右键单击![camera](../common/camera.svg) ，您可以：
+2. 上下滚动鼠标滚轮浏览或通过搜索，找到相机图标 ![camera](../common/camera.svg)，单击运行 。
+3. 右键单击 ![camera](../common/camera.svg)，您可以：
    - 单击 **发送到桌面**，在桌面创建快捷方式。
-
    - 单击 **发送到任务栏**，将应用程序固定到任务栏。
-
    - 单击 **开机自动启动**，将应用程序添加到开机启动项，在电脑开机时自动运行该应用程序。
 
 ### 关闭相机
 
-- 在相机界面单击![close](../common/close.svg) ，退出相机。
+- 在相机界面单击 ![close](../common/close.svg)，退出相机。
 - 右键单击任务栏上的 ![camera](../common/camera.svg)，选择 **关闭所有** 来退出相机。
-- 在相机界面单击 ![icon_menu](../common/icon_menu.svg) ，选择 **退出** 来退出相机。
+- 在相机界面单击 ![icon_menu](../common/icon_menu.svg)，选择 **退出** 来退出相机。
 
 ## 操作介绍
+
 使用相机的前提是电脑自带摄像头或外接摄像头，当连接多个摄像头时，可以在多个摄像头间切换。打开相机后，您可以选择拍照或录制视频。
 
 ### 拍照
@@ -37,7 +36,7 @@
 
 ### 录制视频 
 
-在相机主界面，单击按钮 ![transcribe_bottom](../common/transcribe_bottom.svg)，进入视频模式。单击录制视频按钮 ![transcribe](../common/transcribe.svg)进行录制，录制完成后单击结束录制按钮![stop](../common/stop.svg)，视频文件会展示在界面，也会保存在默认路径下。
+在相机主界面，单击按钮 ![transcribe_bottom](../common/transcribe_bottom.svg)，进入视频模式。单击录制视频按钮 ![transcribe](../common/transcribe.svg) 进行录制，录制完成后单击结束录制按钮 ![stop](../common/stop.svg)，视频文件会展示在界面，也会保存在默认路径下。
 
 ![video](fig/video.png)
 
@@ -81,7 +80,7 @@
 
 窗口主题包含浅色主题、深色主题和系统主题。
 
-1. 在相机界面，单击![icon_menu](../common/icon_menu.svg)。
+1. 在相机界面，单击 ![icon_menu](../common/icon_menu.svg)。
 2. 单击 **主题**，选择一个主题颜色。
 
 
