@@ -55,11 +55,31 @@ extern "C" {
 #include <sys/mman.h>
 
 #include <linux/videodev2.h>
-
+#include "rkisp_api.h"
 /**
 * @brief camInit　相机初始化
 */
 int camInit(const char *device_name);
+
+
+
+void close_rkisp_ctx();
+
+void start_rkisp_capture();
+
+void stop_rkisp_capture();
+
+void create_rkisp_ctx(const char *device);
+
+const struct rkisp_api_buf* get_rkisp_frame(int timeout_ms);
+
+void put_rkisp_frame(const struct rkisp_api_buf *buf);
+
+int get_rkisp_ctx_width();
+
+int get_rkisp_ctx_height();
+
+char *get_rkisp_ctx_device();
 
 #ifdef __cplusplus
 }

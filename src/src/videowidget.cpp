@@ -1225,171 +1225,178 @@ void videowidget::onRestartDevices()
     }
 
 }
-
 void videowidget::onSwitchCameraTimer()
 {
     QString str = m_preVideoDevice;
     m_preVideoDevice = "";
 
-    v4l2_device_list_t *devlist = get_device_list();
-    if (devlist->num_devices == 2) {
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-            if (str != str1) {
-                int ret = camInit(devlist->list_devices[i].device);
-                if (ret == E_OK) {
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
-                    DataManager::instance()->setdevStatus(CAM_CANUSE);
-                    break;
-
-                } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                        showCamUsed();
-
-                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-
-                } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    DataManager::instance()->setdevStatus(NOCAM);
-                    showNocam();
-                }
-
-            }
-
-        }
-
-    } else {
-        if (devlist->num_devices == 0) {
-            DataManager::instance()->setdevStatus(NOCAM);
-            showNocam();
-        }
-
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-
-            if (str == str1) {
-                if (i == devlist->num_devices - 1) {
-                    int ret = camInit(devlist->list_devices[0].device);
-
-                    if (ret == E_OK) {
-                        m_imgPrcThread->init();
-                        m_imgPrcThread->start();
-                        DataManager::instance()->setdevStatus(CAM_CANUSE);
-                    } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                            showCamUsed();
-
-                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                    } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        DataManager::instance()->setdevStatus(NOCAM);
-                        showNocam();
-                    }
-
-                    break;
-                } else {
-                    int ret = camInit(devlist->list_devices[i + 1].device);
-
-                    if (ret == E_OK) {
-                        m_imgPrcThread->init();
-                        m_imgPrcThread->start();
-                        DataManager::instance()->setdevStatus(CAM_CANUSE);
-                    } else if (ret == E_FORMAT_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                            showCamUsed();
-
-                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                    } else if (ret == E_NO_DEVICE_ERR) {
-                        v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                        if (vd != nullptr)
-                            close_v4l2_device_handler();
-
-                        DataManager::instance()->setdevStatus(NOCAM);
-                        showNocam();
-                    }
-
-                    break;
-                }
-
-            }
-
-            if (str.isEmpty()) {
-                int ret = camInit(devlist->list_devices[0].device);
-
-                if (ret == E_OK) {
-                    m_imgPrcThread->init();
-                    m_imgPrcThread->start();
-                    DataManager::instance()->setdevStatus(CAM_CANUSE);
-                } else if (ret == E_FORMAT_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    qWarning() << "camInit failed";
-
-                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
-                        showCamUsed();
-
-                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-                } else if (ret == E_NO_DEVICE_ERR) {
-                    v4l2_dev_t *vd =  get_v4l2_device_handler();
-
-                    if (vd != nullptr)
-                        close_v4l2_device_handler();
-
-                    DataManager::instance()->setdevStatus(NOCAM);
-                    showNocam();
-                }
-
-                break;
-            }
-        }
+    int ret = camInit(str.toStdString().c_str());
+    if (ret == E_OK) {
+        m_imgPrcThread->init();
+        m_imgPrcThread->start();
+        DataManager::instance()->setdevStatus(CAM_CANUSE);
     }
 }
+
+//void videowidget::onSwitchCameraTimer()
+//{
+//    QString str = m_preVideoDevice;
+//    m_preVideoDevice = "";
+
+//    v4l2_device_list_t *devlist = get_device_list();
+//    if (devlist->num_devices == 2) {
+//        for (int i = 0 ; i < devlist->num_devices; i++) {
+//            QString str1 = QString(devlist->list_devices[i].device);
+//            if (str != str1) {
+//                int ret = camInit(devlist->list_devices[i].device);
+//                if (ret == E_OK) {
+//                    m_imgPrcThread->init();
+//                    m_imgPrcThread->start();
+//                    DataManager::instance()->setdevStatus(CAM_CANUSE);
+//                    break;
+
+//                } else if (ret == E_FORMAT_ERR) {
+//                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                    if (vd != nullptr)
+//                        close_v4l2_device_handler();
+
+//                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
+//                        showCamUsed();
+
+//                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+
+//                } else if (ret == E_NO_DEVICE_ERR) {
+//                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                    if (vd != nullptr)
+//                        close_v4l2_device_handler();
+
+//                    DataManager::instance()->setdevStatus(NOCAM);
+//                    showNocam();
+//                }
+
+//            }
+
+//        }
+
+//    } else {
+//        if (devlist->num_devices == 0) {
+//            DataManager::instance()->setdevStatus(NOCAM);
+//            showNocam();
+//        }
+
+//        for (int i = 0 ; i < devlist->num_devices; i++) {
+//            QString str1 = QString(devlist->list_devices[i].device);
+
+//            if (str == str1) {
+//                if (i == devlist->num_devices - 1) {
+//                    int ret = camInit(devlist->list_devices[0].device);
+
+//                    if (ret == E_OK) {
+//                        m_imgPrcThread->init();
+//                        m_imgPrcThread->start();
+//                        DataManager::instance()->setdevStatus(CAM_CANUSE);
+//                    } else if (ret == E_FORMAT_ERR) {
+//                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                        if (vd != nullptr)
+//                            close_v4l2_device_handler();
+
+//                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
+//                            showCamUsed();
+
+//                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+//                    } else if (ret == E_NO_DEVICE_ERR) {
+//                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                        if (vd != nullptr)
+//                            close_v4l2_device_handler();
+
+//                        DataManager::instance()->setdevStatus(NOCAM);
+//                        showNocam();
+//                    }
+
+//                    break;
+//                } else {
+//                    int ret = camInit(devlist->list_devices[i + 1].device);
+
+//                    if (ret == E_OK) {
+//                        m_imgPrcThread->init();
+//                        m_imgPrcThread->start();
+//                        DataManager::instance()->setdevStatus(CAM_CANUSE);
+//                    } else if (ret == E_FORMAT_ERR) {
+//                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                        if (vd != nullptr)
+//                            close_v4l2_device_handler();
+
+//                        if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
+//                            showCamUsed();
+
+//                        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+//                    } else if (ret == E_NO_DEVICE_ERR) {
+//                        v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                        if (vd != nullptr)
+//                            close_v4l2_device_handler();
+
+//                        DataManager::instance()->setdevStatus(NOCAM);
+//                        showNocam();
+//                    }
+
+//                    break;
+//                }
+
+//            }
+
+//            if (str.isEmpty()) {
+//                int ret = camInit(devlist->list_devices[0].device);
+
+//                if (ret == E_OK) {
+//                    m_imgPrcThread->init();
+//                    m_imgPrcThread->start();
+//                    DataManager::instance()->setdevStatus(CAM_CANUSE);
+//                } else if (ret == E_FORMAT_ERR) {
+//                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                    if (vd != nullptr)
+//                        close_v4l2_device_handler();
+
+//                    qWarning() << "camInit failed";
+
+//                    if (DataManager::instance()->getdevStatus() != CAM_CANNOT_USE)
+//                        showCamUsed();
+
+//                    DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+//                } else if (ret == E_NO_DEVICE_ERR) {
+//                    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+//                    if (vd != nullptr)
+//                        close_v4l2_device_handler();
+
+//                    DataManager::instance()->setdevStatus(NOCAM);
+//                    showNocam();
+//                }
+
+//                break;
+//            }
+//        }
+//    }
+//}
 
 void videowidget::onChangeDev()
 {
-    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
-
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
 
     while (m_imgPrcThread->isRunning());
-    QString str;
-
-    if (devicehandler != nullptr) {
-        str = QString(devicehandler->videodevice);
-        m_preVideoDevice = str;
-        close_v4l2_device_handler();
-    }
+    QString str = dc::Settings::get().generalOption("open_device").toString();
+    qDebug() << "---------------- pre device:" << str << "------------------------\n";
+    close_rkisp_ctx();
 
     str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
+    m_preVideoDevice = str;
 
     char pCmd[100]={0};
     snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
@@ -1401,26 +1408,48 @@ void videowidget::onChangeDev()
     qDebug() << "---------------- set device:" << str << "------------------------\n";
     m_switchTimer->start();
 }
+
+//void videowidget::onChangeDev()
+//{
+//    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+//    if (m_imgPrcThread != nullptr)
+//        m_imgPrcThread->stop();
+
+//    while (m_imgPrcThread->isRunning());
+//    QString str;
+
+//    if (devicehandler != nullptr) {
+//        str = QString(devicehandler->videodevice);
+//        m_preVideoDevice = str;
+//        close_v4l2_device_handler();
+//    }
+
+//    str = str == "/dev/video0" ? "/dev/video1":"/dev/video0";
+
+//    char pCmd[100]={0};
+//    snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
+//    //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
+//    system(pCmd);
+
+//    m_imgPrcThread->setChangeState();
+//    dc::Settings::get().setGeneralOption("open_device", str);
+//    qDebug() << "---------------- set device:" << str << "------------------------\n";
+//    m_switchTimer->start();
+//}
 
 void videowidget::onChangeCurrentDev()
 {
-    qInfo() << __func__;
-    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
-
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
 
     while (m_imgPrcThread->isRunning());
-    QString str;
-
-    if (devicehandler != nullptr) {
-        str = QString(devicehandler->videodevice);
-        m_preVideoDevice = str;
-        close_v4l2_device_handler();
-    }
+    QString str = dc::Settings::get().generalOption("open_device").toString();
+    close_rkisp_ctx();
 
     qInfo() << str;
     str = str == "/dev/video0" ? "/dev/video0":"/dev/video1";
+    m_preVideoDevice = str;
 
     char pCmd[100]={0};
     snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
@@ -1432,6 +1461,37 @@ void videowidget::onChangeCurrentDev()
     qDebug() << "---------------- set device:" << str << "------------------------\n";
     m_switchTimer->start();
 }
+
+//void videowidget::onChangeCurrentDev()
+//{
+//    qInfo() << __func__;
+//    v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+
+//    if (m_imgPrcThread != nullptr)
+//        m_imgPrcThread->stop();
+
+//    while (m_imgPrcThread->isRunning());
+//    QString str;
+
+//    if (devicehandler != nullptr) {
+//        str = QString(devicehandler->videodevice);
+//        m_preVideoDevice = str;
+//        close_v4l2_device_handler();
+//    }
+
+//    qInfo() << str;
+//    str = str == "/dev/video0" ? "/dev/video0":"/dev/video1";
+
+//    char pCmd[100]={0};
+//    snprintf(pCmd,100,"echo %s > /tmp/pipe_camera", str.toStdString().c_str());
+//    //snprintf(pCmd, 100,  "/usr/bin/camera_switch.sh %s", devicename);
+//    system(pCmd);
+
+//    m_imgPrcThread->setChangeState();
+//    dc::Settings::get().setGeneralOption("open_device", str);
+//    qDebug() << "---------------- set device:" << str << "------------------------\n";
+//    m_switchTimer->start();
+//}
 
 void videowidget::onTimerCheckRotation()
 {

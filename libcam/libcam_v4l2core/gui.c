@@ -465,62 +465,62 @@ void set_video_name(const char *name)
 
 	video_name = strdup(name);
 
-	/*get image format*/
-	char *ext = get_file_extension(name);
-	if(ext == NULL)
-	{
-		if(video_name)
-			free(video_name);
+    /*get image format*/
+    char *ext = get_file_extension(name);
+    if(ext == NULL)
+    {
+        if(video_name)
+            free(video_name);
 
-		fprintf(stderr, "deepin-camera: no valid file extension for video file %s\n",
-			name);
-		fprintf(stderr, "deepin-camera: using muxer %i\n", get_video_muxer());
-		switch(get_video_muxer())
-		{
-			case ENCODER_MUX_MKV:
-				video_name = set_file_extension(name, "mkv");
-				break;
-			case ENCODER_MUX_WEBM:
-				video_name = set_file_extension(name, "webm");
-				break;
+        fprintf(stderr, "deepin-camera: no valid file extension for video file %s\n",
+            name);
+        fprintf(stderr, "deepin-camera: using muxer %i\n", get_video_muxer());
+        switch(get_video_muxer())
+        {
+            case ENCODER_MUX_MKV:
+                video_name = set_file_extension(name, "mkv");
+                break;
+            case ENCODER_MUX_WEBM:
+                video_name = set_file_extension(name, "webm");
+                break;
             case ENCODER_MUX_MP4:
                 video_name = set_file_extension(name,"mp4");
                 break;
             default:
-				video_name = set_file_extension(name, "avi");
-				break;
-		}
-	}
-	else if( strcasecmp(ext, "mkv") == 0)
-		set_video_muxer(ENCODER_MUX_MKV);
+                video_name = set_file_extension(name, "avi");
+                break;
+        }
+    }
+    else if( strcasecmp(ext, "mkv") == 0)
+        set_video_muxer(ENCODER_MUX_MKV);
     else if(strcasecmp(ext,"mp4") == 0)
         set_video_muxer(ENCODER_MUX_MP4);
-	else if ( strcasecmp(ext, "webm") == 0 )
-	{
+    else if ( strcasecmp(ext, "webm") == 0 )
+    {
         set_video_muxer(ENCODER_MUX_WEBM);
 
         //注释这个地方是因为占用CPU过高
-		/*force webm codecs*/
+        /*force webm codecs*/
         int video_codec_ind = encoder_get_webm_video_codec_index();
         set_video_codec_ind(video_codec_ind);
         int audio_codec_ind = encoder_get_webm_audio_codec_index();
         set_audio_codec_ind(audio_codec_ind);
-	}
-	else if ( strcasecmp(ext, "avi") == 0 )
-		set_video_muxer(ENCODER_MUX_AVI);
+    }
+    else if ( strcasecmp(ext, "avi") == 0 )
+        set_video_muxer(ENCODER_MUX_AVI);
 
-	if(ext)
-		free(ext);
+    if(ext)
+        free(ext);
 	
-	/* update the config */
-	config_t *my_config = config_get();
+    /* update the config */
+    config_t *my_config = config_get();
 
-	/*this can be the function arg 'name'*/
-	if(my_config->video_name)
-		free(my_config->video_name);
+    /*this can be the function arg 'name'*/
+    if(my_config->video_name)
+        free(my_config->video_name);
 
-	/*so here we use the dup string*/
-	my_config->video_name = strdup(video_name);
+    /*so here we use the dup string*/
+    my_config->video_name = strdup(video_name);
 }
 
 /*

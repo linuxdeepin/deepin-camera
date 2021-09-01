@@ -792,26 +792,27 @@ static void *encoder_loop(__attribute__((unused))void *data)
     printf("------------------init encoder %d-----------------------\n",g_exchangeWidthHeight);
     if (1 == g_exchangeWidthHeight){
         encoder_ctx = encoder_init(
-        v4l2core_get_requested_frame_format(my_vd),
+        V4L2_PIX_FMT_YUV420/*v4l2core_get_requested_frame_format(my_vd)*/,
         get_video_codec_ind(),
         get_audio_codec_ind(),
         get_video_muxer(),
-        v4l2core_get_frame_height(my_vd),
-        v4l2core_get_frame_width(my_vd),  //平板相机旋转 yuv 270度，录制初始化时，将宽高对换
-        v4l2core_get_fps_num(my_vd),
-        v4l2core_get_fps_denom(my_vd),
+        /*v4l2core_get_frame_height(my_vd)*/
+        get_rkisp_ctx_height(),
+        get_rkisp_ctx_width()/*4l2core_get_frame_width(my_vd)*/,  //平板相机旋转 yuv 270度，录制初始化时，将宽高对换
+        1/*v4l2core_get_fps_num(my_vd)*/,
+        50/*v4l2core_get_fps_denom(my_vd)*/,
         channels,
         samprate);
      } else {
 	encoder_ctx = encoder_init(
-        v4l2core_get_requested_frame_format(my_vd),
+        V4L2_PIX_FMT_YUV420/*v4l2core_get_requested_frame_format(my_vd)*/,
         get_video_codec_ind(),
         get_audio_codec_ind(),
         get_video_muxer(),
-        v4l2core_get_frame_width(my_vd),
-        v4l2core_get_frame_height(my_vd),  
-	v4l2core_get_fps_num(my_vd),
-        v4l2core_get_fps_denom(my_vd),
+        get_rkisp_ctx_width()/*v4l2core_get_frame_width(my_vd)*/,
+        get_rkisp_ctx_height()/*v4l2core_get_frame_height(my_vd)*/,
+        1/*v4l2core_get_fps_num(my_vd)*/,
+        50/*v4l2core_get_fps_denom(my_vd)*/,
         channels,
         samprate);
      }
@@ -819,45 +820,45 @@ static void *encoder_loop(__attribute__((unused))void *data)
 
 
     /*store external SPS and PPS data if needed*/
-    if(encoder_ctx->video_codec_ind == 0 && /*raw - direct input*/
-        v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
-    {
-        /*request a IDR (key) frame*/
-        v4l2core_h264_request_idr(my_vd);
+//    if(encoder_ctx->video_codec_ind == 0 && /*raw - direct input*/
+//        v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
+//    {
+//        /*request a IDR (key) frame*/
+//        v4l2core_h264_request_idr(my_vd);
 
-        if(debug_level > 0)
-            printf("deepin-camera: storing external pps and sps data in encoder context\n");
-        encoder_ctx->h264_pps_size = v4l2core_get_h264_pps_size(my_vd);
-        if(encoder_ctx->h264_pps_size > 0)
-        {
-            encoder_ctx->h264_pps = calloc(encoder_ctx->h264_pps_size, sizeof(uint8_t));
-            if(encoder_ctx->h264_pps == NULL)
-            {
-                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
-                exit(-1);
-            }
-            memcpy(encoder_ctx->h264_pps, v4l2core_get_h264_pps(my_vd), encoder_ctx->h264_pps_size);
-        }
+//        if(debug_level > 0)
+//            printf("deepin-camera: storing external pps and sps data in encoder context\n");
+//        encoder_ctx->h264_pps_size = v4l2core_get_h264_pps_size(my_vd);
+//        if(encoder_ctx->h264_pps_size > 0)
+//        {
+//            encoder_ctx->h264_pps = calloc(encoder_ctx->h264_pps_size, sizeof(uint8_t));
+//            if(encoder_ctx->h264_pps == NULL)
+//            {
+//                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+//                exit(-1);
+//            }
+//            memcpy(encoder_ctx->h264_pps, v4l2core_get_h264_pps(my_vd), encoder_ctx->h264_pps_size);
+//        }
 
-        encoder_ctx->h264_sps_size = v4l2core_get_h264_sps_size(my_vd);
-        if(encoder_ctx->h264_sps_size > 0)
-        {
-            encoder_ctx->h264_sps = calloc(encoder_ctx->h264_sps_size, sizeof(uint8_t));
-            if(encoder_ctx->h264_sps == NULL)
-            {
-                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
-                exit(-1);
-            }
-            memcpy(encoder_ctx->h264_sps, v4l2core_get_h264_sps(my_vd), encoder_ctx->h264_sps_size);
-        }
-    }
+//        encoder_ctx->h264_sps_size = v4l2core_get_h264_sps_size(my_vd);
+//        if(encoder_ctx->h264_sps_size > 0)
+//        {
+//            encoder_ctx->h264_sps = calloc(encoder_ctx->h264_sps_size, sizeof(uint8_t));
+//            if(encoder_ctx->h264_sps == NULL)
+//            {
+//                fprintf(stderr,"deepin-camera: FATAL memory allocation failure (encoder_loop): %s\n", strerror(errno));
+//                exit(-1);
+//            }
+//            memcpy(encoder_ctx->h264_sps, v4l2core_get_h264_sps(my_vd), encoder_ctx->h264_sps_size);
+//        }
+//    }
 
     uint32_t current_framerate = 0;
-    if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
-    {
-        /* store framerate since it may change due to scheduler*/
-        current_framerate = v4l2core_get_h264_frame_rate_config(my_vd);
-    }
+//    if(v4l2core_get_requested_frame_format(my_vd) == V4L2_PIX_FMT_H264)
+//    {
+//        /* store framerate since it may change due to scheduler*/
+//        current_framerate = v4l2core_get_h264_frame_rate_config(my_vd);
+//    }
 
     char *video_filename = NULL;
     /*get_video_[name|path] always return a non NULL value*/

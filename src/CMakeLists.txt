@@ -118,10 +118,12 @@ set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
+
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
+    ${CMAKE_CURRENT_LIST_DIR}/lib/librkisp_api.so
     )
 
 # 将工程与Qt模块链接起来
@@ -153,6 +155,10 @@ install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/s
 
 #debus_service
 install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.sh DESTINATION /usr/bin)
+
+#rkisp
+install(FILES ${PROJECT_SOURCE_DIR}/lib/librkisp_api.so DESTINATION /usr/lib)
+install(FILES ${PROJECT_SOURCE_DIR}/lib/librkisp.so DESTINATION /usr/lib)
 
 #switch_camera
 install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.service DESTINATION /lib/systemd/system)
