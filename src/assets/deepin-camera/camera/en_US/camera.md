@@ -10,23 +10,23 @@ You can run, close or create shortcuts for Camera in the following ways.
 
 ### Run Camera
 
-1. Click ![launcher](../common/deepin_launcher.svg) in the Dock and enter the Launcher interface.
-2. Locate ![camera](../common/camera.svg) by scrolling the mouse wheel or searching "camera" in the Launcher interface and click it to run.
+1. Click the Launcher icon ![launcher](../common/deepin_launcher.svg) in the Dock and enter the Launcher interface.
+2. Locate Camera ![camera](../common/camera.svg) by scrolling the mouse wheel or searching "camera" in the Launcher interface and click it to run.
 3. Right-click ![camera](../common/camera.svg) and you can:
 
  - Click **Send to desktop** to create a desktop shortcut.
- - Click **Send to dock** to fix the application in the dock.
+ - Click **Send to dock** to fix the application in the Dock.
  - Click **Add to startup** to add the application to startup and it will automatically run when the system starts up.
 
 ### Exit Camera
 
 - On the Camera interface, click![close_icon](../common/close.svg)to exit Camera.
-- Right-click ![camera](../common/camera.svg) in the dock and select **Close All** to exit Camera.
+- Right-click ![camera](../common/camera.svg) in the Dock and select **Close All** to exit Camera.
 - On the Camera interface, click ![icon_menu](../common/icon_menu.svg) and select **Exit** to exit Camera.
 
 ## Operations
 
-You can use the Camera application if your computer comes with a camera or is connected to a camera.  If there are multiple cameras connected, you can select the camera expected. Select the photo or video mode on the Camera interface to take photos and record videos.
+You can use the Camera application if your computer comes with a camera or is connected to a camera. If there are multiple cameras connected, you can select the camera expected. Select the photo or video mode on the Camera interface to take photos and record videos.
 
 ### Take Photos
 
@@ -36,7 +36,7 @@ Photo mode is defaulted when Camera starts up. Click the ![photograph](../common
 
 ### Record Videos
 
-On the Camera interface, click the ![transcribe_bottom](../common/transcribe_bottom.svg) icon to to enter the video mode. Click  the![transcribe](../common/transcribe.svg) icon to start recording, and click the ![stop](../common/stop.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
+On the Camera interface, click the ![transcribe_bottom](../common/transcribe_bottom.svg) icon to to enter the video mode. Click  the![transcribe](../common/transcribe.svg) icon to start recording, and click the ![stop](../common/stop1.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
 
 ![video](fig/video.png)
 
@@ -66,16 +66,16 @@ On the main menu, you can change settings for Camera, switch window themes, view
 1. On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
 2. Click **Settings** to adjust **Basic**, **Shoot** and **Output** settings.
 
-   - **Basic** setting: set up the **File location** for photos and videos.
-   - **Shoot** setting: set up the **Sound effects**, **Burst mode** and **Self-timer delay** options.
+   - **Basic** settings: set up the **File location** for photos and videos.
+   - **Shoot** settings: set up the **Sound effects**, **Burst mode** and **Self-timer delay** options.
 
      ![settings](fig/settings.png)
 
-   - **Output** setting: set up the **Output format** and **Resolution settings** for photos and videos.
+   - **Output** settings: set up the **Output format** and **Resolution settings** for photos and videos.
    
      ![output-settings](fig/outputsettings.png)
 
-#### Theme
+### Theme
 
 The window theme provides three theme types, namely Light Theme, Dark Theme, and System Theme.
 
