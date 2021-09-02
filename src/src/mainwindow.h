@@ -264,12 +264,6 @@ private slots:
     void onTakeVdCancel();
 
     /**
-     * @brief onThemeChange 更换主题
-     * @param type 三种：light、dark、跟随系统
-     */
-    void onThemeChange(DGuiApplicationHelper::ColorType type);
-
-    /**
      * @brief updateBlockSystem 更新阻塞关机
      * @param bTrue
      */

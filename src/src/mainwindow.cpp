@@ -758,7 +758,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_pTitlebar->raise();
 }
 
-
 void CMainWindow::slotPopupSettingsDialog()
 {
 #ifndef UNITTEST
@@ -767,7 +766,6 @@ void CMainWindow::slotPopupSettingsDialog()
     settingDialogDel();
 #endif
 }
-
 
 QString CMainWindow::libPath(const QString &strlib)
 {
@@ -928,8 +926,6 @@ void CMainWindow::initTabOrder()
     setTabOrder(m_windowMinBtn, m_windowMaxBtn);
     setTabOrder(m_windowMaxBtn, m_windowCloseBtn);
     setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
-//    setTabOrder(m_takePhotoSettingArea, m_cameraSwitchBtn);
-//    setTabOrder(m_cameraSwitchBtn, m_photoRecordBtn);
 
     m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 }
@@ -964,21 +960,9 @@ void CMainWindow::initEventFilter()
     if (windowCloseBtn)
         windowCloseBtn->installEventFilter(this);
 
-    //预览画面添加过滤
-    if (m_videoPre)
-        m_videoPre->installEventFilter(this);
-
-    //摄像头切换控件添加过滤
-    if (m_cameraSwitchBtn)
-        m_cameraSwitchBtn->installEventFilter(this);
-
     //拍照/录像控件添加过滤
     if (m_photoRecordBtn)
         m_photoRecordBtn->installEventFilter(this);
-
-    //缩略图控件添加过滤
-    if (m_snapshotLabel)
-        m_snapshotLabel->installEventFilter(this);
 
     if (m_pTitlebar->titlebar())
         m_pTitlebar->titlebar()->installEventFilter(this);
@@ -1300,7 +1284,6 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
     m_showCameraNameTimer->start();
 }
 
-
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
 {
     qDebug() << serviceName << key2value << endl;
@@ -1529,7 +1512,7 @@ void CMainWindow::initUI()
     m_videoPre->setObjectName(VIDEO_PREVIEW_WIDGET);
     m_videoPre->setAccessibleName(VIDEO_PREVIEW_WIDGET);
     setCentralWidget(m_videoPre);
-    paletteTime.setBrush(QPalette::Dark, QColor(/*"#202020"*/0, 0, 0, 51)); //深色
+    paletteTime.setBrush(QPalette::Dark, QColor(0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
 
     m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
@@ -1706,8 +1689,6 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
-    //主题变换
-    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &CMainWindow::onThemeChange);
 
     //连拍在锁屏、熄屏情况下都要结束，与平台无关
     QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
@@ -2033,11 +2014,6 @@ void CMainWindow::onTakeVdCancel()   //保存视频完成，通过已有的文�
     onEnableSettings(true);
 }
 
-void CMainWindow::onThemeChange(DGuiApplicationHelper::ColorType type)
-{
-
-}
-
 bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 {
     /**
@@ -2084,7 +2060,6 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
  * 3、正在录像，只显示拍照按钮
  * 4、无摄像头或者只有一个摄像头不显示切换摄像机状态
 */
-
 
 void CMainWindow::showChildWidget()
 {

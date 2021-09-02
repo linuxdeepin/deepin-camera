@@ -138,24 +138,10 @@ public:
      * @return
      */
     uint getNowTabIndex();
-//    /**
-//     * @brief getindexImage 获得图片索引
-//     */
-//    QMap<int, ImageItem *> &getindexImage();
-//    /**
-//     * @brief setdevStatus 设置图片索引
-//     */
-//    void setindexImage(int tIndex,ImageItem * pLabel);
-
-
 
 private:
     DataManager();
     static DataManager *m_dataManager;
-//    bool m_bCtrlMulti;//ctrl键多选
-//    bool m_bShitfMulti;//shift键连续多选
-//    int m_indexLast;
-//    int m_indexNow;
     uint m_tabIndexNow;//当前tab索引
     QString m_strFileName;
     int m_videoCount;
