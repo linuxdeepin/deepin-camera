@@ -62,34 +62,7 @@ void Settings::init()
 
     m_settings->setBackend(m_backend);
 
-    connect(m_settings, &DSettings::valueChanged, this, [ = ](const QString & key, const QVariant & value) {
-        if (key.startsWith("outsetting.resolutionsetting.resolution")) {
-            auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
-            if (value >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
-                QString mode = mode_opt->data("items").toStringList()[value.toInt()];
-                emit resolutionchanged(mode);
-            }
-        }
-
-        if (key.startsWith("photosetting.photosdelay.photodelays")) {
-            auto mode_opt1 = m_settings->option("photosetting.photosdelay.photodelays");
-            if (value >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {
-                QString mode1 = mode_opt1->data("items").toStringList()[value.toInt()];
-                emit delayTimeChanged(mode1);
-            }
-        }
-
-        if (key.startsWith("photosetting.mirrorMode.mirrorMode")){
-            bool bMirror = m_settings->getOption("photosetting.mirrorMode.mirrorMode").toBool();
-            emit mirrorModeChanged(bMirror);
-        }
-
-        if (key.startsWith("photosetting.Flashlight.Flashlight")){
-            bool bLight = m_settings->getOption("photosetting.Flashlight.Flashlight").toBool();
-            emit flashLightChanged(bLight);
-        }
-
-    });
+    connect(m_settings, &DSettings::valueChanged, this, &Settings::onValueChanged);
 
     qInfo() << "keys" << m_settings->keys();
     setNewResolutionList();
@@ -224,6 +197,35 @@ void Settings::setBackOption(const QString &opt, const QVariant &v)
 QVariant Settings::getBackOption(const QString &opt)
 {
     return m_backend->getOption(opt);
+}
+
+void Settings::onValueChanged(const QString & key, const QVariant & value)
+{
+    if (key.startsWith("outsetting.resolutionsetting.resolution")) {
+        auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
+        if (value >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
+            QString mode = mode_opt->data("items").toStringList()[value.toInt()];
+            emit resolutionchanged(mode);
+        }
+    }
+
+    if (key.startsWith("photosetting.photosdelay.photodelays")) {
+        auto mode_opt1 = m_settings->option("photosetting.photosdelay.photodelays");
+        if (value >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {
+            QString mode1 = mode_opt1->data("items").toStringList()[value.toInt()];
+            emit delayTimeChanged(mode1);
+        }
+    }
+
+    if (key.startsWith("photosetting.mirrorMode.mirrorMode")){
+        bool bMirror = m_settings->getOption("photosetting.mirrorMode.mirrorMode").toBool();
+        emit mirrorModeChanged(bMirror);
+    }
+
+    if (key.startsWith("photosetting.Flashlight.Flashlight")){
+        bool bLight = m_settings->getOption("photosetting.Flashlight.Flashlight").toBool();
+        emit flashLightChanged(bLight);
+    }
 }
 
 Settings::~Settings()

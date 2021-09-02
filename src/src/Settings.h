@@ -122,11 +122,17 @@ public:
     QVariant getBackOption(const QString &opt);
 
 public slots:
-
     /**
      * @brief resolutionchanged 设置新分辨率表
      */
     void setNewResolutionList();
+
+    /**
+     * @brief onValueChanged 配置文件改变
+     * @param key       改变项
+     * @param value     改变值
+     */
+    void onValueChanged(const QString & key, const QVariant & value);
 
 signals:
 

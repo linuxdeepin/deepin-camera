@@ -631,19 +631,6 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
     int width, height;
 
     if (m_delayGroupDisplay) {
-       /* //先画一个矩形
-        QPoint topLeft = m_delayFoldBtn->pos() + QPoint(0, m_delayFoldBtn->height() * 0.5);
-        QPoint bottomRight = m_delay6SecondBtn->pos() + QPoint(m_delayFoldBtn->width(), m_delay6SecondBtn->height() * 0.5);
-
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(m_buttonGroupColor));
-        painter.drawRect(QRect(topLeft, bottomRight));
-
-        //再画两个半圆
-        painter.drawPie(QRect(m_delayFoldBtn->pos(), m_delayFoldBtn->pos() + QPoint(m_delayFoldBtn->width(), m_delayFoldBtn->height())), 0 * 16, 180 * 16);
-        painter.drawPie(QRect(m_delay6SecondBtn->pos(), m_delay6SecondBtn->pos() + QPoint(m_delay6SecondBtn->width(), m_delay6SecondBtn->height())), 180 * 16, 180 * 16);
-        */
-
         QPainterPath path;  //上半圆+矩形
         QPainterPath arc1;  //下半圆
 
@@ -666,18 +653,6 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
         painter.fillPath(path, QBrush(m_buttonGroupColor));
 
     } else if (m_flashGroupDisplay) {
-        /* //先画一个矩形
-        QPoint topLeft = m_flashlightFoldBtn->pos() + QPoint(-1, m_flashlightFoldBtn->height() * 0.5);
-        QPoint bottomRight = m_flashlightOffBtn->pos() + QPoint(m_flashlightFoldBtn->width(), m_flashlightOffBtn->height() * 0.5);
-
-        painter.setPen(Qt::NoPen);
-        painter.setBrush(QBrush(m_buttonGroupColor));
-        painter.drawRect(QRect(topLeft, bottomRight));
-
-        //再画两个半圆
-        painter.drawPie(QRect(m_flashlightFoldBtn->pos(), m_flashlightFoldBtn->pos() + QPoint(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height())), 0 * 16, 180 * 16);
-        painter.drawPie(QRect(m_flashlightOffBtn->pos(), m_flashlightOffBtn->pos() + QPoint(m_flashlightOffBtn->width(), m_flashlightOffBtn->height())), 180 * 16, 180 * 16);*/
-
         QPainterPath path;
         QPainterPath arc1;
 
@@ -757,18 +732,21 @@ void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
         m_noDelayBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_noDelayBtn);
         m_delayFoldBtn->copyPixmap(*m_noDelayBtn);
+        update();
         break;
     case 3:
 //        emit m_delay3SecondBtn->clicked();
         m_delay3SecondBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_delay3SecondBtn);
         m_delayFoldBtn->copyPixmap(*m_delay3SecondBtn);
+        update();
         break;
     case 6:
 //        emit m_delay6SecondBtn->clicked();
         m_delay6SecondBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_delay6SecondBtn);
         m_delayFoldBtn->copyPixmap(*m_delay6SecondBtn);
+        update();
         break;
     default:
         ;
