@@ -24,43 +24,6 @@
 #include "../capplication.h"
 
 DataManager *DataManager::m_dataManager = nullptr;
-//MultiType DataManager::getMultiType()
-//{
-//    MultiType multiTypeStatus = MultiType::None;
-//    //几种状态：都没选，都选，选其中一个，选其中另一个
-//    if (!m_bCtrlMulti && !m_bShitfMulti)
-//        multiTypeStatus =  MultiType::None;
-//    else if (m_bCtrlMulti && m_bShitfMulti)
-//        multiTypeStatus = MultiType::Both;
-//    else {
-//        if (m_bCtrlMulti)
-//            multiTypeStatus = MultiType::Ctrl;
-
-//        if (m_bShitfMulti)
-//            multiTypeStatus = MultiType::Shift;
-//    }
-//    return multiTypeStatus;
-//}
-
-//void DataManager::setCtrlMulti(bool bCtrlMulti)
-//{
-//    m_bCtrlMulti = bCtrlMulti;
-//}
-
-//void DataManager::setShiftMulti(bool bShitfMulti)
-//{
-//    m_bShitfMulti = bShitfMulti;
-//}
-
-//int DataManager::getindexNow()
-//{
-//    return m_indexNow;
-//}
-
-//void DataManager::setindexNow(int indexNow)
-//{
-//    m_indexNow = indexNow;
-//}
 
 QString &DataManager::getstrFileName()
 {
@@ -107,15 +70,9 @@ DataManager *DataManager::instance()
 
 DataManager::DataManager()
 {
-
-//    m_bCtrlMulti = false; //ctrl键多选
-//    m_bShitfMulti = false; //shift键连续多选
     m_bTabEnter = false;
     m_tabIndex = 0;
-//    m_indexLast = -1;
-//    m_indexNow = 0;
     m_tabIndexNow = 0;
-//    QMap<int, ImageItem *> m_indexImage;
     m_strFileName.clear();
     m_videoCount = 0;
     m_devStatus = DeviceStatus::NOCAM;
