@@ -96,7 +96,6 @@ pkg_check_modules(3rd_lib REQUIRED
 #        libffmpegthumbnailer
         )
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
-
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
@@ -104,6 +103,8 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
     pthread
     Qt5Test
     dl
+    rkisp_api
+    -L${CMAKE_CURRENT_LIST_DIR}/../src/lib
 #    portaudio
 #    asound
 #    z

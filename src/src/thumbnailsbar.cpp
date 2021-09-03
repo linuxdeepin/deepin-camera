@@ -736,6 +736,7 @@ void ThumbnailsBar::addFile(QString strFile)
         g_indexImage.remove(tmp->getIndex());
         QString strPath = tmp->getPath();
         m_hBox->removeWidget(tmp);
+        DataManager::instance()->m_setIndex.remove(tmp->getIndex());
         delete tmp;
         tmp = nullptr;
         //ui上删掉的得加回来，否则删除文件的时候，总会剩一个文件
@@ -765,11 +766,14 @@ void ThumbnailsBar::addFile(QString strFile)
     connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
     connect(pLabel, SIGNAL(shiftMulti()), this, SLOT(onShiftMulti()));
     g_indexImage.insert(nIndexMax + 1, pLabel);
-
     if (pLabel == nullptr)
         qWarning() << "error! imageitem is null!!";
 
     m_hBox->insertWidget(0, pLabel);
+    if (DataManager::instance()->m_setIndex.isEmpty())
+    {
+        DataManager::instance()->m_setIndex.insert(nIndexMax+1);
+    }
 
     //找到对应的widget，然后把选中的item改到对应的DataManager::instance()->getindexNow()
     if (m_hBox->count() <= 1) {//除非最开始没有图元，否则后续根据最开始的图像移动，图像在哪，选中的框在哪儿

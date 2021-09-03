@@ -1268,7 +1268,7 @@ void CMainWindow::loadAfterShow()
     initUI();
     initShortcut();
     gviewencoder_init();
-    v4l2core_init();
+    //v4l2core_init();
 
     m_devnumMonitor = new DevNumMonitor();
     m_devnumMonitor->setParent(this);
