@@ -91,6 +91,7 @@ void MajorImageProcessingThread::run()
     //m_videoDevice = get_v4l2_device_handler();
     //v4l2core_start_stream(m_videoDevice);
     int framedely = 0;
+    time_t lastGetTime = time(NULL);
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
     start_rkisp_capture();
@@ -141,14 +142,15 @@ void MajorImageProcessingThread::run()
         m_result = -1;
         //m_frame = v4l2core_get_decoded_frame(m_videoDevice);
         const struct rkisp_api_buf *buf;
-        buf = get_rkisp_frame(0);
+        buf = get_rkisp_frame(1);
         if(buf == nullptr || buf->size == 0){
-            framedely++;
-            if (framedely == MAX_DELAYED_FRAMES) {
+            if (time(NULL)-lastGetTime > 3) {  //3 sec
                 emit changCurrent();
             }
+            usleep(10);
             continue;
         }
+        lastGetTime = time(NULL);
         m_frame->yuv_frame = (uint8_t*)buf->buf;
         m_frame->width = get_rkisp_ctx_width();
         m_frame->height = get_rkisp_ctx_height();
