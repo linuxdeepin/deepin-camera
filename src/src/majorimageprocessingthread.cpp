@@ -143,6 +143,10 @@ void MajorImageProcessingThread::run()
         const struct rkisp_api_buf *buf;
         buf = get_rkisp_frame(0);
         if(buf == nullptr || buf->size == 0){
+            framedely++;
+            if (framedely == MAX_DELAYED_FRAMES) {
+                emit changCurrent();
+            }
             continue;
         }
         m_frame->yuv_frame = (uint8_t*)buf->buf;
