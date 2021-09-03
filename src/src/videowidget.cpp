@@ -955,11 +955,11 @@ void videowidget::showCountdown()
 
         if (g_Enum_Camera_State == PICTRUE) {
             
-          QString str;
-            v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
-            if (devicehandler != nullptr) {
-                str = QString(devicehandler->videodevice);
-            }
+          QString str = dc::Settings::get().generalOption("open_device").toString();
+//            v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
+//            if (devicehandler != nullptr) {
+//                str = QString(devicehandler->videodevice);
+//            }
           
             if (m_nInterval == 0 && m_curTakePicTime > 0 && "/dev/video0" == str) {
               
@@ -1236,6 +1236,7 @@ void videowidget::onSwitchCameraTimer()
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
     }
+    m_thumbnail->setEnabled(true);
 }
 
 //void videowidget::onSwitchCameraTimer()
@@ -1387,6 +1388,7 @@ void videowidget::onSwitchCameraTimer()
 
 void videowidget::onChangeDev()
 {
+    m_thumbnail->setEnabled(false);
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
 
@@ -1440,6 +1442,7 @@ void videowidget::onChangeDev()
 
 void videowidget::onChangeCurrentDev()
 {
+    m_thumbnail->setEnabled(false);
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
 

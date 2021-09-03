@@ -142,7 +142,7 @@ void /*__attribute__ ((constructor))*/ v4l2core_init()
  *
  * returns: none
  */
-void __attribute__ ((destructor)) v4l2core_fini()
+void /*__attribute__ ((destructor))*/ v4l2core_fini()
 {
 	//close and free the device list
 	if(verbosity > 2)
