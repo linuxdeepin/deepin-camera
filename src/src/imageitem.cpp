@@ -255,7 +255,7 @@ void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
         program = "deepin-movie"; //用影院打开
     }
     QStringList arguments;
-    //表示本地文件
+    //表示本地文件,需与文管保持一致
     arguments << QUrl::fromLocalFile(m_path).toString();
     qInfo() << QUrl::fromLocalFile(m_path).toString();
     QProcess *myProcess = new QProcess(this);
