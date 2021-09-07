@@ -158,7 +158,6 @@ install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.sh DESTINATION /usr/bin)
 
 #rkisp
 install(FILES ${PROJECT_SOURCE_DIR}/lib/librkisp_api.so DESTINATION /usr/lib)
-install(FILES ${PROJECT_SOURCE_DIR}/lib/librkisp.so DESTINATION /usr/lib)
 
 #switch_camera
 install(FILES ${PROJECT_SOURCE_DIR}/switch_camera.service DESTINATION /lib/systemd/system)
