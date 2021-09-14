@@ -146,6 +146,13 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 
     /**
+     * @brief mouseReleaseEvent 鼠标按下事件
+     * @param event
+     */
+    void mousePressEvent(QMouseEvent *event) override;
+
+
+    /**
      * @brief mouseReleaseEvent 鼠标释放事件
      * @param event
      */
