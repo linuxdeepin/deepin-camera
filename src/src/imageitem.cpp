@@ -220,11 +220,20 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.drawPath(inside);
 }
 
-void ImageItem::mouseReleaseEvent(QMouseEvent *event)
+void ImageItem::mousePressEvent(QMouseEvent *event)
 {
+    if (event->type() == QEvent::MouseButtonDblClick)
+        return; //不响应双击事件
+
     if (event->button() == Qt::LeftButton) {
         openFile();
     }
+
+}
+
+void ImageItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    return;
 }
 
 void ImageItem::focusInEvent(QFocusEvent *event)
