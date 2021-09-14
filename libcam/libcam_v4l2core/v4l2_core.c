@@ -1598,10 +1598,10 @@ void v4l2core_prepare_new_format(v4l2_dev_t *vd, int new_format)
 
 	int format_index = v4l2core_get_frame_format_index(vd, new_format);
 
-	if(format_index < 0)
-		format_index = 0;
+	if(vd->numb_formats < 1)
+		vd->numb_formats = 1;
 
-	my_pixelformat = vd->list_stream_formats[format_index].format;
+    my_pixelformat = vd->list_stream_formats[vd->numb_formats - 1].format;
 }
 
 /*
