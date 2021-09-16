@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f844bae_2212443c",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-16T10:01:44Z",
+      "side": 1,
+      "message": "注释行数: 21; 改动行数(修改和新增): 110; 注释率: 19.1%",
+      "revId": "7352c7784575084beb2b78c4b35c7a59964d175f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37711f92_4bb0b00f",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-16T10:01:44Z",
+      "side": 1,
+      "message": "注释行数: 44; 改动行数(修改和新增): 68; 注释率: 64.7%",
+      "revId": "7352c7784575084beb2b78c4b35c7a59964d175f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
