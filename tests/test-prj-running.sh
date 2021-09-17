@@ -54,6 +54,12 @@ create_coverage_report(){
 remove_cache
 make_new_dir
 copy_test_files
+
+export DISPLAY=":0"
+export QT_QPA_PLATFORM=
+echo $DISPLAY
+echo $QT_QPA_PLATFORM
+
 build_exe
 create_coverage_report
 exit 0
