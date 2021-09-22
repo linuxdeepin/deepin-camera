@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Je bent niet gemachtigd om deze map te gebruiken</translation>
+        <translation>Je bent niet bevoegd om deze map te gebruiken</translation>
     </message>
     <message>
         <source>Close</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Spiegelmodus</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Wachttijd</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Geen</translation>
     </message>
 </context>
 <context>

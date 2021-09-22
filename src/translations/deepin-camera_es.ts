@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Foto</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Vídeo</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Cambiar de cámara</translation>
     </message>
 </context>
 <context>
@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Modo espejo</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Linterna</translation>
     </message>
 </context>
 <context>
@@ -248,19 +248,23 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Linterna</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Encendido</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Apagado</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Retraso en la captura</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ninguno</translation>
     </message>
 </context>
 <context>

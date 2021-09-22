@@ -262,6 +262,10 @@
         <source>Delay capture</source>
         <translation>Atrasar captura</translation>
     </message>
+    <message>
+        <source>None</source>
+        <translation>Nenhum</translation>
+    </message>
 </context>
 <context>
     <name>videowidget</name>

@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Fotka</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Přepnout mezi kamerami</translation>
     </message>
 </context>
 <context>
@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Převrátit strany (jako v zrcadle)</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Přisvícení</translation>
     </message>
 </context>
 <context>
@@ -248,19 +248,23 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Přisvícení</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Zapnuto</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Vypnuto</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Prodleva zachycení</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Žádné</translation>
     </message>
 </context>
 <context>

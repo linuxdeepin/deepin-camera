@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Tükör mód</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Rögzítés késleltetése</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nincs</translation>
     </message>
 </context>
 <context>

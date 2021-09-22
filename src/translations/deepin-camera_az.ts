@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Güzgü rejimi</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Çəlikənin kecikməsi</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Heç biri</translation>
     </message>
 </context>
 <context>

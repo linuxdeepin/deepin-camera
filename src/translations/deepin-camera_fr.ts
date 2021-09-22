@@ -262,6 +262,10 @@
         <source>Delay capture</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <source>None</source>
+        <translation>Aucun</translation>
+    </message>
 </context>
 <context>
     <name>videowidget</name>

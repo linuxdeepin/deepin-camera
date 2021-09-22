@@ -262,6 +262,10 @@
         <source>Delay capture</source>
         <translation>Aufnahme verzögern</translation>
     </message>
+    <message>
+        <source>None</source>
+        <translation>Keine</translation>
+    </message>
 </context>
 <context>
     <name>videowidget</name>

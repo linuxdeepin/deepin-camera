@@ -262,6 +262,10 @@
         <source>Delay capture</source>
         <translation>चित्र लेने में विलंब</translation>
     </message>
+    <message>
+        <source>None</source>
+        <translation>कुछ नहीं</translation>
+    </message>
 </context>
 <context>
     <name>videowidget</name>

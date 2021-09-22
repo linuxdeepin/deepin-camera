@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Mode de rèplica</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Retard de la captura</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Cap</translation>
     </message>
 </context>
 <context>

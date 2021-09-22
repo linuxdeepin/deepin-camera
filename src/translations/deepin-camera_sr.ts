@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Режим у огледалу</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Лампа</translation>
+        <translation>Блиц</translation>
     </message>
 </context>
 <context>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Одложи снимање</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ништа</translation>
     </message>
 </context>
 <context>

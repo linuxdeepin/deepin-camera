@@ -262,6 +262,10 @@
         <source>Delay capture</source>
         <translation>延時拍攝</translation>
     </message>
+    <message>
+        <source>None</source>
+        <translation>無</translation>
+    </message>
 </context>
 <context>
     <name>videowidget</name>

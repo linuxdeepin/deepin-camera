@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Slika</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Zamenjaj kamere</translation>
     </message>
 </context>
 <context>
@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Način zrcaljenja</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Bliskavica</translation>
     </message>
 </context>
 <context>
@@ -248,19 +248,23 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Bliskavica</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Vklopljeno</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Izklopljeno</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Zamik zajema</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Brez</translation>
     </message>
 </context>
 <context>

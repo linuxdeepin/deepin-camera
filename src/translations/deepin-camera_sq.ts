@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Mënyra pasqyrë</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -260,7 +260,11 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Vonesë shkrepjeje</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Asnjë</translation>
     </message>
 </context>
 <context>

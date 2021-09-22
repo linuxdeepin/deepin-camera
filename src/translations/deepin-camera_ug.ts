@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>مەۋھۇم كامېرا</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>ۋاقىت بەلگىلەپ تارتىش</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>يوق</translation>
     </message>
 </context>
 <context>

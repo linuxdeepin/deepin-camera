@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -21,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"></translation>
+        <translation>Zdjęcie</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>Wideo</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"></translation>
+        <translation>Przełącz kamery</translation>
     </message>
 </context>
 <context>
@@ -59,7 +57,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Wydrukuj</translation>
     </message>
 </context>
 <context>
@@ -158,23 +156,23 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zdjęcia:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wideo:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Efekty dźwiękowe</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Tryb lustrzany</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"></translation>
+        <translation>Latarka</translation>
     </message>
 </context>
 <context>
@@ -201,19 +199,19 @@
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Otwórz</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation type="unfinished"></translation>
+        <translation>Wydrukuj</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomoc</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż skróty</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -221,7 +219,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu kontekstowe</translation>
     </message>
 </context>
 <context>
@@ -250,19 +248,23 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"></translation>
+        <translation>Latarka</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>Wł</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Wył</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Opóźnij migawkę</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Brak</translation>
     </message>
 </context>
 <context>

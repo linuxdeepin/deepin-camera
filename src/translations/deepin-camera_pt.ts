@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Modo de espelho</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Atrasar a captura</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Nenhuma</translation>
     </message>
 </context>
 <context>

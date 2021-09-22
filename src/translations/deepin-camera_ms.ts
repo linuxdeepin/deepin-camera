@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Foto</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Tukar Kamera</translation>
     </message>
 </context>
 <context>
@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Mod cermin</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Lampu Denyar</translation>
     </message>
 </context>
 <context>
@@ -248,19 +248,23 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Lampu denyar</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Hidup</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Mati</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Lengah tangkapan</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Tiada</translation>
     </message>
 </context>
 <context>

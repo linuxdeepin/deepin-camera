@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Дзеркальний режим</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Затримка знімка</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Немає</translation>
     </message>
 </context>
 <context>

@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Itselaukaisimen viive</translation>
+        <translation>Laukaisimen viive</translation>
     </message>
     <message>
         <source>Output</source>
@@ -108,7 +108,7 @@
     </message>
     <message>
         <source>Output format</source>
-        <translation>Ulostulon muoto</translation>
+        <translation>Talletusmuoto</translation>
     </message>
     <message>
         <source>4 pcs</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Peilaus</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Kaappauksen viive</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Ei mitään</translation>
     </message>
 </context>
 <context>

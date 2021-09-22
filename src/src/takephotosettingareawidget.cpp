@@ -108,6 +108,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_noDelayBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_noDelayBtn->setObjectName(DELAY_UNFOLD_BTN);
     m_noDelayBtn->setAccessibleName(DELAY_UNFOLD_BTN);
+    m_noDelayBtn->setToolTip(tr("None"));
     m_noDelayBtn->setFocusPolicy(Qt::NoFocus);
 
     m_delay3SecondBtn = new circlePushButton(this);

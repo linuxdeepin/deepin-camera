@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Ayna kipi</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>Gecikmeli yakalama</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>Yok</translation>
     </message>
 </context>
 <context>

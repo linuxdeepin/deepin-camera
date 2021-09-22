@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>ཤེལ་བཪྙན་རྣམ་པ།</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>དུས་འགྱངས་པར་ལེན།</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>མེད། </translation>
     </message>
 </context>
 <context>

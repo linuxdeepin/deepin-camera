@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>延时拍摄</translation>
+        <translation>拍照延时设置</translation>
     </message>
     <message>
         <source>Output</source>
@@ -261,6 +261,10 @@
     <message>
         <source>Delay capture</source>
         <translation>延时拍摄</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>无</translation>
     </message>
 </context>
 <context>

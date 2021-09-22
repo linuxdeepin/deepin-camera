@@ -169,7 +169,7 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Modalità specchio</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -262,6 +262,10 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     <message>
         <source>Delay capture</source>
         <translation>Ritarda scatto</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>No</translation>
     </message>
 </context>
 <context>
