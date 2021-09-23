@@ -123,13 +123,8 @@ static LoadLibs *newClass(void)
     PrintError();
     pLibs->m_avcodec_parameters_from_context = (uos_avcodec_parameters_from_context)dlsym(handle, "avcodec_parameters_from_context");
     PrintError();
-#if LIBAVFORMAT_VERSION_MAJOR >= 57 && LIBAVFORMAT_VERSION_MINOR <= 25
     dlsym(handle, "avcodec_find_decoder");
     PrintError();
-#else
-    dlsym(handle, "avcodec_parameters_to_context");
-    PrintError();
-#endif
     pLibs->m_avcodec_send_packet = (uos_avcodec_send_packet)dlsym(handle, "avcodec_send_packet");
     PrintError();
     pLibs->m_avcodec_receive_frame = (uos_avcodec_receive_frame)dlsym(handle, "avcodec_receive_frame");
