@@ -114,18 +114,18 @@ endif ()
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
-
+#link_directories(./lib)
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 
 # 将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
+target_link_libraries(${CMAKE_CURRENT_LIST_DIR}/lib/librkisp_api 
+    ${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
-    ${CMAKE_CURRENT_LIST_DIR}/lib/librkisp_api.so
     )
-
+    
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
 
