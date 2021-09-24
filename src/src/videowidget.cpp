@@ -896,7 +896,6 @@ void videowidget::showCountdown()
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime > 0) {
                 m_flashLabel->show();
-
                 /**
                   * @brief m_flashLabel显示，控件在摄像头切换，标题栏录制，拍照/录制，缩略图左边窗体，
                   * 将焦点移到m_flashlabel
@@ -1084,7 +1083,6 @@ void videowidget::showRecTime()
 void videowidget::flash()
 {
     if (m_flashLabel->isVisible()) {
-        //隐藏闪光窗口
 
         if (get_sound_of_takeing_photo())
             m_takePicSound->play();
@@ -1098,7 +1096,8 @@ void videowidget::flash()
         m_thumbnail->show();
         recoverTabWidget();
 
-//        m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
+        //fix bug96435 by fengli
+        m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
         if (m_curTakePicTime == 0)
             stopEverything();
