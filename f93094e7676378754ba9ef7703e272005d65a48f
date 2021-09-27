@@ -50,6 +50,40 @@
       "revId": "f93094e7676378754ba9ef7703e272005d65a48f",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc4fd1a7_caa330e8",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:06:45Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027framedely\u0027 can be reduced",
+      "revId": "f93094e7676378754ba9ef7703e272005d65a48f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e028472f_34f255c4",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:06:45Z",
+      "side": 1,
+      "message": "(style) Variable \u0027framedely\u0027 is assigned a value that is never used",
+      "revId": "f93094e7676378754ba9ef7703e272005d65a48f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
