@@ -16,6 +16,23 @@
       "revId": "72ba42c68a9402adfef0f8fe6beb9907c0a22723",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ffd1d3e_f60fd456",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:57:28Z",
+      "side": 1,
+      "message": "(style) Variable \u0027timespausestamp\u0027 is assigned a value that is never used",
+      "revId": "72ba42c68a9402adfef0f8fe6beb9907c0a22723",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
