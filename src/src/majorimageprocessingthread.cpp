@@ -83,7 +83,6 @@ void MajorImageProcessingThread::setRotation(int rotation)
     default:
         break;
     }
-   // qDebug() << "------------------- "  << rotation << "------------------";
 }
 
 void MajorImageProcessingThread::run()
