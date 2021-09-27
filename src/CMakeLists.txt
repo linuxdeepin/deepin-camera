@@ -123,7 +123,7 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
-    ${CMAKE_CURRENT_LIST_DIR}/lib/librkisp_api.so
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/librkisp_api
     )
 
 # 将工程与Qt模块链接起来
