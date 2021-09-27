@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ae2f920_206d9bf7",
+        "filename": "src/src/basepub/load_libs.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:02:34Z",
+      "side": 1,
+      "message": "改动行数(修改和新增): 0; 删除代码行数: 5; 注释率: 不计算",
+      "revId": "df2cd7fecedb105a0789fce3e29676d6a418c125",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e66898e_0b9d6714",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:02:34Z",
+      "side": 1,
+      "message": "改动行数(修改和新增): 0; 删除代码行数: 35; 注释率: 不计算",
+      "revId": "df2cd7fecedb105a0789fce3e29676d6a418c125",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4a945d5_eef83ead",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-27T06:02:34Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 21; 注释率: 14.3%",
+      "revId": "df2cd7fecedb105a0789fce3e29676d6a418c125",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
