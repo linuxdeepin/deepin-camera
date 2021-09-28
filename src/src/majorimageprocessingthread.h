@@ -88,14 +88,13 @@ protected:
 
 
 signals:
-#ifdef __mips__
     /**
-     * @brief SendMajorImageProcessing 向预览界面发送帧数据
+     * @brief SendMajorImageProcessing 向预览界面发送帧数据  mips平台、wayland下使用该接口
      * @param image 图像
      * @param result 结果
      */
     void SendMajorImageProcessing(QImage *image, int result);
-#else
+
     /**
      * @brief sigYUVFrame YUV框架信号
      * @param yuv YUV
@@ -110,7 +109,6 @@ signals:
      */
     void sigRenderYuv(bool);
 
-#endif
     /**
      * @brief reachMaxDelayedFrames 到达最大延迟信号
      */
@@ -135,9 +133,8 @@ private:
     v4l2_frame_buff_t *m_frame;
     uint8_t           *m_yuvPtr;
     bool              m_bHorizontalMirror;   //水平镜像
-#ifdef __mips__
-    QImage             m_Img;
-#endif
+
+    QImage             m_Img;   //mips、wayland下使用该变量
 
 };
 

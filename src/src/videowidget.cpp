@@ -57,7 +57,10 @@ videowidget::videowidget(DWidget *parent)
       m_nMaxRecTime(60) //默认60小时
 {
 #ifndef __mips__
-    m_openglwidget = new PreviewOpenglWidget(this);
+    if (get_wayland_status() == true)
+        m_pNormalItem = new QGraphicsPixmapItem;
+    else
+        m_openglwidget = new PreviewOpenglWidget(this);
 #else
     m_pNormalItem = new QGraphicsPixmapItem;
 #endif
@@ -88,7 +91,8 @@ videowidget::videowidget(DWidget *parent)
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
 #ifndef __mips__
-    m_openglwidget->setFocusPolicy(Qt::ClickFocus);
+    if (get_wayland_status() != true)
+        m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
     m_savePicFolder = "";
@@ -108,6 +112,8 @@ videowidget::videowidget(DWidget *parent)
 #ifdef __mips__
     m_pNormalScene->addItem(m_pNormalItem);
 #endif
+    if (get_wayland_status() == true)
+        m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pCamErrItem);
     recordingwidgetlay->setSpacing(0);
     recordingwidgetlay->setContentsMargins(0, 0, 0, 0);
@@ -181,9 +187,15 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
-    connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
-    connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
-            m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
+    if (get_wayland_status() == true) {
+        connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
+                this, SLOT(ReceiveMajorImage(QImage *, int)));
+    } else {
+        connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
+        connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
+                m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
+    }
+
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
@@ -212,11 +224,16 @@ void videowidget::showNocam()
     if (!m_pSvgItem->isVisible())
         m_pSvgItem->show();
 
-#ifndef __mips__
-    m_openglwidget->hide();
-#else
+#ifdef __mips__
     if (m_pNormalItem->isVisible())
         m_pNormalItem->hide();
+#else
+    if (get_wayland_status() == true) {
+        if (m_pNormalItem->isVisible())
+            m_pNormalItem->hide();
+    } else {
+        m_openglwidget->hide();
+    }
 #endif
 
     emit sigDeviceChange();
@@ -262,6 +279,8 @@ void videowidget::showNocam()
 #ifdef __mips__
     m_pNormalItem->hide();
 #endif
+    if (get_wayland_status() == true)
+        m_pNormalItem->hide();
 
     emit noCam();
 
@@ -276,11 +295,16 @@ void videowidget::showCamUsed()
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
-#ifndef __mips__
-    m_openglwidget->hide();
-#else
+#ifdef __mips__
     if (m_pNormalItem->isVisible())
         m_pNormalItem->hide();
+#else
+    if (get_wayland_status() == true) {
+        if (m_pNormalItem->isVisible())
+            m_pNormalItem->hide();
+    } else {
+        m_openglwidget->hide();
+    }
 #endif
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
@@ -374,7 +398,6 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
 #endif
 
-#ifdef __mips__
 void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
     if (!image->isNull()) {
@@ -422,7 +445,6 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         }
     }
 }
-#endif
 
 void videowidget::onReachMaxDelayedFrames()
 {
@@ -442,11 +464,16 @@ void videowidget::onReachMaxDelayedFrames()
     showNocam();
     emit updatePhotoState(CMainWindow::photoNormal);
 
-#ifndef __mips__
-    if (m_openglwidget->isVisible())
-        m_openglwidget->hide();//隐藏opengl窗口
-#else
+#ifdef __mips__
     m_pNormalItem->hide() ;
+
+#else
+    if (get_wayland_status() == true) {
+        m_pNormalItem->hide() ;
+    } else {
+        if (m_openglwidget->isVisible())
+            m_openglwidget->hide();//隐藏opengl窗口
+    }
 #endif
 }
 
@@ -751,6 +778,7 @@ void videowidget::flash()
     }
 
 }
+
 void videowidget::slotresolutionchanged(const QString &resolution)
 {
     if (DataManager::instance()->getdevStatus() != CAM_CANUSE)
@@ -1212,12 +1240,12 @@ videowidget::~videowidget()
     delete m_imgPrcThread;
 
 #ifndef __mips__
-
-    if (m_openglwidget) {
-        delete m_openglwidget;
-        m_openglwidget = nullptr;
+    if (!get_wayland_status()) {
+        if (m_openglwidget) {
+            delete m_openglwidget;
+            m_openglwidget = nullptr;
+        }
     }
-
 #endif
 
     delete m_flashLabel;
