@@ -73,10 +73,10 @@ qint64 Stub_Function::msecsTo(const QDateTime &)
     return 0;
 }
 
-int Stub_Function::get_wayland_status()
-{
-    return true;
-}
+//int Stub_Function::get_wayland_status()
+//{
+//    return true;
+//}
 
 bool Stub_Function::isVisible()
 {
@@ -530,7 +530,7 @@ void Stub_Function::initSub()
     m_stub.set(::get_v4l2_device_handler, ADDR(Stub_Function, get_v4l2_device_handler));
     m_stub.set(::set_device_name, ADDR(Stub_Function, set_device_name));
     m_stub.set(::v4l2core_release_frame, ADDR(Stub_Function, v4l2core_release_frame));
-    m_stub.set(::get_wayland_status, ADDR(Stub_Function, get_wayland_status));
+//    m_stub.set(::get_wayland_status, ADDR(Stub_Function, get_wayland_status));
     m_stub.set(::start_encoder_thread, ADDR(Stub_Function, start_encoder_thread));
     m_stub.set(::v4l2core_get_format_resolution_index,ADDR(Stub_Function, v4l2core_get_format_resolution_index));
     m_stub.set(::config_load, ADDR(Stub_Function, config_load));

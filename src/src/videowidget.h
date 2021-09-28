@@ -263,20 +263,15 @@ public slots:
     void onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType);
 
 private slots:
-#ifdef __mips__
     /**
-    * @brief ReceiveMajorImage　处理视频帧
+    * @brief ReceiveMajorImage　处理视频帧 mips、wayland下使用
     */
     void ReceiveMajorImage(QImage *image, int result);
-
-#else
 
     /**
     * @brief ReceiveOpenGLstatus　接收openGL状态
     */
     void ReceiveOpenGLstatus(bool);
-
-#endif
 
     /**
     * @brief onReachMaxDelayedFrames　达到视频帧最大延迟
@@ -373,12 +368,11 @@ private:
     QGraphicsView              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
     QGraphicsSvgItem           *m_pSvgItem;
-#ifndef __mips__
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
-#else
+
     QPixmap                    m_framePixmap;       //帧图片
     QGraphicsPixmapItem        *m_pNormalItem;
-#endif
+
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
     bool                       m_flashEnable;       //是否闪光灯
 };

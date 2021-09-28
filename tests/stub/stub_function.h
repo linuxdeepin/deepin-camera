@@ -31,7 +31,7 @@ public:
     qint64 msecsTo(const QDateTime &);
 
     //videowidget
-    int get_wayland_status();//获取wayland状态函数打桩
+//    int get_wayland_status();//获取wayland状态函数打桩
     bool isVisible();//可见函数打桩
     //调用delayInit分支
     int camInit_OK(const char *devicename);//返回值为E_OK(进入该分支会出现错误)
