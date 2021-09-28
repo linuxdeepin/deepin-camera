@@ -19,6 +19,57 @@
     },
     {
       "key": {
+        "uuid": "f96d9756_1c7d7dc5",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-28T05:48:18Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "ef4d91bc0711addf2e92bef7ca01d553c60cf2f1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e3c69fa_271aa51d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-28T05:48:18Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "ef4d91bc0711addf2e92bef7ca01d553c60cf2f1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "439b8ea4_ec590b24",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-28T05:48:18Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027rgb\u0027 can be reduced",
+      "revId": "ef4d91bc0711addf2e92bef7ca01d553c60cf2f1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d0cf835_02e01b42",
         "filename": "src/src/majorimageprocessingthread.h",
         "patchSetId": 3
@@ -81,6 +132,23 @@
       "writtenOn": "2021-09-28T05:48:16Z",
       "side": 1,
       "message": "注释行数: 5; 改动行数(修改和新增): 5; 注释率: 100.0%",
+      "revId": "ef4d91bc0711addf2e92bef7ca01d553c60cf2f1",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d943912_4c5e0a3d",
+        "filename": "tests/stub/stub_function.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-09-28T05:48:18Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16328080931250.8327013328107029/changeCache/tests/stub/stub_function.cpp:437]: (style) Variable \u0027m_v4l2_dev-\u003elist_stream_formats[0].list_stream_cap[0].width\u0027 is reassigned a value before the old one has been used",
       "revId": "ef4d91bc0711addf2e92bef7ca01d553c60cf2f1",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
