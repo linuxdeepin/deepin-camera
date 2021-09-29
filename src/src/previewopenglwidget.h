@@ -55,6 +55,7 @@ public:
     int getFrameWidth();
 
 public slots:
+#ifndef __mips__
     /**
     * @brief slotShowYuv　显示一帧Yuv图像
     * @param ptr 数据
@@ -62,6 +63,7 @@ public slots:
     * @param height 高度
     */
     void slotShowYuv(uchar *ptr, uint width, uint height);
+#endif
 
 protected:
     /**

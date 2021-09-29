@@ -95,6 +95,7 @@ signals:
      */
     void SendMajorImageProcessing(QImage *image, int result);
 
+#ifndef __mips__
     /**
      * @brief sigYUVFrame YUV框架信号
      * @param yuv YUV
@@ -108,6 +109,7 @@ signals:
      * @param width
      */
     void sigRenderYuv(bool);
+#endif
 
     /**
      * @brief reachMaxDelayedFrames 到达最大延迟信号

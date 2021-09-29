@@ -268,10 +268,12 @@ private slots:
     */
     void ReceiveMajorImage(QImage *image, int result);
 
+#ifndef __mips__
     /**
     * @brief ReceiveOpenGLstatus　接收openGL状态
     */
     void ReceiveOpenGLstatus(bool);
+#endif
 
     /**
     * @brief onReachMaxDelayedFrames　达到视频帧最大延迟
