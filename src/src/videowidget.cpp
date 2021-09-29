@@ -109,11 +109,14 @@ videowidget::videowidget(DWidget *parent)
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
     m_pGridLayout->addWidget(m_pNormalView);
     m_pNormalScene->addItem(m_pSvgItem);
+
 #ifdef __mips__
     m_pNormalScene->addItem(m_pNormalItem);
-#endif
+#else
     if (get_wayland_status() == true)
         m_pNormalScene->addItem(m_pNormalItem);
+#endif
+
     m_pNormalScene->addItem(m_pCamErrItem);
     recordingwidgetlay->setSpacing(0);
     recordingwidgetlay->setContentsMargins(0, 0, 0, 0);
@@ -278,6 +281,9 @@ void videowidget::showNocam()
 
 #ifdef __mips__
     m_pNormalItem->hide();
+#else
+    if (get_wayland_status() == true)
+        m_pNormalItem->hide();
 #endif
     if (get_wayland_status() == true)
         m_pNormalItem->hide();

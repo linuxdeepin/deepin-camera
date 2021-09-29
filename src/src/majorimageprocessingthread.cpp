@@ -169,15 +169,15 @@ void MajorImageProcessingThread::run()
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
+#ifdef __mips__
+        uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
+        yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+#else
         uint8_t *rgb; //yuv数据转为rgb
         if (get_wayland_status()) {
             rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
             yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
         }
-
-#ifdef __mips__
-        uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
-        yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
 #endif
 
         /*录像*/
@@ -295,9 +295,10 @@ void MajorImageProcessingThread::run()
 
 #ifdef __mips__
         free(rgb);
-#endif
+#else
         if (get_wayland_status() == true)
             free(rgb);
+#endif
 
         m_frame->yuv_frame = pOldYuvFrame;
         v4l2core_release_frame(m_videoDevice, m_frame);
