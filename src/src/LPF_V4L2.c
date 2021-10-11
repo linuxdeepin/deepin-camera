@@ -263,23 +263,14 @@ int camInit(const char *devicename)
     return E_OK;
 }
 
+int camUnInit()
+{
+    v4l2_dev_t *vd =  get_v4l2_device_handler();
+
+    if (vd)
+        close_v4l2_device_handler();
+}
+
 #ifdef __cplusplus
 }
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

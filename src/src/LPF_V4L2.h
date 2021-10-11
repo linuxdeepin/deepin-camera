@@ -61,6 +61,8 @@ extern "C" {
 */
 int camInit(const char *device_name);
 
+int camUnInit();
+
 #ifdef __cplusplus
 }
 #endif

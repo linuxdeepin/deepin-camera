@@ -1290,4 +1290,6 @@ videowidget::~videowidget()
 
     delete m_recordingTimer;
     m_recordingTimer = nullptr;
+
+    camUnInit();
 }
