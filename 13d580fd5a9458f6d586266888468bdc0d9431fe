@@ -16,6 +16,40 @@
       "revId": "13d580fd5a9458f6d586266888468bdc0d9431fe",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1a44eb9_cd14ecae",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 504,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-13T07:49:32Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nIndex\u0027 can be reduced",
+      "revId": "13d580fd5a9458f6d586266888468bdc0d9431fe",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61c95bb8_f3623860",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-13T07:49:32Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nIndex\u0027 can be reduced",
+      "revId": "13d580fd5a9458f6d586266888468bdc0d9431fe",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
