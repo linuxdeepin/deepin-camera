@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "fec41f16_9dded3c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-13T07:25:20Z",
+      "side": 1,
+      "message": "详细信息下方缺少空行",
+      "revId": "71aa2ffc092e891d5730e5111e0885453c7c7705",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6bc1032_8f551ac9",
         "filename": "src/src/thumbnailsbar.cpp",
         "patchSetId": 1
