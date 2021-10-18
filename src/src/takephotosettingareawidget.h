@@ -48,9 +48,10 @@ public:
     /**
     * @brief showUnfold 显示展开
     * @param bShow 是否显示
+    * @param btn 返回焦点的按钮
     * @param isShortcut 是否通过快捷键触发
     */
-    void showUnfold(bool bShow, bool isShortcut = false);
+    void showUnfold(bool bShow, circlePushButton *btn, bool isShortcut = false);
     /**
     * @brief showDelayButtons 显示延时拍照按钮
     * @param bShow 是否显示

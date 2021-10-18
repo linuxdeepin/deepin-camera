@@ -253,7 +253,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
     });
 }
 
-void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortcut)
+void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, bool isShortcut)
 {
     //位移动画
     QPropertyAnimation *position1 = new QPropertyAnimation(m_foldBtn, "pos", this);
@@ -291,8 +291,9 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, bool isShortcut)
 
     connect(pPosGroup, &QParallelAnimationGroup::finished, this, [=](){
         m_isBtnsFold = false;
-        if (isShortcut)
-            m_flashlightUnfoldBtn->setFocus();
+        if (isShortcut) {
+            btn->setFocus();
+        }
     });
 
     m_foldBtn->setVisible(bShow);
@@ -367,7 +368,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
             m_delay3SecondBtn->setVisible(bShow);
             m_delay6SecondBtn->setVisible(bShow);
             m_delayGroupDisplay = false;
-            showUnfold(true, isShortcut);
+            showUnfold(true, m_delayUnfoldBtn, isShortcut);
         });
     }
 
@@ -434,7 +435,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
             m_flashlightOnBtn->setVisible(bShow);
             m_flashlightOffBtn->setVisible(bShow);
             m_flashGroupDisplay = false;
-            showUnfold(true, isShortcut);
+            showUnfold(true, m_flashlightUnfoldBtn, isShortcut);
         });
     }
 
@@ -473,7 +474,11 @@ void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
     group->start();
 
     connect(group, &QParallelAnimationGroup::finished, this, [=](){
-        showUnfold(true, isShortcut);
+        if (m_bPhoto) {
+            showUnfold(true, m_flashlightUnfoldBtn, isShortcut);
+        } else {
+            showUnfold(true, m_delayUnfoldBtn, isShortcut);
+        }
         group->deleteLater();
 
     });
@@ -796,12 +801,20 @@ void takePhotoSettingAreaWidget::focusInEvent(QFocusEvent *event)
     Q_UNUSED(event);
     if (m_isBtnsFold) {
         m_unfoldBtn->setFocus();
-    } else if (m_flashGroupDisplay) {
-        m_flashlightFoldBtn->setFocus();
-    } else if (m_delayGroupDisplay) {
-        m_delayFoldBtn->setFocus();
+    } else if (!m_bPhoto) {
+        if (m_delayGroupDisplay) {
+            m_delayFoldBtn->setFocus();
+        } else {
+            m_delayUnfoldBtn->setFocus();
+        }
     } else {
-        m_flashlightUnfoldBtn->setFocus();
+        if (m_flashGroupDisplay) {
+            m_flashlightFoldBtn->setFocus();
+        } else if (m_delayGroupDisplay) {
+            m_delayFoldBtn->setFocus();
+        } else {
+            m_flashlightUnfoldBtn->setFocus();
+        }
     }
     update();
 }
