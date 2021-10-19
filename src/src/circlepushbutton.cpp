@@ -74,9 +74,11 @@ void circlePushButton::paintEvent(QPaintEvent *event)
     int tmpWidth = width();
     int tmpHeight = height();
 
+    QRectF rect = this->rect();
+
     //绘制背景色
     QPainterPath path;
-    path.addEllipse(rect());
+    path.addEllipse(rect);
     painter.fillPath(path, QBrush(QColor(m_color)));
 
     //绘制点击效果
@@ -110,6 +112,14 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         painter.drawEllipse(selectedRect);
     }
     
+    if (m_isNewNotification) {
+        rect.setTopLeft(QPoint(rect.width() - 9, 1));
+        rect.setSize(QSize(8, 8));
+        painter.setPen(QPen(Qt::white, 1));
+        painter.setBrush(/*Qt::NoBrush*/Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        painter.drawEllipse(rect);
+    }
+
     painter.save();
     painter.translate(width() / 2, height() / 2);
     painter.rotate(m_rotate);
@@ -214,6 +224,11 @@ void circlePushButton::setRotate(int rotate)
 {
     m_rotate = rotate;
     update();
+}
+
+void circlePushButton::setNewNotification (const bool set_new)
+{
+    m_isNewNotification = set_new;
 }
 
 circlePushButton::~circlePushButton()

@@ -23,6 +23,7 @@
 #define CIRCLEPUSHBUTTON_H
 
 #include <QPushButton>
+#include <DApplicationHelper>
 
 class QColor;
 class QSvgRenderer;
@@ -96,6 +97,12 @@ public:
     */
     void setRotate(int rotate);
 
+    /**
+    * @brief setNewNotification 设置是否显示小圆点
+    * @param  set_new true显示  false不显示
+    */
+    void setNewNotification (const bool set_new);
+
 signals:
     void clicked(bool isShortcut = false);
 
@@ -159,6 +166,7 @@ private:
     bool          m_disableSelect;//禁用选中
     int           m_opacity = 102;    //不透明度 默认值102
     int           m_rotate = 0; //旋转角度
+    bool          m_isNewNotification = false;  //是否显示小圆点
 };
 
 #endif // CIRCLEPUSHBUTTON_H
