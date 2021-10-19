@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42a87aa8_9fd5c518",
+        "filename": "src/src/photorecordbtn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-19T02:29:52Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 23; 注释率: 0.0%",
+      "revId": "9abd17f82a086feaa68d7b33b4e37591baf93f2f",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
