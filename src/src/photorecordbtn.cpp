@@ -46,57 +46,49 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::NoBrush);
 
     QPainterPath path;
-    QRect rect = this->rect();
+    QRectF rect = this->rect();
 
     QColor color = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0, 0, 0, 0.1 * 255);
     painter.setPen(QPen(color, 2));
     painter.setBrush(Qt::NoBrush);
-    rect.setTopLeft(QPoint(2, 2));
-    rect.setSize(QSize(60, 60));
+    rect.setTopLeft(QPoint(1, 1));
+    rect.setSize(QSize(62, 62));
     painter.drawEllipse(rect);
 
-    rect.setTopLeft(QPoint(5, 5));
-    rect.setSize(QSize(54, 54));
+    rect.setTopLeft(QPoint(4, 4));
+    rect.setSize(QSize(56, 56));
     painter.setPen(QPen(Qt::white, 4));
     painter.drawEllipse(rect);
 
+    rect.setTopLeft(QPoint(6, 6));
+    rect.setSize(QSize(52, 52));
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QBrush(QColor(255, 255, 255, 0.1 * 255)));
+    painter.drawEllipse(rect);
 
     if (!m_bPhoto)
     {
         if (Normal == m_recordState){
-            rect.setTopLeft(QPoint(9, 9));
-            rect.setSize(QSize(46, 46));
-            painter.setPen(QPen(QColor(255, 255, 255, 0.1 * 255), 5));
-            painter.drawEllipse(rect);
-
-            rect.setTopLeft(QPoint(12, 12));
-            rect.setSize(QSize(40, 40));
+            rect.setTopLeft(QPoint(11, 11));
+            rect.setSize(QSize(42, 42));
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(0xff,0x57,0x36,0xff)));
             painter.drawEllipse(rect);
-        }
-        else if (preRecord == m_recordState){
-            rect.setTopLeft(QPoint(8, 8));
-            rect.setSize(QSize(48, 48));
+        } else if (preRecord == m_recordState){
+            rect.setTopLeft(QPoint(20, 20));
+            rect.setSize(QSize(24, 24));
             painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(QColor(255, 255, 255, 0.1 * 255)));
-            painter.drawEllipse(rect);
+            painter.setBrush(QColor(0, 0, 0, 255 * 0.08));
+            painter.drawRoundedRect(rect, 5, 5);
 
             rect.setTopLeft(QPoint(22, 22));
             rect.setSize(QSize(20,20));
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(255,255,255,0xff)));
             painter.drawRoundedRect(rect,4,4);
-        }
-        else if(Recording == m_recordState){
-            rect.setTopLeft(QPoint(8, 8));
-            rect.setSize(QSize(48, 48));
-            painter.setPen(Qt::NoPen);
-            painter.setBrush(QBrush(QColor(255, 255, 255, 0.1 * 255)));
-            painter.drawEllipse(rect);
-
-            rect.setTopLeft(QPoint(12, 12));
-            rect.setSize(QSize(40, 40));
+        } else if (Recording == m_recordState){
+            rect.setTopLeft(QPoint(11, 11));
+            rect.setSize(QSize(42, 42));
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(255, 255, 255)));
             painter.drawEllipse(rect);
@@ -108,15 +100,9 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
             painter.drawRoundedRect(rect, 4, 4);
         }
 
-    }
-    else {
-        rect.setTopLeft(QPoint(9, 9));
-        rect.setSize(QSize(46, 46));
-        painter.setPen(QPen(QColor(255, 255, 255, 0.1 * 255), 5));
-        painter.drawEllipse(rect);
-
-        rect.setTopLeft(QPoint(12, 12));
-        rect.setSize(QSize(40, 40));
+    } else {
+        rect.setTopLeft(QPoint(11, 11));
+        rect.setSize(QSize(42, 42));
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(QColor(Qt::white)));
         painter.drawEllipse(rect);
