@@ -50,10 +50,10 @@ static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent)
 {
-#ifndef __mips__
-    m_openglwidget = new PreviewOpenglWidget(this);
-#else
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     m_pNormalItem = new QGraphicsPixmapItem;
+#else
+    m_openglwidget = new PreviewOpenglWidget(this);
 #endif
     m_bActive = false;   //是否录制中
     m_takePicSound = new QSound(":/resource/Camera.wav");
@@ -79,7 +79,7 @@ videowidget::videowidget(DWidget *parent)
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
@@ -102,7 +102,7 @@ videowidget::videowidget(DWidget *parent)
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
     m_pGridLayout->addWidget(m_pNormalView);
     m_pNormalScene->addItem(m_pSvgItem);
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     m_pNormalScene->addItem(m_pNormalItem);
 #endif
     m_pNormalScene->addItem(m_pCamErrItem);
@@ -207,7 +207,7 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 
     if (m_openglwidget) {
         delete m_openglwidget;
@@ -267,7 +267,7 @@ void videowidget::delayInit()
     m_imgPrcThread->setObjectName("MajorThread");
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
@@ -428,7 +428,7 @@ void videowidget::showNocam()
     if (!m_pSvgItem->isVisible())
         m_pSvgItem->show();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     m_openglwidget->hide();
 #else
     if (m_pNormalItem->isVisible())
@@ -478,7 +478,7 @@ void videowidget::showNocam()
     m_pCamErrItem->show();
     m_pSvgItem->show();
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     m_pNormalItem->hide();
 #endif
 
@@ -502,7 +502,7 @@ void videowidget::showCamUsed()
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     m_openglwidget->hide();
 #else
     if (m_pNormalItem->isVisible())
@@ -554,7 +554,7 @@ void videowidget::showCamUsed()
         onEndBtnClicked();
 
 }
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 void videowidget::ReceiveOpenGLstatus(bool result)
 {
     if (result) {
@@ -603,7 +603,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
 #endif
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
 void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
     if (!image->isNull()) {
@@ -670,7 +670,7 @@ void videowidget::onReachMaxDelayedFrames()
     stopEverything();
     showNocam();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (m_openglwidget->isVisible())
         m_openglwidget->hide();//隐藏opengl窗口
 #else
@@ -910,7 +910,7 @@ void videowidget::showCountdown()
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
                 m_openglwidget->hide();
 #else
                 m_pNormalView->hide();
@@ -935,7 +935,7 @@ void videowidget::showCountdown()
                 //立即闪光，500ms后关闭
                 m_flashTimer->start(500);
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
                 m_openglwidget->hide();
 #else
                 m_pNormalView->hide();
@@ -1087,7 +1087,7 @@ void videowidget::flash()
         if (get_sound_of_takeing_photo())
             m_takePicSound->play();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 
         if (m_openglwidget->isVisible() == false)
             m_openglwidget->show();
@@ -1185,7 +1185,7 @@ void videowidget::onRestartDevices()
             QPalette plt = palette();
             plt.setColor(QPalette::Window, Qt::white);
             m_pNormalView->hide();
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
             m_openglwidget->show();
 #endif
         }
@@ -1396,7 +1396,7 @@ void videowidget::onTakePic(bool bTrue)
         QEventLoop eventloop;
         QTimer::singleShot(300, &eventloop, SLOT(quit()));
         eventloop.exec();
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 
         if (!m_openglwidget->isVisible())
             m_openglwidget->show();
@@ -1561,7 +1561,7 @@ void videowidget::stopEverything()
     if (m_fWgtCountdown->isVisible())
         m_fWgtCountdown->hide();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (!m_openglwidget->isVisible())
         m_openglwidget->show();
 #endif

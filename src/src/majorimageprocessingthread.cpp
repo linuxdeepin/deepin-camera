@@ -130,7 +130,7 @@ void MajorImageProcessingThread::run()
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
         uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
         yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
 #endif
@@ -217,7 +217,7 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
             QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
             if (!imgTmp.isNull()) {
                 m_Img = imgTmp.copy();
@@ -247,7 +247,7 @@ void MajorImageProcessingThread::run()
             malloc_trim(0);
         }
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
         if (m_frame->yuv_frame == nullptr) {
             emit sigRenderYuv(false);
         }
@@ -255,7 +255,7 @@ void MajorImageProcessingThread::run()
 #endif
         m_rwMtxImg.unlock();
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
         free(rgb);
 #endif
         v4l2core_release_frame(m_videoDevice, m_frame);

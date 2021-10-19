@@ -82,7 +82,7 @@ protected:
 
 
 signals:
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     /**
      * @brief SendMajorImageProcessing 向预览界面发送帧数据
      * @param image 图像
@@ -125,7 +125,7 @@ private:
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
     uchar             *m_yuvPtr;
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     QImage             m_Img;
 #endif
 

@@ -244,7 +244,7 @@ public slots:
     void onRestartDevices();
 
 private slots:
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
     /**
     * @brief ReceiveMajorImage　处理视频帧
     */
@@ -358,7 +358,7 @@ private:
     QGraphicsView              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
     QGraphicsSvgItem           *m_pSvgItem;
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
 #else
     QGraphicsPixmapItem        *m_pNormalItem;
