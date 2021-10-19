@@ -84,6 +84,10 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
+    //fix mips wayland ,the first time the camera is occupied, test connection and occupied
+    //If there's a problem, Please modify the subject transformation
+    //Powered by xxxx
+    m_pSvgItem->hide();
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
 
