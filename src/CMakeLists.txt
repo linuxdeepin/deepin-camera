@@ -8,7 +8,11 @@ project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
 #option (__mips__ "Use UNITTEST" ON)
-#add_definitions(-D__mips__)
+
+# cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
+set(LUT_DIR "/usr/share/libvisualresult/filter_cube")
+add_definitions(-DLUT_DIR="${LUT_DIR}")
+add_definitions(-D__mips__)
 
 
 # 加速编译优化参数
@@ -17,7 +21,7 @@ if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
     SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 else()
-    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -Wl,--as-need -fPIE")
+    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -Wl,--as-need -fPIE")
     SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3  -Wl,--as-need -fPIE")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 endif()
@@ -118,6 +122,8 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
 #    portaudio
     dl
+
+    visualresult
     )
 
 # 将工程与Qt模块链接起来

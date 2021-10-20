@@ -193,6 +193,8 @@ void videowidget::delayInit()
 #ifdef __mips__
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
+    connect(m_imgPrcThread, SIGNAL(SendFilterImageProcessing(QImage *)),
+            this, SIGNAL(updateFilterImage(QImage *)));
 #else
     if (get_wayland_status() == true) {
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
@@ -1246,6 +1248,11 @@ void videowidget::setMaxRecTime(int hour)
     m_nMaxRecTime = hour;
 }
 
+void videowidget::setFilterType(efilterType type)
+{
+    if (m_imgPrcThread)
+        m_imgPrcThread->setFilter(filterPreviewButton::filterName_CUBE(type));
+}
 
 videowidget::~videowidget()
 {
