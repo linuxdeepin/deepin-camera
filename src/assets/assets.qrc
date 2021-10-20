@@ -53,6 +53,12 @@
         <file>images/icons/light/select-normal.svg</file>
         <file>images/camera/old_fold.svg</file>
         <file>images/camera/unfold.svg</file>
+        <file>images/camera/exposure-press.svg</file>
+        <file>images/camera/exposure-hover.svg</file>
+        <file>images/camera/filters-hover.svg</file>
+        <file>images/camera/filters-press.svg</file>
+        <file>images/camera/filters.svg</file>
+        <file>images/camera/exposure.svg</file>
     </qresource>
     <qresource prefix="/icons/deepin/builtin">
         <file>texts/panel_switch_camera_20px.svg</file>
