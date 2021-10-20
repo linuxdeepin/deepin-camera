@@ -21,6 +21,8 @@
 #ifndef TAKEPHOTOSETTINGAREAWIDGET_H
 #define TAKEPHOTOSETTINGAREAWIDGET_H
 
+#include "filterpreviewbutton.h"
+
 #include <QWidget>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -64,6 +66,18 @@ public:
     */
     void showFlashlights(bool bShow, bool isShortcut = false);
     /**
+    * @brief showFilters 显示滤镜按钮
+    * @param bShow 是否显示
+    * @param isShortcut 是否通过快捷键触发
+    */
+    void showFilters(bool bShow, bool isShortcut = false);
+    /**
+    * @brief showExposures 显示曝光按钮
+    * @param bShow 是否显示
+    * @param isShortcut 是否通过快捷键触发
+    */
+    void showExposures(bool bShow, bool isShortcut = false);
+    /**
     * @brief setDelayTime 设置延时拍照时间
     * @param delayTime 延迟的时间
     */
@@ -78,6 +92,18 @@ public:
     * @brief setDelayTime 获取闪光灯状态
     */
     bool flashLight();
+
+    /**
+    * @brief setFilterType 设置滤镜类型
+    * @param type 滤镜类型
+    */
+    void setFilterType(efilterType type);
+
+    /**
+    * @brief filterType 获取滤镜类型
+    */
+    efilterType getFilterType();
+
     /**
     * @brief moveToParentLeft 移动到父窗口左边
     */
@@ -151,6 +177,7 @@ protected:
 signals:
     void sngSetDelayTakePhoto(int delayTime);
     void sngSetFlashlight(bool bFlashlightOn);
+    void sngFilterChanged(efilterType efilterType);
 
 public slots:
     /**
@@ -190,6 +217,26 @@ public slots:
     void delayfoldBtnClicked(bool isShortcut = false);
 
     /**
+    * @brief filtersUnfoldBtnsClicked 滤镜展开按钮点击槽函数
+    */
+    void filtersUnfoldBtnClicked(bool isShortcut = false);
+
+    /**
+    * @brief filtersFoldBtnsClicked 滤镜折叠按钮点击槽函数
+    */
+    void filtersFoldBtnClicked(bool isShortcut = false);
+
+    /**
+    * @brief exposureUnfoldBtnClicked 曝光展开按钮点击槽函数
+    */
+    void exposureUnfoldBtnClicked(bool isShortcut = false);
+
+    /**
+    * @brief exposureFoldBtnsClicked 曝光折叠按钮点击槽函数
+    */
+    void exposureFoldBtnClicked(bool isShortcut = false);
+
+    /**
     * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
     */
     void onDelayBtnsClicked(bool isShortcut = false);
@@ -198,6 +245,20 @@ public slots:
     * @brief onDelayBtnsClicked 闪光开关按钮点击槽函数
     */
     void onFlashlightBtnsClicked(bool isShortcut = false);
+
+    /**
+    * @brief onFilterPreviewBtnsClicked 滤镜预览选择按钮点击槽函数
+    */
+    void onFilterBtnsClicked(bool isShortcut = false);
+
+    /**
+    * @brief onUpdateFilterImage 更新预览帧图片
+    * @param img 预览帧图片
+    */
+    void onUpdateFilterImage(QImage* img);
+
+private:
+    filterPreviewButton* getFilterPreviewFocusBtn();
 
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
@@ -214,6 +275,14 @@ private:
     circlePushButton        *m_delay3SecondBtn;//延迟3s
     circlePushButton        *m_delay6SecondBtn;//延迟6s
 
+    circlePushButton        *m_filtersFoldBtn = nullptr;//折叠滤镜按钮
+    circlePushButton        *m_filtersUnfoldBtn = nullptr;//展开滤镜按钮
+
+    filterPreviewBtnList     m_filterPreviewBtnList;//滤镜预览按钮列表
+
+    circlePushButton        *m_exposureFoldBtn = nullptr;//折叠曝光按钮
+    circlePushButton        *m_exposureUnfoldBtn = nullptr;//展开曝光按钮
+
     int                      m_btnHeightOffset;//按钮之间的间隔
     int                      m_threeBtnOffset;//三级菜单按钮之间的间隔
 
@@ -221,10 +290,15 @@ private:
 
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
+    bool                     m_filtersGroupDislay = false;//滤镜按钮组是否显示
+    bool                     m_exposureGroupDisplay = false;//曝光按钮组是否显示
+
     bool                     m_isBtnsFold;  //按钮组是否收起
     int                      m_opacity = 102;    //不透明度 默认值0.4 * 255
 
     bool                     m_bPhoto;          //true 拍照状态， false 录像状态
+
+    efilterType               m_filterType;      //当前选中的滤镜类型
 };
 
 #endif // TAKEPHOTOSETTINGAREAWIDGET_H

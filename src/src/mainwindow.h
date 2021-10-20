@@ -28,6 +28,7 @@
 #include "Settings.h"
 #include "titlebar.h"
 #include "rollingbox.h"
+#include "filterpreviewbutton.h"
 
 #include <DMainWindow>
 #include <DTitlebar>
@@ -377,6 +378,12 @@ private slots:
      * @brief onkeyRight 键盘右键处理事件
      */
     void onkeyRight();
+
+    /**
+     * @brief onFilterChanged 滤镜变更处理事件
+     * @param type 改变后的滤镜类型
+     */
+    void onFilterChanged(efilterType type);
 
 protected:
 

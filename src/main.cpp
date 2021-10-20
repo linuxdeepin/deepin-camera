@@ -29,12 +29,18 @@ extern "C"
 #include "cameraconfig.h"
 #include "acobjectlist.h"
 
+extern "C"
+{
+#include <libvisualresult/visualresult.h>
+}
+
 #include <DMainWindow>
 #include <DWidgetUtil>
 #include <DLog>
 #include <DApplicationSettings>
 
 #include <QSharedMemory>
+#include <QTime>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -106,6 +112,12 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
         set_wayland_status(1);
     }
+
+    QTime time;
+    time.start();
+    QString lutDir = LUT_DIR;
+    initFilters(lutDir.toStdString().c_str());
+    qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
 

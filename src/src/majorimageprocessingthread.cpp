@@ -21,6 +21,10 @@
 
 #include "majorimageprocessingthread.h"
 
+extern "C" {
+#include <libvisualresult/visualresult.h>
+}
+
 #include <QFile>
 #include <QDate>
 #include <QDir>
@@ -46,6 +50,11 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
+}
+
+void MajorImageProcessingThread::setFilter(QString filter)
+{
+    m_filter = filter;
 }
 
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
@@ -169,9 +178,28 @@ void MajorImageProcessingThread::run()
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
+        QTime time;
+        time.start();
 #ifdef __mips__
         uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
+    #if 0
         yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+    #else
+        yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+    #endif
+        qDebug() << QString("yu12_to_rgb24 cost %1 ms...").arg(time.elapsed());
+    #if 1
+
+        m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
+
+        time.restart();
+        imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+        qDebug() << QString("filter algorithm cost %1 ms...").arg(time.elapsed());
+    #else
+        time.restart();
+        exposure(rgb, m_frame->width, m_frame->height, -100);
+        qDebug() << QString("exposure algorithm cost %1 ms...").arg(time.elapsed());
+    #endif
 #else
         uint8_t *rgb; //yuv数据转为rgb
         if (get_wayland_status()) {
@@ -267,6 +295,7 @@ void MajorImageProcessingThread::run()
             if (!imgTmp.isNull()) {
                 m_Img = imgTmp.copy();
                 emit SendMajorImageProcessing(&m_Img, m_result);
+                emit SendFilterImageProcessing(&m_filterImg);
             }
 #else
             if (get_wayland_status()) {
