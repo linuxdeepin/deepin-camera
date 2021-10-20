@@ -80,6 +80,12 @@ public:
         return m_stopped;
     }
 
+    /**
+     * @brief setFilter 设置滤镜
+     * @param filter 滤镜名称
+     */
+    void setFilter(QString filter);
+
 protected:
     /**
      * @brief run 运行线程
@@ -94,6 +100,12 @@ signals:
      * @param result 结果
      */
     void SendMajorImageProcessing(QImage *image, int result);
+
+    /**
+     * @brief SendFilterImageProcessing 向滤镜预览类发送帧数据
+     * @param image 预览图像 大小40*40
+     */
+    void SendFilterImageProcessing(QImage *image);
 
 #ifndef __mips__
     /**
@@ -130,6 +142,7 @@ private:
     uint              m_nVdWidth;
     uint              m_nVdHeight;
     volatile int      m_majorindex;
+    QString           m_filter;//当前选择的滤镜名称
     QAtomicInt        m_stopped;
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
@@ -137,6 +150,7 @@ private:
     bool              m_bHorizontalMirror;   //水平镜像
 
     QImage             m_Img;   //mips、wayland下使用该变量
+    QImage             m_filterImg; //滤镜预览类使用 大小40*40
 
 };
 

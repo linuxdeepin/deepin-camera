@@ -1207,6 +1207,9 @@ void CMainWindow::loadAfterShow()
     connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
 
     m_videoPre->delayInit();
+    m_videoPre->setFilterType(filter_Normal);
+    m_takePhotoSettingArea->setFilterType(filter_Normal);
+
     showChildWidget();
     m_windowStateThread = new windowStateThread(this);
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
@@ -1505,6 +1508,13 @@ void CMainWindow::onkeyRight()
     }
 }
 
+void CMainWindow::onFilterChanged(efilterType type)
+{
+    if (m_videoPre) {
+        m_videoPre->setFilterType(type);
+    }
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1532,6 +1542,7 @@ void CMainWindow::initUI()
             dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), setIndex);
     });
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngFilterChanged, this, &CMainWindow::onFilterChanged);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
@@ -1550,6 +1561,7 @@ void CMainWindow::initUI()
     m_takePhotoSettingArea->init();
     m_takePhotoSettingArea->moveToParentLeft();
     m_takePhotoSettingArea->setVisible(true);
+
     m_videoPath = lastOpenedPath(QStandardPaths::MoviesLocation);//如果路径不存在会自动使用并创建默认路径
     m_picPath = lastOpenedPath(QStandardPaths::PicturesLocation);
 
@@ -1687,6 +1699,9 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(updateRecordState(int)), this, SLOT(onUpdateRecordState(int)));
 
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
+
+    // 更新滤镜预览帧图片
+    connect(m_videoPre, SIGNAL(updateFilterImage(QImage*)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage*)));
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
 
