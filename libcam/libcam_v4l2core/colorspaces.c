@@ -2794,6 +2794,140 @@ void yu12_to_rgb24 (uint8_t *out, uint8_t *in, int width, int height)
 	}
 }
 
+static __int64_t T1_402[256], T0_34414[256], T0_71414[256], T1_772[256];
+void init_yuv2rgb_num_table()
+{
+    for (int i = 0; i < 256; i++) {
+        T1_402[i] = i * 5743;
+        T1_402[i] = T1_402[i] >> 12;
+        T0_34414[i] = i * 721714;
+        T0_34414[i] = T0_34414[i] >> 21;
+        T0_71414[i] = i * 5990641;
+        T0_71414[i] = T0_71414[i] >> 23;
+        T1_772[i] = i * 1858077;
+        T1_772[i] = T1_772[i] >> 20;
+    }
+}
+
+/*
+ * yu12 to rgb24 high efficiency, use table inquer improve excution efficency
+ * args:
+ *    out - pointer to output rgb data buffer
+ *    in - pointer to input yu12 data buffer
+ *    width - buffer width (in pixels)
+ *    height - buffer height (in pixels)
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+#define F_H
+void yu12_to_rgb24_higheffic (uint8_t *out, uint8_t *in, int width, int height)
+{
+    /*assertions*/
+    assert(out);
+    assert(in);
+
+    uint8_t *py1 = in; //line 1
+    uint8_t *py2 = py1 + width; //line 2
+    uint8_t *pu = in + (width * height);
+    uint8_t *pv = pu + ((width * height) / 4);
+
+    uint8_t *pout1 = out; //first line
+    uint8_t *pout2 = out + (width * 3); //second line
+
+    int h=0, w=0;
+
+    int groupSize = width * 3;
+    int64_t v1_402, u0_34414_v0_71414, u1_772;
+    for(h=0; h < height; h+=2) //every two lines
+    {
+        py1 = in + (h * width);
+        py2 = py1 + width;
+
+        pout1 = out + (h * groupSize);
+        pout2 = pout1 + (groupSize);
+
+        for(w=0; w<width; w+=2) //every 2 pixels
+        {
+            v1_402 = T1_402[*pv] - T1_402[128];
+            u0_34414_v0_71414 = T0_34414[*pu] - T0_34414[128] + T0_71414[*pv] - T0_71414[128];
+            u1_772 = T1_772[*pu] - T1_772[128];
+//            printf("v1_402i:%ld, uvi:%ld, u1_772i:%ld\n", v1_402, u0_34414_v0_71414, u1_772);
+
+//            v1_402f = 1.402 * (*pv - 128);
+//            u0_34414_v0_71414f = 0.34414 * (*pu - 128) + 0.71414 * (*pv - 128);
+//            u1_772f = 1.772 * (*pu - 128);
+//            printf("v1_402f:%f, uvf:%f, u1_772f:%f\n", v1_402f, u0_34414_v0_71414f, u1_772f);
+#ifdef F_H
+            *pout1++=CLIP(*py1 + v1_402);
+            *pout2++=CLIP(*py2 + v1_402);
+            *pout1++=CLIP(*py1 - u0_34414_v0_71414);
+            *pout2++=CLIP(*py2 - u0_34414_v0_71414);
+            *pout1++=CLIP(*py1 + u1_772);
+            *pout2++=CLIP(*py2 + u1_772);
+
+            py1++;
+            py2++;
+
+            *pout1++=CLIP(*py1 + v1_402);
+            *pout2++=CLIP(*py2 + v1_402);
+            *pout1++=CLIP(*py1 - u0_34414_v0_71414);
+            *pout2++=CLIP(*py2 - u0_34414_v0_71414);
+            *pout1++=CLIP(*py1 + u1_772);
+            *pout2++=CLIP(*py2 + u1_772);
+#elif defined F_L
+//            uint8_t t1 = CLIP(v1_402f);
+//            uint8_t t2 = CLIP(u0_34414_v0_71414f);
+//            uint8_t t3 = CLIP(u1_772f);
+//            printf("v1_402_ui:%d, uv_ui:%d, u1_772_ui:%d\n", t1, t2, t3);
+
+            v1_402f = 1.402 * (*pv - 128);
+            u0_34414_v0_71414f = 0.34414 * (*pu - 128) + 0.71414 * (*pv - 128);
+            u1_772f = 1.722 * (*pu - 128);
+            *pout1++=CLIP(*py1 + v1_402f);
+            *pout2++=CLIP(*py2 + v1_402f);
+            *pout1++=CLIP(*py1 - u0_34414_v0_71414f);
+            *pout2++=CLIP(*py2 - u0_34414_v0_71414f);
+            *pout1++=CLIP(*py1 + u1_772f);
+            *pout2++=CLIP(*py2 + u1_772f);
+
+            py1++;
+            py2++;
+
+            *pout1++=CLIP(*py1 + v1_402f);
+            *pout2++=CLIP(*py2 + v1_402f);
+            *pout1++=CLIP(*py1 - u0_34414_v0_71414f);
+            *pout2++=CLIP(*py2 - u0_34414_v0_71414f);
+            *pout1++=CLIP(*py1 + u1_772f);
+            *pout2++=CLIP(*py2 + u1_772f);
+#else
+            *pout1++=CLIP(*py1 + 1.402 * (*pv-128));
+            *pout2++=CLIP(*py2 + 1.402 * (*pv-128));
+            *pout1++=CLIP(*py1 - 0.34414 * (*pu-128) -0.71414*(*pv-128));
+            *pout2++=CLIP(*py2 - 0.34414 * (*pu-128) -0.71414*(*pv-128));
+            *pout1++=CLIP(*py1 + 1.772 *( *pu-128));
+            *pout2++=CLIP(*py2 + 1.772 *( *pu-128));
+
+            py1++;
+            py2++;
+
+            *pout1++=CLIP(*py1 + 1.402 * (*pv-128));
+            *pout2++=CLIP(*py2 + 1.402 * (*pv-128));
+            *pout1++=CLIP(*py1 - 0.34414 * (*pu-128) -0.71414 * (*pv-128));
+            *pout2++=CLIP(*py2 - 0.34414 * (*pu-128) -0.71414 * (*pv-128));
+            *pout1++=CLIP(*py1 + 1.772 * (*pu-128));
+            *pout2++=CLIP(*py2 + 1.772 * (*pu-128));
+#endif
+            py1++;
+            py2++;
+            pu++;
+            pv++;
+        }
+    }
+}
+
 /*
  * FIXME:  yu12 to bgr24 with lines upsidedown
  *   used for bitmap files (DIB24)

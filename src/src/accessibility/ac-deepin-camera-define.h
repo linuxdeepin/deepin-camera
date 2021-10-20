@@ -50,6 +50,10 @@
 #define DELAY_NODELAY_BTN QObject::tr("DelayNoDelayBtn")
 #define DELAY_3S_BTN QObject::tr("Delay3SecBtn")
 #define DELAY_6S_BTN QObject::tr("Delay6SecBtn")
+#define FILTERS_UNFOLD_BTN QObject::tr("FiltersUnfoldBtn")
+#define FILTERS_FOLD_BTN QObject::tr("FiltersFoldBtn")
+#define EXPOSURE_UNFOLD_BTN QObject::tr("ExposureUnfoldBtn")
+#define EXPOSURE_FOLD_BTN QObject::tr("ExposureFoldBtn")
 
 //缩略图快捷键
 #define SHORTCUT_CALLMENU QObject::tr("ShortcutCallMenu")
