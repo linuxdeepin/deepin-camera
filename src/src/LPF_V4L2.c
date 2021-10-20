@@ -33,12 +33,16 @@ extern "C" {
 #include "gviewrender.h"
 #include "audio.h"
 #include "core_io.h"
+#include "colorspaces.h"
 
 int camInit(const char *devicename)
 {
     const rlim_t kStackSize = 1024L * 1024L * 128L;
     struct rlimit rl;
     int result;
+
+    // 初始化yuv转rgb浮点值查找表
+    init_yuv2rgb_num_table();
 
     result = getrlimit(RLIMIT_STACK, &rl);
     if (result == 0) {
