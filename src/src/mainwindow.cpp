@@ -1505,6 +1505,13 @@ void CMainWindow::onkeyRight()
     }
 }
 
+void CMainWindow::onFilterChanged(efilterType type)
+{
+    if (m_videoPre) {
+        m_videoPre->setFilterType(type);
+    }
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1532,6 +1539,7 @@ void CMainWindow::initUI()
             dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), setIndex);
     });
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngFilterChanged, this, &CMainWindow::onFilterChanged);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
@@ -1687,6 +1695,9 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(updateRecordState(int)), this, SLOT(onUpdateRecordState(int)));
 
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
+
+    // 更新滤镜预览帧图片
+    connect(m_videoPre, SIGNAL(updateFilterImage(QImage*)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage*)));
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
 

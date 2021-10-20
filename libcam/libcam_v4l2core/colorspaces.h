@@ -622,6 +622,36 @@ void ba24_to_yu12(uint8_t *out, uint8_t *in, int width, int height);
 void yu12_to_rgb24 (uint8_t *out, uint8_t *in, int width, int height);
 
 /*
+ * table_int initialize float calc 1.402 0.34414 0.71414 1.772
+ * args:
+ *    out - pointer to output rgb data buffer
+ *    in - pointer to input yu12 data buffer
+ *    width - buffer width (in pixels)
+ *    height - buffer height (in pixels)
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void init_yuv2rgb_num_table();
+
+/*
+ * yu12 to rgb24 high efficiency, use table inquer improve excution efficency
+ * args:
+ *    out - pointer to output rgb data buffer
+ *    in - pointer to input yu12 data buffer
+ *    width - buffer width (in pixels)
+ *    height - buffer height (in pixels)
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void yu12_to_rgb24_higheffic (uint8_t *out, uint8_t *in, int width, int height);
+
+/*
  * FIXME:  yu12 to bgr24 with lines upsidedown
  *   used for bitmap files (DIB24)
  * args:

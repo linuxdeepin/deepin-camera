@@ -107,6 +107,8 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
 #    portaudio
 #    asound
 #    z
+
+    visualresult
     )
 
 # 将工程与Qt模块链接起来

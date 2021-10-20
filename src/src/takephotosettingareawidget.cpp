@@ -21,10 +21,12 @@
 #include "takephotosettingareawidget.h"
 #include "ac-deepin-camera-define.h"
 #include "circlepushbutton.h"
+#include "filterpreviewbutton.h"
 
 #include <QColor>
 #include <QPainter>
 #include <QPainterPath>
+#include <QDebug>
 
 #define HIDE_NIMATION_DURATION 100
 #define ANIMATION_DURATION 200
@@ -62,6 +64,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_unfoldBtn->setObjectName(UNFOLD_BTN);
     m_unfoldBtn->setAccessibleName(UNFOLD_BTN);
 
+    // 闪光灯
     m_flashlightFoldBtn = new circlePushButton(this);
     m_flashlightFoldBtn->setPixmap(":/images/camera/flashlight.svg", ":/images/camera/flashlight-hover.svg", ":/images/camera/flashlight-press.svg");
     m_flashlightFoldBtn->setDisableSelect(true);
@@ -90,6 +93,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_flashlightOffBtn->setToolTip(tr("Off"));
     m_flashlightOffBtn->setFocusPolicy(Qt::NoFocus);
 
+    // 延迟拍摄
     m_delayFoldBtn = new circlePushButton(this);
     m_delayFoldBtn->setPixmap(":/images/camera/delay.svg", ":/images/camera/delay-hover.svg", ":/images/camera/delay-press.svg");
     m_delayFoldBtn->setDisableSelect(true);
@@ -123,6 +127,46 @@ void takePhotoSettingAreaWidget::initButtons()
     m_delay6SecondBtn->setAccessibleName(DELAY_6S_BTN);
     m_delay6SecondBtn->setFocusPolicy(Qt::NoFocus);
 
+    // 滤镜
+    m_filtersFoldBtn = new circlePushButton(this);
+    m_filtersFoldBtn->setPixmap(":/images/camera/filters.svg", ":/images/camera/filters-hover.svg", ":/images/camera/filters-press.svg");
+    m_filtersFoldBtn->setDisableSelect(true);
+    m_filtersFoldBtn->setObjectName(FILTERS_FOLD_BTN);
+    m_filtersFoldBtn->setAccessibleName(FILTERS_FOLD_BTN);
+    m_filtersFoldBtn->setToolTip(tr("Filters"));
+
+    m_filtersUnfoldBtn = new circlePushButton(this);
+    m_filtersUnfoldBtn->setPixmap(":/images/camera/filters.svg", ":/images/camera/filters-hover.svg", ":/images/camera/filters-press.svg");
+    m_filtersUnfoldBtn->setDisableSelect(true);
+    m_filtersUnfoldBtn->setObjectName(FILTERS_UNFOLD_BTN);
+    m_filtersUnfoldBtn->setAccessibleName(FILTERS_UNFOLD_BTN);
+    m_filtersUnfoldBtn->setToolTip(tr("Filters"));
+    m_filtersUnfoldBtn->setFocusPolicy(Qt::NoFocus);
+
+    filterPreviewButton* filterBtn = nullptr;
+    for (int i = 0; i < efilterType::filter_Count; i++) {
+        filterBtn = new filterPreviewButton(this, static_cast<efilterType>(i));
+        filterBtn->setToolTip(filterPreviewButton::filterName(static_cast<efilterType>(i)));
+        filterBtn->setFocusPolicy(Qt::NoFocus);
+        m_filterPreviewBtnList.push_back(filterBtn);
+    }
+
+    // 曝光
+    m_exposureFoldBtn = new circlePushButton(this);
+    m_exposureFoldBtn->setPixmap(":/images/camera/exposure.svg", ":/images/camera/exposure-hover.svg", ":/images/camera/exposure-press.svg");
+    m_exposureFoldBtn->setDisableSelect(true);
+    m_exposureFoldBtn->setObjectName(EXPOSURE_FOLD_BTN);
+    m_exposureFoldBtn->setAccessibleName(EXPOSURE_FOLD_BTN);
+    m_exposureFoldBtn->setToolTip(tr("Exposure"));
+
+    m_exposureUnfoldBtn = new circlePushButton(this);
+    m_exposureUnfoldBtn->setPixmap(":/images/camera/exposure.svg", ":/images/camera/exposure-hover.svg", ":/images/camera/exposure-press.svg");
+    m_exposureUnfoldBtn->setDisableSelect(true);
+    m_exposureUnfoldBtn->setObjectName(EXPOSURE_UNFOLD_BTN);
+    m_exposureUnfoldBtn->setAccessibleName(EXPOSURE_UNFOLD_BTN);
+    m_exposureUnfoldBtn->setToolTip(tr("Exposure"));
+    m_exposureUnfoldBtn->setFocusPolicy(Qt::NoFocus);
+
     m_foldBtn = new circlePushButton(this);
     m_foldBtn->setDisableSelect(true);
     m_foldBtn->setPixmap(":/images/camera/fold.svg", ":/images/camera/fold.svg", ":/images/camera/fold.svg");
@@ -139,7 +183,8 @@ void takePhotoSettingAreaWidget::initLayout()
     int btnHeight = m_foldBtn->height();
 
     m_delayUnfoldBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
-    m_foldBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
+    m_filtersUnfoldBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
+    m_foldBtn->move(pos.x(), pos.y() + 3 * btnHeight + 3 * m_btnHeightOffset);
 
     pos = m_delayFoldBtn->pos();
     m_noDelayBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
@@ -149,6 +194,19 @@ void takePhotoSettingAreaWidget::initLayout()
     pos = m_flashlightFoldBtn->pos();
     m_flashlightOnBtn->move(pos.x(), pos.y() + btnHeight + m_btnHeightOffset);
     m_flashlightOffBtn->move(pos.x(), pos.y() + 2 * btnHeight + 2 * m_btnHeightOffset);
+
+    pos = m_filtersFoldBtn->pos();
+    int index = 1;
+    for (auto btn : m_filterPreviewBtnList) {
+        if (index == 1)
+            btn->move(pos.x(), pos.y() + (btnHeight + m_btnHeightOffset) * index++);
+        else
+            btn->move(pos.x(), pos.y() + (46 + m_btnHeightOffset) * index++);
+    }
+
+    // TODO: 设置曝光滑块位置
+    pos = m_exposureFoldBtn->pos();
+
 }
 
 void takePhotoSettingAreaWidget::init()
@@ -165,6 +223,12 @@ void takePhotoSettingAreaWidget::init()
     connect(m_delayUnfoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::delayUnfoldBtnClicked);
     connect(m_delayFoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::delayfoldBtnClicked);
 
+    connect(m_filtersUnfoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::filtersUnfoldBtnClicked);
+    connect(m_filtersFoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::filtersFoldBtnClicked);
+
+    connect(m_exposureUnfoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::exposureUnfoldBtnClicked);
+    connect(m_exposureFoldBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::exposureFoldBtnClicked);
+
     connect(m_noDelayBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
     connect(m_delay3SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
     connect(m_delay6SecondBtn, &QPushButton::clicked, this, &takePhotoSettingAreaWidget::onDelayBtnsClicked);
@@ -179,6 +243,11 @@ void takePhotoSettingAreaWidget::init()
     connect(m_flashlightOnBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
     connect(m_flashlightOffBtn, &circlePushButton::clicked, this, &takePhotoSettingAreaWidget::onFlashlightBtnsClicked);
 
+    for (auto btn : m_filterPreviewBtnList) {
+        connect(btn, &filterPreviewButton::clicked, this, &takePhotoSettingAreaWidget::onFilterBtnsClicked);
+    }
+
+
 //    showFold(true);
     setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
     m_unfoldBtn->setVisible(true);
@@ -186,16 +255,32 @@ void takePhotoSettingAreaWidget::init()
 
 void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 {
+    Q_UNUSED(bShow);
+
     //位移动画
+    // 设置折叠按钮移动轨迹
     QPropertyAnimation *position1 = new QPropertyAnimation(m_foldBtn, "pos", this);
     position1->setDuration(ANIMATION_DURATION);
-    position1->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+    position1->setStartValue(QPoint(0, m_delayFoldBtn->height() * 4 + 4 * m_btnHeightOffset));
     position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
 
+    // 设置闪光灯展开按钮移动轨迹
     QPropertyAnimation *position2 = new QPropertyAnimation(m_flashlightUnfoldBtn, "pos", this);
     position2->setDuration(ANIMATION_DURATION);
     position2->setStartValue(QPoint(0, 0));
     position2->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    // 设置滤镜展开按钮移动轨迹
+    QPropertyAnimation *position3 = new QPropertyAnimation(m_filtersUnfoldBtn, "pos", this);
+    position3->setDuration(ANIMATION_DURATION);
+    position3->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+    position3->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+
+    // 设置曝光展开按钮移动轨迹
+    QPropertyAnimation *position4 = new QPropertyAnimation(m_exposureUnfoldBtn, "pos", this);
+    position4->setDuration(ANIMATION_DURATION);
+    position4->setStartValue(QPoint(0, m_delayFoldBtn->height() * 3 + 3 * m_btnHeightOffset));
+    position4->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
 
     //透明度动画
     QPropertyAnimation *opacity1 = new QPropertyAnimation(m_foldBtn, "opacity", this);
@@ -213,12 +298,26 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
     opacity3->setStartValue(102);
     opacity3->setEndValue(0);
 
+    QPropertyAnimation *opacity4 = new QPropertyAnimation(m_filtersUnfoldBtn, "opacity", this);
+    opacity4->setDuration(ANIMATION_DURATION);
+    opacity4->setStartValue(102);
+    opacity4->setEndValue(0);
+
+    QPropertyAnimation *opacity5 = new QPropertyAnimation(m_exposureUnfoldBtn, "opacity", this);
+    opacity5->setDuration(ANIMATION_DURATION);
+    opacity5->setStartValue(102);
+    opacity5->setEndValue(0);
+
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
     pPosGroup->addAnimation(position1);
     pPosGroup->addAnimation(position2);
+    pPosGroup->addAnimation(position3);
+    pPosGroup->addAnimation(position4);
     pPosGroup->addAnimation(opacity1);
     pPosGroup->addAnimation(opacity2);
     pPosGroup->addAnimation(opacity3);
+    pPosGroup->addAnimation(opacity4);
+    pPosGroup->addAnimation(opacity5);
 
     pPosGroup->start();
 
@@ -246,6 +345,8 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
     connect(pPosGroup, &QParallelAnimationGroup::finished, [=](){
         m_foldBtn->setVisible(false);
         m_flashlightUnfoldBtn->setVisible(false);
+        m_filtersUnfoldBtn->setVisible(false);
+        m_exposureUnfoldBtn->setVisible(false);
         m_unfoldBtn->setVisible(true);
         setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
 
@@ -256,15 +357,29 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, bool isShortcut)
 {
     //位移动画
+    //设置折叠按钮移动轨迹
     QPropertyAnimation *position1 = new QPropertyAnimation(m_foldBtn, "pos", this);
     position1->setDuration(ANIMATION_DURATION);
     position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
-    position1->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+    position1->setEndValue(QPoint(0, m_delayFoldBtn->height() * 4 + 4 * m_btnHeightOffset));
 
+    //设置闪光灯展开按钮移动轨迹
     QPropertyAnimation *position2 = new QPropertyAnimation(m_flashlightUnfoldBtn, "pos", this);
     position2->setDuration(ANIMATION_DURATION);
     position2->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
     position2->setEndValue(QPoint(0, 0));
+
+    //设置滤镜展开按钮移动轨迹
+    QPropertyAnimation *position3 = new QPropertyAnimation(m_filtersUnfoldBtn, "pos", this);
+    position3->setDuration(ANIMATION_DURATION);
+    position3->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+    position3->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + 2 * m_btnHeightOffset));
+
+    // 设置曝光展开按钮移动轨迹
+    QPropertyAnimation *position4 = new QPropertyAnimation(m_exposureUnfoldBtn, "pos", this);
+    position4->setDuration(ANIMATION_DURATION);
+    position4->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_btnHeightOffset));
+    position4->setEndValue(QPoint(0, m_delayFoldBtn->height() * 3 + 3 * m_btnHeightOffset));
 
     //透明度动画
     QPropertyAnimation *opacity1 = new QPropertyAnimation(m_foldBtn, "opacity", this);
@@ -282,12 +397,26 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     opacity3->setStartValue(0);
     opacity3->setEndValue(102);
 
+    QPropertyAnimation *opacity4 = new QPropertyAnimation(m_filtersUnfoldBtn, "opacity", this);
+    opacity4->setDuration(ANIMATION_DURATION);
+    opacity4->setStartValue(0);
+    opacity4->setEndValue(102);
+
+    QPropertyAnimation *opacity5 = new QPropertyAnimation(m_exposureUnfoldBtn, "opacity", this);
+    opacity5->setDuration(ANIMATION_DURATION);
+    opacity5->setStartValue(0);
+    opacity5->setEndValue(102);
+
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
     pPosGroup->addAnimation(position1);
     pPosGroup->addAnimation(position2);
+    pPosGroup->addAnimation(position3);
+    pPosGroup->addAnimation(position4);
     pPosGroup->addAnimation(opacity1);
     pPosGroup->addAnimation(opacity2);
     pPosGroup->addAnimation(opacity3);
+    pPosGroup->addAnimation(opacity4);
+    pPosGroup->addAnimation(opacity5);
 
     connect(pPosGroup, &QParallelAnimationGroup::finished, this, [=](){
         m_isBtnsFold = false;
@@ -303,10 +432,12 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
         m_flashlightUnfoldBtn->setVisible(!bShow);
     }
     m_delayUnfoldBtn->setVisible(bShow);
+    m_filtersUnfoldBtn->setVisible(bShow);
+    m_exposureUnfoldBtn->setVisible(bShow);
     m_unfoldBtn->setVisible(!bShow);
     pPosGroup->start();
 
-    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 3 + 2 * m_btnHeightOffset));
+    setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 5 + 4 * m_btnHeightOffset));
     update();
 }
 
@@ -449,6 +580,110 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
     update();
 }
 
+void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
+{
+    //位移动画
+    int nPreviewBtnHeight = 0;
+    int nPreviewBtnWidth = 0;
+    QList<QPropertyAnimation*> positionList;
+    for (auto pBtn : m_filterPreviewBtnList) {
+        QPropertyAnimation* position = new QPropertyAnimation(pBtn, "pos", this);
+        position->setDuration(ANIMATION_DURATION);
+        positionList.push_back(position);
+        nPreviewBtnHeight = pBtn->height();
+        nPreviewBtnWidth = pBtn->width();
+    }
+
+    //透明度动画
+    QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity", this);
+    opacity->setDuration(ANIMATION_DURATION);
+    opacity->setStartValue(0);
+    opacity->setEndValue(102);
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+
+    if (bShow) {
+        int index = 1;
+        for (auto pos : positionList) {
+            pos->setStartValue(QPoint(0,0));
+            pos->setEndValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
+        }
+
+        m_filtersFoldBtn->setVisible(bShow);
+        m_filtersFoldBtn->move(3,0);
+        for (auto pBtn : m_filterPreviewBtnList)
+            pBtn->setVisible(bShow);
+        connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
+            if (isShortcut)
+                m_filtersFoldBtn->setFocus();
+        });
+    } else {
+        int index = 1;
+        for (auto pos : positionList) {
+            pos->setStartValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset) * index++));
+            pos->setEndValue(QPoint(0,0));
+        }
+
+        connect(pPosGroup, &QPropertyAnimation::finished, this, [=](){
+            m_filtersFoldBtn->setVisible(bShow);
+            for (auto pBtn : m_filterPreviewBtnList)
+                pBtn->setVisible(bShow);
+            m_filtersGroupDislay = false;
+            showUnfold(true, m_filtersUnfoldBtn, isShortcut);
+        });
+    }
+
+    //normal状态下设置按钮透明，只显示背景颜色
+//    m_filtersFoldBtn->setOpacity(255 * 0.4);
+//    for (auto pBtn : m_filterPreviewBtnList)
+//        pBtn->setbackground(Qt::transparent);
+
+    for (auto pos : positionList)
+        pPosGroup->addAnimation(pos);
+    pPosGroup->addAnimation(opacity);
+
+    pPosGroup->start();
+
+    setFixedSize(QSize(nPreviewBtnWidth, m_filtersFoldBtn->height() + m_threeBtnOffset + (nPreviewBtnHeight + m_threeBtnOffset) * filter_Count));
+    update();
+}
+
+void takePhotoSettingAreaWidget::showExposures(bool bShow, bool isShortcut)
+{
+    QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity", this);
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+
+    if (bShow) {
+        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setStartValue(0);
+        opacity->setEndValue(102);
+
+        m_exposureFoldBtn->setVisible(bShow);
+
+        connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
+            if (isShortcut)
+                m_exposureFoldBtn->setFocus();
+        });
+    } else {
+        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setStartValue(102);
+        opacity->setEndValue(0);
+
+        connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
+            m_exposureFoldBtn->setVisible(bShow);
+            m_exposureGroupDisplay = false;
+            showUnfold(true, m_exposureUnfoldBtn, isShortcut);
+        });
+    }
+
+    pPosGroup->addAnimation(opacity);
+
+    pPosGroup->start();
+
+    setFixedSize(QSize(m_exposureFoldBtn->width(), m_exposureFoldBtn->height()));
+    update();
+}
+
 void takePhotoSettingAreaWidget::foldBtnClicked(bool isShortcut)
 {
 //    hideAll();
@@ -517,19 +752,53 @@ void takePhotoSettingAreaWidget::delayfoldBtnClicked(bool isShortcut)
 //    m_delayGroupDisplay = false;
 }
 
+void takePhotoSettingAreaWidget::filtersUnfoldBtnClicked(bool isShortcut)
+{
+    hideAll();
+    showFilters(true, isShortcut);
+    m_filtersGroupDislay = true;
+}
+
+void takePhotoSettingAreaWidget::filtersFoldBtnClicked(bool isShortcut)
+{
+    showFilters(false, isShortcut);
+}
+
+void takePhotoSettingAreaWidget::exposureUnfoldBtnClicked(bool isShortcut)
+{
+    hideAll();
+    showExposures(true, isShortcut);
+    m_exposureGroupDisplay = true;
+}
+
+void takePhotoSettingAreaWidget::exposureFoldBtnClicked(bool isShortcut)
+{
+    showExposures(false, isShortcut);
+}
+
 void takePhotoSettingAreaWidget::hideAll()
 {
     m_foldBtn->setVisible(false);
     m_unfoldBtn->setVisible(false);
+
     m_flashlightFoldBtn->setVisible(false);
     m_flashlightUnfoldBtn->setVisible(false);
     m_flashlightOnBtn->setVisible(false);
     m_flashlightOffBtn->setVisible(false);
+
     m_delayFoldBtn->setVisible(false);
     m_delayUnfoldBtn->setVisible(false);
     m_noDelayBtn->setVisible(false);
     m_delay3SecondBtn->setVisible(false);
     m_delay6SecondBtn->setVisible(false);
+
+    m_filtersFoldBtn->setVisible(false);
+    m_filtersUnfoldBtn->setVisible(false);
+    for (auto btn : m_filterPreviewBtnList)
+        btn->setVisible(false);
+
+    m_exposureFoldBtn->setVisible(false);
+    m_exposureUnfoldBtn->setVisible(false);
 }
 
 void takePhotoSettingAreaWidget::keyDownClick()
@@ -563,6 +832,30 @@ void takePhotoSettingAreaWidget::keyDownClick()
             m_delay6SecondBtn->setFocus();
         } else if(m_delay6SecondBtn->hasFocus()) {
             m_delayFoldBtn->setFocus();
+        }
+    }
+
+    if (m_filtersGroupDislay) {
+        if (m_filtersFoldBtn->hasFocus()) {
+            m_filterPreviewBtnList.at(0)->setFocus();
+        } else {
+            for (int i = 0; i < efilterType::filter_Count; i++) {
+                if (m_filterPreviewBtnList.at(i)->hasFocus()) {
+                    if (i + 1 < efilterType::filter_Count)
+                        m_filterPreviewBtnList.at(i + 1)->setFocus();
+                    else
+                        m_filtersFoldBtn->setFocus();
+                }
+            }
+        }
+    }
+
+    if (m_exposureGroupDisplay) {
+        if (m_exposureFoldBtn->hasFocus()) {
+            //TODO：设置焦点到曝光滑块
+            ;
+        } else if(/*曝光滑块有焦点*/true) {
+            m_exposureFoldBtn->setFocus();
         }
     }
 }
@@ -600,6 +893,30 @@ void takePhotoSettingAreaWidget::keyUpClick()
             m_delay3SecondBtn->setFocus();
         }
     }
+
+    if (m_filtersGroupDislay) {
+        if (m_filtersFoldBtn->hasFocus()) {
+            m_filterPreviewBtnList.at(efilterType::filter_Count - 1)->setFocus();
+        } else {
+            for (int i = efilterType::filter_Count - 1; i >= 0; i--) {
+                if (m_filterPreviewBtnList.at(i)->hasFocus()) {
+                    if (i - 1 >= 0)
+                        m_filterPreviewBtnList.at(i - 1)->setFocus();
+                    else
+                        m_filtersFoldBtn->setFocus();
+                }
+            }
+        }
+    }
+
+    if (m_exposureGroupDisplay) {
+        if (m_exposureFoldBtn->hasFocus()) {
+            //TODO：设置焦点到曝光滑块
+            ;
+        } else if(/*曝光滑块有焦点*/true) {
+            m_exposureFoldBtn->setFocus();
+        }
+    }
 }
 
 void takePhotoSettingAreaWidget::keyEnterClick()
@@ -626,6 +943,18 @@ void takePhotoSettingAreaWidget::keyEnterClick()
         emit m_delay3SecondBtn->clicked(true);
     } else if (m_delay6SecondBtn->hasFocus()) {
         emit m_delay6SecondBtn->clicked(true);
+    } else if (m_filtersFoldBtn->hasFocus()) {
+        filtersFoldBtnClicked(true);
+    } else if (m_filtersUnfoldBtn->hasFocus()) {
+        filtersUnfoldBtnClicked(true);
+    } else if (filterPreviewButton* pFocusBtn = getFilterPreviewFocusBtn()) {
+        emit pFocusBtn->clicked(true);
+    } else if (m_exposureFoldBtn->hasFocus()) {
+        exposureFoldBtnClicked(true);
+    } else if (m_exposureUnfoldBtn->hasFocus()) {
+        exposureUnfoldBtnClicked(true);
+    } else if (/*曝光滑块有焦点*/false) {
+        // TODO: 执行设置曝光值函数
     }
 }
 
@@ -679,6 +1008,8 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 
         path.addPath(arc1);
         painter.fillPath(path, QBrush(m_buttonGroupColor));
+    } else if (m_filtersGroupDislay) {
+
     }
 }
 
@@ -725,6 +1056,45 @@ void takePhotoSettingAreaWidget::onFlashlightBtnsClicked(bool isShortcut)
     emit sngSetFlashlight(m_flashlightOnBtn->getButtonState());
 
     showFlashlights(false, isShortcut);
+}
+
+void takePhotoSettingAreaWidget::onFilterBtnsClicked(bool isShortcut)
+{
+    Q_UNUSED(isShortcut);
+
+    auto pBtn = static_cast<filterPreviewButton *>(sender());
+    if (!pBtn)
+        return;
+
+    for (auto pTmpBtn : m_filterPreviewBtnList) {
+        if (pTmpBtn != pBtn)
+            pTmpBtn->setSelected(false);
+    }
+
+    efilterType newFilterType = pBtn->getFiltertype();
+    if (m_filterType != newFilterType) {
+        emit sngFilterChanged(newFilterType);
+        m_filterType = newFilterType;
+    }
+}
+
+void takePhotoSettingAreaWidget::onUpdateFilterImage(QImage *img)
+{
+    if (!img)
+        return;
+
+    for (auto btn : m_filterPreviewBtnList)
+        btn->setImage(img);
+}
+
+filterPreviewButton *takePhotoSettingAreaWidget::getFilterPreviewFocusBtn()
+{
+    for (auto pBtn : m_filterPreviewBtnList) {
+        if (pBtn->hasFocus())
+            return pBtn;
+    }
+
+    return nullptr;
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
@@ -774,6 +1144,21 @@ bool takePhotoSettingAreaWidget::flashLight()
     return m_flashlightOnBtn->getButtonState();
 }
 
+void takePhotoSettingAreaWidget::setFilterType(efilterType type)
+{
+    for (auto pBtn : m_filterPreviewBtnList) {
+        pBtn->setSelected(pBtn->getFiltertype() == type);
+    }
+    update();
+
+    m_filterType = type;
+}
+
+efilterType takePhotoSettingAreaWidget::getFilterType()
+{
+    return m_filterType;
+}
+
 void takePhotoSettingAreaWidget::resizeEvent(QResizeEvent *event)
 {
     moveToParentLeft();
@@ -812,6 +1197,10 @@ void takePhotoSettingAreaWidget::focusInEvent(QFocusEvent *event)
             m_flashlightFoldBtn->setFocus();
         } else if (m_delayGroupDisplay) {
             m_delayFoldBtn->setFocus();
+        } else if (m_filtersGroupDislay) {
+            m_filtersFoldBtn->setFocus();
+        } else if (m_exposureGroupDisplay) {
+            m_exposureFoldBtn->setFocus();
         } else {
             m_flashlightUnfoldBtn->setFocus();
         }
@@ -829,6 +1218,7 @@ void takePhotoSettingAreaWidget::moveToParentLeft()
     if (nullptr == pParentWidget)
         return;
 
+    qDebug() << QString("parentheight:%1 setheight:%2").arg(pParentWidget->height()).arg(height());
     move(20, pParentWidget->height() / 2 - height() / 2);
 }
 
@@ -841,6 +1231,14 @@ void takePhotoSettingAreaWidget::closeAllGroup()
     //判断闪光灯拍照组是否显示
     if (m_flashGroupDisplay)
         flashlightFoldBtnClicked();
+
+    //判断滤镜按钮组是否显示
+    if (m_filtersGroupDislay)
+        filtersFoldBtnClicked();
+
+    //判断曝光按钮组是否显示
+    if (m_exposureGroupDisplay)
+        exposureFoldBtnClicked();
 }
 
 void takePhotoSettingAreaWidget::setOpacity(int opacity)

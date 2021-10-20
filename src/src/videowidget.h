@@ -40,6 +40,7 @@
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
 #include "previewopenglwidget.h"
+#include "filterpreviewbutton.h"
 
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -142,6 +143,12 @@ signals:
     */
     void updatePhotoState(int state);
 
+    /**
+     * @brief filterImage 更新滤镜预览帧图片
+     * @param image 预览帧图片 大小40*40
+     */
+    void updateFilterImage(QImage *image);
+
 public:
     /**
     * @brief setCapStatus　设置相机状态
@@ -219,6 +226,12 @@ public:
     * @param hour  最大录像小时数
     */
     void setMaxRecTime(int hour);
+
+    /**
+    * @brief setFilterType　设置滤镜类型
+    * @param type  滤镜类型
+    */
+    void setFilterType(efilterType type);
 
 public slots:
     /**
