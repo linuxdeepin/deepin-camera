@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "195a49ef_16364a94",
+        "filename": "libcam/libcam_v4l2core/colorspaces.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T01:51:59Z",
+      "side": 1,
+      "message": "注释行数: 29; 改动行数(修改和新增): 118; 注释率: 24.6%",
+      "revId": "9c8b2767092e7edceccb99f991fae0c7f32afea2",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb54f968_7053f6f2",
+        "filename": "libcam/libcam_v4l2core/colorspaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T01:51:59Z",
+      "side": 1,
+      "message": "注释行数: 13; 改动行数(修改和新增): 28; 注释率: 46.4%",
+      "revId": "9c8b2767092e7edceccb99f991fae0c7f32afea2",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
