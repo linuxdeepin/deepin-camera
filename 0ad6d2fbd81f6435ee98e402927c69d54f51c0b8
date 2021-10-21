@@ -33,6 +33,91 @@
       "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf356dc7_0ba1a585",
+        "filename": "src/src/filterpreviewbutton.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:47:26Z",
+      "side": 1,
+      "message": "(style) The class \u0027filterPreviewButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "380fa70d_cd97779e",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:47:26Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_SpaceKeyInterval\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3a478bf_4abe1779",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:47:26Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67fd5a35_63d4f22d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:47:26Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a99b8b5_58d64cb0",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:47:26Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
+      "revId": "0ad6d2fbd81f6435ee98e402927c69d54f51c0b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
