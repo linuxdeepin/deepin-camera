@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e45084e7_94b82e56",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-21T05:07:40Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 7; 注释率: 57.1%",
+      "revId": "2151e96446d4111bb54e2e9bb878b713a21dbea4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
