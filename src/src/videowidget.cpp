@@ -415,7 +415,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
 
-            m_pNormalView->show();
+            //fix wayland flashing occasional abnormal problems in the camera window
+            //If there is an abnormality, please enable downlink code
+            //powered by xxxx
+//            m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
@@ -699,6 +702,10 @@ void videowidget::showCountdown()
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalView->hide();
+
+            QTimer::singleShot(100, this, [=] {
+                m_openglwidget->show();
+            });
         }
 
     } else {
