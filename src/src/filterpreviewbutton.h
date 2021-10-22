@@ -163,8 +163,8 @@ private:
     int           m_opacity = 102;    //不透明度 默认值102
     int           m_radius = 8;//按钮圆角矩形半径大小
 
-    QPixmap        m_pixmap;
-    efilterType    m_filterType = filter_Normal;
+    QPixmap       m_pixmap;
+    efilterType   m_filterType = filter_Normal;
 };
 
 typedef QList<filterPreviewButton*> filterPreviewBtnList;

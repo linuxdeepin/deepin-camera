@@ -187,14 +187,15 @@ void MajorImageProcessingThread::run()
     #else
         yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
     #endif
-        qDebug() << QString("yu12_to_rgb24 cost %1 ms...").arg(time.elapsed());
+        //qDebug() << QString("yu12_to_rgb24 cost %1 ms...").arg(time.elapsed());
     #if 1
 
         m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
 
         time.restart();
-        imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
-        qDebug() << QString("filter algorithm cost %1 ms...").arg(time.elapsed());
+        if (!m_filter.isEmpty())
+            imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+        //qDebug() << QString("filter algorithm cost %1 ms...").arg(time.elapsed());
     #else
         time.restart();
         exposure(rgb, m_frame->width, m_frame->height, -100);

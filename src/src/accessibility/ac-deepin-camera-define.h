@@ -52,6 +52,7 @@
 #define DELAY_6S_BTN QObject::tr("Delay6SecBtn")
 #define FILTERS_UNFOLD_BTN QObject::tr("FiltersUnfoldBtn")
 #define FILTERS_FOLD_BTN QObject::tr("FiltersFoldBtn")
+#define FILTERS_CLOSE_BTN QObject::tr("FiltersCloseBtn")
 #define EXPOSURE_UNFOLD_BTN QObject::tr("ExposureUnfoldBtn")
 #define EXPOSURE_FOLD_BTN QObject::tr("ExposureFoldBtn")
 

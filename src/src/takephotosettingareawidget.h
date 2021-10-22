@@ -178,6 +178,8 @@ signals:
     void sngSetDelayTakePhoto(int delayTime);
     void sngSetFlashlight(bool bFlashlightOn);
     void sngFilterChanged(efilterType efilterType);
+    void sngShowFilterName(bool bShow);
+    void sngSetFilterName(const QString& name);
 
 public slots:
     /**
@@ -279,6 +281,8 @@ private:
     circlePushButton        *m_filtersUnfoldBtn = nullptr;//展开滤镜按钮
 
     filterPreviewBtnList     m_filterPreviewBtnList;//滤镜预览按钮列表
+
+    circlePushButton        *m_filtersCloseBtn = nullptr;//关闭滤镜界面按钮
 
     circlePushButton        *m_exposureFoldBtn = nullptr;//折叠曝光按钮
     circlePushButton        *m_exposureUnfoldBtn = nullptr;//展开曝光按钮

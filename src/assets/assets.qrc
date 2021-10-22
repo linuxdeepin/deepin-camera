@@ -59,6 +59,9 @@
         <file>images/camera/filters-press.svg</file>
         <file>images/camera/filters.svg</file>
         <file>images/camera/exposure.svg</file>
+        <file>images/camera/filters-close-hover.svg</file>
+        <file>images/camera/filters-close-press.svg</file>
+        <file>images/camera/filters-close.svg</file>
     </qresource>
     <qresource prefix="/icons/deepin/builtin">
         <file>texts/panel_switch_camera_20px.svg</file>

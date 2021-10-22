@@ -56,7 +56,7 @@ void filterPreviewButton::setImage(QImage *img)
 {
     Q_ASSERT(img);
 
-    if (img->isNull())
+    if (img->isNull() || isHidden())
         return;
 
     uint8_t* frame = img->bits();
@@ -96,15 +96,16 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
 
     QPainterPath roundPixmapRectPath;
     roundPixmapRectPath.addRoundedRect(imageRect, m_radius, m_radius);
-    painter.fillPath(roundPixmapRectPath, QBrush(QColor(m_color)));
 
     //绘制滤镜预览图
-    painter.save();
     if (!m_pixmap.isNull()) {
+        painter.save();
         painter.setClipPath(roundPixmapRectPath);
         painter.drawPixmap(imageRect, m_pixmap);
+        painter.restore();
+    } else {
+        painter.fillPath(roundPixmapRectPath, QBrush(QColor(m_color)));
     }
-    painter.restore();
 
     // 预览图边缘绘制透明描边
     painter.save();

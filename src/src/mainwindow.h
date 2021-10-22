@@ -385,6 +385,18 @@ private slots:
      */
     void onFilterChanged(efilterType type);
 
+    /**
+     * @brief onShowFilterName 显隐滤镜名称
+     * @param bShow 是否显示滤镜名称
+     */
+    void onShowFilterName(bool bShow);
+
+    /**
+     * @brief onSetFilterName 设置滤镜名称
+     * @param name 待设置的滤镜名称
+     */
+    void onSetFilterName(const QString& name);
+
 protected:
 
     /**
@@ -451,6 +463,7 @@ private:
     QString                         m_videoPath;            //配置的视频路径
     QString                         m_picPath;              //配置图片路径
     takePhotoSettingAreaWidget      *m_takePhotoSettingArea;//拍照设置界面
+    QLabel                          *m_filterName = nullptr;          //滤镜名称标签
     bool                            m_bUIinit;              //UI初始化是否完成
 
     DWindowMinButton                *m_windowMinBtn;        //最小化按钮

@@ -80,6 +80,8 @@ const int switchBtnWidth = 50;
 const int switchBtnHeight = 26;
 const int labelCameraNameWidth = 150;
 const int labelCameraNameHeight = 26;
+const int labelFilterNameWidth = 150;
+const int labelFilterNameHeight = 26;
 
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
@@ -1209,6 +1211,7 @@ void CMainWindow::loadAfterShow()
     m_videoPre->delayInit();
     m_videoPre->setFilterType(filter_Normal);
     m_takePhotoSettingArea->setFilterType(filter_Normal);
+    m_filterName->setText(filterPreviewButton::filterName(filter_Normal));
 
     showChildWidget();
     m_windowStateThread = new windowStateThread(this);
@@ -1515,6 +1518,16 @@ void CMainWindow::onFilterChanged(efilterType type)
     }
 }
 
+void CMainWindow::onShowFilterName(bool bShow)
+{
+    m_filterName->setVisible(bShow);
+}
+
+void CMainWindow::onSetFilterName(const QString& name)
+{
+    m_filterName->setText(name);
+}
+
 void CMainWindow::initUI()
 {
     m_videoPre = new videowidget(this);
@@ -1524,6 +1537,21 @@ void CMainWindow::initUI()
     setCentralWidget(m_videoPre);
     paletteTime.setBrush(QPalette::Dark, QColor(0, 0, 0, 51)); //深色
     m_videoPre->setPalette(paletteTime);
+
+    m_filterName = new QLabel(this);
+    m_filterName->hide();
+    m_filterName->setFixedSize(labelFilterNameWidth, labelFilterNameHeight);
+    QPalette paletteFilterName = m_filterName->palette();
+    paletteFilterName.setColor(QPalette::Background, QColor(0, 0, 0, 0));
+    paletteFilterName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
+    m_filterName->setAutoFillBackground(true);
+    m_filterName->setPalette(paletteFilterName);
+    QFont ftFilter("SourceHanSansSC");
+    ftFilter.setPixelSize(18);
+    ftFilter.setWeight(QFont::Medium);
+    m_filterName->setFont(ftFilter);
+    m_filterName->setAlignment(Qt::AlignCenter);
+    m_filterName->move((width() - labelFilterNameWidth) / 2, height() - 20 - labelFilterNameHeight);
 
     m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
 
@@ -1543,6 +1571,8 @@ void CMainWindow::initUI()
     });
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngFilterChanged, this, &CMainWindow::onFilterChanged);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngShowFilterName, this, &CMainWindow::onShowFilterName);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFilterName, this, &CMainWindow::onSetFilterName);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
@@ -1843,6 +1873,9 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event);
     if (m_labelCameraName && m_bUIinit) {
         m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
+    }
+    if (m_filterName && m_bUIinit) {
+        m_filterName->move((width() - labelFilterNameWidth) / 2, height() - 20 - labelFilterNameHeight);
     }
     locateRightButtons();
     if (m_videoPre)
