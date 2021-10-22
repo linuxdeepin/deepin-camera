@@ -67,6 +67,74 @@
       "revId": "5b5524d00694bf543a4b569c985564083c697beb",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dc36726_76e05597",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-22T03:39:08Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_SpaceKeyInterval\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "5b5524d00694bf543a4b569c985564083c697beb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9658927e_0e17142a",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-22T03:39:08Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "5b5524d00694bf543a4b569c985564083c697beb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec48a81c_2e6164fe",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-22T03:39:08Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
+      "revId": "5b5524d00694bf543a4b569c985564083c697beb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02c9fa88_f551fc46",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-22T03:39:08Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
+      "revId": "5b5524d00694bf543a4b569c985564083c697beb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
