@@ -158,7 +158,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_filtersCloseBtn->setDisableSelect(true);
     m_filtersCloseBtn->setObjectName(FILTERS_CLOSE_BTN);
     m_filtersCloseBtn->setAccessibleName(FILTERS_CLOSE_BTN);
-    m_filtersCloseBtn->setToolTip(tr("Filters Close"));
+    //m_filtersCloseBtn->setToolTip(tr("Filters Close"));
 
     // 曝光
     m_exposureFoldBtn = new circlePushButton(this);
