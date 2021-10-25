@@ -81,6 +81,7 @@ void circlePushButton::paintEvent(QPaintEvent *event)
     path.addEllipse(rect);
     painter.fillPath(path, QBrush(QColor(m_color)));
 
+    QColor highlight = Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
     //绘制点击效果
     if (m_mousePress) {
         QRect grayRect = this->rect();
@@ -94,7 +95,7 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         QRect focusBlue = this->rect();
         focusBlue.setTopLeft(QPoint(1, 1));
         focusBlue.setSize(QSize(tmpWidth - 2, tmpHeight - 2));
-        painter.setPen(QPen(QColor("#0081FF"), distance));
+        painter.setPen(QPen(highlight, distance));
         painter.setBrush(Qt::NoBrush);
         painter.drawEllipse(focusBlue);
 
@@ -116,7 +117,7 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         rect.setTopLeft(QPoint(rect.width() - 9, 1));
         rect.setSize(QSize(8, 8));
         painter.setPen(QPen(Qt::white, 1));
-        painter.setBrush(/*Qt::NoBrush*/Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color());
+        painter.setBrush(highlight);
         painter.drawEllipse(rect);
     }
 

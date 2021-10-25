@@ -26,6 +26,8 @@
 #include <QDebug>
 #include <QSvgRenderer>
 
+#include <DApplicationHelper>
+
 photoRecordBtn::photoRecordBtn(QWidget *parent/* = nullptr*/)
     :QWidget (parent),
       m_bPhoto(true),
@@ -48,7 +50,7 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     QPainterPath path;
     QRectF rect = this->rect();
 
-    QColor color = m_bFocus ? QColor(0,0x81,0xff,255) : QColor(0, 0, 0, 0.1 * 255);
+    QColor color = m_bFocus ? Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color() : QColor(0, 0, 0, 0.1 * 255);
     painter.setPen(QPen(color, 2));
     painter.setBrush(Qt::NoBrush);
     rect.setTopLeft(QPoint(1, 1));

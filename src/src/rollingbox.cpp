@@ -25,6 +25,8 @@
 #include <QPainter>
 #include <QTimer>
 
+#include <DApplicationHelper>
+
 #define BTN_WIDTH 50
 #define BTN_HEIGHT 26
 #define BTN_SPACING 10
@@ -213,7 +215,7 @@ void RollingBox::paintEvent(QPaintEvent *e)
     centerPath.lineTo(tmpLeftRect.topRight());
 
     if (m_bFocus) {
-        painter.setPen(QPen(QColor("#0081FF"), 2));
+        painter.setPen(QPen(Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color(), 2));
         painter.setBrush(QBrush(QColor(0, 0, 0, 0.4 * 255)));
         painter.drawPath(centerPath);
 
