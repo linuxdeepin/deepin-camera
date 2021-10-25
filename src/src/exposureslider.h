@@ -68,6 +68,13 @@ public slots:
     */
     void onValueChanged(int value);
 
+signals:
+    /**
+    * @brief valueChanged 曝光值改变信号
+    * @param  value 曝光值
+    */
+    void valueChanged(int value);
+
 private:
     DLabel *m_pLabShowValue;    //曝光值显示
     DSlider *m_slider;          //滑动条

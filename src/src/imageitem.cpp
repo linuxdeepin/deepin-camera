@@ -26,6 +26,7 @@
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
+#include <DApplicationHelper>
 
 #include <QFileInfo>
 #include <QPainterPath>
@@ -197,7 +198,7 @@ void ImageItem::paintEvent(QPaintEvent *event)
     foregroundRect.setWidth(rect().width() - 4);
     foregroundRect.setHeight(rect().height() - 4);
 
-    QColor bgColor = m_bFocus ? QColor(0, 0x81, 0xff, 255) : QColor(0, 0, 0, 25);
+    QColor bgColor = m_bFocus ? Dtk::Gui::DGuiApplicationHelper::instance()->applicationPalette().highlight().color() : QColor(0, 0, 0, 25);
     QPainterPath bg;
     bg.addRoundedRect(rect(), 26, 26);
     painter.fillPath(bg, QBrush(bgColor));

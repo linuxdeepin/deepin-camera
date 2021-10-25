@@ -24,6 +24,7 @@
 #include <QPalette>
 
 #include <DFontSizeManager>
+#include <DApplication>
 
 #define WIDTH 40
 #define HEIGHT 192
@@ -50,24 +51,25 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_pLabShowValue->setAlignment(Qt::AlignCenter);
     m_pLabShowValue->setText("0");
 
+    //颜色不随主题变化
     QPalette pa = m_pLabShowValue->palette();
-    pa.setColor(QPalette::WindowText, Qt::white);
+    pa.setColor(QPalette::BrightText, Qt::white);
     m_pLabShowValue->setPalette(pa);
 
-    vLayout->addStretch();
-    vLayout->addWidget(m_pLabShowValue, 0, Qt::AlignCenter);
+    vLayout->addWidget(m_pLabShowValue, 0, Qt::AlignHCenter);
+    vLayout->setSpacing(0);
 
     m_slider = new DSlider(Qt::Vertical, this);
     m_slider->setFixedHeight(150);
     m_slider->setIconSize(QSize(15, 15));
-    m_slider->show();
     m_slider->slider()->setRange(-100, 100);
     m_slider->setValue(m_curValue);
-    m_slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
-    vLayout->addWidget(m_slider, 1, Qt::AlignCenter);
-    vLayout->addStretch();
+//    m_slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
+    m_slider->setContentsMargins(0, 0, 0, 0);
+    vLayout->addWidget(m_slider, 0, Qt::AlignHCenter);
 
     connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::onValueChanged);
+    connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::valueChanged);
 }
 
 void ExposureSlider::moveToParentLeft()
@@ -80,7 +82,10 @@ void ExposureSlider::moveToParentLeft()
     if (nullptr == pParentWidget)
         return;
 
-    move(20, pParentWidget->height() / 2 - height() / 2);
+    auto main_rect = pParentWidget->rect();
+
+//    move(50, pParentWidget->height() / 2 - height() / 2);
+    move(main_rect.x() + 58, main_rect.y() + 295);
 }
 
 int ExposureSlider::value()
@@ -106,6 +111,15 @@ void ExposureSlider::paintEvent(QPaintEvent *event)
 
     painter.setPen(Qt::NoPen);
     painter.fillPath(path, QBrush(QColor(0, 0, 0, 0.4 * 255)));
+
+    if (m_curValue) {
+        QRectF rect = this->rect();
+        rect.setTopLeft(QPoint(29, rect.height() / 2 - 2));
+        rect.setSize(QSize(4, 4));
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(QBrush(QColor(255, 255, 255, 0.8 * 255)));
+        painter.drawEllipse(rect);
+    }
 }
 
 void ExposureSlider::wheelEvent(QWheelEvent *event)
@@ -128,6 +142,8 @@ void ExposureSlider::onValueChanged(int value)
     m_curValue = value;
 
     m_pLabShowValue->setText(QString("%1").arg(value));
+
+    update();
 }
 
 ExposureSlider::~ExposureSlider()

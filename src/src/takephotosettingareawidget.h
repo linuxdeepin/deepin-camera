@@ -29,8 +29,11 @@
 #include <QEvent>
 #include <QKeyEvent>
 
+#include "exposureslider.h"
+
 class QPalette;
 class circlePushButton;
+class CMainWindow;
 
 class takePhotoSettingAreaWidget : public QWidget
 {
@@ -231,12 +234,12 @@ public slots:
     /**
     * @brief exposureUnfoldBtnClicked 曝光展开按钮点击槽函数
     */
-    void exposureUnfoldBtnClicked(bool isShortcut = false);
+//    void exposureUnfoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief exposureFoldBtnsClicked 曝光折叠按钮点击槽函数
     */
-    void exposureFoldBtnClicked(bool isShortcut = false);
+//    void exposureFoldBtnClicked(bool isShortcut = false);
 
     /**
     * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
@@ -259,8 +262,19 @@ public slots:
     */
     void onUpdateFilterImage(QImage* img);
 
+    /**
+    * @brief onExposureValueChanged 曝光值改变槽函数
+    * @param value 曝光值
+    */
+    void onExposureValueChanged(int value);
+
 private:
     filterPreviewButton* getFilterPreviewFocusBtn();
+    /**
+    * @brief exposureBtnClicked 曝光按钮点击槽函数
+    * @param isShortcut 是否通过键盘触发
+    */
+    void exposureBtnClicked(bool isShortcut = false);
 
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
@@ -281,11 +295,10 @@ private:
     circlePushButton        *m_filtersUnfoldBtn = nullptr;//展开滤镜按钮
 
     filterPreviewBtnList     m_filterPreviewBtnList;//滤镜预览按钮列表
-
     circlePushButton        *m_filtersCloseBtn = nullptr;//关闭滤镜界面按钮
 
-    circlePushButton        *m_exposureFoldBtn = nullptr;//折叠曝光按钮
-    circlePushButton        *m_exposureUnfoldBtn = nullptr;//展开曝光按钮
+    circlePushButton        *m_exposureBtn = nullptr;//曝光按钮
+    ExposureSlider          *m_exposureSlider;
 
     int                      m_btnHeightOffset;//按钮之间的间隔
     int                      m_threeBtnOffset;//三级菜单按钮之间的间隔
@@ -295,7 +308,7 @@ private:
     bool                     m_delayGroupDisplay;//延迟按钮组是否显示
     bool                     m_flashGroupDisplay;//闪光灯按钮组是否显示
     bool                     m_filtersGroupDislay = false;//滤镜按钮组是否显示
-    bool                     m_exposureGroupDisplay = false;//曝光按钮组是否显示
+    bool                     m_exposureSliderDisplay = false;//曝光按钮组是否显示
 
     bool                     m_isBtnsFold;  //按钮组是否收起
     int                      m_opacity = 102;    //不透明度 默认值0.4 * 255
