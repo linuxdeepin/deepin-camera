@@ -968,6 +968,9 @@ void CMainWindow::initEventFilter()
 
     if (m_pTitlebar->titlebar())
         m_pTitlebar->titlebar()->installEventFilter(this);
+
+    if (m_videoPre)
+        m_videoPre->installEventFilter(this);
 }
 
 void CMainWindow::initShortcut()
@@ -2079,7 +2082,12 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 
     if (e->type() == QEvent::MouseButtonPress) {
         m_takePhotoSettingArea->closeAllGroup();
+    } else if (obj == m_videoPre) {
+        if (e->type() == QEvent::MouseButtonPress)
+            m_takePhotoSettingArea->closeAllGroup();
+        return DMainWindow::eventFilter(obj, e);
     }
+
     if ((obj == windowoptionButton) && (e->type() == QEvent::FocusIn)) {
         DataManager::instance()->m_tabIndex = 4;
     } else if ((obj == windowMinBtn) && (e->type() == QEvent::FocusIn)) {
