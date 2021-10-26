@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "bf57f152_553f2b29",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(style) Class \u0027ExposureSlider\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ba41f461_71d5b6d0",
         "filename": "src/src/mainwindow.cpp",
         "patchSetId": 1
@@ -64,6 +81,40 @@
       "writtenOn": "2021-10-26T01:39:59Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 6; 注释率: 0.0%",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d758a448_a617243a",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57431850_5d7371fc",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
       "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -104,6 +155,40 @@
     },
     {
       "key": {
+        "uuid": "0e6e52eb_669547ac",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f538cc9_c2408c17",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc7e0ef9_47c7cb9a",
         "filename": "src/src/takephotosettingareawidget.h",
         "patchSetId": 1
@@ -115,6 +200,23 @@
       "writtenOn": "2021-10-26T01:39:59Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44661200_412bd812",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T01:40:01Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
       "revId": "a26bb9357979a7bfd7a04b12bca8895dc55ed22d",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
