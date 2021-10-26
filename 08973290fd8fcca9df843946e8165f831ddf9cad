@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "426f25c5_96174c28",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-26T07:36:16Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 55; 注释率: 3.6%",
+      "revId": "08973290fd8fcca9df843946e8165f831ddf9cad",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
