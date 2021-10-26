@@ -279,9 +279,18 @@ void MajorImageProcessingThread::run()
 
         /*拍照*/
         if (m_bTake) {
-            int nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-            if (nRet < 0) {
-                qWarning() << "保存照片失败";
+            int nRet = -1;
+            if (!m_filter.isEmpty()) {
+                // 有滤镜时，使用QImage保存滤镜图片
+                QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
+                if (m_Img.save(m_strPath, "JPG"))
+                    nRet = 0;
+            } else {
+                // 无滤镜时，使用v4l2原生接口保存滤镜图片
+                nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+                if (nRet < 0) {
+                    qWarning() << "保存照片失败";
+                }
             }
 
             m_bTake = false;
