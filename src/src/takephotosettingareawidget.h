@@ -268,6 +268,7 @@ public slots:
 
 private:
     filterPreviewButton* getFilterPreviewFocusBtn();
+
     /**
     * @brief exposureBtnClicked 曝光按钮点击槽函数
     * @param isShortcut 是否通过键盘触发
