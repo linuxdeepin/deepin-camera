@@ -61,6 +61,12 @@ protected:
     */
     void wheelEvent(QWheelEvent *event) override;
 
+    /**
+    * @brief keyReleaseEvent 尺寸大小改变事件
+    * @param  event 事件参数
+    */
+    void keyReleaseEvent(QKeyEvent *event) override;
+
 public slots:
     /**
     * @brief onValueChanged 曝光值改变槽函数

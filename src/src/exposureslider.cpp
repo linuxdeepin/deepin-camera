@@ -114,7 +114,7 @@ void ExposureSlider::paintEvent(QPaintEvent *event)
 
     if (m_curValue) {
         QRectF rect = this->rect();
-        rect.setTopLeft(QPoint(29, rect.height() / 2 - 2));
+        rect.setTopLeft(QPoint(29, rect.height() / 2 + 10));
         rect.setSize(QSize(4, 4));
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(QColor(255, 255, 255, 0.8 * 255)));
@@ -132,6 +132,26 @@ void ExposureSlider::wheelEvent(QWheelEvent *event)
 
     m_curValue += event->angleDelta().y() / 60;
     m_slider->setValue(m_curValue);
+}
+
+void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
+{
+    switch (event->key()) {
+    case Qt::Key_Down: {
+        if (m_curValue <= m_valueMin)
+            return;
+        m_curValue -= 1;
+        m_slider->setValue(m_curValue);
+        break;
+    }
+    case Qt::Key_Up:
+        if (m_curValue >= m_valueMax)
+            return;
+        m_curValue += 1;
+        m_slider->setValue(m_curValue);
+        break;
+    }
+    QWidget::keyReleaseEvent(event);
 }
 
 void ExposureSlider::onValueChanged(int value)

@@ -22,6 +22,7 @@
 #define TAKEPHOTOSETTINGAREAWIDGET_H
 
 #include "filterpreviewbutton.h"
+#include "exposureslider.h"
 
 #include <QWidget>
 #include <QPropertyAnimation>
@@ -68,18 +69,14 @@ public:
     * @param isShortcut 是否通过快捷键触发
     */
     void showFlashlights(bool bShow, bool isShortcut = false);
+
     /**
     * @brief showFilters 显示滤镜按钮
     * @param bShow 是否显示
     * @param isShortcut 是否通过快捷键触发
     */
     void showFilters(bool bShow, bool isShortcut = false);
-    /**
-    * @brief showExposures 显示曝光按钮
-    * @param bShow 是否显示
-    * @param isShortcut 是否通过快捷键触发
-    */
-    void showExposures(bool bShow, bool isShortcut = false);
+
     /**
     * @brief setDelayTime 设置延时拍照时间
     * @param delayTime 延迟的时间
@@ -183,6 +180,7 @@ signals:
     void sngFilterChanged(efilterType efilterType);
     void sngShowFilterName(bool bShow);
     void sngSetFilterName(const QString& name);
+    void sigExposureChanged(int exposure);
 
 public slots:
     /**

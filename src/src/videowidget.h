@@ -233,6 +233,7 @@ public:
     */
     void setFilterType(efilterType type);
 
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -274,6 +275,12 @@ public slots:
     * @brief onThemeTypeChanged　主题切换槽函数
     */
     void onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType);
+
+    /**
+     * @brief onExposureChanged 曝光值改变槽函数
+     * @param exposure 曝光值
+     */
+    void onExposureChanged(int exposure);
 
 private slots:
     /**
