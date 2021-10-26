@@ -240,7 +240,88 @@ void takePhotoSettingAreaWidget::init()
 void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 {
     Q_UNUSED(bShow);
+#if 1
+    circlePushBtnList btnList;
+    btnList.push_back(m_flashlightUnfoldBtn);
+    btnList.push_back(m_delayUnfoldBtn);
+    btnList.push_back(m_filtersUnfoldBtn);
+    btnList.push_back(m_exposureBtn);
+    btnList.push_back(m_foldBtn);
 
+    // 以哪个按钮为原点来折叠动画
+    circlePushButton* originBtn = m_filtersUnfoldBtn;
+    if (!m_bPhoto)
+        originBtn = m_delayUnfoldBtn;
+
+    //位移动画
+    QPoint endPos = QPoint(0, (originBtn->height() + m_btnHeightOffset) * 2); //结束位置固定为中间按钮
+    if (!m_bPhoto)
+        endPos = QPoint(0, 0);
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    int index = 0;
+    for (auto btn : btnList) {
+        if (!m_bPhoto) {
+            if (btn == m_flashlightUnfoldBtn
+                    || btn == m_filtersUnfoldBtn
+                    || btn == m_exposureBtn)
+                continue;
+        }
+
+        QPropertyAnimation *opacity = new QPropertyAnimation(btn, "opacity", this);
+        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setStartValue(102);
+        opacity->setEndValue(0);
+        pPosGroup->addAnimation(opacity);
+
+        if (btn == originBtn) {
+            originBtn->move(0,(originBtn->height() + m_btnHeightOffset) * index++);
+            continue;
+        }
+
+        QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
+        position->setDuration(ANIMATION_DURATION);
+        position->setStartValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
+        position->setEndValue(endPos);
+        position->setEasingCurve(QEasingCurve::OutSine);
+        pPosGroup->addAnimation(position);
+    }
+
+    pPosGroup->start();
+
+    //展开按钮旋转动画
+    QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
+    opacity->setStartValue(0);
+    opacity->setEndValue(102);
+    opacity->setDuration(ANIMATION_DURATION);
+
+    QPropertyAnimation *rotate = new QPropertyAnimation(m_unfoldBtn, "rotate", this);
+    rotate->setStartValue(90);
+    rotate->setEndValue(0);
+    rotate->setDuration(ANIMATION_DURATION);
+
+    QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
+    group->addAnimation(opacity);
+    group->addAnimation(rotate);
+
+    connect(group, &QParallelAnimationGroup::finished, this, [=](){
+        m_isBtnsFold = true;
+        if (isShortcut)
+            m_unfoldBtn->setFocus();
+    });
+
+    connect(pPosGroup, &QParallelAnimationGroup::finished, [=](){
+        m_foldBtn->setVisible(false);
+        m_flashlightUnfoldBtn->setVisible(false);
+        m_delayUnfoldBtn->setVisible(false);
+        m_filtersUnfoldBtn->setVisible(false);
+        m_exposureBtn->setVisible(false);
+        m_unfoldBtn->setVisible(true);
+        setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
+
+        group->start();
+    });
+#else
     //位移动画
     QPoint endPos = QPoint(0, (m_filtersUnfoldBtn->height() + m_btnHeightOffset) * 2); //结束位置固定为中间按钮
 
@@ -338,11 +419,86 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 
         group->start();
     });
+#endif
 }
 
 void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, bool isShortcut)
 {
+#if 1
+    circlePushBtnList btnList;
+    btnList.push_back(m_flashlightUnfoldBtn);
+    btnList.push_back(m_delayUnfoldBtn);
+    btnList.push_back(m_filtersUnfoldBtn);
+    btnList.push_back(m_exposureBtn);
+    btnList.push_back(m_foldBtn);
+
+    // 以哪个按钮为原点来展开动画
+    circlePushButton* originBtn = m_filtersUnfoldBtn;
+    if (!m_bPhoto)
+        originBtn = m_delayUnfoldBtn;
+
     //位移动画
+    QPoint startPos = QPoint(0, (originBtn->height() + m_btnHeightOffset) * 2); //开始位置固定为中间按钮
+    if (!m_bPhoto)
+        startPos = QPoint(0,0);
+
+    QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+    int index = 0;
+    for (auto btn : btnList) {
+        if (!m_bPhoto) {
+            if (btn == m_flashlightUnfoldBtn
+                    || btn == m_filtersUnfoldBtn
+                    || btn == m_exposureBtn)
+                continue;
+        }
+
+        QPropertyAnimation *opacity = new QPropertyAnimation(btn, "opacity", this);
+        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setStartValue(0);
+        opacity->setEndValue(102);
+        pPosGroup->addAnimation(opacity);
+
+        if (btn == originBtn) {
+            originBtn->move(0,(originBtn->height() + m_btnHeightOffset) * index++);
+            continue;
+        }
+
+        QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
+        position->setDuration(ANIMATION_DURATION);
+        position->setStartValue(startPos);
+        position->setEndValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
+        position->setEasingCurve(QEasingCurve::OutExpo);
+        pPosGroup->addAnimation(position);
+    }
+
+    connect(pPosGroup, &QParallelAnimationGroup::finished, this, [=](){
+        m_isBtnsFold = false;
+        if (isShortcut) {
+            btn->setFocus();
+        }
+    });
+
+    m_foldBtn->setVisible(bShow);
+    if(m_bPhoto) {
+        m_flashlightUnfoldBtn->setVisible(bShow);
+        m_filtersUnfoldBtn->setVisible(bShow);
+        m_exposureBtn->setVisible(bShow);
+    } else {
+        m_flashlightUnfoldBtn->setVisible(!bShow);
+        m_filtersUnfoldBtn->setVisible(!bShow);
+        m_exposureBtn->setVisible(!bShow);
+    }
+    m_delayUnfoldBtn->setVisible(bShow);
+    m_unfoldBtn->setVisible(!bShow);
+    pPosGroup->start();
+
+    int nBtnCount = btnList.size();
+    if (!m_bPhoto)
+        nBtnCount -= 3;
+    setFixedSize(QSize(originBtn->width(), originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
+    update();
+
+#else
     QPoint startPos = QPoint(0, (m_filtersUnfoldBtn->height() + m_btnHeightOffset) * 2); //开始位置固定为中间按钮
     QPropertyAnimation *position1 = new QPropertyAnimation(m_flashlightUnfoldBtn, "pos", this);
     position1->setDuration(ANIMATION_DURATION);
@@ -415,8 +571,12 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     m_foldBtn->setVisible(bShow);
     if(m_bPhoto) {
         m_flashlightUnfoldBtn->setVisible(bShow);
+        m_filtersUnfoldBtn->setVisible(bShow);
+        m_exposureBtn->setVisible(bShow);
     } else {
         m_flashlightUnfoldBtn->setVisible(!bShow);
+        m_filtersUnfoldBtn->setVisible(!bShow);
+        m_exposureBtn->setVisible(!bShow);
     }
     m_delayUnfoldBtn->setVisible(bShow);
     m_filtersUnfoldBtn->setVisible(bShow);
@@ -426,6 +586,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
 
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 5 + 4 * m_btnHeightOffset));
     update();
+#endif
 }
 
 void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
@@ -711,7 +872,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 
 void takePhotoSettingAreaWidget::foldBtnClicked(bool isShortcut)
 {
-    closeAllGroup();
+    //closeAllGroup();
     showFold(true, isShortcut);
 }
 
@@ -1141,6 +1302,11 @@ filterPreviewButton *takePhotoSettingAreaWidget::getFilterPreviewFocusBtn()
     return nullptr;
 }
 
+bool takePhotoSettingAreaWidget::hasBtnGroupDisplay()
+{
+    return m_delayGroupDisplay || m_flashGroupDisplay || m_filtersGroupDislay || m_exposureSliderDisplay;
+}
+
 void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
 {
     QPoint pos = mapToParent(m_exposureBtn->pos());
@@ -1310,11 +1476,50 @@ void takePhotoSettingAreaWidget::setOpacity(int opacity)
 
 void takePhotoSettingAreaWidget::setState(bool bPhoto)
 {
+    // 若有功能按钮组处于展开状态，折叠之
+    if (hasBtnGroupDisplay())
+        closeAllGroup();
+    // 按钮总开关处于展开状态
+    else if (!m_isBtnsFold){
+        // 功能按钮组未处于展开状态，重新设置各个按钮位置
+        circlePushBtnList btnList;
+        btnList.push_back(m_flashlightUnfoldBtn);
+        btnList.push_back(m_delayUnfoldBtn);
+        btnList.push_back(m_filtersUnfoldBtn);
+        btnList.push_back(m_exposureBtn);
+        btnList.push_back(m_foldBtn);
+
+        int index = 0;
+        for (auto btn : btnList) {
+            if (!bPhoto) {
+                if (btn == m_flashlightUnfoldBtn
+                        || btn == m_filtersUnfoldBtn
+                        || btn == m_exposureBtn)
+                    continue;
+            }
+
+            btn->move(0, (btn->height() + m_btnHeightOffset) * index++);
+        }
+
+        int nBtnCount = btnList.size();
+        if (!bPhoto)
+            nBtnCount -= 3;
+        setFixedSize(QSize(m_foldBtn->width(), m_foldBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
+    }
+
     m_bPhoto = bPhoto;
     if (bPhoto && !m_isBtnsFold) {
         m_flashlightUnfoldBtn->setVisible(true);
+        m_filtersUnfoldBtn->setVisible(true);
+        m_exposureBtn->setVisible(true);
+
+        m_flashlightUnfoldBtn->setOpacity(102);
+        m_filtersUnfoldBtn->setOpacity(102);
+        m_exposureBtn->setOpacity(102);
     } else {
         m_flashlightUnfoldBtn->setVisible(false);
+        m_filtersUnfoldBtn->setVisible(false);
+        m_exposureBtn->setVisible(false);
     }
     update();
 }

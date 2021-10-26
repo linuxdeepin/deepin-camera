@@ -169,4 +169,6 @@ private:
     bool          m_isNewNotification = false;  //是否显示小圆点
 };
 
+typedef QList<circlePushButton*> circlePushBtnList;
+
 #endif // CIRCLEPUSHBUTTON_H
