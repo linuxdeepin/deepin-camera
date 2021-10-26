@@ -1576,6 +1576,7 @@ void CMainWindow::initUI()
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngFilterChanged, this, &CMainWindow::onFilterChanged);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngShowFilterName, this, &CMainWindow::onShowFilterName);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFilterName, this, &CMainWindow::onSetFilterName);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sigExposureChanged, m_videoPre, &videowidget::onExposureChanged);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));

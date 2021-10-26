@@ -86,6 +86,12 @@ public:
      */
     void setFilter(QString filter);
 
+    /**
+     * @brief setExposure 设置曝光
+     * @param exposure 曝光值
+     */
+    void setExposure(int exposure);
+
 protected:
     /**
      * @brief run 运行线程
@@ -148,6 +154,7 @@ private:
     v4l2_frame_buff_t *m_frame;
     uint8_t           *m_yuvPtr;
     bool              m_bHorizontalMirror;   //水平镜像
+    int               m_exposure = 0;
 
     QImage             m_Img;   //mips、wayland下使用该变量
     QImage             m_filterImg; //滤镜预览类使用 大小40*40

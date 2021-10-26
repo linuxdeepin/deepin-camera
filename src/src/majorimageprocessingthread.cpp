@@ -57,6 +57,11 @@ void MajorImageProcessingThread::setFilter(QString filter)
     m_filter = filter;
 }
 
+void MajorImageProcessingThread::setExposure(int exposure)
+{
+    m_exposure = exposure;
+}
+
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
 {
     /*
@@ -195,6 +200,8 @@ void MajorImageProcessingThread::run()
         time.restart();
         if (!m_filter.isEmpty())
             imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+        if(m_exposure)
+            exposure(rgb, m_frame->width, m_frame->height, m_exposure);
         //qDebug() << QString("filter algorithm cost %1 ms...").arg(time.elapsed());
     #else
         time.restart();
