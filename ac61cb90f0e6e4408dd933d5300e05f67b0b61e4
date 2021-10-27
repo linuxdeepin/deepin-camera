@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "266abaa0_e440c3d5",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:13Z",
+      "side": 1,
+      "message": "注释行数: 1; 改动行数(修改和新增): 46; 注释率: 2.2%",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81a2c0d6_189f116b",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:13Z",
+      "side": 1,
+      "message": "注释行数: 16; 改动行数(修改和新增): 21; 注释率: 76.2%",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53166355_9110d0ae",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:13Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6550251_96888bbf",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:13Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 45; 注释率: 0.0%",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
