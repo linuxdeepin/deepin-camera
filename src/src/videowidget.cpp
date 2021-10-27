@@ -1254,6 +1254,13 @@ void videowidget::setFilterType(efilterType type)
         m_imgPrcThread->setFilter(filterPreviewButton::filterName_CUBE(type));
 }
 
+void videowidget::setState(bool bPhoto)
+{
+    m_bPhoto = bPhoto;
+    if (m_imgPrcThread)
+        m_imgPrcThread->setState(bPhoto);
+}
+
 void videowidget::onExposureChanged(int exposure)
 {
     if (m_imgPrcThread)

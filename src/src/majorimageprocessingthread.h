@@ -92,6 +92,14 @@ public:
      */
     void setExposure(int exposure);
 
+    /**
+     * @brief setState 设置拍照，录像状态
+     * @param bPhoto  true 拍照状态， false 录像状态
+     */
+    void setState(bool bPhoto){
+        m_bPhoto = bPhoto;
+    }
+
 protected:
     /**
      * @brief run 运行线程
@@ -153,6 +161,8 @@ private:
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
     uint8_t           *m_yuvPtr;
+
+    bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
     bool              m_bHorizontalMirror;   //水平镜像
     int               m_exposure = 0;
 

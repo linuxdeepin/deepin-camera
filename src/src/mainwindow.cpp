@@ -1336,6 +1336,7 @@ void CMainWindow::onSwitchPhotoBtnClked()
     m_photoRecordBtn->setState(true);
     m_photoRecordBtn->setToolTip(tr("Photo"));
     m_takePhotoSettingArea->setState(true);
+    m_videoPre->setState(true);
     locateRightButtons();
 }
 
@@ -1344,6 +1345,7 @@ void CMainWindow::onSwitchRecordBtnClked()
     m_photoRecordBtn->setState(false);
     m_photoRecordBtn->setToolTip(tr("Video"));
     m_takePhotoSettingArea->setState(false);
+    m_videoPre->setState(false);
     locateRightButtons();
 }
 

@@ -233,6 +233,11 @@ public:
     */
     void setFilterType(efilterType type);
 
+    /**
+     * @brief setState 设置拍照，录像状态
+     * @param bPhoto  true 拍照状态， false 录像状态
+     */
+    void setState(bool bPhoto);
 
 public slots:
     /**
@@ -397,6 +402,7 @@ private:
 
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
     bool                       m_flashEnable;       //是否闪光灯
+    bool                       m_bPhoto = true;     //相机当前状态，默认为拍照状态
 };
 
 #endif // VIDEOWIDGET_H
