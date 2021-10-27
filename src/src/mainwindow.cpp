@@ -1336,6 +1336,7 @@ void CMainWindow::onSwitchPhotoBtnClked()
     m_photoRecordBtn->setState(true);
     m_photoRecordBtn->setToolTip(tr("Photo"));
     m_takePhotoSettingArea->setState(true);
+    m_videoPre->setState(true);
     locateRightButtons();
 }
 
@@ -1344,6 +1345,7 @@ void CMainWindow::onSwitchRecordBtnClked()
     m_photoRecordBtn->setState(false);
     m_photoRecordBtn->setToolTip(tr("Video"));
     m_takePhotoSettingArea->setState(false);
+    m_videoPre->setState(false);
     locateRightButtons();
 }
 
@@ -1736,6 +1738,8 @@ void CMainWindow::initConnection()
 
     // 更新滤镜预览帧图片
     connect(m_videoPre, SIGNAL(updateFilterImage(QImage*)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage*)));
+
+    connect(m_videoPre, &videowidget::reflushSnapshotLabel, this, &CMainWindow::reflushSnapshotLabel);
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
 
