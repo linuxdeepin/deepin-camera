@@ -315,6 +315,8 @@ private:
     bool                     m_bPhoto;          //true 拍照状态， false 录像状态
 
     efilterType               m_filterType;      //当前选中的滤镜类型
+
+    qint64                  m_animationTime = 0;    //记录动画执行时间
 };
 
 #endif // TAKEPHOTOSETTINGAREAWIDGET_H
