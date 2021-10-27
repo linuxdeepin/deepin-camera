@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "e925e09e_1f6c0f60",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:14Z",
+      "side": 1,
+      "message": "(style) Class \u0027ExposureSlider\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "53166355_9110d0ae",
         "filename": "src/src/majorimageprocessingthread.cpp",
         "patchSetId": 1
@@ -64,6 +81,40 @@
       "writtenOn": "2021-10-27T07:09:13Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 45; 注释率: 0.0%",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a47abf57_1b04a499",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:14Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af090894_a5f7b196",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T07:09:14Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
       "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
