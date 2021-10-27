@@ -183,38 +183,34 @@ void MajorImageProcessingThread::run()
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
-        QTime time;
-        time.start();
+        // 判断是否使用rgb数据
+        bool bUseRgb = false;
 #ifdef __mips__
-        uint8_t *rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
-    #if 0
-        yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
-    #else
-        yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
-    #endif
-        //qDebug() << QString("yu12_to_rgb24 cost %1 ms...").arg(time.elapsed());
-    #if 1
-
-        m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
-
-        time.restart();
-        if (!m_filter.isEmpty())
-            imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
-        if(m_exposure)
-            exposure(rgb, m_frame->width, m_frame->height, m_exposure);
-        //qDebug() << QString("filter algorithm cost %1 ms...").arg(time.elapsed());
-    #else
-        time.restart();
-        exposure(rgb, m_frame->width, m_frame->height, -100);
-        qDebug() << QString("exposure algorithm cost %1 ms...").arg(time.elapsed());
-    #endif
-#else
-        uint8_t *rgb; //yuv数据转为rgb
-        if (get_wayland_status()) {
-            rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
-            yu12_to_rgb24(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
-        }
+        bUseRgb = true;
 #endif
+        if (get_wayland_status())
+            bUseRgb = true;
+
+        if (!m_filter.isEmpty() || m_exposure)
+            bUseRgb = true;
+
+        uint8_t *rgb = nullptr;
+        if (bUseRgb || m_bPhoto) {
+            rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
+            // yu12到rgb数据高性能转换
+            yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+            m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
+
+            // 拍照状态下，曝光和滤镜功能才有效
+            if (m_bPhoto) {
+                // 滤镜效果渲染
+                if (!m_filter.isEmpty())
+                    imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+                // 曝光强度调节
+                if(m_exposure)
+                    exposure(rgb, m_frame->width, m_frame->height, m_exposure);
+            }
+        }
 
         /*录像*/
         if (video_capture_get_save_video()) {
@@ -284,20 +280,24 @@ void MajorImageProcessingThread::run()
 
         }
 
+        QImage* imgTmp = nullptr;
+        if (rgb)
+            imgTmp = new QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
+
         /*拍照*/
         if (m_bTake) {
             int nRet = -1;
-            if (!m_filter.isEmpty()) {
-                // 有滤镜时，使用QImage保存滤镜图片
-                QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
-                if (m_Img.save(m_strPath, "JPG"))
+            if ((!m_filter.isEmpty() || m_exposure) && imgTmp) {
+                if (imgTmp->save(m_strPath, "JPG")) {
                     nRet = 0;
-            } else {
-                // 无滤镜时，使用v4l2原生接口保存滤镜图片
-                nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-                if (nRet < 0) {
-                    qWarning() << "保存照片失败";
+                    emit sigReflushSnapshotLabel();
                 }
+            } else {
+                nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+            }
+
+            if (nRet < 0) {
+                qWarning() << "保存照片失败";
             }
 
             m_bTake = false;
@@ -307,29 +307,22 @@ void MajorImageProcessingThread::run()
         framedely = 0;
         m_rwMtxImg.lock();
         if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
-#ifdef __mips__
-            QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
-            if (!imgTmp.isNull()) {
-                m_Img = imgTmp.copy();
-                emit SendMajorImageProcessing(&m_Img, m_result);
-                emit SendFilterImageProcessing(&m_filterImg);
-            }
-#else
-            if (get_wayland_status()) {
-                QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
-                if (!imgTmp.isNull()) {
-                    m_Img = imgTmp.copy();
+            if (bUseRgb) {
+                if (imgTmp && !imgTmp->isNull()) {
+                    m_Img = imgTmp->copy();
                     emit SendMajorImageProcessing(&m_Img, m_result);
                 }
             } else {
+#ifndef __mips__
                 emit sigRenderYuv(true);
-
                 emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
-}
-
 #endif
+            }
+
             malloc_trim(0);
         }
+
+        emit SendFilterImageProcessing(&m_filterImg);
 
 #ifndef __mips__
         if (m_frame->yuv_frame == nullptr) {
@@ -339,12 +332,10 @@ void MajorImageProcessingThread::run()
 #endif
         m_rwMtxImg.unlock();
 
-#ifdef __mips__
-        free(rgb);
-#else
-        if (get_wayland_status() == true)
+        if (rgb)
             free(rgb);
-#endif
+        if (imgTmp)
+            delete imgTmp;
 
         m_frame->yuv_frame = pOldYuvFrame;
         v4l2core_release_frame(m_videoDevice, m_frame);
