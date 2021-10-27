@@ -22,20 +22,26 @@
 
 #include <QVBoxLayout>
 #include <QPalette>
+#include <QPropertyAnimation>
+#include <QGraphicsOpacityEffect>
 
 #include <DFontSizeManager>
 #include <DApplication>
+#include <QParallelAnimationGroup>
 
 #define WIDTH 40
 #define HEIGHT 192
+#define ANIMATION_DURATION 200
+
 ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
   ,m_pLabShowValue(nullptr)
   ,m_slider(nullptr)
   ,m_valueMax(100)
   ,m_valueMin(-100)
   ,m_curValue(0)
+  ,m_opacity(102)  //UI默认
 {
-    setFixedSize(WIDTH, HEIGHT);
+    resize(WIDTH, HEIGHT);
     QVBoxLayout *vLayout = new QVBoxLayout(this);
     setLayout(vLayout);
     setContentsMargins(0, 0, 0, 0);
@@ -70,27 +76,63 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
 
     connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::onValueChanged);
     connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::valueChanged);
+
+    m_pLabShowValue->hide();
+    m_slider->hide();
 }
 
-void ExposureSlider::moveToParentLeft()
+void ExposureSlider::setOpacity(int opacity)
 {
-    if (nullptr == parent())
-        return;
-
-    auto pParentWidget = static_cast<QWidget *>(parent());
-
-    if (nullptr == pParentWidget)
-        return;
-
-    auto main_rect = pParentWidget->rect();
-
-//    move(50, pParentWidget->height() / 2 - height() / 2);
-    move(main_rect.x() + 58, main_rect.y() + 295);
+    m_opacity = opacity;
+    update();
 }
 
-int ExposureSlider::value()
+void ExposureSlider::showContent(bool show)
 {
-    return m_curValue;
+    QGraphicsOpacityEffect *effectSlider = new QGraphicsOpacityEffect(m_slider);
+    m_slider->setGraphicsEffect(effectSlider);
+    QPropertyAnimation *opacity = new QPropertyAnimation(effectSlider, "opacity", this);
+    opacity->setDuration(ANIMATION_DURATION);
+    opacity->setEasingCurve(QEasingCurve::OutSine);
+
+    QGraphicsOpacityEffect *effectLabel = new QGraphicsOpacityEffect(m_pLabShowValue);
+    m_slider->setGraphicsEffect(effectLabel);
+    QPropertyAnimation *opacity1 = new QPropertyAnimation(effectLabel, "opacity", this);
+    opacity1->setDuration(ANIMATION_DURATION);
+    opacity1->setEasingCurve(QEasingCurve::OutSine);
+
+    QParallelAnimationGroup *pGroup = new QParallelAnimationGroup(this);
+    pGroup->addAnimation(opacity);
+    pGroup->addAnimation(opacity1);
+
+    if (show) {
+        opacity->setStartValue(0);
+        opacity->setEndValue(1);
+        opacity1->setStartValue(0);
+        opacity1->setEndValue(1);
+        connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            pGroup->deleteLater();
+        });
+
+        m_pLabShowValue->show();
+        m_slider->show();
+        pGroup->start();
+    } else {
+        opacity->setStartValue(1);
+        opacity->setEndValue(0);
+        opacity1->setStartValue(1);
+        opacity1->setEndValue(0);
+
+        connect(pGroup, &QParallelAnimationGroup::finished, this, &ExposureSlider::contentHided);
+        connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            m_pLabShowValue->hide();
+            m_slider->hide();
+            pGroup->deleteLater();
+        });
+
+        pGroup->start();
+    }
+
 }
 
 void ExposureSlider::paintEvent(QPaintEvent *event)
@@ -110,7 +152,7 @@ void ExposureSlider::paintEvent(QPaintEvent *event)
     path.lineTo(centerRect.topRight());
 
     painter.setPen(Qt::NoPen);
-    painter.fillPath(path, QBrush(QColor(0, 0, 0, 0.4 * 255)));
+    painter.fillPath(path, QBrush(QColor(0, 0, 0, m_opacity)));
 
     if (m_curValue) {
         QRectF rect = this->rect();

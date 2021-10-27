@@ -28,10 +28,13 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QGraphicsOpacityEffect>
+#include <QDateTime>
 
 #define HIDE_ANIMATION_DURATION 300
 #define ANIMATION_DURATION 400
 #define ANIMATION_FILTER_DURATION 350
+#define SLIDER_ANIMATION_DURATION 300
+#define EXPOSURE_SLIDER_HEIGHT 192
 
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
     , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
@@ -1304,16 +1307,69 @@ filterPreviewButton *takePhotoSettingAreaWidget::getFilterPreviewFocusBtn()
 
 void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
 {
+    if (QDateTime::currentMSecsSinceEpoch() - m_animationTime < 500) //防止上一次动画未完成
+        return;
+    else
+        m_animationTime = QDateTime::currentMSecsSinceEpoch();
+
     QPoint pos = mapToParent(m_exposureBtn->pos());
+    m_exposureSlider->move(pos.x() + m_exposureBtn->width() + 8, pos.y() - (EXPOSURE_SLIDER_HEIGHT - m_exposureBtn->height()) / 2);
+
+    QRect start = QRect(QPoint(pos.x() + m_exposureBtn->width() + 8, pos.y() - (EXPOSURE_SLIDER_HEIGHT - m_exposureBtn->height()) / 2), QSize(m_exposureSlider->width(), 0));
+    QRect end = start;
+    end.setHeight(EXPOSURE_SLIDER_HEIGHT);
 
     if (m_exposureSliderDisplay) {
-        m_exposureSlider->hide();
+        m_exposureSlider->showContent(false);
+
+        connect(m_exposureSlider, &ExposureSlider::contentHided, this, [=](){
+            QPropertyAnimation *opacity = new QPropertyAnimation(m_exposureSlider, "opacity", this);
+            opacity->setStartValue(102);
+            opacity->setEndValue(0);
+            opacity->setDuration(SLIDER_ANIMATION_DURATION);
+            opacity->setEasingCurve(QEasingCurve::OutQuart);
+
+            QPropertyAnimation *geometry = new QPropertyAnimation(m_exposureSlider, "geometry", this);
+            geometry->setStartValue(end);
+            geometry->setEndValue(start);
+            geometry->setDuration(SLIDER_ANIMATION_DURATION);
+            geometry->setEasingCurve(QEasingCurve::OutQuart);
+
+            QParallelAnimationGroup *pGroup = new QParallelAnimationGroup(this);
+            pGroup->addAnimation(opacity);
+            pGroup->addAnimation(geometry);
+            connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+                m_exposureSlider->hide();
+                pGroup->deleteLater();
+            });
+            pGroup->start();
+        });
+
     } else {
-        m_exposureSlider->move(pos.x() + m_exposureBtn->width() + 8, pos.y() - (m_exposureSlider->height() - m_exposureBtn->height()) / 2);
+        QPropertyAnimation *opacity = new QPropertyAnimation(m_exposureSlider, "opacity", this);
+        opacity->setStartValue(0);
+        opacity->setEndValue(102);
+        opacity->setDuration(SLIDER_ANIMATION_DURATION);
+        opacity->setEasingCurve(QEasingCurve::OutQuart);
+
+        QPropertyAnimation *geometry = new QPropertyAnimation(m_exposureSlider, "geometry", this);
+        geometry->setStartValue(start);
+        geometry->setEndValue(end);
+        geometry->setDuration(SLIDER_ANIMATION_DURATION);
+        geometry->setEasingCurve(QEasingCurve::OutQuart);
+
+        QParallelAnimationGroup *pGroup = new QParallelAnimationGroup(this);
+        pGroup->addAnimation(opacity);
+        pGroup->addAnimation(geometry);
+        connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            m_exposureSlider->showContent(true);
+            pGroup->deleteLater();
+        });
+
         m_exposureSlider->show();
+        pGroup->start();
     }
     m_exposureSliderDisplay = !m_exposureSliderDisplay;
-
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
