@@ -36,6 +36,40 @@
     },
     {
       "key": {
+        "uuid": "aeaca302_ee39b298",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T06:44:39Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "d6f0c8477e257e50f6dbc10a6bab3687be844fdb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a530b76c_1f63bb91",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-27T06:44:39Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "d6f0c8477e257e50f6dbc10a6bab3687be844fdb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3766d75_5b9cca1b",
         "filename": "src/src/majorimageprocessingthread.h",
         "patchSetId": 4
