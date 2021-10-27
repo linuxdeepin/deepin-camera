@@ -416,8 +416,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
-
-            m_pNormalView->show();
+            //fix wayland flashing occasional abnormal problems in the camera window
+            //If there is an abnormality, please enable downlink code
+            //powered by xxxx
+//            m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
@@ -701,6 +703,10 @@ void videowidget::showCountdown()
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalView->hide();
+
+            QTimer::singleShot(100, this, [=] {
+                m_openglwidget->show();
+            });
         }
 
     } else {
@@ -874,7 +880,6 @@ void videowidget::onRestartDevices()
             emit sigDeviceChange();
             QPalette plt = palette();
             plt.setColor(QPalette::Window, Qt::white);
-            m_pNormalView->hide();
 #ifndef __mips__
             if (!get_wayland_status())
                 m_openglwidget->show();
