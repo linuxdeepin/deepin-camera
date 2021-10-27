@@ -54,12 +54,14 @@ static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
       m_imgPrcThread(nullptr),
-      m_nMaxRecTime(60) //默认60小时
+      m_nMaxRecTime(60), //默认60小时
+      m_openglwidget(nullptr)
 {
 #ifndef __mips__
     if (get_wayland_status() == true)
         m_pNormalItem = new QGraphicsPixmapItem;
     else
+        m_pNormalItem = new QGraphicsPixmapItem;
         m_openglwidget = new PreviewOpenglWidget(this);
 #else
     m_pNormalItem = new QGraphicsPixmapItem;
@@ -119,6 +121,7 @@ videowidget::videowidget(DWidget *parent)
 #else
     if (get_wayland_status() == true)
         m_pNormalScene->addItem(m_pNormalItem);
+    m_pNormalScene->addItem(m_pNormalItem);
 #endif
 
     m_pNormalScene->addItem(m_pCamErrItem);
@@ -193,13 +196,13 @@ void videowidget::delayInit()
 #ifdef __mips__
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
-    connect(m_imgPrcThread, SIGNAL(SendFilterImageProcessing(QImage *)),
-            this, SIGNAL(updateFilterImage(QImage *)));
 #else
     if (get_wayland_status() == true) {
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
     } else {
+        connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
+                this, SLOT(ReceiveMajorImage(QImage *, int)));
         connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
         connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
                 m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
@@ -208,6 +211,10 @@ void videowidget::delayInit()
 #endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
+    connect(m_imgPrcThread, SIGNAL(SendFilterImageProcessing(QImage *)),
+            this, SIGNAL(updateFilterImage(QImage *)));
+    connect(m_imgPrcThread, SIGNAL(sigReflushSnapshotLabel()),
+            this, SIGNAL(reflushSnapshotLabel()));
 
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
@@ -403,6 +410,10 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
         } else
             m_openglwidget->resize(width(), height());
+
+        if (!m_openglwidget->isVisible())
+            m_openglwidget->show();
+
         malloc_trim(0);
     }
 
@@ -421,6 +432,9 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
+
+            if (m_openglwidget && m_openglwidget->isVisible())
+                m_openglwidget->hide();
 
             {
                 int widgetwidth = width();
@@ -1252,6 +1266,13 @@ void videowidget::setFilterType(efilterType type)
 {
     if (m_imgPrcThread)
         m_imgPrcThread->setFilter(filterPreviewButton::filterName_CUBE(type));
+}
+
+void videowidget::setState(bool bPhoto)
+{
+    m_bPhoto = bPhoto;
+    if (m_imgPrcThread)
+        m_imgPrcThread->setState(bPhoto);
 }
 
 void videowidget::onExposureChanged(int exposure)
