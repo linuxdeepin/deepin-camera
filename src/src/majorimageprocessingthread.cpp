@@ -287,7 +287,7 @@ void MajorImageProcessingThread::run()
         /*拍照*/
         if (m_bTake) {
             int nRet = -1;
-            if (!m_filter.isEmpty()) {
+            if (!m_filter.isEmpty() || m_exposure) {
                 // 有滤镜时，使用QImage保存滤镜图片
                 QImage imgTmp(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
                 if (m_Img.save(m_strPath, "JPG"))

@@ -34,19 +34,32 @@ DWIDGET_USE_NAMESPACE
 class ExposureSlider : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(int opacity READ getOpacity WRITE setOpacity)//自定义不透明度属性
 public:
     ExposureSlider(QWidget *parent = nullptr);
     ~ExposureSlider();
 
     /**
-    * @brief moveToParentLeft 移动到父窗口左边
-    */
-    void moveToParentLeft();
-
-    /**
     * @brief value 获取当前的曝光值
     */
-    int value();
+    int value() {return m_curValue; };
+
+    /**
+    * @brief getOpacity 获取当前不透明度
+    */
+    int getOpacity() { return m_opacity; };
+
+    /**
+    * @brief setOpacity 设置不透明度 动画会通过这个函数输入插值，修改透明度。
+    * @param  opacity 不透明度 0～255
+    */
+    void setOpacity(int opacity);
+
+    /**
+    * @brief showContent 显示滑动条内部内容，动画实现需要
+    * @param  show 是否显示
+    */
+    void showContent(bool show);
 
 protected:
     /**
@@ -81,12 +94,19 @@ signals:
     */
     void valueChanged(int value);
 
+    /**
+    * @brief contentHided 滑动条内部内容隐藏动画结束信号
+    */
+    void contentHided();
+
 private:
     DLabel *m_pLabShowValue;    //曝光值显示
     DSlider *m_slider;          //滑动条
     int m_valueMax;             //最大值
     int m_valueMin;            //最小值
     int m_curValue;            //当前值
+
+    int m_opacity;              //背景透明度
 
 };
 
