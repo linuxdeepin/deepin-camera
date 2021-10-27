@@ -12,7 +12,7 @@ set(TARGET_NAME deepin-camera)
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
 set(LUT_DIR "/usr/share/libvisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
-add_definitions(-D__mips__)
+#add_definitions(-D__mips__)
 
 
 # 加速编译优化参数
