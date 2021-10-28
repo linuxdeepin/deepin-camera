@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "7ef3e584_4495884e",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T03:24:19Z",
+      "side": 1,
+      "message": "(style) Class \u0027ExposureSlider\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "027185ae9d8cbc186d9c9384454e8bd4ccffc85e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3d42ef81_cd2fad4f",
         "filename": "src/src/takephotosettingareawidget.cpp",
         "patchSetId": 2
@@ -53,6 +70,40 @@
     },
     {
       "key": {
+        "uuid": "9fa33082_4e086853",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T03:24:19Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "027185ae9d8cbc186d9c9384454e8bd4ccffc85e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb90bd3d_0460936a",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T03:24:19Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
+      "revId": "027185ae9d8cbc186d9c9384454e8bd4ccffc85e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2aecb4ec_ca122f51",
         "filename": "src/src/takephotosettingareawidget.h",
         "patchSetId": 2
@@ -64,6 +115,23 @@
       "writtenOn": "2021-10-28T03:24:17Z",
       "side": 1,
       "message": "注释行数: 1; 改动行数(修改和新增): 1; 注释率: 100.0%",
+      "revId": "027185ae9d8cbc186d9c9384454e8bd4ccffc85e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dac1708_e443f27e",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T03:24:19Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
       "revId": "027185ae9d8cbc186d9c9384454e8bd4ccffc85e",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
