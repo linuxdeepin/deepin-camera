@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "554e5cfe_a45184de",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1000207
+      },
+      "writtenOn": "2021-10-28T02:40:46Z",
+      "side": 1,
+      "message": "这个函数应该是会被重复调用，内存谁来释放",
+      "revId": "ac61cb90f0e6e4408dd933d5300e05f67b0b61e4",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81a2c0d6_189f116b",
         "filename": "src/src/exposureslider.h",
         "patchSetId": 1
