@@ -96,7 +96,7 @@ void ExposureSlider::showContent(bool show)
     opacity->setEasingCurve(QEasingCurve::OutSine);
 
     QGraphicsOpacityEffect *effectLabel = new QGraphicsOpacityEffect(m_pLabShowValue);
-    m_slider->setGraphicsEffect(effectLabel);
+    m_pLabShowValue->setGraphicsEffect(effectLabel);
     QPropertyAnimation *opacity1 = new QPropertyAnimation(effectLabel, "opacity", this);
     opacity1->setDuration(ANIMATION_DURATION);
     opacity1->setEasingCurve(QEasingCurve::OutSine);
@@ -110,6 +110,7 @@ void ExposureSlider::showContent(bool show)
         opacity->setEndValue(1);
         opacity1->setStartValue(0);
         opacity1->setEndValue(1);
+
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
             pGroup->deleteLater();
         });

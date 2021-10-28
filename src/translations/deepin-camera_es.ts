@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="es">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="es" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>La grabación esta en progreso. ¿Quiere cerrar la ventana?</translation>
+        <translation>Grabación en progreso. ¿Desea cerrar la ventana?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -74,7 +72,7 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Carpeta inválida</translation>
+        <translation type="vanished">Carpeta no válida</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -134,7 +132,7 @@
     </message>
     <message>
         <source>File not saved</source>
-        <translation>No se guardo el archivo</translation>
+        <translation>Archivo no guardado</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -250,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"></translation>
+        <translation>Vívido</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"></translation>
+        <translation>Cálido</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"></translation>
+        <translation>Frío</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"></translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"></translation>
+        <translation>Película</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"></translation>
+        <translation>Gris</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"></translation>
+        <translation>B&amp;N</translation>
     </message>
 </context>
 <context>
@@ -305,15 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filters Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"></translation>
+        <translation>Exposición</translation>
     </message>
 </context>
 <context>
