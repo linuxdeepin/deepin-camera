@@ -33,6 +33,40 @@
       "revId": "9b91021c75f34b039acdc3d2b8a16835838c8821",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04bd212c_0ab7a766",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T07:37:28Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "9b91021c75f34b039acdc3d2b8a16835838c8821",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca0bf7a1_37a98028",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-10-28T07:37:28Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
+      "revId": "9b91021c75f34b039acdc3d2b8a16835838c8821",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
