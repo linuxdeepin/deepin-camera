@@ -430,7 +430,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             //fix wayland flashing occasional abnormal problems in the camera window
             //If there is an abnormality, please enable downlink code
             //powered by xxxx
-//            m_pNormalView->show();
+            m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
