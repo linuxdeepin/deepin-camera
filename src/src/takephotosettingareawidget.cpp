@@ -290,7 +290,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
         pPosGroup->addAnimation(position);
     }
 
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     //展开按钮旋转动画
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
@@ -322,7 +322,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
         m_unfoldBtn->setVisible(true);
         setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
 
-        group->start();
+        group->start(QAbstractAnimation::DeleteWhenStopped);
     });
 #else
     //位移动画
@@ -389,7 +389,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(opacity4);
     pPosGroup->addAnimation(opacity5);
 
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     //展开按钮旋转动画
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
@@ -420,7 +420,7 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
         m_unfoldBtn->setVisible(true);
         setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
 
-        group->start();
+        group->start(QAbstractAnimation::DeleteWhenStopped);
     });
 #endif
 }
@@ -493,7 +493,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     }
     m_delayUnfoldBtn->setVisible(bShow);
     m_unfoldBtn->setVisible(!bShow);
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     int nBtnCount = btnList.size();
     if (!m_bPhoto)
@@ -585,7 +585,7 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     m_filtersUnfoldBtn->setVisible(bShow);
     m_exposureBtn->setVisible(bShow);
     m_unfoldBtn->setVisible(!bShow);
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 5 + 4 * m_btnHeightOffset));
     update();
@@ -671,7 +671,7 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(position3);
     pPosGroup->addAnimation(opacity);
 
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + m_threeBtnOffset * 3 + 2));
     update();
@@ -735,7 +735,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(position2);
     pPosGroup->addAnimation(opacity);
 
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     setFixedSize(QSize(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height() * 3 + m_threeBtnOffset * 2 + 2));
     update();
@@ -864,7 +864,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     for (auto opa : opacityList)
         pPosGroup->addAnimation(opa);
 
-    pPosGroup->start();
+    pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     emit sngShowFilterName(bShow);
 
@@ -895,7 +895,7 @@ void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
     group->addAnimation(opacity);
     group->addAnimation(rotate);
 
-    group->start();
+    group->start(QAbstractAnimation::DeleteWhenStopped);
 
     connect(group, &QParallelAnimationGroup::finished, this, [=](){
         if (m_bPhoto) {
@@ -1342,7 +1342,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
                 m_exposureSlider->hide();
                 pGroup->deleteLater();
             });
-            pGroup->start();
+            pGroup->start(QAbstractAnimation::DeleteWhenStopped);
         });
 
     } else {
@@ -1367,7 +1367,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
         });
 
         m_exposureSlider->show();
-        pGroup->start();
+        pGroup->start(QAbstractAnimation::DeleteWhenStopped);
     }
     m_exposureSliderDisplay = !m_exposureSliderDisplay;
 }

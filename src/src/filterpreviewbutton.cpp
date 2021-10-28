@@ -26,6 +26,7 @@ extern "C" {
 }
 
 #include <QPainter>
+#include <QPainterPath>
 
 DWIDGET_USE_NAMESPACE;
 
