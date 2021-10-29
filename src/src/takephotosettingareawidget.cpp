@@ -126,12 +126,14 @@ void takePhotoSettingAreaWidget::initButtons()
     m_delay3SecondBtn->setObjectName(DELAY_3S_BTN);
     m_delay3SecondBtn->setAccessibleName(DELAY_3S_BTN);
     m_delay3SecondBtn->setFocusPolicy(Qt::NoFocus);
+    m_delay3SecondBtn->setToolTip("3s");
 
     m_delay6SecondBtn = new circlePushButton(this);
     m_delay6SecondBtn->setPixmap(":/images/camera/delay6S.svg", ":/images/camera/delay-6S-hover.svg", ":/images/camera/delay-6S-press.svg");
     m_delay6SecondBtn->setObjectName(DELAY_6S_BTN);
     m_delay6SecondBtn->setAccessibleName(DELAY_6S_BTN);
     m_delay6SecondBtn->setFocusPolicy(Qt::NoFocus);
+    m_delay6SecondBtn->setToolTip("6s");
 
     // 滤镜
     m_filtersFoldBtn = new circlePushButton(this);
