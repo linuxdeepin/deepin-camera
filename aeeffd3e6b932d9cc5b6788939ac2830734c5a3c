@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "7f8b791f_6e82d306",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-01T05:35:22Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nPreviewBtnHeight\u0027 can be reduced",
+      "revId": "aeeffd3e6b932d9cc5b6788939ac2830734c5a3c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "920b68a8_ad7eea10",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 762,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-01T05:35:22Z",
+      "side": 1,
+      "message": "(style) Variable \u0027nPreviewBtnHeight\u0027 is assigned a value that is never used",
+      "revId": "aeeffd3e6b932d9cc5b6788939ac2830734c5a3c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d048dc45_dbc17da7",
         "filename": "src/src/takephotosettingareawidget.h",
         "patchSetId": 1
@@ -30,6 +64,23 @@
       "writtenOn": "2021-11-01T05:35:21Z",
       "side": 1,
       "message": "注释行数: 1; 改动行数(修改和新增): 1; 注释率: 100.0%",
+      "revId": "aeeffd3e6b932d9cc5b6788939ac2830734c5a3c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75a4b047_1cbaa7c6",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-01T05:35:22Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
       "revId": "aeeffd3e6b932d9cc5b6788939ac2830734c5a3c",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
