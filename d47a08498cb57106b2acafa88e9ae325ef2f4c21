@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "80560aa1_65c5f39d",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-01T07:08:19Z",
+      "side": 1,
+      "message": "(style) The class \u0027circlePushButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "d47a08498cb57106b2acafa88e9ae325ef2f4c21",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74e9b064_2cc9db2a",
         "filename": "src/src/takephotosettingareawidget.cpp",
         "patchSetId": 3
