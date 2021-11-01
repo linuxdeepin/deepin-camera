@@ -173,7 +173,7 @@ void ExposureSlider::wheelEvent(QWheelEvent *event)
     if (m_curValue <= m_valueMin)
         m_curValue = m_valueMin;
 
-    m_curValue += event->angleDelta().y() / 60;
+    m_curValue += event->angleDelta().y() / 120;
     m_slider->setValue(m_curValue);
 }
 
