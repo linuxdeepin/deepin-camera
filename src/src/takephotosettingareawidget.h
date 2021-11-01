@@ -309,6 +309,8 @@ private:
     bool                     m_filtersGroupDislay = false;//滤镜按钮组是否显示
     bool                     m_exposureSliderDisplay = false;//曝光按钮组是否显示
 
+    bool                     m_bPhotoToVideState; //当前是否由拍照状态切换到录像状态
+
     bool                     m_isBtnsFold;  //按钮组是否收起
     int                      m_opacity = 102;    //不透明度 默认值0.4 * 255
 
