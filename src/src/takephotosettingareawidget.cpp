@@ -52,6 +52,8 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_delay6SecondBtn(nullptr)
     , m_exposureSlider(nullptr)
     , m_bPhoto(true)
+    , m_filterType(filter_Normal)
+    , m_bPhotoToVideState(false)
 {
     m_delayGroupDisplay = false;
     m_flashGroupDisplay = false;
@@ -168,7 +170,6 @@ void takePhotoSettingAreaWidget::initButtons()
 
     m_exposureBtn = new circlePushButton(this);
     m_exposureBtn->setPixmap(":/images/camera/exposure.svg", ":/images/camera/exposure-hover.svg", ":/images/camera/exposure-press.svg");
-    m_exposureBtn->setDisableSelect(true);
     m_exposureBtn->setObjectName(EXPOSURE_UNFOLD_BTN);
     m_exposureBtn->setAccessibleName(EXPOSURE_UNFOLD_BTN);
     m_exposureBtn->setToolTip(tr("Exposure"));
@@ -746,7 +747,6 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 {
     //位移动画
-    int nPreviewBtnHeight = 0;
     int nPreviewBtnWidth = 0;
     QList<QPropertyAnimation*> positionList;
     QList<QPropertyAnimation*> opacityList;
@@ -759,7 +759,6 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 //            pBtn->setFocus();
         positionList.push_back(position);
         opacityList.push_back(opacity);
-        nPreviewBtnHeight = pBtn->height();
         nPreviewBtnWidth = pBtn->width();
     }
 
@@ -1343,6 +1342,26 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
             connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
                 m_exposureSlider->hide();
                 pGroup->deleteLater();
+
+                if (m_bPhotoToVideState) {
+                    showUnfold(true, m_exposureBtn, isShortcut);
+
+                    if (m_bPhoto && !m_isBtnsFold) {
+                        m_flashlightUnfoldBtn->setVisible(true);
+                        m_filtersUnfoldBtn->setVisible(true);
+                        m_exposureBtn->setVisible(true);
+
+                        m_flashlightUnfoldBtn->setOpacity(102);
+                        m_filtersUnfoldBtn->setOpacity(102);
+                        m_exposureBtn->setOpacity(102);
+                    } else {
+                        m_flashlightUnfoldBtn->setVisible(false);
+                        m_filtersUnfoldBtn->setVisible(false);
+                        m_exposureBtn->setVisible(false);
+                    }
+
+                    m_bPhotoToVideState = false;
+                }
             });
             pGroup->start(QAbstractAnimation::DeleteWhenStopped);
         });
@@ -1372,6 +1391,8 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
         pGroup->start(QAbstractAnimation::DeleteWhenStopped);
     }
     m_exposureSliderDisplay = !m_exposureSliderDisplay;
+
+    m_exposureBtn->setSelected(m_exposureSliderDisplay);
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
@@ -1529,6 +1550,14 @@ void takePhotoSettingAreaWidget::setOpacity(int opacity)
 
 void takePhotoSettingAreaWidget::setState(bool bPhoto)
 {
+    if (m_exposureSliderDisplay) {
+        //判断当前是否由拍照状态切换到录像状态
+        m_bPhotoToVideState = m_bPhoto && !bPhoto;
+        exposureBtnClicked();
+        m_bPhoto = bPhoto;
+        return;
+    }
+
     // 若有功能按钮组处于展开状态，折叠之
     if (m_delayGroupDisplay || m_flashGroupDisplay || m_filtersGroupDislay || m_exposureSliderDisplay)
         closeAllGroup();
