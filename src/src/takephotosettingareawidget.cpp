@@ -29,6 +29,7 @@
 #include <QDebug>
 #include <QGraphicsOpacityEffect>
 #include <QDateTime>
+#include <QTimer>
 
 #define HIDE_ANIMATION_DURATION 300
 #define ANIMATION_DURATION 400
@@ -812,9 +813,13 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
             for (auto pBtn : m_filterPreviewBtnList) {
                 pBtn->update();
             }
-            if (isShortcut)
-                m_filtersFoldBtn->setFocus();
         });
+
+        if (isShortcut) {
+            QTimer::singleShot(ANIMATION_FILTER_DURATION, this, [=] {
+                m_filtersFoldBtn->setFocus();
+            });
+        }
     } else {
         int index = 1;
         for (auto pos : positionList) {

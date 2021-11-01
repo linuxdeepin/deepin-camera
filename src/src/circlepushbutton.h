@@ -133,6 +133,8 @@ protected:
     */
     void focusOutEvent(QFocusEvent *event) override;
 
+    bool focusNextPrevChild(bool next) override;
+
     /**
     * @brief leaveEvent 鼠标离开事件
     * @param  event 事件参数

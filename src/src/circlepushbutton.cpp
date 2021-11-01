@@ -168,6 +168,12 @@ void circlePushButton::focusOutEvent(QFocusEvent *event)
     update();
 }
 
+bool circlePushButton::focusNextPrevChild(bool next)
+{
+    Q_UNUSED(next);
+    return true;
+}
+
 void circlePushButton::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
