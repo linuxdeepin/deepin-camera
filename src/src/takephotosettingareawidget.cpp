@@ -37,6 +37,8 @@
 #define SLIDER_ANIMATION_DURATION 300
 #define EXPOSURE_SLIDER_HEIGHT 192
 
+#define LEFT_MARGIN_PIX 10
+
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
     , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
     , m_threeBtnOffset(6)
@@ -54,10 +56,10 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_exposureSlider(nullptr)
     , m_bPhoto(true)
     , m_filterType(filter_Normal)
-    , m_bPhotoToVideState(false)
 {
     m_delayGroupDisplay = false;
     m_flashGroupDisplay = false;
+    m_bPhotoToVideState = false;
     m_isBtnsFold = true;
     m_buttonGroupColor.setRgb(0, 0, 0, 255 * 0.4);
 }
@@ -288,13 +290,19 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 
         QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
         position->setDuration(ANIMATION_DURATION);
-        position->setStartValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
+        if (btn == m_foldBtn)
+            //折叠按钮与上一按钮间距比普通间距多10px
+            position->setStartValue(QPoint(0, 10 + (originBtn->height() + m_btnHeightOffset) * index++));
+        else
+            position->setStartValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
         position->setEndValue(endPos);
         position->setEasingCurve(QEasingCurve::OutSine);
         pPosGroup->addAnimation(position);
     }
 
     pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
+
+    closeAllGroup();
 
     //展开按钮旋转动画
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
@@ -473,7 +481,11 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
         QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
         position->setDuration(ANIMATION_DURATION);
         position->setStartValue(startPos);
-        position->setEndValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
+        if (m_foldBtn == btn)
+            //折叠按钮与上一按钮间距比普通间距多10px
+            position->setEndValue(QPoint(0, 10 + (originBtn->height() + m_btnHeightOffset) * index++));
+        else
+            position->setEndValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
         position->setEasingCurve(QEasingCurve::OutExpo);
         pPosGroup->addAnimation(position);
     }
@@ -502,7 +514,8 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     int nBtnCount = btnList.size();
     if (!m_bPhoto)
         nBtnCount -= 3;
-    setFixedSize(QSize(originBtn->width(), originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
+    //折叠按钮与上一按钮间距比普通间距多10px 整体高度+10
+    setFixedSize(QSize(originBtn->width(), 10 + originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
     update();
 
 #else
@@ -1524,7 +1537,7 @@ void takePhotoSettingAreaWidget::moveToParentLeft()
     int posY = pParentWidget->height() / 2 - height() / 2;
     if (m_filtersGroupDislay)
         posY += 20;
-    move(20, posY);
+    move(LEFT_MARGIN_PIX, posY);
 }
 
 void takePhotoSettingAreaWidget::closeAllGroup()

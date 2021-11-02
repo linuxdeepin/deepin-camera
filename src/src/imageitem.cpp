@@ -232,8 +232,15 @@ void ImageItem::mousePressEvent(QMouseEvent *event)
 
 }
 
+void ImageItem::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    return;
+}
+
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     return;
 }
 

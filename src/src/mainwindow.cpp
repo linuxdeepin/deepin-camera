@@ -2087,10 +2087,6 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
 
     if (e->type() == QEvent::MouseButtonPress) {
         m_takePhotoSettingArea->closeAllGroup();
-    } else if (obj == m_videoPre) {
-        if (e->type() == QEvent::MouseButtonPress)
-            m_takePhotoSettingArea->closeAllGroup();
-        return DMainWindow::eventFilter(obj, e);
     }
 
     if ((obj == windowoptionButton) && (e->type() == QEvent::FocusIn)) {

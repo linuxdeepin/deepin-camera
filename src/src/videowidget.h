@@ -36,6 +36,7 @@
 #include <QtMultimedia/QSound>
 #include <QDateTime>
 #include <QSvgRenderer>
+#include <QGraphicsView>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
@@ -61,6 +62,19 @@ class QGraphicsSvgItem;
 * @brief PRIVIEW_ENUM_STATE　枚举拍照，无设备，录像
 */
 enum PRIVIEW_ENUM_STATE {PICTRUE, NODEVICE, VIDEO};
+
+class QGraphicsViewEx : public QGraphicsView
+{
+    Q_OBJECT
+
+public:
+    explicit QGraphicsViewEx(QWidget *parent = nullptr);
+
+protected:
+    virtual void mousePressEvent(QMouseEvent* e) override;
+    virtual void mouseMoveEvent(QMouseEvent* e) override;
+    virtual void mouseReleaseEvent(QMouseEvent* e) override;
+};
 
 /**
 * @brief videowidget　完成拍照，录像相关工作
@@ -397,7 +411,7 @@ private:
     QTimer                     *m_recordingTimer;   //录制3秒后，每200ms设置一次时间
     QDateTime                  m_btnClickTime;      //按钮点击时间
     QGridLayout                *m_pGridLayout;
-    QGraphicsView              *m_pNormalView;
+    QGraphicsViewEx              *m_pNormalView;
     QGraphicsScene             *m_pNormalScene;
     QGraphicsSvgItem           *m_pSvgItem;
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口

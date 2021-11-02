@@ -133,6 +133,8 @@ protected:
     */
     void focusOutEvent(QFocusEvent *event) override;
 
+    void hideEvent(QHideEvent* event) override;
+
     bool focusNextPrevChild(bool next) override;
 
     /**
@@ -146,6 +148,12 @@ protected:
     * @param  event 事件参数
     */
     void mousePressEvent(QMouseEvent *event) override;
+
+    /**
+    * @brief mouseMoveEvent 鼠标移动事件
+    * @param  event 事件参数
+    */
+    void mouseMoveEvent(QMouseEvent *event) override;
 
     /**
     * @brief mouseReleaseEvent 鼠标释放事件

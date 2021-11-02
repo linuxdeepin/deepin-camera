@@ -30,7 +30,6 @@
 
 #include <QPixmap>
 #include <QTimer>
-#include <QGraphicsView>
 #include <QDateTime>
 #include <QGraphicsPixmapItem>
 #include <QVBoxLayout>
@@ -50,6 +49,27 @@
 #define COUNTDOWN_OFFECT 20
 
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
+
+QGraphicsViewEx::QGraphicsViewEx(QWidget *parent)
+    : QGraphicsView(parent)
+{
+
+}
+
+void QGraphicsViewEx::mousePressEvent(QMouseEvent *e)
+{
+    QWidget::mousePressEvent(e);
+}
+
+void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
+{
+    QWidget::mouseMoveEvent(e);
+}
+
+void QGraphicsViewEx::mouseReleaseEvent(QMouseEvent *e)
+{
+    QWidget::mouseReleaseEvent(e);
+}
 
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
@@ -71,7 +91,7 @@ videowidget::videowidget(DWidget *parent)
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
-    m_pNormalView = new QGraphicsView(this);
+    m_pNormalView = new QGraphicsViewEx(this);
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
@@ -86,9 +106,6 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
-    //fix mips wayland ,the first time the camera is occupied, test connection and occupied
-    //If there's a problem, Please modify the subject transformation
-    //Powered by xxxx
     m_pSvgItem->hide();
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
@@ -240,17 +257,10 @@ void videowidget::showNocam()
     if (!m_pSvgItem->isVisible())
         m_pSvgItem->show();
 
-#ifdef __mips__
-    if (m_pNormalItem->isVisible())
+    if (m_pNormalItem)
         m_pNormalItem->hide();
-#else
-    if (get_wayland_status() == true) {
-        if (m_pNormalItem->isVisible())
-            m_pNormalItem->hide();
-    } else {
+    if (m_openglwidget)
         m_openglwidget->hide();
-    }
-#endif
 
     emit sigDeviceChange();
 
@@ -427,9 +437,6 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
-            //fix wayland flashing occasional abnormal problems in the camera window
-            //If there is an abnormality, please enable downlink code
-            //powered by xxxx
             m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
@@ -580,7 +587,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     //计时窗口放大缩小的显示
     m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10) / 2,
-                                height() - m_recordingTimeWidget->height() - 9);
+                                height() - m_recordingTimeWidget->height() - 15);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
                    (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
@@ -718,9 +725,9 @@ void videowidget::showCountdown()
             m_pSvgItem->hide();
             m_pNormalView->hide();
 
-            QTimer::singleShot(100, this, [=] {
-                m_openglwidget->show();
-            });
+//            QTimer::singleShot(100, this, [=] {
+//                m_openglwidget->show();
+//            });
         }
 
     } else {
@@ -1153,7 +1160,7 @@ void videowidget::startTakeVideo()
 
         m_recordingTimeWidget->show();
         m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
-                                    nHeight - m_recordingTimeWidget->height() - 9);
+                                    nHeight - m_recordingTimeWidget->height() - 15);
     }
 }
 
