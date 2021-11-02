@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "48b8c2be_cb352809",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-02T13:32:17Z",
+      "side": 1,
+      "message": "(style) The class \u0027circlePushButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "427db0dac1754711ba356a100148eb19017be644",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4849db7b_02b17f8b",
         "filename": "src/src/imageitem.cpp",
         "patchSetId": 1
@@ -53,6 +70,23 @@
     },
     {
       "key": {
+        "uuid": "d8ddd814_f8f20647",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-02T13:32:17Z",
+      "side": 1,
+      "message": "(style) Variable \u0027bOK\u0027 is assigned a value that is never used",
+      "revId": "427db0dac1754711ba356a100148eb19017be644",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "799e5bcc_15815b68",
         "filename": "src/src/imageitem.h",
         "patchSetId": 1
@@ -64,6 +98,23 @@
       "writtenOn": "2021-11-02T13:32:15Z",
       "side": 1,
       "message": "注释行数: 4; 改动行数(修改和新增): 5; 注释率: 80.0%",
+      "revId": "427db0dac1754711ba356a100148eb19017be644",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3bd7069_b786f2d1",
+        "filename": "src/src/imageitem.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-02T13:32:17Z",
+      "side": 1,
+      "message": "(style) Class \u0027ImageItem\u0027 has a constructor with 1 argument that is not explicit",
       "revId": "427db0dac1754711ba356a100148eb19017be644",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
