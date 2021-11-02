@@ -133,6 +133,12 @@ protected:
     */
     void focusOutEvent(QFocusEvent *event) override;
 
+    /**
+    * @brief hideEvent 界面隐藏事件
+    * @param  event 事件参数
+    */
+    void hideEvent(QHideEvent* event) override;
+
     bool focusNextPrevChild(bool next) override;
 
     /**
