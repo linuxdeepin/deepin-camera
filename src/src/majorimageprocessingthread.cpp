@@ -150,6 +150,8 @@ void MajorImageProcessingThread::run()
                 m_stopped = 1;
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
+                m_filterImg =  QImage();
+                emit SendFilterImageProcessing(&m_filterImg);
                 close_v4l2_device_handler();
             }
 
