@@ -43,6 +43,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
 {
     resize(WIDTH, HEIGHT);
     QVBoxLayout *vLayout = new QVBoxLayout(this);
+    vLayout->setContentsMargins(0, 0, 0, 0);
     setLayout(vLayout);
     setContentsMargins(0, 0, 0, 0);
 
@@ -56,14 +57,15 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_pLabShowValue->setFont(font);
     m_pLabShowValue->setAlignment(Qt::AlignCenter);
     m_pLabShowValue->setText("0");
-
+    m_pLabShowValue->setFixedWidth(30);
     //颜色不随主题变化
     QPalette pa = m_pLabShowValue->palette();
     pa.setColor(QPalette::BrightText, Qt::white);
     m_pLabShowValue->setPalette(pa);
 
+    vLayout->addStretch(5);
     vLayout->addWidget(m_pLabShowValue, 0, Qt::AlignHCenter);
-    vLayout->setSpacing(0);
+    vLayout->setSpacing(2);
 
     m_slider = new DSlider(Qt::Vertical, this);
     m_slider->setFixedHeight(150);
@@ -72,7 +74,8 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_slider->setValue(m_curValue);
 //    m_slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
     m_slider->setContentsMargins(0, 0, 0, 0);
-    vLayout->addWidget(m_slider, 0, Qt::AlignHCenter);
+    vLayout->addWidget(m_slider, 0, Qt::AlignCenter);
+    vLayout->addStretch(5);
 
     connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::onValueChanged);
     connect(m_slider, &DSlider::valueChanged, this, &ExposureSlider::valueChanged);
