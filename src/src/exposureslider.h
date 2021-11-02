@@ -58,8 +58,9 @@ public:
     /**
     * @brief showContent 显示滑动条内部内容，动画实现需要
     * @param  show 是否显示
+    * @param  isShortCut 是否通过键盘进行触发
     */
-    void showContent(bool show);
+    void showContent(bool show, bool isShortCut);
 
 protected:
     /**
@@ -98,6 +99,11 @@ signals:
     * @brief contentHided 滑动条内部内容隐藏动画结束信号
     */
     void contentHided();
+
+    /**
+    * @brief contentHided Enter键按下信号，用于键盘交互
+    */
+    void enterBtnClicked(bool isShortCut);
 
 private:
     DLabel *m_pLabShowValue;    //曝光值显示
