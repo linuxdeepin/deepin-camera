@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "19de7ca3_37a00764",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-02T13:21:25Z",
+      "side": 1,
+      "message": "(style) Class \u0027ExposureSlider\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "37fb003ffaeef7d702cb27db323e8d728a7d3409",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d2124ac_aca4d996",
         "filename": "src/src/takephotosettingareawidget.cpp",
         "patchSetId": 1
