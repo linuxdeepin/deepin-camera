@@ -151,6 +151,11 @@ protected:
      */
     void mousePressEvent(QMouseEvent *event) override;
 
+    /**
+    * @brief mouseMoveEvent 鼠标移动事件
+    * @param  event 事件参数
+    */
+    void mouseMoveEvent(QMouseEvent *event) override;
 
     /**
      * @brief mouseReleaseEvent 鼠标释放事件

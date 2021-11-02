@@ -38,8 +38,6 @@ photoRecordBtn::photoRecordBtn(QWidget *parent/* = nullptr*/)
 
 }
 
-
-
 void photoRecordBtn::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
@@ -130,6 +128,12 @@ void photoRecordBtn::mousePressEvent(QMouseEvent *event)
     Q_UNUSED(event);
     m_bFocus = false;
     update();
+}
+
+void photoRecordBtn::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    return;
 }
 
 void photoRecordBtn::mouseReleaseEvent(QMouseEvent *event)

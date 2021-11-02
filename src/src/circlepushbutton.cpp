@@ -191,6 +191,12 @@ void circlePushButton::mousePressEvent(QMouseEvent *event)
     QPushButton::mousePressEvent(event);
 }
 
+void circlePushButton::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    return;
+}
+
 void circlePushButton::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
