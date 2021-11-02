@@ -30,7 +30,6 @@
 
 #include <QPixmap>
 #include <QTimer>
-#include <QGraphicsView>
 #include <QDateTime>
 #include <QGraphicsPixmapItem>
 #include <QVBoxLayout>
@@ -50,6 +49,29 @@
 #define COUNTDOWN_OFFECT 20
 
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
+
+// 重写QGraphicsView类，在子类中，直接将鼠标事件路由到QWidget，这样QGraphicsScene不会接收和处理鼠标事件
+// bug链接 https://pms.uniontech.com/zentao/bug-view-100791.html
+QGraphicsViewEx::QGraphicsViewEx(QWidget *parent)
+    : QGraphicsView(parent)
+{
+
+}
+
+void QGraphicsViewEx::mousePressEvent(QMouseEvent *e)
+{
+    QWidget::mousePressEvent(e);
+}
+
+void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
+{
+    QWidget::mouseMoveEvent(e);
+}
+
+void QGraphicsViewEx::mouseReleaseEvent(QMouseEvent *e)
+{
+    QWidget::mouseReleaseEvent(e);
+}
 
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
@@ -71,7 +93,7 @@ videowidget::videowidget(DWidget *parent)
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
-    m_pNormalView = new QGraphicsView(this);
+    m_pNormalView = new QGraphicsViewEx(this);
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();

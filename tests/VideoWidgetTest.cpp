@@ -44,7 +44,7 @@ ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_dLabel);
 ACCESS_PRIVATE_FIELD(videowidget, DLabel *, m_flashLabel);
 ACCESS_PRIVATE_FIELD(videowidget, PreviewOpenglWidget *, m_openglwidget);
 //ACCESS_PRIVATE_FIELD(videowidget, ThumbnailsBar *, m_thumbnail);
-ACCESS_PRIVATE_FIELD(videowidget, QGraphicsView *, m_pNormalView);
+ACCESS_PRIVATE_FIELD(videowidget, QGraphicsViewEx *, m_pNormalView);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_nInterval);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_Maxinterval);
 ACCESS_PRIVATE_FIELD(videowidget, int, m_nCount);
