@@ -25,6 +25,7 @@
 #include <QPainterPath>
 #include <QDebug>
 #include <QSvgRenderer>
+#include <QApplication>
 
 circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radius(20)
 {
@@ -166,6 +167,15 @@ void circlePushButton::focusOutEvent(QFocusEvent *event)
     Q_UNUSED(event);
     m_hover = false;
     update();
+}
+
+void circlePushButton::hideEvent(QHideEvent *event)
+{
+    QWidget* fw = QApplication::focusWidget();
+    if (fw == this)
+        this->clearFocus();
+
+    QPushButton::hideEvent(event);
 }
 
 bool circlePushButton::focusNextPrevChild(bool next)
