@@ -86,9 +86,6 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
-    //fix mips wayland ,the first time the camera is occupied, test connection and occupied
-    //If there's a problem, Please modify the subject transformation
-    //Powered by xxxx
     m_pSvgItem->hide();
     m_pCamErrItem = new QGraphicsTextItem;
     m_pGridLayout = new QGridLayout(this);
@@ -240,17 +237,10 @@ void videowidget::showNocam()
     if (!m_pSvgItem->isVisible())
         m_pSvgItem->show();
 
-#ifdef __mips__
-    if (m_pNormalItem->isVisible())
+    if (m_pNormalItem)
         m_pNormalItem->hide();
-#else
-    if (get_wayland_status() == true) {
-        if (m_pNormalItem->isVisible())
-            m_pNormalItem->hide();
-    } else {
+    if (m_openglwidget)
         m_openglwidget->hide();
-    }
-#endif
 
     emit sigDeviceChange();
 
@@ -427,9 +417,6 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         switch (result) {
         case 0:     //Success
             m_imgPrcThread->m_rwMtxImg.lock();
-            //fix wayland flashing occasional abnormal problems in the camera window
-            //If there is an abnormality, please enable downlink code
-            //powered by xxxx
             m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
