@@ -90,7 +90,7 @@ void ExposureSlider::setOpacity(int opacity)
     update();
 }
 
-void ExposureSlider::showContent(bool show)
+void ExposureSlider::showContent(bool show, bool isShortCut)
 {
     QGraphicsOpacityEffect *effectSlider = new QGraphicsOpacityEffect(m_slider);
     m_slider->setGraphicsEffect(effectSlider);
@@ -115,6 +115,8 @@ void ExposureSlider::showContent(bool show)
         opacity1->setEndValue(1);
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            if (isShortCut) //键盘触发，需在此处理焦点
+                m_slider->slider()->setFocus();
             pGroup->deleteLater();
         });
 
@@ -190,12 +192,19 @@ void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
         m_slider->setValue(m_curValue);
         break;
     }
-    case Qt::Key_Up:
+    case Qt::Key_Up: {
         if (m_curValue >= m_valueMax)
             return;
         m_curValue += 1;
         m_slider->setValue(m_curValue);
         break;
+    }
+    case Qt::Key_Return: {
+        if (!m_slider->slider()->hasFocus())
+            return;
+        emit enterBtnClicked(true);
+        break;
+    }
     }
     QWidget::keyReleaseEvent(event);
 }

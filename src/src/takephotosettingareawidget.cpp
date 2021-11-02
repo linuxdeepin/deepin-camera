@@ -238,6 +238,8 @@ void takePhotoSettingAreaWidget::init()
 
     connect(m_exposureSlider, &ExposureSlider::valueChanged, this, &takePhotoSettingAreaWidget::onExposureValueChanged);
     connect(m_exposureSlider, &ExposureSlider::valueChanged, this, &takePhotoSettingAreaWidget::sigExposureChanged);
+    //使用Enter键收起曝光条
+    connect(m_exposureSlider, &ExposureSlider::enterBtnClicked, this, &takePhotoSettingAreaWidget::exposureBtnClicked);
 
 //    showFold(true);
     setFixedSize(QSize(m_unfoldBtn->width(), m_unfoldBtn->height()));
@@ -1153,9 +1155,7 @@ void takePhotoSettingAreaWidget::keyEnterClick()
         emit pFocusBtn->clicked(true);
     } else if (m_filtersCloseBtn->hasFocus()) {
         filtersFoldBtnClicked(true);
-    } /*else if (m_exposureBtn->hasFocus()) {
-        exposureFoldBtnClicked(true);
-    }*/ else if (m_exposureBtn->hasFocus()) {
+    } else if (m_exposureBtn->hasFocus()) {
         exposureBtnClicked(true);
     } else if (/*曝光滑块有焦点*/false) {
         // TODO: 执行设置曝光值函数
@@ -1326,7 +1326,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
     end.setHeight(EXPOSURE_SLIDER_HEIGHT);
 
     if (m_exposureSliderDisplay) {
-        m_exposureSlider->showContent(false);
+        m_exposureSlider->showContent(false, isShortcut);
 
         connect(m_exposureSlider, &ExposureSlider::contentHided, this, [=](){
             QPropertyAnimation *opacity = new QPropertyAnimation(m_exposureSlider, "opacity", this);
@@ -1346,6 +1346,8 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
             pGroup->addAnimation(geometry);
             connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
                 m_exposureSlider->hide();
+                if (isShortcut) //键盘触发，焦点设回到曝光按钮上
+                    m_exposureBtn->setFocus();
                 pGroup->deleteLater();
 
                 if (m_bPhotoToVideState) {
@@ -1388,7 +1390,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
         pGroup->addAnimation(opacity);
         pGroup->addAnimation(geometry);
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-            m_exposureSlider->showContent(true);
+            m_exposureSlider->showContent(true, isShortcut);
             pGroup->deleteLater();
         });
 
