@@ -727,9 +727,9 @@ void videowidget::showCountdown()
             m_pSvgItem->hide();
             m_pNormalView->hide();
 
-            QTimer::singleShot(100, this, [=] {
-                m_openglwidget->show();
-            });
+//            QTimer::singleShot(100, this, [=] {
+//                m_openglwidget->show();
+//            });
         }
 
     } else {
