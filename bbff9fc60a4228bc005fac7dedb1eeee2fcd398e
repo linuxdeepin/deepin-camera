@@ -33,6 +33,23 @@
       "revId": "bbff9fc60a4228bc005fac7dedb1eeee2fcd398e",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "584a85f4_efbe14f9",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-02T13:13:06Z",
+      "side": 1,
+      "message": "(style) The class \u0027circlePushButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "bbff9fc60a4228bc005fac7dedb1eeee2fcd398e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
