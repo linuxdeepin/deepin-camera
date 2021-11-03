@@ -81,6 +81,13 @@ protected:
     */
     void keyReleaseEvent(QKeyEvent *event) override;
 
+    /**
+     * @brief eventFilter 事件处理
+     * @param e
+     */
+    bool eventFilter(QObject *obj, QEvent *e) override;
+
+
 public slots:
     /**
     * @brief onValueChanged 曝光值改变槽函数
