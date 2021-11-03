@@ -203,6 +203,48 @@ TEST_F(TakePhotoSettingTest, delayfoldBtnClicked)
     if (nullptr != m_takePhotoSet)
         m_takePhotoSet->delayfoldBtnClicked();
 }
+
+TEST_F(TakePhotoSettingTest, exposureBtnClicked)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *exposureBtn = m_takePhotoSet->findChild<circlePushButton *>(EXPOSURE_BTN);
+//        m_takePhotoSet->unfoldBtnClicked();
+//        QTest::qWait(300);
+        Q_ASSERT(exposureBtn->isVisible());
+        m_takePhotoSet->exposureBtnClicked(true);
+        QTest::qWait(500);
+        ExposureSlider *slider = m_takePhotoSet->findChild<ExposureSlider *>(EXPOSURE_SLIDER);
+        if (!slider)
+            return;
+        Q_ASSERT(slider->isVisible());
+        QTest::qWait(200);
+        m_takePhotoSet->exposureBtnClicked(true);
+    }
+}
+
+TEST_F(TakePhotoSettingTest, exposureSlider)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *exposureBtn = m_takePhotoSet->findChild<circlePushButton *>(EXPOSURE_BTN);
+        Q_ASSERT(exposureBtn->isVisible());
+        m_takePhotoSet->exposureBtnClicked(true);
+        QTest::qWait(500);
+        ExposureSlider *slider = m_takePhotoSet->findChild<ExposureSlider *>(EXPOSURE_SLIDER);
+        if (!slider)
+            return;
+        Q_ASSERT(slider->isVisible());
+
+        QWheelEvent wheelEvent(slider->rect().topLeft() + QPoint(10, 20), 40, Qt::MiddleButton, Qt::NoModifier);
+        QApplication::sendEvent(slider, &wheelEvent);
+
+        QKeyEvent downEvent(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier);
+        QApplication::sendEvent(slider, &downEvent);
+
+        QTest::qWait(200);
+        m_takePhotoSet->exposureBtnClicked(true);
+    }
+}
+
 /**
  *  @brief takePhotoSettingAreaWidget折叠设置
  */
