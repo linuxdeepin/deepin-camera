@@ -53,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "dd6b9e94_b3311bf4",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-03T10:00:52Z",
+      "side": 1,
+      "message": "(style) The class \u0027takePhotoSettingAreaWidget\u0027 does not have a constructor although it has private member variables",
+      "revId": "fd9b07ca667742e51c7b9e798a19bc62cdb90298",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2fedc80a_c4a005e0",
         "filename": "tests/TakePhotoSettingTest.cpp",
         "patchSetId": 2
@@ -64,6 +81,23 @@
       "writtenOn": "2021-11-03T10:00:51Z",
       "side": 1,
       "message": "注释行数: 2; 改动行数(修改和新增): 36; 注释率: 5.6%",
+      "revId": "fd9b07ca667742e51c7b9e798a19bc62cdb90298",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ad33678_94fc410e",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-03T10:00:52Z",
+      "side": 1,
+      "message": "(style) Variable \u0027foldBtn\u0027 is assigned a value that is never used",
       "revId": "fd9b07ca667742e51c7b9e798a19bc62cdb90298",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
