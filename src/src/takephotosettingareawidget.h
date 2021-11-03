@@ -230,16 +230,6 @@ public slots:
     void filtersFoldBtnClicked(bool isShortcut = false);
 
     /**
-    * @brief exposureUnfoldBtnClicked 曝光展开按钮点击槽函数
-    */
-//    void exposureUnfoldBtnClicked(bool isShortcut = false);
-
-    /**
-    * @brief exposureFoldBtnsClicked 曝光折叠按钮点击槽函数
-    */
-//    void exposureFoldBtnClicked(bool isShortcut = false);
-
-    /**
     * @brief onDelayBtnsClicked 延时拍照按钮点击槽函数
     */
     void onDelayBtnsClicked(bool isShortcut = false);
@@ -266,14 +256,14 @@ public slots:
     */
     void onExposureValueChanged(int value);
 
-private:
-    filterPreviewButton* getFilterPreviewFocusBtn();
-
     /**
     * @brief exposureBtnClicked 曝光按钮点击槽函数
     * @param isShortcut 是否通过键盘触发
     */
     void exposureBtnClicked(bool isShortcut = false);
+
+private:
+    filterPreviewButton* getFilterPreviewFocusBtn();
 
 private:
     circlePushButton        *m_foldBtn;//折叠按钮
