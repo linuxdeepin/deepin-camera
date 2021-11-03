@@ -589,7 +589,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     //计时窗口放大缩小的显示
     m_recordingTimeWidget->move((width() - m_recordingTimeWidget->width() - 10) / 2,
-                                height() - m_recordingTimeWidget->height() - 9);
+                                height() - m_recordingTimeWidget->height() - 15);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
                    (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
@@ -1162,7 +1162,7 @@ void videowidget::startTakeVideo()
 
         m_recordingTimeWidget->show();
         m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
-                                    nHeight - m_recordingTimeWidget->height() - 9);
+                                    nHeight - m_recordingTimeWidget->height() - 15);
     }
 }
 

@@ -28,6 +28,8 @@ extern "C" {
 #include <QPainter>
 #include <QPainterPath>
 
+#include <DApplicationHelper>
+
 DWIDGET_USE_NAMESPACE;
 
 #define MARGIN 5
@@ -118,6 +120,8 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
     painter.drawRoundedRect(imageRect.adjusted(-1, -1, 1, 1), m_radius, m_radius);
     painter.restore();
 
+    QColor highlightColor = DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
+
     //绘制点击效果
     QRect grayRect = imageRect;
     if (m_mousePress) {
@@ -142,7 +146,7 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(QColor(Qt::white), m_radius / 4));
         painter.drawRoundedRect(focusWhite, m_radius, m_radius);
 
-        painter.setPen(QPen(QColor("#0081FF"), m_radius / 2));
+        painter.setPen(QPen(QColor(highlightColor), m_radius / 2));
         painter.setBrush(Qt::NoBrush);
         painter.drawRoundedRect(focusBlue, m_radius, m_radius);
     }
