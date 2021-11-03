@@ -749,6 +749,8 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_pLoginManager = nullptr;
     m_pLoginMgrSleep = nullptr;
     m_pDBus = nullptr;
+    m_filterName = nullptr;
+    m_bShowFilterName = false;
     m_bWayland = false;
     m_nActTpye = ActTakePic;
     m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
@@ -1290,6 +1292,7 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
     int width = m_labelCameraName->fontMetrics().width(tmpList[0]);
     m_labelCameraName->setFixedWidth(width);
     m_labelCameraName->show();
+    m_filterName->hide();
     m_showCameraNameTimer->start();
 }
 
@@ -1393,6 +1396,8 @@ void CMainWindow::onShowCameraNameTimer()
 {
     m_showCameraNameTimer->stop();
     m_labelCameraName->hide();
+    if (m_bShowFilterName)
+        m_filterName->show();
 }
 
 void CMainWindow::onUpdateRecordState(int state)
@@ -1526,6 +1531,7 @@ void CMainWindow::onFilterChanged(efilterType type)
 void CMainWindow::onShowFilterName(bool bShow)
 {
     m_filterName->setVisible(bShow);
+    m_bShowFilterName = bShow;
 }
 
 void CMainWindow::onSetFilterName(const QString& name)
