@@ -71,6 +71,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_slider->setFixedHeight(150);
     m_slider->setIconSize(QSize(15, 15));
     m_slider->slider()->setRange(-100, 100);
+    m_slider->slider()->installEventFilter(this);
     m_slider->setValue(m_curValue);
 //    m_slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
     m_slider->setContentsMargins(0, 0, 0, 0);
@@ -207,6 +208,16 @@ void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
     }
     }
     QWidget::keyReleaseEvent(event);
+}
+
+bool ExposureSlider::eventFilter(QObject *obj, QEvent *e)
+{
+    if (obj == m_slider->slider() && e->type() == QEvent::Hide) {
+        QWidget* fw = QApplication::focusWidget();
+        if (fw == m_slider->slider())
+            m_slider->slider()->clearFocus();
+    }
+    return QWidget::eventFilter(obj, e);
 }
 
 void ExposureSlider::onValueChanged(int value)
