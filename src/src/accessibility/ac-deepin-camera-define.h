@@ -53,8 +53,8 @@
 #define FILTERS_UNFOLD_BTN QObject::tr("FiltersUnfoldBtn")
 #define FILTERS_FOLD_BTN QObject::tr("FiltersFoldBtn")
 #define FILTERS_CLOSE_BTN QObject::tr("FiltersCloseBtn")
-#define EXPOSURE_UNFOLD_BTN QObject::tr("ExposureUnfoldBtn")
-#define EXPOSURE_FOLD_BTN QObject::tr("ExposureFoldBtn")
+#define EXPOSURE_BTN QObject::tr("ExposureBtn")
+#define EXPOSURE_SLIDER QObject::tr("ExposureSlider")
 
 //缩略图快捷键
 #define SHORTCUT_CALLMENU QObject::tr("ShortcutCallMenu")

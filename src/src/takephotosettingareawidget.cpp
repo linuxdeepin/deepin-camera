@@ -173,8 +173,8 @@ void takePhotoSettingAreaWidget::initButtons()
 
     m_exposureBtn = new circlePushButton(this);
     m_exposureBtn->setPixmap(":/images/camera/exposure.svg", ":/images/camera/exposure-hover.svg", ":/images/camera/exposure-press.svg");
-    m_exposureBtn->setObjectName(EXPOSURE_UNFOLD_BTN);
-    m_exposureBtn->setAccessibleName(EXPOSURE_UNFOLD_BTN);
+    m_exposureBtn->setObjectName(EXPOSURE_BTN);
+    m_exposureBtn->setAccessibleName(EXPOSURE_BTN);
     m_exposureBtn->setToolTip(tr("Exposure"));
     m_exposureBtn->setFocusPolicy(Qt::NoFocus);
 
@@ -186,6 +186,8 @@ void takePhotoSettingAreaWidget::initButtons()
     m_foldBtn->setFocusPolicy(Qt::NoFocus);
 
     m_exposureSlider = new ExposureSlider((QWidget *)this->parent());
+    m_exposureSlider->setObjectName(EXPOSURE_SLIDER);
+    m_exposureSlider->setAccessibleName(EXPOSURE_SLIDER);
     m_exposureSlider->hide();
 
     hideAll();

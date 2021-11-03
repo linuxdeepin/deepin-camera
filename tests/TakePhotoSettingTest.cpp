@@ -203,6 +203,84 @@ TEST_F(TakePhotoSettingTest, delayfoldBtnClicked)
     if (nullptr != m_takePhotoSet)
         m_takePhotoSet->delayfoldBtnClicked();
 }
+
+
+/**
+ *  @brief takePhotoSettingAreaWidget 滤镜按钮
+ */
+TEST_F(TakePhotoSettingTest, filterBtnClicked)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *filtersUnfoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_UNFOLD_BTN);
+        QVERIFY(filtersUnfoldBtn->isVisible());
+        m_takePhotoSet->filtersUnfoldBtnClicked();
+
+        QTest::qWait(600);
+        circlePushButton *filtersFoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_FOLD_BTN);
+        QVERIFY(filtersFoldBtn->isVisible());
+        m_takePhotoSet->filtersFoldBtnClicked();
+    }
+}
+
+/**
+ *  @brief takePhotoSettingAreaWidget 曝光按钮
+ */
+TEST_F(TakePhotoSettingTest, exposureBtnClicked)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *exposureBtn = m_takePhotoSet->findChild<circlePushButton *>(EXPOSURE_BTN);
+        QVERIFY(exposureBtn->isVisible());
+        m_takePhotoSet->exposureBtnClicked(true);
+        QTest::qWait(500);
+        ExposureSlider *slider = m_mainwindow->findChild<ExposureSlider *>(EXPOSURE_SLIDER);
+        if (!slider)
+            return;
+        QVERIFY(slider->isVisible());
+        QTest::qWait(500);
+        m_takePhotoSet->exposureBtnClicked(true);
+    }
+}
+
+/**
+ *  @brief takePhotoSettingAreaWidget 曝光滑动条
+ */
+TEST_F(TakePhotoSettingTest, exposureSlider)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *exposureBtn = m_takePhotoSet->findChild<circlePushButton *>(EXPOSURE_BTN);
+        QVERIFY(exposureBtn->isVisible());
+        QKeyEvent tabEvent(QEvent::KeyRelease, Qt::Key_Return, Qt::NoModifier);
+        QApplication::sendEvent(exposureBtn, &tabEvent);
+
+        QTest::qWait(500);
+        ExposureSlider *slider = m_mainwindow->findChild<ExposureSlider *>(EXPOSURE_SLIDER);
+        if (!slider)
+            return;
+        QVERIFY(slider->isVisible());
+
+        QTest::qWait(500);
+        QPoint p(slider->rect().topLeft() + QPoint(10, 20));
+        QWheelEvent wheelEvent(p, 40, Qt::MiddleButton, Qt::NoModifier);
+        QApplication::sendEvent(slider, &wheelEvent);
+
+        QTest::qWait(500);
+        slider->setFocus();
+        QKeyEvent downEvent(QEvent::KeyRelease, Qt::Key_Down, Qt::NoModifier);
+        QApplication::sendEvent(slider, &downEvent);
+
+        QTest::qWait(500);
+        QKeyEvent upEvent(QEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier);
+        QApplication::sendEvent(slider, &upEvent);
+
+        QTest::qWait(500);
+        QKeyEvent enterEvent(QEvent::KeyRelease, Qt::Key_Return, Qt::NoModifier);
+        QApplication::sendEvent(slider, &enterEvent);
+
+        QTest::qWait(200);
+        m_takePhotoSet->exposureBtnClicked(true);
+    }
+}
+
 /**
  *  @brief takePhotoSettingAreaWidget折叠设置
  */
