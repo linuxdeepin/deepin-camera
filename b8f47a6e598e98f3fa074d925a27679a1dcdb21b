@@ -33,6 +33,23 @@
       "revId": "b8f47a6e598e98f3fa074d925a27679a1dcdb21b",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3ddc843_e74d6ed8",
+        "filename": "src/src/exposureslider.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-03T06:57:18Z",
+      "side": 1,
+      "message": "(style) Class \u0027ExposureSlider\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "b8f47a6e598e98f3fa074d925a27679a1dcdb21b",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
