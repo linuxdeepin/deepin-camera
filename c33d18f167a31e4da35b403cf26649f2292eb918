@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ac9aa65_d6f8f54f",
+        "filename": "src/src/accessibility/ac-deepin-camera-define.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-04T03:39:47Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "c33d18f167a31e4da35b403cf26649f2292eb918",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ed40faf_09c92443",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-04T03:39:47Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 4; 注释率: 0.0%",
+      "revId": "c33d18f167a31e4da35b403cf26649f2292eb918",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc15d2fa_f9404998",
+        "filename": "src/src/takephotosettingareawidget.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-04T03:39:47Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 2; 注释率: 0.0%",
+      "revId": "c33d18f167a31e4da35b403cf26649f2292eb918",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
