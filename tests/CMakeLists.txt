@@ -108,7 +108,7 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
 #    asound
 #    z
 
-    visualresult
+    imagevisualresult
     )
 
 # 将工程与Qt模块链接起来
