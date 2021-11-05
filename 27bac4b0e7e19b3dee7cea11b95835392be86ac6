@@ -33,6 +33,23 @@
       "revId": "27bac4b0e7e19b3dee7cea11b95835392be86ac6",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cc4b8df_24a77721",
+        "filename": "src/src/filterpreviewbutton.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-05T02:04:18Z",
+      "side": 1,
+      "message": "(style) The class \u0027filterPreviewButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "27bac4b0e7e19b3dee7cea11b95835392be86ac6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
