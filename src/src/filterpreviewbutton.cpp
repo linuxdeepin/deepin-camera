@@ -192,6 +192,13 @@ void filterPreviewButton::mousePressEvent(QMouseEvent *event)
     DWidget::mousePressEvent(event);
 }
 
+void filterPreviewButton::mouseMoveEvent(QMouseEvent *event)
+{
+    //解决bug 在按钮中可拖动相机界面，https://pms.uniontech.com/zentao/bug-view-100647.html
+    Q_UNUSED(event);
+    return;
+}
+
 void filterPreviewButton::mouseReleaseEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
