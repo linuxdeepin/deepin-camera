@@ -10,7 +10,7 @@ set(TARGET_NAME deepin-camera)
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
-set(LUT_DIR "/usr/share/libvisualresult/filter_cube")
+set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 #add_definitions(-D__mips__)
 
@@ -120,10 +120,8 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 # 将第三方库链接进来(注意 *_LIBRARIES)
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
-#    portaudio
     dl
-
-    visualresult
+    imagevisualresult
     )
 
 # 将工程与Qt模块链接起来
