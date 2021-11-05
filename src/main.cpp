@@ -31,7 +31,7 @@ extern "C"
 
 extern "C"
 {
-#include <libvisualresult/visualresult.h>
+#include <libimagevisualresult/visualresult.h>
 }
 
 #include <DMainWindow>
