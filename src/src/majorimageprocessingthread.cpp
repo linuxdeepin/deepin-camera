@@ -22,7 +22,7 @@
 #include "majorimageprocessingthread.h"
 
 extern "C" {
-#include <libvisualresult/visualresult.h>
+#include <libimagevisualresult/visualresult.h>
 }
 
 #include <QFile>
