@@ -21,12 +21,13 @@
 
 #include "photorecordbtn.h"
 
+#include <DApplicationHelper>
+
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
 #include <QSvgRenderer>
-
-#include <DApplicationHelper>
+#include <QMouseEvent>
 
 photoRecordBtn::photoRecordBtn(QWidget *parent/* = nullptr*/)
     :QWidget (parent),
@@ -127,7 +128,9 @@ void photoRecordBtn::leaveEvent(QEvent *event)
 
 void photoRecordBtn::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    if (event->type() == QEvent::MouseButtonDblClick)
+        return; //不响应双击事件
+
     m_bFocus = false;
     update();
 }
@@ -141,7 +144,12 @@ void photoRecordBtn::mouseMoveEvent(QMouseEvent *event)
 
 void photoRecordBtn::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    if (event->type() == QEvent::MouseButtonDblClick)
+        return; //不响应双击事件
+
+    if (!rect().contains(event->pos()))
+        return;
+
     m_bFocus= true;
     update();
     emit clicked();

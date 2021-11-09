@@ -226,10 +226,7 @@ void ImageItem::mousePressEvent(QMouseEvent *event)
     if (event->type() == QEvent::MouseButtonDblClick)
         return; //不响应双击事件
 
-    if (event->button() == Qt::LeftButton) {
-        openFile();
-    }
-
+    DLabel::mousePressEvent(event);
 }
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
@@ -241,7 +238,16 @@ void ImageItem::mouseMoveEvent(QMouseEvent *event)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    if (event->type() == QEvent::MouseButtonDblClick)
+        return; //不响应双击事件
+
+    if (!rect().contains(event->pos()))
+        return;
+
+    if (event->button() == Qt::LeftButton) {
+        openFile();
+    }
+
     return;
 }
 
