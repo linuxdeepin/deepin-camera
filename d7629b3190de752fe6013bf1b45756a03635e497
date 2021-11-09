@@ -16,6 +16,23 @@
       "revId": "d7629b3190de752fe6013bf1b45756a03635e497",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4b2a777_74cf335f",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-09T12:13:35Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16364600123780.3382398894592157/changeCache/src/src/exposureslider.cpp:67]: (style) Local variable font shadows outer variabl",
+      "revId": "d7629b3190de752fe6013bf1b45756a03635e497",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
