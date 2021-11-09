@@ -49,10 +49,10 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
 
     QFont font;
     font.setFamily("SourceHanSansSC");
+    font.setPixelSize(15);
     font.setWeight(QFont::Medium);
 
     m_pLabShowValue = new DLabel(this);
-//    DFontSizeManager::instance()->bind(m_pLabShowValue, DFontSizeManager::T6);
     m_pLabShowValue->setForegroundRole(QPalette::BrightText);
     m_pLabShowValue->setFont(font);
     m_pLabShowValue->setAlignment(Qt::AlignCenter);
@@ -62,6 +62,13 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     QPalette pa = m_pLabShowValue->palette();
     pa.setColor(QPalette::BrightText, Qt::white);
     m_pLabShowValue->setPalette(pa);
+    //字体大小不随系统变化
+    connect(qApp, &QGuiApplication::fontChanged, this, [=](){
+        QFont font("SourceHanSansSC");
+        font.setPixelSize(15);
+        font.setWeight(QFont::Medium);
+        m_pLabShowValue->setFont(font);
+    });
 
     vLayout->addStretch(5);
     vLayout->addWidget(m_pLabShowValue, 0, Qt::AlignHCenter);
@@ -73,7 +80,6 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_slider->slider()->setRange(-100, 100);
     m_slider->slider()->installEventFilter(this);
     m_slider->setValue(m_curValue);
-//    m_slider->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred));
     m_slider->setContentsMargins(0, 0, 0, 0);
     vLayout->addWidget(m_slider, 0, Qt::AlignCenter);
     vLayout->addStretch(5);
