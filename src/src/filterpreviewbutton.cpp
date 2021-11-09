@@ -70,6 +70,7 @@ void filterPreviewButton::setImage(QImage *img)
         imageFilter24(frame, width, height, filterName_CUBE.toStdString().c_str(), 100);
 
     m_pixmap = QPixmap::fromImage(QImage(frame, width, height, QImage::Format_RGB888));
+    update();
 }
 
 void filterPreviewButton::setSelected(bool selected)
