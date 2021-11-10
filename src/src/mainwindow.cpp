@@ -1258,6 +1258,7 @@ void CMainWindow::onNoCam()
 void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 {
     if (bTrue) {
+        onStopPhotoAndRecord();
     }
 }
 
