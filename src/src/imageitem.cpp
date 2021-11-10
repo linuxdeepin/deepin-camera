@@ -324,7 +324,7 @@ void ImageItem::openFile()
     }
     if (fileInfo.suffix() == "jpg") {
         program = "deepin-image-viewer"; //用看图打开
-        arguments << QUrl::fromLocalFile(m_path).toString();
+        arguments << m_path;
         qDebug() << "Open it with deepin-image-viewer";
     } else {
         program = "deepin-movie"; //用影院打开
@@ -332,7 +332,7 @@ void ImageItem::openFile()
         qDebug() << "Open it with deepin-movie";
     }
 
-    qInfo() << QUrl::fromLocalFile(m_path).toString();
+    qInfo() << m_path;
     QProcess *myProcess = new QProcess(this);
     bool bOK = myProcess->startDetached(program, arguments);
     if (CamApp->isPanelEnvironment())
