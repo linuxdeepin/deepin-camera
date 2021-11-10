@@ -1268,16 +1268,60 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
     QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
     QDir  dir(videoPath);
     if (!dir.exists()) {
-        m_fileWatcher.removePath(videoPath);
-        dir.mkdir(videoPath);
-        m_fileWatcher.addPath(videoPath);
+        QString videoDefaultPath = lastOpenedPath(QStandardPaths::MoviesLocation);
+        if (videoDefaultPath != videoPath) {
+            QDir setVideoDir(videoDefaultPath);
+            QDir lastVideoDir(m_videoPath);
+            setVideoDir.cdUp();
+            lastVideoDir.cdUp();
+            m_videoPre->setSaveVdFolder(videoDefaultPath);
+            m_fileWatcher.removePath(m_videoPath);
+            if (false == m_fileWatcher.directories().contains(videoDefaultPath)) {
+                m_fileWatcher.addPath(videoDefaultPath);
+            }
+
+            if (setVideoDir.path() != lastVideoDir.path()) {
+                m_fileWatcherUp.removePath(lastVideoDir.path());
+                if (false == m_fileWatcherUp.directories().contains(setVideoDir.path())) {
+                    m_fileWatcherUp.addPath(setVideoDir.path());
+                }
+            }
+            m_videoPath = videoDefaultPath;
+            Settings::get().setOption("base.save.vddatapath", QVariant(m_videoPath));
+        } else {
+            m_fileWatcher.removePath(videoPath);
+            dir.mkdir(videoPath);
+            m_fileWatcher.addPath(videoPath);
+        }
     }
 
     dir = QDir(picPath);
     if (!dir.exists()) {
-        m_fileWatcher.removePath(picPath);
-        dir.mkdir(picPath);
-        m_fileWatcher.addPath(picPath);
+        QString picDefaultPath = lastOpenedPath(QStandardPaths::PicturesLocation);
+        if (picDefaultPath != picPath) {
+            QDir setPicDir(picDefaultPath);
+            QDir lastPicDir(m_picPath);
+            setPicDir.cdUp();
+            lastPicDir.cdUp();
+            m_videoPre->setSavePicFolder(picDefaultPath);
+            m_fileWatcher.removePath(m_picPath);
+            if (false == m_fileWatcher.directories().contains(picDefaultPath)) {
+                m_fileWatcher.addPath(picDefaultPath);
+            }
+
+            if (setPicDir.path() != lastPicDir.path()) {
+                m_fileWatcherUp.removePath(lastPicDir.path());
+                if (false == m_fileWatcherUp.directories().contains(setPicDir.path())) {
+                    m_fileWatcherUp.addPath(setPicDir.path());
+                }
+            }
+            m_picPath = picDefaultPath;
+            Settings::get().setOption("base.save.picdatapath", QVariant(m_picPath));
+        } else {
+            m_fileWatcher.removePath(picPath);
+            dir.mkdir(picPath);
+            m_fileWatcher.addPath(picPath);
+        }
     }
 
     reflushSnapshotLabel();
