@@ -31,7 +31,7 @@
 
 #define WIDTH 40
 #define HEIGHT 192
-#define ANIMATION_DURATION 200
+#define ANIMATION_DURATION 100
 
 ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
   ,m_pLabShowValue(nullptr)

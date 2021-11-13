@@ -1018,6 +1018,7 @@ void CMainWindow::initShortcut()
         {
             m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
             onPhotoRecordBtnClked();
+            m_takePhotoSettingArea->closeAllGroup();
         }
     });
 
