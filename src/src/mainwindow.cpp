@@ -1352,8 +1352,7 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
         if (key2value.value("Locked").value<bool>()) {
             qDebug() << "locked";
 
-            if (m_videoPre->getCapStatus())
-                m_videoPre->onEndBtnClicked();
+            onStopPhotoAndRecord();
 
             m_videoPre->m_imgPrcThread->stop();
             qDebug() << "lock end";
