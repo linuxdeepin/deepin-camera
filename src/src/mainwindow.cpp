@@ -1429,6 +1429,10 @@ void CMainWindow::onPhotoRecordBtnClked()
         if (true == m_bRecording) {
             m_videoPre->onEndBtnClicked();
         } else {
+            QFileInfo fi(m_videoPath);
+            if (!fi.isWritable())
+                return;
+
             m_videoPre->onTakeVideo();
             if (!m_windowStateThread->isRunning()) {
                 m_windowStateThread->start();
