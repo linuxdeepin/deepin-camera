@@ -978,6 +978,7 @@ void CMainWindow::initEventFilter()
 void CMainWindow::initShortcut()
 {
     QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
+    scViewShortcut->setAutoRepeat(false);
     QShortcut *scSpaceShortcut = new QShortcut(Qt::Key_Space, this);
     QShortcut *scEnterShortcut = new QShortcut(Qt::Key_Return, this);
     QShortcut *scUpShortcut = new QShortcut(Qt::Key_Up, this);
