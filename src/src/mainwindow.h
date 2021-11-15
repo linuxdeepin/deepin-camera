@@ -65,7 +65,6 @@ class QGridLayout;
 class photoRecordBtn;
 class SwitchCameraBtn;
 class takePhotoSettingAreaWidget;
-class windowStateThread;
 
 const int TOP_TOOLBAR_HEIGHT = 50;
 
@@ -395,7 +394,7 @@ private slots:
      * @brief onSetFilterName 设置滤镜名称
      * @param name 待设置的滤镜名称
      */
-    void onSetFilterName(const QString& name);
+    void onSetFilterName(const QString &name);
 
 protected:
 
@@ -471,7 +470,6 @@ private:
     DWindowOptionButton             *m_windowoptionButton;  //设置按钮
     DWindowMaxButton                *m_windowMaxBtn;        //最大化按钮
     DWindowCloseButton              *m_windowCloseBtn;      //关闭按钮
-    windowStateThread               *m_windowStateThread;   //窗口检测线程
 };
 
 #endif // MAINWINDOW_H
