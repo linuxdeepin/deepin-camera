@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "31597f66_683dc5b9",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 753,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-15T07:16:04Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_SpaceKeyInterval\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "995f4f9240a9824adf7a6a49abb3c8b8e3e50a30",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "18df52e5_99629531",
         "filename": "src/src/mainwindow.h",
         "patchSetId": 1
