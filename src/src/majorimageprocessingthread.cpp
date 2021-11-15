@@ -180,8 +180,8 @@ void MajorImageProcessingThread::run()
         pOldYuvFrame = m_frame->yuv_frame;
         m_frame->yuv_frame = m_yuvPtr;
 
-
-        if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
+        // wayland下，获取的相机原始画面为镜像画面，需要翻转一次
+        if (get_wayland_status() == 1) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
