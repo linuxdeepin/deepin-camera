@@ -29,8 +29,6 @@
 #include "takephotosettingareawidget.h"
 #include "photorecordbtn.h"
 #include "switchcamerabtn.h"
-#include "windowstatethread.h"
-
 #include <DLabel>
 #include <DApplication>
 #include <DSettingsDialog>
@@ -737,8 +735,7 @@ CMainWindow::CMainWindow(QWidget *parent)
       m_photoState(photoNormal),
       m_bRecording(false),
       m_bSwitchCameraShowEnable(false),
-      m_bUIinit(false),
-      m_windowStateThread(nullptr)
+      m_bUIinit(false)
 {
     m_cameraSwitchBtn = nullptr;
     m_photoRecordBtn = nullptr;
@@ -1219,8 +1216,6 @@ void CMainWindow::loadAfterShow()
     m_filterName->setText(filterPreviewButton::filterName(filter_Normal));
 
     showChildWidget();
-    m_windowStateThread = new windowStateThread(this);
-    connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)
@@ -1420,9 +1415,6 @@ void CMainWindow::onPhotoRecordBtnClked()
         if (photoNormal != m_photoState) {
             m_videoPre->onTakePic(false);
         } else {
-            if (!m_windowStateThread->isRunning()) {
-                m_windowStateThread->start();
-            }
             m_videoPre->onTakePic(true);
         }
     } else { //录像模式下
@@ -1430,9 +1422,6 @@ void CMainWindow::onPhotoRecordBtnClked()
             m_videoPre->onEndBtnClicked();
         } else {
             m_videoPre->onTakeVideo();
-            if (!m_windowStateThread->isRunning()) {
-                m_windowStateThread->start();
-            }
         }
     }
 }
@@ -1451,10 +1440,6 @@ void CMainWindow::onUpdateRecordState(int state)
     m_bRecording = (photoRecordBtn::Normal != state);
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
-    if (false == m_bRecording
-            && m_windowStateThread->isRunning()) {
-        m_windowStateThread->requestInterruption();
-    }
 }
 
 void CMainWindow::onUpdatePhotoState(int state)
@@ -1462,10 +1447,6 @@ void CMainWindow::onUpdatePhotoState(int state)
     m_actionSettings->setEnabled(photoNormal == state);
     m_photoState = state;
     showChildWidget();
-    if (photoNormal == state
-            && m_windowStateThread->isRunning()) {
-        m_windowStateThread->requestInterruption();
-    }
 }
 
 void CMainWindow::onStopPhotoAndRecord()
@@ -1579,7 +1560,7 @@ void CMainWindow::onShowFilterName(bool bShow)
     m_bShowFilterName = bShow;
 }
 
-void CMainWindow::onSetFilterName(const QString& name)
+void CMainWindow::onSetFilterName(const QString &name)
 {
     m_filterName->setText(name);
 }
@@ -1788,7 +1769,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
 
     // 更新滤镜预览帧图片
-    connect(m_videoPre, SIGNAL(updateFilterImage(QImage*)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage*)));
+    connect(m_videoPre, SIGNAL(updateFilterImage(QImage *)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage *)));
 
     connect(m_videoPre, &videowidget::reflushSnapshotLabel, this, &CMainWindow::reflushSnapshotLabel);
 
@@ -2219,10 +2200,4 @@ CMainWindow::~CMainWindow()
         m_videoPre->deleteLater();
         m_videoPre = nullptr;
     }
-    if (m_windowStateThread) {
-        m_windowStateThread->requestInterruption();
-        m_windowStateThread->wait();
-        m_windowStateThread->deleteLater();
-    }
-    qDebug() << "stop_encoder_thread";
 }
