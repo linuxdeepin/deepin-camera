@@ -70,6 +70,23 @@
     },
     {
       "key": {
+        "uuid": "ecad1b4c_4ced9920",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T02:54:03Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_SpaceKeyInterval\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "eac687e59e37461d9510572f1108af06a6e9a524",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d263632e_38ccf9a2",
         "filename": "src/src/mainwindow.h",
         "patchSetId": 1
@@ -98,6 +115,40 @@
       "writtenOn": "2021-11-16T02:54:00Z",
       "side": 1,
       "message": "注释行数: 1; 改动行数(修改和新增): 13; 注释率: 7.7%",
+      "revId": "eac687e59e37461d9510572f1108af06a6e9a524",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0cf3906_dd067652",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T02:54:03Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "eac687e59e37461d9510572f1108af06a6e9a524",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b8af614_0c6edf9d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T02:54:03Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
       "revId": "eac687e59e37461d9510572f1108af06a6e9a524",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
