@@ -31,9 +31,6 @@ extern "C" {
 #include "gviewv4l2core.h"
 #include "encoder.h"
 
-#define VERTEXIN 0
-#define TEXTUREIN 1
-
 typedef struct _capture_loop_data_t {
     void *options;
     void *config;
@@ -423,9 +420,6 @@ extern int stop_encoder_thread(void);
  */
 extern void *capture_loop(void *data);
 
-void set_wayland_status(int status);
-
-int get_wayland_status(void);
 
 void set_takeing_photo_sound(uint8_t status);
 

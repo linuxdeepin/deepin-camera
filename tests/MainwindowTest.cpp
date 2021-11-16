@@ -90,12 +90,6 @@ TEST_F(MainwindowTest, onTimeoutLock)
     call_private_fun::CMainWindowonTimeoutLock(*mainwindow, "", key2value1, strList);
     QVariantMap key2value2;
     key2value2.insert("Locked", true);
-    mainwindow->setWayland(true);
-    call_private_fun::CMainWindowonTimeoutLock(*mainwindow, "", key2value2, strList);
-    QVariantMap key2value3;
-    key2value3.insert("Locked", false);
-    call_private_fun::CMainWindowonTimeoutLock(*mainwindow, "", key2value3, strList);
-    mainwindow->setWayland(false);
 }
 
 /**

@@ -19,10 +19,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-extern "C"
-{
-#include "camview.h"
-}
 #include "mainwindow.h"
 #include "capplication.h"
 #include "dbus_adpator.h"
@@ -80,37 +76,13 @@ static bool runSingleInstance()
     return true;
 }
 
-//判断是否采用wayland显示服务器
-static bool CheckWayland()
-{
-    auto e = QProcessEnvironment::systemEnvironment();
-    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
-    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
-
-    if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
-        return true;
-    } else
-        return false;
-
-}
-
 int main(int argc, char *argv[])
 {
     QAccessible::installFactory(accessibleFactory);
-    bool bWayland = CheckWayland();
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
-    }
-
-    if (bWayland) {
-        //默认走xdgv6,该库没有维护了，因此需要添加该代码
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
-        QSurfaceFormat format;
-        format.setRenderableType(QSurfaceFormat::OpenGLES);
-        format.setDefaultFormat(format);
-        set_wayland_status(1);
     }
 
     QTime time;
@@ -170,7 +142,6 @@ int main(int argc, char *argv[])
     a.setMainWindow(&w);
 
     Dtk::Widget::moveToCenter(&w);
-    w.setWayland(bWayland);
     //判断是否是平板环境
     if (CamApp->isPanelEnvironment())
         w.showMaximized();

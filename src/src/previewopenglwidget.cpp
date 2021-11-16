@@ -26,6 +26,9 @@
 
 #include <malloc.h>
 
+#define VERTEXIN 0
+#define TEXTUREIN 1
+
 PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
@@ -97,44 +100,23 @@ void PreviewOpenglWidget::initializeGL()
             textureOut = textureIn; \
         }";
 
-    const char *fsrc;
+    const char *fsrc = "varying vec2 textureOut; \
+        uniform sampler2D tex_y; \
+        uniform sampler2D tex_u; \
+        uniform sampler2D tex_v; \
+        void main(void) \
+        { \
+            vec3 yuv; \
+            vec3 rgb; \
+            yuv.x = texture2D(tex_y, textureOut).r; \
+            yuv.y = texture2D(tex_u, textureOut).r - 0.5; \
+            yuv.z = texture2D(tex_v, textureOut).r - 0.5; \
+            rgb = mat3( 1,       1,         1, \
+                        0,       -0.39465,  2.03211, \
+                        1.13983, -0.58060,  0) * yuv; \
+            gl_FragColor = vec4(rgb, 1); \
+        }";
 
-    if (get_wayland_status() == 0) {
-        fsrc = "varying vec2 textureOut; \
-        uniform sampler2D tex_y; \
-        uniform sampler2D tex_u; \
-        uniform sampler2D tex_v; \
-        void main(void) \
-        { \
-            vec3 yuv; \
-            vec3 rgb; \
-            yuv.x = texture2D(tex_y, textureOut).r; \
-            yuv.y = texture2D(tex_u, textureOut).r - 0.5; \
-            yuv.z = texture2D(tex_v, textureOut).r - 0.5; \
-            rgb = mat3( 1,       1,         1, \
-                        0,       -0.39465,  2.03211, \
-                        1.13983, -0.58060,  0) * yuv; \
-            gl_FragColor = vec4(rgb, 1); \
-        }";
-    } else {
-        fsrc = "precision mediump float; \
-        varying vec2 textureOut; \
-        uniform sampler2D tex_y; \
-        uniform sampler2D tex_u; \
-        uniform sampler2D tex_v; \
-        void main(void) \
-        { \
-            vec3 yuv; \
-            vec3 rgb; \
-            yuv.x = texture2D(tex_y, textureOut).r; \
-            yuv.y = texture2D(tex_u, textureOut).r - 0.5; \
-            yuv.z = texture2D(tex_v, textureOut).r - 0.5; \
-            rgb = mat3( 1,       1,         1, \
-                        0,       -0.39465,  2.03211, \
-                        1.13983, -0.58060,  0) * yuv; \
-            gl_FragColor = vec4(rgb, 1); \
-        }";
-    }
 
     m_program = new QOpenGLShaderProgram(this);
     m_textureY = new QOpenGLTexture(QOpenGLTexture::Target2D);
@@ -173,7 +155,7 @@ void PreviewOpenglWidget::paintGL()
 {
     if (m_yuvPtr == nullptr)
         return;
-  
+
     glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
     glBindTexture(GL_TEXTURE_2D, m_idY); //绑定y分量纹理对象id到激活的纹理单元
 
