@@ -1614,6 +1614,12 @@ void CMainWindow::initUI()
     m_filterName->setAlignment(Qt::AlignCenter);
     m_filterName->move((width() - labelFilterNameWidth) / 2, height() - 20 - labelFilterNameHeight);
 
+    QGraphicsDropShadowEffect *shadow_effect1 = new QGraphicsDropShadowEffect(this);
+    shadow_effect1->setOffset(0, 0);              //阴影的偏移量
+    shadow_effect1->setColor(QColor(33, 33, 33)); //阴影的颜色
+    shadow_effect1->setBlurRadius(15);             // 阴影圆角的大小
+    m_filterName->setGraphicsEffect(shadow_effect1);
+
     m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
 
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetDelayTakePhoto, this, [ = ](int delaytime) {
@@ -1666,17 +1672,23 @@ void CMainWindow::initUI()
     m_showCameraNameTimer->setInterval(2000);
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
-    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 30)); //深色
+    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 0)); //深色
     paletteName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
     QFont ft;
     ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
     ft.setWeight(20);
-    ft.setPointSize(18);
+    ft.setPointSize(16);
     m_labelCameraName->setFont(ft);
     m_labelCameraName->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
+
+    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
+    shadow_effect->setOffset(0, 0);              //阴影的偏移量
+    shadow_effect->setColor(QColor(33, 33, 33)); //阴影的颜色
+    shadow_effect->setBlurRadius(15);             // 阴影圆角的大小
+    m_labelCameraName->setGraphicsEffect(shadow_effect);
 
     QDir dirVd(m_videoPath);
     dirVd.cdUp();

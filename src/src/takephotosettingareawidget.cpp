@@ -31,13 +31,17 @@
 #include <QDateTime>
 #include <QTimer>
 
-#define HIDE_ANIMATION_DURATION 300
-#define ANIMATION_DURATION 400
-#define ANIMATION_FILTER_DURATION 350
-#define SLIDER_ANIMATION_DURATION 300
+#define HIDE_ANIMATION_DURATION 100
+#define ANIMATION_DURATION 100
+#define ANIMATION_FOLD_DURATION 100
+#define ANIMATION_ROTATE_DURATION 100
+#define ANIMATION_FILTER_DURATION 170
+#define SLIDER_ANIMATION_DURATION 50
 #define EXPOSURE_SLIDER_HEIGHT 192
 
 #define LEFT_MARGIN_PIX 10
+
+#define EASING_OVERSHOOT 0.82079
 
 takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidget(parent)
     , m_btnHeightOffset(20)//暂时间隔设定为20,需确定后修改
@@ -282,10 +286,16 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
         }
 
         QPropertyAnimation *opacity = new QPropertyAnimation(btn, "opacity", this);
-        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setDuration(ANIMATION_FOLD_DURATION);
         opacity->setStartValue(102);
         opacity->setEndValue(0);
         pPosGroup->addAnimation(opacity);
+
+        QPropertyAnimation *iconOpacity = new QPropertyAnimation(btn, "iconopacity", this);
+        iconOpacity->setDuration(ANIMATION_FOLD_DURATION);
+        iconOpacity->setStartValue(1);
+        iconOpacity->setEndValue(0);
+        pPosGroup->addAnimation(iconOpacity);
 
         if (btn == originBtn) {
             originBtn->move(0,(originBtn->height() + m_btnHeightOffset) * index++);
@@ -293,14 +303,13 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
         }
 
         QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
-        position->setDuration(ANIMATION_DURATION);
+        position->setDuration(ANIMATION_FOLD_DURATION);
         if (btn == m_foldBtn)
             //折叠按钮与上一按钮间距比普通间距多10px
             position->setStartValue(QPoint(0, 10 + (originBtn->height() + m_btnHeightOffset) * index++));
         else
             position->setStartValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
         position->setEndValue(endPos);
-        position->setEasingCurve(QEasingCurve::OutSine);
         pPosGroup->addAnimation(position);
     }
 
@@ -312,12 +321,12 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
     opacity->setStartValue(0);
     opacity->setEndValue(102);
-    opacity->setDuration(ANIMATION_DURATION);
+    opacity->setDuration(ANIMATION_ROTATE_DURATION);
 
     QPropertyAnimation *rotate = new QPropertyAnimation(m_unfoldBtn, "rotate", this);
     rotate->setStartValue(90);
     rotate->setEndValue(0);
-    rotate->setDuration(ANIMATION_DURATION);
+    rotate->setDuration(ANIMATION_ROTATE_DURATION);
 
     QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
     group->addAnimation(opacity);
@@ -361,6 +370,10 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     if (!m_bPhoto)
         startPos = QPoint(0,0);
 
+    QEasingCurve ec;
+    ec.setType(QEasingCurve::OutBack);
+    ec.setOvershoot(EASING_OVERSHOOT);
+
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
     int index = 0;
     for (auto btn : btnList) {
@@ -372,10 +385,17 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
         }
 
         QPropertyAnimation *opacity = new QPropertyAnimation(btn, "opacity", this);
-        opacity->setDuration(ANIMATION_DURATION);
+        opacity->setDuration(ANIMATION_FOLD_DURATION);
         opacity->setStartValue(0);
         opacity->setEndValue(102);
         pPosGroup->addAnimation(opacity);
+
+        QPropertyAnimation *iconOpacity = new QPropertyAnimation(btn, "iconopacity", this);
+        iconOpacity->setDuration(ANIMATION_FOLD_DURATION);
+        iconOpacity->setStartValue(0);
+        iconOpacity->setEndValue(1);
+        btn->setIconOpacity(0);
+        pPosGroup->addAnimation(iconOpacity);
 
         if (btn == originBtn) {
             originBtn->move(0,(originBtn->height() + m_btnHeightOffset) * index++);
@@ -383,14 +403,14 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
         }
 
         QPropertyAnimation* position = new QPropertyAnimation(btn, "pos", this);
-        position->setDuration(ANIMATION_DURATION);
+        position->setDuration(ANIMATION_FOLD_DURATION);
         position->setStartValue(startPos);
         if (m_foldBtn == btn)
             //折叠按钮与上一按钮间距比普通间距多10px
             position->setEndValue(QPoint(0, 10 + (originBtn->height() + m_btnHeightOffset) * index++));
         else
             position->setEndValue(QPoint(0, (originBtn->height() + m_btnHeightOffset) * index++));
-        position->setEasingCurve(QEasingCurve::OutExpo);
+        position->setEasingCurve(ec);
         pPosGroup->addAnimation(position);
     }
 
@@ -418,8 +438,8 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     int nBtnCount = btnList.size();
     if (!m_bPhoto)
         nBtnCount -= 3;
-    //折叠按钮与上一按钮间距比普通间距多10px 整体高度+10
-    setFixedSize(QSize(originBtn->width(), 10 + originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
+    //折叠按钮与上一按钮间距比普通间距多10px 整体高度+10 回弹伸缩范围 +5
+    setFixedSize(QSize(originBtn->width(), 10 + 5 + originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
     update();
 }
 
@@ -431,55 +451,90 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
     QPropertyAnimation *position3 = new QPropertyAnimation(m_delay6SecondBtn, "pos", this);
     //透明度动画
     QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity", this);
+
+    QPropertyAnimation *opacity1 = new QPropertyAnimation(m_noDelayBtn, "iconopacity", this);
+    QPropertyAnimation *opacity2 = new QPropertyAnimation(m_delay3SecondBtn, "iconopacity", this);
+    QPropertyAnimation *opacity3 = new QPropertyAnimation(m_delay6SecondBtn, "iconopacity", this);
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+
+    QEasingCurve ec;
+    ec.setType(QEasingCurve::OutBack);
+    ec.setOvershoot(EASING_OVERSHOOT);
 
     if (bShow) {
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, 0));
         position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
-        position1->setEasingCurve(QEasingCurve::OutExpo);
+        position1->setEasingCurve(ec);
 
         position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, 0));
         position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
-        position2->setEasingCurve(QEasingCurve::OutExpo);
+        position2->setEasingCurve(ec);
 
         position3->setDuration(ANIMATION_DURATION);
         position3->setStartValue(QPoint(0, 0));
         position3->setEndValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_threeBtnOffset * 3));
-        position3->setEasingCurve(QEasingCurve::OutExpo);
+        position3->setEasingCurve(ec);
 
         opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(0);
         opacity->setEndValue(102);
 
+        opacity1->setDuration(ANIMATION_DURATION);
+        opacity1->setStartValue(0);
+        opacity1->setEndValue(1);
+
+        opacity2->setDuration(ANIMATION_DURATION);
+        opacity2->setStartValue(0);
+        opacity2->setEndValue(1);
+
+        opacity3->setDuration(ANIMATION_DURATION);
+        opacity3->setStartValue(0);
+        opacity3->setEndValue(1);
+
         m_delayFoldBtn->setVisible(bShow);
         m_noDelayBtn->setVisible(bShow);
         m_delay3SecondBtn->setVisible(bShow);
         m_delay6SecondBtn->setVisible(bShow);
+        m_noDelayBtn->setIconOpacity(0);
+        m_delay3SecondBtn->setIconOpacity(0);
+        m_delay6SecondBtn->setIconOpacity(0);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             if (isShortcut)
                 m_delayFoldBtn->setFocus();
         });
     } else {
-        position1->setDuration(HIDE_ANIMATION_DURATION);
+        position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
         position1->setEndValue(QPoint(0, 0));
-        position1->setEasingCurve(QEasingCurve::OutSine);
+        position1->setEasingCurve(ec);
 
-        position2->setDuration(HIDE_ANIMATION_DURATION);
+        position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
         position2->setEndValue(QPoint(0, 0));
-        position2->setEasingCurve(QEasingCurve::OutSine);
+        position2->setEasingCurve(ec);
 
-        position3->setDuration(HIDE_ANIMATION_DURATION);
+        position3->setDuration(ANIMATION_DURATION);
         position3->setStartValue(QPoint(0, m_delayFoldBtn->height() * 3 + m_threeBtnOffset * 3));
         position3->setEndValue(QPoint(0, 0));
-        position3->setEasingCurve(QEasingCurve::OutSine);
+        position3->setEasingCurve(ec);
 
-        opacity->setDuration(HIDE_ANIMATION_DURATION);
+        opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(102);
         opacity->setEndValue(0);
+
+        opacity1->setDuration(ANIMATION_DURATION);
+        opacity1->setStartValue(1);
+        opacity1->setEndValue(0);
+
+        opacity2->setDuration(ANIMATION_DURATION);
+        opacity2->setStartValue(1);
+        opacity2->setEndValue(0);
+
+        opacity3->setDuration(ANIMATION_DURATION);
+        opacity3->setStartValue(1);
+        opacity3->setEndValue(0);
 
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=](){
             m_delayFoldBtn->setVisible(bShow);
@@ -501,6 +556,9 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(position2);
     pPosGroup->addAnimation(position3);
     pPosGroup->addAnimation(opacity);
+    pPosGroup->addAnimation(opacity1);
+    pPosGroup->addAnimation(opacity2);
+    pPosGroup->addAnimation(opacity3);
 
     pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
@@ -512,46 +570,72 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 {
     QPropertyAnimation *position1 = new QPropertyAnimation(m_flashlightOnBtn, "pos", this);
     QPropertyAnimation *position2 = new QPropertyAnimation(m_flashlightOffBtn, "pos", this);
+
     QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity", this);
+
+    QPropertyAnimation *opacity1 = new QPropertyAnimation(m_flashlightOnBtn, "iconopacity", this);
+    QPropertyAnimation *opacity2 = new QPropertyAnimation(m_flashlightOffBtn, "iconopacity", this);
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+
+    QEasingCurve ec;
+    ec.setType(QEasingCurve::OutBack);
+    ec.setOvershoot(EASING_OVERSHOOT);
 
     if (bShow) {
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, 0));
         position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
-        position1->setEasingCurve(QEasingCurve::OutExpo);
+        position1->setEasingCurve(ec);
 
         position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, 0));
         position2->setEndValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
-        position2->setEasingCurve(QEasingCurve::OutExpo);
+        position2->setEasingCurve(ec);
 
         opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(0);
         opacity->setEndValue(102);
 
+        opacity1->setDuration(ANIMATION_DURATION);
+        opacity1->setStartValue(0);
+        opacity1->setEndValue(1);
+
+        opacity2->setDuration(ANIMATION_DURATION);
+        opacity2->setStartValue(0);
+        opacity2->setEndValue(1);
+
         m_flashlightFoldBtn->setVisible(bShow);
         m_flashlightOnBtn->setVisible(bShow);
         m_flashlightOffBtn->setVisible(bShow);
+        m_flashlightOnBtn->setIconOpacity(0);
+        m_flashlightOffBtn->setIconOpacity(0);
 
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             if (isShortcut)
                 m_flashlightFoldBtn->setFocus();
         });
     } else {
-        position1->setDuration(HIDE_ANIMATION_DURATION);
+        position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
         position1->setEndValue(QPoint(0, 0));
-        position1->setEasingCurve(QEasingCurve::OutSine);
+        position1->setEasingCurve(ec);
 
-        position2->setDuration(HIDE_ANIMATION_DURATION);
+        position2->setDuration(ANIMATION_DURATION);
         position2->setStartValue(QPoint(0, m_delayFoldBtn->height() * 2 + m_threeBtnOffset * 2));
         position2->setEndValue(QPoint(0, 0));
-        position2->setEasingCurve(QEasingCurve::OutSine);
+        position2->setEasingCurve(ec);
 
-        opacity->setDuration(HIDE_ANIMATION_DURATION);
+        opacity->setDuration(ANIMATION_DURATION);
         opacity->setStartValue(102);
         opacity->setEndValue(0);
+
+        opacity1->setDuration(ANIMATION_DURATION);
+        opacity1->setStartValue(1);
+        opacity1->setEndValue(0);
+
+        opacity2->setDuration(ANIMATION_DURATION);
+        opacity2->setStartValue(1);
+        opacity2->setEndValue(0);
 
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             m_flashlightFoldBtn->setVisible(bShow);
@@ -565,6 +649,8 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(position1);
     pPosGroup->addAnimation(position2);
     pPosGroup->addAnimation(opacity);
+    pPosGroup->addAnimation(opacity1);
+    pPosGroup->addAnimation(opacity2);
 
     pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
@@ -597,19 +683,24 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     posFold->setStartValue(QPoint(5, 0));
     posFold->setEndValue(QPoint(5, 0));
     QPropertyAnimation *opacityFold = new QPropertyAnimation(m_filtersFoldBtn, "opacity", this);
+    QPropertyAnimation *iconOpacityFold = new QPropertyAnimation(m_filtersFoldBtn, "iconopacity", this);
     QParallelAnimationGroup *pPosGroup = new QParallelAnimationGroup(this);
+
+    QEasingCurve ec;
+    ec.setType(QEasingCurve::OutBack);
+    ec.setOvershoot(EASING_OVERSHOOT);
 
     if (bShow) {
         int index = 1;
         for (auto pos : positionList) {
             pos->setDuration(ANIMATION_FILTER_DURATION);
-            pos->setEasingCurve(QEasingCurve::OutExpo);
+            pos->setEasingCurve(ec);
             pos->setStartValue(QPoint(0,0));
             pos->setEndValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
         }
 
         posClose->setDuration(ANIMATION_FILTER_DURATION);
-        posClose->setEasingCurve(QEasingCurve::OutExpo);
+        posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, 0));
         posClose->setEndValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index + 10));
 
@@ -624,16 +715,22 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         opacityFold->setStartValue(0);
         opacityFold->setEndValue(102);
 
+        iconOpacityFold->setDuration(ANIMATION_FILTER_DURATION);
+        iconOpacityFold->setStartValue(0);
+        iconOpacityFold->setEndValue(1);
+
         opacityClose->setDuration(ANIMATION_FILTER_DURATION);
-        opacityClose->setEasingCurve(QEasingCurve::OutExpo);
         opacityClose->setStartValue(0);
         opacityClose->setEndValue(102);
 
         m_filtersFoldBtn->setVisible(bShow);
+        m_filtersFoldBtn->setOpacity(0);
+        m_filtersFoldBtn->setIconOpacity(0);
         for (auto pBtn : m_filterPreviewBtnList) {
             pBtn->setVisible(bShow);
         }
         m_filtersCloseBtn->setVisible(bShow);
+        m_filtersCloseBtn->setOpacity(0);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             for (auto pBtn : m_filterPreviewBtnList) {
                 pBtn->update();
@@ -649,19 +746,17 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         int index = 1;
         for (auto pos : positionList) {
             pos->setDuration(ANIMATION_DURATION);
-            pos->setEasingCurve(QEasingCurve::OutExpo);
             pos->setStartValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
             pos->setEndValue(QPoint(0,0));
         }
 
         posClose->setDuration(ANIMATION_DURATION);
-        posClose->setEasingCurve(QEasingCurve::OutExpo);
+        posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index + 10));
         posClose->setEndValue(QPoint(5, 0));
 
         for (auto opa : opacityList) {
             opa->setDuration(ANIMATION_DURATION);
-            opa->setEasingCurve(QEasingCurve::OutExpo);
             opa->setStartValue(1);
             opa->setEndValue(0);
         }
@@ -669,6 +764,10 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         opacityFold->setDuration(ANIMATION_DURATION);
         opacityFold->setStartValue(102);
         opacityFold->setEndValue(0);
+
+        iconOpacityFold->setDuration(ANIMATION_DURATION);
+        iconOpacityFold->setStartValue(1);
+        iconOpacityFold->setEndValue(0);
 
         m_filtersCloseBtn->setVisible(bShow);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=](){
@@ -683,10 +782,12 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 
     pPosGroup->addAnimation(posFold);
     pPosGroup->addAnimation(opacityFold);
+    pPosGroup->addAnimation(iconOpacityFold);
 
     for (auto pos : positionList)
         pPosGroup->addAnimation(pos);
     pPosGroup->addAnimation(posClose);
+    pPosGroup->addAnimation(opacityClose);
     for (auto opa : opacityList)
         pPosGroup->addAnimation(opa);
 
@@ -694,7 +795,8 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 
     emit sngShowFilterName(bShow);
 
-    int height = (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * (filter_Count + 2) - 1;
+    // 每个按钮增加回弹间隙1像素
+    int height = (m_filtersFoldBtn->height() + m_threeBtnOffset*2 + 1) * (filter_Count + 2) - 1;
     setFixedSize(QSize(nPreviewBtnWidth, height));
     update();
 }
@@ -710,12 +812,12 @@ void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
     opacity->setStartValue(102);
     opacity->setEndValue(0);
-    opacity->setDuration(ANIMATION_DURATION);
+    opacity->setDuration(ANIMATION_ROTATE_DURATION);
 
     QPropertyAnimation *rotate = new QPropertyAnimation(m_unfoldBtn, "rotate", this);
     rotate->setStartValue(0);
     rotate->setEndValue(90);
-    rotate->setDuration(ANIMATION_DURATION);
+    rotate->setDuration(ANIMATION_ROTATE_DURATION);
 
     QParallelAnimationGroup *group = new QParallelAnimationGroup(this);
     group->addAnimation(opacity);

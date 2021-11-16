@@ -129,8 +129,10 @@ void circlePushButton::paintEvent(QPaintEvent *event)
     if (m_disableSelect) {//禁用悬浮只绘制选中与正常
 //        painter.setViewport(QRect(-width() / 2, -height() / 2, width(), height()));
         if (m_mousePress) {
+            painter.setOpacity(m_iconOpacity);
             m_pressSvg->render(&painter);
         } else {
+            painter.setOpacity(m_iconOpacity);
             m_normalSvg->render(&painter);
         }
         painter.restore();
@@ -139,10 +141,13 @@ void circlePushButton::paintEvent(QPaintEvent *event)
 
     //设置绘制的图案
     if (!m_mousePress && m_isSelected) {
+        painter.setOpacity(m_iconOpacity);
         m_hoverSvg->render(&painter);
     } else if (!m_mousePress && !m_isSelected) {
+        painter.setOpacity(m_iconOpacity);
         m_normalSvg->render(&painter);
     } else {
+        painter.setOpacity(m_iconOpacity);
         m_pressSvg->render(&painter);
     }
     painter.restore();
@@ -241,6 +246,14 @@ void circlePushButton::setOpacity(int opacity)
 {
     m_opacity = opacity;
     m_color.setAlpha(opacity);
+    qDebug() << opacity;
+    update();
+}
+
+void circlePushButton::setIconOpacity(qreal opacity)
+{
+    m_iconOpacity = opacity;
+    qDebug() << m_iconOpacity;
     update();
 }
 

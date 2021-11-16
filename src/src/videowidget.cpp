@@ -106,6 +106,12 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTime = new DLabel;
     m_dLabel = new DLabel(this);
     m_dLabel->setFixedSize(COUNTDOWN_WIDTH, COUNTDOWN_HEIGHT);
+    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
+    shadow_effect->setOffset(0, 0);              //阴影的偏移量
+    shadow_effect->setColor(QColor(33, 33, 33)); //阴影的颜色
+    shadow_effect->setBlurRadius(45);             // 阴影圆角的大小
+    m_dLabel->setGraphicsEffect(shadow_effect);
+
     m_pNormalScene = new QGraphicsScene();
     m_pSvgItem = new QGraphicsSvgItem;
     m_pSvgItem->hide();
@@ -152,6 +158,11 @@ videowidget::videowidget(DWidget *parent)
     recordingRedStatus->setFixedSize(QSize(22, 22));
     m_recordingTime->setFixedSize(73, 26);
     m_recordingTime->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    QGraphicsDropShadowEffect *shadow_effect1 = new QGraphicsDropShadowEffect(this);
+    shadow_effect1->setOffset(0, 0);              //阴影的偏移量
+    shadow_effect1->setColor(QColor(33, 33, 33)); //阴影的颜色
+    shadow_effect1->setBlurRadius(15);             // 阴影圆角的大小
+    m_recordingTime->setGraphicsEffect(shadow_effect1);
     m_recordingTimeWidget->setLayout(recordingwidgetlay);
     m_recordingTimeWidget->hide(); //先隐藏
     m_recordingTimeWidget->setFixedSize(95, 26);

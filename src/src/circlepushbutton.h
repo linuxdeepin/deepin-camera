@@ -32,8 +32,9 @@ class QSvgRenderer;
 class circlePushButton : public QPushButton
 {
     Q_OBJECT
+    Q_PROPERTY(qreal iconopacity READ getIconOpacity WRITE setIconOpacity)//自定义图标不透明度属性
     Q_PROPERTY(int opacity READ getOpacity WRITE setOpacity)//自定义不透明度属性
-    Q_PROPERTY(int rotate READ getRotate WRITE setRotate)//自定义不透明度属性
+    Q_PROPERTY(int rotate READ getRotate WRITE setRotate)//自定义旋转角度属性
 public:
     explicit circlePushButton(QWidget *parent = nullptr);
     ~circlePushButton();
@@ -81,6 +82,11 @@ public:
     int getOpacity() { return m_opacity; };
 
     /**
+    * @brief getOpacity 获取当前图标不透明度
+    */
+    int getIconOpacity() { return m_iconOpacity; };
+
+    /**
     * @brief getRotate 获取当前旋转角度
     */
     int getRotate() { return m_rotate; };
@@ -90,6 +96,12 @@ public:
     * @param  opacity 不透明度 0～255
     */
     void setOpacity(int opacity);
+
+    /**
+    * @brief setIconOpacity 设置图标不透明度 动画会通过这个函数输入插值，修改透明度。
+    * @param  opacity 不透明度 0～100
+    */
+    void setIconOpacity(qreal opacity);
 
     /**
     * @brief setRotate 设置旋转角度
@@ -179,6 +191,7 @@ private:
     int           m_radius;//半径
     bool          m_disableSelect;//禁用选中
     int           m_opacity = 102;    //不透明度 默认值102
+    qreal         m_iconOpacity = 1.f; //图标不透明度 默认值1
     int           m_rotate = 0; //旋转角度
     bool          m_isNewNotification = false;  //是否显示小圆点
 };
