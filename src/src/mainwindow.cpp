@@ -1119,7 +1119,7 @@ void CMainWindow::settingDialog()
                     QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
 
                     if ((resolutiontemp1[0].toInt() <= resolutiontemp2[0].toInt())
-                            && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
+                            || (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt())) {
                         QString resolutionstr = resolutionDatabase[j + 1];
                         resolutionDatabase[j + 1] = resolutionDatabase[j];
                         resolutionDatabase[j] = resolutionstr;
