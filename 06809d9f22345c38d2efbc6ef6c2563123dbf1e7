@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65613710_d84ed194",
+        "filename": "src/src/circlepushbutton.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 12; 注释率: 0.0%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1972575b_36f48b52",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 7; 改动行数(修改和新增): 12; 注释率: 58.3%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "758a6e85_3d4bad08",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ed97be8_b88892e0",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 7; 改动行数(修改和新增): 12; 注释率: 58.3%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "253c9ed2_178f79ca",
+        "filename": "src/src/photorecordbtn.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 10; 注释率: 0.0%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "355818f8_648751de",
+        "filename": "src/src/takephotosettingareawidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 120; 注释率: 1.7%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dfda75b_86cbc51f",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:35:37Z",
+      "side": 1,
+      "message": "注释行数: 6; 改动行数(修改和新增): 10; 注释率: 60.0%",
+      "revId": "06809d9f22345c38d2efbc6ef6c2563123dbf1e7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
