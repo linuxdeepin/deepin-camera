@@ -47,12 +47,12 @@ static config_t my_config =
     .height = 1080,
     .device_name = NULL,
     .device_location = NULL,
-    .format = V4L2_PIX_FMT_MJPEG,
+    .format = V4L2_PIX_FMT_YUV420,
 	.render = "sdl",
 	.gui = "qt5",
 	.audio = "port",
 	.capture = "mmap",
-    .video_codec = "mjpg",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
+    .video_codec = "raw",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
     .audio_codec = "aac",
 	.profile_name = NULL,
 	.profile_path = NULL,
@@ -259,7 +259,7 @@ int config_load(const char *filename)
             set_device_location(value);
         }
         else if(strcmp(token, "v4l2_format") == 0)
-            my_config.format = (uint32_t) strtoul("V4L2_PIX_FMT_MJPEG", NULL, 10);
+            my_config.format = atoi(value) /*(uint32_t) strtoul("V4L2_PIX_FMT_YUV420", NULL, 10)*/;
 //		else if(strcmp(token, "capture") == 0)
 //			strncpy(my_config.capture, value, 4);
 //		else if(strcmp(token, "audio") == 0)
