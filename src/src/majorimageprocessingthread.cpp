@@ -29,7 +29,10 @@ extern "C" {
 #include <QDate>
 #include <QDir>
 
-MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
+MajorImageProcessingThread::MajorImageProcessingThread(bool bWayland, QObject *parent /*= nullptr*/)
+    : QThread(parent)
+    , m_bHorizontalMirror(false)
+    , m_bWayland(bWayland)
 {
     m_yuvPtr = nullptr;
     m_nVdWidth = 0;
@@ -62,7 +65,7 @@ void MajorImageProcessingThread::setExposure(int exposure)
     m_exposure = exposure;
 }
 
-void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
+void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t *src, uint8_t *dst, int width, int height)
 {
     /*
     yu12
@@ -96,7 +99,7 @@ void MajorImageProcessingThread::run()
     int framedely = 0;
     int64_t timespausestamp = 0;
     uint yuvsize = 0;
-    uint8_t* pOldYuvFrame = nullptr;
+    uint8_t *pOldYuvFrame = nullptr;
     while (m_stopped == 0) {
         if (get_resolution_status()) {
             //reset
@@ -172,8 +175,8 @@ void MajorImageProcessingThread::run()
             yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
         }
 
-        if (m_bHorizontalMirror){
-            ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
+        if (m_bHorizontalMirror) {
+            ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr, m_frame->width, m_frame->height);
         } else {
             memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
         }
@@ -181,7 +184,7 @@ void MajorImageProcessingThread::run()
         m_frame->yuv_frame = m_yuvPtr;
 
 
-        if (get_wayland_status() == 1 && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
+        if (m_bWayland && QString::compare(QString(m_videoDevice->videodevice), "/dev/video0") == 0) {
             render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
         }
 
@@ -190,7 +193,7 @@ void MajorImageProcessingThread::run()
 #ifdef __mips__
         bUseRgb = true;
 #endif
-        if (get_wayland_status())
+        if (m_bWayland)
             bUseRgb = true;
 
         if (!m_filter.isEmpty() || m_exposure)
@@ -201,7 +204,7 @@ void MajorImageProcessingThread::run()
             rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
             // yu12到rgb数据高性能转换
             yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
-            m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
+            m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40, 40, Qt::IgnoreAspectRatio);
 
             // 拍照状态下，曝光和滤镜功能才有效
             if (m_bPhoto) {
@@ -209,7 +212,7 @@ void MajorImageProcessingThread::run()
                 if (!m_filter.isEmpty())
                     imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
                 // 曝光强度调节
-                if(m_exposure)
+                if (m_exposure)
                     exposure(rgb, m_frame->width, m_frame->height, m_exposure);
             }
         }
@@ -282,7 +285,7 @@ void MajorImageProcessingThread::run()
 
         }
 
-        QImage* imgTmp = nullptr;
+        QImage *imgTmp = nullptr;
         if (rgb)
             imgTmp = new QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
 

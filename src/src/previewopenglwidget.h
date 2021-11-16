@@ -22,8 +22,6 @@
 #ifndef PREVIEWOPENGLWIDGET_H
 #define PREVIEWOPENGLWIDGET_H
 
-#include "camview.h"
-
 #include <QObject>
 #include <QWidget>
 #include <QMutex>

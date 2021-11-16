@@ -725,11 +725,6 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
     return lastPath;
 }
 
-void CMainWindow::setWayland(bool bTrue)
-{
-    m_bWayland = bTrue;
-}
-
 CMainWindow::CMainWindow(QWidget *parent)
     : DMainWindow(parent),
       m_photoState(photoNormal),
@@ -757,6 +752,19 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
+
+    auto e = QProcessEnvironment::systemEnvironment();
+    QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
+    QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
+
+    m_bWayland = (XDG_SESSION_TYPE == QLatin1String("wayland")
+                  || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive));
+    if (m_bWayland) {
+        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+        QSurfaceFormat format;
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        format.setDefaultFormat(format);
+    }
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -1567,7 +1575,7 @@ void CMainWindow::onSetFilterName(const QString &name)
 
 void CMainWindow::initUI()
 {
-    m_videoPre = new videowidget(this);
+    m_videoPre = new videowidget(m_bWayland, this);
     QPalette paletteTime = m_videoPre->palette();
     m_videoPre->setObjectName(VIDEO_PREVIEW_WIDGET);
     m_videoPre->setAccessibleName(VIDEO_PREVIEW_WIDGET);
