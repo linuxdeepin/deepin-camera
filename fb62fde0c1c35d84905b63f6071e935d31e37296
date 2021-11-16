@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "a7cdb91c_77abf829",
+        "filename": "src/src/circlepushbutton.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:22:54Z",
+      "side": 1,
+      "message": "(style) The class \u0027circlePushButton\u0027 does not have a constructor although it has private member variables",
+      "revId": "fb62fde0c1c35d84905b63f6071e935d31e37296",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8ab8972_6d323359",
         "filename": "src/src/exposureslider.cpp",
         "patchSetId": 1
@@ -47,6 +64,23 @@
       "writtenOn": "2021-11-16T09:22:52Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 1; 注释率: 0.0%",
+      "revId": "fb62fde0c1c35d84905b63f6071e935d31e37296",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e922dac6_1bc12312",
+        "filename": "src/src/exposureslider.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-16T09:22:54Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16370545696230.8868402171370232/changeCache/src/src/exposureslider.cpp:67]: (style) Local variable font shadows outer variabl",
       "revId": "fb62fde0c1c35d84905b63f6071e935d31e37296",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
