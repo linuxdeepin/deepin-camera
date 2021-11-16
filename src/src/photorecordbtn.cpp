@@ -74,6 +74,10 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
         if (Normal == m_recordState){
             rect.setTopLeft(QPoint(11, 11));
             rect.setSize(QSize(42, 42));
+            if (m_bPress) {
+                rect.setTopLeft(QPoint(13, 13));
+                rect.setSize(QSize(38,38));
+            }
             painter.setPen(Qt::NoPen);
             painter.setBrush(QBrush(QColor(0xff,0x57,0x36,0xff)));
             painter.drawEllipse(rect);
@@ -106,6 +110,10 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     } else {
         rect.setTopLeft(QPoint(11, 11));
         rect.setSize(QSize(42, 42));
+        if (m_bPress) {
+            rect.setTopLeft(QPoint(13, 13));
+            rect.setSize(QSize(38,38));
+        }
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(QColor(Qt::white)));
         painter.drawEllipse(rect);
@@ -132,6 +140,9 @@ void photoRecordBtn::mousePressEvent(QMouseEvent *event)
         return; //不响应双击事件
 
     m_bFocus = false;
+
+    m_bPress = true;
+
     update();
 }
 
@@ -144,6 +155,8 @@ void photoRecordBtn::mouseMoveEvent(QMouseEvent *event)
 
 void photoRecordBtn::mouseReleaseEvent(QMouseEvent *event)
 {
+    m_bPress = false;
+
     if (event->type() == QEvent::MouseButtonDblClick)
         return; //不响应双击事件
 
