@@ -73,18 +73,19 @@ void QGraphicsViewEx::mouseReleaseEvent(QMouseEvent *e)
     QWidget::mouseReleaseEvent(e);
 }
 
-videowidget::videowidget(DWidget *parent)
-    : DWidget(parent),
-      m_imgPrcThread(nullptr),
-      m_nMaxRecTime(60), //默认60小时
-      m_openglwidget(nullptr)
+videowidget::videowidget(bool bWayland, DWidget *parent)
+    : DWidget(parent)
+    , m_imgPrcThread(nullptr)
+    , m_nMaxRecTime(60) //默认60小时
+    , m_openglwidget(nullptr)
+    , m_bWayland(bWayland)
 {
 #ifndef __mips__
-    if (get_wayland_status() == true)
+    if (m_bWayland)
         m_pNormalItem = new QGraphicsPixmapItem;
     else
         m_pNormalItem = new QGraphicsPixmapItem;
-        m_openglwidget = new PreviewOpenglWidget(this);
+    m_openglwidget = new PreviewOpenglWidget(this);
 #else
     m_pNormalItem = new QGraphicsPixmapItem;
 #endif
@@ -116,7 +117,7 @@ videowidget::videowidget(DWidget *parent)
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
 #ifndef __mips__
-    if (get_wayland_status() != true)
+    if (!m_bWayland)
         m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
     m_btnClickTime = QDateTime::currentDateTime();
@@ -138,7 +139,7 @@ videowidget::videowidget(DWidget *parent)
 #ifdef __mips__
     m_pNormalScene->addItem(m_pNormalItem);
 #else
-    if (get_wayland_status() == true)
+    if (m_bWayland)
         m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pNormalItem);
 #endif
@@ -162,7 +163,7 @@ videowidget::videowidget(DWidget *parent)
     m_pSvgItem->setCacheMode(QGraphicsItem::NoCache);
 
     //wayland平台设置背景色为黑色
-    if (get_wayland_status() == true) {
+    if (m_bWayland) {
         QPalette pal(palette());
         pal.setColor(QPalette::Background, Qt::black);
         setAutoFillBackground(true);
@@ -204,7 +205,7 @@ videowidget::videowidget(DWidget *parent)
 //延迟加载
 void videowidget::delayInit()
 {
-    m_imgPrcThread = new MajorImageProcessingThread;
+    m_imgPrcThread = new MajorImageProcessingThread(m_bWayland, this);
     m_imgPrcThread->setParent(this);
     m_imgPrcThread->setObjectName("MajorThread");
 
@@ -216,7 +217,7 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
-    if (get_wayland_status() == true) {
+    if (m_bWayland) {
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
     } else {
@@ -307,10 +308,10 @@ void videowidget::showNocam()
 #ifdef __mips__
     m_pNormalItem->hide();
 #else
-    if (get_wayland_status() == true)
+    if (m_bWayland)
         m_pNormalItem->hide();
 #endif
-    if (get_wayland_status() == true)
+    if (m_bWayland)
         m_pNormalItem->hide();
 
     emit noCam();
@@ -330,7 +331,7 @@ void videowidget::showCamUsed()
     if (m_pNormalItem->isVisible())
         m_pNormalItem->hide();
 #else
-    if (get_wayland_status() == true) {
+    if (m_bWayland) {
         if (m_pNormalItem->isVisible())
             m_pNormalItem->hide();
     } else {
@@ -400,7 +401,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             onEndBtnClicked();
 
         //wayland平台等比例缩放画面
-        if (get_wayland_status() == true) {
+        if (m_bWayland) {
             int framewidth = m_openglwidget->getFrameWidth();
             int frameheight = m_openglwidget->getFrameHeight();
             int widgetwidth = width();
@@ -453,7 +454,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
                 int widgetheight = height();
                 //qDebug()<<"widgetwidth :" << width() << " widgetheight: " << height() << endl;
 
-                if (get_wayland_status() == true) {
+                if (m_bWayland) {
                     if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
                         QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                         m_framePixmap = QPixmap::fromImage(img);
@@ -505,7 +506,7 @@ void videowidget::onReachMaxDelayedFrames()
     m_pNormalItem->hide() ;
 
 #else
-    if (get_wayland_status() == true) {
+    if (m_bWayland) {
         m_pNormalItem->hide() ;
     } else {
         if (m_openglwidget->isVisible())
@@ -645,7 +646,7 @@ void videowidget::showCountdown()
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 #ifndef __mips__
-                if (!get_wayland_status())
+                if (!m_bWayland)
                     m_openglwidget->hide();
 #else
                 m_pNormalView->hide();
@@ -804,7 +805,7 @@ void videowidget::flash()
         m_takePicSound->play();
 
 #ifndef __mips__
-    if (!get_wayland_status())
+    if (!m_bWayland)
         if (m_openglwidget->isVisible() == false)
             m_openglwidget->show();
 
@@ -904,7 +905,7 @@ void videowidget::onRestartDevices()
             QPalette plt = palette();
             plt.setColor(QPalette::Window, Qt::white);
 #ifndef __mips__
-            if (!get_wayland_status())
+            if (!m_bWayland)
                 m_openglwidget->show();
 #endif
         }
@@ -1046,7 +1047,7 @@ void videowidget::onTakePic(bool bTrue)
         eventloop.exec();
 #ifndef __mips__
 
-        if (!get_wayland_status())
+        if (!m_bWayland)
             if (!m_openglwidget->isVisible())
                 m_openglwidget->show();
 
@@ -1192,7 +1193,7 @@ void videowidget::stopEverything()
     m_dLabel->hide();
 
 #ifndef __mips__
-    if (!get_wayland_status())
+    if (!m_bWayland)
         if (!m_openglwidget->isVisible())
             m_openglwidget->show();
 #endif
@@ -1302,7 +1303,7 @@ videowidget::~videowidget()
     delete m_imgPrcThread;
 
 #ifndef __mips__
-    if (!get_wayland_status()) {
+    if (!m_bWayland) {
         if (m_openglwidget) {
             delete m_openglwidget;
             m_openglwidget = nullptr;

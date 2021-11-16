@@ -52,7 +52,7 @@ class MajorImageProcessingThread : public QThread
 {
     Q_OBJECT
 public:
-    MajorImageProcessingThread();
+    MajorImageProcessingThread(bool bWayland, QObject *parent = nullptr);
 
     ~MajorImageProcessingThread();
 
@@ -96,7 +96,8 @@ public:
      * @brief setState 设置拍照，录像状态
      * @param bPhoto  true 拍照状态， false 录像状态
      */
-    void setState(bool bPhoto){
+    void setState(bool bPhoto)
+    {
         m_bPhoto = bPhoto;
     }
 
@@ -154,7 +155,7 @@ public:
     bool    m_bTake; //是否拍照
 
 private:
-    void ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height);
+    void ImageHorizontalMirror(const uint8_t *src, uint8_t *dst, int width, int height);
 
 private:
     int               m_result;
@@ -169,6 +170,7 @@ private:
 
     bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
     bool              m_bHorizontalMirror;   //水平镜像
+    bool              m_bWayland;
     int               m_exposure = 0;
 
     QImage             m_Img;   //mips、wayland下使用该变量

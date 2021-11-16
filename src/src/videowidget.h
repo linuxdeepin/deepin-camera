@@ -72,9 +72,9 @@ public:
     explicit QGraphicsViewEx(QWidget *parent = nullptr);
 
 protected:
-    virtual void mousePressEvent(QMouseEvent* e) override;
-    virtual void mouseMoveEvent(QMouseEvent* e) override;
-    virtual void mouseReleaseEvent(QMouseEvent* e) override;
+    virtual void mousePressEvent(QMouseEvent *e) override;
+    virtual void mouseMoveEvent(QMouseEvent *e) override;
+    virtual void mouseReleaseEvent(QMouseEvent *e) override;
 };
 
 /**
@@ -85,7 +85,7 @@ class videowidget : public DWidget
 {
     Q_OBJECT
 public:
-    explicit videowidget(DWidget *parent = nullptr);
+    explicit videowidget(bool bWayland, DWidget *parent = nullptr);
     ~videowidget();
 
 signals:
@@ -423,6 +423,7 @@ private:
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
     bool                       m_flashEnable;       //是否闪光灯
     bool                       m_bPhoto = true;     //相机当前状态，默认为拍照状态
+    bool                       m_bWayland;
 };
 
 #endif // VIDEOWIDGET_H

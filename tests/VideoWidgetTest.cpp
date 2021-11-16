@@ -116,10 +116,6 @@ TEST_F(VideoWidgetTest, updateBlockSystem)
 {
     emit m_videoWidget->updateBlockSystem(false);
     emit m_videoWidget->updateBlockSystem(true);
-    m_mainwindow->setWayland(true);
-    emit m_videoWidget->updateBlockSystem(false);
-    emit m_videoWidget->updateBlockSystem(true);
-    m_mainwindow->setWayland(false);
 }
 
 ///**

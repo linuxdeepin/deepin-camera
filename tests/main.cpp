@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
     CMainWindow *mainWnd = new CMainWindow();
     mainWnd->setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
     a.setMainWindow(mainWnd);
-    mainWnd->setWayland(false);
 
     mainWnd->show();
     mainWnd->loadAfterShow();

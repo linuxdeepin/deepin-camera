@@ -24,7 +24,6 @@
 #include "videowidget.h"
 #include "devnummonitor.h"
 #include "closedialog.h"
-#include "camview.h"
 #include "Settings.h"
 #include "titlebar.h"
 #include "rollingbox.h"
@@ -90,12 +89,6 @@ public:
     * @brief lastOpenedPath　上一次打开的文件路径,如果路径错误或者不存在，不会创建，因为有权限问题和U盘拔出问题
     */
     static QString lastOpenedPath(QStandardPaths::StandardLocation standard);
-
-    /**
-    * @brief setWayland　判断是否是wayland，并初始化对应操作
-    * @param bTrue
-    */
-    void setWayland(bool bTrue);
 
     /**
     * @brief settingDialog　加载设置对话框
