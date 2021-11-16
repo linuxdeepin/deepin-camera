@@ -29,6 +29,7 @@ extern "C"
 #include "cameraconfig.h"
 #include "acobjectlist.h"
 
+
 extern "C"
 {
 #include <libimagevisualresult/visualresult.h>
