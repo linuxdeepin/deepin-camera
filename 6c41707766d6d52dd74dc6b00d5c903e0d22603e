@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "596de051_1c9ae19a",
+        "filename": "libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-17T05:30:22Z",
+      "side": 1,
+      "message": "(style) Unused variable: fm",
+      "revId": "6c41707766d6d52dd74dc6b00d5c903e0d22603e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35f365f0_01ec48e4",
+        "filename": "libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-17T05:30:22Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16371270187540.3781234648956624/changeCache/libcam/libcam_v4l2core/v4l2_devices.c:356]: (warning) Either the condition \u0027videodevice!\u003dNULL\u0027 is redundant or there is possible null pointer dereference: videodevice",
+      "revId": "6c41707766d6d52dd74dc6b00d5c903e0d22603e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1659c333_99bf723f",
         "filename": "src/src/majorimageprocessingthread.cpp",
         "patchSetId": 1
