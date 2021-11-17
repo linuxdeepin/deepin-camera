@@ -120,7 +120,7 @@ void MajorImageProcessingThread::run()
                 m_stopped = 1;
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
-                close_v4l2_device_handler();
+//                close_v4l2_device_handler();
             }
 
             continue;
