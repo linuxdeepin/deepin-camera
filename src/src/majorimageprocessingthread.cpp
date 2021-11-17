@@ -150,9 +150,13 @@ void MajorImageProcessingThread::run()
                 m_stopped = 1;
                 //发送设备中断信号
                 emit reachMaxDelayedFrames();
+<<<<<<< HEAD   (f85887 fix: UI动效调整，标签阴影显示)
                 m_filterImg =  QImage();
                 emit SendFilterImageProcessing(&m_filterImg);
                 close_v4l2_device_handler();
+=======
+//                close_v4l2_device_handler();
+>>>>>>> CHANGE (6c4170 fix: bug100342 插拔摄像头闪退)
             }
 
             continue;
