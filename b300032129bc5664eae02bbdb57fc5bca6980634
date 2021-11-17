@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "f747bbee_9a71183c",
+        "filename": "libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-17T06:27:00Z",
+      "side": 1,
+      "message": "(style) Unused variable: fm",
+      "revId": "b300032129bc5664eae02bbdb57fc5bca6980634",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4acb81c_65f61bf2",
+        "filename": "libcam/libcam_v4l2core/v4l2_devices.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-17T06:27:00Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16371304168430.21780576996899026/changeCache/libcam/libcam_v4l2core/v4l2_devices.c:356]: (warning) Either the condition \u0027videodevice!\u003dNULL\u0027 is redundant or there is possible null pointer dereference: videodevice",
+      "revId": "b300032129bc5664eae02bbdb57fc5bca6980634",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6d82f50a_5af5de5e",
         "filename": "src/src/majorimageprocessingthread.cpp",
         "patchSetId": 1
@@ -30,6 +64,23 @@
       "writtenOn": "2021-11-17T06:26:59Z",
       "side": 1,
       "message": "注释行数: 1; 改动行数(修改和新增): 4; 注释率: 25.0%",
+      "revId": "b300032129bc5664eae02bbdb57fc5bca6980634",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b99fd0cf_768cd87d",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-11-17T06:27:00Z",
+      "side": 1,
+      "message": "(error) The code contains unhandled character(s) (character code\u003d229). Neither unicode nor extended ascii is supported",
       "revId": "b300032129bc5664eae02bbdb57fc5bca6980634",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
