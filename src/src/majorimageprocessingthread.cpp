@@ -152,7 +152,7 @@ void MajorImageProcessingThread::run()
                 emit reachMaxDelayedFrames();
                 m_filterImg =  QImage();
                 emit SendFilterImageProcessing(&m_filterImg);
-                close_v4l2_device_handler();
+//                close_v4l2_device_handler();
             }
 
             continue;

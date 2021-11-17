@@ -1,4 +1,4 @@
-/*******************************************************************************#
+﻿/*******************************************************************************#
 #           guvcview              http://guvcview.sourceforge.net               #
 #                                                                               #
 #           Paulo Assis <pj.assis@gmail.com>                                    #
@@ -339,11 +339,12 @@ void v4l2core_init_device_list()
  */ 
 int v4l2core_get_device_index(const char *videodevice)
 {
-	if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL)
+    if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL && videodevice != NULL)
 	{
 		int dev_index = 0;
 		for(dev_index = 0; dev_index < my_device_list.num_devices; ++dev_index)
 		{
+            fprintf(stderr,"v4l2core_get_device_index dev_index(%d) videodevice:%x device:%x\n", dev_index, (unsigned int)videodevice, (unsigned int)(my_device_list.list_devices[dev_index].device));
 			if(strcmp(videodevice, my_device_list.list_devices[dev_index].device)==0)
 			{
 				my_device_list.list_devices[dev_index].current = 1;
