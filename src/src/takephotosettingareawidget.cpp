@@ -31,9 +31,8 @@
 #include <QDateTime>
 #include <QTimer>
 
-#define HIDE_ANIMATION_DURATION 100
-#define ANIMATION_DURATION 100
-#define ANIMATION_FOLD_DURATION 100
+#define ANIMATION_DURATION 200
+#define ANIMATION_FOLD_DURATION 200
 #define ANIMATION_ROTATE_DURATION 100
 #define ANIMATION_FILTER_DURATION 170
 #define SLIDER_ANIMATION_DURATION 50
@@ -676,6 +675,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 
     QPropertyAnimation *posClose = new QPropertyAnimation(m_filtersCloseBtn, "pos", this);
     QPropertyAnimation *opacityClose = new QPropertyAnimation(m_filtersCloseBtn, "opacity", this);
+    QPropertyAnimation *iconOpacityClose = new QPropertyAnimation(m_filtersCloseBtn, "iconopacity", this);
 
     //透明度动画
     QPropertyAnimation *posFold = new QPropertyAnimation(m_filtersFoldBtn, "pos", this);
@@ -723,6 +723,10 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         opacityClose->setStartValue(0);
         opacityClose->setEndValue(102);
 
+        iconOpacityClose->setDuration(ANIMATION_FILTER_DURATION);
+        iconOpacityClose->setStartValue(0);
+        iconOpacityClose->setEndValue(1);
+
         m_filtersFoldBtn->setVisible(bShow);
         m_filtersFoldBtn->setOpacity(0);
         m_filtersFoldBtn->setIconOpacity(0);
@@ -731,6 +735,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         }
         m_filtersCloseBtn->setVisible(bShow);
         m_filtersCloseBtn->setOpacity(0);
+        m_filtersCloseBtn->setIconOpacity(0);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             for (auto pBtn : m_filterPreviewBtnList) {
                 pBtn->update();
@@ -745,29 +750,37 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     } else {
         int index = 1;
         for (auto pos : positionList) {
-            pos->setDuration(ANIMATION_DURATION);
+            pos->setDuration(ANIMATION_FILTER_DURATION);
             pos->setStartValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
             pos->setEndValue(QPoint(0,0));
         }
 
-        posClose->setDuration(ANIMATION_DURATION);
+        posClose->setDuration(ANIMATION_FILTER_DURATION);
         posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index + 10));
         posClose->setEndValue(QPoint(5, 0));
 
         for (auto opa : opacityList) {
-            opa->setDuration(ANIMATION_DURATION);
+            opa->setDuration(ANIMATION_FILTER_DURATION);
             opa->setStartValue(1);
             opa->setEndValue(0);
         }
 
-        opacityFold->setDuration(ANIMATION_DURATION);
+        opacityFold->setDuration(ANIMATION_FILTER_DURATION);
         opacityFold->setStartValue(102);
         opacityFold->setEndValue(0);
 
-        iconOpacityFold->setDuration(ANIMATION_DURATION);
+        iconOpacityFold->setDuration(ANIMATION_FILTER_DURATION);
         iconOpacityFold->setStartValue(1);
         iconOpacityFold->setEndValue(0);
+
+        opacityClose->setDuration(ANIMATION_FILTER_DURATION);
+        opacityClose->setStartValue(102);
+        opacityClose->setEndValue(0);
+
+        iconOpacityClose->setDuration(ANIMATION_FILTER_DURATION);
+        iconOpacityClose->setStartValue(1);
+        iconOpacityClose->setEndValue(0);
 
         m_filtersCloseBtn->setVisible(bShow);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=](){
@@ -788,6 +801,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         pPosGroup->addAnimation(pos);
     pPosGroup->addAnimation(posClose);
     pPosGroup->addAnimation(opacityClose);
+    pPosGroup->addAnimation(iconOpacityClose);
     for (auto opa : opacityList)
         pPosGroup->addAnimation(opa);
 

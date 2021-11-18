@@ -1679,7 +1679,7 @@ void CMainWindow::initUI()
     QFont ft;
     ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
     ft.setWeight(20);
-    ft.setPointSize(16);
+    ft.setPointSize(14);
     m_labelCameraName->setFont(ft);
     m_labelCameraName->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
     m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
