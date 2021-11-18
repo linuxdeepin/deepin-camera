@@ -1003,7 +1003,7 @@ void CMainWindow::initShortcut()
         QString param1 = "-j=" + sc.toStr();
         QString param2 = "-p=" + QString::number(pos.x()) + "," + QString::number(pos.y());
 
-        shortcutString << "-b" << param1 << param2;
+        shortcutString << param1 << param2;
 #ifndef UNITTEST
         QProcess::startDetached("deepin-shortcut-viewer", shortcutString);
 #endif
