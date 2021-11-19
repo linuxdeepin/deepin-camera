@@ -56,7 +56,6 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QFormLayout>
-#include <QShortcut>
 #include <QLibraryInfo>
 
 #include <qsettingbackend.h>
@@ -977,14 +976,13 @@ void CMainWindow::initEventFilter()
 
 void CMainWindow::initShortcut()
 {
-    QShortcut *scViewShortcut = new QShortcut(QKeySequence("Ctrl+Shift+/"), this);
-    scViewShortcut->setAutoRepeat(false);
-    QShortcut *scSpaceShortcut = new QShortcut(Qt::Key_Space, this);
-    QShortcut *scEnterShortcut = new QShortcut(Qt::Key_Return, this);
-    QShortcut *scUpShortcut = new QShortcut(Qt::Key_Up, this);
-    QShortcut *scDownShortcut = new QShortcut(Qt::Key_Down, this);
-    QShortcut *scLeftShortcut = new QShortcut(Qt::Key_Left, this);
-    QShortcut *scRightShortcut = new QShortcut(Qt::Key_Right, this);
+    QShortcutEx *scViewShortcut = new QShortcutEx(QKeySequence("Ctrl+Shift+/"), this);
+    QShortcutEx *scSpaceShortcut = new QShortcutEx(Qt::Key_Space, this);
+    QShortcutEx *scEnterShortcut = new QShortcutEx(Qt::Key_Return, this);
+    QShortcutEx *scUpShortcut = new QShortcutEx(Qt::Key_Up, this);
+    QShortcutEx *scDownShortcut = new QShortcutEx(Qt::Key_Down, this);
+    QShortcutEx *scLeftShortcut = new QShortcutEx(Qt::Key_Left, this);
+    QShortcutEx *scRightShortcut = new QShortcutEx(Qt::Key_Right, this);
 
     connect(scUpShortcut, &QShortcut::activated, this, &CMainWindow::onKeyUp);
     connect(scDownShortcut, &QShortcut::activated, this, &CMainWindow::onKeyDown);

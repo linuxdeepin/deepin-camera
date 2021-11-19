@@ -29,6 +29,7 @@
 #include <QFileInfo>
 #include <QDateTime>
 #include <QPropertyAnimation>
+#include <QShortcut>
 
 #include <dprintpreviewwidget.h>
 #include <dprintpreviewdialog.h>
@@ -38,6 +39,16 @@ DWIDGET_USE_NAMESPACE
 #define SELECTED_WIDTH 58//选中的缩略图图元宽高
 
 #define ANIMATION_DURATION 160 //动画时长
+
+//默认触发一次，避免长按一直触发快捷键槽函数，引起的程序异常
+class QShortcutEx: public QShortcut
+{
+    Q_OBJECT
+public:
+    QShortcutEx(const QKeySequence& key, QWidget *parent,
+                const char *member = nullptr, const char *ambiguousMember = nullptr,
+                Qt::ShortcutContext context = Qt::WindowShortcut);
+};
 
 /**
  * @brief AnimationWidget 文件更新动画的上层控件

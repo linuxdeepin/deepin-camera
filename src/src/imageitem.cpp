@@ -38,7 +38,6 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
-#include <QShortcut>
 
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 
@@ -50,6 +49,12 @@ extern "C" {
 #include "load_libs.h"
 }
 
+QShortcutEx::QShortcutEx(const QKeySequence& key, QWidget *parent,
+                         const char *member, const char *ambiguousMember,
+                         Qt::ShortcutContext context):QShortcut (key, parent, member, ambiguousMember, context)
+{
+    setAutoRepeat(false);
+}
 
 ImageItem::ImageItem(QWidget *parent)
     : DLabel(parent),
@@ -293,23 +298,23 @@ void ImageItem::onOpenFolder()
 
 void ImageItem::initShortcut()
 {
-    QShortcut *shortcutCopy = new QShortcut(QKeySequence("ctrl+c"), this);
+    QShortcutEx *shortcutCopy = new QShortcutEx(QKeySequence("ctrl+c"), this);
     shortcutCopy->setObjectName(SHORTCUT_COPY);
     connect(shortcutCopy, SIGNAL(activated()), this, SLOT(onCopy()));
     //也可以用Qt::Key_Delete
-    QShortcut *shortcutDel = new QShortcut(QKeySequence("delete"), this);
+    QShortcutEx *shortcutDel = new QShortcutEx(QKeySequence("delete"), this);
     shortcutDel->setObjectName(SHORTCUT_DELETE);
     connect(shortcutDel, SIGNAL(activated()), this, SLOT(onShortcutDel()));
     //唤起右键菜单
-    QShortcut *shortcutMenu = new QShortcut(QKeySequence("Alt+M"), this);
+    QShortcutEx *shortcutMenu = new QShortcutEx(QKeySequence("Alt+M"), this);
     shortcutMenu->setObjectName(SHORTCUT_CALLMENU);
     connect(shortcutMenu, SIGNAL(activated()), this, SLOT(onShowMenu()));
     //打开文件夹
-    QShortcut *shortcutOpenFolder = new QShortcut(QKeySequence("Ctrl+O"), this);
+    QShortcutEx *shortcutOpenFolder = new QShortcutEx(QKeySequence("Ctrl+O"), this);
     shortcutOpenFolder->setObjectName(SHORTCUT_OPENFOLDER);
     connect(shortcutOpenFolder, &QShortcut::activated, this, &ImageItem::onOpenFolder);
     //打印
-    QShortcut *shortcutPrint = new QShortcut(QKeySequence("Ctrl+P"), this);
+    QShortcutEx *shortcutPrint = new QShortcutEx(QKeySequence("Ctrl+P"), this);
     shortcutPrint->setObjectName(SHORTCUT_PRINT);
     connect(shortcutPrint, SIGNAL(activated()), this, SLOT(onPrint()));
 }
