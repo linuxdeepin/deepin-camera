@@ -56,6 +56,7 @@
 
 //thumbnailbar
 #define BUTTON_PICTURE_VIDEO QObject::tr("PicVdBtn")
+#define THUMB_LEFT_WIDGET QObject::tr("thumbLeftWidget")
 
 //videowidget
 #define BUTTON_TAKE_VIDEO_END QObject::tr("TakeVdEndBtn")

@@ -76,7 +76,7 @@ ThumbnailsBar::ThumbnailsBar(QWidget *parent)
     m_nMaxWidth = 0;
     m_hBox = new QHBoxLayout();
     m_thumbLeftWidget->setLayout(m_hBox);
-    m_thumbLeftWidget->setObjectName("thumbLeftWidget");
+    m_thumbLeftWidget->setObjectName(THUMB_LEFT_WIDGET);
     m_thumbLeftWidget->setFocusPolicy(Qt::TabFocus);
     m_thumbLeftWidget->setMargin(0);
 
@@ -658,6 +658,17 @@ void ThumbnailsBar::OnPrint()
     //判断指针不为空
     if (tmp)
         tmp->onPrint();
+}
+
+void ThumbnailsBar::OnEnter()
+{
+    if (!m_thumbLeftWidget->hasFocus())
+        return;
+
+    ImageItem *tmp = g_indexImage.value(DataManager::instance()->getindexNow());
+    //判断指针不为空
+    if (tmp)
+        tmp->openFile();
 }
 
 void ThumbnailsBar::onShiftMulti()

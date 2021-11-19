@@ -57,6 +57,8 @@ public:
 
     ~ImageItem() override;
 
+    void openFile();
+
     /**
      * @brief updatePic 更新图片
      * @param pixmap

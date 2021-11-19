@@ -1050,6 +1050,10 @@ void CMainWindow::initShortcut()
                     m_thumbnail->findChild<DPushButton *>(BUTTON_PICTURE_VIDEO)->click();
                 }
             }
+        } else if (m_thumbnail->findChild<ThumbWidget *>(THUMB_LEFT_WIDGET) == focuswidget) {
+            if (focuswidget) {
+                m_thumbnail->OnEnter();
+            }
         } else if (m_pTitlePicBtn == focuswidget)
             m_pTitlePicBtn->click();
         else if (m_pTitleVdBtn == focuswidget)

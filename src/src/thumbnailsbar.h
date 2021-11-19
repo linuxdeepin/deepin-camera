@@ -214,6 +214,11 @@ public slots:
     void OnPrint();
 
     /**
+    * @brief onEnter　打开文件
+    */
+    void OnEnter();
+
+    /**
      * @brief onShiftMulti 多选
      */
     void onShiftMulti();

@@ -272,31 +272,36 @@ ImageItem::~ImageItem()
 
 }
 
+void ImageItem::openFile()
+{
+    QFileInfo fileInfo(m_path);
+    QString program;
+    if (fileInfo.suffix() == "jpg") {
+        program = "deepin-image-viewer"; //用看图打开
+        qDebug() << "Open it with deepin-image-viewer";
+    } else {
+        program = "deepin-movie"; //用影院打开
+        qDebug() << "Open it with deepin-movie";
+    }
+
+    QStringList arguments;
+    //表示本地文件
+    arguments << QUrl::fromLocalFile(m_path).toString();
+    qInfo() << QUrl::fromLocalFile(m_path).toString();
+    QProcess *myProcess = new QProcess(this);
+    bool bOK = myProcess->startDetached(program, arguments);
+
+    if (!bOK)
+        qWarning() << "QProcess startDetached error";
+}
+
 void ImageItem::mouseDoubleClickEvent(QMouseEvent *ev)
 {
     if (!CamApp->isPanelEnvironment()) {
         if (ev->button() == Qt::RightButton)
             return;
 
-        QFileInfo fileInfo(m_path);
-        QString program;
-        if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer"; //用看图打开
-            qDebug() << "Open it with deepin-image-viewer";
-        } else {
-            program = "deepin-movie"; //用影院打开
-            qDebug() << "Open it with deepin-movie";
-        }
-
-        QStringList arguments;
-        //表示本地文件
-        arguments << QUrl::fromLocalFile(m_path).toString();
-        qInfo() << QUrl::fromLocalFile(m_path).toString();
-        QProcess *myProcess = new QProcess(this);
-        bool bOK = myProcess->startDetached(program, arguments);
-
-        if (!bOK)
-            qWarning() << "QProcess startDetached error";
+        openFile();
     }
 }
 
