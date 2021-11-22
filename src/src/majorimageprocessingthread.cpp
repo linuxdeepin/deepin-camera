@@ -181,9 +181,9 @@ void MajorImageProcessingThread::run()
         m_frame->yuv_frame = m_yuvPtr;
 
         // wayland下，获取的相机原始画面为镜像画面，需要翻转一次
-        if (get_wayland_status() == 1) {
-            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
-        }
+//        if (get_wayland_status() == 1) {
+//            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
+//        }
 
         // 判断是否使用rgb数据
         bool bUseRgb = false;
