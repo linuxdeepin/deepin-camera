@@ -44,7 +44,7 @@
 #include <QGraphicsSvgItem>
 #include <QDesktopWidget>
 
-#define COUNTDOWN_WIDTH 30
+#define COUNTDOWN_WIDTH 32
 #define COUNTDOWN_HEIGHT 61
 #define COUNTDOWN_OFFECT 20
 
