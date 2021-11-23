@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Trwa nagrywanie wideo. Zamknij okno?</translation>
+        <translation>Nagrywanie wideo w trakcie. Czy na pewno chcesz zamknąć okno? </translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Przełącz kamery</translation>
+        <translation>Zmień kamerę</translation>
     </message>
 </context>
 <context>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie masz uprawnień do obsługi tego folderu</translation>
+        <translation>Nie masz uprawnień do operowania na tym folderze</translation>
     </message>
     <message>
         <source>Close</source>
@@ -248,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>Normalny</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>Żywy</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>Ciepły</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>Chłodny</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>Szary</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>B&amp;W</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>Filtry</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Odsłonięcie</translation>
     </message>
 </context>
 <context>

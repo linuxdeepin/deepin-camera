@@ -248,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>ئۆلچەملىك</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>ئىنىقراق</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>ئېسسېق رەڭ</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>سوغۇق رەڭ</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>كونىچە</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>بېسىش</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>كۈلرەڭ</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>ئاق-قارا</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>سۈزگۈچ</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>ئېكسپوزىتسىيە</translation>
     </message>
 </context>
 <context>

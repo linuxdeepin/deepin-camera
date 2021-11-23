@@ -248,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>Canlı</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>İsti</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>Soyuq</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>Boz</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>Ağ-Qara</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>Süzgəclər</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Ekspozisiya</translation>
     </message>
 </context>
 <context>

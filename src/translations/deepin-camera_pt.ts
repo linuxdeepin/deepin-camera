@@ -248,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>Vívido</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>Quente</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>Frio</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>Cinema</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>Cinzento</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>P&amp;B</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Exposição</translation>
     </message>
 </context>
 <context>

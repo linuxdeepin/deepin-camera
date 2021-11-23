@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"/>
+        <translation>Die Videoaufnahme läuft. Das Fenster schließen?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"/>
+        <translation>Du hast keine Berechtigung, diesen Ordner zu verwenden</translation>
     </message>
     <message>
         <source>Close</source>
@@ -84,7 +84,7 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>Grundlegend</translation>
     </message>
     <message>
         <source>File location</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"/>
+        <translation>Kamera ist ein Dienstprogramm zur Bild- und Videoaufnahme, das Ihre PC-Kamera oder Webcam verwendet.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -248,35 +248,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>Lebendig</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>Warm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>Kalt</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>Grau</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>SW</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>Filter</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Belichtung</translation>
     </message>
 </context>
 <context>
