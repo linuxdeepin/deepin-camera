@@ -26,6 +26,7 @@
 #include "acobjectlist.h"
 
 
+
 extern "C"
 {
 #include <libimagevisualresult/visualresult.h>
