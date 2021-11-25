@@ -250,7 +250,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         lastPicPath = picStrElideText;
     } else if (picStrElideText[0] == '~' && picStrElideText.compare(option->defaultValue().toString())) {
         picStrElideText = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                          + QDir::separator() + QObject::tr("Camera");
+                          + QDir::separator() + "Camera";
 
         lastPicPath = picStrElideText;
     } else
@@ -345,7 +345,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         if (!dir.exists()) {
             //设置文本框为新的路径
             tmplastpicpath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                             + QDir::separator() + QObject::tr("Camera");
+                             + QDir::separator() + "Camera";
             QDir defaultdir(tmplastpicpath);
 
             if (!defaultdir.exists())
@@ -407,7 +407,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             //文本框路径无效
             else {
                 QString strDefaultPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                                            + QDir::separator() + QObject::tr("Camera");
+                                            + QDir::separator() + "Camera";
                 //设置为默认路径
                 option->setValue(option->defaultValue().toString());
                 picPathLineEdit->setText(option->defaultValue().toString());
@@ -505,7 +505,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         lastVideoPath = VideoStrElideText;
     } else if (VideoStrElideText[0] == '~' && VideoStrElideText.compare(option->defaultValue().toString())) {
         VideoStrElideText = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                            + QDir::separator() + QObject::tr("Camera");
+                            + QDir::separator() + "Camera";
 
         lastVideoPath = VideoStrElideText;
     } else
@@ -589,7 +589,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         if (!dir.exists()) {
             //设置文本框为新的路径
             lastVideoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                            + QDir::separator() + QObject::tr("Camera");
+                            + QDir::separator() + "Camera";
             QDir defaultdir(lastVideoPath);
 
             if (!defaultdir.exists()) {
@@ -652,7 +652,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
             //文本框路径无效
             else {
                 QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                                           + QDir::separator() + QObject::tr("Camera");
+                                           + QDir::separator() + "Camera";
                 //设置为默认路径
                 option->setValue(option->defaultValue().toString());
                 videoPathLineEdit->setText(option->defaultValue().toString());
@@ -690,23 +690,23 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
         lastPath = Settings::get().getOption("base.save.vddatapath").toString();
         if (lastPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
             lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                       + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + "Camera";
 
     } else {
         lastPath = Settings::get().getOption("base.save.picdatapath").toString();
         if (lastPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                       + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + "Camera";
     }
 
     QDir lastDir(lastPath);
     if (lastPath.isEmpty() || !lastDir.exists()) {
         if (standard == QStandardPaths::MoviesLocation) {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                       + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + "Camera";
         } else {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                       + QDir::separator() + QObject::tr("Camera");
+                       + QDir::separator() + "Camera";
         }
 
         QDir dirNew(lastPath);
