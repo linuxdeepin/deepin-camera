@@ -37,6 +37,7 @@
 #include <QDateTime>
 #include <QSvgRenderer>
 #include <QGraphicsView>
+#include <QGraphicsScene>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
@@ -72,9 +73,7 @@ public:
     explicit QGraphicsViewEx(QWidget *parent = nullptr);
 
 protected:
-    virtual void mousePressEvent(QMouseEvent* e) override;
     virtual void mouseMoveEvent(QMouseEvent* e) override;
-    virtual void mouseReleaseEvent(QMouseEvent* e) override;
 };
 
 /**
