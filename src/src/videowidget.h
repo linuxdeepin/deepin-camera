@@ -37,6 +37,7 @@
 #include <QDateTime>
 #include <QSvgRenderer>
 #include <QGraphicsView>
+#include <QGraphicsScene>
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
