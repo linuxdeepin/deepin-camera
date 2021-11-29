@@ -58,19 +58,17 @@ QGraphicsViewEx::QGraphicsViewEx(QWidget *parent)
 
 }
 
-void QGraphicsViewEx::mousePressEvent(QMouseEvent *e)
-{
-    QWidget::mousePressEvent(e);
-}
-
 void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
 {
-    QWidget::mouseMoveEvent(e);
-}
+    // 画布视图鼠标事件，默认接收鼠标事件(accepted为true)，即默认不向父窗口传递鼠标事件
+    // 若在鼠标事件处理完成后，需要父窗口继续处理鼠标事件，需要在函数末尾将accepted改为false
+    QGraphicsView::mouseMoveEvent(e);
 
-void QGraphicsViewEx::mouseReleaseEvent(QMouseEvent *e)
-{
-    QWidget::mouseReleaseEvent(e);
+    //若没有选中任何图元，才执行移动相机窗口操作
+    if (scene() && scene()->selectedItems().isEmpty()) {
+        //accepted设为false，鼠标移动事件会继续向父窗口传递，拖动窗口功能可正常运行
+        e->setAccepted(false);
+    }
 }
 
 videowidget::videowidget(DWidget *parent)
