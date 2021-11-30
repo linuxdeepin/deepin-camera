@@ -76,27 +76,22 @@ void Titlebar::paintEvent(QPaintEvent *pe)
 {
     Q_D(const Titlebar);
 
-    if(DataManager::instance()->getdevStatus() != NOCAM) {
-        QPainter painter(this);
-        QPalette pa;
-        QPen pen(QColor(0, 0, 0, 0));
-        QLinearGradient linearGradient(width(), 0, width(), height());
+    QPainter painter(this);
+    QPalette pa;
+    QPen pen(QColor(0, 0, 0, 0));
+    QLinearGradient linearGradient(width(), 0, width(), height());
 
-        linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
-        linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
+    linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
+    linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
-        pa.setColor(QPalette::ButtonText, d->lightColor);
-        d->m_titlebar->setPalette(pa);
+    pa.setColor(QPalette::ButtonText, d->lightColor);
+    d->m_titlebar->setPalette(pa);
 
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        painter.setBrush(QBrush(linearGradient));
-        painter.setPen(pen);
-        painter.drawRect(rect());
-    } else {
-        DBlurEffectWidget::paintEvent(pe);
-    }
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setBrush(QBrush(linearGradient));
+    painter.setPen(pen);
+    painter.drawRect(rect());
 }
-
 
 Titlebar::~Titlebar()
 {
