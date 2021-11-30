@@ -39,7 +39,7 @@ DWIDGET_USE_NAMESPACE;
 filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* = filter_Normal*/): QWidget(parent)
   , m_filterType(filter)
 {
-    m_color.setRgb(0, 0, 0, m_opacity);
+    m_color.setRgb(44, 44, 44);
 
     m_hover = false;
     m_mousePress = false;
@@ -59,7 +59,7 @@ void filterPreviewButton::setImage(QImage *img)
 {
     Q_ASSERT(img);
 
-    if (isHidden())
+    if (isHidden() && !img->isNull())
         return;
 
     uint8_t* frame = img->bits();
