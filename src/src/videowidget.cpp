@@ -217,15 +217,8 @@ videowidget::videowidget(DWidget *parent)
     connect(m_flashTimer, SIGNAL(timeout()), this, SLOT(flash()));
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//显示录制时长
     m_flashTimer->setSingleShot(true);
-
-    //设置相机背景色为黑色
-    QColor bgColor(0, 0, 0);
-    QPalette pal(this->palette());
-    pal.setColor(QPalette::Background, bgColor);
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
-    m_pNormalScene->setBackgroundBrush(bgColor);
 }
+
 
 //延迟加载
 void videowidget::delayInit()
@@ -297,11 +290,23 @@ void videowidget::showNocam()
         QColor clr(255, 255, 255);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
+
+        QColor clrBase(0, 0, 0);
+        clrBase.setAlphaF(0.7);
+        QPalette plt = palette();
+        plt.setColor(QPalette::Base, clrBase);
+        setPalette(plt);
     } else {
         m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Not connected_dark.svg"), this));
         QColor clr(0, 0, 0);
         clr.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clr);
+
+        QColor clrBase(255, 255, 255);
+        clrBase.setAlphaF(0.7);
+        QPalette plt = palette();
+        plt.setColor(QPalette::Base, clrBase);
+        setPalette(plt);
     }
 
     QFont ft("SourceHanSansSC");
@@ -359,12 +364,22 @@ void videowidget::showCamUsed()
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);//浅色主题文字和图片是白色，特殊处理
         m_pCamErrItem->setPlainText(str);
+        QPalette plt = palette();
+        QColor clrBackGRD(Qt::black);
+        clrBackGRD.setAlphaF(0.7);
+        plt.setColor(QPalette::Base, clrBackGRD);
+        setPalette(plt);
     } else {
         m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Take up_dark.svg"), this));
         QColor clrText(Qt::black);
         clrText.setAlphaF(0.8);
         m_pCamErrItem->setDefaultTextColor(clrText);
         m_pCamErrItem->setPlainText(str);
+        QPalette plt = palette();
+        QColor clrBackGRD(Qt::white);
+        clrBackGRD.setAlphaF(0.7);
+        plt.setColor(QPalette::Base, clrBackGRD);
+        setPalette(plt);
     }
 
     QFont ft("SourceHanSansSC");
@@ -403,22 +418,29 @@ void videowidget::ReceiveOpenGLstatus(bool result)
         if (get_encoder_status() == 0 && getCapStatus())
             onEndBtnClicked();
 
-        // 画布窗口等比例缩放画面
-        int framewidth = m_openglwidget->getFrameWidth();
-        int frameheight = m_openglwidget->getFrameHeight();
-        int widgetwidth = width();
-        int widgetheight = height();
-        if (!framewidth && !frameheight) {
-            m_openglwidget->resize(widgetwidth, widgetheight);
-        } else {
-            if ((framewidth * 100 / frameheight) > (widgetwidth * 100 / widgetheight)) {
-                m_openglwidget->resize(widgetwidth, widgetwidth * frameheight / framewidth);
-                m_openglwidget->move(0, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
+        //wayland平台等比例缩放画面
+        if (get_wayland_status() == true) {
+            int framewidth = m_openglwidget->getFrameWidth();
+            int frameheight = m_openglwidget->getFrameHeight();
+            int widgetwidth = width();
+            int widgetheight = height();
+
+            if (!framewidth && !frameheight) {
+                m_openglwidget->resize(widgetwidth, widgetheight);
             } else {
-                m_openglwidget->resize(widgetheight * framewidth / frameheight, widgetheight);
-                m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, 0);
+                if ((framewidth * 100 / frameheight) > (widgetwidth * 100 / widgetheight)) {
+                    m_openglwidget->resize(widgetwidth, widgetwidth * frameheight / framewidth);
+                    m_openglwidget->move(0, (widgetheight - widgetwidth * frameheight / framewidth) / 2);
+                } else {
+
+                    m_openglwidget->resize(widgetheight * framewidth / frameheight, widgetheight);
+                    m_openglwidget->move((widgetwidth - widgetheight * framewidth / frameheight) / 2, 0);
+                }
+
             }
-        }
+
+        } else
+            m_openglwidget->resize(width(), height());
 
         if (!m_openglwidget->isVisible())
             m_openglwidget->show();
@@ -443,15 +465,23 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
 
             if (m_openglwidget && m_openglwidget->isVisible())
                 m_openglwidget->hide();
+
             {
-                // OpenGL窗口等比例缩放画面
                 int widgetwidth = width();
+
                 int widgetheight = height();
-                if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
-                    QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    m_framePixmap = QPixmap::fromImage(img);
+                //qDebug()<<"widgetwidth :" << width() << " widgetheight: " << height() << endl;
+
+                if (get_wayland_status() == true) {
+                    if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
+                        QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        m_framePixmap = QPixmap::fromImage(img);
+                    } else {
+                        QImage img = image->scaled(widgetheight * image->width() / image->height(), widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        m_framePixmap = QPixmap::fromImage(img);
+                    }
                 } else {
-                    QImage img = image->scaled(widgetheight * image->width() / image->height(), widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    QImage img = image->scaled(widgetwidth, widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                     m_framePixmap = QPixmap::fromImage(img);
                 }
 
@@ -467,6 +497,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             break;
         default:
             break;
+
         }
     }
 }
