@@ -87,6 +87,29 @@
     },
     {
       "key": {
+        "uuid": "30317b8c_99d7625d",
+        "filename": "src/src/gridline.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-12-02T09:23:12Z",
+      "side": 1,
+      "message": "缺少函数注释",
+      "range": {
+        "startLine": 33,
+        "startChar": 41,
+        "endLine": 33,
+        "endChar": 47
+      },
+      "revId": "201b7d6503dc5af0dec4ded792d4f08d5cf197ad",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0db1d82_fc7f7221",
         "filename": "src/src/mainwindow.cpp",
         "patchSetId": 1
