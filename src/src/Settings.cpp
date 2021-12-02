@@ -209,6 +209,13 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
         }
     }
 
+    if (key.startsWith("base.photogrid.photogrids")) {
+        auto grid_opt1 = m_settings->option("base.photogrid.photogrids");
+        if (value >= 0 && grid_opt1->data("items").toStringList().size() > value.toInt()) {
+            emit gridTypeChanged(value.toInt());
+        }
+    }
+
     if (key.startsWith("photosetting.photosdelay.photodelays")) {
         auto mode_opt1 = m_settings->option("photosetting.photosdelay.photodelays");
         if (value >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {

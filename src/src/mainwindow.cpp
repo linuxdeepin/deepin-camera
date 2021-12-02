@@ -1700,6 +1700,7 @@ void CMainWindow::initUI()
     m_videoPre->setSaveVdFolder(m_videoPath);
     m_videoPre->setSavePicFolder(m_picPath);
 
+    GridType gridType = static_cast<GridType>(Settings::get().getOption("base.photogrid.photogrids").toInt());
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
     bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundswitchbtn").toBool();
@@ -1733,6 +1734,7 @@ void CMainWindow::initUI()
     else
         set_takeing_photo_sound(0);
 
+    m_videoPre->setGridType(gridType);
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     m_videoPre->setMaxRecTime(dc::Settings::get().getOption("photosetting.maxRecordTime.maxRecordTime").toInt());
@@ -1778,6 +1780,8 @@ void CMainWindow::initConnection()
     connect(m_actionSettings, &QAction::triggered, this, &CMainWindow::slotPopupSettingsDialog);
     //切换分辨率
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
+    //切换网格类型
+    connect(&Settings::get(), SIGNAL(gridTypeChanged(int)), m_videoPre, SLOT(slotGridTypeChanged(int)));
     //拍照
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
     //拍照取消

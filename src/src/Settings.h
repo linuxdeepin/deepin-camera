@@ -141,6 +141,11 @@ signals:
      * @param
      */
     void resolutionchanged(const QString &);
+    /**
+    * @brief gridTypeChanged 网格线类型改变信号
+    * @param
+    */
+    void gridTypeChanged(int type);
      /**
      * @brief delayTimeChanged 延迟拍照时间改变信号
      * @param

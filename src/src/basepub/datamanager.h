@@ -26,6 +26,13 @@
 #include <QObject>
 #include <QSet>
 
+enum GridType
+{
+    Grid_None = 0, //不显示网格线
+    Grid_Matts = 1, //田字格
+    Grid_Thirds = 2 //九宫格
+};
+
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
 //enum MultiType {None, Ctrl, Shift, Both};
 
