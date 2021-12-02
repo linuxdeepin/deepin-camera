@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e875a27_7c8805a1",
+        "filename": "src/src/Settings.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 6; 注释率: 0.0%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2482594b_5989e239",
+        "filename": "src/src/Settings.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 5; 注释率: 80.0%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a1641d5_b15e7a88",
+        "filename": "src/src/basepub/datamanager.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 6; 注释率: 50.0%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c904862_a525485f",
+        "filename": "src/src/gridline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 27; 改动行数(修改和新增): 108; 注释率: 25.0%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cd2bd29_fbe9e56e",
+        "filename": "src/src/gridline.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 27; 改动行数(修改和新增): 54; 注释率: 50.0%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c9286fb_f23b6e53",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-02T09:32:18Z",
+      "side": 1,
+      "message": "注释行数: 20; 改动行数(修改和新增): 119; 注释率: 16.8%",
+      "revId": "a8e13e77cab513fb5db4b27b4cf7c39ea7aa1b88",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
