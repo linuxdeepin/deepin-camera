@@ -42,6 +42,7 @@
 #include "majorimageprocessingthread.h"
 #include "previewopenglwidget.h"
 #include "filterpreviewbutton.h"
+#include "gridline.h"
 
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -72,9 +73,7 @@ public:
     explicit QGraphicsViewEx(QWidget *parent = nullptr);
 
 protected:
-    virtual void mousePressEvent(QMouseEvent* e) override;
     virtual void mouseMoveEvent(QMouseEvent* e) override;
-    virtual void mouseReleaseEvent(QMouseEvent* e) override;
 };
 
 /**
@@ -259,6 +258,18 @@ public:
      */
     void setState(bool bPhoto);
 
+    /**
+     * @brief getFrameSize 获取画面显示区域
+     * @return 画面显示区域
+     */
+    QRect getFrameRect();
+
+    /**
+     * @brief setGridType 设置网格线类型
+     * @param type 网格线类型
+     */
+    void setGridType(GridType type);
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -336,6 +347,12 @@ private slots:
     */
     void slotresolutionchanged(const QString &);
 
+    /**
+    * @brief slotGridTypeChanged　网格线类型改变槽函数
+    * @param 网格线类型
+    */
+    void slotGridTypeChanged(int);
+
 private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
@@ -398,7 +415,7 @@ private:
     int                        m_nFileID;           //文件id
     int                        m_nFastClick;        //快速点击次数，小于200ms计入
     int                        m_nMaxRecTime;       //最大录像时长  小时
-
+    GridType                   m_GridType;          //网格线类型
     DLabel                     *m_flashLabel;       //闪光灯Label
     DLabel                     *m_dLabel;           //倒计时
     DLabel                     *m_recordingTimeWidget;//录制时长窗口
@@ -416,6 +433,8 @@ private:
     QGraphicsScene             *m_pNormalScene;
     QGraphicsSvgItem           *m_pSvgItem;
     PreviewOpenglWidget        *m_openglwidget;     //opengl渲染窗口
+    GridLineItem               *m_pGridLineItem;    //网格线图元
+    GridLineWidget             *m_gridlinewidget;   //网格线部件
 
     QPixmap                    m_framePixmap;       //帧图片
     QGraphicsPixmapItem        *m_pNormalItem;

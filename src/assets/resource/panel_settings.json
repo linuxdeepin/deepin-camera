@@ -42,6 +42,23 @@
                             "default": ""
                         }
                     ]
+                },
+                {
+                    "key": "photogrid",
+                    "name": "Gridlines",
+                    "options": [
+                        {
+                            "key": "photogrids",
+                            "name": "",
+                            "type": "radiogroup",
+                            "items": [
+                                "None",
+                                "1*1 lines",
+                                "2*2 lines"
+                            ],
+                            "default": 0
+                        }
+                    ]
                 }
             ]
         },

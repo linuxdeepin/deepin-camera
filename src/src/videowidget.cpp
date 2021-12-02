@@ -58,11 +58,6 @@ QGraphicsViewEx::QGraphicsViewEx(QWidget *parent)
 
 }
 
-void QGraphicsViewEx::mousePressEvent(QMouseEvent *e)
-{
-    QGraphicsView::mousePressEvent(e);  
-}
-
 void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
 {
     // 画布视图鼠标事件，默认接收鼠标事件(accepted为true)，即默认不向父窗口传递鼠标事件
@@ -76,32 +71,30 @@ void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
     }
 }
 
-void QGraphicsViewEx::mouseReleaseEvent(QMouseEvent *e)
-{
-    QGraphicsView::mouseReleaseEvent(e);  
-}
-
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
       m_imgPrcThread(nullptr),
       m_nMaxRecTime(60), //默认60小时
-      m_openglwidget(nullptr)
+      m_openglwidget(nullptr),
+      m_gridlinewidget(nullptr)
 {
 #ifndef __mips__
-    if (get_wayland_status() == true)
-        m_pNormalItem = new QGraphicsPixmapItem;
-    else
-        m_pNormalItem = new QGraphicsPixmapItem;
+    if (!get_wayland_status()) {
         m_openglwidget = new PreviewOpenglWidget(this);
-#else
-    m_pNormalItem = new QGraphicsPixmapItem;
+        m_openglwidget->setFocusPolicy(Qt::ClickFocus);
+    }
 #endif
+    m_pNormalItem = new QGraphicsPixmapItem;
+    m_pNormalItem->setZValue(0);
+
     m_bActive = false;   //是否录制中
     m_takePicSound = new QSound(":/resource/Camera.wav");
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsViewEx(this);
+    m_gridlinewidget = new GridLineWidget(this);
+    m_gridlinewidget->setGridType(Grid_Thirds);
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
@@ -121,18 +114,22 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setGraphicsEffect(shadow_effect);
 
     m_pNormalScene = new QGraphicsScene();
+    // 画布网格线图元
+    m_pGridLineItem = new GridLineItem;
+    m_pGridLineItem->setGridType(Grid_Matts);
+    m_pGridLineItem->setZValue(1);
+    // 画布svg图标图元
     m_pSvgItem = new QGraphicsSvgItem;
+    m_pSvgItem->setZValue(2);
     m_pSvgItem->hide();
+    // 画布错误提示图元
     m_pCamErrItem = new QGraphicsTextItem;
+    m_pCamErrItem->setZValue(2);
     m_pGridLayout = new QGridLayout(this);
 
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
-#ifndef __mips__
-    if (get_wayland_status() != true)
-        m_openglwidget->setFocusPolicy(Qt::ClickFocus);
-#endif
     m_btnClickTime = QDateTime::currentDateTime();
     m_savePicFolder = "";
     m_saveVdFolder = "";
@@ -147,17 +144,12 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalView->setScene(m_pNormalScene);
     m_pGridLayout->setContentsMargins(0, 0, 0, 0);
     m_pGridLayout->addWidget(m_pNormalView);
+
+    m_pNormalScene->addItem(m_pNormalItem);
     m_pNormalScene->addItem(m_pSvgItem);
-
-#ifdef __mips__
-    m_pNormalScene->addItem(m_pNormalItem);
-#else
-    if (get_wayland_status() == true)
-        m_pNormalScene->addItem(m_pNormalItem);
-    m_pNormalScene->addItem(m_pNormalItem);
-#endif
-
     m_pNormalScene->addItem(m_pCamErrItem);
+    m_pNormalScene->addItem(m_pGridLineItem);
+
     recordingwidgetlay->setSpacing(0);
     recordingwidgetlay->setContentsMargins(0, 0, 0, 0);
     recordingwidgetlay->addWidget(recordingRedStatus, 0, Qt::AlignBottom);
@@ -225,6 +217,9 @@ videowidget::videowidget(DWidget *parent)
     this->setAutoFillBackground(true);
     this->setPalette(pal);
     m_pNormalScene->setBackgroundBrush(bgColor);
+
+    // 默认不显示网格线
+    setGridType(Grid_None);
 }
 
 //延迟加载
@@ -290,6 +285,13 @@ void videowidget::showNocam()
     if (m_openglwidget)
         m_openglwidget->hide();
 
+    if (m_GridType != Grid_None) {
+        if (!m_pGridLineItem->isVisible())
+            m_pGridLineItem->show();
+        if (m_gridlinewidget->isVisible())
+            m_gridlinewidget->hide();
+    }
+
     emit sigDeviceChange();
 
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
@@ -299,8 +301,8 @@ void videowidget::showNocam()
         m_pCamErrItem->setDefaultTextColor(clr);
     } else {
         m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Not connected_dark.svg"), this));
-        QColor clr(0, 0, 0);
-        clr.setAlphaF(0.8);
+        QColor clr(Qt::white);
+        clr.setAlphaF(0.2);
         m_pCamErrItem->setDefaultTextColor(clr);
     }
 
@@ -318,15 +320,6 @@ void videowidget::showNocam()
     m_pCamErrItem->show();
     m_pSvgItem->show();
 
-#ifdef __mips__
-    m_pNormalItem->hide();
-#else
-    if (get_wayland_status() == true)
-        m_pNormalItem->hide();
-#endif
-    if (get_wayland_status() == true)
-        m_pNormalItem->hide();
-
     emit noCam();
 
     if (getCapStatus())  //录制完成处理
@@ -340,17 +333,18 @@ void videowidget::showCamUsed()
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
-#ifdef __mips__
-    if (m_pNormalItem->isVisible())
+    if (m_pNormalItem)
         m_pNormalItem->hide();
-#else
-    if (get_wayland_status() == true) {
-        if (m_pNormalItem->isVisible())
-            m_pNormalItem->hide();
-    } else {
+    if (m_openglwidget)
         m_openglwidget->hide();
+
+    if (m_GridType != Grid_None) {
+        if (!m_pGridLineItem->isVisible())
+            m_pGridLineItem->show();
+        if (m_gridlinewidget->isVisible())
+            m_gridlinewidget->hide();
     }
-#endif
+
     emit sigDeviceChange();
     QString str(tr("The webcam is in use"));//摄像头已被占用
     if (DGuiApplicationHelper::LightType == DGuiApplicationHelper::instance()->themeType()) {
@@ -361,8 +355,8 @@ void videowidget::showCamUsed()
         m_pCamErrItem->setPlainText(str);
     } else {
         m_pSvgItem->setSharedRenderer(new QSvgRenderer(QString(":/images/icons/dark/Take up_dark.svg"), this));
-        QColor clrText(Qt::black);
-        clrText.setAlphaF(0.8);
+        QColor clrText(Qt::white);
+        clrText.setAlphaF(0.2);
         m_pCamErrItem->setDefaultTextColor(clrText);
         m_pCamErrItem->setPlainText(str);
     }
@@ -382,7 +376,6 @@ void videowidget::showCamUsed()
 
     if (getCapStatus())//录制完成处理
         onEndBtnClicked();
-
 }
 #ifndef __mips__
 void videowidget::ReceiveOpenGLstatus(bool result)
@@ -397,6 +390,14 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
         if (m_pNormalView->isVisible())
             m_pNormalView->hide();
+
+        if (m_GridType != Grid_None) {
+            if (m_pGridLineItem->isVisible())
+                m_pGridLineItem->hide();
+
+            if (!m_gridlinewidget->isVisible())
+                m_gridlinewidget->show();
+        }
 
         m_pNormalScene->update();
 
@@ -425,7 +426,6 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
         malloc_trim(0);
     }
-
 }
 
 #endif
@@ -440,6 +440,13 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
+
+            if (m_GridType != Grid_None) {
+                if (!m_pGridLineItem->isVisible())
+                    m_pGridLineItem->show();
+                if (m_gridlinewidget->isVisible())
+                    m_gridlinewidget->hide();
+            }
 
             if (m_openglwidget && m_openglwidget->isVisible())
                 m_openglwidget->hide();
@@ -489,17 +496,9 @@ void videowidget::onReachMaxDelayedFrames()
     showNocam();
     emit updatePhotoState(CMainWindow::photoNormal);
 
-#ifdef __mips__
     m_pNormalItem->hide() ;
-
-#else
-    if (get_wayland_status() == true) {
-        m_pNormalItem->hide() ;
-    } else {
-        if (m_openglwidget->isVisible())
-            m_openglwidget->hide();//隐藏opengl窗口
-    }
-#endif
+    if (m_openglwidget)
+        m_openglwidget->hide();
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
@@ -591,6 +590,9 @@ void videowidget::resizeEvent(QResizeEvent *size)
         itemPosChange();
         m_pCamErrItem->hide();
     }
+
+    if (m_gridlinewidget)
+        m_gridlinewidget->resize(rect().size());
 }
 
 void videowidget::showCountdown()
@@ -632,12 +634,11 @@ void videowidget::showCountdown()
                 }
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
-#ifndef __mips__
-                if (!get_wayland_status())
+
+                if (m_pNormalView)
+                    m_pNormalView->hide();
+                if (m_openglwidget)
                     m_openglwidget->hide();
-#else
-                m_pNormalView->hide();
-#endif
             }
 
             //发送就结束信号处理按钮状态
@@ -834,6 +835,11 @@ void videowidget::slotresolutionchanged(const QString &resolution)
         request_format_update(1);
     }
 
+}
+
+void videowidget::slotGridTypeChanged(int type)
+{
+    setGridType(static_cast<GridType>(type));
 }
 
 void videowidget::onEndBtnClicked()
@@ -1203,11 +1209,6 @@ void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
             clrText.setAlphaF(0.8);
             m_pCamErrItem->setDefaultTextColor(clrText);
             m_pCamErrItem->setPlainText(str);
-            QColor clrBase(Qt::black);
-            clrBase.setAlphaF(0.7);
-            QPalette plt = palette();
-            plt.setColor(QPalette::Base, clrBase);
-            setPalette(plt);
         } else if (themeType == DGuiApplicationHelper::DarkType) {
             if (DataManager::instance()->getdevStatus() == NOCAM) {
                 qDebug() << "changed theme 3";
@@ -1219,15 +1220,10 @@ void videowidget::onThemeTypeChanged(DGuiApplicationHelper::ColorType themeType)
                 str = tr("The webcam is in use");//摄像头已被占用
             }
 
-            QColor clor(0, 0, 0);
-            clor.setAlphaF(0.8);
+            QColor clor(Qt::white);
+            clor.setAlphaF(0.2);
             m_pCamErrItem->setDefaultTextColor(clor);//浅色主题文字和图片是白色，特殊处理
             m_pCamErrItem->setPlainText(str);
-            QColor clrBase(255, 255, 255);
-            clrBase.setAlphaF(0.7);
-            QPalette plt = palette();
-            plt.setColor(QPalette::Base, clrBase);
-            setPalette(plt);
         }
 
         QFont ft("SourceHanSansSC");
@@ -1275,6 +1271,43 @@ void videowidget::setState(bool bPhoto)
     m_bPhoto = bPhoto;
     if (m_imgPrcThread)
         m_imgPrcThread->setState(bPhoto);
+}
+
+QRect videowidget::getFrameRect()
+{
+    QRect rect;
+    if (m_openglwidget && m_openglwidget->isVisible()) {
+        rect = m_openglwidget->geometry();
+    } else if (m_pNormalView && m_pNormalView->isVisible()) {
+        if (m_pNormalItem && m_pNormalItem->isVisible())
+            rect = QRect(m_pNormalView->mapFromScene(0,0), m_pNormalView->mapFromScene(m_pNormalView->sceneRect().bottomRight()));
+    }
+
+    return rect;
+}
+
+void videowidget::setGridType(GridType type)
+{
+    if (type == m_GridType)
+        return;
+
+    m_GridType = type;
+
+    m_pGridLineItem->setGridType(type);
+    m_gridlinewidget->setGridType(type);
+
+    if (type == Grid_None) {
+        m_pGridLineItem->hide();
+        m_gridlinewidget->hide();
+    } else {
+        if (m_openglwidget && m_openglwidget->isVisible()) {
+            m_gridlinewidget->show();
+            m_pGridLineItem->hide();
+        } else {
+            m_gridlinewidget->hide();
+            m_pGridLineItem->show();
+        }
+    }
 }
 
 void videowidget::onExposureChanged(int exposure)
