@@ -72,6 +72,31 @@ TEST_F(MainwindowTest, TabChange)
 }
 
 /**
+ *  @brief 等比例拉伸
+ */
+#ifndef __mips__
+TEST_F(MainwindowTest, equalScale)
+{
+    MajorImageProcessingThread *processThread = mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
+    if(processThread) {
+        mainwindow->resize(1280, 600);
+        processThread->sigRenderYuv(true);
+        QTest::qWait(1000);
+
+        mainwindow->resize(800, 1080);
+        processThread->sigRenderYuv(true);
+        QTest::qWait(1000);
+
+        mainwindow->resize(800, 600);
+        processThread->sigRenderYuv(true);
+        QTest::qWait(500);
+
+        Dtk::Widget::moveToCenter(mainwindow);
+    }
+}
+#endif
+
+/**
  *  @brief 关闭拍照，录像
  */
 TEST_F(MainwindowTest, stopCancelContinuousRecording)
@@ -240,6 +265,20 @@ TEST_F(MainwindowTest, ChangeResolution)
     dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 1);
     dc::Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
 }
+
+/**
+ *  @brief 切换网格线类型
+ */
+TEST_F(MainwindowTest, ChangeGridType)
+{
+    dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 0);
+    dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 1);
+    QTest::qWait(1000);
+    dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 2);
+    QTest::qWait(1000);
+    dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 0);
+}
+
 /**
  *  @brief 打开摄像头设置页面
  */

@@ -39,6 +39,11 @@ DWIDGET_USE_NAMESPACE;
 filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* = filter_Normal*/): QWidget(parent)
   , m_filterType(filter)
 {
+    QString objName = filterName_CUBE(filter);
+    if (objName.isEmpty())
+        objName = "normal";
+    setObjectName(objName);
+
     m_color.setRgb(44, 44, 44);
 
     m_hover = false;

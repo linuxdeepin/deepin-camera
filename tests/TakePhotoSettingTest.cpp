@@ -22,6 +22,7 @@
 #include "src/takephotosettingareawidget.h"
 #include "src/circlepushbutton.h"
 #include "src/accessibility/ac-deepin-camera-define.h"
+#include "addr_pri.h"
 
 #include <QtTest/QTest>
 
@@ -63,7 +64,6 @@ TEST_F(TakePhotoSettingTest, KeyEvent)
     circlePushButton *delayUnfoldBtn = m_mainwindow->findChild<circlePushButton *>(DELAY_UNFOLD_BTN);
     circlePushButton *delayFoldBtn = m_mainwindow->findChild<circlePushButton *>(DELAY_FOLD_BTN);
     circlePushButton *foldBtn = m_mainwindow->findChild<circlePushButton *>(FOLD_BTN);
-
 
     if (unfoldBtn != nullptr) {
         unfoldBtn->setFocus();
@@ -213,6 +213,53 @@ TEST_F(TakePhotoSettingTest, filterBtnClicked)
         circlePushButton *filtersUnfoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_UNFOLD_BTN);
         QVERIFY(filtersUnfoldBtn->isVisible());
         m_takePhotoSet->filtersUnfoldBtnClicked();
+
+        QTest::qWait(600);
+        circlePushButton *filtersFoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_FOLD_BTN);
+        QVERIFY(filtersFoldBtn->isVisible());
+        m_takePhotoSet->filtersFoldBtnClicked();
+    }
+}
+
+/**
+ *  @brief takePhotoSettingAreaWidget 点击滤镜暖色按钮，测试画布网格线图元绘制流程
+ */
+TEST_F(TakePhotoSettingTest, warmFilterBtnClicked)
+{
+    if (nullptr != m_takePhotoSet) {
+        circlePushButton *filtersUnfoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_UNFOLD_BTN);
+        QVERIFY(filtersUnfoldBtn->isVisible());
+        m_takePhotoSet->filtersUnfoldBtnClicked();
+
+        filterPreviewButton *warmFilterBtn = m_takePhotoSet->findChild<filterPreviewButton *>(filterPreviewButton::filterName_CUBE(filter_Warm));
+        QVERIFY(warmFilterBtn->isVisible());
+        warmFilterBtn->clicked();
+
+        MajorImageProcessingThread *processThread = m_mainwindow->findChild<MajorImageProcessingThread *>("MajorThread");
+        if (processThread) {
+            // 启动线程，当前选择有滤镜，使用rgb模式显示画面
+            processThread->init();
+            processThread->start();
+        }
+
+        dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 0);
+        dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 2);
+        QTest::qWait(1000);
+        dc::Settings::get().settings()->setOption(QString("base.photogrid.photogrids"), 0);
+
+        filterPreviewButton *normalFilterBtn = m_takePhotoSet->findChild<filterPreviewButton *>("normal");
+        QVERIFY(normalFilterBtn->isVisible());
+        normalFilterBtn->clicked();
+        QTest::qWait(500);
+
+        if (processThread) {
+            processThread->stop();
+            while(processThread->isRunning());
+#ifndef __mips__
+            // 使用openGL窗口显示画面
+            processThread->sigRenderYuv(true);
+#endif
+        }
 
         QTest::qWait(600);
         circlePushButton *filtersFoldBtn = m_takePhotoSet->findChild<circlePushButton *>(FILTERS_FOLD_BTN);
