@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c371d02_fc9af239",
+        "filename": "src/src/filterpreviewbutton.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-03T09:27:59Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 4; 注释率: 0.0%",
+      "revId": "af5e4fe2032abc103657d5d50e9c186f6b4a895d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2af2b05_24864aa0",
+        "filename": "tests/MainwindowTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-03T09:27:59Z",
+      "side": 1,
+      "message": "注释行数: 4; 改动行数(修改和新增): 33; 注释率: 12.1%",
+      "revId": "af5e4fe2032abc103657d5d50e9c186f6b4a895d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf8968ee_c0277691",
+        "filename": "tests/SettingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-03T09:27:59Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 3; 注释率: 0.0%",
+      "revId": "af5e4fe2032abc103657d5d50e9c186f6b4a895d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94c5926a_602372b0",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-03T09:27:59Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 41; 注释率: 4.9%",
+      "revId": "af5e4fe2032abc103657d5d50e9c186f6b4a895d",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
