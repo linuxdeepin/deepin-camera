@@ -67,6 +67,23 @@
       "revId": "cfc828e6673156f885072e7b9a50f1d46c290eb7",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b50e44f_52c847a4",
+        "filename": "tests/TakePhotoSettingTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-03T08:58:58Z",
+      "side": 1,
+      "message": "(style) Variable \u0027foldBtn\u0027 is assigned a value that is never used",
+      "revId": "cfc828e6673156f885072e7b9a50f1d46c290eb7",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
