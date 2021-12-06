@@ -174,6 +174,18 @@
         <source>Flashlight</source>
         <translation>Vaku</translation>
     </message>
+    <message>
+        <source>Gridlines</source>
+        <translation>Rácsvonalak</translation>
+    </message>
+    <message>
+        <source>1*1 lines</source>
+        <translation>1*1 sor</translation>
+    </message>
+    <message>
+        <source>2*2 lines</source>
+        <translation>2*2 sor</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

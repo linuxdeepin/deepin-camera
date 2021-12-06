@@ -174,6 +174,18 @@
         <source>Flashlight</source>
         <translation>闪光灯</translation>
     </message>
+    <message>
+        <source>Gridlines</source>
+        <translation>构图网格</translation>
+    </message>
+    <message>
+        <source>1*1 lines</source>
+        <translation>十字网格</translation>
+    </message>
+    <message>
+        <source>2*2 lines</source>
+        <translation>井字网格</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>

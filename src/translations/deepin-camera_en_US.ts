@@ -174,6 +174,18 @@
         <source>Flashlight</source>
         <translation>Flashlight</translation>
     </message>
+    <message>
+        <source>Gridlines</source>
+        <translation>Gridlines</translation>
+    </message>
+    <message>
+        <source>1*1 lines</source>
+        <translation>1*1 lines</translation>
+    </message>
+    <message>
+        <source>2*2 lines</source>
+        <translation>2*2 lines</translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
