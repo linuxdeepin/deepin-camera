@@ -28,6 +28,9 @@ void GenerateSettingTranslate()
     auto group_base_savaName = QObject::tr("File location");
     auto base_save_picpathName = QObject::tr("Photos:");
     auto base_save_vidpathName = QObject::tr("Videos:");
+    auto group_base_gridLines = QObject::tr("Gridlines");
+    auto base_1_1_lines = QObject::tr("1*1 lines");
+    auto base_2_2_lines = QObject::tr("2*2 lines");
     auto group_photosettingName = QObject::tr("Shoot");
     auto group_photosetting_photosnumberName = QObject::tr("Burst mode");
     auto group_photosetting_photosdelayName = QObject::tr("Self-timer delay");
