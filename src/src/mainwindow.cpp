@@ -46,7 +46,6 @@
 #include <DWindowCloseButton>
 #include <DWindowMaxButton>
 #include <DWindowOptionButton>
-#include <DWindowQuitFullButton>
 #include <DStyleHelper>
 #include <DStyle>
 

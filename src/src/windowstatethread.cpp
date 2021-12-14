@@ -22,6 +22,7 @@
 
 #include <DWindowManagerHelper>
 #include <QMutexLocker>
+#include <QDebug>
 
 windowStateThread::windowStateThread(QObject *parent /*= nullptr*/)
     : QThread (parent)
