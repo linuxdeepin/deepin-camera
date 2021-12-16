@@ -630,6 +630,10 @@ void videowidget::showCountdown()
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
                 if (m_flashEnable && 1 == m_nMaxContinuous) {
+                    int index = QApplication::desktop()->screenNumber(this);
+                    QRect rt = QApplication::desktop()->screenGeometry(index);
+                    m_flashLabel->setGeometry(rt);
+                    m_flashLabel->setFixedSize(rt.size());
                     m_flashLabel->show();
                 }
                 m_flashTimer->start(500);
