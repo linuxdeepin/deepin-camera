@@ -1418,8 +1418,12 @@ void CMainWindow::onPhotoRecordBtnClked()
         if (photoNormal != m_photoState) {
             m_videoPre->onTakePic(false);
         } else {
-            if (!m_windowStateThread->isRunning()) {
-                m_windowStateThread->start();
+            int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
+            if (nContinuous > 1) {
+                // 仅在连拍模式下才开启窗口状态监听线程
+                if (!m_windowStateThread->isRunning()) {
+                    m_windowStateThread->start();
+                }
             }
             m_videoPre->onTakePic(true);
         }
