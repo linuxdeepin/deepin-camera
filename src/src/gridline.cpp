@@ -24,7 +24,7 @@
 #include <QPainter>
 #include <QGraphicsScene>
 
-const QColor gridLineColor = QColor(255, 255, 255, 0.7 * 255);// 网格线颜色值
+const QColor gridLineColor = QColor(255, 255, 255, 0.5 * 255);// 网格线颜色值
 
 GridLineItem::GridLineItem(QGraphicsItem *parent) : QGraphicsItem (parent)
 {
