@@ -313,7 +313,7 @@ private slots:
     */
     void ReceiveMajorImage(QImage *image, int result);
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     /**
     * @brief ReceiveOpenGLstatus　接收openGL状态
     */

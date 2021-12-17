@@ -187,7 +187,7 @@ void MajorImageProcessingThread::run()
 
         // 判断是否使用rgb数据
         bool bUseRgb = false;
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64)
         bUseRgb = true;
 #endif
         if (get_wayland_status())
@@ -315,7 +315,7 @@ void MajorImageProcessingThread::run()
                     emit SendMajorImageProcessing(&m_Img, m_result);
                 }
             } else {
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
                 emit sigRenderYuv(true);
                 emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
 #endif
@@ -326,7 +326,7 @@ void MajorImageProcessingThread::run()
 
         emit SendFilterImageProcessing(&m_filterImg);
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
         if (m_frame->yuv_frame == nullptr) {
             emit sigRenderYuv(false);
         }

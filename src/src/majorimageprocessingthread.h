@@ -126,7 +126,7 @@ signals:
      */
     void sigReflushSnapshotLabel();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     /**
      * @brief sigYUVFrame YUV框架信号
      * @param yuv YUV
