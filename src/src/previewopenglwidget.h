@@ -55,7 +55,7 @@ public:
     int getFrameWidth();
 
 public slots:
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     /**
     * @brief slotShowYuv　显示一帧Yuv图像
     * @param ptr 数据

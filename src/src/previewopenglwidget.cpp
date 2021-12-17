@@ -48,7 +48,7 @@ int PreviewOpenglWidget::getFrameWidth()
     return static_cast<int>(m_videoWidth);
 }
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)
 {
     m_Rendermutex.lock();

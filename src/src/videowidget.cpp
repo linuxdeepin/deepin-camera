@@ -87,7 +87,7 @@ videowidget::videowidget(DWidget *parent)
       m_nMaxRecTime(60), //默认60小时
       m_openglwidget(nullptr)
 {
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (get_wayland_status() == true)
         m_pNormalItem = new QGraphicsPixmapItem;
     else
@@ -129,7 +129,7 @@ videowidget::videowidget(DWidget *parent)
     DLabel *recordingRedStatus = new DLabel;//录制状态红点
     QHBoxLayout *recordingwidgetlay = new QHBoxLayout;
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (get_wayland_status() != true)
         m_openglwidget->setFocusPolicy(Qt::ClickFocus);
 #endif
@@ -149,7 +149,7 @@ videowidget::videowidget(DWidget *parent)
     m_pGridLayout->addWidget(m_pNormalView);
     m_pNormalScene->addItem(m_pSvgItem);
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) ||defined(__loongarch64)
     m_pNormalScene->addItem(m_pNormalItem);
 #else
     if (get_wayland_status() == true)
@@ -231,7 +231,7 @@ void videowidget::delayInit()
     setFlash(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) ||defined(__loongarch64)
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
 #else
@@ -323,7 +323,7 @@ void videowidget::showNocam()
     m_pCamErrItem->show();
     m_pSvgItem->show();
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) ||defined(__loongarch64)
     m_pNormalItem->hide();
 #else
     if (get_wayland_status() == true)
@@ -345,7 +345,7 @@ void videowidget::showCamUsed()
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) ||defined(__loongarch64)
     if (m_pNormalItem->isVisible())
         m_pNormalItem->hide();
 #else
@@ -399,7 +399,7 @@ void videowidget::showCamUsed()
         onEndBtnClicked();
 
 }
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 void videowidget::ReceiveOpenGLstatus(bool result)
 {
     if (result && m_openglwidget) {
@@ -520,7 +520,7 @@ void videowidget::onReachMaxDelayedFrames()
     showNocam();
     emit updatePhotoState(CMainWindow::photoNormal);
 
-#ifdef __mips__
+#if defined (__mips__) || defined(_loongarch) || defined(__loongarch__) ||defined(__loongarch64)
     m_pNormalItem->hide() ;
 
 #else
@@ -663,7 +663,7 @@ void videowidget::showCountdown()
                 }
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
                 if (!get_wayland_status())
                     m_openglwidget->hide();
 #else
@@ -822,7 +822,7 @@ void videowidget::flash()
     if (get_sound_of_takeing_photo())
         m_takePicSound->play();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (!get_wayland_status())
         if (m_openglwidget->isVisible() == false)
             m_openglwidget->show();
@@ -922,7 +922,7 @@ void videowidget::onRestartDevices()
             emit sigDeviceChange();
             QPalette plt = palette();
             plt.setColor(QPalette::Window, Qt::white);
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
             if (!get_wayland_status())
                 m_openglwidget->show();
 #endif
@@ -1063,7 +1063,7 @@ void videowidget::onTakePic(bool bTrue)
         QEventLoop eventloop;
         QTimer::singleShot(300, &eventloop, SLOT(quit()));
         eventloop.exec();
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
 
         if (!get_wayland_status())
             if (!m_openglwidget->isVisible())
@@ -1210,7 +1210,7 @@ void videowidget::stopEverything()
 
     m_dLabel->hide();
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (!get_wayland_status())
         if (!m_openglwidget->isVisible())
             m_openglwidget->show();
@@ -1320,7 +1320,7 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
-#ifndef __mips__
+#if !defined (__mips__) && !defined(_loongarch) && !defined(__loongarch__) && !defined(__loongarch64)
     if (!get_wayland_status()) {
         if (m_openglwidget) {
             delete m_openglwidget;
