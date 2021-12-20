@@ -24,7 +24,7 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     Q_D(Titlebar);
 
     setAttribute(Qt::WA_TranslucentBackground, true);
-    setFocusPolicy(Qt::NoFocus);
+    //setFocusPolicy(Qt::NoFocus);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -32,7 +32,7 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     setLayout(layout);
 
     d->m_titlebar = new DTitlebar(this);
-    d->m_titlebar->setFocusPolicy(Qt::NoFocus);
+    //d->m_titlebar->setFocusPolicy(Qt::NoFocus);
 //    d->m_titlebar->setWindowFlags(Qt::WindowMinMaxButtonsHint |
 //                                  Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
     d->m_titlebar->setBackgroundTransparent(true);
