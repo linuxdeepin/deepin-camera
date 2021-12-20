@@ -405,6 +405,12 @@ protected:
      */
     bool eventFilter(QObject *obj, QEvent *e)override;
 
+    /**
+     * @brief showEvent 显示事件
+     * @param e
+     */
+    virtual void showEvent(QShowEvent *e) override;
+
 private:
     /**
      * @brief showChildWidget 显示子控件，左侧配置控件，右侧操作区域控件
@@ -466,6 +472,7 @@ private:
     QLabel                          *m_filterName;          //滤镜名称标签
     bool                            m_bShowFilterName;      //是否显示滤镜名称
     bool                            m_bUIinit;              //UI初始化是否完成
+    bool                            m_bFirstShow;           //是否第一次显示
 
     DWindowMinButton                *m_windowMinBtn;        //最小化按钮
     DWindowOptionButton             *m_windowoptionButton;  //设置按钮

@@ -737,6 +737,7 @@ CMainWindow::CMainWindow(QWidget *parent)
       m_bRecording(false),
       m_bSwitchCameraShowEnable(false),
       m_bUIinit(false),
+      m_bFirstShow(true),
       m_windowStateThread(nullptr)
 {
     m_cameraSwitchBtn = nullptr;
@@ -2181,6 +2182,20 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         QWidget::eventFilter(obj, e);//调用父类事件过滤器
     }
     return QWidget::eventFilter(obj, e);
+}
+
+void CMainWindow::showEvent(QShowEvent *e)
+{
+#ifdef __sw_64__
+    if (m_bFirstShow) {
+        m_bFirstShow = false;
+        QTimer::singleShot(1000, this, [=] {
+           QMouseEvent event(QEvent::MouseButtonPress, QPointF(0, 0), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+           QApplication::sendEvent(m_videoPre, &event);
+        });
+    }
+#endif
+    DMainWindow::showEvent(e);
 }
 
 /*
