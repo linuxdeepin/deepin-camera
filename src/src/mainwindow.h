@@ -405,6 +405,12 @@ protected:
      */
     bool eventFilter(QObject *obj, QEvent *e)override;
 
+    /**
+     * @brief showEvent 显示事件
+     * @param e
+     */
+    virtual void showEvent(QShowEvent *e) override;
+
 private:
     /**
      * @brief showChildWidget 显示子控件，左侧配置控件，右侧操作区域控件

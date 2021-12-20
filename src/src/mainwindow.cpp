@@ -929,8 +929,6 @@ void CMainWindow::initTabOrder()
     setTabOrder(m_windowMinBtn, m_windowMaxBtn);
     setTabOrder(m_windowMaxBtn, m_windowCloseBtn);
     setTabOrder(m_windowCloseBtn, m_takePhotoSettingArea);
-
-    m_pTitlebar->titlebar()->setFocusPolicy(Qt::NoFocus);
 }
 
 void CMainWindow::initEventFilter()
