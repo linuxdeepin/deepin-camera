@@ -45,16 +45,17 @@
        </tr>   
        <tr>
             <td><img src="../common/flashlight.png" alt="閃光燈" class="inline" /></td>
-            <td>閃光燈</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>開啟閃光燈</td>
+            <td><img src="../common/filter.png" alt="濾鏡" class="inline" /></td>
+            <td>設定濾鏡</td>
+            <td><img src="../common/exposure.png" alt="曝光" class="inline" /></td>
+            <td>調節曝光度</td>
         </tr>
     </tbody>
 </table>
 
-> ![notes](../common/notes.svg) 說明：當連接多個攝影機時，介面上才會顯示切換攝影機按鈕![1](fig/switch.png)。
+
+> ![notes](../common/notes.svg) 說明：當連接多個攝影機時，介面上才會顯示切換攝影機按鈕 ![1](fig/switch.png)。
 
 ## 操作介紹
 
@@ -64,18 +65,18 @@
 
 打開相機後，預設進入拍照模式。單擊拍照按鈕 ![photograph](../common/photograph.png)，拍攝的圖片文件會展示在介面。
 
-![image](fig/d_image.png)
+![image](fig/image.png)
 
 ### 錄製影片 
 
 在相機主介面，單擊 **影片**，進入影片模式。單擊錄製影片按鈕 ![transcribe](../common/record.svg) 進行錄製，錄製完成後單擊結束錄製按鈕 ![stop](../common/stop.svg)，影片檔案會展示在介面，也會儲存在預設路徑下。
 
-![video](fig/d_video.png)
+![video](fig/video.png)
 
 ### 管理照片/影片
 
 在相機主界面，右鍵單擊照片或影片檔案，可選擇複製、刪除、列印或開啟資料夾。
-
+  > ![notes](../common/notes.svg) 說明：僅圖片文件支援列印功能，影片文件則不會顯示列印按鈕。
 
 - 複製：將選中的照片/影片複製到其他路徑。
 
@@ -83,11 +84,9 @@
 
 - 列印：將選中的照片進行列印。單擊 **列印** 後，跳轉到列印預覽介面，您可以進行相關設定後再列印。
 
-  > ![notes](../common/notes.svg)說明：僅圖片文件支援列印功能，影片文件不會顯示列印按鈕。
-
 - 開啟資料夾：開啟照片或影片所在的資料夾。
 
-![rightmenu](fig/d_rightmenu.png)
+![rightmenu](fig/rightmenu.png)
 
 ## 主選單
 
@@ -97,15 +96,11 @@
 
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
 2. 單擊 **設定**，您可以進行基本設定、拍照設定及輸出設定。
-   - 基本設定：設定照片及影片的儲存位置。
-   - 拍照設定：設定音效、連拍次數、拍照延時設定、鏡像攝影機、閃光燈。
+   - 基本設定：設定照片及影片的儲存位置，選擇構圖網格樣式。
+   - 拍照設定：設定音效、連拍次數、拍照延時時間、鏡像攝影機、閃光燈。
 
-   ![settings](fig/d_settings.png)
+   - 輸出設定：顯示照片/影片的輸出格式，設定輸出解析度。
 
-   - 輸出設定：設定照片/影片的輸出格式，還可以設定解析度。
-
-   ![outputsettings](fig/d_outputsettings.png)
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 
 ### 主題
 

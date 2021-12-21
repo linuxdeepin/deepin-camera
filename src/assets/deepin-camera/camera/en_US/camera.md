@@ -6,7 +6,7 @@ Camera is an easy-to-use camera application that supports multiple functions suc
 
 ## Guide
 
-You can run, close or create shortcuts for Camera in the following ways.
+You can run, close or create a desktop shortcut for Camera in the following ways.
 
 ### Run Camera
 
@@ -24,19 +24,52 @@ You can run, close or create shortcuts for Camera in the following ways.
 - Right-click ![camera](../common/camera.svg) in the Dock and select **Close All** to exit Camera.
 - On the Camera interface, click ![icon_menu](../common/icon_menu.svg) and select **Exit** to exit Camera.
 
+## Icon Descriptions
+<table class="block1">
+    <tbody>
+        <tr>
+            <td><img src="../common/photograph.png" alt="Photo" class="inline" /></td>
+            <td>Photo</td>
+            <td><img src="../common/record.png" alt="Video" class="inline" /></td>
+            <td>Video</td>
+            <td><img src="../common/switch.png" alt="Switch Cameras" class="inline" /></td>
+            <td>Switch Cameras</td>
+        </tr>
+        <tr>
+            <td><img src="../common/more.png" alt="Fold" class="inline" /></td>
+            <td>Fold Toolbar</td>
+            <td><img src="../common/fold.png" alt="Unfold Toolbar" class="inline" /></td>
+            <td>Unfold Toolbar</td>
+            <td><img src="../common/delay.png" alt="Delay Capture" class="inline" /></td>
+            <td>Delay Capture</td>
+       </tr>   
+       <tr>
+            <td><img src="../common/flashlight.png" alt="flashlight" class="inline" /></td>
+            <td>Enable flashlight</td>
+            <td><img src="../common/filter.png" alt="Filters" class="inline" /></td>
+            <td>Set filters</td>
+            <td><img src="../common/exposure.png" alt="Exposure" class="inline" /></td>
+            <td>Adjust the exposure level</td>
+        </tr>
+    </tbody>
+</table>
+
+
+> ![notes](../common/notes.svg) The camera switching icon ![1](fig/switch.png) only shows when there are multiple cameras connected.
+
 ## Operations
 
-You can use the Camera application if your computer comes with a camera or is connected to a camera. If there are multiple cameras connected, you can select the camera expected. Select the photo or video mode on the Camera interface to take photos and record videos.
+You can use the Camera application if your computer comes with a camera or is connected to a camera. Select the photo or video mode on the Camera interface to take photos and record videos. You can also enable the **Mirror mode** in **Settings > Shoot** to flip the photo horizontally.
 
 ### Take Photos
 
-Photo mode is defaulted when Camera starts up. Click the ![photograph](../common/photograph.svg) icon to take photos, and the photos will be displayed on the interface.
+Photo mode is defaulted when Camera starts up. Click the ![photograph](../common/photograph.png) icon to take photos, and the photos will be displayed on the interface.
 
 ![image](fig/image.png)
 
 ### Record Videos
 
-On the Camera interface, click the ![transcribe_bottom](../common/transcribe_bottom.svg) icon to to enter the video mode. Click  the![transcribe](../common/transcribe.svg) icon to start recording, and click the ![stop](../common/stop1.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
+On the Camera interface, click **Video** to to enter the video mode. Click  the![transcribe](../common/record.svg) icon to start recording, and click the ![stop](../common/stop.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
 
 ![video](fig/video.png)
 
@@ -44,13 +77,13 @@ On the Camera interface, click the ![transcribe_bottom](../common/transcribe_bot
 
 On the Camera interface, right-click the photos or video files to select copy, delete, print and open folder.
 
+> ![notes](../common/notes.svg) Notes: The printing function is only available for photo files. 
+
 - Copy: Copy the selected photo/video to another path.
 
 - Delete: Delete the selected photo/video.
 
 - Print: Print the selected photo. Click **Print** and you will be direct to the print preview interface. Set the relevant printing parameters and click the **Save** icon to finish printing.
-
-  ![notes](../common/notes.svg) Notes: The printing function is only available for photo files. If a video file is contained in the multiple files selected, the **Print** icon will not be displayed.
 
 - Open folder: Open the folder where photos and videos are located.
 
@@ -67,17 +100,15 @@ On the main menu, you can change settings for Camera, switch window themes, view
 2. Click **Settings** to adjust **Basic**, **Shoot** and **Output** settings.
 
    - **Basic** settings: set up the **File location** for photos and videos.
-   - **Shoot** settings: set up the **Sound effects**, **Burst mode** and **Self-timer delay** options.
+   - **Shoot** settings: set up the **Sound effects**, **Burst mode**, **Self-timer delay**, **Mirror mode** and **Flashlight** options.
 
-     ![settings](fig/settings.png)
+   - **Output** settings: display the **Output format** and set up **Resolution settings** for photos and videos.
 
-   - **Output** settings: set up the **Output format** and **Resolution settings** for photos and videos.
-   
-     ![output-settings](fig/outputsettings.png)
+     
 
 ### Theme
 
-The window theme provides three theme types, namely Light Theme, Dark Theme, and System Theme.
+There are three window themes, namely Light Theme, Dark Theme, and System Theme.
 
 1.  On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
 2.  Click **Theme** to select a theme.

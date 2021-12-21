@@ -6,7 +6,7 @@ Camera is an easy-to-use camera application that supports multiple functions suc
 
 ## Guide
 
-You can run, close or create shortcuts for Camera in the following ways.
+You can run, close or create a desktop shortcut for Camera in the following ways.
 
 ### Run Camera
 
@@ -44,19 +44,18 @@ You can run, close or create shortcuts for Camera in the following ways.
             <td>Delay Capture</td>
        </tr>   
        <tr>
-            <td><img src="../common/flashlight.png" alt="Flashlight" class="inline" /></td>
-            <td>Flashlight</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td><img src="../common/flashlight.png" alt="flashlight" class="inline" /></td>
+            <td>Enable flashlight</td>
+            <td><img src="../common/filter.png" alt="Filters" class="inline" /></td>
+            <td>Set filters</td>
+            <td><img src="../common/exposure.png" alt="Exposure" class="inline" /></td>
+            <td>Adjust the exposure level</td>
         </tr>
     </tbody>
 </table>
 
 
-
-> ![notes](../common/notes.svg) The camera switching icon ![1](fig/switch.png)only shows when there are multiple cameras connected.
+> ![notes](../common/notes.svg) The camera switching icon ![1](fig/switch.png) only shows when there are multiple cameras connected.
 
 ## Operations
 
@@ -66,17 +65,19 @@ You can use the Camera application if your computer comes with a camera or is co
 
 Photo mode is defaulted when Camera starts up. Click the ![photograph](../common/photograph.png) icon to take photos, and the photos will be displayed on the interface.
 
-![image](fig/d_image.png)
+![image](fig/image.png)
 
 ### Record Videos
 
 On the Camera interface, click **Video** to to enter the video mode. Click  the![transcribe](../common/record.svg) icon to start recording, and click the ![stop](../common/stop.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
 
-![video](fig/d_video.png)
+![video](fig/video.png)
 
 ### Process Photos and Videos
 
 On the Camera interface, right-click the photos or video files to select copy, delete, print and open folder.
+
+> ![notes](../common/notes.svg) Notes: The printing function is only available for photo files. 
 
 - Copy: Copy the selected photo/video to another path.
 
@@ -84,12 +85,10 @@ On the Camera interface, right-click the photos or video files to select copy, d
 
 - Print: Print the selected photo. Click **Print** and you will be direct to the print preview interface. Set the relevant printing parameters and click the **Save** icon to finish printing.
 
-    ![notes](../common/notes.svg) Notes: The printing function is only available for photo files. 
-
 - Open folder: Open the folder where photos and videos are located.
 
 
-![rightmenu](fig/d_right_menu.png)
+![rightmenu](fig/right_menu.png)
 
 ## Main Menu
 
@@ -100,18 +99,16 @@ On the main menu, you can change settings for Camera, switch window themes, view
 1. On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
 2. Click **Settings** to adjust **Basic**, **Shoot** and **Output** settings.
 
-   - **Basic** settings: set up the **File location** for photos and videos.
+   - **Basic** settings: set up the **File location** for photos and videos as well as gridlines for photos.
    - **Shoot** settings: set up the **Sound effects**, **Burst mode**, **Self-timer delay**, **Mirror mode** and **Flashlight** options.
 
-     ![settings](fig/d_settings.png)
+   - **Output** settings: display the **Output format** and set up **Resolution settings** for photos and videos.
 
-   - **Output** settings: set up the **Output format** and **Resolution settings** for photos and videos.
-   
-     ![output-settings](fig/d_outputsettings.png)
+     
 
 ### Theme
 
-The window theme provides three theme types, namely Light Theme, Dark Theme, and System Theme.
+There are three window themes, namely Light Theme, Dark Theme, and System Theme.
 
 1.  On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
 2.  Click **Theme** to select a theme.
