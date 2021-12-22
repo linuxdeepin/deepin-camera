@@ -650,7 +650,7 @@ void videowidget::showCountdown()
             emit updatePhotoState(CMainWindow::Photoing);
 
             if (QDir(m_savePicFolder).exists() == false) {
-                QString strDefaultPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + QObject::tr("Camera");
+                QString strDefaultPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + QDir::separator() + "Camera";
                 if (QDir(strDefaultPath).exists() == false) {
                     QDir dir;
                     dir.mkdir(strDefaultPath);
@@ -1115,7 +1115,7 @@ void videowidget::startTakeVideo()
 {
     QDir dir;
 
-    QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+    QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
     if (QDir(strDefaultVdPath).exists() == false)
         dir.mkdir(strDefaultVdPath);
 
@@ -1133,7 +1133,7 @@ void videowidget::startTakeVideo()
             m_nFileID ++;
 
             if (QDir(m_saveVdFolder).exists() == false) {
-                m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + QObject::tr("Camera");
+                m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
             }
 
             set_video_path(m_saveVdFolder.toStdString().c_str());
