@@ -1264,6 +1264,12 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
     Q_UNUSED(filePath);
     QString videoPath = Settings::get().getOption("base.save.vddatapath").toString();
     QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
+    if (videoPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
+            videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+                       + QDir::separator() + "Camera";
+        if (picPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
+            picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
+                       + QDir::separator() + "Camera";
     QDir  dir(videoPath);
     if (!dir.exists()) {
         QString videoDefaultPath = lastOpenedPath(QStandardPaths::MoviesLocation);
