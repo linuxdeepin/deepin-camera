@@ -81,6 +81,7 @@ const int labelCameraNameWidth = 150;
 const int labelCameraNameHeight = 26;
 const int labelFilterNameWidth = 150;
 const int labelFilterNameHeight = 26;
+const int pathEditWidth = 285;
 
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
@@ -211,21 +212,27 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     picPathLineEdit->setAccessibleName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     //获取当前设置的照片保存路径
     QString curPicSettingPath = option->value().toString();
-
     if (curPicSettingPath.contains(relativeHomePath))
         curPicSettingPath.replace(0, 1, QDir::homePath());
 
     QDir curPicSettingPathdir(curPicSettingPath);
 
     //路径不存在
-    if (!curPicSettingPathdir.exists())
+    if (!curPicSettingPathdir.exists()) {
         picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
+        curPicSettingPath = option->defaultValue().toString();
+        if (curPicSettingPath.contains(relativeHomePath))
+            curPicSettingPath.replace(0, 1, QDir::homePath());
+    }
     else
         picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
 
+    lastPicPath = curPicSettingPath;
+
     QFontMetrics tem_fontmetrics = picPathLineEdit->fontMetrics();
-    QString picStrElideText = ElideText(picPathLineEdit->text(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                        picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+    QString picStrElideText = ElideText(picPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                        picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+    picPathLineEdit->setText(picStrElideText);
 
     option->connect(picPathLineEdit, &DLineEdit::focusChanged, [ = ](bool on) {
         if (on) {
@@ -242,19 +249,6 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
                 picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
         }
     });
-
-    picPathLineEdit->setText(picStrElideText);
-
-    if (picStrElideText[0] == '~' && !picStrElideText.compare(option->defaultValue().toString())) {
-        picStrElideText.replace(0, 1, QDir::homePath());
-        lastPicPath = picStrElideText;
-    } else if (picStrElideText[0] == '~' && picStrElideText.compare(option->defaultValue().toString())) {
-        picStrElideText = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                          + QDir::separator() + "Camera";
-
-        lastPicPath = picStrElideText;
-    } else
-        lastPicPath = picStrElideText;
 
     icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
     icon->setIconSize(QSize(24, 24));
@@ -364,9 +358,14 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
         if (validate(selectPicSavePath, false)) {
             option->setValue(selectPicSavePath);
-            picPathLineEdit->setText(selectPicSavePath);
-            tmplastpicpath = selectPicSavePath;
+            QFontMetrics tem_fontmetrics = picPathLineEdit->fontMetrics();
+            QString elideText = ElideText(picPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                                picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+            picPathLineEdit->setText(elideText);
         }
+
+        QString qlastPath = Settings::get().getOption("base.save.picdatapath").toString();
+        qDebug() << QString("-----------------qlastPath: %1").arg(qlastPath);
 
         QFileInfo fm(selectPicSavePath);
 
@@ -382,36 +381,38 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         QString curPicEditStr = picPathLineEdit->text();
         QDir dir(curPicEditStr);
         //获取当前文本框路径
-        QString curPicLineEditPath = ElideText(curPicEditStr, {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                               picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+        QString curPicElidePath = ElideText(curPicEditStr, {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                               picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
 
-        if (!validate(picPathLineEdit->text(), false)) {
+        if (!validate(curPicEditStr, false)) {
             QFileInfo fn(dir.path());
 
-            if ((!fn.isReadable() || !fn.isWritable()) && !curPicEditStr.isEmpty())
-                curPicLineEditPath = option->defaultValue().toString();
+            if ((!fn.isReadable() || !fn.isWritable()) && !curPicEditStr.isEmpty()) {
+                // 设置为默认路径
+                curPicEditStr = option->defaultValue().toString();
+                option->setValue(option->defaultValue().toString());
+                curPicElidePath = option->defaultValue().toString();
+            }
         }
 
         if (!picPathLineEdit->lineEdit()->hasFocus()) {
 
             //文本框路径有效
-            if (validate(picPathLineEdit->text(), false)) {
-                option->setValue(curPicLineEditPath);
-                picPathLineEdit->setText(curPicLineEditPath);
-                lastPicPath = curPicLineEditPath;
-            }
-            //路径编辑，但未修改
-            else if (curPicLineEditPath == picStrElideText) {
-                picPathLineEdit->setText(picStrElideText);
+            if (validate(curPicEditStr, false)) {
+                option->setValue(curPicEditStr);
             }
             //文本框路径无效
             else {
-                QString strDefaultPicPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                                            + QDir::separator() + "Camera";
-                //设置为默认路径
+                // 设置为默认路径
+                curPicEditStr = option->defaultValue().toString();
+                if (curPicEditStr.front() == '~')
+                    curPicEditStr.replace(0, 1, QDir::homePath());
                 option->setValue(option->defaultValue().toString());
-                picPathLineEdit->setText(option->defaultValue().toString());
+                curPicElidePath = option->defaultValue().toString();
             }
+
+            lastPicPath = curPicEditStr;
+            picPathLineEdit->setText(curPicElidePath);
         }
     });
 
@@ -424,12 +425,13 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
      */
     option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, picPathLineEdit,
     [ = ](const QVariant & value) {
-        auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                            picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+        auto pi = ElideText(value.toString(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                            picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
         picPathLineEdit->setText(pi);
-        lastPicPath = pi;
-        option->setValue(pi);
-        qDebug() << "save pic last path:" << pi << endl;
+        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << endl;
+        lastPicPath = value.toString();
+        option->setValue(value.toString());
+        qDebug() << "save pic last path:" << value.toString() << endl;
         picPathLineEdit->update();
     });
 
@@ -473,14 +475,21 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     QDir curVideoSettingPathdir(curVideoSettingPath);
 
     //路径不存在
-    if (!curVideoSettingPathdir.exists())
+    if (!curVideoSettingPathdir.exists()) {
         videoPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Videos/Camera
+        curVideoSettingPath = option->defaultValue().toString();
+        if (curVideoSettingPath.contains(relativeHomePath))
+            curVideoSettingPath.replace(0, 1, QDir::homePath());
+    }
     else
         videoPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
 
+    lastVideoPath = curVideoSettingPath;
+
     QFontMetrics tem_fontmetrics = videoPathLineEdit->fontMetrics();
-    QString VideoStrElideText = ElideText(videoPathLineEdit->text(), {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                          videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
+    QString vdStrElideText = ElideText(videoPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                          videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+    videoPathLineEdit->setText(vdStrElideText);
 
     option->connect(videoPathLineEdit, &DLineEdit::focusChanged, [ = ](bool on) {
         if (on) {
@@ -497,19 +506,6 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
                 videoPathLineEdit->setText(option->value().toString());
         }
     });
-
-    videoPathLineEdit->setText(VideoStrElideText);
-
-    if (VideoStrElideText[0] == '~' && !VideoStrElideText.compare(option->defaultValue().toString())) {
-        VideoStrElideText.replace(0, 1, QDir::homePath());
-        lastVideoPath = VideoStrElideText;
-    } else if (VideoStrElideText[0] == '~' && VideoStrElideText.compare(option->defaultValue().toString())) {
-        VideoStrElideText = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                            + QDir::separator() + "Camera";
-
-        lastVideoPath = VideoStrElideText;
-    } else
-        lastVideoPath = VideoStrElideText;
 
     icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
     icon->setIconSize(QSize(24, 24));
@@ -583,17 +579,22 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
      */
     option->connect(icon, &DPushButton::clicked, [ = ]() {
 
-
         QString selectVideoSavePath;
-        QDir dir(lastVideoPath);
+        QString tmplastvdcpath = lastVideoPath;
+
+        if (tmplastvdcpath.contains(relativeHomePath))
+            tmplastvdcpath.replace(0, 1, QDir::homePath());
+
+        QDir dir(tmplastvdcpath);
+
         if (!dir.exists()) {
             //设置文本框为新的路径
-            lastVideoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
+            tmplastvdcpath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
                             + QDir::separator() + "Camera";
-            QDir defaultdir(lastVideoPath);
+            QDir defaultdir(tmplastvdcpath);
 
             if (!defaultdir.exists()) {
-                dir.mkdir(lastVideoPath);
+                dir.mkdir(tmplastvdcpath);
             }
             videoPathLineEdit->setText(option->defaultValue().toString());
         }
@@ -602,14 +603,16 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 #else
         //打开文件夹
         selectVideoSavePath = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
-                                                                lastVideoPath,
+                                                                tmplastvdcpath,
                                                                 DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
 #endif
 
         if (validate(selectVideoSavePath, false)) {
             option->setValue(selectVideoSavePath);
-            videoPathLineEdit->setText(selectVideoSavePath);
-            lastVideoPath = selectVideoSavePath;
+            QFontMetrics tem_fontmetrics = videoPathLineEdit->fontMetrics();
+            QString elideText = ElideText(videoPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                                videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+            videoPathLineEdit->setText(elideText);
         }
 
         QFileInfo fm(selectVideoSavePath);
@@ -625,38 +628,45 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     option->connect(videoPathLineEdit, &DLineEdit::editingFinished, option, [ = ]() {
 
         QString curVideoEditStr = videoPathLineEdit->text();
+
+        // 视频保存路径暂时不能设置到smb网盘路径(会卡死在fwrite)，临时处理方案：重置回默认路径
+        if (curVideoEditStr.contains("/run/user/1000/gvfs/smb-share:server="))
+            curVideoEditStr = option->defaultValue().toString();
+
         QDir dir(curVideoEditStr);
+        // 获取当前文本路径
+        QString curVdElidePath = ElideText(curVideoEditStr, {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+                                                 videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
 
-        QString curVideoLineEditPath = ElideText(curVideoEditStr, {285, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                                 videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), 285);
-
-        if (!validate(videoPathLineEdit->text(), false)) {
+        if (!validate(curVideoEditStr, false)) {
             QFileInfo fn(dir.path());
 
-            if ((!fn.isReadable() || !fn.isWritable()) && !curVideoEditStr.isEmpty())
-                curVideoLineEditPath = option->defaultValue().toString();
+            if ((!fn.isReadable() || !fn.isWritable()) && !curVideoEditStr.isEmpty()) {
+                // 设置为默认路径
+                curVideoEditStr = option->defaultValue().toString();
+                option->setValue(option->defaultValue().toString());
+                curVdElidePath = option->defaultValue().toString();
+            }
         }
 
         if (!videoPathLineEdit->lineEdit()->hasFocus()) {
 
             //文本框路径有效
             if (validate(videoPathLineEdit->text(), false)) {
-                option->setValue(videoPathLineEdit->text());
-                videoPathLineEdit->setText(curVideoLineEditPath);
-                lastVideoPath = curVideoEditStr;
-            }
-            //路径编辑，但未修改
-            else if (curVideoLineEditPath == VideoStrElideText) {
-                videoPathLineEdit->setText(VideoStrElideText);
+                option->setValue(curVideoEditStr);
             }
             //文本框路径无效
             else {
-                QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                                           + QDir::separator() + "Camera";
-                //设置为默认路径
+                // 设置为默认路径
+                curVideoEditStr = option->defaultValue().toString();
+                if (curVideoEditStr.front() == '~')
+                    curVideoEditStr.replace(0, 1, QDir::homePath());
                 option->setValue(option->defaultValue().toString());
-                videoPathLineEdit->setText(option->defaultValue().toString());
+                curVdElidePath = option->defaultValue().toString();
             }
+
+            lastVideoPath = curVideoEditStr;
+            videoPathLineEdit->setText(curVdElidePath);
         }
     });
 
@@ -669,14 +679,14 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
      */
     option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, videoPathLineEdit,
     [ = ](const QVariant & value) {
-        auto pi = ElideText(value.toString(), {285, tem_fontmetrics.height()},
+        auto pi = ElideText(value.toString(), {pathEditWidth, tem_fontmetrics.height()},
                             QTextOption::WrapAnywhere, videoPathLineEdit->font(), Qt::ElideMiddle,
-                            tem_fontmetrics.height(), 285);
-
+                            tem_fontmetrics.height(), pathEditWidth);
         videoPathLineEdit->setText(pi);
-        lastVideoPath = pi;
-        option->setValue(pi);
-
+        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << endl;
+        lastVideoPath = value.toString();
+        option->setValue(value.toString());
+        qDebug() << "save video last path:" << value.toString() << endl;
         videoPathLineEdit->update();
     });
 
@@ -697,6 +707,12 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
         if (lastPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
                        + QDir::separator() + "Camera";
+    }
+
+    // 包含主目录相对路径，QDir不能识别，必须转为绝对路径
+    QString relativeHomePath = QString("~") + QDir::separator();
+    if (lastPath.contains(relativeHomePath)) {
+        lastPath.replace(0, 1, QDir::homePath());
     }
 
     QDir lastDir(lastPath);
@@ -1262,14 +1278,14 @@ void CMainWindow::stopCancelContinuousRecording(bool bTrue)
 void CMainWindow::onDirectoryChanged(const QString &filePath)
 {
     Q_UNUSED(filePath);
+    // 转为绝对路径进行比较
+    QString relativeHomePath = QString("~") + QDir::separator();
     QString videoPath = Settings::get().getOption("base.save.vddatapath").toString();
     QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
-    if (videoPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
-            videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                       + QDir::separator() + "Camera";
-        if (picPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
-            picPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                       + QDir::separator() + "Camera";
+    if (videoPath.contains(relativeHomePath))
+            videoPath.replace(0, 1, QDir::homePath());
+    if (picPath.contains(relativeHomePath))
+        picPath.replace(0, 1, QDir::homePath());
     QDir  dir(videoPath);
     if (!dir.exists()) {
         QString videoDefaultPath = lastOpenedPath(QStandardPaths::MoviesLocation);
