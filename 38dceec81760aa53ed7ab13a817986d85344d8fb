@@ -16,6 +16,40 @@
       "revId": "38dceec81760aa53ed7ab13a817986d85344d8fb",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5d39ce4_e642dc74",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-27T13:21:21Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16406112770960.4240265001968109/changeCache/src/src/mainwindow.cpp:361]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "38dceec81760aa53ed7ab13a817986d85344d8fb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9924ccc8_dcea6dd9",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-27T13:21:21Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16406112770960.4240265001968109/changeCache/src/src/mainwindow.cpp:612]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "38dceec81760aa53ed7ab13a817986d85344d8fb",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
