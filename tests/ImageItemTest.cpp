@@ -245,7 +245,7 @@ TEST_F(ImageItemTest, ChangeToVideo)
     if (videoFile.isEmpty()) {
         return;
     }
-    m_imageItem->updatePicPath(videoFile);
+//    m_imageItem->updatePicPath(videoFile);
     emit m_imageItem->customContextMenuRequested(QPoint(0, 0));
     QTest::qWait(100);
     m_imageItem->openFile();
