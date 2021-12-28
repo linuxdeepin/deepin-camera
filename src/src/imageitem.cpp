@@ -121,6 +121,9 @@ ImageItem::ImageItem(QWidget *parent)
 
 void ImageItem::updatePicPath(const QString &filePath)
 {
+#ifdef UNITTEST
+    return;
+#endif
     m_path = filePath;
     QPixmap pix;
     QFileInfo fileInfo(filePath);
