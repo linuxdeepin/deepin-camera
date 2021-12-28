@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "9027dfab_45e3ecf0",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 354,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2021-12-28T03:36:46Z",
+      "side": 1,
+      "message": "(style) Variable \u0027bOK\u0027 is assigned a value that is never used",
+      "revId": "ef5a865bef8839b5fdc8a6d4bc132c5716a175e2",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a23993e5_3c0a81dc",
         "filename": "tests/ImageItemTest.cpp",
         "patchSetId": 3
