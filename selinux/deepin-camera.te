@@ -1,0 +1,87 @@
+policy_module(deepin-camera, 1.0.0)
+
+########################################
+#
+# Declarations
+#
+
+type deepin_camera_t;
+type deepin_camera_exec_t;
+init_daemon_domain(deepin_camera_t, deepin_camera_exec_t)
+userdom_user_application_domain(deepin_camera_t,deepin_camera_exec_t)
+#domain_role_change_exemption(deepin_camera_t)
+#domain_system_change_exemption(deepin_camera_t)
+#domain_interactive_fd(deepin_camera_t)
+#role deepin_camera_roles types deepin_camera_t;
+
+##域切换
+unprivuser_domtrans_to(deepin_camera_t, deepin_camera_exec_t) 
+sysadm_domtrans_to(deepin_camera_t, deepin_camera_exec_t)
+secadm_domtrans_to(deepin_camera_t, deepin_camera_exec_t)
+auditadm_domtrans_to(deepin_camera_t, deepin_camera_exec_t)
+unconfined_domain(deepin_camera_t)
+
+require {
+	type initrc_t;
+	type user_dbusd_t;
+	type xdm_t;
+	type tmpfs_t;
+	type pulseaudio_t;
+	type user_t;
+	type systemd_logind_t;
+	type system_dbusd_t;
+	type sysadm_t;
+	type secadm_t;
+	type v4l_device_t;
+	type NetworkManager_t;
+	class chr_file { getattr ioctl map open read write };
+	class process { noatsecure rlimitinh siginh getattr signull };
+	class capability sys_ptrace;
+	class file {getattr open read write };
+	class dir { getattr open read search setattr write };
+	class lnk_file { getattr read };
+	class fd use;
+	class dbus { acquire_svc send_msg };
+	type alsa_t;
+}
+
+
+domain_use_interactive_fds(deepin_camera_t)
+files_read_etc_files(deepin_camera_t)
+miscfiles_read_localization(deepin_camera_t)
+
+
+#domain_auto_transition_pattern(sysadm_t,deepin_camera_exec_t,deepin_camera_t)
+allow deepin_camera_t v4l_device_t:chr_file { getattr ioctl map open read write };
+allow deepin_camera_t user_dbusd_t:dbus { acquire_svc send_msg };
+allow deepin_camera_t user_t:dbus send_msg;
+
+
+allow NetworkManager_t deepin_camera_t:dbus send_msg;
+
+allow sysadm_t deepin_camera_t:fd use;
+allow sysadm_t deepin_camera_t:process { noatsecure siginh };
+allow sysadm_t deepin_camera_t:dbus send_msg;
+#allow system_dbusd_t alsa_t:process { noatsecure rlimitinh siginh };
+#allow system_dbusd_t self:capability sys_ptrace;
+allow systemd_logind_t deepin_camera_t:dbus send_msg;
+
+allow secadm_t deepin_camera_t:dbus send_msg;
+allow secadm_t deepin_camera_t:dir { getattr search };
+allow secadm_t deepin_camera_t:file { getattr open read };
+allow secadm_t deepin_camera_t:process { noatsecure siginh signull };
+
+
+allow pulseaudio_t deepin_camera_t:fd use;
+allow user_t deepin_camera_t:dir { getattr search };
+allow user_t deepin_camera_t:file { getattr open read };
+allow user_t deepin_camera_t:lnk_file { getattr read };
+allow user_t deepin_camera_t:process { noatsecure siginh getattr };
+allow user_t deepin_camera_t:dbus send_msg;
+
+#allow user_t xdm_t:file { noatsecure siginh };
+xserver_read_xdm_state(domain)
+
+allow system_dbusd_t deepin_camera_t:dbus send_msg;
+
+allow initrc_t deepin_camera_t:dbus send_msg;

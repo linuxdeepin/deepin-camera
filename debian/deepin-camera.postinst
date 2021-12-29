@@ -1,0 +1,43 @@
+#!/bin/sh
+#set -e
+MODULE_NAME=deepin-camera
+SELINUX_CONFIG=/etc/selinux/config
+SHARE_PATH=/usr/share
+SELINUX_PP_TEMP_DIR=/tmp/${MODULE_NAME}
+#LIB_FILE="/lib/xxx.so /lib/yyy.so"
+LIB_FILE=""
+#CONFIG_FILE="/etc/${MODULE_NAME}"
+CONFIG_FILE=""
+#SERVICE_FILE=/lib/systemd/system/${MODULE_NAME}.service
+SERVICE_FILE=
+EXECUTABLE_FILE=/usr/bin/${MODULE_NAME}
+ALL_NEED_RELABELED_FILE="${LIB_FILE} ${CONFIG_FILE} ${EXECUTABLE_FILE} ${SERVICE_FILE}"
+SELINUX_DEV=`dpkg -l | grep "ii  selinux-policy-dev"`
+
+if [ -z "$SELINUX_DEV" ];then
+    exit 0
+fi
+
+if [ ! -d ${SELINUX_PP_TEMP_DIR} ];then
+	exit 0
+fi
+
+if [ -f ${SELINUX_CONFIG} ];then
+	SELINUX_PP_DIR=`find /usr/share/selinux -name *.pp.bz2 | cut -d '/' -f 5 | uniq`
+	for i in ${SELINUX_PP_DIR}
+	do
+		if [ -d ${SHARE_PATH}/selinux/${i} ];then
+			install -D -m 644 ${SELINUX_PP_TEMP_DIR}/${MODULE_NAME}.pp.bz2 ${SHARE_PATH}/selinux/${i}/${MODULE_NAME}.pp.bz2 > /dev/null 2>&1
+		fi
+	done
+	SELINUX_STATUS=`getenforce`
+	SELINUX_MODE=`cat ${SELINUX_CONFIG} | grep '^SELINUXTYPE=' |tail -n 1|cut -d '=' -f 2`
+	if [ ! $SELINUX_STATUS = "Disabled" ];then
+		restorecon -R ${SHARE_PATH}/selinux > /dev/null 2>&1
+		semodule -X 100 -i ${SHARE_PATH}/selinux/${SELINUX_MODE}/${MODULE_NAME}.pp.bz2 > /dev/null 2>&1
+		restorecon -RF ${ALL_NEED_RELABELED_FILE}
+	fi
+fi
+
+rm -rf ${SELINUX_PP_TEMP_DIR} > /dev/null 2>&1
+exit 0

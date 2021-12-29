@@ -1,0 +1,58 @@
+## <summary>policy for deepin_camera</summary>
+
+########################################
+## <summary>
+##	Execute deepin_camera_exec_t in the deepin_camera domain.
+## </summary>
+## <param name="domain">
+## <summary>
+##	Domain allowed to transition.
+## </summary>
+## </param>
+#
+interface(`deepin_camera_domtrans',`
+	gen_require(`
+		type deepin_camera_t, deepin_camera_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	domtrans_pattern($1, deepin_camera_exec_t, deepin_camera_t)
+')
+
+######################################
+## <summary>
+##	Execute deepin_camera in the caller domain.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed access.
+##	</summary>
+## </param>
+#
+interface(`deepin_camera_exec',`
+	gen_require(`
+		type deepin_camera_exec_t;
+	')
+
+	corecmd_search_bin($1)
+	can_exec($1, deepin_camera_exec_t)
+')
+
+########################################
+## <summary>
+##	Read deepin_camera log files.
+## </summary>
+## <param name="domain">
+##	<summary>
+##	Domain allowed to read the log files.
+##	</summary>
+## </param>
+#
+interface(`deepin_camera_read_log',`
+	gen_require(`
+		type deepin_camera_log_t;
+	')
+
+	logging_search_logs($1)
+	allow $1 deepin_camera_log_t:file read_file_perms;
+')
