@@ -5,7 +5,7 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 SELINUX_DEV ?= $(shell dpkg -l | grep "ii  selinux-policy-dev")
 
 MODULE_NAME=deepin-camera
-SELINUX_PP_TEMP_DIR=tmp/${MODULE_NAME}
+SELINUX_PP_TEMP_DIR=pp/${MODULE_NAME}
 %:
 	dh $@ --parallel
 
@@ -16,18 +16,7 @@ override_dh_auto_configure:
       -DAPP_VERSION=$(DEB_VERSION_UPSTREAM) -DVERSION=$(DEB_VERSION_UPSTREAM) LIB_INSTALL_DIR=/usr/lib/$(DEB_HOST_MULTIARCH) DH_AUTO_ARGS = --parallel --buildsystem=cmake
 
 
-
-ifneq ($(SELINUX_DEV),)
-
-	make -C selinux/
-
-override_dh_clean:
-	dh_clean
-	rm -f selinux/*.pp*
-	rm -rf selinux/tmp
-		
 override_dh_install:
 	mkdir -pv debian/${MODULE_NAME}/${SELINUX_PP_TEMP_DIR} > /dev/null 2>&1
 	cp selinux/*.pp* debian/${MODULE_NAME}/${SELINUX_PP_TEMP_DIR}/ > /dev/null 2>&1
 	dh_install
-endif
