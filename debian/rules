@@ -2,7 +2,6 @@
 include /usr/share/dpkg/default.mk
 export QT_SELECT=5
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
-SELINUX_DEV ?= $(shell dpkg -l | grep "ii  selinux-policy-dev")
 
 MODULE_NAME=deepin-camera
 SELINUX_PP_TEMP_DIR=tmp/${MODULE_NAME}
@@ -17,17 +16,15 @@ override_dh_auto_configure:
 
 
 
-ifneq ($(SELINUX_DEV),)
 
-	make -C selinux/
+# 	make -C selinux/
 
-override_dh_clean:
-	dh_clean
-	rm -f selinux/*.pp*
-	rm -rf selinux/tmp
+# override_dh_clean:
+# 	dh_clean
+# 	rm -f selinux/*.pp*
+# 	rm -rf selinux/tmp
 		
 override_dh_install:
 	mkdir -pv debian/${MODULE_NAME}/${SELINUX_PP_TEMP_DIR} > /dev/null 2>&1
 	cp selinux/*.pp* debian/${MODULE_NAME}/${SELINUX_PP_TEMP_DIR}/ > /dev/null 2>&1
 	dh_install
-endif
