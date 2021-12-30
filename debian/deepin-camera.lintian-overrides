@@ -1,0 +1,3 @@
+# Maintainer scripts create plugins.dat there.
+deepin-camera: dir-or-file-in-tmp tmp/deepin-camera/
+deepin-camera: dir-or-file-in-tmp tmp/deepin-camera/deepin-camera.pp.bz2
