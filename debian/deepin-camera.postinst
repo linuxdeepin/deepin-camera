@@ -3,7 +3,7 @@
 MODULE_NAME=deepin-camera
 SELINUX_CONFIG=/etc/selinux/config
 SHARE_PATH=/usr/share
-SELINUX_PP_TEMP_DIR=/tmp/${MODULE_NAME}
+SELINUX_PP_TEMP_DIR=temp/${MODULE_NAME}
 #LIB_FILE="/lib/xxx.so /lib/yyy.so"
 LIB_FILE=""
 #CONFIG_FILE="/etc/${MODULE_NAME}"
