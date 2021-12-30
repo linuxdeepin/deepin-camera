@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a925227_e780755f",
+        "filename": "debian/rules",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1000213
+      },
+      "writtenOn": "2021-12-30T08:15:09Z",
+      "side": 1,
+      "message": "此处代码不需要，编译已经不需要此库了",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 0
+      },
+      "revId": "942b7bb421729fc8460f5d932cd9fdd2fe599876",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": false
+    }
+  ]
+}
