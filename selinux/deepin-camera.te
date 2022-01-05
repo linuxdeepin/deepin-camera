@@ -49,7 +49,7 @@ require {
 domain_use_interactive_fds(deepin_camera_t)
 files_read_etc_files(deepin_camera_t)
 miscfiles_read_localization(deepin_camera_t)
-
+deepin_domain_set(deepin_camera_t)
 
 #domain_auto_transition_pattern(sysadm_t,deepin_camera_exec_t,deepin_camera_t)
 allow deepin_camera_t v4l_device_t:chr_file { getattr ioctl map open read write };
