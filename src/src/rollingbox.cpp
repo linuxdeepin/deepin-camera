@@ -36,17 +36,12 @@ RollingBox::RollingBox(QWidget *parent) :
     QWidget(parent),
     m_rangeMin(0),
     m_currentIndex(0),
-    m_isDragging(false),
+    m_isMousePressed(false),
     m_bFocus(false),
     m_deviation(0),
     m_textSize(15)  //暂定15,后续修改
 {
     setContentsMargins(0, 0, 0, 0);
-
-    m_pressResetTimer = new QTimer(this);
-    connect(m_pressResetTimer, &QTimer::timeout, this, [=](){
-        m_isDragging = true;
-    });
 
     m_homingAnimation = new QPropertyAnimation(this, "deviation", this);
     m_homingAnimation->setDuration(300);
@@ -79,18 +74,14 @@ int RollingBox::getCurrentValue()
 
 void RollingBox::mousePressEvent(QMouseEvent *e)
 {
-    if (m_pressResetTimer->isActive()) {
-        m_isDragging = false;
-        m_pressResetTimer->stop();
-    }
+    m_isMousePressed = true;
     m_homingAnimation->stop();
     m_mouseSrcPos = e->pos().y();
-    m_pressResetTimer->start(500);
 }
 
 void RollingBox::mouseMoveEvent(QMouseEvent *e)
 {
-    if (m_isDragging) {
+    if (m_isMousePressed) {
         //数值到边界时，阻止继续往对应方向移动
         if((m_currentIndex == m_rangeMin && e->pos().y() >= m_mouseSrcPos)||
           (m_currentIndex == m_rangeMax && e->pos().y() <= m_mouseSrcPos))
@@ -110,8 +101,8 @@ void RollingBox::mouseMoveEvent(QMouseEvent *e)
 
 void RollingBox::mouseReleaseEvent(QMouseEvent *e)
 {
-    if(m_isDragging) {
-        m_isDragging = false;
+    if(m_isMousePressed) {
+        m_isMousePressed = false;
         homing();
     } else {
         m_deviation = this->height() / 2 - e->pos().y();

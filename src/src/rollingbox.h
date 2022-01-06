@@ -127,13 +127,12 @@ private:
     int                 m_rangeMin;//最小范围
     int                 m_rangeMax;//最大范围
     int                 m_currentIndex;//当前索引
-    bool                m_isDragging;//是否鼠标拖动
+    bool                m_isMousePressed;//是否鼠标拖动
     bool                m_bFocus;//是否得到焦点
     int                 m_deviation;//偏移量
     int                 m_mouseSrcPos;//鼠标坐标
     int                 m_textSize;    //字符尺寸
     QPropertyAnimation  *m_homingAnimation;//矫正动画
-    QTimer              *m_pressResetTimer;//重置鼠标按下状态
     QList<QString>      m_content;//选项列表
 };
 
