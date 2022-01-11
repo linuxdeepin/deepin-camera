@@ -91,13 +91,24 @@ static bool CheckWayland()
         return true;
     } else
         return false;
+}
 
+static bool CheckFFmpegEnv()
+{
+    QProcess process;
+    process.start("dpkg -s ffmpeg");
+    process.waitForFinished();
+    bool bRet = !process.exitCode();
+
+    return bRet;
 }
 
 int main(int argc, char *argv[])
 {
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
+    bool bFFmpegEnv = CheckFFmpegEnv();
+    DataManager::instance()->setFFmpegEnv(bFFmpegEnv);
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {

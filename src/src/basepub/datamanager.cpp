@@ -60,6 +60,16 @@ uint DataManager::getNowTabIndex()
     return m_tabIndexNow;
 }
 
+void DataManager::setFFmpegEnv(bool bEnv)
+{
+    m_bFFmpegEnv = bEnv;
+}
+
+bool DataManager::isFFmpegEnv()
+{
+    return m_bFFmpegEnv;
+}
+
 DataManager *DataManager::instance()
 {
     if (m_dataManager == nullptr) {
@@ -75,6 +85,7 @@ DataManager::DataManager()
     m_tabIndexNow = 0;
     m_strFileName.clear();
     m_videoCount = 0;
+    m_bFFmpegEnv = false;
     m_devStatus = DeviceStatus::NOCAM;
 }
 

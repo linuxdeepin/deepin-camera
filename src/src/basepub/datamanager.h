@@ -146,12 +146,25 @@ public:
      */
     uint getNowTabIndex();
 
+    /**
+     * @brief setFFmpegEnv 设置当前是否具备FFmpeg环境
+     * @return
+     */
+    void setFFmpegEnv(bool bEnv);
+
+    /**
+     * @brief isFFmpegEnv 获取当前是否具备FFmpeg环境
+     * @return
+     */
+    bool isFFmpegEnv();
+
 private:
     DataManager();
     static DataManager *m_dataManager;
     uint m_tabIndexNow;//当前tab索引
     QString m_strFileName;
     int m_videoCount;
+    bool m_bFFmpegEnv;
     volatile enum DeviceStatus m_devStatus;
 };
 #endif // DATAMANAGER_H
