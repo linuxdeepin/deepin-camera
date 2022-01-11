@@ -21,6 +21,7 @@
 
 #include "majorimageprocessingthread.h"
 #include "datamanager.h"
+#include "camera.h"
 
 extern "C" {
 #include <libimagevisualresult/visualresult.h>
@@ -53,8 +54,7 @@ void MajorImageProcessingThread::init()
     m_result = -1;
     m_bFFmpegEnv = DataManager::instance()->isFFmpegEnv();
     if (!m_bFFmpegEnv) {
-        m_camera = new Camera;
-        connect(m_camera, &Camera::imageCapture, this, &MajorImageProcessingThread::processingImage);
+        connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
     }
 }
 
@@ -95,7 +95,7 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
     }
 }
 
-void MajorImageProcessingThread::processingImage(int ret, QImage img)
+void MajorImageProcessingThread::processingImage(QImage& img)
 {
     emit SendMajorImageProcessing(&img, 0);
 }
@@ -359,15 +359,8 @@ void MajorImageProcessingThread::run()
         }
 
         v4l2core_stop_stream(m_videoDevice);
-    } else {
-#ifndef UNITTEST
-        while (m_stopped == 0) {
-            m_camera->captureImage();
-        }
-#endif
     }
 }
-
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {

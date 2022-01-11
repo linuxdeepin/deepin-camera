@@ -21,9 +21,20 @@
 #define TMPPATH "/tmp/tmp.jpg"
 
 #include "camera.h"
+#include "videosurface.h"
 
 #include <QUrl>
 #include <QtMultimediaWidgets/QCameraViewfinder>
+
+Camera *Camera::m_instance = nullptr;
+
+Camera *Camera::instance()
+{
+    if (m_instance == nullptr) {
+        m_instance = new Camera;
+    }
+    return m_instance;
+}
 
 Camera::Camera()
 {
@@ -38,15 +49,17 @@ void Camera::initMember()
     m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
 
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
-
-    connect(m_imageCapture, &QCameraImageCapture::imageCaptured, this, &Camera::imageCapture);
+    // 连接相机surface，能够发送每帧QImage数据到外部
+    m_videoSurface = new VideoSurface(this);
+    m_camera->setViewfinder(m_videoSurface);
+    connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
 
     m_camera->start();
 
     QCameraViewfinderSettings viewfinderSettings;
     viewfinderSettings.setResolution(640, 480);
     m_camera->setViewfinderSettings(viewfinderSettings);
+
 }
 
 void Camera::switchCamera()

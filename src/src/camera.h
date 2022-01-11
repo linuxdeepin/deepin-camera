@@ -29,11 +29,14 @@
 #include <QMediaRecorder>
 #include <QCameraImageCapture>
 
+class VideoSurface;
 class Camera : public QObject
         {
     Q_OBJECT
 public:
-    explicit Camera();
+
+    static Camera *instance();
+
     /**
      * @brief initMember
      * 初始化参数
@@ -78,13 +81,19 @@ public slots:
     void captureImage();
 
 signals:
-    void imageCapture(int, QImage);
+    void presentImage(QImage&);
+
+private:
+    explicit Camera();
+
+private:
+    static Camera *m_instance;
 
 private:
     QCamera                 *m_camera;
     QMediaRecorder          *m_mediaRecoder;
     QCameraImageCapture     *m_imageCapture;
-
+    VideoSurface            *m_videoSurface;
     QList<QCameraInfo>      m_cameraInfoList;      ///摄像头信息列表
     int currentCamera;                             ///当前的摄像头
 };
