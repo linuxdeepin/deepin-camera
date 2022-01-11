@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
     bool bFFmpegEnv = CheckFFmpegEnv();
+    //bFFmpegEnv = false;
     DataManager::instance()->setFFmpegEnv(bFFmpegEnv);
 
     //root login for this application

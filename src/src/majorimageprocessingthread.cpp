@@ -36,7 +36,12 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
     m_yuvPtr = nullptr;
     m_nVdWidth = 0;
     m_nVdHeight = 0;
+
     init();
+
+    m_bFFmpegEnv = DataManager::instance()->isFFmpegEnv();
+    if (!m_bFFmpegEnv)
+        connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
 }
 
 void MajorImageProcessingThread::stop()
@@ -52,10 +57,6 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
-    m_bFFmpegEnv = DataManager::instance()->isFFmpegEnv();
-    if (!m_bFFmpegEnv) {
-        connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
-    }
 }
 
 void MajorImageProcessingThread::setFilter(QString filter)
@@ -97,6 +98,46 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
 
 void MajorImageProcessingThread::processingImage(QImage& img)
 {
+    // 镜像
+    if (!m_bHorizontalMirror)
+        img = img.mirrored(true,false);
+
+    if (m_bPhoto) {
+        img = img.convertToFormat(QImage::Format_RGB888);
+
+        // 滤镜预览
+        m_filterImg = img.scaled(40,40,Qt::IgnoreAspectRatio);
+        emit SendFilterImageProcessing(&m_filterImg);
+
+        if (!m_filter.isEmpty() || m_exposure) {
+            // 滤镜效果渲染
+            uint8_t *rgb = img.bits();
+            if (!m_filter.isEmpty())
+                imageFilter24(rgb, img.width(), img.height(), m_filter.toStdString().c_str(), 100);
+            // 曝光强度调节
+            if(m_exposure)
+                exposure(rgb, img.width(), img.height(), m_exposure);
+        }
+
+        /*拍照*/
+        if (m_bTake) {
+            int nRet = -1;
+            if (!img.isNull()) {
+                if (img.save(m_strPath, "JPG")) {
+                    nRet = 0;
+                    emit sigReflushSnapshotLabel();
+                }
+            }
+
+            if (nRet < 0) {
+                qWarning() << "保存照片失败";
+            }
+
+            m_bTake = false;
+        }
+
+    }
+
     emit SendMajorImageProcessing(&img, 0);
 }
 

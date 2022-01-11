@@ -974,8 +974,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
         ret = 0;
     }
     if (ret == E_OK) {
-        //构造函数已完成初始化，此处不需要再次init
-//        m_imgPrcThread->init();
+        m_imgPrcThread->init();
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
         //切换摄像机成功，发送设备名称信号到主界面。
