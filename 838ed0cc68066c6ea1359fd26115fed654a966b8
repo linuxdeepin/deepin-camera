@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "17cfaf57_11b2c15f",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T12:01:58Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_cameraInfoList\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e06b3f2b_e8e7dfa3",
         "filename": "src/src/camera.h",
         "patchSetId": 2
@@ -47,6 +64,40 @@
       "writtenOn": "2022-01-11T12:01:57Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 3; 注释率: 0.0%",
+      "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27446cae_c9ff6470",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T12:01:58Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdWidth\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e03739f_e5147021",
+        "filename": "src/src/majorimageprocessingthread.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T12:01:58Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_nVdHeight\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
       "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -98,6 +149,23 @@
       "writtenOn": "2022-01-11T12:01:57Z",
       "side": 1,
       "message": "注释行数: 19; 改动行数(修改和新增): 42; 注释率: 45.2%",
+      "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7303994_6feb5e92",
+        "filename": "src/src/videosurface.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T12:01:58Z",
+      "side": 1,
+      "message": "(style) Class \u0027VideoSurface\u0027 has a constructor with 1 argument that is not explicit",
       "revId": "838ed0cc68066c6ea1359fd26115fed654a966b8",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
