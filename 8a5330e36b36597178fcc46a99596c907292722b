@@ -36,6 +36,40 @@
     },
     {
       "key": {
+        "uuid": "fafcf3a1_83f4d016",
+        "filename": "src/src/basepub/datamanager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T06:11:14Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_tabIndex\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "8a5330e36b36597178fcc46a99596c907292722b",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d510f131_fb1c5d6c",
+        "filename": "src/src/basepub/datamanager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-11T06:11:14Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_tabIndexNow\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "8a5330e36b36597178fcc46a99596c907292722b",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a589c691_7687f0cb",
         "filename": "src/src/basepub/datamanager.h",
         "patchSetId": 1
