@@ -85,7 +85,7 @@ void Camera::captureImage()
         return;
 
     if (m_imageCapture->isReadyForCapture()) {
-        m_imageCapture->capture("/tmp/123.jpg");
+        m_imageCapture->capture(TMPPATH);
     }
 }
 

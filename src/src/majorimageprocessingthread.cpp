@@ -20,6 +20,7 @@
 */
 
 #include "majorimageprocessingthread.h"
+#include "datamanager.h"
 
 extern "C" {
 #include <libimagevisualresult/visualresult.h>
@@ -50,6 +51,11 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
+    m_bFFmpegEnv = DataManager::instance()->isFFmpegEnv();
+    if (!m_bFFmpegEnv) {
+        m_camera = new Camera;
+        connect(m_camera, &Camera::imageCapture, this, &MajorImageProcessingThread::processingImage);
+    }
 }
 
 void MajorImageProcessingThread::setFilter(QString filter)
@@ -89,264 +95,277 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
     }
 }
 
+void MajorImageProcessingThread::processingImage(int ret, QImage img)
+{
+    emit SendMajorImageProcessing(&img, 0);
+}
+
 void MajorImageProcessingThread::run()
 {
-    m_videoDevice = get_v4l2_device_handler();
-    v4l2core_start_stream(m_videoDevice);
-    int framedely = 0;
-    int64_t timespausestamp = 0;
-    uint yuvsize = 0;
-    uint8_t* pOldYuvFrame = nullptr;
-    while (m_stopped == 0) {
-        if (get_resolution_status()) {
-            //reset
-            request_format_update(0);
-            v4l2core_stop_stream(m_videoDevice);
-            m_rwMtxImg.lock();
-            v4l2core_clean_buffers(m_videoDevice);
-            m_rwMtxImg.unlock();
+    if (m_bFFmpegEnv) {
+        m_videoDevice = get_v4l2_device_handler();
+        v4l2core_start_stream(m_videoDevice);
+        int framedely = 0;
+        int64_t timespausestamp = 0;
+        uint yuvsize = 0;
+        uint8_t* pOldYuvFrame = nullptr;
+        while (m_stopped == 0) {
+            if (get_resolution_status()) {
+                //reset
+                request_format_update(0);
+                v4l2core_stop_stream(m_videoDevice);
+                m_rwMtxImg.lock();
+                v4l2core_clean_buffers(m_videoDevice);
+                m_rwMtxImg.unlock();
 
-            int ret = v4l2core_update_current_format(m_videoDevice);
-
-            if (ret != E_OK) {
-                fprintf(stderr, "camera: could not set the defined stream format\n");
-                fprintf(stderr, "camera: trying first listed stream format\n");
-
-                v4l2core_prepare_valid_format(m_videoDevice);
-                v4l2core_prepare_valid_resolution(m_videoDevice);
-                ret = v4l2core_update_current_format(m_videoDevice);
+                int ret = v4l2core_update_current_format(m_videoDevice);
 
                 if (ret != E_OK) {
-                    fprintf(stderr, "camera: also could not set the first listed stream format\n");
-                    stop();
+                    fprintf(stderr, "camera: could not set the defined stream format\n");
+                    fprintf(stderr, "camera: trying first listed stream format\n");
+
+                    v4l2core_prepare_valid_format(m_videoDevice);
+                    v4l2core_prepare_valid_resolution(m_videoDevice);
+                    ret = v4l2core_update_current_format(m_videoDevice);
+
+                    if (ret != E_OK) {
+                        fprintf(stderr, "camera: also could not set the first listed stream format\n");
+                        stop();
+                    }
+
                 }
 
+                v4l2core_start_stream(m_videoDevice);
+
+                //保存新的分辨率//后续修改为标准Qt用法
+                QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
+                                      QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
+
+                config_load(config_file.toLatin1().data());
+
+                config_t *my_config = config_get();
+
+                my_config->width = static_cast<int>(m_videoDevice->format.fmt.pix.width);
+                my_config->height = static_cast<int>(m_videoDevice->format.fmt.pix.height);
+                my_config->format = static_cast<uint>(m_videoDevice->format.fmt.pix.pixelformat);
+                v4l2_device_list_t *devlist = get_device_list();
+                set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
+                config_save(config_file.toLatin1().data());
             }
 
-            v4l2core_start_stream(m_videoDevice);
+            m_result = -1;
+            m_frame = v4l2core_get_decoded_frame(m_videoDevice);
 
-            //保存新的分辨率//后续修改为标准Qt用法
-            QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
-                                  QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
-
-            config_load(config_file.toLatin1().data());
-
-            config_t *my_config = config_get();
-
-            my_config->width = static_cast<int>(m_videoDevice->format.fmt.pix.width);
-            my_config->height = static_cast<int>(m_videoDevice->format.fmt.pix.height);
-            my_config->format = static_cast<uint>(m_videoDevice->format.fmt.pix.pixelformat);
-            v4l2_device_list_t *devlist = get_device_list();
-            set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
-            config_save(config_file.toLatin1().data());
-        }
-
-        m_result = -1;
-        m_frame = v4l2core_get_decoded_frame(m_videoDevice);
-
-        if (m_frame == nullptr) {
-            framedely++;
-            if (framedely == MAX_DELAYED_FRAMES) {
-                m_stopped = 1;
-                //发送设备中断信号
-                emit reachMaxDelayedFrames();
-                m_filterImg =  QImage();
-                emit SendFilterImageProcessing(&m_filterImg);
-//                close_v4l2_device_handler();
-            }
-
-            continue;
-        }
-
-        if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
-            m_nVdWidth = static_cast<unsigned int>(m_frame->width);
-            m_nVdHeight = static_cast<unsigned int>(m_frame->height);
-            if (m_yuvPtr != nullptr) {
-                delete [] m_yuvPtr;
-                m_yuvPtr = nullptr;
-            }
-
-            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-            m_yuvPtr = new uchar[yuvsize];
-        } else {
-            yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-        }
-
-        if (m_bHorizontalMirror){
-            ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
-        } else {
-            memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-        }
-        pOldYuvFrame = m_frame->yuv_frame;
-        m_frame->yuv_frame = m_yuvPtr;
-
-        // wayland下，获取的相机原始画面为镜像画面，需要翻转一次
-//        if (get_wayland_status() == 1) {
-//            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
-//        }
-
-        // 判断是否使用rgb数据
-        bool bUseRgb = false;
-#ifdef __mips__
-        bUseRgb = true;
-#endif
-        if (get_wayland_status())
-            bUseRgb = true;
-
-        if (!m_filter.isEmpty() || m_exposure)
-            bUseRgb = true;
-
-        uint8_t *rgb = nullptr;
-        if (bUseRgb || m_bPhoto) {
-            rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
-            // yu12到rgb数据高性能转换
-            yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
-            m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
-
-            // 拍照状态下，曝光和滤镜功能才有效
-            if (m_bPhoto) {
-                // 滤镜效果渲染
-                if (!m_filter.isEmpty())
-                    imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
-                // 曝光强度调节
-                if(m_exposure)
-                    exposure(rgb, m_frame->width, m_frame->height, m_exposure);
-            }
-        }
-
-        /*录像*/
-        if (video_capture_get_save_video()) {
-
-            if (get_myvideo_bebin_timer() == 0)
-                set_myvideo_begin_timer(v4l2core_time_get_timestamp());
-
-            int size = (m_frame->width * m_frame->height * 3) / 2;
-            uint8_t *input_frame = m_frame->yuv_frame;
-
-            /*
-             * TODO: check codec_id, format and frame flags
-             * (we may want to store a compressed format
-             */
-            if (get_video_codec_ind() == 0) { //raw frame
-                switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
-                case  V4L2_PIX_FMT_H264:
-                    input_frame = m_frame->h264_frame;
-                    size = static_cast<int>(m_frame->h264_frame_size);
-                    break;
-                default:
-                    input_frame = m_frame->raw_frame;
-                    size = static_cast<int>(m_frame->raw_frame_size);
-                    break;
+            if (m_frame == nullptr) {
+                framedely++;
+                if (framedely == MAX_DELAYED_FRAMES) {
+                    m_stopped = 1;
+                    //发送设备中断信号
+                    emit reachMaxDelayedFrames();
+                    m_filterImg =  QImage();
+                    emit SendFilterImageProcessing(&m_filterImg);
+    //                close_v4l2_device_handler();
                 }
 
+                continue;
             }
 
-            /*把帧加入编码队列*/
-            if (!get_capture_pause()) {
-                //设置时间戳
-                set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
-                encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
+            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+                if (m_yuvPtr != nullptr) {
+                    delete [] m_yuvPtr;
+                    m_yuvPtr = nullptr;
+                }
+
+                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+                m_yuvPtr = new uchar[yuvsize];
             } else {
-                //设置暂停时长
-                timespausestamp = get_video_timestamptmp();
-                if (timespausestamp == 0) {
-                    set_video_pause_timestamp(0);
+                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+            }
+
+            if (m_bHorizontalMirror){
+                ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
+            } else {
+                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+            }
+            pOldYuvFrame = m_frame->yuv_frame;
+            m_frame->yuv_frame = m_yuvPtr;
+
+            // wayland下，获取的相机原始画面为镜像画面，需要翻转一次
+    //        if (get_wayland_status() == 1) {
+    //            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
+    //        }
+
+            // 判断是否使用rgb数据
+            bool bUseRgb = false;
+    #ifdef __mips__
+            bUseRgb = true;
+    #endif
+            if (get_wayland_status())
+                bUseRgb = true;
+
+            if (!m_filter.isEmpty() || m_exposure)
+                bUseRgb = true;
+
+            uint8_t *rgb = nullptr;
+            if (bUseRgb || m_bPhoto) {
+                rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
+                // yu12到rgb数据高性能转换
+                yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+                m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
+
+                // 拍照状态下，曝光和滤镜功能才有效
+                if (m_bPhoto) {
+                    // 滤镜效果渲染
+                    if (!m_filter.isEmpty())
+                        imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+                    // 曝光强度调节
+                    if(m_exposure)
+                        exposure(rgb, m_frame->width, m_frame->height, m_exposure);
+                }
+            }
+
+            /*录像*/
+            if (video_capture_get_save_video()) {
+
+                if (get_myvideo_bebin_timer() == 0)
+                    set_myvideo_begin_timer(v4l2core_time_get_timestamp());
+
+                int size = (m_frame->width * m_frame->height * 3) / 2;
+                uint8_t *input_frame = m_frame->yuv_frame;
+
+                /*
+                 * TODO: check codec_id, format and frame flags
+                 * (we may want to store a compressed format
+                 */
+                if (get_video_codec_ind() == 0) { //raw frame
+                    switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
+                    case  V4L2_PIX_FMT_H264:
+                        input_frame = m_frame->h264_frame;
+                        size = static_cast<int>(m_frame->h264_frame_size);
+                        break;
+                    default:
+                        input_frame = m_frame->raw_frame;
+                        size = static_cast<int>(m_frame->raw_frame_size);
+                        break;
+                    }
+
+                }
+
+                /*把帧加入编码队列*/
+                if (!get_capture_pause()) {
+                    //设置时间戳
+                    set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+                    encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
-                    set_video_pause_timestamp(static_cast<int64_t>(m_frame->timestamp) - timespausestamp);
+                    //设置暂停时长
+                    timespausestamp = get_video_timestamptmp();
+                    if (timespausestamp == 0) {
+                        set_video_pause_timestamp(0);
+                    } else {
+                        set_video_pause_timestamp(static_cast<int64_t>(m_frame->timestamp) - timespausestamp);
+                    }
+
+                }
+
+                /*
+                 * exponencial scheduler
+                 *  with 50% threshold (milisec)
+                 *  and max value of 250 ms (4 fps)
+                 */
+                double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
+                if (time_sched > 0) {
+                    switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
+                    case V4L2_PIX_FMT_H264: {
+                        uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
+                        v4l2core_set_h264_frame_rate_config(m_videoDevice, framerate);
+                        break;
+                    }
+
+                    default: {
+                        struct timespec req = {0, static_cast<__syscall_slong_t>(time_sched * 1E6)}; /*nanosec*/
+                        nanosleep(&req, nullptr);
+                        break;
+                    }
+                    }
+
                 }
 
             }
 
-            /*
-             * exponencial scheduler
-             *  with 50% threshold (milisec)
-             *  and max value of 250 ms (4 fps)
-             */
-            double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
-            if (time_sched > 0) {
-                switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
-                case V4L2_PIX_FMT_H264: {
-                    uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
-                    v4l2core_set_h264_frame_rate_config(m_videoDevice, framerate);
-                    break;
+            QImage* imgTmp = nullptr;
+            if (rgb)
+                imgTmp = new QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
+
+            /*拍照*/
+            if (m_bTake) {
+                int nRet = -1;
+                if ((!m_filter.isEmpty() || m_exposure) && imgTmp) {
+                    if (imgTmp->save(m_strPath, "JPG")) {
+                        nRet = 0;
+                        emit sigReflushSnapshotLabel();
+                    }
+                } else {
+                    nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
                 }
 
-                default: {
-                    struct timespec req = {0, static_cast<__syscall_slong_t>(time_sched * 1E6)}; /*nanosec*/
-                    nanosleep(&req, nullptr);
-                    break;
-                }
+                if (nRet < 0) {
+                    qWarning() << "保存照片失败";
                 }
 
+                m_bTake = false;
             }
 
+            m_result = 0;
+            framedely = 0;
+            m_rwMtxImg.lock();
+            if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
+                if (bUseRgb) {
+                    if (imgTmp && !imgTmp->isNull()) {
+                        m_Img = imgTmp->copy();
+                        emit SendMajorImageProcessing(&m_Img, m_result);
+                    }
+                } else {
+    #ifndef __mips__
+                    emit sigRenderYuv(true);
+                    emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
+    #endif
+                }
+
+                malloc_trim(0);
+            }
+
+            emit SendFilterImageProcessing(&m_filterImg);
+
+    #ifndef __mips__
+            if (m_frame->yuv_frame == nullptr) {
+                emit sigRenderYuv(false);
+            }
+
+    #endif
+            m_rwMtxImg.unlock();
+
+            if (rgb)
+                free(rgb);
+            if (imgTmp)
+                delete imgTmp;
+
+            m_frame->yuv_frame = pOldYuvFrame;
+            v4l2core_release_frame(m_videoDevice, m_frame);
+    #ifdef UNITTEST
+            break;
+    #endif
         }
 
-        QImage* imgTmp = nullptr;
-        if (rgb)
-            imgTmp = new QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
-
-        /*拍照*/
-        if (m_bTake) {
-            int nRet = -1;
-            if ((!m_filter.isEmpty() || m_exposure) && imgTmp) {
-                if (imgTmp->save(m_strPath, "JPG")) {
-                    nRet = 0;
-                    emit sigReflushSnapshotLabel();
-                }
-            } else {
-                nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-            }
-
-            if (nRet < 0) {
-                qWarning() << "保存照片失败";
-            }
-
-            m_bTake = false;
+        v4l2core_stop_stream(m_videoDevice);
+    } else {
+#ifndef UNITTEST
+        while (m_stopped == 0) {
+            m_camera->captureImage();
         }
-
-        m_result = 0;
-        framedely = 0;
-        m_rwMtxImg.lock();
-        if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
-            if (bUseRgb) {
-                if (imgTmp && !imgTmp->isNull()) {
-                    m_Img = imgTmp->copy();
-                    emit SendMajorImageProcessing(&m_Img, m_result);
-                }
-            } else {
-#ifndef __mips__
-                emit sigRenderYuv(true);
-                emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
-#endif
-            }
-
-            malloc_trim(0);
-        }
-
-        emit SendFilterImageProcessing(&m_filterImg);
-
-#ifndef __mips__
-        if (m_frame->yuv_frame == nullptr) {
-            emit sigRenderYuv(false);
-        }
-
-#endif
-        m_rwMtxImg.unlock();
-
-        if (rgb)
-            free(rgb);
-        if (imgTmp)
-            delete imgTmp;
-
-        m_frame->yuv_frame = pOldYuvFrame;
-        v4l2core_release_frame(m_videoDevice, m_frame);
-#ifdef UNITTEST
-        break;
 #endif
     }
-
-    v4l2core_stop_stream(m_videoDevice);
 }
 
 
