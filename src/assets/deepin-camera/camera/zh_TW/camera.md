@@ -21,7 +21,7 @@
 
 - 在相機界面，單擊 ![close](../common/close.svg)，關閉相機。
 - 右鍵單擊任務欄上的 ![camera](../common/camera.svg)，選擇 **全部關閉** 關閉相機。
-- 在相機界面單擊 ![icon_menu](../common/icon_menu.svg)，選擇 **離開** 關閉相機。
+- 在相機界面單擊 ![icon_menu](../common/icon_menu.svg)，選擇 **退出** 關閉相機。
 
 ## 圖示介紹
 
@@ -118,8 +118,8 @@
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
 2. 單擊 **關於**，查看關於相機的版本和介紹。
 
-### 離開
+### 退出
 
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
-2. 單擊 **離開**。
+2. 單擊 **退出**。
 
