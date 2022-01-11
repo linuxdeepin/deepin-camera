@@ -44,7 +44,6 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#include "camera.h"
 
 /**
  * @brief stop 线程处理图片
@@ -107,7 +106,6 @@ protected:
      */
     void run();
 
-
 signals:
     /**
      * @brief SendMajorImageProcessing 向预览界面发送帧数据  mips平台、wayland下使用该接口
@@ -158,7 +156,7 @@ private:
     void ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height);
 
 private slots:
-    void processingImage(int, QImage);
+    void processingImage(QImage&);
 
 private:
     int               m_result;
@@ -170,7 +168,6 @@ private:
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
     uint8_t           *m_yuvPtr;
-    Camera            *m_camera;       //QCamera相机类
 
     bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
     bool              m_bHorizontalMirror;   //水平镜像
