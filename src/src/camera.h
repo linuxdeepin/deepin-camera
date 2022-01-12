@@ -42,21 +42,24 @@ public:
      * 初始化参数
      */
     void initMember();
-    /**
-     * @brief switchCamera 切换摄像头
-     */
-    void switchCamera();
 
     /**
      * @brief getSupportResolutions 获取支持的分辨率列表
      * @return 当前摄像头分辨率列表
      */
-    QList<QSize> getSupportResolutions();
+    QStringList getSupportResolutions();
+
     /**
      * @brief setCameraResolution
      * 设置当前摄像头的分辨率
      */
     void setCameraResolution(QSize&);
+
+    /**
+     * @brief setCameraResolution
+     * 获取当前摄像头的分辨率
+     */
+    QSize getCameraResolution();
 
     /**
      * @brief stopCamera 停止当前相机
@@ -109,6 +112,14 @@ public slots:
      * @brief captureImage 抓取当前图像
      */
     void captureImage();
+    /**
+     * @brief switchCamera 切换摄像头
+     */
+    void switchCamera();
+
+    void restartCamera();
+    void refreshCamInfoList();
+
 
 signals:
     void presentImage(QImage&);
@@ -118,11 +129,10 @@ private:
 
 private:
     static Camera *m_instance;
-
-private:
     QCamera                 *m_camera;
     QMediaRecorder          *m_mediaRecoder;
     QCameraImageCapture     *m_imageCapture;
+    QCameraViewfinderSettings m_viewfinderSettings;
     VideoSurface            *m_videoSurface;
     QList<QCameraInfo>      m_cameraInfoList;      ///摄像头信息列表
     int currentCamera;                             ///当前的摄像头

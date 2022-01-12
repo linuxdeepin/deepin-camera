@@ -22,6 +22,7 @@
 
 #include "camera.h"
 #include "videosurface.h"
+#include "datamanager.h"
 
 #include <QUrl>
 #include <QtMultimediaWidgets/QCameraViewfinder>
@@ -54,7 +55,7 @@ void Camera::initMember()
 //    QString codec = videoSettings.codec();
 //    videoSettings.setCodec("video/mpeg2");
     QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
-    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+//    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
 
     m_camera->setCaptureMode(QCamera::CaptureStillImage);
 
@@ -65,40 +66,105 @@ void Camera::initMember()
 
     m_camera->start();
 
-    QCameraViewfinderSettings viewfinderSettings;
-    viewfinderSettings.setResolution(640, 480);
-    m_camera->setViewfinderSettings(viewfinderSettings);
-
+    QStringList resols = getSupportResolutions();
+    if(!resols.isEmpty()) {
+        QStringList resolutiontemp = resols[0].split("x");
+        m_viewfinderSettings.setResolution(resolutiontemp[0].toInt(), resolutiontemp[1].toInt());
+    }
+    m_camera->setViewfinderSettings(m_viewfinderSettings);
 }
 
 void Camera::switchCamera()
 {
     currentCamera++;
-    if (currentCamera > m_cameraInfoList.size())
+    if (currentCamera >= m_cameraInfoList.size())
         currentCamera = 0;
     m_camera->stop();
+
     m_camera = new QCamera(m_cameraInfoList.at(currentCamera));
+    m_imageCapture->deleteLater();
+    m_imageCapture = nullptr;
+
+    m_imageCapture = new QCameraImageCapture(m_camera);
+
+    bool resetResolution = true;
+    QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
+    QSize curResolution = getCameraResolution();
+
+    for (int i = 0; i < supportResolutionList.size(); i++) {
+        if (supportResolutionList[i].width() == curResolution.width() &&
+                supportResolutionList[i].height() == curResolution.height()) {
+            resetResolution = false;
+        }
+    }
+
+    if (resetResolution) {
+        m_viewfinderSettings.setResolution(supportResolutionList[0]);
+        m_camera->setViewfinderSettings(m_viewfinderSettings);
+    }
+
+    m_camera->setViewfinder(m_videoSurface);
+    m_camera->start();
+    m_camera->setViewfinderSettings(m_viewfinderSettings);
 }
 
-QList<QSize> Camera::getSupportResolutions()
+void Camera::restartCamera()
 {
-    if (!m_camera)
-        return QList<QSize>();
+    if (DataManager::instance()->getdevStatus() != NOCAM || m_cameraInfoList.isEmpty())
+        return;
+    m_camera = new QCamera(QCameraInfo::defaultCamera());
+    m_camera->setViewfinder(m_videoSurface);
+    m_camera->start();
+    m_camera->setViewfinderSettings(m_viewfinderSettings);
+    DataManager::instance()->setdevStatus(CAM_CANUSE);
 
-    QList<QSize> supportResolutionList = m_camera->supportedViewfinderResolutions();
+}
+
+void Camera::refreshCamInfoList()
+{
+    m_cameraInfoList = QCameraInfo::availableCameras();
+    qInfo() << m_cameraInfoList;
+}
+
+QStringList Camera::getSupportResolutions()
+{
+    QStringList resolutionsList;
+//    if (!m_camera)
+//        return QList<QSize>();
+
+    QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
     if (supportResolutionList.isEmpty())
         qInfo() << "Support Resolution is Empty!";
 
-    return supportResolutionList;
+    int size = supportResolutionList.size();
+    resolutionsList.clear();
+    for (int i = 0; i < size; i++) {
+        QString resol = QString("%1x%2").arg(supportResolutionList[size - 1 -i].width()).arg(supportResolutionList[size - 1 -i].height());
+        resolutionsList.append(resol);
+    }
+
+    return resolutionsList;
 }
 
 void Camera::setCameraResolution(QSize &size)
 {
     if (m_camera) {
-        QCameraViewfinderSettings set = m_camera->viewfinderSettings();
-        set.setResolution(size);
-        m_camera->setViewfinderSettings(set);
+        m_viewfinderSettings.setResolution(size);
+        m_camera->setViewfinderSettings(m_viewfinderSettings);
     }
+}
+
+QSize Camera::getCameraResolution()
+{
+    if (m_camera) {
+        return m_viewfinderSettings.resolution();
+    }
+}
+
+void Camera::stopCamera()
+{
+    m_camera->stop();
+    m_cameraInfoList.clear();
 }
 
 void Camera::setCaptureImage()
