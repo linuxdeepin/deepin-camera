@@ -270,6 +270,11 @@ public:
      */
     void setGridType(GridType type);
 
+    /**
+    * @brief showNocam　显示没有设备的图片的槽函数
+    */
+    void showNocam();
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -373,10 +378,7 @@ private:
     */
     void showCamUsed();
 
-    /**
-    * @brief showNocam　显示没有设备的图片的槽函数
-    */
-    void showNocam();
+
 
     /**
     * @brief startTakeVideo　开始录像
