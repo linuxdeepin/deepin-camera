@@ -51,11 +51,9 @@ void Camera::initMember()
     m_mediaRecoder = new QMediaRecorder(m_camera);
 
     QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
-//    QVariantMap map = videoSettings.encodingOptions();
-//    QString codec = videoSettings.codec();
-//    videoSettings.setCodec("video/mpeg2");
+    videoSettings.setCodec("video/x-vp8");
     QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
-//    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
 
     m_camera->setCaptureMode(QCamera::CaptureStillImage);
 
@@ -103,14 +101,11 @@ void Camera::restartCamera()
 void Camera::refreshCamInfoList()
 {
     m_cameraInfoList = QCameraInfo::availableCameras();
-    qInfo() << m_cameraInfoList;
 }
 
 QStringList Camera::getSupportResolutions()
 {
     QStringList resolutionsList;
-//    if (!m_camera)
-//        return QList<QSize>();
 
     QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
     if (supportResolutionList.isEmpty())
@@ -174,7 +169,7 @@ void Camera::stopRecoder()
 
 qint64 Camera::getRecoderTime()
 {
-    m_mediaRecoder->duration();
+    return m_mediaRecoder->duration();
 }
 
 QMediaRecorder::State Camera::getRecoderState()

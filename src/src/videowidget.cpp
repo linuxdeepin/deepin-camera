@@ -758,6 +758,7 @@ void videowidget::showRecTime()
         }
     } else {
         m_nCount = Camera::instance()->getRecoderTime() / 1000;
+        m_nCount += 2;
     }
 
     if (m_nCount >= m_nMaxRecTime * 60 * 60)//最大录制时长，平板与主线保持一致
@@ -1219,7 +1220,7 @@ void videowidget::startCaptureVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start Gstreamer takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID);
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
 
