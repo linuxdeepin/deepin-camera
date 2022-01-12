@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "821f47e0_e0524775",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T11:10:06Z",
+      "side": 1,
+      "message": "注释行数: 0; 改动行数(修改和新增): 17; 注释率: 0.0%",
+      "revId": "49aee260fea65eda7b074b5f464e376dbd1a8561",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
