@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "e3f93a6d_e06b2cf5",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T13:28:05Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_cameraInfoList\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "a5c7f09c6e620a2b45c6efe96958d7b663690fc0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71ad140b_58212d47",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T13:28:05Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16419940818570.7513571136467541/changeCache/src/src/camera.cpp:309]: (style) Local variable size shadows outer variabl",
+      "revId": "a5c7f09c6e620a2b45c6efe96958d7b663690fc0",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "797103ed_176c217f",
         "filename": "src/src/camera.h",
         "patchSetId": 3
