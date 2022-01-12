@@ -25,6 +25,7 @@
 #include "ac-deepin-camera-define.h"
 #include "capplication.h"
 #include "photorecordbtn.h"
+#include "camera.h"
 
 #include <DBlurEffectWidget>
 
@@ -435,7 +436,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
     if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
-            m_imgPrcThread->m_rwMtxImg.lock();
+//            m_imgPrcThread->m_rwMtxImg.lock();
             m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
@@ -464,10 +465,15 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
 
                 m_pNormalScene->setSceneRect(m_framePixmap.rect());
                 m_pNormalItem->setPixmap(m_framePixmap);
-                m_imgPrcThread->m_rwMtxImg.unlock();
+//                m_imgPrcThread->m_rwMtxImg.unlock();
 
-                if (get_encoder_status() == 0 && getCapStatus() == true)
-                    onEndBtnClicked();
+                if (DataManager::instance()->isFFmpegEnv()) {
+                    if (get_encoder_status() == 0 && getCapStatus() == true)
+                        onEndBtnClicked();
+                } else {
+                    if (Camera::instance()->getRecoderState() == 0 && getCapStatus() == true)
+                        onEndBtnClicked();
+                }
 
                 malloc_trim(0);
             }
@@ -615,11 +621,15 @@ void videowidget::showCountdown()
         m_dLabel->hide();
         if (g_Enum_Camera_State == VIDEO) {
             if (!getCapStatus()) {
-                /*m_bActive录制状态判断
-                *false：非录制状态
-                *true：录制状态
-                */
-                startTakeVideo();
+                if (DataManager::instance()->isFFmpegEnv()) {
+                    /*m_bActive录制状态判断
+                    *false：非录制状态
+                    *true：录制状态
+                    */
+                    startTakeVideo();
+                } else {
+                    startCaptureVideo();
+                }
             }
 
             showCountDownLabel(g_Enum_Camera_State);
@@ -738,12 +748,16 @@ void videowidget::showCountdown()
 void videowidget::showRecTime()
 {
     //获取写video的时间
-    m_nCount = static_cast<int>(get_video_time_capture());
+    if (DataManager::instance()->isFFmpegEnv()) {
+        m_nCount = static_cast<int>(get_video_time_capture());
 
-    //过滤不正常的时间
-    if (m_nCount <= 3) {
-        qWarning() << "error time" << m_nCount;
-        return;
+        //过滤不正常的时间
+        if (m_nCount <= 3) {
+            qWarning() << "error time" << m_nCount;
+            return;
+        }
+    } else {
+        m_nCount = Camera::instance()->getRecoderTime() / 1000;
     }
 
     if (m_nCount >= m_nMaxRecTime * 60 * 60)//最大录制时长，平板与主线保持一致
@@ -880,9 +894,15 @@ void videowidget::onEndBtnClicked()
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
 
-        if (video_capture_get_save_video() == 1) {
-            set_video_time_capture(0);
-            stop_encoder_thread();
+        if (DataManager::instance()->isFFmpegEnv()) {
+            if (video_capture_get_save_video() == 1) {
+                set_video_time_capture(0);
+                stop_encoder_thread();
+            }
+        } else {
+            if (Camera::instance()->getRecoderState() == 1) {
+                Camera::instance()->stopRecoder();
+            }
         }
 
         setCapStatus(false);
@@ -1082,7 +1102,11 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         qDebug() << "stop takeVideo";
         //向mainwindow 发送录像状态通知信号
         emit updateRecordState(photoRecordBtn::Normal);
-        stop_encoder_thread();
+        if (DataManager::instance()->isFFmpegEnv()) {
+            stop_encoder_thread();
+        } else {
+            Camera::instance()->stopRecoder();
+        }
         setCapStatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
@@ -1145,6 +1169,62 @@ void videowidget::startTakeVideo()
             set_video_path(m_saveVdFolder.toStdString().c_str());
             set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
             start_encoder_thread();
+            emit updateBlockSystem(true);
+            setCapStatus(true);
+            m_countTimer->stop();
+            m_countTimer->start(1000); //重新计时，否则时间与显示时间
+        } else {
+            reset_video_timer();//重置底层定时器
+            m_countTimer->stop();
+            setCapStatus(false);
+        }
+
+        m_nCount = 0;//5184000;
+        m_recordingTime->setText(QString("00:00:00"));
+        int nWidth = width();
+        int nHeight = height();
+
+        //判断倒计时阶段焦点位移到拍照/录制按钮，重新设置tab的索引
+        if (DataManager::instance()->m_tabIndex == 8)
+            DataManager::instance()->setNowTabIndex(8);
+
+        m_recordingTimeWidget->show();
+        m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
+                                    nHeight - m_recordingTimeWidget->height() - 15);
+    }
+}
+
+void videowidget::startCaptureVideo()
+{
+    QDir dir;
+
+    QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
+    if (QDir(strDefaultVdPath).exists() == false)
+        dir.mkdir(strDefaultVdPath);
+
+    if (getCapStatus()) {
+        qDebug() << "stop takeVideo";
+        Camera::instance()->stopRecoder();
+        setCapStatus(false);
+        reset_video_timer();
+        emit updateBlockSystem(false);
+    } else {
+        if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
+            qDebug() << "start Gstreamer takeVideo";
+            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            emit filename(DataManager::instance()->getstrFileName());
+            m_nFileID ++;
+
+            if (QDir(m_saveVdFolder).exists() == false) {
+                m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
+            }
+
+//            set_video_path(m_saveVdFolder.toStdString().c_str());
+//            set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
+//            start_encoder_thread();
+            QString outPutPath = QString(strDefaultVdPath + QDir::separator() + DataManager::instance()->getstrFileName());
+            Camera::instance()->setVideoOutPutPath(outPutPath);
+            Camera::instance()->startRecoder();
             emit updateBlockSystem(true);
             setCapStatus(true);
             m_countTimer->stop();
@@ -1279,8 +1359,15 @@ void videowidget::setFilterType(efilterType type)
 void videowidget::setState(bool bPhoto)
 {
     m_bPhoto = bPhoto;
-    if (m_imgPrcThread)
-        m_imgPrcThread->setState(bPhoto);
+    if (DataManager::instance()->isFFmpegEnv()) {
+        if (m_imgPrcThread)
+            m_imgPrcThread->setState(bPhoto);
+    } else {
+        if (bPhoto)
+            Camera::instance()->setCaptureImage();
+        else
+            Camera::instance()->setCaptureVideo();
+    }
 }
 
 QRect videowidget::getFrameRect()

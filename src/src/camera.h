@@ -69,6 +69,36 @@ public:
     void startCamera();
 
     /**
+     * @brief setCaptureImage 设置为捕获图像
+     */
+    void setCaptureImage();
+
+    /**
+     * @brief setCaptureVideo 设置为捕获视频
+     */
+    void setCaptureVideo();
+
+    /**
+     * @brief setVideoOutPutPath 设置视频保存路径
+     * @param path 视频输出路径
+     */
+    void setVideoOutPutPath(QString& path);
+
+    /**
+     * @brief startRecoder 开始录制
+     */
+    void startRecoder();
+
+    /**
+     * @brief stopRecoder 停止录制
+     */
+    void stopRecoder();
+
+    qint64 getRecoderTime();
+
+    QMediaRecorder::State getRecoderState();
+
+    /**
      * @brief getCamera 提供直接操作摄像头接口
      * @return QCamera指针
      */
