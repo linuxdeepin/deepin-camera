@@ -40,6 +40,7 @@ Camera *Camera::instance()
 Camera::Camera()
 {
     m_cameraInfoList = QCameraInfo::availableCameras();
+
     initMember();
 }
 
@@ -82,22 +83,44 @@ void Camera::switchCamera()
     m_camera->stop();
 
     m_camera = new QCamera(m_cameraInfoList.at(currentCamera));
+    m_imageCapture->deleteLater();
+    m_imageCapture = nullptr;
+
+    m_imageCapture = new QCameraImageCapture(m_camera);
 
     m_camera->setViewfinder(m_videoSurface);
     m_camera->start();
     m_camera->setViewfinderSettings(m_viewfinderSettings);
+
+    bool resetResolution = true;
+    QStringList list = getSupportResolutions();
+    QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
+    QSize curResolution = getCameraResolution();
+
+    for (int i = 0; i < supportResolutionList.size(); i++) {
+        if (supportResolutionList[i].width() == curResolution.width() &&
+                supportResolutionList[i].height() == curResolution.height()) {
+            resetResolution = false;
+        }
+    }
+
+    if (resetResolution) {
+        m_viewfinderSettings.setResolution(supportResolutionList[0]);
+        m_camera->setViewfinderSettings(m_viewfinderSettings);
+    }
 }
 
 void Camera::restartCamera()
 {
     if (DataManager::instance()->getdevStatus() != NOCAM || m_cameraInfoList.isEmpty())
         return;
+
+
     m_camera = new QCamera(QCameraInfo::defaultCamera());
     m_camera->setViewfinder(m_videoSurface);
     m_camera->start();
     m_camera->setViewfinderSettings(m_viewfinderSettings);
     DataManager::instance()->setdevStatus(CAM_CANUSE);
-
 }
 
 void Camera::refreshCamInfoList()
