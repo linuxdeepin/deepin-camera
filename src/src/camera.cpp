@@ -49,6 +49,15 @@ void Camera::initMember()
     m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
 
+    QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
+//    QVariantMap map = videoSettings.encodingOptions();
+//    QString codec = videoSettings.codec();
+//    videoSettings.setCodec("video/mpeg2");
+    QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
+    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+
+    m_camera->setCaptureMode(QCamera::CaptureStillImage);
+
     // 连接相机surface，能够发送每帧QImage数据到外部
     m_videoSurface = new VideoSurface(this);
     m_camera->setViewfinder(m_videoSurface);
@@ -90,6 +99,41 @@ void Camera::setCameraResolution(QSize &size)
         set.setResolution(size);
         m_camera->setViewfinderSettings(set);
     }
+}
+
+void Camera::setCaptureImage()
+{
+    m_camera->setCaptureMode(QCamera::CaptureStillImage);
+}
+
+void Camera::setCaptureVideo()
+{
+    m_camera->setCaptureMode(QCamera::CaptureVideo);
+}
+
+void Camera::setVideoOutPutPath(QString &path)
+{
+    m_mediaRecoder->setOutputLocation(QUrl::fromLocalFile(path));
+}
+
+void Camera::startRecoder()
+{
+    m_mediaRecoder->record();
+}
+
+void Camera::stopRecoder()
+{
+    m_mediaRecoder->stop();
+}
+
+qint64 Camera::getRecoderTime()
+{
+    m_mediaRecoder->duration();
+}
+
+QMediaRecorder::State Camera::getRecoderState()
+{
+    return  m_mediaRecoder->state();
 }
 
 void Camera::captureImage()
