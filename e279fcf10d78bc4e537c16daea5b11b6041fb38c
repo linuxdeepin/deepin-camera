@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "0290049b_ee1f71b8",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T05:30:55Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_cameraInfoList\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "e279fcf10d78bc4e537c16daea5b11b6041fb38c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7bf56f06_30a2d98f",
         "filename": "src/src/camera.h",
         "patchSetId": 5
