@@ -29,9 +29,21 @@
 #include <QMediaRecorder>
 #include <QCameraImageCapture>
 
+typedef struct _cam_config_t {
+    int  width;      /*width*/
+    int  height;     /*height*/
+    char *device_name; /*device name*/
+    char *device_location; /*device location*/
+    char *video_path;
+    char *video_name;
+    char *photo_path;
+    char *photo_name;
+    int fps_num;
+    int fps_denom;
+} cam_config;
 class VideoSurface;
 class Camera : public QObject
-        {
+{
     Q_OBJECT
 public:
 
@@ -53,7 +65,7 @@ public:
      * @brief setCameraResolution
      * 设置当前摄像头的分辨率
      */
-    void setCameraResolution(QSize&);
+    void setCameraResolution(QSize);
 
     /**
      * @brief setCameraResolution
@@ -107,6 +119,10 @@ public:
      */
     QCamera* getCamera();
 
+    int parseConfig();
+    void updateConfig();
+    int saveConfig();
+
 public slots:
     /**
      * @brief captureImage 抓取当前图像
@@ -130,6 +146,7 @@ private:
 private:
     static Camera *m_instance;
     QCamera                 *m_camera;
+    QCameraInfo             *m_cameraInfo;
     QMediaRecorder          *m_mediaRecoder;
     QCameraImageCapture     *m_imageCapture;
     QCameraViewfinderSettings m_viewfinderSettings;
