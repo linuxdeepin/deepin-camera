@@ -108,7 +108,12 @@ int main(int argc, char *argv[])
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
     bool bFFmpegEnv = CheckFFmpegEnv();
-    //bFFmpegEnv = false;
+    if (argc > 1) {
+        if (QString(argv[1]) == "-g") {
+            bFFmpegEnv = false;
+            qDebug() << "当前为gstreamer测试环境..";
+        }
+    }
     DataManager::instance()->setFFmpegEnv(bFFmpegEnv);
 
     //root login for this application
