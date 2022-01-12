@@ -842,15 +842,24 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
 
-    int nWidth = v4l2core_get_frame_width(get_v4l2_device_handler());
-    int nHeight = v4l2core_get_frame_height(get_v4l2_device_handler());
+    if (!DataManager::instance()->isFFmpegEnv()) {
+        QSize resolution = Camera::instance()->getCameraResolution();
+        if (resolution.width() != newwidth || resolution.height() != newheight) {
+            QSize size(newwidth, newheight);
+            Camera::instance()->setCameraResolution(size);
+        }
 
-    if (newwidth != nWidth || newheight != nHeight) {
-        //设置刷新率
-        v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
-        //设置新的分辨率
-        v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
-        request_format_update(1);
+    } else {
+        int nWidth = v4l2core_get_frame_width(get_v4l2_device_handler());
+        int nHeight = v4l2core_get_frame_height(get_v4l2_device_handler());
+
+        if (newwidth != nWidth || newheight != nHeight) {
+            //设置刷新率
+            v4l2core_define_fps(get_v4l2_device_handler(), 1, 30);
+            //设置新的分辨率
+            v4l2core_prepare_new_resolution(get_v4l2_device_handler(), newwidth, newheight);
+            request_format_update(1);
+        }
     }
 
 }
