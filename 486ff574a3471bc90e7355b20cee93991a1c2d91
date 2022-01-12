@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "400b1a1f_4c5b6ab1",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T08:05:36Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_cameraInfoList\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "486ff574a3471bc90e7355b20cee93991a1c2d91",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7192bb40_e469177b",
         "filename": "src/src/camera.h",
         "patchSetId": 2
@@ -47,6 +64,40 @@
       "writtenOn": "2022-01-12T08:05:34Z",
       "side": 1,
       "message": "注释行数: 7; 改动行数(修改和新增): 40; 注释率: 17.5%",
+      "revId": "486ff574a3471bc90e7355b20cee93991a1c2d91",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bfa3760_a639096b",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T08:05:36Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16419747309300.33761223239425975/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "486ff574a3471bc90e7355b20cee93991a1c2d91",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22f6ccd5_c179417c",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T08:05:36Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16419747309300.33761223239425975/changeCache/src/src/mainwindow.cpp:613]: (style) Local variable tem_fontmetrics shadows outer variabl",
       "revId": "486ff574a3471bc90e7355b20cee93991a1c2d91",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
