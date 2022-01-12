@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e9995fb_8b8d7057",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T06:41:34Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 50; 注释率: 4.0%",
+      "revId": "a640528d92ea672c3c9497261ea7e669e6b6ca9c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28a7ee1d_6d786662",
+        "filename": "src/src/camera.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T06:41:34Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 9; 注释率: 33.3%",
+      "revId": "a640528d92ea672c3c9497261ea7e669e6b6ca9c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ad93691_72d5ef7c",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T06:41:34Z",
+      "side": 1,
+      "message": "注释行数: 7; 改动行数(修改和新增): 40; 注释率: 17.5%",
+      "revId": "a640528d92ea672c3c9497261ea7e669e6b6ca9c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32897a4f_dcb5625e",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T06:41:34Z",
+      "side": 1,
+      "message": "注释行数: 2; 改动行数(修改和新增): 17; 注释率: 11.8%",
+      "revId": "a640528d92ea672c3c9497261ea7e669e6b6ca9c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bdc8e2c_041a4d97",
+        "filename": "src/src/videowidget.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-12T06:41:34Z",
+      "side": 1,
+      "message": "注释行数: 3; 改动行数(修改和新增): 4; 注释率: 75.0%",
+      "revId": "a640528d92ea672c3c9497261ea7e669e6b6ca9c",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    }
+  ]
+}
