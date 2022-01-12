@@ -30,6 +30,7 @@
 #include "photorecordbtn.h"
 #include "switchcamerabtn.h"
 #include "windowstatethread.h"
+#include "camera.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -1081,6 +1082,8 @@ void CMainWindow::settingDialog()
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
+
+
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
         int format_index = v4l2core_get_frame_format_index(
@@ -1168,14 +1171,30 @@ void CMainWindow::settingDialog()
         }
     } else {
         //初始化分辨率字符串表
+        int defres = 0;
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
+        if (!DataManager::instance()->isFFmpegEnv()) {
+            resolutionDatabase = Camera::instance()->getSupportResolutions();
 
-        if (resolutionDatabase.size() > 0)
-            resolutionmodeFamily->data("items").clear();
+            for (int i = 0; i < resolutionDatabase.size(); i++) {
+                QStringList resolutiontemp = resolutionDatabase[i].split("x");
 
-        resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("None")));
-        Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+                if ((Camera::instance()->getCameraResolution().width() == resolutiontemp[0].toInt()) &&
+                        Camera::instance()->getCameraResolution().height() == resolutiontemp[1].toInt()) {
+                    defres = i; //设置分辨率下拉菜单当前索引
+                    break;
+                }
+            }
+
+        } else {
+            if (resolutionDatabase.size() > 0)
+                resolutionmodeFamily->data("items").clear();
+
+            resolutionDatabase.clear();
+            resolutionDatabase.append(QString(tr("None")));
+            defres = 0;
+        }
+        Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
     m_SetDialog->setProperty("_d_QSSThemename", "dark");
@@ -1223,8 +1242,23 @@ void CMainWindow::loadAfterShow()
 
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
-    connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
-    connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+    if(DataManager::instance()->isFFmpegEnv()) {
+        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+        connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+    } else {
+        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamInfoList);
+        connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, Camera::instance(), &Camera::refreshCamInfoList);
+        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::restartCamera);
+//        connect(m_devnumMonitor, &DevNumMonitor::seltBtnStateDisable, this, [=](){
+//            Camera::instance()->stopCamera();
+//        });
+        connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
+            DataManager::instance()->setdevStatus(NOCAM);
+            m_videoPre->showNocam();
+            Camera::instance()->stopCamera();
+        });//重启设备
+    }
+
 
     m_videoPre->delayInit();
     m_videoPre->setFilterType(filter_Normal);
@@ -1883,7 +1917,10 @@ void CMainWindow::initRightButtons()
     m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
     m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
-    connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
+    if (DataManager::instance()->isFFmpegEnv())
+        connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
+    else
+        connect(m_cameraSwitchBtn, SIGNAL(clicked()), Camera::instance(), SLOT(switchCamera()));
     connect(m_modeSwitchBox, &RollingBox::currentValueChanged, this, &CMainWindow::onModeSwitchBoxValueChanged);
     connect(m_photoRecordBtn, SIGNAL(clicked()), this, SLOT(onPhotoRecordBtnClked()));
     connect(m_snapshotLabel, SIGNAL(trashFile(const QString &)), SLOT(onTrashFile(const QString &)));
