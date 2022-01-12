@@ -67,6 +67,9 @@ void DataManager::setFFmpegEnv(bool bEnv)
 
 bool DataManager::isFFmpegEnv()
 {
+#ifdef UNITTEST
+    return true;
+#endif
     return m_bFFmpegEnv;
 }
 
