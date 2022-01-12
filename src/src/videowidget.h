@@ -384,6 +384,11 @@ private:
     void startTakeVideo();
 
     /**
+     * @brief startCaptureVideo gstreamer环境下录制视频
+     */
+    void startCaptureVideo();
+
+    /**
     * @brief itemPosChange　item位置改变
     */
     void itemPosChange();
