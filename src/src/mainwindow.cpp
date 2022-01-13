@@ -1934,7 +1934,10 @@ void CMainWindow::initRightButtons()
     //系统文件夹变化信号
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //摄像头切换成功信号
-    connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+    if (DataManager::instance()->isFFmpegEnv())
+        connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+    else
+        connect(Camera::instance(), &Camera::cameraSwitched, this, &CMainWindow::onSwitchCameraSuccess);
     locateRightButtons();
 }
 

@@ -62,7 +62,6 @@ Camera::Camera()
 void Camera::initMember()
 {
     currentCamera = 0;
-//    m_camera = new QCamera(QCameraInfo::defaultCamera());
 
     m_camera = new QCamera(QCameraInfo(camConfig.device_location));
     m_cameraInfo = new QCameraInfo(*m_camera);
@@ -134,6 +133,7 @@ void Camera::switchCamera()
         m_viewfinderSettings.setResolution(supportResolutionList[0]);
         m_camera->setViewfinderSettings(m_viewfinderSettings);
     }
+    emit cameraSwitched(QString(camConfig.device_name));
 }
 
 void Camera::restartCamera()
@@ -179,11 +179,11 @@ void Camera::setCameraResolution(QSize size)
     QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
     if (supportResolutionList.isEmpty())
         return;
-    QSize curResolution = getCameraResolution();
+//    QSize curResolution = getCameraResolution();
 
     for (int i = 0; i < supportResolutionList.size(); i++) {
-        if (supportResolutionList[i].width() == curResolution.width() &&
-                supportResolutionList[i].height() == curResolution.height()) {
+        if (supportResolutionList[i].width() == size.width() &&
+                supportResolutionList[i].height() == size.height()) {
             setResolution = true;
         }
     }

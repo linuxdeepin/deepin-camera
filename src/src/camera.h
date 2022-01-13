@@ -139,6 +139,7 @@ public slots:
 
 signals:
     void presentImage(QImage&);
+    void cameraSwitched(QString);
 
 private:
     explicit Camera();
