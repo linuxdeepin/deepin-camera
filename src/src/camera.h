@@ -74,14 +74,14 @@ public:
     QSize getCameraResolution();
 
     /**
+     * @brief startCamera 开始当前相机
+     */
+    void startCamera(const QString& devName);
+
+    /**
      * @brief stopCamera 停止当前相机
      */
     void stopCamera();
-
-    /**
-     * @brief startCamera 开始当前相机
-     */
-    void startCamera();
 
     /**
      * @brief setCaptureImage 设置为捕获图像
@@ -113,46 +113,53 @@ public:
 
     QMediaRecorder::State getRecoderState();
 
-    /**
-     * @brief getCamera 提供直接操作摄像头接口
-     * @return QCamera指针
-     */
-    QCamera* getCamera();
-
     int parseConfig();
-    void updateConfig();
     int saveConfig();
 
 public slots:
-    /**
-     * @brief captureImage 抓取当前图像
-     */
-    void captureImage();
     /**
      * @brief switchCamera 切换摄像头
      */
     void switchCamera();
 
-    void restartCamera();
-    void refreshCamInfoList();
+    /**
+     * @brief refreshCamera 刷新摄像头设备状态
+     */
+    void refreshCamera();
 
+    /**
+     * @brief restartCamera 重启摄像头
+     */
+    void restartCamera();
+
+    /**
+     * @brief refreshCamInfoList 刷新摄像头设备列表
+     */
+    void refreshCamDevList();
 
 signals:
+    // 发送摄像头每帧画面
     void presentImage(QImage&);
+
+    // 当前摄像头断开链接信号
+    void currentCameraDisConnected();
+
+    // 摄像头切换信号
+    void cameraSwitched(const QString&);
 
 private:
     explicit Camera();
 
 private:
-    static Camera *m_instance;
-    QCamera                 *m_camera;
-    QCameraInfo             *m_cameraInfo;
-    QMediaRecorder          *m_mediaRecoder;
-    QCameraImageCapture     *m_imageCapture;
-    QCameraViewfinderSettings m_viewfinderSettings;
-    VideoSurface            *m_videoSurface;
-    QList<QCameraInfo>      m_cameraInfoList;      ///摄像头信息列表
-    int currentCamera;                             ///当前的摄像头
+    static Camera               *m_instance;
+    QCamera                     *m_camera;
+    QMediaRecorder              *m_mediaRecoder;
+    QCameraImageCapture         *m_imageCapture;
+    VideoSurface                *m_videoSurface;
+
+    QString                     m_curDevName;          // 当前摄像头设备名
+    QCameraViewfinderSettings   m_viewfinderSettings;
+    QList<QString>              m_cameraDevList;       // 摄像头设备名列表
 };
 
 #endif //CAMERA_H
