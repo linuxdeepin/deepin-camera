@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "69a15644_9d010187",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T07:42:18Z",
+      "side": 1,
+      "message": "(warning) Possible leak in public function. The pointer \u0027m_videoSurface\u0027 is not deallocated before it is allocated",
+      "revId": "9d902fb975d12177c34bd9510ef219ab2b672a09",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2532cf39_474a1cb3",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T07:42:18Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420597331780.2913007046445574/changeCache/src/src/camera.cpp:324]: (style) Local variable size shadows outer variabl",
+      "revId": "9d902fb975d12177c34bd9510ef219ab2b672a09",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "094c6ee3_5101ef49",
         "filename": "src/src/camera.h",
         "patchSetId": 4
@@ -47,6 +81,40 @@
       "writtenOn": "2022-01-13T07:42:16Z",
       "side": 1,
       "message": "注释行数: 2; 改动行数(修改和新增): 14; 注释率: 14.3%",
+      "revId": "9d902fb975d12177c34bd9510ef219ab2b672a09",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8d3f27f_7303154b",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T07:42:18Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420597331780.2913007046445574/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "9d902fb975d12177c34bd9510ef219ab2b672a09",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f13ba114_ee650cac",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T07:42:18Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420597331780.2913007046445574/changeCache/src/src/mainwindow.cpp:613]: (style) Local variable tem_fontmetrics shadows outer variabl",
       "revId": "9d902fb975d12177c34bd9510ef219ab2b672a09",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
