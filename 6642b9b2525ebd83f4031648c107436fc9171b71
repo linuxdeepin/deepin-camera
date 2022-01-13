@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "c9f8533c_45845d34",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T01:55:55Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_cameraInfoList\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "6642b9b2525ebd83f4031648c107436fc9171b71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c27e6a2_561554fd",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T01:55:55Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420389498620.17087720962135733/changeCache/src/src/camera.cpp:309]: (style) Local variable size shadows outer variabl",
+      "revId": "6642b9b2525ebd83f4031648c107436fc9171b71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81e4bb65_5dd71a43",
         "filename": "src/src/camera.h",
         "patchSetId": 2
@@ -47,6 +81,40 @@
       "writtenOn": "2022-01-13T01:55:54Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 4; 注释率: 0.0%",
+      "revId": "6642b9b2525ebd83f4031648c107436fc9171b71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ca6c39b_28c40dc8",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T01:55:55Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420389498620.17087720962135733/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "6642b9b2525ebd83f4031648c107436fc9171b71",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a24bcaeb_a49402bc",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-13T01:55:55Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16420389498620.17087720962135733/changeCache/src/src/mainwindow.cpp:613]: (style) Local variable tem_fontmetrics shadows outer variabl",
       "revId": "6642b9b2525ebd83f4031648c107436fc9171b71",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
