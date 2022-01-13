@@ -28,6 +28,7 @@
 extern "C" {
 #endif
 #include "core_io.h"
+#include "v4l2_devices.h"
 #ifdef __cplusplus
 }
 #endif
@@ -53,109 +54,78 @@ Camera *Camera::instance()
 }
 
 Camera::Camera()
+    : m_camera(nullptr)
+    , m_mediaRecoder(nullptr)
+    , m_imageCapture(nullptr)
 {
-    m_cameraInfoList = QCameraInfo::availableCameras();
+    refreshCamInfoList();
     parseConfig();
     initMember();
 }
 
 void Camera::initMember()
 {
-    currentCamera = 0;
-//    m_camera = new QCamera(QCameraInfo::defaultCamera());
-
-    m_camera = new QCamera(QCameraInfo(camConfig.device_location));
-    m_cameraInfo = new QCameraInfo(*m_camera);
-    m_imageCapture = new QCameraImageCapture(m_camera);
-    m_mediaRecoder = new QMediaRecorder(m_camera);
-
-    camConfig.device_name = strdup(m_cameraInfo->description().toStdString().c_str());
-    camConfig.device_location = strdup(m_cameraInfo->deviceName().toStdString().c_str());
-    saveConfig();
-
-    QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
-    videoSettings.setCodec("video/x-vp8");
-    QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
-    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
-
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
-
     // 连接相机surface，能够发送每帧QImage数据到外部
     m_videoSurface = new VideoSurface(this);
-    m_camera->setViewfinder(m_videoSurface);
     connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
 
-    m_camera->start();
-
-//    QStringList resols = getSupportResolutions();
-//    if(!resols.isEmpty()) {
-//        QStringList resolutiontemp = resols[0].split("x");
-//        m_viewfinderSettings.setResolution(resolutiontemp[0].toInt(), resolutiontemp[1].toInt());
-//    }
-//    m_viewfinderSettings.setResolution(camConfig.width, camConfig.height);
-    setCameraResolution(QSize(camConfig.width, camConfig.height));
-    m_camera->setViewfinderSettings(m_viewfinderSettings);
+    startCamera(camConfig.device_location);
 }
 
 void Camera::switchCamera()
 {
-    currentCamera++;
-    if (currentCamera >= m_cameraInfoList.size())
-        currentCamera = 0;
-    m_camera->stop();
+    refreshCamInfoList();
 
-    m_camera = new QCamera(m_cameraInfoList.at(currentCamera));
-    camConfig.device_name = strdup(m_cameraInfoList.at(currentCamera).description().toStdString().c_str());
-    camConfig.device_location = strdup(m_cameraInfoList.at(currentCamera).deviceName().toStdString().c_str());
-    saveConfig();
+    int nCurIndex = m_cameraDevList.indexOf(m_curDevName);
 
-    m_imageCapture->deleteLater();
-    m_imageCapture = nullptr;
+    QString nextDevName;
+    if (nCurIndex + 1 < m_cameraDevList.size())
+        nextDevName = m_cameraDevList[nCurIndex + 1];
+    else if (nCurIndex + 1 == m_cameraDevList.size())
+        nextDevName = m_cameraDevList[0];
+    else
+        nextDevName = QCameraInfo::defaultCamera().deviceName();
 
-    m_imageCapture = new QCameraImageCapture(m_camera);
-
-    m_camera->setViewfinder(m_videoSurface);
-    m_camera->start();
-    m_camera->setViewfinderSettings(m_viewfinderSettings);
-
-    bool resetResolution = true;
-    QStringList list = getSupportResolutions();
-    QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
-    QSize curResolution = getCameraResolution();
-
-    for (int i = 0; i < supportResolutionList.size(); i++) {
-        if (supportResolutionList[i].width() == curResolution.width() &&
-                supportResolutionList[i].height() == curResolution.height()) {
-            resetResolution = false;
-        }
-    }
-
-    if (resetResolution) {
-        m_viewfinderSettings.setResolution(supportResolutionList[0]);
-        m_camera->setViewfinderSettings(m_viewfinderSettings);
-    }
+    startCamera(nextDevName);
 }
 
+void Camera::refreshCamera()
+{
+    refreshCamInfoList();
+
+    // 设备链表找不到当前设备，发送设备断开信号
+    if (!m_curDevName.isEmpty() && m_cameraDevList.indexOf(m_curDevName) == -1) {
+        m_curDevName = "";
+        emit currentCameraDisConnected();
+    }
+
+    restartCamera();
+}
+
+// 重启摄像头
 void Camera::restartCamera()
 {
-    if (DataManager::instance()->getdevStatus() != NOCAM || m_cameraInfoList.isEmpty())
+    if (DataManager::instance()->getdevStatus() != NOCAM)
         return;
 
+    startCamera(QCameraInfo::defaultCamera().deviceName());
 
-    m_camera = new QCamera(QCameraInfo::defaultCamera());
-    m_camera->setViewfinder(m_videoSurface);
-    m_camera->start();
-    m_camera->setViewfinderSettings(m_viewfinderSettings);
     DataManager::instance()->setdevStatus(CAM_CANUSE);
 }
 
 void Camera::refreshCamInfoList()
 {
-    m_cameraInfoList = QCameraInfo::availableCameras();
+    m_cameraDevList.clear();
+
+    v4l2_device_list_t *devlist = get_device_list();
+    for (int i = 0; i < devlist->num_devices; i++)
+        m_cameraDevList.push_back(devlist->list_devices[i].device);
 }
 
 QStringList Camera::getSupportResolutions()
 {
+    Q_ASSERT(m_imageCapture);
+
     QStringList resolutionsList;
 
     QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
@@ -174,45 +144,98 @@ QStringList Camera::getSupportResolutions()
 
 void Camera::setCameraResolution(QSize size)
 {
-    bool setResolution = false;
-    QStringList list = getSupportResolutions();
+    Q_ASSERT(m_camera);
+    Q_ASSERT(m_imageCapture);
+
     QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
     if (supportResolutionList.isEmpty())
         return;
-    QSize curResolution = getCameraResolution();
 
-    for (int i = 0; i < supportResolutionList.size(); i++) {
-        if (supportResolutionList[i].width() == curResolution.width() &&
-                supportResolutionList[i].height() == curResolution.height()) {
-            setResolution = true;
+    m_viewfinderSettings.setResolution(size);
+
+    // 判断是否需要重置分辨率
+    if (!supportResolutionList.isEmpty()) {
+        QSize curResolution = getCameraResolution();
+        bool bResetResolution = true;
+        for (int i = 0; i < supportResolutionList.size(); i++) {
+            if (supportResolutionList[i].width() == curResolution.width() &&
+                    supportResolutionList[i].height() == curResolution.height()) {
+                bResetResolution = false;
+                break;
+            }
         }
+        if (bResetResolution)
+            m_viewfinderSettings.setResolution(supportResolutionList[0]);
     }
 
-    if (m_camera && setResolution) {
-        m_viewfinderSettings.setResolution(size);
-        m_camera->setViewfinderSettings(m_viewfinderSettings);
-        camConfig.width = size.rwidth();
-        camConfig.height = size.height();
-    } else {
-        m_viewfinderSettings.setResolution(supportResolutionList[0]);
-        m_camera->setViewfinderSettings(m_viewfinderSettings);
-        camConfig.width = supportResolutionList[0].rwidth();
-        camConfig.height = supportResolutionList[0].height();
+    // 设置分辨率到相机
+    m_camera->setViewfinderSettings(m_viewfinderSettings);
+
+    // 同步有变更的分辨率到config
+    if (m_viewfinderSettings.resolution().rwidth() != camConfig.width
+            || m_viewfinderSettings.resolution().rheight() != camConfig.height) {
+        camConfig.width = m_viewfinderSettings.resolution().rwidth();
+        camConfig.height = m_viewfinderSettings.resolution().height();
+        saveConfig();
     }
-    saveConfig();
 }
 
 QSize Camera::getCameraResolution()
 {
-    if (m_camera) {
-        return m_viewfinderSettings.resolution();
-    }
+    return m_viewfinderSettings.resolution();
+}
+
+void Camera::startCamera(const QString &devName)
+{
+    // 存在上一相机，先停止
+    if (m_camera)
+        stopCamera();
+
+    m_camera = new QCamera(devName.toStdString().c_str());
+    QCameraInfo cameraInfo(*m_camera);
+    m_curDevName = devName;
+
+    // 同步设备名称到config
+    camConfig.device_name = strdup(cameraInfo.description().toStdString().c_str());
+    camConfig.device_location = strdup(cameraInfo.deviceName().toStdString().c_str());
+    saveConfig();
+
+    m_imageCapture = new QCameraImageCapture(m_camera);
+    m_mediaRecoder = new QMediaRecorder(m_camera);
+
+    QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
+    videoSettings.setCodec("video/x-vp8");
+    QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
+    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+
+    m_camera->setCaptureMode(QCamera::CaptureStillImage);
+    m_camera->setViewfinder(m_videoSurface);
+
+    m_camera->start();
+
+    // 同步config分辨率到相机
+    setCameraResolution(QSize(camConfig.width, camConfig.height));
+
+    emit cameraSwitched(cameraInfo.description());
 }
 
 void Camera::stopCamera()
 {
-    m_camera->stop();
-    m_cameraInfoList.clear();
+    if (m_camera) {
+        m_camera->stop();
+        m_camera->deleteLater();
+        m_camera = nullptr;
+    }
+
+    if (m_imageCapture) {
+        m_imageCapture->deleteLater();
+        m_imageCapture = nullptr;
+    }
+
+    if (m_mediaRecoder) {
+        m_mediaRecoder->deleteLater();
+        m_mediaRecoder = nullptr;
+    }
 }
 
 void Camera::setCaptureImage()
@@ -248,21 +271,6 @@ qint64 Camera::getRecoderTime()
 QMediaRecorder::State Camera::getRecoderState()
 {
     return  m_mediaRecoder->state();
-}
-
-void Camera::captureImage()
-{
-    if (!m_camera)
-        return;
-
-    if (m_imageCapture->isReadyForCapture()) {
-        m_imageCapture->capture(TMPPATH);
-    }
-}
-
-QCamera *Camera::getCamera()
-{
-    return m_camera;
 }
 
 int Camera::parseConfig()
@@ -344,11 +352,6 @@ int Camera::parseConfig()
     }
     fclose(fp);
     return 0;
-}
-
-void Camera::updateConfig()
-{
-
 }
 
 int Camera::saveConfig()
