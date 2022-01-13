@@ -1246,17 +1246,24 @@ void CMainWindow::loadAfterShow()
         connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
         connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     } else {
-        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamInfoList);
-        connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, Camera::instance(), &Camera::refreshCamInfoList);
-        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::restartCamera);
-//        connect(m_devnumMonitor, &DevNumMonitor::seltBtnStateDisable, this, [=](){
-//            Camera::instance()->stopCamera();
-//        });
+        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamera);
+        connect(Camera::instance(), SIGNAL(cameraSwitched(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+        // 当前无摄像头设备，给出无摄像头提示
         connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
             DataManager::instance()->setdevStatus(NOCAM);
             m_videoPre->showNocam();
+            QImage image;
+            m_takePhotoSettingArea->onUpdateFilterImage(&image);
             Camera::instance()->stopCamera();
-        });//重启设备
+        });
+        // 当前设备断开连接，给出无摄像头提示
+        connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=](){
+            DataManager::instance()->setdevStatus(NOCAM);
+            m_videoPre->showNocam();
+            QImage image;
+            m_takePhotoSettingArea->onUpdateFilterImage(&image);
+            Camera::instance()->stopCamera();
+        });
     }
 
 
