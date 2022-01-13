@@ -275,6 +275,11 @@ public:
     */
     void showNocam();
 
+    /**
+    * @brief showCountDownLabel　显示设备被占用或者拔掉的图片的槽函数
+    */
+    void showCamUsed();
+
 public slots:
     /**
     * @brief onTakePic　拍照事件响应
@@ -372,13 +377,6 @@ private:
     * @param view
     */
     void forbidScrollBar(QGraphicsView *view);
-
-    /**
-    * @brief showCountDownLabel　显示设备被占用或者拔掉的图片的槽函数
-    */
-    void showCamUsed();
-
-
 
     /**
     * @brief startTakeVideo　开始录像

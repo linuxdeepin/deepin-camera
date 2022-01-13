@@ -147,6 +147,9 @@ signals:
     // 摄像头切换信号
     void cameraSwitched(const QString&);
 
+    // 摄像头占用信号
+    void cameraCannotUsed();
+
 private:
     explicit Camera();
 

@@ -111,7 +111,13 @@ void Camera::refreshCamera()
 // 重启摄像头
 void Camera::restartCamera()
 {
-    if (DataManager::instance()->getdevStatus() != NOCAM)
+    QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
+    if (availableCams.isEmpty() && !m_cameraDevList.isEmpty() &&
+            m_camera->status() == QCamera::UnloadedStatus) {
+        emit cameraCannotUsed();
+        return;
+    }
+    if (DataManager::instance()->getdevStatus() == CAM_CANUSE)
         return;
 
     startCamera(QCameraInfo::defaultCamera().deviceName());
