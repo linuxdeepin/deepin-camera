@@ -59,6 +59,7 @@ Camera::Camera()
     , m_imageCapture(nullptr)
     , m_videoSurface(nullptr)
     , m_curDevName("")
+    , m_captureMode(QCamera::CaptureStillImage)
 {
     parseConfig();
     initMember();
@@ -83,7 +84,7 @@ void Camera::switchCamera()
     QString nextDevName;
     if (nCurIndex + 1 < m_cameraDevList.size() && nCurIndex != -1)
         nextDevName = m_cameraDevList[nCurIndex + 1];
-    else if (nCurIndex + 1 == m_cameraDevList.size())
+    else if (nCurIndex + 1 == m_cameraDevList.size() && m_cameraDevList.size())
         nextDevName = m_cameraDevList[0];
     else {
         nextDevName = camConfig.device_location;
@@ -174,6 +175,12 @@ void Camera::setCameraResolution(QSize size)
             m_viewfinderSettings.setResolution(supportResolutionList[0]);
     }
 
+//    m_camera->stop();
+//    QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
+//    videoSettings.setResolution(m_viewfinderSettings.resolution());
+//    m_mediaRecoder->setVideoSettings(videoSettings);
+//    m_camera->start();
+
     // 设置分辨率到相机
     m_camera->setViewfinderSettings(m_viewfinderSettings);
 
@@ -214,7 +221,7 @@ void Camera::startCamera(const QString &devName)
     QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
     m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
 
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
+    m_camera->setCaptureMode(m_captureMode);
     m_camera->setViewfinder(m_videoSurface);
 
     m_camera->start();
@@ -247,12 +254,18 @@ void Camera::stopCamera()
 
 void Camera::setCaptureImage()
 {
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
+    if (m_camera)
+        m_camera->setCaptureMode(QCamera::CaptureStillImage);
+    else
+        m_captureMode = QCamera::CaptureStillImage;
 }
 
 void Camera::setCaptureVideo()
 {
-    m_camera->setCaptureMode(QCamera::CaptureVideo);
+    if (m_camera)
+        m_camera->setCaptureMode(QCamera::CaptureVideo);
+    else
+        m_captureMode = QCamera::CaptureVideo;
 }
 
 void Camera::setVideoOutPutPath(QString &path)

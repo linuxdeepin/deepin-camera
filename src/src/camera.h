@@ -160,6 +160,8 @@ private:
     QString                     m_curDevName;          // 当前摄像头设备名
     QCameraViewfinderSettings   m_viewfinderSettings;
     QList<QString>              m_cameraDevList;       // 摄像头设备名列表
+
+    QCamera::CaptureMode        m_captureMode;         //用于在断开摄像头时保存状态
 };
 
 #endif //CAMERA_H
