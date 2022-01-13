@@ -1264,6 +1264,10 @@ void CMainWindow::loadAfterShow()
             m_takePhotoSettingArea->onUpdateFilterImage(&image);
             Camera::instance()->stopCamera();
         });
+        connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=](){
+            DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+            m_videoPre->showCamUsed();
+        });
     }
 
 
