@@ -1173,7 +1173,7 @@ void CMainWindow::settingDialog()
         //初始化分辨率字符串表
         int defres = 0;
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
-        if (!DataManager::instance()->isFFmpegEnv()) {
+        if (!DataManager::instance()->isFFmpegEnv() && !Camera::instance()->getSupportResolutions().isEmpty()) {
             resolutionDatabase = Camera::instance()->getSupportResolutions();
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
@@ -1185,14 +1185,12 @@ void CMainWindow::settingDialog()
                     break;
                 }
             }
-
         } else {
             if (resolutionDatabase.size() > 0)
                 resolutionmodeFamily->data("items").clear();
 
             resolutionDatabase.clear();
             resolutionDatabase.append(QString(tr("None")));
-            defres = 0;
         }
         Settings::get().settings()->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         resolutionmodeFamily->setData("items", resolutionDatabase);
@@ -1248,21 +1246,23 @@ void CMainWindow::loadAfterShow()
     } else {
         connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamera);
         connect(Camera::instance(), SIGNAL(cameraSwitched(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+        // 摄像头重连，刷新设置页分辨率下拉框内容
+        connect(Camera::instance(), SIGNAL(cameraDevRestarted()), &Settings::get(), SLOT(setNewResolutionList()));
         // 当前无摄像头设备，给出无摄像头提示
         connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
+            Camera::instance()->stopCamera();
             DataManager::instance()->setdevStatus(NOCAM);
             m_videoPre->showNocam();
             QImage image;
             m_takePhotoSettingArea->onUpdateFilterImage(&image);
-            Camera::instance()->stopCamera();
         });
         // 当前设备断开连接，给出无摄像头提示
         connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=](){
+            Camera::instance()->stopCamera();
             DataManager::instance()->setdevStatus(NOCAM);
             m_videoPre->showNocam();
             QImage image;
             m_takePhotoSettingArea->onUpdateFilterImage(&image);
-            Camera::instance()->stopCamera();
         });
         connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=](){
             DataManager::instance()->setdevStatus(CAM_CANNOT_USE);

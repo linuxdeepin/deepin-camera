@@ -23,6 +23,7 @@
 #include "camview.h"
 #include "gviewv4l2core.h"
 #include "capplication.h"
+#include "camera.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -168,14 +169,28 @@ void Settings::setNewResolutionList()
         }
     } else {
         //初始化分辨率字符串表
+        int defres = 0;
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
+        if (!DataManager::instance()->isFFmpegEnv() && !Camera::instance()->getSupportResolutions().isEmpty()) {
+            resolutionDatabase = Camera::instance()->getSupportResolutions();
 
-        if (resolutionDatabase.size() > 0)
-            resolutionmodeFamily->data("items").clear();
+            for (int i = 0; i < resolutionDatabase.size(); i++) {
+                QStringList resolutiontemp = resolutionDatabase[i].split("x");
 
-        resolutionDatabase.clear();
-        resolutionDatabase.append(QString(tr("None")));
-        m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), 0);
+                if ((Camera::instance()->getCameraResolution().width() == resolutiontemp[0].toInt()) &&
+                        Camera::instance()->getCameraResolution().height() == resolutiontemp[1].toInt()) {
+                    defres = i; //设置分辨率下拉菜单当前索引
+                    break;
+                }
+            }
+        } else {
+            if (resolutionDatabase.size() > 0)
+                resolutionmodeFamily->data("items").clear();
+
+            resolutionDatabase.clear();
+            resolutionDatabase.append(QString(tr("None")));
+        }
+        m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
         resolutionmodeFamily->setData("items", resolutionDatabase);
     }
 

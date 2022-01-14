@@ -150,6 +150,9 @@ signals:
     // 摄像头占用信号
     void cameraCannotUsed();
 
+    // 摄像头重连信号
+    void cameraDevRestarted();
+
 private:
     explicit Camera();
 

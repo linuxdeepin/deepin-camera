@@ -1371,11 +1371,6 @@ void videowidget::setState(bool bPhoto)
     if (DataManager::instance()->isFFmpegEnv()) {
         if (m_imgPrcThread)
             m_imgPrcThread->setState(bPhoto);
-    } else {
-        if (bPhoto)
-            Camera::instance()->setCaptureImage();
-        else
-            Camera::instance()->setCaptureVideo();
     }
 }
 
