@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "7f780681_13afcf9b",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-14T10:06:59Z",
+      "side": 1,
+      "message": "(warning) Possible leak in public function. The pointer \u0027m_videoSurface\u0027 is not deallocated before it is allocated",
+      "revId": "6bff8529859865d7e1ad2aa50879f0e067e61467",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de221cd7_3678f16d",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-14T10:06:59Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16421548095410.4057106398572681/changeCache/src/src/camera.cpp:381]: (style) Local variable size shadows outer variabl",
+      "revId": "6bff8529859865d7e1ad2aa50879f0e067e61467",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c2e391d5_4ecbf89f",
         "filename": "src/src/camera.h",
         "patchSetId": 1
