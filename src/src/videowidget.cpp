@@ -471,7 +471,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
                     if (get_encoder_status() == 0 && getCapStatus() == true)
                         onEndBtnClicked();
                 } else {
-                    if (Camera::instance()->getRecoderState() == 0 && getCapStatus() == true)
+                    if (Camera::instance()->getRecoderState() == 0 && getCapStatus() == true && !Camera::instance()->isReadyRecord())
                         onEndBtnClicked();
                 }
 

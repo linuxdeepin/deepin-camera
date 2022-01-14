@@ -113,6 +113,8 @@ public:
 
     QMediaRecorder::State getRecoderState();
 
+    bool isReadyRecord();
+
     int parseConfig();
     int saveConfig();
 
@@ -136,6 +138,11 @@ public slots:
      * @brief refreshCamInfoList 刷新摄像头设备列表
      */
     void refreshCamDevList();
+
+    /**
+     * @brief onCameraStatusChanged 相机状态监听
+     */
+    void onCameraStatusChanged(QCamera::Status status);
 
 signals:
     // 发送摄像头每帧画面
@@ -166,6 +173,8 @@ private:
     QString                     m_curDevName;          // 当前摄像头设备名
     QCameraViewfinderSettings   m_viewfinderSettings;
     QList<QString>              m_cameraDevList;       // 摄像头设备名列表
+
+    bool                        m_bReadyRecord;
 };
 
 #endif //CAMERA_H

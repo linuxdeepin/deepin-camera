@@ -59,6 +59,7 @@ Camera::Camera()
     , m_imageCapture(nullptr)
     , m_videoSurface(nullptr)
     , m_curDevName("")
+    , m_bReadyRecord(false)
 {
     parseConfig();
     initMember();
@@ -66,6 +67,10 @@ Camera::Camera()
 
 void Camera::initMember()
 {
+    // 连接相机surface，能够发送每帧QImage数据到外部
+    m_videoSurface = new VideoSurface(this);
+    connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
+
     // 初始设备名为空，默认启动config中的摄像头设备，若config设备名为空，则启动defaultCamera
     switchCamera();
 }
@@ -134,6 +139,18 @@ void Camera::refreshCamDevList()
         m_cameraDevList.push_back(devlist->list_devices[i].device);
 }
 
+void Camera::onCameraStatusChanged(QCamera::Status status)
+{
+    if (m_mediaRecoder) {
+        if (m_bReadyRecord && status == QCamera::ActiveStatus) {
+            qDebug() << "m_mediaRecoder->record();";
+            m_mediaRecoder->record();
+            m_bReadyRecord = false;
+        }
+    }
+    //qDebug() << "onCameraStatusChanged  status:" << status;
+}
+
 QStringList Camera::getSupportResolutions()
 {
     if (!m_imageCapture)
@@ -155,17 +172,11 @@ QStringList Camera::getSupportResolutions()
     return resolutionsList;
 }
 
+// 设置相机分辨率
 void Camera::setCameraResolution(QSize size)
 {
     Q_ASSERT(m_camera);
     Q_ASSERT(m_imageCapture);
-
-    QCameraInfo camInfo(*m_camera);
-
-    // 设置分辨率到相机
-    QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
-    viewfinderSettings.setResolution(size);
-    m_camera->setViewfinderSettings(viewfinderSettings);
 
     // 设置图片捕获器分辨率到相机
     QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
@@ -179,17 +190,15 @@ void Camera::setCameraResolution(QSize size)
     videoSettings.setResolution(size);
     m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
 
+    // 设置分辨率到相机
+    QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
+    viewfinderSettings.setResolution(size);
+    m_camera->setViewfinderSettings(viewfinderSettings);
+
     // 同步有变更的分辨率到config
-    if (size.rwidth() != camConfig.width
-            || size.rheight() != camConfig.height) {
-        camConfig.width = size.rwidth();
-        camConfig.height = size.height();
-        saveConfig();
-    }
-    qDebug() << QString("camera: %1(%2) resolution width:[%1] heihgt:[%2]..")
-                .arg(camInfo.description())
-                .arg(camInfo.deviceName())
-                .arg(viewfinderSettings.resolution().rwidth()).arg(viewfinderSettings.resolution().rheight());
+    camConfig.width = size.rwidth();
+    camConfig.height = size.rheight();
+    saveConfig();
 }
 
 QSize Camera::getCameraResolution()
@@ -204,61 +213,67 @@ void Camera::startCamera(const QString &devName)
         stopCamera();
 
     m_camera = new QCamera(devName.toStdString().c_str());
-    m_imageCapture = new QCameraImageCapture(m_camera);
     QCameraInfo cameraInfo(*m_camera);
     m_curDevName = devName;
 
-    // 当前设备与config设备名不同，重置分辨率到最大值，并同步到config文件
-    QString configDevName = QString(camConfig.device_name);
-    if (m_curDevName != configDevName
-            || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
+    connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
 
-        camConfig.device_name = strdup(cameraInfo.description().toStdString().c_str());
-        camConfig.device_location = strdup(cameraInfo.deviceName().toStdString().c_str());
-
-        QList<QSize> supportList = m_imageCapture->supportedResolutions();
-        if (!supportList.isEmpty()) {
-            camConfig.width = supportList.last().rwidth();
-            camConfig.height = supportList.last().rheight();
-        }
-        saveConfig();
-    }
-
-    // 设置分辨率到相机
-    QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
-    viewfinderSettings.setResolution(camConfig.width, camConfig.height);
-    m_camera->setViewfinderSettings(viewfinderSettings);
-
-    // 设置图片捕获器分辨率到相机
-    QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
-    imageSettings.setResolution(camConfig.width, camConfig.height);
-    m_imageCapture->setEncodingSettings(imageSettings);
-
-    // 设置视频分辨率和编码格式到相机
+    m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
+
     QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
     videoSettings.setCodec("video/x-vp8");
-    videoSettings.setResolution(camConfig.width, camConfig.height);
     QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
     m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
 
-    // 连接相机surface，能够发送每帧QImage数据到外部
-    m_videoSurface = new VideoSurface(this);
-    connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
     m_camera->setCaptureMode(QCamera::CaptureStillImage);
     m_camera->setViewfinder(m_videoSurface);
 
     m_camera->start();
 
+    // 同步设备名称到config
+    camConfig.device_name = strdup(cameraInfo.description().toStdString().c_str());
+    camConfig.device_location = strdup(cameraInfo.deviceName().toStdString().c_str());
+
+    QList<QSize> supportList = m_imageCapture->supportedResolutions();
+
+    // 当前设备与config设备名不同，重置分辨率到最大值，并同步到config文件
+    QString configDevName = QString(camConfig.device_name);
+    if (m_curDevName != configDevName
+            || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
+        if (!supportList.isEmpty()) {
+            camConfig.width = supportList.last().rwidth();
+            camConfig.height = supportList.last().rheight();
+        }
+    }
+
+    // 若当前摄像头不支持该分辨率，重置为当前摄像头最大分辨率
+    if (!supportList.isEmpty()) {
+        bool bResetResolution = true;
+        for (int i = 0; i < supportList.size(); i++) {
+            if (supportList[i].width() == camConfig.width &&
+                    supportList[i].height() == camConfig.height) {
+                bResetResolution = false;
+                break;
+            }
+        }
+        if (bResetResolution) {
+            camConfig.width = supportList.last().width();
+            camConfig.height = supportList.last().height();
+        }
+    }
+
+    // 同步config分辨率到相机，并保存到文件
+    setCameraResolution(QSize(camConfig.width, camConfig.height));
+
     // 发送相机名称变更信号
     emit cameraSwitched(cameraInfo.description());
-
-    qDebug() << QString("camera [%1] started....").arg(cameraInfo.description());
 }
 
 void Camera::stopCamera()
 {
     if (m_camera) {
+        connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
         m_camera->stop();
         m_camera->deleteLater();
         m_camera = nullptr;
@@ -272,12 +287,6 @@ void Camera::stopCamera()
     if (m_mediaRecoder) {
         m_mediaRecoder->deleteLater();
         m_mediaRecoder = nullptr;
-    }
-
-    if (m_videoSurface) {
-        disconnect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
-        m_videoSurface->deleteLater();
-        m_videoSurface = nullptr;
     }
 }
 
@@ -298,9 +307,12 @@ void Camera::setVideoOutPutPath(QString &path)
 
 void Camera::startRecoder()
 {
-    if (m_camera->captureMode() != QCamera::CaptureVideo)
+    m_bReadyRecord = true;
+    if (m_camera->captureMode() != QCamera::CaptureVideo) {
+        qDebug() << "m_camera->setCaptureMode(QCamera::CaptureVideo);";
+
         m_camera->setCaptureMode(QCamera::CaptureVideo);
-    m_mediaRecoder->record();
+    }
 }
 
 void Camera::stopRecoder()
@@ -318,6 +330,11 @@ qint64 Camera::getRecoderTime()
 QMediaRecorder::State Camera::getRecoderState()
 {
     return  m_mediaRecoder->state();
+}
+
+bool Camera::isReadyRecord()
+{
+    return m_bReadyRecord;
 }
 
 int Camera::parseConfig()
