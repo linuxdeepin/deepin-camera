@@ -1228,10 +1228,7 @@ void videowidget::startCaptureVideo()
                 m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
             }
 
-//            set_video_path(m_saveVdFolder.toStdString().c_str());
-//            set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
-//            start_encoder_thread();
-            QString outPutPath = QString(strDefaultVdPath + QDir::separator() + DataManager::instance()->getstrFileName());
+            QString outPutPath = QString(m_saveVdFolder + QDir::separator() + DataManager::instance()->getstrFileName());
             Camera::instance()->setVideoOutPutPath(outPutPath);
             Camera::instance()->startRecoder();
             emit updateBlockSystem(true);

@@ -70,7 +70,6 @@ bool VideoSurface::present(const QVideoFrame &frame) //每一帧摄像头的数�
     }
     currentFrame_ = frame;
 
-    //qDebug() << "present...";
     if (currentFrame_.map(QAbstractVideoBuffer::ReadOnly)) {
         //img就是转换的数据了
         QImage img = QImage(currentFrame_.bits(),currentFrame_.width(),currentFrame_.height(),currentFrame_.bytesPerLine(),imageFormat_).mirrored(true,false);

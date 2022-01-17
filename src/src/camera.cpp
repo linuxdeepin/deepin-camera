@@ -143,12 +143,10 @@ void Camera::onCameraStatusChanged(QCamera::Status status)
 {
     if (m_mediaRecoder) {
         if (m_bReadyRecord && status == QCamera::ActiveStatus) {
-            qDebug() << "m_mediaRecoder->record();";
             m_mediaRecoder->record();
             m_bReadyRecord = false;
         }
     }
-    //qDebug() << "onCameraStatusChanged  status:" << status;
 }
 
 QStringList Camera::getSupportResolutions()
@@ -309,8 +307,6 @@ void Camera::startRecoder()
 {
     m_bReadyRecord = true;
     if (m_camera->captureMode() != QCamera::CaptureVideo) {
-        qDebug() << "m_camera->setCaptureMode(QCamera::CaptureVideo);";
-
         m_camera->setCaptureMode(QCamera::CaptureVideo);
     }
 }
