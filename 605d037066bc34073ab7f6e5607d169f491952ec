@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "5280dae6_e9b5dcf6",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-17T06:12:59Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16423999681240.5485247977247704/changeCache/src/src/camera.cpp:377]: (style) Local variable size shadows outer variabl",
+      "revId": "605d037066bc34073ab7f6e5607d169f491952ec",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b008de37_57794498",
         "filename": "src/src/imageitem.cpp",
         "patchSetId": 1
@@ -30,6 +47,23 @@
       "writtenOn": "2022-01-17T06:12:58Z",
       "side": 1,
       "message": "改动行数(修改和新增): 0; 删除代码行数: 3; 注释率: 不计算",
+      "revId": "605d037066bc34073ab7f6e5607d169f491952ec",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61460a90_14e6236d",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-17T06:12:59Z",
+      "side": 1,
+      "message": "(style) Variable \u0027bOK\u0027 is assigned a value that is never used",
       "revId": "605d037066bc34073ab7f6e5607d169f491952ec",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
