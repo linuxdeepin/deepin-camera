@@ -1365,10 +1365,8 @@ void videowidget::setFilterType(efilterType type)
 void videowidget::setState(bool bPhoto)
 {
     m_bPhoto = bPhoto;
-    if (DataManager::instance()->isFFmpegEnv()) {
-        if (m_imgPrcThread)
-            m_imgPrcThread->setState(bPhoto);
-    }
+    if (m_imgPrcThread)
+        m_imgPrcThread->setState(bPhoto);
 }
 
 QRect videowidget::getFrameRect()
