@@ -62,6 +62,7 @@ ThumbnailsBar::ThumbnailsBar(DWidget *parent) : DFloatingWidget(parent)
     m_nActTpye = ActTakePic;
     m_nItemCount = 0;
     m_nMaxWidth = 0;
+    m_strFileName = "";
     m_hBOx = new QHBoxLayout();
     m_hBOx->setSpacing(ITEM_SPACE);
     m_mainLayout = new QHBoxLayout();
@@ -152,35 +153,62 @@ void ThumbnailsBar::onFoldersChanged(const QString &strDirectory)
     }
     g_indexImage.clear();
     m_fileInfoLst.clear();
+    m_lstPicFolder.clear();
+    m_lstVdFolder.clear();
     m_curFileIndex = 0;
+
+    if (m_strlstFolders.size() <= 0) {
+        emit fitToolBar();
+        m_showVdTime->setText("");
+        return;
+    }
     //获取所选文件类型过滤器
     QStringList filters;
-    filters << QString("*.jpg") << QString("*.webm");
+    filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
     int tIndex = 0;
     QString strFolder;
-    for (int i = m_strlstFolders.size(); i >= 1; i--) {
-        strFolder = m_strlstFolders[i - 1];
-        QDir dir(strFolder);
-        //按时间逆序排序
-        dir.setNameFilters(filters);
-        dir.setSorting(QDir::Time /*| QDir::Reversed*/);
-        if (dir.exists()) {
-            m_fileInfoLst += dir.entryInfoList();
-        }
+
+    strFolder = m_strlstFolders[0];
+    QDir dir1(strFolder);
+    //按时间逆序排序
+    dir1.setNameFilters(filters);
+    dir1.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir1.exists())
+        m_lstPicFolder += dir1.entryInfoList();
+
+    if (m_strlstFolders.size() > 1) {
+        strFolder = m_strlstFolders[1];
+    } else {
+        strFolder = "";
     }
 
+    QDir dir2(strFolder);
+    //按时间逆序排序
+    dir2.setNameFilters(filters);
+    dir2.setSorting(QDir::Time /*| QDir::Reversed*/);
+    if (dir2.exists())
+        m_lstVdFolder += dir2.entryInfoList();
+
+    //将两个tmpLst合并排序，赋值给m_fileInfoLst
+    while (m_fileInfoLst.size() < nLetAddCount) {
+        if (sortFileInfoList(m_lstPicFolder, m_lstVdFolder, m_fileInfoLst) == false)
+            break;
+    }
+
+    QString strFileName = "";
     while (m_fileInfoLst.size() > 0) {
         if (nLetAddCount <= m_nItemCount) {
             m_curFileIndex = m_nItemCount;
             break;
         }
 
-        QFileInfo fileInfo = m_fileInfoLst.at(0);
-        m_fileInfoLst.removeAt(0);
-        //录像格式只有"webm"
-        if (fileInfo.suffix() == "webm") {
-            QString strFileName = fileInfo.fileName();
-        }
+        QFileInfo fileInfo = m_fileInfoLst.first();
+        m_fileInfoLst.removeFirst();
+        strFileName = fileInfo.fileName();
+
+        if (!m_strFileName.isEmpty() && fileInfo.fileName().compare(m_strFileName) == 0)
+            continue;
+
         ImageItem *pLabel = new ImageItem(tIndex, fileInfo.filePath());
         connect(pLabel, SIGNAL(trashFile()), this, SLOT(onTrashFile()));
         connect(pLabel, SIGNAL(showDuration(QString)), this, SLOT(onShowVdTime(QString)));
@@ -416,9 +444,34 @@ void ThumbnailsBar::onTrashFile()
     //qInfo() << "g_indexNow=" << g_indexNow;
 }
 
+void ThumbnailsBar::addPaths(QString strPicPath, QString strVdPath)
+{
+    if (m_strlstFolders.contains(strPicPath) && m_strlstFolders.contains(strVdPath)) {
+        return;
+    }
+
+    m_strlstFolders.clear();
+
+    if (!strPicPath.isEmpty()) {
+        m_strlstFolders.push_back(strPicPath);
+    }
+    //两个路径不相同并且都不为空才添加
+    if (strPicPath.compare(strVdPath) != 0 && !strVdPath.isEmpty()) {
+        m_strlstFolders.push_back(strVdPath);
+    }
+
+    //这里不能根据m_strlstFolders.size()来判断是否做该动作，如果两个路径都为空，需要在ui上清空缩略图
+    onFoldersChanged("");
+}
+
 void ThumbnailsBar::onShowVdTime(QString str)
 {
     m_showVdTime->setText(str);
+}
+
+void ThumbnailsBar::onFileName(const QString &strfilename)
+{
+    m_strFileName = strfilename;
 }
 
 void ThumbnailsBar::ChangeActType(int nType)
@@ -560,6 +613,7 @@ void ThumbnailsBar::addFile(QString strFile)
     }
     qInfo() << "m_nItemCount " << m_nItemCount;
     emit fitToolBar();
+    m_strFileName = "";
 }
 
 void ThumbnailsBar::delFile(QString strFile)
@@ -656,4 +710,35 @@ void ThumbnailsBar::mousePressEvent(QMouseEvent *ev) //点击空白处的处理
 void ThumbnailsBar::mouseMoveEvent(QMouseEvent *event)
 {
     Q_UNUSED(event);
+}
+
+bool ThumbnailsBar::sortFileInfoList(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut)
+{
+    if (firstIn.size() > 0) {
+        if (secondIn.size() > 0) {
+            QFileInfo fileInfo1 = firstIn.first();
+            QFileInfo fileInfo2 = secondIn.first();
+
+            if (fileInfo1.fileTime(QFileDevice::FileModificationTime).secsTo(fileInfo2.fileTime(QFileDevice::FileModificationTime)) > 0) {
+                resultOut += fileInfo2;
+                secondIn.removeFirst();
+            } else {
+                resultOut += fileInfo1;
+                firstIn.removeFirst();
+            }
+        } else {
+            QFileInfo fileInfo1 = firstIn.first();
+            resultOut += fileInfo1;
+            firstIn.removeFirst();
+        }
+    } else {
+        //两个都为空，结束while循环
+        if (secondIn.size() <= 0) {
+            return false;
+        }
+        QFileInfo fileInfo2 = secondIn.first();
+        resultOut += fileInfo2;
+        secondIn.removeFirst();
+    }
+    return true;
 }

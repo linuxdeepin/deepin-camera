@@ -67,14 +67,20 @@ signals:
     void updateBlockSystem(bool bTrue);
     void noCam();
     void noCamAvailable();
+
+    /**
+    * @brief filename　文件名
+    * @param strFilename 文件名
+    */
+    void filename(QString strFilename);
 public:
     QString getFolder()
     {
-        return m_strFolder;
+        return QString();
     }
     void setSaveFolder(QString strFolder)
     {
-        m_strFolder = strFolder;
+        return;
     }
     void setInterval(int nInterval)
     {
@@ -93,6 +99,24 @@ public:
     bool getCapstatus()
     {
         return m_bActive;
+    }
+
+    /**
+    * @brief setSaveVdFolder　设置保存视频文件夹
+    * @param strVdFolder 视频文件夹路径
+    */
+    void setSaveVdFolder(QString& strVdFolder)
+    {
+        m_saveVdFolder = strVdFolder;
+    }
+
+    /**
+    * @brief setSavePicFolder　设置保存照片文件夹
+    * @param strPicFolder 照片文件夹路径
+    */
+    void setSavePicFolder(QString& strPicFolder)
+    {
+        m_savePicFolder = strPicFolder;
     }
 
     void setthumbnail(ThumbnailsBar *thumb);
@@ -175,12 +199,14 @@ private:
     ThumbnailsBar         *m_thumbnail;
     QPixmap               m_pixmap;
     int                     m_nFileID;
-    QString                 m_strFolder;
     int                     m_nMaxContinuous; //最大连拍数：0,4,10
     int                     m_curTakePicTime; //当前连拍次数
     int                     m_nMaxInterval; //最大间隔：0,3,6
     int                     m_nInterval; //当前间隔时间,初始化为0,按钮响应时赋值
     int                     m_nCount; //录制计时
+
+    QString                    m_savePicFolder;     //图片文件夹路径
+    QString                    m_saveVdFolder;      //视频文件夹路径
 };
 
 #endif // VIDEOWIDGET_H

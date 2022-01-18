@@ -67,6 +67,11 @@ public:
     void delFile(QString strFile);
     void fitSize(int nWidth);
 
+    /**
+     * @brief addPaths 添加多个路径,无顺序要求,但文件夹需要存在
+     */
+    void addPaths(QString strPicPath, QString strVdPath);
+
     QHBoxLayout *m_mainLayout;
     DWidget *m_wgt;
     QHBoxLayout *m_hBOx;
@@ -87,12 +92,17 @@ private:
     int m_lastItemCount;//最近一次可显示的缩略图个数
 
     QFileInfoList m_fileInfoLst;//所有文件信息，界面每加载一个，对应删除一个
+    QFileInfoList  m_lstPicFolder;//图片文件夹文件信息列表
+    QFileInfoList  m_lstVdFolder;//视频文件夹文件信息列表
+    QString        m_strFileName;//当前拍照或录制视频的文件名
 
     int m_curFileIndex;//当前读取到的文件位置
 
 private:
     void mousePressEvent(QMouseEvent *ev) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event) override;//用于取消鼠标拖拽，避免拖拽时窗口移动
+private:
+    bool sortFileInfoList(QFileInfoList &firstIn, QFileInfoList &secondIn, QFileInfoList &resultOut);
 signals:
     void fitToolBar();//调整工具栏
     void enableTitleBar(int nType);//1、禁用标题栏视频；2、禁用标题栏拍照；3、恢复标题栏视频；4、恢复标题栏拍照
@@ -106,6 +116,11 @@ public slots:
     void onShortcutDel();
     void onTrashFile();
     void onShowVdTime(QString str);
+    /**
+    * @brief onFileName　设置文件名
+    * @param strfilename　文件名
+    */
+    void onFileName(const QString &strfilename);
 };
 
 #endif // THUMBNAILSBAR_H

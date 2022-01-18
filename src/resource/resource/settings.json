@@ -9,10 +9,16 @@
                     "name": "File location",
                     "options": [
                         {
-                            "key": "datapath",
-                            "name": "Save to:",
-                            "type": "selectableEdit",
-                            "default": "~/Videos"
+                            "key": "picdatapath",
+                            "name": "Photos:",
+                            "type": "selectableEditpic",
+                            "default": "~/Pictures/Camera"
+                        },
+                        {
+                            "key": "vddatapath",
+                            "name": "Videos:",
+                            "type": "selectableEditvd",
+                            "default": "~/Videos/Camera"
                         }
                     ]
                 },
