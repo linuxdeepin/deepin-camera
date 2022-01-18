@@ -112,6 +112,8 @@ public:
 
     QMediaRecorder::State getRecoderState();
 
+    bool isRecording();
+
     bool isReadyRecord();
 
     int parseConfig();
@@ -174,6 +176,7 @@ private:
     QList<QString>              m_cameraDevList;       // 摄像头设备名列表
 
     bool                        m_bReadyRecord;
+    bool                        m_bRecording;
 };
 
 #endif //CAMERA_H

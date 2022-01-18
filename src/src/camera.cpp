@@ -94,6 +94,7 @@ Camera::Camera()
     , m_videoSurface(nullptr)
     , m_curDevName("")
     , m_bReadyRecord(false)
+    , m_bRecording(false)
 {
     parseConfig();
     initMember();
@@ -352,6 +353,8 @@ void Camera::startRecoder()
     if (m_camera && m_camera->captureMode() != QCamera::CaptureVideo) {
         m_camera->setCaptureMode(QCamera::CaptureVideo);
     }
+
+    m_bRecording = true;
 }
 
 void Camera::stopRecoder()
@@ -360,6 +363,8 @@ void Camera::stopRecoder()
         m_mediaRecoder->stop();
     if (m_camera && m_camera->captureMode() != QCamera::CaptureStillImage)
         m_camera->setCaptureMode(QCamera::CaptureStillImage);
+
+    m_bRecording = false;
 }
 
 qint64 Camera::getRecoderTime()
@@ -378,6 +383,11 @@ QMediaRecorder::State Camera::getRecoderState()
         recState = m_mediaRecoder->state();
 
     return recState;
+}
+
+bool Camera::isRecording()
+{
+    return m_bRecording;
 }
 
 bool Camera::isReadyRecord()

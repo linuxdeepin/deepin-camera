@@ -910,7 +910,7 @@ void videowidget::onEndBtnClicked()
                 stop_encoder_thread();
             }
         } else {
-            if (Camera::instance()->getRecoderState() == 1) {
+            if (Camera::instance()->isRecording()) {
                 Camera::instance()->stopRecoder();
             }
         }

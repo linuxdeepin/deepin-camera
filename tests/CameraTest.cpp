@@ -124,6 +124,7 @@ TEST_F(CameraTest, recordFunction)
     emit pBtn->clicked();
     Camera::instance()->isReadyRecord();
     Camera::instance()->getRecoderState();
+    Camera::instance()->isRecording();
     Camera::instance()->getRecoderTime();
 
     QTest::qWait(2000);
