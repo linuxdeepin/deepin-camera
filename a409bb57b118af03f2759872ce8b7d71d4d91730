@@ -16,6 +16,40 @@
       "revId": "a409bb57b118af03f2759872ce8b7d71d4d91730",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a67fd8d_687d8d62",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T11:30:28Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425054239600.7739485718821759/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "a409bb57b118af03f2759872ce8b7d71d4d91730",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "596ba733_4f61683e",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T11:30:28Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425054239600.7739485718821759/changeCache/src/src/mainwindow.cpp:613]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "a409bb57b118af03f2759872ce8b7d71d4d91730",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
