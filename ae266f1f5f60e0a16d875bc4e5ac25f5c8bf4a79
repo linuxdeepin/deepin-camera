@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "e4d0428d_ebf75ac8",
+        "filename": "src/src/basepub/datamanager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_tabIndex\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff67512c_9b5ac456",
+        "filename": "src/src/basepub/datamanager.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_tabIndexNow\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95e4cc56_04bbbaf8",
         "filename": "src/src/basepub/datamanager.h",
         "patchSetId": 1
@@ -47,6 +81,40 @@
       "writtenOn": "2022-01-18T08:06:14Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 27; 注释率: 0.0%",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23aff5e9_72beb3ef",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(warning) Possible leak in public function. The pointer \u0027m_videoSurface\u0027 is not deallocated before it is allocated",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9add40da_e76d0926",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424931701870.29594155344984474/changeCache/src/src/camera.cpp:388]: (style) Local variable size shadows outer variabl",
       "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -87,6 +155,23 @@
     },
     {
       "key": {
+        "uuid": "c70ba040_3dcf5697",
+        "filename": "src/src/imageitem.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 351,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(style) Variable \u0027bOK\u0027 is assigned a value that is never used",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fedb6d1a_ba54e4c4",
         "filename": "src/src/mainwindow.cpp",
         "patchSetId": 1
@@ -98,6 +183,57 @@
       "writtenOn": "2022-01-18T08:06:14Z",
       "side": 1,
       "message": "注释行数: 3; 改动行数(修改和新增): 28; 注释率: 10.7%",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51fcaa4f_24d9292a",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424931701870.29594155344984474/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bd1fae2_bbe78fda",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424931701870.29594155344984474/changeCache/src/src/mainwindow.cpp:613]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bc2034e_445f6a50",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_SpaceKeyInterval\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
       "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -132,6 +268,74 @@
       "writtenOn": "2022-01-18T08:06:14Z",
       "side": 1,
       "message": "注释行数: 60; 改动行数(修改和新增): 230; 注释率: 26.1%",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16cb9cf7_d5aaf310",
+        "filename": "tests/CameraTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(warning) Member variable \u0027CameraTest::m_devnumMonitor\u0027 is not initialized in the constructor",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6daf738_4bb3a445",
+        "filename": "tests/CameraTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(warning) Member variable \u0027CameraTest::m_mainwindow\u0027 is not initialized in the constructor",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0341697b_4faf75ec",
+        "filename": "tests/CameraTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "(warning) Member variable \u0027CameraTest::m_processThread\u0027 is not initialized in the constructor",
+      "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7899e790_5785a014",
+        "filename": "tests/stub/stub_function.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T08:06:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424931701870.29594155344984474/changeCache/tests/stub/stub_function.cpp:469]: (style) Variable \u0027m_v4l2_dev-\u003elist_stream_formats[0].list_stream_cap[0].width\u0027 is reassigned a value before the old one has been used",
       "revId": "ae266f1f5f60e0a16d875bc4e5ac25f5c8bf4a79",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
