@@ -16,6 +16,23 @@
       "revId": "9997732efc059b2e0c1d3b331e61166ebc77871e",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f25e3679_9bbff6fd",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T12:38:50Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425095258890.14746275334443337/changeCache/src/src/camera.cpp:440]: (style) Local variable size shadows outer variabl",
+      "revId": "9997732efc059b2e0c1d3b331e61166ebc77871e",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
     }
   ]
 }
