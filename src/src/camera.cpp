@@ -186,9 +186,6 @@ void Camera::onCameraStatusChanged(QCamera::Status status)
 
 QStringList Camera::getSupportResolutions()
 {
-    if (!m_imageCapture)
-        return  QStringList();
-
     QStringList resolutionsList;
 
     QList<QSize> supportResolutionList = getSupportResolutionsSize();
@@ -217,25 +214,28 @@ QList<QSize> Camera::getSupportResolutionsSize()
 // 设置相机分辨率
 void Camera::setCameraResolution(QSize size)
 {
-    Q_ASSERT(m_camera);
-    Q_ASSERT(m_imageCapture);
-
     // 设置图片捕获器分辨率到相机
-    QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
-    imageSettings.setResolution(size);
-    m_imageCapture->setEncodingSettings(imageSettings);
+    if (m_imageCapture) {
+        QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
+        imageSettings.setResolution(size);
+        m_imageCapture->setEncodingSettings(imageSettings);
+    }
 
     // 设置视频分辨率到相机
-    QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
-    QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
-    videoSettings.setCodec("video/x-vp8");
-    videoSettings.setResolution(size);
-    m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+    if (m_mediaRecoder) {
+        QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
+        QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
+        videoSettings.setCodec("video/x-vp8");
+        videoSettings.setResolution(size);
+        m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
+    }
 
     // 设置分辨率到相机
-    QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
-    viewfinderSettings.setResolution(size);
-    m_camera->setViewfinderSettings(viewfinderSettings);
+    if (m_camera) {
+        QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
+        viewfinderSettings.setResolution(size);
+        m_camera->setViewfinderSettings(viewfinderSettings);
+    }
 
     // 同步有变更的分辨率到config
     camConfig.width = size.rwidth();
@@ -342,32 +342,42 @@ void Camera::stopCamera()
 
 void Camera::setVideoOutPutPath(QString &path)
 {
-    m_mediaRecoder->setOutputLocation(QUrl::fromLocalFile(path));
+    if (m_mediaRecoder)
+        m_mediaRecoder->setOutputLocation(QUrl::fromLocalFile(path));
 }
 
 void Camera::startRecoder()
 {
     m_bReadyRecord = true;
-    if (m_camera->captureMode() != QCamera::CaptureVideo) {
+    if (m_camera && m_camera->captureMode() != QCamera::CaptureVideo) {
         m_camera->setCaptureMode(QCamera::CaptureVideo);
     }
 }
 
 void Camera::stopRecoder()
 {
-    m_mediaRecoder->stop();
-    if (m_camera->captureMode() != QCamera::CaptureStillImage)
+    if (m_mediaRecoder)
+        m_mediaRecoder->stop();
+    if (m_camera && m_camera->captureMode() != QCamera::CaptureStillImage)
         m_camera->setCaptureMode(QCamera::CaptureStillImage);
 }
 
 qint64 Camera::getRecoderTime()
 {
-    return m_mediaRecoder->duration();
+    qint64 nRecTime = 0;
+    if (m_mediaRecoder)
+        nRecTime = m_mediaRecoder->duration();
+
+    return nRecTime;
 }
 
 QMediaRecorder::State Camera::getRecoderState()
 {
-    return  m_mediaRecoder->state();
+    QMediaRecorder::State recState = QMediaRecorder::StoppedState;
+    if (m_mediaRecoder)
+        recState = m_mediaRecoder->state();
+
+    return recState;
 }
 
 bool Camera::isReadyRecord()

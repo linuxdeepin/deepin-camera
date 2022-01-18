@@ -878,10 +878,10 @@ void videowidget::onEndBtnClicked()
     if (m_recordingTimer->isActive())
         m_recordingTimer->stop();
 
-    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
+    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->isFFmpegEnv())
         m_pCamErrItem->hide();
 
-    if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0))
+    if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->isFFmpegEnv())
         m_pSvgItem->hide();
     m_dLabel->hide();
 
