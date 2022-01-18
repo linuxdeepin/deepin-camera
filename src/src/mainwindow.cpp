@@ -1061,7 +1061,8 @@ void CMainWindow::initShortcut()
         else if (m_snapshotLabel == focuswidget)
             m_snapshotLabel->openFile();
         else if (m_cameraSwitchBtn == focuswidget)
-            m_videoPre->onChangeDev();
+            //m_videoPre->onChangeDev();
+            m_cameraSwitchBtn->clicked();
         else
             return;
     });
