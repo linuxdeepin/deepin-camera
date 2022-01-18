@@ -19,6 +19,40 @@
     },
     {
       "key": {
+        "uuid": "a013e933_73076356",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/mainwindow.cpp:747]: (style) Local variable fm shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05ccce57_f8a0ea85",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1555,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/mainwindow.cpp:1567]: (style) Local variable iconVd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb1e5308_427f2445",
         "filename": "src/src/mainwindow.h",
         "patchSetId": 1
@@ -36,6 +70,23 @@
     },
     {
       "key": {
+        "uuid": "244843dc_a1136125",
+        "filename": "src/src/mainwindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "(style) Class \u0027CMainWindow\u0027 has a constructor with 1 argument that is not explicit",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed062b4a_638e98d8",
         "filename": "src/src/thumbnailsbar.cpp",
         "patchSetId": 1
@@ -47,6 +98,40 @@
       "writtenOn": "2022-01-18T06:34:14Z",
       "side": 1,
       "message": "注释行数: 9; 改动行数(修改和新增): 87; 注释率: 10.3%",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f6fddd7_2e8f9d37",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nIndex\u0027 can be reduced",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f78d36d_ed158487",
+        "filename": "src/src/thumbnailsbar.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "(style) The scope of the variable \u0027nIndex\u0027 can be reduced",
       "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
@@ -81,6 +166,193 @@
       "writtenOn": "2022-01-18T06:34:14Z",
       "side": 1,
       "message": "注释行数: 0; 改动行数(修改和新增): 16; 注释率: 0.0%",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f7a75dc_220a3775",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "(performance) Variable \u0027m_btnClickTime\u0027 is assigned in constructor body. Consider performing initialization in initialization list",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7fafbe3_eec8bdd7",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:238]: (style) Local variable pltLabel shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e670cc0_b9a7b4d8",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:1009]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27ac009b_93926052",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:977]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82e52d4d_501241cd",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:947]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5050c695_25c0f3f9",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:1001]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c354e727_ec59279b",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:986]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8693b10_8a4bc472",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:957]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79333626_dd107a68",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:1035]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86dc5d48_aca4a1b6",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:1026]: (style) Local variable vd shadows outer variabl",
+      "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca3f2991_e6c2f879",
+        "filename": "src/src/videowidget.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1072,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-18T06:34:16Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16424876503870.5887926445210125/changeCache/src/src/videowidget.cpp:1074]: (style) Variable \u0027m_curTakePicTime\u0027 is reassigned a value before the old one has been used",
       "revId": "333b1b384ee45d38697104269ffc0a0ad560fbb6",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
