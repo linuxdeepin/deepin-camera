@@ -289,7 +289,7 @@ void Camera::startCamera(const QString &devName)
     QList<QSize> supportList = getSupportResolutionsSize();
 
     // 当前设备与config设备名不同，重置分辨率到最大值，并同步到config文件
-    QString configDevName = QString(camConfig.device_name);
+    QString configDevName = QString(camConfig.device_location);
     if (m_curDevName != configDevName
             || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
         if (!supportList.isEmpty()) {
