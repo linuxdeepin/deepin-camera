@@ -30,16 +30,6 @@ QString &DataManager::getstrFileName()
     return m_strFileName;
 }
 
-int &DataManager::getvideoCount()
-{
-    return m_videoCount;
-}
-
-void DataManager::setvideoCount(int videoCount)
-{
-    m_videoCount = videoCount;
-}
-
 enum DeviceStatus DataManager::getdevStatus()
 {
     return m_devStatus;

@@ -118,14 +118,6 @@ public:
      */
     QString &getstrFileName();
     /**
-     * @brief getvideoCount 获得视频数目
-     */
-    int &getvideoCount();
-    /**
-     * @brief setvideoCount 设置视频数目
-     */
-    void setvideoCount(int videoCount);
-    /**
      * @brief getdevStatus 获得设备状态
      */
     enum DeviceStatus getdevStatus();

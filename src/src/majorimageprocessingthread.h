@@ -155,7 +155,7 @@ public:
 private:
     void ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height);
 
-private slots:
+public slots:
     void processingImage(QImage&);
 
 private:

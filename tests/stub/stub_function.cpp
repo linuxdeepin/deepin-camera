@@ -350,6 +350,38 @@ int Stub_Function::get_video_codec_ind()
     return 0;
 }
 
+QList<QSize> Stub_Function::getSupportResolutionsSize()
+{
+    QList<QSize> resolutions;
+    resolutions << QSize(800,600);
+    return resolutions;
+}
+
+QCamera::Status Stub_Function::cameraStatus()
+{
+    return QCamera::UnavailableStatus;
+}
+
+Stub_Function::DeviceStatus Stub_Function::getNoDevStatus()
+{
+    return NOCAM;
+}
+
+bool Stub_Function::videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode)
+{
+    return true;
+}
+
+bool Stub_Function::noFFmpegEnv()
+{
+    return false;
+}
+
+int Stub_Function::recordingState()
+{
+    return 1;
+}
+
 void Stub_Function::init()
 {
     if (m_v4l2_frame_buff == nullptr) {

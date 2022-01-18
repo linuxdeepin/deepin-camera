@@ -48,6 +48,9 @@ class Camera : public QObject
 public:
 
     static Camera *instance();
+    static void release();
+
+    ~Camera();
 
     /**
      * @brief initMember
@@ -56,10 +59,16 @@ public:
     void initMember();
 
     /**
-     * @brief getSupportResolutions 获取支持的分辨率列表
-     * @return 当前摄像头分辨率列表
+     * @brief getSupportResolutions 获取支持的分辨率列表(字符串)
+     * @return 当前摄像头分辨率列表，字符串形式
      */
     QStringList getSupportResolutions();
+
+    /**
+     * @brief getSupportResolutionsSize 获取支持的分辨率列表(大小)
+     * @return 当前摄像头分辨率列表，QSize形式
+     */
+    QList<QSize> getSupportResolutionsSize();
 
     /**
      * @brief setCameraResolution
@@ -82,16 +91,6 @@ public:
      * @brief stopCamera 停止当前相机
      */
     void stopCamera();
-
-    /**
-     * @brief setCaptureImage 设置为捕获图像
-     */
-    void setCaptureImage();
-
-    /**
-     * @brief setCaptureVideo 设置为捕获视频
-     */
-    void setCaptureVideo();
 
     /**
      * @brief setVideoOutPutPath 设置视频保存路径

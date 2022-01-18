@@ -131,6 +131,11 @@ private:
     void initConnection();
 
     /**
+    * @brief initCameraConnection　初始化QCamera连接状态
+    */
+    void initCameraConnection();
+
+    /**
     * @brief initRightButtons　初始化右侧功能按钮键
     */
     void initRightButtons();

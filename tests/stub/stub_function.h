@@ -2,6 +2,7 @@
 #define STUB_FUNCTION_H
 
 #include <QObject>
+#include <QCamera>
 #include "../../src/devnummonitor.h"
 #include "../../src/imageitem.h"
 #include "stub.h"
@@ -127,6 +128,14 @@ public:
     void devnumMonitorStartCheck();
     int get_video_codec_ind();
 
+    // Camera类相关桩函数--------------------begin
+    QList<QSize> getSupportResolutionsSize();
+    QCamera::Status cameraStatus();
+    DeviceStatus getNoDevStatus();
+    bool videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode);
+    bool noFFmpegEnv();
+    int recordingState();
+    // Camera类相关桩函数--------------------end
 
     //重置单个桩函数
     template<typename T,typename S>
