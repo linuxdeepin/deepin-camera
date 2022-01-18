@@ -1244,32 +1244,8 @@ void CMainWindow::loadAfterShow()
         connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
         connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
     } else {
-        connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamera);
-        connect(Camera::instance(), SIGNAL(cameraSwitched(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
-        // 摄像头重连，刷新设置页分辨率下拉框内容
-        connect(Camera::instance(), SIGNAL(cameraDevRestarted()), &Settings::get(), SLOT(setNewResolutionList()));
-        // 当前无摄像头设备，给出无摄像头提示
-        connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
-            Camera::instance()->stopCamera();
-            DataManager::instance()->setdevStatus(NOCAM);
-            m_videoPre->showNocam();
-            QImage image;
-            m_takePhotoSettingArea->onUpdateFilterImage(&image);
-        });
-        // 当前设备断开连接，给出无摄像头提示
-        connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=](){
-            Camera::instance()->stopCamera();
-            DataManager::instance()->setdevStatus(NOCAM);
-            m_videoPre->showNocam();
-            QImage image;
-            m_takePhotoSettingArea->onUpdateFilterImage(&image);
-        });
-        connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=](){
-            DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-            m_videoPre->showCamUsed();
-        });
+        initCameraConnection();
     }
-
 
     m_videoPre->delayInit();
     m_videoPre->setFilterType(filter_Normal);
@@ -1898,6 +1874,34 @@ void CMainWindow::initConnection()
 
     QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
                                          "org.freedesktop.login1.Manager", "PrepareForShutdown", this, SLOT(stopCancelContinuousRecording(bool)));
+}
+
+void CMainWindow::initCameraConnection()
+{
+    connect(m_devnumMonitor, &DevNumMonitor::existDevice, Camera::instance(), &Camera::refreshCamera);
+    connect(Camera::instance(), SIGNAL(cameraSwitched(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+    // 摄像头重连，刷新设置页分辨率下拉框内容
+    connect(Camera::instance(), SIGNAL(cameraDevRestarted()), &Settings::get(), SLOT(setNewResolutionList()));
+    // 当前无摄像头设备，给出无摄像头提示
+    connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
+        Camera::instance()->stopCamera();
+        DataManager::instance()->setdevStatus(NOCAM);
+        m_videoPre->showNocam();
+        QImage image;
+        m_takePhotoSettingArea->onUpdateFilterImage(&image);
+    });
+    // 当前设备断开连接，给出无摄像头提示
+    connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=](){
+        Camera::instance()->stopCamera();
+        DataManager::instance()->setdevStatus(NOCAM);
+        m_videoPre->showNocam();
+        QImage image;
+        m_takePhotoSettingArea->onUpdateFilterImage(&image);
+    });
+    connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=](){
+        DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+        m_videoPre->showCamUsed();
+    });
 }
 
 void CMainWindow::initRightButtons()

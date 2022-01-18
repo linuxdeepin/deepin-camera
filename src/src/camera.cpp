@@ -53,6 +53,40 @@ Camera *Camera::instance()
     return m_instance;
 }
 
+void Camera::release()
+{
+    delete m_instance;
+    m_instance = nullptr;
+}
+
+Camera::~Camera()
+{
+    if (camConfig.device_name) {
+        free(camConfig.device_name);
+        camConfig.device_name = nullptr;
+    }
+    if (camConfig.device_location) {
+        free(camConfig.device_location);
+        camConfig.device_location = nullptr;
+    }
+    if (camConfig.video_path) {
+        free(camConfig.video_path);
+        camConfig.video_path = nullptr;
+    }
+    if (camConfig.video_name) {
+        free(camConfig.video_name);
+        camConfig.video_name = nullptr;
+    }
+    if (camConfig.photo_path) {
+        free(camConfig.photo_path);
+        camConfig.photo_path = nullptr;
+    }
+    if (camConfig.photo_name) {
+        free(camConfig.photo_name);
+        camConfig.photo_name = nullptr;
+    }
+}
+
 Camera::Camera()
     : m_camera(nullptr)
     , m_mediaRecoder(nullptr)
@@ -79,18 +113,19 @@ void Camera::switchCamera()
 {
     refreshCamDevList();
 
-    int nCurIndex = m_cameraDevList.indexOf(m_curDevName);
-
     QString nextDevName;
-    if (nCurIndex + 1 < m_cameraDevList.size() && nCurIndex != -1)
-        nextDevName = m_cameraDevList[nCurIndex + 1];
-    else if (nCurIndex + 1 == m_cameraDevList.size() && nCurIndex != -1)
-        nextDevName = m_cameraDevList[0];
-    else {
-        nextDevName = camConfig.device_location;
-        if (nextDevName.isEmpty())
-            nextDevName = QCameraInfo::defaultCamera().deviceName();
+
+    if (!m_cameraDevList.isEmpty()) {
+        int nCurIndex = m_cameraDevList.indexOf(m_curDevName);
+        nCurIndex = (nCurIndex + 1) % m_cameraDevList.size();
+        nextDevName = m_cameraDevList[nCurIndex];
     }
+
+    if (nextDevName.isEmpty())
+        nextDevName = camConfig.device_location;
+
+    if (nextDevName.isEmpty())
+        nextDevName = QCameraInfo::defaultCamera().deviceName();
 
     startCamera(nextDevName);
 }
@@ -156,7 +191,7 @@ QStringList Camera::getSupportResolutions()
 
     QStringList resolutionsList;
 
-    QList<QSize> supportResolutionList = m_imageCapture->supportedResolutions();
+    QList<QSize> supportResolutionList = getSupportResolutionsSize();
     if (supportResolutionList.isEmpty())
         qInfo() << "Support Resolution is Empty!";
 
@@ -168,6 +203,15 @@ QStringList Camera::getSupportResolutions()
     }
 
     return resolutionsList;
+}
+
+QList<QSize> Camera::getSupportResolutionsSize()
+{
+    QList<QSize> resolutions;
+    if (m_imageCapture)
+        resolutions = m_imageCapture->supportedResolutions();
+
+    return resolutions;
 }
 
 // 设置相机分辨率
@@ -230,10 +274,18 @@ void Camera::startCamera(const QString &devName)
     m_camera->start();
 
     // 同步设备名称到config
+    if (camConfig.device_name) {
+        free(camConfig.device_name);
+        camConfig.device_name = nullptr;
+    }
+    if (camConfig.device_location) {
+        free(camConfig.device_location);
+        camConfig.device_location = nullptr;
+    }
     camConfig.device_name = strdup(cameraInfo.description().toStdString().c_str());
     camConfig.device_location = strdup(cameraInfo.deviceName().toStdString().c_str());
 
-    QList<QSize> supportList = m_imageCapture->supportedResolutions();
+    QList<QSize> supportList = getSupportResolutionsSize();
 
     // 当前设备与config设备名不同，重置分辨率到最大值，并同步到config文件
     QString configDevName = QString(camConfig.device_name);
@@ -288,16 +340,6 @@ void Camera::stopCamera()
     }
 }
 
-void Camera::setCaptureImage()
-{
-    m_camera->setCaptureMode(QCamera::CaptureStillImage);
-}
-
-void Camera::setCaptureVideo()
-{
-    m_camera->setCaptureMode(QCamera::CaptureVideo);
-}
-
 void Camera::setVideoOutPutPath(QString &path)
 {
     m_mediaRecoder->setOutputLocation(QUrl::fromLocalFile(path));
@@ -348,6 +390,7 @@ int Camera::parseConfig()
     /*open file for read*/
     if((fp = fopen(config_file,"r")) == NULL)
     {
+        free(config_file);
         fprintf(stderr, "deepin-camera: couldn't open %s for read: %s\n", config_path, strerror(errno));
         return -1;
     }
@@ -409,7 +452,15 @@ int Camera::parseConfig()
                 free(camConfig.device_location);
             camConfig.device_location = strdup(value);
         }
+
+        if(token)
+            free(token);
+        if(value)
+            free(value);
     }
+
+    free(config_file);
+
     fclose(fp);
     return 0;
 }
@@ -419,7 +470,7 @@ int Camera::saveConfig()
     QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
                           QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
 
-    const char *filename = config_file.toLatin1().data();
+    char *filename = strdup(config_file.toLatin1().data());
     FILE *fp;
 
     /*open file for write*/
@@ -461,6 +512,8 @@ int Camera::saveConfig()
 
     /* flush stream buffers to filesystem */
     fflush(fp);
+
+    free(filename);
 
     /* close file after fsync (sync file data to disk) */
     if (fsync(fileno(fp)) || fclose(fp))

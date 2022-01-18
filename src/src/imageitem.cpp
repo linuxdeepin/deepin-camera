@@ -559,10 +559,6 @@ AnimationWidget::~AnimationWidget()
 
 ImageItem::~ImageItem()
 {
-    QFileInfo fileInfo(m_path);
-    if (fileInfo.suffix() == "webm")
-        DataManager::instance()->setvideoCount(DataManager::instance()->getvideoCount() - 1);
-
     delete m_pAniWidget;
     m_pAniWidget = nullptr;
 
