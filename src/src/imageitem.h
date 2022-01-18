@@ -221,7 +221,7 @@ private:
     QList<QImage>       m_imgs;//需要打印的图片
     QString             m_path;//文件路径
     QPixmap             m_pixmap;//缩略图
-    QString             m_pixmapstring;//缩略图路径
+    QString             m_pixmapstring;//默认缩略图路径
     QMenu               *m_menu;//右键菜单
     QAction             *m_actCopy;//复制
     QAction             *m_actDel;//删除
