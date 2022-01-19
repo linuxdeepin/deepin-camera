@@ -148,9 +148,10 @@ void Camera::refreshCamera()
 // 重启摄像头
 void Camera::restartCamera()
 {
-    QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
-    if (availableCams.isEmpty() && !m_cameraDevList.isEmpty()){
-        if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
+    if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
+        QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
+        if ((availableCams.isEmpty() || availableCams.indexOf(QCameraInfo(*m_camera)) != -1)
+                && !m_cameraDevList.isEmpty()) {
             emit cameraCannotUsed();
             return;
         }
