@@ -606,6 +606,9 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         selectVideoSavePath = DFileDialog::getExistingDirectory(nullptr, QObject::tr("Open folder"),
                                                                 tmplastvdcpath,
                                                                 DFileDialog::ShowDirsOnly | DFileDialog::DontResolveSymlinks);
+        // 视频保存路径暂时不能设置到smb网盘路径(会卡死在fwrite)，临时处理方案：重置回默认路径
+        if (selectVideoSavePath.contains("/run/user/1000/gvfs/smb-share:server="))
+            selectVideoSavePath = option->defaultValue().toString();
 #endif
 
         if (validate(selectVideoSavePath, false)) {
