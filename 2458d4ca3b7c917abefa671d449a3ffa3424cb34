@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "79b81d06_7e89b294",
+        "filename": "src/src/camera.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-19T03:50:48Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425642400320.5352670953891484/changeCache/src/src/camera.cpp:441]: (style) Local variable size shadows outer variabl",
+      "revId": "2458d4ca3b7c917abefa671d449a3ffa3424cb34",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "acceb942_103bd9d0",
         "filename": "src/src/mainwindow.cpp",
         "patchSetId": 1
@@ -30,6 +47,40 @@
       "writtenOn": "2022-01-19T03:50:47Z",
       "side": 1,
       "message": "注释行数: 1; 改动行数(修改和新增): 3; 注释率: 33.3%",
+      "revId": "2458d4ca3b7c917abefa671d449a3ffa3424cb34",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b4b5e94_46a2d22e",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-19T03:50:48Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425642400320.5352670953891484/changeCache/src/src/mainwindow.cpp:362]: (style) Local variable tem_fontmetrics shadows outer variabl",
+      "revId": "2458d4ca3b7c917abefa671d449a3ffa3424cb34",
+      "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "595ea371_9a3cdb05",
+        "filename": "src/src/mainwindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2022-01-19T03:50:48Z",
+      "side": 1,
+      "message": "\u003e [/tmp/16425642400320.5352670953891484/changeCache/src/src/mainwindow.cpp:616]: (style) Local variable tem_fontmetrics shadows outer variabl",
       "revId": "2458d4ca3b7c917abefa671d449a3ffa3424cb34",
       "serverId": "7c03bcd7-3a90-48d7-8881-a48a22a829d2",
       "unresolved": true
