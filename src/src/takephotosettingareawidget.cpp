@@ -739,6 +739,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             for (auto pBtn : m_filterPreviewBtnList) {
                 pBtn->update();
+                pBtn->clearFocus();
             }
         });
 

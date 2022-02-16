@@ -20,6 +20,7 @@
 */
 
 #include "circlepushbutton.h"
+#include "ac-deepin-camera-define.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -96,6 +97,9 @@ void circlePushButton::paintEvent(QPaintEvent *event)
         QRect focusBlue = this->rect();
         focusBlue.setTopLeft(QPoint(1, 1));
         focusBlue.setSize(QSize(tmpWidth - 2, tmpHeight - 2));
+        if (this->objectName() == FILTERS_FOLD_BTN
+                || this->objectName() == FILTERS_CLOSE_BTN)
+            highlight = Qt::white;
         painter.setPen(QPen(highlight, distance));
         painter.setBrush(Qt::NoBrush);
         painter.drawEllipse(focusBlue);

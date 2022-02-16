@@ -152,6 +152,8 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
         painter.setPen(QPen(QColor(Qt::white), m_radius / 4));
         painter.drawRoundedRect(focusWhite, m_radius, m_radius);
 
+        if (m_hover)
+            highlightColor = Qt::white;
         painter.setPen(QPen(QColor(highlightColor), m_radius / 2));
         painter.setBrush(Qt::NoBrush);
         painter.drawRoundedRect(focusBlue, m_radius, m_radius);
@@ -163,6 +165,7 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
 void filterPreviewButton::enterEvent(QEvent *event)
 {
     Q_UNUSED(event);
+    this->setFocus();
     m_hover = true;
     update();
 }
@@ -184,6 +187,7 @@ void filterPreviewButton::focusOutEvent(QFocusEvent *event)
 void filterPreviewButton::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
+    this->clearFocus();
     m_hover = false;
     m_mousePress = false;
     update();
