@@ -37,8 +37,10 @@
 ACCESS_PRIVATE_FUN(CMainWindow, void(), initCameraConnection);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, bool, m_bRecording);
+ACCESS_PRIVATE_FIELD(CMainWindow, videowidget*, m_videoPre);
 ACCESS_PRIVATE_FIELD(Camera, QString, m_curDevName);
 ACCESS_PRIVATE_FIELD(Camera, VideoSurface*, m_videoSurface);
+ACCESS_PRIVATE_FIELD(videowidget, QString, m_saveVdFolder);
 
 CameraTest::CameraTest()
 {
@@ -74,6 +76,17 @@ void CameraTest::TearDown()
     Camera::release();
 
     DataManager::instance()->setFFmpegEnv(true);
+}
+
+/**
+ *  @brief 摄像头占用提示
+ */
+TEST_F(CameraTest, occupyTips)
+{
+    // 是否显示摄像头占用提示
+    Stub_Function::resetSub(ADDR(QCamera, status), ADDR(Stub_Function, cameraStatus_Unloaded));
+    m_devnumMonitor->existDevice();
+    Stub_Function::clearSub(ADDR(QCamera, status));
 }
 
 /**
@@ -120,8 +133,17 @@ TEST_F(CameraTest, recordFunction)
     photoRecordBtn *pBtn = m_mainwindow->findChild<photoRecordBtn *>(BUTTON_PICTURE_VIDEO);
     QTest::mouseMove(pBtn, QPoint(5, 5), 500);
 
+    // 变更视频保存路径
+    QString videoPath = "/home";
+    if (!QDir(videoPath).exists())
+        videoPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation);
+    videowidget* videoPre = access_private_field::CMainWindowm_videoPre(*m_mainwindow);
+    videoPre->setSaveVdFolder(videoPath);
+
     // 点击录制
     emit pBtn->clicked();
+    // 判断视频变更路径是否成功
+    EXPECT_EQ(access_private_field::videowidgetm_saveVdFolder(*videoPre), videoPath);
     Camera::instance()->isReadyRecord();
     Camera::instance()->getRecoderState();
     Camera::instance()->isRecording();

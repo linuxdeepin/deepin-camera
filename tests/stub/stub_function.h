@@ -131,6 +131,7 @@ public:
     // Camera类相关桩函数--------------------begin
     QList<QSize> getSupportResolutionsSize();
     QCamera::Status cameraStatus();
+    QCamera::Status cameraStatus_Unloaded();
     DeviceStatus getNoDevStatus();
     bool videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode);
     bool noFFmpegEnv();

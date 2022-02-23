@@ -362,6 +362,11 @@ QCamera::Status Stub_Function::cameraStatus()
     return QCamera::UnavailableStatus;
 }
 
+QCamera::Status Stub_Function::cameraStatus_Unloaded()
+{
+    return QCamera::UnloadedStatus;
+}
+
 Stub_Function::DeviceStatus Stub_Function::getNoDevStatus()
 {
     return NOCAM;

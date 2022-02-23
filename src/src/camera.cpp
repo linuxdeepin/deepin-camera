@@ -150,7 +150,7 @@ void Camera::restartCamera()
 {
     if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
         QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
-        if ((availableCams.isEmpty() || availableCams.indexOf(QCameraInfo(*m_camera)) != -1)
+        if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
                 && !m_cameraDevList.isEmpty()) {
             emit cameraCannotUsed();
             return;
