@@ -92,7 +92,7 @@ static bool CheckWayland()
     } else
         return false;
 }
-
+//判断是否采用wayland显示服务器
 static bool CheckFFmpegEnv()
 {
     QProcess process;
