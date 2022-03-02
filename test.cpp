@@ -303,3 +303,5 @@ void RecorderRegionShow::updateMultiKeyBoardPos()
     }
     */
 }
+
+
