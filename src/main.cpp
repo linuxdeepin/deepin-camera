@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
         format.setDefaultFormat(format);
         set_wayland_status(1);
     }
-
+    
     QTime time;
     time.start();
     QString lutDir = LUT_DIR;
@@ -182,7 +182,7 @@ int main(int argc, char *argv[])
 
         exit(0);
     }
-
+    //主界面
     CMainWindow w;
     a.setMainWindow(&w);
 
