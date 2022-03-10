@@ -25,7 +25,6 @@ extern "C"
 }
 #include "mainwindow.h"
 #include "capplication.h"
-#include "dbus_adpator.h"
 #include "cameraconfig.h"
 #include "acobjectlist.h"
 
@@ -196,11 +195,6 @@ int main(int argc, char *argv[])
 
     w.show();
     w.loadAfterShow();
-
-    //最小化后双击桌面恢复画面
-    ApplicationAdaptor adaptor(&w);
-    QDBusConnection::sessionBus().registerService("com.deepin.camera");
-    QDBusConnection::sessionBus().registerObject(QDir::separator(), &w);
 
     return qApp->exec();
 }
