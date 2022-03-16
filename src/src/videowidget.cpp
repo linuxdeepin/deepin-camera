@@ -900,7 +900,18 @@ void videowidget::onEndBtnClicked()
     }
 
     m_recordingTimeWidget->hide();
+#ifdef __sw_64__
+    photoRecordBtn* recordBtn = nullptr;
+    CMainWindow* mainwindow = qobject_cast<CMainWindow*>(parentWidget());
+    if (mainwindow) {
+        recordBtn = mainwindow->findChild<photoRecordBtn *>(BUTTON_PICTURE_VIDEO);
+    }
+    if (recordBtn)
+        recordBtn->blockSignals(true);
+#endif
 
+    QTime time;
+    time.start();
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
 
@@ -920,6 +931,16 @@ void videowidget::onEndBtnClicked()
         emit updateBlockSystem(false);
         emit takeVdDone();
     }
+
+    qInfo() << QString("-------------------stop record cost[%1]ms..----------------\n").arg(time.elapsed());
+
+#ifdef __sw_64__
+    // 过滤停止录像编码期间的键鼠点击事件
+    qApp->processEvents();
+    if (recordBtn)
+        recordBtn->blockSignals(false);
+#endif
+
 }
 
 void videowidget::onRestartDevices()
@@ -1152,6 +1173,14 @@ void videowidget::forbidScrollBar(QGraphicsView *view)
 
 void videowidget::startTakeVideo()
 {
+
+#ifdef __sw_64__
+    if (video_capture_get_save_video() == 1) {
+        qInfo() << "-------------------------takeVideo reclicked..----------------------";
+        return;
+    }
+#endif
+
     QDir dir;
 
     QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
