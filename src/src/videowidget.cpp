@@ -1441,6 +1441,12 @@ void videowidget::onExposureChanged(int exposure)
         m_imgPrcThread->setExposure(exposure);
 }
 
+void videowidget::onFilterDisplayChanged(int bDisplay)
+{
+    if (m_imgPrcThread)
+        m_imgPrcThread->setFilterGroupState(bDisplay);
+}
+
 videowidget::~videowidget()
 {
     m_imgPrcThread->stop();

@@ -888,11 +888,13 @@ void takePhotoSettingAreaWidget::filtersUnfoldBtnClicked(bool isShortcut)
     closeAllGroup();
     m_filtersGroupDislay = true;
     showFilters(true, isShortcut);
+    emit sigFilterGroupDisplay(true);
 }
 
 void takePhotoSettingAreaWidget::filtersFoldBtnClicked(bool isShortcut)
 {
     showFilters(false, isShortcut);
+    emit sigFilterGroupDisplay(false);
 }
 
 void takePhotoSettingAreaWidget::hideAll()

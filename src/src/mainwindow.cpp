@@ -1685,6 +1685,7 @@ void CMainWindow::initUI()
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngFilterChanged, this, &CMainWindow::onFilterChanged);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngShowFilterName, this, &CMainWindow::onShowFilterName);
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sigFilterGroupDisplay, m_videoPre, &videowidget::onFilterDisplayChanged);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFilterName, this, &CMainWindow::onSetFilterName);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sigExposureChanged, m_videoPre, &videowidget::onExposureChanged);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));

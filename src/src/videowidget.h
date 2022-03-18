@@ -328,6 +328,12 @@ public slots:
      */
     void onExposureChanged(int exposure);
 
+    /**
+     * @brief onFilterDisplayChanged 滤镜展开状态
+     * @param bDisplay 是否展示
+     */
+    void onFilterDisplayChanged(int bDisplay);
+
 private slots:
     /**
     * @brief ReceiveMajorImage　处理视频帧 mips、wayland下使用

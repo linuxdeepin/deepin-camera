@@ -233,11 +233,6 @@ void MajorImageProcessingThread::run()
             pOldYuvFrame = m_frame->yuv_frame;
             m_frame->yuv_frame = m_yuvPtr;
 
-            // wayland下，获取的相机原始画面为镜像画面，需要翻转一次
-    //        if (get_wayland_status() == 1) {
-    //            render_fx_apply(m_frame->yuv_frame, m_frame->width, m_frame->height, REND_FX_YUV_MIRROR);
-    //        }
-
             // 判断是否使用rgb数据
             bool bUseRgb = false;
     #ifdef __mips__
@@ -250,7 +245,7 @@ void MajorImageProcessingThread::run()
                 bUseRgb = true;
 
             uint8_t *rgb = nullptr;
-            if (bUseRgb || m_bPhoto) {
+            if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
                 rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
                 // yu12到rgb数据高性能转换
                 yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
