@@ -15,10 +15,12 @@ ALL_NEED_RELABELED_FILE="${LIB_FILE} ${CONFIG_FILE} ${EXECUTABLE_FILE} ${SERVICE
 SELINUX_DEV=`dpkg -l | grep "ii  selinux-policy-dev"`
 
 if [ -z "$SELINUX_DEV" ];then
+	rm -rf /temp > /dev/null 2>&1
     exit 0
 fi
 
 if [ ! -d ${SELINUX_PP_TEMP_DIR} ];then
+	rm -rf /temp > /dev/null 2>&1
 	exit 0
 fi
 
@@ -39,5 +41,5 @@ if [ -f ${SELINUX_CONFIG} ];then
 	fi
 fi
 
-rm -rf ${SELINUX_PP_TEMP_DIR} > /dev/null 2>&1
+rm -rf /temp > /dev/null 2>&1
 exit 0
