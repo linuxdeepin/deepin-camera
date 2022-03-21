@@ -93,7 +93,13 @@ void GridLineWidget::setGridType(GridType type)
 void GridLineWidget::paintEvent(QPaintEvent *e)
 {
     QRect rtGrid = rect();
-    if (m_videowidget && !m_videowidget->getFrameRect().isNull())
+
+    //if the video frame area is zero, it will not be repainted,
+    //otherwize it will be repainted outside the video frame.
+    if (m_videowidget->getFrameRect().isNull())
+        return;
+
+    if (m_videowidget)
         // 画面大小-1，是为了保证网格线等分距离与网格线图元等分距离相等，这样能保证两种网格线能重合显示，避免视觉上网格线微移情况
         rtGrid = m_videowidget->getFrameRect().adjusted(0, 0, -1, -1);
 

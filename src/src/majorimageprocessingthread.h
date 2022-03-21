@@ -100,6 +100,14 @@ public:
         m_bPhoto = bPhoto;
     }
 
+    /**
+     * @brief setFilterGroupState 设置滤镜按钮组展开状态
+     * @param bDisplay  true 展开 false 关闭
+     */
+    void setFilterGroupState(bool bDisplay){
+        m_filtersGroupDislay = bDisplay;
+    }
+
 protected:
     /**
      * @brief run 运行线程
@@ -173,6 +181,7 @@ private:
     bool              m_bHorizontalMirror;   //水平镜像
     bool              m_bFFmpegEnv;          //FFmpeg环境
     int               m_exposure = 0;
+    bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
 
     QImage             m_Img;   //mips、wayland下使用该变量
     QImage             m_filterImg; //滤镜预览类使用 大小40*40

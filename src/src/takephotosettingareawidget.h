@@ -181,6 +181,7 @@ signals:
     void sngShowFilterName(bool bShow);
     void sngSetFilterName(const QString& name);
     void sigExposureChanged(int exposure);
+    void sigFilterGroupDisplay(bool bDisplay);
 
 public slots:
     /**
