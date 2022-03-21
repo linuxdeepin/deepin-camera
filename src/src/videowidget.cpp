@@ -77,7 +77,9 @@ videowidget::videowidget(DWidget *parent)
       m_imgPrcThread(nullptr),
       m_nMaxRecTime(60), //默认60小时
       m_openglwidget(nullptr),
-      m_gridlinewidget(nullptr)
+      m_gridlinewidget(nullptr),
+      m_filterType(filter_Normal),
+      m_exposure(0)
 {
 #ifndef __mips__
     if (!get_wayland_status()) {
@@ -813,7 +815,7 @@ void videowidget::flash()
 
 #ifndef __mips__
     if (!get_wayland_status())
-        if (m_openglwidget->isVisible() == false)
+        if (m_openglwidget->isVisible() == false && m_filterType == filter_Normal && m_exposure == 0)
             m_openglwidget->show();
 
 #endif
@@ -1387,6 +1389,7 @@ void videowidget::setMaxRecTime(int hour)
 
 void videowidget::setFilterType(efilterType type)
 {
+    m_filterType = type;
     if (m_imgPrcThread)
         m_imgPrcThread->setFilter(filterPreviewButton::filterName_CUBE(type));
 }
@@ -1437,6 +1440,7 @@ void videowidget::setGridType(GridType type)
 
 void videowidget::onExposureChanged(int exposure)
 {
+    m_exposure = exposure;
     if (m_imgPrcThread)
         m_imgPrcThread->setExposure(exposure);
 }
