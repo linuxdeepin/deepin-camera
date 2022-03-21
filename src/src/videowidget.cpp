@@ -655,6 +655,8 @@ void videowidget::showCountdown()
                     m_pNormalView->hide();
                 if (m_openglwidget)
                     m_openglwidget->hide();
+                if (m_gridlinewidget)
+                    m_gridlinewidget->hide();
             }
 
             //发送就结束信号处理按钮状态
@@ -815,7 +817,7 @@ void videowidget::flash()
 
 #ifndef __mips__
     if (!get_wayland_status())
-        if (m_openglwidget->isVisible() == false && m_filterType == filter_Normal && m_exposure == 0)
+        if (!m_openglwidget->isVisible() && filter_Normal == m_filterType && 0 == m_exposure)
             m_openglwidget->show();
 
 #endif
