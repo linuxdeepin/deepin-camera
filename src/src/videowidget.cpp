@@ -97,7 +97,7 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsViewEx(this);
     m_gridlinewidget = new GridLineWidget(this);
-    m_gridlinewidget->setGridType(Grid_Thirds);
+    m_gridlinewidget->setGridType(Grid_None);
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
