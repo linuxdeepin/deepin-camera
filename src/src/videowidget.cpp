@@ -78,6 +78,7 @@ videowidget::videowidget(DWidget *parent)
       m_nMaxRecTime(60), //默认60小时
       m_openglwidget(nullptr),
       m_gridlinewidget(nullptr),
+      m_GridType(Grid_None),
       m_filterType(filter_Normal),
       m_exposure(0)
 {
@@ -97,7 +98,7 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsViewEx(this);
     m_gridlinewidget = new GridLineWidget(this);
-    m_gridlinewidget->setGridType(Grid_Thirds);
+    m_gridlinewidget->setGridType(Grid_None);
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
@@ -119,7 +120,7 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalScene = new QGraphicsScene();
     // 画布网格线图元
     m_pGridLineItem = new GridLineItem;
-    m_pGridLineItem->setGridType(Grid_Matts);
+    m_pGridLineItem->setGridType(Grid_None);
     m_pGridLineItem->setZValue(1);
     // 画布svg图标图元
     m_pSvgItem = new QGraphicsSvgItem;
