@@ -34,13 +34,14 @@ extern "C" {
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
     m_yuvPtr = nullptr;
+    m_bRecording = false;
     m_nVdWidth = 0;
     m_nVdHeight = 0;
 
     init();
 
-    m_bFFmpegEnv = DataManager::instance()->isFFmpegEnv();
-    if (!m_bFFmpegEnv)
+    m_eEncodeEnv = DataManager::instance()->encodeEnv();
+    if (m_eEncodeEnv == QCamera_Env)
         connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
 }
 
@@ -143,7 +144,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
 
 void MajorImageProcessingThread::run()
 {
-    if (m_bFFmpegEnv) {
+    if (m_eEncodeEnv != QCamera_Env) {
         m_videoDevice = get_v4l2_device_handler();
         v4l2core_start_stream(m_videoDevice);
         int framedely = 0;
@@ -328,7 +329,8 @@ void MajorImageProcessingThread::run()
 
                 }
 
-            }
+            } else if (m_bRecording)
+                emit sigRecordYuv(m_yuvPtr, yuvsize);
 
             QImage* imgTmp = nullptr;
             if (rgb)
