@@ -152,13 +152,11 @@ void GstVideoWriter::setEncodeThreadNum(uint num)
 bool GstVideoWriter::writeFrame(uchar *yu12, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
-    GstBuffer *buffer;
-    guint8 *ptr;
-    ptr = (guint8 *)g_malloc(size * sizeof(uchar));
+    guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr)
     {
         memcpy(ptr, yu12, size);
-        buffer = gst_buffer_new_wrapped((void*)ptr, size);
+        GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 
         //设置时间戳
         if (m_pipeline)
@@ -177,13 +175,11 @@ bool GstVideoWriter::writeFrame(uchar *yu12, uint size)
 bool GstVideoWriter::writeAudio(uchar *yu12, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
-    GstBuffer *buffer;
-    guint8 *ptr;
-    ptr = (guint8 *)g_malloc(size * sizeof(uchar));
+    guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr)
     {
         memcpy(ptr, yu12, size);
-        buffer = gst_buffer_new_wrapped((void*)ptr, size);
+        GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 
         // 设置时间戳
         if (m_pipeline)
