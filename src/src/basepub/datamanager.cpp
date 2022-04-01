@@ -50,17 +50,17 @@ uint DataManager::getNowTabIndex()
     return m_tabIndexNow;
 }
 
-void DataManager::setFFmpegEnv(bool bEnv)
+void DataManager::setEncodeEnv(EncodeEnv env)
 {
-    m_bFFmpegEnv = bEnv;
+    m_encodeEnv = env;
 }
 
-bool DataManager::isFFmpegEnv()
+EncodeEnv DataManager::encodeEnv()
 {
 #ifdef UNITTEST
-    return true;
+    return FFmpeg_Env;
 #endif
-    return m_bFFmpegEnv;
+    return m_encodeEnv;
 }
 
 DataManager *DataManager::instance()
@@ -78,7 +78,7 @@ DataManager::DataManager()
     m_tabIndexNow = 0;
     m_strFileName.clear();
     m_videoCount = 0;
-    m_bFFmpegEnv = false;
+    m_encodeEnv = GStreamer_Env;
     m_devStatus = DeviceStatus::NOCAM;
 }
 

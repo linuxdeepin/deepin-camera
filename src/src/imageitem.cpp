@@ -129,7 +129,7 @@ void ImageItem::updatePicPath(const QString &filePath)
 
     if (fileInfo.suffix() == "webm") {
         m_bVideo = true;
-        if (DataManager::instance()->isFFmpegEnv()) {
+        if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
             image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
 

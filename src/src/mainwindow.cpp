@@ -1177,7 +1177,7 @@ void CMainWindow::settingDialog()
         //初始化分辨率字符串表
         int defres = 0;
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
-        if (!DataManager::instance()->isFFmpegEnv() && !Camera::instance()->getSupportResolutions().isEmpty()) {
+        if (DataManager::instance()->encodeEnv() == QCamera_Env && !Camera::instance()->getSupportResolutions().isEmpty()) {
             resolutionDatabase = Camera::instance()->getSupportResolutions();
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
@@ -1244,10 +1244,10 @@ void CMainWindow::loadAfterShow()
 
     connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
     connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
-    if(DataManager::instance()->isFFmpegEnv()) {
+    if(DataManager::instance()->encodeEnv() != QCamera_Env) {
         connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
         connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
-    } else {
+    } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         initCameraConnection();
     }
 
@@ -1937,7 +1937,7 @@ void CMainWindow::initRightButtons()
     m_snapshotLabel->setObjectName(THUMBNAIL_PREVIEW);
     m_snapshotLabel->setAccessibleName(THUMBNAIL_PREVIEW);
 
-    if (DataManager::instance()->isFFmpegEnv())
+    if (DataManager::instance()->encodeEnv() != QCamera_Env)
         connect(m_cameraSwitchBtn, SIGNAL(clicked()), m_videoPre, SLOT(onChangeDev()));
     else
         connect(m_cameraSwitchBtn, SIGNAL(clicked()), Camera::instance(), SLOT(switchCamera()));

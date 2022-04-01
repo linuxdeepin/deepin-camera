@@ -77,7 +77,7 @@ file (GLOB_RECURSE HEADERS
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkcore
+        dtkwidget dtkcore gstreamer-1.0 gstreamer-app-1.0
 #        libv4l2
 #        libudev
 #        libusb-1.0

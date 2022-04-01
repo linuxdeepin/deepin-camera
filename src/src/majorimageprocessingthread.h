@@ -28,6 +28,8 @@
 #include <QMutex>
 #include <QWaitCondition>
 
+#include "datamanager.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -101,6 +103,14 @@ public:
     }
 
     /**
+     * @brief setRecording 设置视频是否正在录制
+     * @param bStatus  true 录制中 false 未录制
+     */
+    void setRecording(bool bRecording) {
+        m_bRecording = bRecording;
+    }
+
+    /**
      * @brief setFilterGroupState 设置滤镜按钮组展开状态
      * @param bDisplay  true 展开 false 关闭
      */
@@ -147,6 +157,13 @@ signals:
      * @param width
      */
     void sigRenderYuv(bool);
+
+    /**
+     * @brief sigRenderYuv 发送GStreamer视频帧写入信号
+     * @param yuv  yu12帧数据
+     * @param size yuv数据大小
+     */
+    void sigRecordYuv(uchar *yuv, uint size);
 #endif
 
     /**
@@ -178,8 +195,9 @@ private:
     uint8_t           *m_yuvPtr;
 
     bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
+    bool              m_bRecording;//是否处理视频录制状态 GStreamer环境下使用
     bool              m_bHorizontalMirror;   //水平镜像
-    bool              m_bFFmpegEnv;          //FFmpeg环境
+    EncodeEnv         m_eEncodeEnv;          //编码环境
     int               m_exposure = 0;
     bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
 
