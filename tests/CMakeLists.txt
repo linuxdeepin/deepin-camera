@@ -81,7 +81,7 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 pkg_check_modules(3rd_lib REQUIRED
         dtkgui
-        dtkwidget
+        dtkwidget gstreamer-1.0 gstreamer-app-1.0
 #        libv4l2
 #        libudev
 #        libusb-1.0
