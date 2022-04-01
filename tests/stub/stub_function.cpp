@@ -372,9 +372,14 @@ bool Stub_Function::videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode)
     return true;
 }
 
-bool Stub_Function::noFFmpegEnv()
+EncodeEnv Stub_Function::qCameraEnv()
 {
-    return false;
+    return QCamera_Env;
+}
+
+EncodeEnv Stub_Function::gstreamerEnv()
+{
+    return GStreamer_Env;
 }
 
 int Stub_Function::recordingState()

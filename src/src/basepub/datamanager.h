@@ -36,6 +36,13 @@ enum GridType
 enum DeviceStatus {NOCAM, CAM_CANNOT_USE, CAM_CANUSE};
 //enum MultiType {None, Ctrl, Shift, Both};
 
+enum EncodeEnv
+{
+    FFmpeg_Env = 0,
+    QCamera_Env = 1,
+    GStreamer_Env = 2
+};
+
 class DataManager: public QObject
 {
     Q_OBJECT
@@ -142,13 +149,13 @@ public:
      * @brief setFFmpegEnv 设置当前是否具备FFmpeg环境
      * @return
      */
-    void setFFmpegEnv(bool bEnv);
+    void setEncodeEnv(EncodeEnv env);
 
     /**
      * @brief isFFmpegEnv 获取当前是否具备FFmpeg环境
      * @return
      */
-    bool isFFmpegEnv();
+    EncodeEnv encodeEnv();
 
 private:
     DataManager();
@@ -156,7 +163,7 @@ private:
     uint m_tabIndexNow;//当前tab索引
     QString m_strFileName;
     int m_videoCount;
-    bool m_bFFmpegEnv;
+    EncodeEnv m_encodeEnv;
     volatile enum DeviceStatus m_devStatus;
 };
 #endif // DATAMANAGER_H

@@ -42,12 +42,12 @@ ACCESS_PRIVATE_FIELD(Camera, VideoSurface*, m_videoSurface);
 
 CameraTest::CameraTest()
 {
-    DataManager::instance()->setFFmpegEnv(false);
+    DataManager::instance()->setEncodeEnv(QCamera_Env);
 }
 
 CameraTest::~CameraTest()
 {
-    DataManager::instance()->setFFmpegEnv(true);
+    DataManager::instance()->setEncodeEnv(FFmpeg_Env);
 }
 
 void CameraTest::SetUp()
@@ -63,7 +63,7 @@ void CameraTest::SetUp()
             QObject::connect(Camera::instance(), SIGNAL(presentImage(QImage &)), m_processThread, SLOT(processingImage(QImage &)));
     }
 
-    DataManager::instance()->setFFmpegEnv(false);
+    DataManager::instance()->setEncodeEnv(QCamera_Env);
 }
 
 void CameraTest::TearDown()
@@ -73,7 +73,7 @@ void CameraTest::TearDown()
 
     Camera::release();
 
-    DataManager::instance()->setFFmpegEnv(true);
+    DataManager::instance()->setEncodeEnv(FFmpeg_Env);
 }
 
 /**
@@ -113,7 +113,7 @@ TEST_F(CameraTest, recordFunction)
 {
     //切换到录像
     Stub_Function::resetSub(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getdevStatus));
-    Stub_Function::resetSub(ADDR(DataManager, isFFmpegEnv), ADDR(Stub_Function, noFFmpegEnv));
+    Stub_Function::resetSub(ADDR(DataManager, encodeEnv), ADDR(Stub_Function, qCameraEnv));
     RollingBox *rollBox = m_mainwindow->findChild<RollingBox *>(MODE_SWITCH_BOX);
     dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), 0);
     emit rollBox->currentValueChanged(ActType::ActTakeVideo);
@@ -127,7 +127,7 @@ TEST_F(CameraTest, recordFunction)
     Camera::instance()->isRecording();
     Camera::instance()->getRecoderTime();
 
-    QTest::qWait(2000);
+    QTest::qWait(7000);
 
     // 点击停止录制
     Stub_Function::resetSub(ADDR(videowidget, getCapStatus), ADDR(Stub_Function, isActive));
@@ -138,7 +138,7 @@ TEST_F(CameraTest, recordFunction)
     Stub_Function::clearSub(ADDR(Camera, getRecoderState));
     access_private_field::CMainWindowm_bRecording(*m_mainwindow) = false;
     Stub_Function::clearSub(ADDR(DataManager, getdevStatus));
-    Stub_Function::clearSub(ADDR(DataManager, isFFmpegEnv));
+    Stub_Function::clearSub(ADDR(DataManager, encodeEnv));
 
     //切换回拍照模式
     emit rollBox->currentValueChanged(ActType::ActTakePic);

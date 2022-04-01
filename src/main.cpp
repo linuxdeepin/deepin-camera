@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
             qDebug() << "当前为gstreamer测试环境..";
         }
     }
-    DataManager::instance()->setFFmpegEnv(bFFmpegEnv);
+    DataManager::instance()->setEncodeEnv(bFFmpegEnv ? FFmpeg_Env : GStreamer_Env);
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
     qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
+    gst_init(&argc, &argv);
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__

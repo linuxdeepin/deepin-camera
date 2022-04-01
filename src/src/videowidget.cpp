@@ -75,10 +75,12 @@ void QGraphicsViewEx::mouseMoveEvent(QMouseEvent *e)
 videowidget::videowidget(DWidget *parent)
     : DWidget(parent),
       m_imgPrcThread(nullptr),
+      m_audPrcThread(nullptr),
       m_nMaxRecTime(60), //默认60小时
       m_openglwidget(nullptr),
       m_gridlinewidget(nullptr),
       m_GridType(Grid_None),
+      m_videoWriter(nullptr),
       m_filterType(filter_Normal),
       m_exposure(0)
 {
@@ -260,6 +262,14 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(sigReflushSnapshotLabel()),
             this, SIGNAL(reflushSnapshotLabel()));
 
+    connect(m_imgPrcThread, SIGNAL(sigRecordYuv(uchar*, uint)),
+            this, SLOT(onRecordFrame(uchar*, uint)));
+
+    m_audPrcThread = new AudioProcessingThread;
+    m_audPrcThread->setParent(this);
+    m_audPrcThread->setObjectName("AudioThread");
+    connect(m_audPrcThread, SIGNAL(sendAudioProcessing(uchar*, uint)), this, SLOT(onRecordAudio(uchar*, uint)));
+
     QPalette pltFlashLabel = m_flashLabel->palette();
     pltFlashLabel.setColor(QPalette::Window, QColor(Qt::white));
     m_flashLabel->setPalette(pltFlashLabel);
@@ -405,7 +415,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
         m_pNormalScene->update();
 
-        if (get_encoder_status() == 0 && getCapStatus())
+        if (get_encoder_status() == 0 && getCapStatus() && DataManager::instance()->encodeEnv() == FFmpeg_Env)
             onEndBtnClicked();
 
         // 画布窗口等比例缩放画面
@@ -470,10 +480,10 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
                 m_pNormalItem->setPixmap(m_framePixmap);
 //                m_imgPrcThread->m_rwMtxImg.unlock();
 
-                if (DataManager::instance()->isFFmpegEnv()) {
+                if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
                     if (get_encoder_status() == 0 && getCapStatus() == true)
                         onEndBtnClicked();
-                } else {
+                } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
                     if (Camera::instance()->getRecoderState() == 0 && getCapStatus() == true && !Camera::instance()->isReadyRecord())
                         onEndBtnClicked();
                 }
@@ -624,15 +634,14 @@ void videowidget::showCountdown()
         m_dLabel->hide();
         if (g_Enum_Camera_State == VIDEO) {
             if (!getCapStatus()) {
-                if (DataManager::instance()->isFFmpegEnv()) {
+                if (DataManager::instance()->encodeEnv() != QCamera_Env) {
                     /*m_bActive录制状态判断
                     *false：非录制状态
                     *true：录制状态
                     */
                     startTakeVideo();
-                } else {
+                } else
                     startCaptureVideo();
-                }
             }
 
             showCountDownLabel(g_Enum_Camera_State);
@@ -753,7 +762,7 @@ void videowidget::showCountdown()
 void videowidget::showRecTime()
 {
     //获取写video的时间
-    if (DataManager::instance()->isFFmpegEnv()) {
+    if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         m_nCount = static_cast<int>(get_video_time_capture());
 
         //过滤不正常的时间
@@ -761,9 +770,11 @@ void videowidget::showRecTime()
             qWarning() << "error time" << m_nCount;
             return;
         }
-    } else {
+    } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         m_nCount = Camera::instance()->getRecoderTime() / 1000;
         m_nCount += 2;
+    } else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+        m_nCount = m_videoWriter->getRecrodTime();
     }
 
     if (m_nCount >= m_nMaxRecTime * 60 * 60)//最大录制时长，平板与主线保持一致
@@ -848,7 +859,7 @@ void videowidget::slotresolutionchanged(const QString &resolution)
     int newwidth = ResStr[0].toInt();//新的宽度
     int newheight = ResStr[1].toInt();//新的高度
 
-    if (!DataManager::instance()->isFFmpegEnv()) {
+    if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         QSize resolution = Camera::instance()->getCameraResolution();
         if (resolution.width() != newwidth || resolution.height() != newheight) {
             QSize size(newwidth, newheight);
@@ -875,6 +886,18 @@ void videowidget::slotGridTypeChanged(int type)
     setGridType(static_cast<GridType>(type));
 }
 
+void videowidget::onRecordFrame(uchar *yuv, uint size)
+{
+    if (m_videoWriter)
+        m_videoWriter->writeFrame(yuv, size);
+}
+
+void videowidget::onRecordAudio(uchar *data, uint size)
+{
+    if (m_videoWriter)
+        m_videoWriter->writeAudio(data, size);
+}
+
 void videowidget::onEndBtnClicked()
 {
     if (m_countTimer->isActive())
@@ -883,10 +906,10 @@ void videowidget::onEndBtnClicked()
     if (m_recordingTimer->isActive())
         m_recordingTimer->stop();
 
-    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->isFFmpegEnv())
+    if (m_pCamErrItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->encodeEnv() != QCamera_Env)
         m_pCamErrItem->hide();
 
-    if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->isFFmpegEnv())
+    if (m_pSvgItem->isVisible() && (m_imgPrcThread->getStatus() == 0) && DataManager::instance()->encodeEnv() != QCamera_Env)
         m_pSvgItem->hide();
     m_dLabel->hide();
 
@@ -920,15 +943,22 @@ void videowidget::onEndBtnClicked()
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
 
-        if (DataManager::instance()->isFFmpegEnv()) {
+        if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             if (video_capture_get_save_video() == 1) {
                 set_video_time_capture(0);
                 stop_encoder_thread();
             }
-        } else {
+        } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
             if (Camera::instance()->isRecording()) {
                 Camera::instance()->stopRecoder();
             }
+        } else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+            if (m_audPrcThread != nullptr)
+                m_audPrcThread->stop();
+            while (m_audPrcThread->isRunning());//等待音频线程结束
+
+            if (m_videoWriter)
+                m_videoWriter->stop();
         }
 
         setCapStatus(false);
@@ -1024,7 +1054,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
         return -1;
     }
     int ret = -1;
-    if (DataManager::instance()->isFFmpegEnv()) {
+    if (DataManager::instance()->encodeEnv() != QCamera_Env) {
         ret = camInit(device);
     } else {
         ret = 0;
@@ -1137,10 +1167,18 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         qDebug() << "stop takeVideo";
         //向mainwindow 发送录像状态通知信号
         emit updateRecordState(photoRecordBtn::Normal);
-        if (DataManager::instance()->isFFmpegEnv()) {
+        if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             stop_encoder_thread();
-        } else {
+        } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
             Camera::instance()->stopRecoder();
+        }
+        else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+            if (m_audPrcThread != nullptr)
+                m_audPrcThread->stop();
+            while (m_audPrcThread->isRunning());//等待音频线程结束
+
+            if (m_videoWriter)
+                m_videoWriter->stop();
         }
         setCapStatus(false);
         reset_video_timer();
@@ -1194,7 +1232,17 @@ void videowidget::startTakeVideo()
 
     if (getCapStatus()) {
         qDebug() << "stop takeVideo";
-        stop_encoder_thread();
+        if (DataManager::instance()->encodeEnv() == FFmpeg_Env)
+            stop_encoder_thread();
+        else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+            if (m_audPrcThread != nullptr)
+                m_audPrcThread->stop();
+            while (m_audPrcThread->isRunning());//等待音频线程结束
+
+            if (m_videoWriter)
+                m_videoWriter->stop();
+        }
+
         setCapStatus(false);
         reset_video_timer();
         emit updateBlockSystem(false);
@@ -1209,9 +1257,21 @@ void videowidget::startTakeVideo()
                 m_saveVdFolder = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
             }
 
-            set_video_path(m_saveVdFolder.toStdString().c_str());
-            set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
-            start_encoder_thread();
+            if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
+                set_video_path(m_saveVdFolder.toStdString().c_str());
+                set_video_name(DataManager::instance()->getstrFileName().toStdString().c_str());
+                start_encoder_thread();
+            } else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+                QString recordFileName = m_saveVdFolder + "/" + DataManager::instance()->getstrFileName();
+                if (!m_videoWriter)
+                    m_videoWriter = new GstVideoWriter(recordFileName);
+                else
+                    m_videoWriter->setVideoPath(recordFileName);
+
+                m_videoWriter->start();
+                m_audPrcThread->init();
+                m_audPrcThread->start();
+            }
             emit updateBlockSystem(true);
             setCapStatus(true);
             m_countTimer->stop();
@@ -1380,6 +1440,13 @@ void videowidget::setHorizontalMirror(bool bMirror)
     }
 }
 
+void videowidget::setCapStatus(bool status)
+{
+    m_bActive = status;
+    if (DataManager::instance()->encodeEnv() == GStreamer_Env)
+        m_imgPrcThread->setRecording(status);
+}
+
 void videowidget::setFlash(bool bFlashOn)
 {
     m_flashEnable = bFlashOn;
@@ -1460,6 +1527,9 @@ videowidget::~videowidget()
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
 
+    m_audPrcThread->stop();
+    m_audPrcThread->wait();
+    delete m_audPrcThread;
 #ifndef __mips__
     if (!get_wayland_status()) {
         if (m_openglwidget) {
@@ -1501,6 +1571,9 @@ videowidget::~videowidget()
 
     delete m_recordingTimer;
     m_recordingTimer = nullptr;
+
+    delete m_videoWriter;
+    m_videoWriter = nullptr;
 
     camUnInit();
 }

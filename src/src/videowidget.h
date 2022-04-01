@@ -40,9 +40,12 @@
 
 #include "LPF_V4L2.h"
 #include "majorimageprocessingthread.h"
+#include "audioprocessingthread.h"
 #include "previewopenglwidget.h"
 #include "filterpreviewbutton.h"
 #include "gridline.h"
+
+#include "gstvideowriter.h"
 
 DWIDGET_USE_NAMESPACE
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -173,10 +176,7 @@ public:
     * @brief setCapStatus　设置相机状态
     * @param status 拍照状态
     */
-    void setCapStatus(bool status)
-    {
-        m_bActive = status;
-    }
+    void setCapStatus(bool status);
 
     /**
     * @brief getCapStatus　获取相机录制状态
@@ -369,6 +369,16 @@ private slots:
     */
     void slotGridTypeChanged(int);
 
+    /**
+    * @brief onRecordFrame　向GStreamer写入视频帧数据
+    */
+    void onRecordFrame(uchar* yuv, uint size);
+
+    /**
+    * @brief onRecordAudio　向GStreamer写入音频帧数据
+    */
+    void onRecordAudio(uchar* data, uint size);
+
 private:
     void resizeEvent(QResizeEvent *size) Q_DECL_OVERRIDE;
 
@@ -414,7 +424,7 @@ private:
 
 public:
     MajorImageProcessingThread *m_imgPrcThread;
-
+    AudioProcessingThread      *m_audPrcThread;
 private:
     bool                       m_bActive;           //是否录制中
     int                        m_nMaxContinuous;    //最大连拍数：0,4,10
@@ -454,7 +464,8 @@ private:
     bool                       m_flashEnable;       //是否闪光灯
     bool                       m_bPhoto = true;     //相机当前状态，默认为拍照状态
 
-    efilterType                m_filterType;            //当前选择的滤镜名称
+    GstVideoWriter             *m_videoWriter;      //基于GStreamer实现的视频帧数据写入器
+    efilterType                m_filterType;        //当前选择的滤镜名称
     int                        m_exposure;
 
 };

@@ -5,6 +5,7 @@
 #include <QCamera>
 #include "../../src/devnummonitor.h"
 #include "../../src/imageitem.h"
+#include "datamanager.h"
 #include "stub.h"
 extern "C"
 {
@@ -133,7 +134,8 @@ public:
     QCamera::Status cameraStatus();
     DeviceStatus getNoDevStatus();
     bool videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode);
-    bool noFFmpegEnv();
+    EncodeEnv qCameraEnv();
+    EncodeEnv gstreamerEnv();
     int recordingState();
     // Camera类相关桩函数--------------------end
 
