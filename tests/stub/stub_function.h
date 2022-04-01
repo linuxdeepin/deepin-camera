@@ -11,6 +11,7 @@ extern "C"
 {
 #include "v4l2_devices.h"
 #include "camview.h"
+#include "audio.h"
 }
 class Stub_Function
 {
@@ -52,6 +53,7 @@ public:
     double get_video_time_capture_hour_40271();//11时11分11秒
     //调用onEndBtnClicked
     int video_capture_get_save_video();
+    int video_capture_get_save_video_no_capture();
 
     v4l2_device_list_t *get_device_list_0();
     //获取设备列表，进入设备数目为1分支
@@ -106,6 +108,12 @@ public:
     double encoder_buff_scheduler_one(int mode, double thresh, double max_time);
     //h264帧率设置
     int v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t framerate);
+
+    //获取音频上下文
+    audio_context_t *get_audio_context();
+    int audio_start(audio_context_t *audio_ctx);
+    int audio_stop(audio_context_t *audio_ctx);
+    int audio_get_next_buffer(audio_context_t *audio_ctx, audio_buff_t *buff, int type, uint32_t mask);
 
     //mainwindow
     //返回不存在的路径
@@ -169,6 +177,7 @@ private:
     static v4l2_device_list_t *m_v4l2_device_list3;//三个摄像头
     static v4l2_frame_buff_t *m_v4l2_frame_buff;//帧缓冲器
     static v4l2_frame_buff_t *m_v4l2_frame_buff2;//帧缓冲器
+    static audio_context_t *m_audio_ctx;//音频上下文
     static Stub    m_stub;
 };
 
