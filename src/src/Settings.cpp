@@ -171,7 +171,7 @@ void Settings::setNewResolutionList()
         //初始化分辨率字符串表
         int defres = 0;
         QStringList resolutionDatabase = resolutionmodeFamily->data("items").toStringList();
-        if (!DataManager::instance()->isFFmpegEnv() && !Camera::instance()->getSupportResolutions().isEmpty()) {
+        if (DataManager::instance()->encodeEnv() == QCamera_Env && !Camera::instance()->getSupportResolutions().isEmpty()) {
             resolutionDatabase = Camera::instance()->getSupportResolutions();
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
