@@ -14,6 +14,7 @@ v4l2_device_list_t *Stub_Function::m_v4l2_device_list2 =  nullptr;//两个摄像
 v4l2_device_list_t *Stub_Function::m_v4l2_device_list3 =  nullptr;//三个摄像头
 v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff =  nullptr;//帧缓冲器
 v4l2_frame_buff_t *Stub_Function::m_v4l2_frame_buff2 =  nullptr;//帧缓冲器
+audio_context_t *Stub_Function::m_audio_ctx = nullptr;//音频上下文
 Stub    Stub_Function::m_stub;
 
 
@@ -141,6 +142,11 @@ double Stub_Function::get_video_time_capture_hour_40271()
 int Stub_Function::video_capture_get_save_video()
 {
     return 1;
+}
+
+int Stub_Function::video_capture_get_save_video_no_capture()
+{
+    return 0;
 }
 
 v4l2_device_list_t *Stub_Function::get_device_list_0()
@@ -275,6 +281,31 @@ int Stub_Function::v4l2core_set_h264_frame_rate_config(v4l2_dev_t *vd, uint32_t 
     return 0;
 }
 
+audio_context_t *Stub_Function::get_audio_context()
+{
+    return m_audio_ctx;
+}
+
+int Stub_Function::audio_start(audio_context_t *audio_ctx)
+{
+    return 0;
+}
+
+int Stub_Function::audio_stop(audio_context_t *audio_ctx)
+{
+    return 0;
+}
+
+int Stub_Function::audio_get_next_buffer(audio_context_t *audio_ctx, audio_buff_t *buff, int type, uint32_t mask)
+{
+    static int time = 0;
+    time++;
+    if (30 == time)
+        return 0;
+
+    return 1;
+}
+
 QVariant Stub_Function::toString()
 {
     return "/a";
@@ -389,6 +420,12 @@ int Stub_Function::recordingState()
 
 void Stub_Function::init()
 {
+    if (nullptr == m_audio_ctx) {
+        m_audio_ctx = (audio_context_t*)malloc(sizeof(audio_context_t));
+        memset(m_audio_ctx, 0, sizeof(audio_context_t));
+        m_audio_ctx->channels = 2;
+    }
+
     if (m_v4l2_frame_buff == nullptr) {
         m_v4l2_frame_buff = (v4l2_frame_buff_t *)malloc(sizeof(v4l2_frame_buff_t));
         memset(m_v4l2_frame_buff, 0, sizeof(v4l2_frame_buff_t));
@@ -550,6 +587,11 @@ void Stub_Function::release()
         free(m_v4l2_frame_buff2->yuv_frame);
         free(m_v4l2_frame_buff2);
         m_v4l2_frame_buff2 = nullptr;
+    }
+
+    if (m_audio_ctx != nullptr) {
+        free(m_audio_ctx);
+        m_audio_ctx = nullptr;
     }
 }
 

@@ -158,13 +158,14 @@ signals:
      */
     void sigRenderYuv(bool);
 
+#endif
+
     /**
      * @brief sigRenderYuv 发送GStreamer视频帧写入信号
      * @param yuv  yu12帧数据
      * @param size yuv数据大小
      */
     void sigRecordYuv(uchar *yuv, uint size);
-#endif
 
     /**
      * @brief reachMaxDelayedFrames 到达最大延迟信号
