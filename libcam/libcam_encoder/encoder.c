@@ -57,6 +57,7 @@
 #endif
 
 extern int verbosity;
+extern int encodeenv;
 
 /*video buffer data mutex*/
 static __MUTEX_TYPE mutex = __STATIC_MUTEX_INIT;
@@ -209,6 +210,9 @@ static void encoder_clean_video_ring_buffer()
  */
 void /*__attribute__ ((constructor)) */gviewencoder_init()
 {
+    if (encodeenv != 0)
+        return;
+
 #if !LIBAVCODEC_VER_AT_LEAST(57,16)
 	fprintf(stderr, "ENCODER: Error - libavcodec version not supported (minimum 57.16)\n");
 	return;

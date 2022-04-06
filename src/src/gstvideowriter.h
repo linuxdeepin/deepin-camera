@@ -38,8 +38,8 @@ public:
     void setVideoPath(const QString& videoPath);
     void setQuantizer(uint quantizer);
     void setEncodeThreadNum(uint num);
-    bool writeFrame(uchar *yu12, uint size);
-    bool writeAudio(uchar *yu12, uint size);
+    bool writeFrame(uchar *rgb, uint size);
+    bool writeAudio(uchar *audio, uint size);
 
     float getRecrodTime();
 

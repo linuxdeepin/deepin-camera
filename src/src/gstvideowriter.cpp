@@ -76,8 +76,8 @@ GstVideoWriter::GstVideoWriter(const QString& videoPath):
   , m_nWidth(1920)
   , m_nHeight(1080)
   , m_nFrameRate(30)
-  , m_nQuantizer(35)
-  , m_nEncodeThreadNum(4)
+  , m_nQuantizer(44)
+  , m_nEncodeThreadNum(6)
   , m_pipeline(nullptr)
   , m_gloop(nullptr)
   , m_appsrc(nullptr)
@@ -149,13 +149,13 @@ void GstVideoWriter::setEncodeThreadNum(uint num)
         g_object_set(m_vp8enc, "threads", m_nEncodeThreadNum, NULL);
 }
 
-bool GstVideoWriter::writeFrame(uchar *yu12, uint size)
+bool GstVideoWriter::writeFrame(uchar *rgb, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr)
     {
-        memcpy(ptr, yu12, size);
+        memcpy(ptr, rgb, size);
         GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 
         //设置时间戳
@@ -172,13 +172,13 @@ bool GstVideoWriter::writeFrame(uchar *yu12, uint size)
     return ret == GST_FLOW_OK;
 }
 
-bool GstVideoWriter::writeAudio(uchar *yu12, uint size)
+bool GstVideoWriter::writeAudio(uchar *audio, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr)
     {
-        memcpy(ptr, yu12, size);
+        memcpy(ptr, audio, size);
         GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 
         // 设置时间戳
@@ -223,8 +223,8 @@ void GstVideoWriter::init()
 
     // 设置vp8编码器线程数和成像质量
     m_vp8enc = gst_bin_get_by_name(GST_BIN(m_pipeline), "encoder");
-    setEncodeThreadNum(4);
-    setQuantizer(41);
+    setEncodeThreadNum(6);
+    setQuantizer(44);
 
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     if (m_bus)
@@ -260,7 +260,7 @@ void GstVideoWriter::loadAppSrcCaps()
     m_nHeight = v4l2core_get_frame_height(get_v4l2_device_handler());
     if (m_nWidth > 0 && m_nHeight > 0 && m_appsrc) {
         GstCaps *caps = gst_caps_new_simple("video/x-raw",
-            "format", G_TYPE_STRING, "I420",
+            "format", G_TYPE_STRING, "RGB",
             "width", G_TYPE_INT, m_nWidth,
             "height", G_TYPE_INT, m_nHeight,
             "framerate", GST_TYPE_FRACTION, m_nFrameRate, 1,

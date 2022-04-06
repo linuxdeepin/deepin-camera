@@ -66,6 +66,9 @@
 /*verbosity (global scope)*/
 int verbosity = 0;
 
+/*encode environment 0:ffmpeg 2:gstreamer default to ffmpeg(0) (global scope)*/
+int encodeenv = 0;
+
 /*requested format data*/
 static int my_pixelformat = 0;
 static int my_width = 0;
@@ -630,7 +633,7 @@ static int check_frame_available(v4l2_dev_t *vd)
  */
 void v4l2core_set_verbosity(int level)
 {
-	verbosity = level;
+    verbosity = level;
 }
 
 /*
@@ -1333,7 +1336,7 @@ int v4l2core_release_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 v4l2_frame_buff_t *v4l2core_get_decoded_frame(v4l2_dev_t *vd)
 {
 	v4l2_frame_buff_t *frame = v4l2core_get_frame(vd);
-	if(frame != NULL)
+    if(frame != NULL && 0 == encodeenv)
 	{
 		/*decode the raw frame*/
 		if(decode_v4l2_frame(vd, frame) != E_OK)
