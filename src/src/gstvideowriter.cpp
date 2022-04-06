@@ -153,8 +153,7 @@ bool GstVideoWriter::writeFrame(uchar *rgb, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
-    if (ptr)
-    {
+    if (ptr) {
         memcpy(ptr, rgb, size);
         GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 
@@ -176,8 +175,7 @@ bool GstVideoWriter::writeAudio(uchar *audio, uint size)
 {
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
-    if (ptr)
-    {
+    if (ptr) {
         memcpy(ptr, audio, size);
         GstBuffer *buffer = gst_buffer_new_wrapped((void*)ptr, size);
 

@@ -41,7 +41,7 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
     init();
 
     m_eEncodeEnv = DataManager::instance()->encodeEnv();
-    if (m_eEncodeEnv == QCamera_Env)
+    if (QCamera_Env == m_eEncodeEnv)
         connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
 }
 
@@ -214,6 +214,7 @@ void MajorImageProcessingThread::run()
             }
 
             if (FFmpeg_Env == m_eEncodeEnv) {
+                // FFmpeg环境下，解码后的帧数据为yu12格式
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
                     m_nVdWidth = static_cast<unsigned int>(m_frame->width);
                     m_nVdHeight = static_cast<unsigned int>(m_frame->height);
@@ -228,7 +229,7 @@ void MajorImageProcessingThread::run()
                     yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                 }
 
-                if (m_bHorizontalMirror){
+                if (m_bHorizontalMirror) {
                     ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
                 } else {
                     memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
@@ -236,6 +237,7 @@ void MajorImageProcessingThread::run()
                 pOldYuvFrame = m_frame->yuv_frame;
                 m_frame->yuv_frame = m_yuvPtr;
             } else if (GStreamer_Env == m_eEncodeEnv) {
+                // GStreamer环境下，获取的帧数据为jpg格式，需要转换为rgb格式，GStreamer底层才能处理
                 QByteArray temp;
                 temp.append((const char *)m_frame->raw_frame, m_frame->raw_frame_max_size);
                 m_jpgImage.loadFromData(temp);
@@ -255,6 +257,7 @@ void MajorImageProcessingThread::run()
             if (!m_filter.isEmpty() || m_exposure)
                 bUseRgb = true;
 
+            // GStreamer环境下，使用rgb格式显示帧数据
             if (GStreamer_Env == m_eEncodeEnv)
                 bUseRgb = true;
 
@@ -349,8 +352,10 @@ void MajorImageProcessingThread::run()
 
                 }
 
-            } else if (m_bRecording)
+            } else if (m_bRecording) {
+                // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
                 emit sigRecordFrame(rgb, rgbsize);
+            }
 
             QImage* imgTmp = nullptr;
             if (rgb)
