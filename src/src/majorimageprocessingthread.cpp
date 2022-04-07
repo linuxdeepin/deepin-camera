@@ -41,7 +41,7 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
     init();
 
     m_eEncodeEnv = DataManager::instance()->encodeEnv();
-    if (m_eEncodeEnv == QCamera_Env)
+    if (QCamera_Env == m_eEncodeEnv)
         connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
 }
 
@@ -150,6 +150,7 @@ void MajorImageProcessingThread::run()
         int framedely = 0;
         int64_t timespausestamp = 0;
         uint yuvsize = 0;
+        uint rgbsize = 0;
         uint8_t* pOldYuvFrame = nullptr;
         while (m_stopped == 0) {
             if (get_resolution_status()) {
@@ -212,27 +213,38 @@ void MajorImageProcessingThread::run()
                 continue;
             }
 
-            if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
-                m_nVdWidth = static_cast<unsigned int>(m_frame->width);
-                m_nVdHeight = static_cast<unsigned int>(m_frame->height);
-                if (m_yuvPtr != nullptr) {
-                    delete [] m_yuvPtr;
-                    m_yuvPtr = nullptr;
+            if (FFmpeg_Env == m_eEncodeEnv) {
+                // FFmpeg环境下，解码后的帧数据为yu12格式
+                if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+                    m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+                    m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+                    if (m_yuvPtr != nullptr) {
+                        delete [] m_yuvPtr;
+                        m_yuvPtr = nullptr;
+                    }
+
+                    yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+                    m_yuvPtr = new uchar[yuvsize];
+                } else {
+                    yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                 }
 
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
-                m_yuvPtr = new uchar[yuvsize];
-            } else {
-                yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
+                if (m_bHorizontalMirror) {
+                    ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
+                } else {
+                    memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
+                }
+                pOldYuvFrame = m_frame->yuv_frame;
+                m_frame->yuv_frame = m_yuvPtr;
+            } else if (GStreamer_Env == m_eEncodeEnv) {
+                // GStreamer环境下，获取的帧数据为jpg格式，需要转换为rgb格式，GStreamer底层才能处理
+                QByteArray temp;
+                temp.append((const char *)m_frame->raw_frame, m_frame->raw_frame_max_size);
+                m_jpgImage.loadFromData(temp);
+                m_jpgImage = m_jpgImage.convertToFormat(QImage::Format_RGB888);
+                if (m_bHorizontalMirror)
+                    m_jpgImage = m_jpgImage.mirrored(true, false);
             }
-
-            if (m_bHorizontalMirror){
-                ImageHorizontalMirror(m_frame->yuv_frame, m_yuvPtr,m_frame->width,m_frame->height);
-            } else {
-                memcpy(m_yuvPtr, m_frame->yuv_frame, yuvsize);
-            }
-            pOldYuvFrame = m_frame->yuv_frame;
-            m_frame->yuv_frame = m_yuvPtr;
 
             // 判断是否使用rgb数据
             bool bUseRgb = false;
@@ -245,11 +257,22 @@ void MajorImageProcessingThread::run()
             if (!m_filter.isEmpty() || m_exposure)
                 bUseRgb = true;
 
+            // GStreamer环境下，使用rgb格式显示帧数据
+            if (GStreamer_Env == m_eEncodeEnv)
+                bUseRgb = true;
+
             uint8_t *rgb = nullptr;
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
-                rgb = static_cast<uint8_t *>(calloc(m_frame->width * m_frame->height * 3, sizeof(uint8_t)));
-                // yu12到rgb数据高性能转换
-                yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+                rgbsize = m_frame->width * m_frame->height * 3;
+                rgb = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
+                if (FFmpeg_Env == m_eEncodeEnv) {
+                    // yu12到rgb数据高性能转换
+                    yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+                }
+                else if (GStreamer_Env == m_eEncodeEnv) {
+                    memset(rgb, 0, rgbsize * sizeof(uint8_t));
+                    memcpy(rgb, m_jpgImage.bits(), rgbsize);
+                }
                 m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
 
                 // 拍照状态下，曝光和滤镜功能才有效
@@ -329,8 +352,10 @@ void MajorImageProcessingThread::run()
 
                 }
 
-            } else if (m_bRecording)
-                emit sigRecordYuv(m_yuvPtr, yuvsize);
+            } else if (m_bRecording) {
+                // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
+                emit sigRecordFrame(rgb, rgbsize);
+            }
 
             QImage* imgTmp = nullptr;
             if (rgb)
@@ -339,14 +364,14 @@ void MajorImageProcessingThread::run()
             /*拍照*/
             if (m_bTake) {
                 int nRet = -1;
-                if ((!m_filter.isEmpty() || m_exposure) && imgTmp) {
+                if (((!m_filter.isEmpty() || m_exposure) && imgTmp)
+                        || GStreamer_Env == m_eEncodeEnv) {
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
                         emit sigReflushSnapshotLabel();
                     }
-                } else {
+                } else if (FFmpeg_Env == m_eEncodeEnv)
                     nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-                }
 
                 if (nRet < 0) {
                     qWarning() << "保存照片失败";
@@ -358,13 +383,13 @@ void MajorImageProcessingThread::run()
             m_result = 0;
             framedely = 0;
             m_rwMtxImg.lock();
-            if (m_frame->yuv_frame != nullptr && (m_stopped == 0)) {
+            if (m_stopped == 0) {
                 if (bUseRgb) {
                     if (imgTmp && !imgTmp->isNull()) {
                         m_Img = imgTmp->copy();
                         emit SendMajorImageProcessing(&m_Img, m_result);
                     }
-                } else {
+                } else if (m_frame->yuv_frame){
     #ifndef __mips__
                     emit sigRenderYuv(true);
                     emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);

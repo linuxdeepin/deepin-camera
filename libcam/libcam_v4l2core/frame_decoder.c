@@ -39,6 +39,7 @@
 #include "cameraconfig.h"
 #include "load_libs.h"
 extern int verbosity;
+extern int encodeenv;
 
 /*
  * Alloc image buffers for decoding video stream
@@ -119,14 +120,16 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 
 		case V4L2_PIX_FMT_JPEG:
 		case V4L2_PIX_FMT_MJPEG:
-			/*init jpeg decoder*/
-			ret = jpeg_init_decoder(width, height);
+            if (0 == encodeenv) {
+                /*init jpeg decoder*/
+                ret = jpeg_init_decoder(width, height);
 
-			if(ret)
-			{
-				fprintf(stderr, "V4L2_CORE: couldn't init jpeg decoder\n");
-				return ret;
-			}
+                if(ret)
+                {
+                    fprintf(stderr, "V4L2_CORE: couldn't init jpeg decoder\n");
+                    return ret;
+                }
+            }
 
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)

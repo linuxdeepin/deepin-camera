@@ -33,17 +33,26 @@ public:
     GstVideoWriter(const QString& videoPath = "test.webm");
     ~GstVideoWriter();
 
+    // 开始录制
     void start();
+    // 停止录制
     void stop();
+    // 设置视频保存路径
     void setVideoPath(const QString& videoPath);
+    // 设置视频成像质量
     void setQuantizer(uint quantizer);
+    // 设置编码线程数
     void setEncodeThreadNum(uint num);
-    bool writeFrame(uchar *yu12, uint size);
-    bool writeAudio(uchar *yu12, uint size);
-
+    // 写入视频帧数据，格式为rgb
+    bool writeFrame(uchar *rgb, uint size);
+    // 写入音频帧数据，格式为f32le
+    bool writeAudio(uchar *audio, uint size);
+    // 获取当前录制时长
     float getRecrodTime();
 
+    // 获取管道对象
     inline GstElement* getPipeLine() { return m_pipeline; };
+    // 获取GStreamer主循环对象
     inline GMainLoop* getGloop() { return m_gloop; };
 
 protected:
@@ -52,11 +61,11 @@ protected:
 
 private:
     QString                     m_videoPath;
-    uint                        m_nWidth;
-    uint                        m_nHeight;
-    uint                        m_nFrameRate;
-    uint                        m_nQuantizer;//成像质量 范围4-63, 默认为35 值约小，成像质量越高，视频画面越清晰，编码耗时越长，视频文件占用磁盘控件越大
-    uint                        m_nEncodeThreadNum;//编码多线程数量 默认为 4
+    uint                        m_nWidth; // 录制视频分辨率宽度
+    uint                        m_nHeight; // 录制视频分辨率高度
+    uint                        m_nFrameRate;// 帧率
+    uint                        m_nQuantizer;//成像质量 范围4-63, 默认为44 值约小，成像质量越高，视频画面越清晰，编码耗时越长，视频文件占用磁盘控件越大
+    uint                        m_nEncodeThreadNum;//编码多线程数量 默认为 6
 
     GstElement                 *m_pipeline;
     GMainLoop                  *m_gloop;

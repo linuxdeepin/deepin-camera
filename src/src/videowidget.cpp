@@ -262,7 +262,7 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(sigReflushSnapshotLabel()),
             this, SIGNAL(reflushSnapshotLabel()));
 
-    connect(m_imgPrcThread, SIGNAL(sigRecordYuv(uchar*, uint)),
+    connect(m_imgPrcThread, SIGNAL(sigRecordFrame(uchar*, uint)),
             this, SLOT(onRecordFrame(uchar*, uint)));
 
     m_audPrcThread = new AudioProcessingThread;
@@ -886,10 +886,10 @@ void videowidget::slotGridTypeChanged(int type)
     setGridType(static_cast<GridType>(type));
 }
 
-void videowidget::onRecordFrame(uchar *yuv, uint size)
+void videowidget::onRecordFrame(uchar *rgb, uint size)
 {
     if (m_videoWriter)
-        m_videoWriter->writeFrame(yuv, size);
+        m_videoWriter->writeFrame(rgb, size);
 }
 
 void videowidget::onRecordAudio(uchar *data, uint size)

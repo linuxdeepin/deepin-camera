@@ -65,6 +65,7 @@
 extern "C" {
 #include "encoder.h"
 #include "load_libs.h"
+extern int encodeenv;
 }
 
 using namespace dc;
@@ -801,8 +802,10 @@ QString CMainWindow::libPath(const QString &strlib)
         return strlib;
 
     list.sort();
-    Q_ASSERT(list.size() > 0);
-    return list.last();
+    if (list.size() > 0)
+        return list.last();
+
+    return "";
 }
 
 void CMainWindow::reflushSnapshotLabel()
@@ -1218,6 +1221,7 @@ void CMainWindow::settingDialogDel()
 
 void CMainWindow::loadAfterShow()
 {
+    encodeenv = DataManager::instance()->encodeEnv();
     initDynamicLibPath();
     //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
     initUI();

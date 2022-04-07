@@ -161,11 +161,11 @@ signals:
 #endif
 
     /**
-     * @brief sigRenderYuv 发送GStreamer视频帧写入信号
-     * @param yuv  yu12帧数据
+     * @brief sigRecordFrame 发送GStreamer视频帧写入信号
+     * @param rgb  rgb24帧数据
      * @param size yuv数据大小
      */
-    void sigRecordYuv(uchar *yuv, uint size);
+    void sigRecordFrame(uchar *rgb, uint size);
 
     /**
      * @brief reachMaxDelayedFrames 到达最大延迟信号
@@ -202,8 +202,9 @@ private:
     int               m_exposure = 0;
     bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
 
-    QImage             m_Img;   //mips、wayland下使用该变量
-    QImage             m_filterImg; //滤镜预览类使用 大小40*40
+    QImage            m_Img;   //mips、wayland下使用该变量
+    QImage            m_filterImg; //滤镜预览类使用 大小40*40
+    QImage            m_jpgImage; // 从v4l2获取的jpg格式的视频帧图片
 
 };
 

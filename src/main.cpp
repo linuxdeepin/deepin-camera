@@ -94,12 +94,14 @@ static bool CheckWayland()
 
 static bool CheckFFmpegEnv()
 {
-    QProcess process;
-    process.start("dpkg -s ffmpeg");
-    process.waitForFinished();
-    bool bRet = !process.exitCode();
-
-    return bRet;
+    QDir dir;
+    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    dir.setPath(path);
+    QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
+    if (list.contains("libavcodec.so.58")) {
+        return true;
+    }
+    return false;
 }
 
 int main(int argc, char *argv[])
