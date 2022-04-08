@@ -110,5 +110,6 @@ void AudioProcessingThread::run()
 
 AudioProcessingThread::~AudioProcessingThread()
 {
+    delete [] m_data;
     qDebug() << "~AudioProcessingThread";
 }
