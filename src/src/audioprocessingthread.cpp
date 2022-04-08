@@ -104,6 +104,7 @@ void AudioProcessingThread::run()
 
     audio_stop(audio_ctx);
     audio_delete_buffer(m_auidoBuffer);
+    delete [] m_data;
 
     return;
 }
