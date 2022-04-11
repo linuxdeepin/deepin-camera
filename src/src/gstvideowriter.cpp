@@ -97,6 +97,7 @@ GstVideoWriter::~GstVideoWriter()
     gst_object_unref(m_vp8enc);
     gst_object_unref(m_filesink);
     gst_object_unref(m_bus);
+    g_main_loop_unref(m_gloop);
 }
 
 void GstVideoWriter::start()
