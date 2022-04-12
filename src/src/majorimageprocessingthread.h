@@ -193,7 +193,8 @@ private:
     QAtomicInt        m_stopped;
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
-    uint8_t           *m_yuvPtr;
+    uint8_t           *m_yuvPtr;// yu12视频帧数据
+    uint8_t           *m_rgbPtr;// rgb视频帧数据
 
     bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
     bool              m_bRecording;//是否处理视频录制状态 GStreamer环境下使用

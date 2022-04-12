@@ -60,14 +60,16 @@ protected:
     void loadAppSrcCaps();
 
 private:
-    QString                     m_videoPath;
+    QString                     m_videoPath; //视频保存路径
     uint                        m_nWidth; // 录制视频分辨率宽度
     uint                        m_nHeight; // 录制视频分辨率高度
-    uint                        m_nFrameRate;// 帧率
-    uint                        m_nQuantizer;//成像质量 范围4-63, 默认为44 值约小，成像质量越高，视频画面越清晰，编码耗时越长，视频文件占用磁盘控件越大
-    uint                        m_nEncodeThreadNum;//编码多线程数量 默认为 6
+    uint                        m_nFrameRate; // 帧率
+    uint                        m_nQuantizer; // 成像质量 范围4-63, 默认为44 值约小，成像质量越高，视频画面越清晰，编码耗时越长，视频文件占用磁盘控件越大
+    uint                        m_nEncodeThreadNum; //编码多线程数量 默认为 6
+    uint                        m_nSkipFrames; // 跳帧处理,默认不抽帧
+    uint                        m_nFrameNum; // 帧编号
 
-    GstElement                 *m_pipeline;
+    GstElement                 *m_pipeline; // 管道实例
     GMainLoop                  *m_gloop;
     GstElement                 *m_appsrc;
     GstElement                 *m_audsrc;
