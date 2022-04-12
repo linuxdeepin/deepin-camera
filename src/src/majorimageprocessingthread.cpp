@@ -34,6 +34,7 @@ extern "C" {
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
     m_yuvPtr = nullptr;
+    m_rgbPtr = nullptr;
     m_bRecording = false;
     m_nVdWidth = 0;
     m_nVdHeight = 0;
@@ -213,6 +214,7 @@ void MajorImageProcessingThread::run()
                 continue;
             }
 
+            QImage jpgImage;
             if (FFmpeg_Env == m_eEncodeEnv) {
                 // FFmpeg环境下，解码后的帧数据为yu12格式
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
@@ -240,10 +242,10 @@ void MajorImageProcessingThread::run()
                 // GStreamer环境下，获取的帧数据为jpg格式，需要转换为rgb格式，GStreamer底层才能处理
                 QByteArray temp;
                 temp.append((const char *)m_frame->raw_frame, m_frame->raw_frame_max_size);
-                m_jpgImage.loadFromData(temp);
-                m_jpgImage = m_jpgImage.convertToFormat(QImage::Format_RGB888);
+                jpgImage.loadFromData(temp);
+                jpgImage = jpgImage.convertToFormat(QImage::Format_RGB888);
                 if (m_bHorizontalMirror)
-                    m_jpgImage = m_jpgImage.mirrored(true, false);
+                    jpgImage = jpgImage.mirrored(true, false);
             }
 
             // 判断是否使用rgb数据
@@ -261,28 +263,40 @@ void MajorImageProcessingThread::run()
             if (GStreamer_Env == m_eEncodeEnv)
                 bUseRgb = true;
 
-            uint8_t *rgb = nullptr;
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
-                rgbsize = m_frame->width * m_frame->height * 3;
-                rgb = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
+                if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
+                    m_nVdWidth = static_cast<unsigned int>(m_frame->width);
+                    m_nVdHeight = static_cast<unsigned int>(m_frame->height);
+                    if (m_rgbPtr != nullptr) {
+                        free(m_rgbPtr);
+                        m_rgbPtr = nullptr;
+                    }
+
+                    rgbsize = m_nVdWidth * m_nVdHeight * 3;
+                    m_rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
+                } else {
+                    rgbsize = m_nVdWidth * m_nVdHeight * 3;
+                }
+
                 if (FFmpeg_Env == m_eEncodeEnv) {
                     // yu12到rgb数据高性能转换
-                    yu12_to_rgb24_higheffic(rgb, m_frame->yuv_frame, m_frame->width, m_frame->height);
+                    yu12_to_rgb24_higheffic(m_rgbPtr, m_frame->yuv_frame, m_frame->width, m_frame->height);
                 }
                 else if (GStreamer_Env == m_eEncodeEnv) {
-                    memset(rgb, 0, rgbsize * sizeof(uint8_t));
-                    memcpy(rgb, m_jpgImage.bits(), rgbsize);
+                    Q_ASSERT(m_rgbPtr);
+                    memset(m_rgbPtr, 0, rgbsize * sizeof(uint8_t));
+                    memcpy(m_rgbPtr, jpgImage.bits(), rgbsize);
                 }
-                m_filterImg = QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
+                m_filterImg = QImage(m_rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888).scaled(40,40,Qt::IgnoreAspectRatio);
 
                 // 拍照状态下，曝光和滤镜功能才有效
                 if (m_bPhoto) {
                     // 滤镜效果渲染
                     if (!m_filter.isEmpty())
-                        imageFilter24(rgb, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
+                        imageFilter24(m_rgbPtr, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
                     // 曝光强度调节
                     if(m_exposure)
-                        exposure(rgb, m_frame->width, m_frame->height, m_exposure);
+                        exposure(m_rgbPtr, m_frame->width, m_frame->height, m_exposure);
                 }
             }
 
@@ -354,12 +368,12 @@ void MajorImageProcessingThread::run()
 
             } else if (m_bRecording) {
                 // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
-                emit sigRecordFrame(rgb, rgbsize);
+                emit sigRecordFrame(m_rgbPtr, rgbsize);
             }
 
             QImage* imgTmp = nullptr;
-            if (rgb)
-                imgTmp = new QImage(rgb, m_frame->width, m_frame->height, QImage::Format_RGB888);
+            if (m_rgbPtr)
+                imgTmp = new QImage(m_rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
 
             /*拍照*/
             if (m_bTake) {
@@ -409,8 +423,6 @@ void MajorImageProcessingThread::run()
     #endif
             m_rwMtxImg.unlock();
 
-            if (rgb)
-                free(rgb);
             if (imgTmp)
                 delete imgTmp;
 
@@ -431,6 +443,11 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
     if (m_yuvPtr) {
         delete [] m_yuvPtr;
         m_yuvPtr = nullptr;
+    }
+
+    if (m_rgbPtr) {
+        free(m_rgbPtr);
+        m_rgbPtr = nullptr;
     }
 
     config_clean();
