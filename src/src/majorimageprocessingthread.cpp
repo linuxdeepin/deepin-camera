@@ -276,6 +276,8 @@ void MajorImageProcessingThread::run()
                     m_rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
                 } else {
                     rgbsize = m_nVdWidth * m_nVdHeight * 3;
+                    if (nullptr == m_rgbPtr)
+                        m_rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
                 }
 
                 if (FFmpeg_Env == m_eEncodeEnv) {
