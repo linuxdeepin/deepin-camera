@@ -111,11 +111,7 @@ void GstVideoWriter::start()
     // 设置视频帧数据格式
     loadAppSrcCaps();
 
-#ifndef __mips__
-    m_nSkipFrames = 1;
-    setQuantizer(NORMAL_QUANTIZER);
-    setEncodeThreadNum(NORMAL_ENCODETHREAD);
-#else
+#if defined(__mips__)
     // mips下，牺牲了帧率和成像质量，保证录像不会耗费太多时间
     m_nSkipFrames = 3;
     if (m_nWidth >= 1920) {
@@ -134,6 +130,29 @@ void GstVideoWriter::start()
         setQuantizer(NORMAL_QUANTIZER);
         setEncodeThreadNum(NORMAL_ENCODETHREAD);
     }
+#elif defined(__aarch64__)
+    // mips下，牺牲了帧率和成像质量，保证录像不会耗费太多时间
+    m_nSkipFrames = 3;
+    if (m_nWidth >= 1920) {
+        setQuantizer(62);
+        setEncodeThreadNum(12);
+    }
+    else if (m_nWidth >= 1280) {
+        setQuantizer(62);
+        setEncodeThreadNum(12);
+    }
+    else if (m_nWidth >= 800) {
+        setQuantizer(62);
+        setEncodeThreadNum(10);
+    }
+    else {
+        setQuantizer(NORMAL_QUANTIZER);
+        setEncodeThreadNum(NORMAL_ENCODETHREAD);
+    }
+#else
+    m_nSkipFrames = 1;
+    setQuantizer(NORMAL_QUANTIZER);
+    setEncodeThreadNum(NORMAL_ENCODETHREAD);
 #endif
 
     // 启动管道
