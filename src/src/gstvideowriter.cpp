@@ -30,8 +30,7 @@ extern "C" {
 
 GST_DEBUG_CATEGORY(appsrc_pipeline_debug);
 
-#define NORMAL_QUANTIZER 44
-#define NORMAL_ENCODETHREAD 6
+#define NORMAL_QUANTIZER 30
 
 static gboolean
 bus_message(GstBus * bus, GstMessage  * message, GstVideoWriter * app)
@@ -80,9 +79,6 @@ GstVideoWriter::GstVideoWriter(const QString& videoPath):
   , m_nHeight(1080)
   , m_nFrameRate(30)
   , m_nQuantizer(NORMAL_QUANTIZER)
-  , m_nEncodeThreadNum(NORMAL_ENCODETHREAD)
-  , m_nSkipFrames(1)
-  , m_nFrameNum(0)
   , m_pipeline(nullptr)
   , m_gloop(nullptr)
   , m_appsrc(nullptr)
@@ -107,52 +103,19 @@ GstVideoWriter::~GstVideoWriter()
 
 void GstVideoWriter::start()
 {
-    m_nFrameNum = 0;
     // 设置视频帧数据格式
     loadAppSrcCaps();
 
-#if defined(__mips__)
-    // mips下，牺牲了帧率和成像质量，保证录像不会耗费太多时间
-    m_nSkipFrames = 3;
+#if defined(__mips__) || defined(__aarch64__)
+    // mips/arm下，牺牲了成像质量
     if (m_nWidth >= 1920) {
-        setQuantizer(52);
-        setEncodeThreadNum(12);
+        setQuantizer(30);
     }
     else if (m_nWidth >= 1280) {
-        setQuantizer(50);
-        setEncodeThreadNum(12);
+        setQuantizer(10);
     }
-    else if (m_nWidth >= 800) {
-        setQuantizer(NORMAL_QUANTIZER);
-        setEncodeThreadNum(10);
-    }
-    else {
-        setQuantizer(NORMAL_QUANTIZER);
-        setEncodeThreadNum(NORMAL_ENCODETHREAD);
-    }
-#elif defined(__aarch64__)
-    // mips下，牺牲了帧率和成像质量，保证录像不会耗费太多时间
-    m_nSkipFrames = 3;
-    if (m_nWidth >= 1920) {
-        setQuantizer(62);
-        setEncodeThreadNum(12);
-    }
-    else if (m_nWidth >= 1280) {
-        setQuantizer(62);
-        setEncodeThreadNum(12);
-    }
-    else if (m_nWidth >= 800) {
-        setQuantizer(62);
-        setEncodeThreadNum(10);
-    }
-    else {
-        setQuantizer(NORMAL_QUANTIZER);
-        setEncodeThreadNum(NORMAL_ENCODETHREAD);
-    }
-#else
-    m_nSkipFrames = 1;
-    setQuantizer(NORMAL_QUANTIZER);
-    setEncodeThreadNum(NORMAL_ENCODETHREAD);
+    else
+        setQuantizer(5);
 #endif
 
     // 启动管道
@@ -190,14 +153,6 @@ void GstVideoWriter::setQuantizer(uint quantizer)
 
     if (m_vp8enc)
         g_object_set(m_vp8enc, "min-quantizer", m_nQuantizer, NULL);
-}
-
-void GstVideoWriter::setEncodeThreadNum(uint num)
-{
-    m_nEncodeThreadNum = num;
-
-    if (m_vp8enc)
-        g_object_set(m_vp8enc, "threads", m_nEncodeThreadNum, NULL);
 }
 
 bool GstVideoWriter::writeFrame(uchar *rgb, uint size)
@@ -256,10 +211,10 @@ float GstVideoWriter::getRecrodTime()
 
 void GstVideoWriter::init()
 {
-    // vp8编码在高分辨(800*600以上或高成像质量下存在巨大编码耗时，因此在编码时使用多线程提升编码速度
+    // 使用vp8编码录制视频裸流数据、使用vorbis编码录制音频裸流数据
     QString pipDesc = QString("webmmux name=mux ! filesink name=filename "
                               "appsrc name=source ! queue ! videoconvert primaries-mode=2  name=convert ! queue ! "
-                              "vp8enc name=encoder ! queue ! mux.video_0 "
+                              "vp8enc nd-usage=vbr min-quantizer=1 max-quantizer=50 undershoot=95 cpu-used=5 deadline=1 static-threshold=50 error-resilient=1 name=encoder ! queue ! mux.video_0 "
                               "appsrc name=audiosource ! queue ! audioconvert ! audioresample ! vorbisenc ! queue ! mux.audio_0");
     m_pipeline = gst_parse_launch(pipDesc.toStdString().c_str(), NULL);
     g_assert(m_pipeline);
@@ -272,8 +227,6 @@ void GstVideoWriter::init()
 
     // 设置vp8编码器线程数和成像质量
     m_vp8enc = gst_bin_get_by_name(GST_BIN(m_pipeline), "encoder");
-    setEncodeThreadNum(NORMAL_ENCODETHREAD);
-    setQuantizer(NORMAL_QUANTIZER);
 
     m_bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
     if (m_bus)
