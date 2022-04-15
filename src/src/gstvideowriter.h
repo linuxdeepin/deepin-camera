@@ -41,8 +41,6 @@ public:
     void setVideoPath(const QString& videoPath);
     // 设置视频成像质量
     void setQuantizer(uint quantizer);
-    // 设置编码线程数
-    void setEncodeThreadNum(uint num);
     // 写入视频帧数据，格式为rgb
     bool writeFrame(uchar *rgb, uint size);
     // 写入音频帧数据，格式为f32le
@@ -65,9 +63,6 @@ private:
     uint                        m_nHeight; // 录制视频分辨率高度
     uint                        m_nFrameRate; // 帧率
     uint                        m_nQuantizer; // 成像质量 范围4-63, 默认为44 值约小，成像质量越高，视频画面越清晰，编码耗时越长，视频文件占用磁盘控件越大
-    uint                        m_nEncodeThreadNum; //编码多线程数量 默认为 6
-    uint                        m_nSkipFrames; // 跳帧处理,默认不抽帧
-    uint                        m_nFrameNum; // 帧编号
 
     GstElement                 *m_pipeline; // 管道实例
     GMainLoop                  *m_gloop;
