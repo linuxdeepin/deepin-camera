@@ -61,6 +61,8 @@ You can run, close or create a desktop shortcut for Camera in the following ways
 
 You can use the Camera application if your computer comes with a camera or is connected to a camera. Select the photo or video mode on the Camera interface to take photos and record videos. You can also enable the **Mirror mode** in **Settings > Shoot** to flip the photo horizontally.
 
+> ![notes](../common/notes.svg) Notes: The actual functions supported may differ according to the decoding method adopted.  Please refer to the interface.
+
 ### Take Photos
 
 Photo mode is defaulted when Camera starts up. Click the ![photograph](../common/photograph.png) icon to take photos, and the photos will be displayed on the interface.
@@ -96,10 +98,10 @@ On the main menu, you can change settings for Camera, switch window themes, view
 
 ### Settings
 
-1. On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+1. Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2. Click **Settings** to adjust **Basic**, **Shoot** and **Output** settings.
 
-   - **Basic** settings: set up the **File location** for photos and videos.
+   - **Basic** settings: set up the **File location** for photos and videos as well as gridlines for photos.
    - **Shoot** settings: set up the **Sound effects**, **Burst mode**, **Self-timer delay**, **Mirror mode** and **Flashlight** options.
 
    - **Output** settings: display the **Output format** and set up **Resolution settings** for photos and videos.
@@ -110,20 +112,20 @@ On the main menu, you can change settings for Camera, switch window themes, view
 
 There are three window themes, namely Light Theme, Dark Theme, and System Theme.
 
-1.  On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2.  Click **Theme** to select a theme.
 
 ### Help
 
-1.  On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2.  Click **Help** to view the manual of Camera.
 
 ### About
 
-1.  On the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2.  Click **About** to view the version and introduction of Camera. 
 
 ### Exit
 
-1.   On the Camera interface, click ![icon_menu](../common/icon_menu.svg). 
+1.   Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2.  Click **Exit** to exit Camera.
