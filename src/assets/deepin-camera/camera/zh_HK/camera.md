@@ -11,7 +11,7 @@
 ### 運行相機
 
 1. 單擊任務欄上的啟動器圖標 ![deepin_launcher](../common/deepin_launcher.svg)，進入啟動器界面。
-2. 上下滾動鼠標滾輪瀏覽或通過搜索找到，相機圖標 ![camera](../common/camera.svg)，單擊運行。
+2. 上下滾動鼠標滾輪瀏覽或通過搜索，找到相機圖標 ![camera](../common/camera.svg)，單擊運行。
 3. 右鍵單擊 ![camera](../common/camera.svg)，您可以：
    - 單擊 **傳送到桌面**，在桌面創建快捷方式。
    - 單擊 **傳送到任務欄**，將應用程序固定到任務欄。
@@ -20,8 +20,8 @@
 ### 關閉相機
 
 - 在相機界面單擊 ![close](../common/close.svg)，退出相機。
-- 在任務欄右鍵單擊 ![camera](../common/camera.svg)，選擇 **關閉所有** 來退出相機。
-- 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)，選擇 **退出** 來退出相機。
+- 在任務欄上右鍵單擊 ![camera](../common/camera.svg)，選擇 **關閉所有**，退出相機。
+- 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)，選擇 **退出**，退出相機。
 
 ## 圖標介紹
 
@@ -54,12 +54,14 @@
     </tbody>
 </table>
 
-> ![notes](../common/notes.svg)說明：當連接多個鏡頭時，界面上才會顯示切換鏡頭按鈕 ![icon](../common/switch.png)。
+> ![notes](../common/notes.svg) 說明：當連接多個鏡頭時，界面上才會顯示切換鏡頭按鈕 ![icon](../common/switch.png)。
 
 
 ## 操作介紹
 
 使用相機的前提是電腦自帶鏡頭或外接鏡頭。打開相機後，單擊 **拍照** 或 **影片** 切換模式，您還可以在 **設置 > 拍照設置** 中開啟鏡像鏡頭功能，將畫面左右翻轉。
+
+> ![notes](../common/notes.svg) 說明：採用不同的解碼技術，其所支持的功能也會不同，請以實際界面為準。
 
 ### 拍照
 
@@ -78,11 +80,11 @@
 
 在相機主界面，右鍵單擊照片或影片文件，可選擇複製、刪除或打開文件夾。
 
-> ![notes](../common/notes.svg)說明：僅圖片文件支持打印功能，影片文件不會顯示打印按鈕。
-
 - 複製：將選中的照片複製到其他路徑。
 - 刪除：將選中的照片刪除。
 - 打印：將選中的圖片進行打印。單擊 **打印** 後，跳轉到打印預覽界面，您可以進行相關設置後再打印。
+
+   > ![notes](../common/notes.svg) 說明：僅圖片文件支持打印功能，影片文件不會顯示打印按鈕。
 - 打開文件夾：打開照片或影片所在的文件夾。
 
 <img src="fig/right_menu.png" alt="right_menu" style="zoom:80%;" />
@@ -96,16 +98,10 @@
 1. 在相機界面，單擊 ![icon_menu](../common/icon_menu.svg)。
 2. 單擊 **設置**，您可以進行基本設置、拍照設置及輸出設置。
 
-   - 基本設置：設置照片及影片的默認保存路徑。
+   - 基本設置：設置照片和影片的默認存儲路徑，選擇構圖網格的樣式。
    - 拍照設置：設置音效、連拍次數及拍照延時時間，開啟或關閉鏡像鏡頭、閃光燈。
+   - 輸出設置：顯示圖片和影片的輸出格式，設置輸出解像度。
 
-   ![settings](fig/settings.png)
-
-   - 輸出設置：設置照片/影片的輸出格式，還可以設置解像度。
-   
-   ![output_settings](fig/output_settings.png)
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ### 主題
 
 窗口主題包含淺色主題、深色主題和系統主題。
