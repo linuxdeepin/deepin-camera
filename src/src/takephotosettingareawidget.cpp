@@ -30,6 +30,8 @@
 #include <QGraphicsOpacityEffect>
 #include <QDateTime>
 #include <QTimer>
+#include <QScrollArea>
+#include <QVBoxLayout>
 
 #define ANIMATION_DURATION 200
 #define ANIMATION_FOLD_DURATION 200
@@ -159,13 +161,33 @@ void takePhotoSettingAreaWidget::initButtons()
     m_filtersUnfoldBtn->setToolTip(tr("Filters"));
     m_filtersUnfoldBtn->setFocusPolicy(Qt::NoFocus);
 
+    //滤镜滚动条窗口
+    m_scrollAreaWidget = new QWidget(this);
+    m_scrollAreaWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+    QVBoxLayout *scrollLayout = new QVBoxLayout(m_scrollAreaWidget);
+    scrollLayout->setContentsMargins(0, 0, 0, 0);
+    scrollLayout->setSpacing(2);
+    m_scrollAreaWidget->setLayout(scrollLayout);
+    m_scrollArea = new QScrollArea(this);
+    m_scrollArea->setFrameShape(QFrame::NoFrame);
+    m_scrollArea->setWidget(m_scrollAreaWidget);
+    m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_scrollArea->setVisible(false);
+
     filterPreviewButton* filterBtn = nullptr;
     for (int i = 0; i < efilterType::filter_Count; i++) {
-        filterBtn = new filterPreviewButton(this, static_cast<efilterType>(i));
+        filterBtn = new filterPreviewButton(nullptr, static_cast<efilterType>(i));
         filterBtn->setToolTip(filterPreviewButton::filterName(static_cast<efilterType>(i)));
         filterBtn->setFocusPolicy(Qt::NoFocus);
+        filterBtn->show();
+        filterBtn->setVisible(true);
+        scrollLayout->addWidget(filterBtn);
         m_filterPreviewBtnList.push_back(filterBtn);
     }
+
+    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6;//默认显示6个
+    m_scrollAreaWidget->resize(filterBtn->width(), (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * efilterType::filter_Count);
+    m_scrollArea->resize(m_scrollAreaWidget->width(), m_scrollHeight);
 
     m_filtersCloseBtn = new circlePushButton(this);
     m_filtersCloseBtn->setPixmap(":/images/camera/filters-close.svg", ":/images/camera/filters-close-hover.svg", ":/images/camera/filters-close-press.svg");
@@ -659,23 +681,13 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 
 void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 {
-    //位移动画
-    int nPreviewBtnWidth = 0;
-    QList<QPropertyAnimation*> positionList;
-    QList<QPropertyAnimation*> opacityList;
-    for (auto pBtn : m_filterPreviewBtnList) {
-        QPropertyAnimation* position = new QPropertyAnimation(pBtn, "pos", this);
-        QGraphicsOpacityEffect *eff = new QGraphicsOpacityEffect(this);
-        QPropertyAnimation* opacity = new QPropertyAnimation(eff, "opacity");
-        pBtn->setGraphicsEffect(eff);
-        positionList.push_back(position);
-        opacityList.push_back(opacity);
-        nPreviewBtnWidth = pBtn->width();
-    }
-
     QPropertyAnimation *posClose = new QPropertyAnimation(m_filtersCloseBtn, "pos", this);
     QPropertyAnimation *opacityClose = new QPropertyAnimation(m_filtersCloseBtn, "opacity", this);
     QPropertyAnimation *iconOpacityClose = new QPropertyAnimation(m_filtersCloseBtn, "iconopacity", this);
+
+    QPropertyAnimation *posScroll = new QPropertyAnimation(m_scrollArea, "geometry", this);
+    QPropertyAnimation *opacityScroll = new QPropertyAnimation(m_scrollArea, "opacity", this);
+    QPropertyAnimation *iconOpacityScroll = new QPropertyAnimation(m_scrollArea, "iconopacity", this);
 
     //透明度动画
     QPropertyAnimation *posFold = new QPropertyAnimation(m_filtersFoldBtn, "pos", this);
@@ -690,26 +702,36 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     ec.setType(QEasingCurve::OutBack);
     ec.setOvershoot(EASING_OVERSHOOT);
 
+    //Rolling window start/end position
+    QRect startGeometry, endGeometry;
+    QPoint startPoint = m_filtersFoldBtn->rect().bottomLeft();
+    startPoint.setY(startPoint.y() + m_threeBtnOffset);
+    startGeometry.setTopLeft(startPoint);
+    startGeometry.setHeight(0);
+    startGeometry.setWidth(m_filterPreviewBtnList.first()->width());
+
+    endGeometry.setTopLeft(startGeometry.topLeft());
+    endGeometry.setHeight(m_scrollHeight);
+    endGeometry.setWidth(startGeometry.width());
+
     if (bShow) {
-        int index = 1;
-        for (auto pos : positionList) {
-            pos->setDuration(ANIMATION_FILTER_DURATION);
-            pos->setEasingCurve(ec);
-            pos->setStartValue(QPoint(0,0));
-            pos->setEndValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
-        }
+        posScroll->setDuration(ANIMATION_FILTER_DURATION);
+        posScroll->setEasingCurve(ec);
+        posScroll->setStartValue(startGeometry);
+        posScroll->setEndValue(endGeometry);
+
+        opacityScroll->setDuration(ANIMATION_FILTER_DURATION);
+        opacityScroll->setStartValue(0);
+        opacityScroll->setEndValue(102);
+
+        iconOpacityScroll->setDuration(ANIMATION_FILTER_DURATION);
+        iconOpacityScroll->setStartValue(0);
+        iconOpacityScroll->setEndValue(1);
 
         posClose->setDuration(ANIMATION_FILTER_DURATION);
         posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, 0));
-        posClose->setEndValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index + 10));
-
-        for (auto opa : opacityList) {
-            opa->setDuration(ANIMATION_FILTER_DURATION*3);
-            opa->setEasingCurve(QEasingCurve::OutExpo);
-            opa->setStartValue(0);
-            opa->setEndValue(1);
-        }
+        posClose->setEndValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + endGeometry.height()));
 
         opacityFold->setDuration(ANIMATION_FILTER_DURATION);
         opacityFold->setStartValue(0);
@@ -736,6 +758,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         m_filtersCloseBtn->setVisible(bShow);
         m_filtersCloseBtn->setOpacity(0);
         m_filtersCloseBtn->setIconOpacity(0);
+        m_scrollArea->setVisible(bShow);
         connect(pPosGroup, &QPropertyAnimation::finished, this, [=]{
             for (auto pBtn : m_filterPreviewBtnList) {
                 pBtn->update();
@@ -749,23 +772,22 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
             });
         }
     } else {
-        int index = 1;
-        for (auto pos : positionList) {
-            pos->setDuration(ANIMATION_FILTER_DURATION);
-            pos->setStartValue(QPoint(0, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index++));
-            pos->setEndValue(QPoint(0,0));
-        }
-
         posClose->setDuration(ANIMATION_FILTER_DURATION);
         posClose->setEasingCurve(ec);
-        posClose->setStartValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) * index + 10));
+        posClose->setStartValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + endGeometry.height()));
         posClose->setEndValue(QPoint(5, 0));
 
-        for (auto opa : opacityList) {
-            opa->setDuration(ANIMATION_FILTER_DURATION);
-            opa->setStartValue(1);
-            opa->setEndValue(0);
-        }
+        posScroll->setDuration(ANIMATION_FILTER_DURATION);
+        posScroll->setStartValue(endGeometry);
+        posScroll->setEndValue(startGeometry);
+
+        opacityScroll->setDuration(ANIMATION_FILTER_DURATION);
+        opacityScroll->setStartValue(102);
+        opacityScroll->setEndValue(0);
+
+        iconOpacityScroll->setDuration(ANIMATION_FILTER_DURATION);
+        iconOpacityScroll->setStartValue(1);
+        iconOpacityScroll->setEndValue(0);
 
         opacityFold->setDuration(ANIMATION_FILTER_DURATION);
         opacityFold->setStartValue(102);
@@ -789,6 +811,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
             for (auto pBtn : m_filterPreviewBtnList)
                 pBtn->setVisible(bShow);
             m_filtersCloseBtn->setVisible(bShow);
+            m_scrollArea->setVisible(bShow);
             m_filtersGroupDislay = false;
             showUnfold(true, m_filtersUnfoldBtn, isShortcut);
         });
@@ -798,21 +821,21 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     pPosGroup->addAnimation(opacityFold);
     pPosGroup->addAnimation(iconOpacityFold);
 
-    for (auto pos : positionList)
-        pPosGroup->addAnimation(pos);
+    pPosGroup->addAnimation(posScroll);
+    pPosGroup->addAnimation(opacityScroll);
+    pPosGroup->addAnimation(iconOpacityScroll);
+
     pPosGroup->addAnimation(posClose);
     pPosGroup->addAnimation(opacityClose);
     pPosGroup->addAnimation(iconOpacityClose);
-    for (auto opa : opacityList)
-        pPosGroup->addAnimation(opa);
 
     pPosGroup->start(QAbstractAnimation::DeleteWhenStopped);
 
     emit sngShowFilterName(bShow);
 
     // 每个按钮增加回弹间隙1像素
-    int height = (m_filtersFoldBtn->height() + m_threeBtnOffset*2 + 1) * (filter_Count + 2) - 1;
-    setFixedSize(QSize(nPreviewBtnWidth, height));
+    int height = (m_filtersFoldBtn->height() + m_threeBtnOffset*2 + 1) * 2 + endGeometry.height();
+    setFixedSize(QSize(m_filterPreviewBtnList.last()->width(), height));
     update();
 }
 
@@ -1529,5 +1552,19 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
         m_filtersUnfoldBtn->setVisible(false);
         m_exposureBtn->setVisible(false);
     }
+    update();
+}
+
+void takePhotoSettingAreaWidget::resizeScrollHeight(int height)
+{
+    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6 + height;
+    if (m_scrollHeight > m_scrollArea->widget()->height())
+        m_scrollHeight = m_scrollArea->widget()->height();
+    m_scrollArea->resize(m_scrollArea->width(), m_scrollHeight);
+    if (!m_scrollArea->isVisible())
+        return;
+    int updateHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset*2 + 1) * 2 + m_scrollHeight;
+    m_filtersCloseBtn->move(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + m_scrollHeight));
+    setFixedHeight(updateHeight);
     update();
 }
