@@ -70,8 +70,8 @@ extern int encodeenv;
 
 using namespace dc;
 
-const int CMainWindow::minWindowWidth = 800;
-const int CMainWindow::minWindowHeight = 600;
+const int CMainWindow::minWindowWidth = 680;
+const int CMainWindow::minWindowHeight = 510;
 
 const int rightOffset = 10;
 const int SwitchcameraDiam = 40; //切换摄像头直径
@@ -2047,8 +2047,10 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     m_pTitlebar->titlebar()->setFixedWidth(this->size().width());
 
     QTimer::singleShot(1, this, [ = ] {
-        if (nullptr != m_takePhotoSettingArea)
+        if (nullptr != m_takePhotoSettingArea) {
             m_takePhotoSettingArea->moveToParentLeft();
+            m_takePhotoSettingArea->resizeScrollHeight(height() - minWindowHeight);
+        }
     });
 }
 
