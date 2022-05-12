@@ -131,6 +131,12 @@ public:
      */
     void setState(bool bPhoto);
 
+    /**
+     * @brief resizeScrollHeight 更新滤镜窗口高度
+     * @param height 主窗口提升高度
+     */
+    void resizeScrollHeight(int height);
+
 private:
     /**
     * @brief initButtons 初始化所有的按钮
@@ -290,8 +296,12 @@ private:
     circlePushButton        *m_exposureBtn = nullptr;//曝光按钮
     ExposureSlider          *m_exposureSlider;
 
+    QScrollArea             *m_scrollArea;//滤镜窗口
+    QWidget                 *m_scrollAreaWidget;//滤镜滚动条窗口
+
     int                      m_btnHeightOffset;//按钮之间的间隔
     int                      m_threeBtnOffset;//三级菜单按钮之间的间隔
+    int                      m_scrollHeight;//滚动窗口默认高度
 
     QColor                   m_buttonGroupColor;//按钮组展开后背景颜色
 
