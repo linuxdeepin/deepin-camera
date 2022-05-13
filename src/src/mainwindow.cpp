@@ -84,6 +84,8 @@ const int labelCameraNameHeight = 26;
 const int labelFilterNameWidth = 150;
 const int labelFilterNameHeight = 26;
 const int pathEditWidth = 285;
+const int defaultWindowWidth = 800;
+const int defaultWindowHeight = 600;
 
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
@@ -1792,7 +1794,7 @@ void CMainWindow::initUI()
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
     m_videoPre->setMaxRecTime(dc::Settings::get().getOption("photosetting.maxRecordTime.maxRecordTime").toInt());
-    resize(minWindowWidth, minWindowHeight);
+    resize(defaultWindowWidth, defaultWindowHeight);
 
     m_takePhotoSettingArea->setDelayTime(nDelayTime);
     m_takePhotoSettingArea->setFlashlight(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());

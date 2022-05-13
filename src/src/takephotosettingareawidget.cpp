@@ -185,7 +185,7 @@ void takePhotoSettingAreaWidget::initButtons()
         m_filterPreviewBtnList.push_back(filterBtn);
     }
 
-    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6;//默认显示6个
+    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 8;//默认显示8个
     m_scrollAreaWidget->resize(filterBtn->width(), (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * efilterType::filter_Count);
     m_scrollArea->resize(m_scrollAreaWidget->width(), m_scrollHeight);
 
@@ -731,7 +731,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         posClose->setDuration(ANIMATION_FILTER_DURATION);
         posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, 0));
-        posClose->setEndValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + endGeometry.height()));
+        posClose->setEndValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + endGeometry.height() + 10));
 
         opacityFold->setDuration(ANIMATION_FILTER_DURATION);
         opacityFold->setStartValue(0);
@@ -1557,7 +1557,7 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
 
 void takePhotoSettingAreaWidget::resizeScrollHeight(int height)
 {
-    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6 + height;
+    m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6 + height + 15; //Add a offset here
     if (m_scrollHeight > m_scrollArea->widget()->height())
         m_scrollHeight = m_scrollArea->widget()->height();
     m_scrollArea->resize(m_scrollArea->width(), m_scrollHeight);
