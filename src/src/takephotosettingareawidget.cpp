@@ -32,6 +32,7 @@
 #include <QTimer>
 #include <QScrollArea>
 #include <QVBoxLayout>
+#include <QScrollBar>
 
 #define ANIMATION_DURATION 200
 #define ANIMATION_FOLD_DURATION 200
@@ -986,11 +987,17 @@ void takePhotoSettingAreaWidget::keyDownClick()
     if (m_filtersGroupDislay) {
         if (m_filtersFoldBtn->hasFocus()) {
             m_filterPreviewBtnList.at(0)->setFocus();
+            m_scrollArea->verticalScrollBar()->setValue(0);
         } else {
             for (int i = 0; i < efilterType::filter_Count; i++) {
                 if (m_filterPreviewBtnList.at(i)->hasFocus()) {
                     if (i + 1 < efilterType::filter_Count) {
                         m_filterPreviewBtnList.at(i + 1)->setFocus();
+                        int value = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * (i + 2) + 15 -
+                                m_scrollArea->height() + m_scrollArea->verticalScrollBar()->value();
+                        if (value) {
+                            m_scrollArea->verticalScrollBar()->setValue(m_scrollArea->verticalScrollBar()->value() + value);
+                        }
                         return;
                     } else {
                         m_filtersCloseBtn->setFocus();
@@ -1051,6 +1058,10 @@ void takePhotoSettingAreaWidget::keyUpClick()
                 if (m_filterPreviewBtnList.at(i)->hasFocus()) {
                     if (i - 1 >= 0) {
                         m_filterPreviewBtnList.at(i - 1)->setFocus();
+                        int value = m_scrollArea->verticalScrollBar()->value() - (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * (i - 1);
+                        if (value) {
+                            m_scrollArea->verticalScrollBar()->setValue(m_scrollArea->verticalScrollBar()->value() - value);
+                        }
                         return;
                     } else {
                         m_filtersFoldBtn->setFocus();
@@ -1059,8 +1070,10 @@ void takePhotoSettingAreaWidget::keyUpClick()
                 }
             }
 
-            if (m_filtersCloseBtn->hasFocus())
+            if (m_filtersCloseBtn->hasFocus()) {
                 m_filterPreviewBtnList.at(efilterType::filter_Count - 1)->setFocus();
+                m_scrollArea->verticalScrollBar()->setValue(m_scrollArea->verticalScrollBar()->maximum());
+            }
         }
     }
 }
