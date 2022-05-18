@@ -1080,7 +1080,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
             showCamUsed();
 
         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
-    } else if (ret == E_NO_DEVICE_ERR) {
+    } else {
         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
         if (vd != nullptr)

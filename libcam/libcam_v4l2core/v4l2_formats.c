@@ -687,7 +687,7 @@ int get_format_resolution_index(v4l2_dev_t *vd, int format, int width, int heigh
 	}
     int tempwidth = 0;
     int tempheight = 0;
-    int index = 0;
+    int index = -1;
     for(i=0; i < vd->list_stream_formats[format].numb_res; i++)
     {
         if( tempwidth <= vd->list_stream_formats[format].list_stream_cap[i].width &&
