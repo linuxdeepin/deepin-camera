@@ -134,7 +134,7 @@
                             "key": "Flashlight",
                             "type": "switchbutton",
                             "name": "Flashlight",
-                            "default": true
+                            "default": false
                         }
                     ]
                 },
