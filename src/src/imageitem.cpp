@@ -127,7 +127,7 @@ void ImageItem::updatePicPath(const QString &filePath)
     QPixmap pix;
     QFileInfo fileInfo(filePath);
 
-    if (fileInfo.suffix() == "webm") {
+    if (fileInfo.suffix() == "webm" || fileInfo.suffix() == "mp4") {
         m_bVideo = true;
         if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();

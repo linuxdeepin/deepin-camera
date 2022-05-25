@@ -82,7 +82,8 @@ videowidget::videowidget(DWidget *parent)
       m_GridType(Grid_None),
       m_videoWriter(nullptr),
       m_filterType(filter_Normal),
-      m_exposure(0)
+      m_exposure(0),
+      m_videoFormat("mp4")
 {
 #ifndef __mips__
     if (!get_wayland_status()) {
@@ -226,6 +227,9 @@ videowidget::videowidget(DWidget *parent)
 
     // 默认不显示网格线
     setGridType(Grid_None);
+
+    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt())
+        m_videoFormat = "webm";
 }
 
 //延迟加载
@@ -743,10 +747,6 @@ void videowidget::showCountdown()
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalView->hide();
-
-//            QTimer::singleShot(100, this, [=] {
-//                m_openglwidget->show();
-//            });
         }
 
     } else {
@@ -884,6 +884,11 @@ void videowidget::slotresolutionchanged(const QString &resolution)
 void videowidget::slotGridTypeChanged(int type)
 {
     setGridType(static_cast<GridType>(type));
+}
+
+void videowidget::slotVideoFormatChanged(const QString &format)
+{
+    m_videoFormat = format;
 }
 
 void videowidget::onRecordFrame(uchar *rgb, uint size)
@@ -1249,7 +1254,8 @@ void videowidget::startTakeVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".webm";
+            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_"
+                    + QString::number(m_nFileID) + "." + m_videoFormat;
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
 
