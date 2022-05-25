@@ -370,6 +370,12 @@ private slots:
     void slotGridTypeChanged(int);
 
     /**
+     * @brief slotVideoFormatChanged 视频格式改变槽函数
+     * @param 视频格式
+     */
+    void slotVideoFormatChanged(const QString &);
+
+    /**
     * @brief onRecordFrame　向GStreamer写入视频帧数据
     */
     void onRecordFrame(uchar* yuv, uint size);
@@ -441,6 +447,7 @@ private:
     DLabel                     *m_dLabel;           //倒计时
     DLabel                     *m_recordingTimeWidget;//录制时长窗口
     DLabel                     *m_recordingTime;    //录制时长
+    QString                    m_videoFormat;       //录制视频格式
 
     QSound                     *m_takePicSound;     //拍照声音
     QString                    m_savePicFolder;     //图片文件夹路径

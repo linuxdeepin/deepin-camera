@@ -134,7 +134,7 @@
                             "key": "Flashlight",
                             "type": "switchbutton",
                             "name": "Flashlight",
-                            "default": true
+                            "default": false
                         }
                     ]
                 },
@@ -171,8 +171,8 @@
                         {
                             "key": "vidformat",
                             "name": "Video:",
-                            "type":"formatLabel",
-                            "default": "  webm"
+                            "type":"combobox",
+                            "default": 0
                         }
                     ]
                 },
