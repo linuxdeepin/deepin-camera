@@ -164,6 +164,12 @@ signals:
     */
     void flashLightChanged(bool bLight);
 
+    /**
+     * @brief videoFormatChanged 录制视频格式
+     * @param format 视频格式
+     */
+    void videoFormatChanged(QString format);
+
 private:
     Settings();
     static Settings     m_instance;
