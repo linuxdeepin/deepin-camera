@@ -62,8 +62,13 @@ void Settings::init()
         m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 
     QStringList videoFormatList;
-    videoFormatList << tr("mp4")
-                    << tr("webm");
+    if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
+        videoFormatList << tr("mp4")
+                        << tr("webm");
+    } else {
+        videoFormatList << tr("webm");
+        m_settings->setOption("outsetting.outformat.vidformat", 0);
+    }
     m_settings->option("outsetting.outformat.vidformat")->setData("items", videoFormatList);
 
     m_settings->setBackend(m_backend);

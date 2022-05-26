@@ -228,7 +228,8 @@ videowidget::videowidget(DWidget *parent)
     // 默认不显示网格线
     setGridType(Grid_None);
 
-    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt())
+    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt() ||
+            DataManager::instance()->encodeEnv() != FFmpeg_Env)
         m_videoFormat = "webm";
 }
 
