@@ -44,6 +44,12 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
     m_eEncodeEnv = DataManager::instance()->encodeEnv();
     if (QCamera_Env == m_eEncodeEnv)
         connect(Camera::instance(), &Camera::presentImage, this, &MajorImageProcessingThread::processingImage);
+    QFile board("/sys/class/dmi/id/board_name");
+    if (board.open(QIODevice::ReadOnly)) {
+        QString name = board.readAll();
+        m_specialTrea = name.contains("LXKT-ZXE");
+        board.close();
+    }
 }
 
 void MajorImageProcessingThread::stop()
@@ -261,6 +267,9 @@ void MajorImageProcessingThread::run()
 
             // GStreamer环境下，使用rgb格式显示帧数据
             if (GStreamer_Env == m_eEncodeEnv)
+                bUseRgb = true;
+
+            if (m_specialTrea)
                 bUseRgb = true;
 
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
