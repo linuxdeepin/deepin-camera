@@ -77,7 +77,7 @@ file (GLOB_RECURSE HEADERS
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkcore gstreamer-1.0 gstreamer-app-1.0
+        dtkwidget dtkcore gobject-2.0
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -90,6 +90,7 @@ pkg_check_modules(3rd_lib REQUIRED
 #        libpulse
 #        libswresample
         )
+list(APPEND PROJECT_INCLUDE /usr/include/glib-2.0 /usr/include/gstreamer-1.0)
 
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
