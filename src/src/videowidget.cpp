@@ -239,10 +239,8 @@ void videowidget::delayInit()
     setFlash(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
-#ifdef __mips__
     connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
             this, SLOT(ReceiveMajorImage(QImage *, int)));
-#else
     if (get_wayland_status() == true) {
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
@@ -254,7 +252,6 @@ void videowidget::delayInit()
                 m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
     }
 
-#endif
     connect(m_imgPrcThread, SIGNAL(reachMaxDelayedFrames()),
             this, SLOT(onReachMaxDelayedFrames()));
     connect(m_imgPrcThread, SIGNAL(SendFilterImageProcessing(QImage *)),

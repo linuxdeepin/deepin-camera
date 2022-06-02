@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
-    gst_init(&argc, &argv);
+//    gst_init(&argc, &argv);
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
