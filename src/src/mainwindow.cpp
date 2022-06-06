@@ -1664,7 +1664,7 @@ void CMainWindow::initUI()
     ftFilter.setWeight(QFont::Medium);
     m_filterName->setFont(ftFilter);
     m_filterName->setAlignment(Qt::AlignCenter);
-    m_filterName->move((width() - labelFilterNameWidth) / 2, height() - 20 - labelFilterNameHeight);
+    m_filterName->move((defaultWindowWidth - labelFilterNameWidth) / 2, defaultWindowHeight - 20 - labelFilterNameHeight);
 
     QGraphicsDropShadowEffect *shadow_effect1 = new QGraphicsDropShadowEffect(this);
     shadow_effect1->setOffset(0, 0);              //阴影的偏移量
