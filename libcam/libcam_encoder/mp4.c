@@ -25,6 +25,7 @@
 
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
+static int64_t first_pts = 0;
 
 AVFormatContext *mp4_create_context(const char *filename)
 {
@@ -118,7 +119,11 @@ int mp4_write_packet(
         getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
 
         set_video_time_capture((double)(pts)/1000/1000000);
-        video_pts++;
+        if (first_pts == 0) {
+            first_pts = pts;
+        } else {
+            video_pts = (double)(pts - first_pts) / 1000000 / 33;
+        }
     }
 
     if(codec_data->codec_context->codec_type == AVMEDIA_TYPE_AUDIO) {
