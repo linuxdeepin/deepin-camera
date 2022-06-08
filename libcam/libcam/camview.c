@@ -700,13 +700,11 @@ static void *audio_processing_loop(void *data)
                 sample_type, my_audio_mask);
 
         audio_timestamp_tmp = audio_buff->timestamp;
-        if(audio_pause_timestamp != 0)
-        {
+        if(audio_pause_timestamp != 0) {
             audio_timestamp_reference += audio_pause_timestamp;
             audio_pause_timestamp = 0;
         }
-        if(ret > 0)
-        {
+        if(ret > 0) {
             /*
              * no buffers to process
              * sleep a couple of milisec
@@ -715,9 +713,7 @@ static void *audio_processing_loop(void *data)
                 .tv_sec = 0,
                 .tv_nsec = 1000000};/*nanosec*/
              nanosleep(&req, NULL);
-        }
-        else if(ret == 0)
-        {
+        } else if(ret == 0) {
             encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp - audio_timestamp_reference;
 
             /*OSD vu meter level*/

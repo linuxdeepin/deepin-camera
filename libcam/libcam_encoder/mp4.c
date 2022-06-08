@@ -96,10 +96,10 @@ int mp4_write_packet(
         int stream_index,
         uint8_t *outbuf,
         uint32_t outbuf_size,
+        uint64_t pts,
         int flags)
 {
     AVPacket *outpacket = codec_data->outpkt;
-    //= codec_data->outpkt;
     outpacket->data = (uint8_t*)calloc((unsigned int)outbuf_size, sizeof(uint8_t));
 
     memcpy(outpacket->data, outbuf, outbuf_size);
@@ -117,6 +117,7 @@ int mp4_write_packet(
         getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
         getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
 
+        set_video_time_capture((double)(pts)/1000/1000000);
         video_pts++;
     }
 

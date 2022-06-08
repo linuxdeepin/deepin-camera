@@ -493,9 +493,13 @@ void set_video_name(const char *name)
 	}
 	else if( strcasecmp(ext, "mkv") == 0)
 		set_video_muxer(ENCODER_MUX_MKV);
-    else if(strcasecmp(ext,"mp4") == 0)
-        set_video_muxer(ENCODER_MUX_MP4);
-	else if ( strcasecmp(ext, "webm") == 0 )
+    else if(strcasecmp(ext,"mp4") == 0) {
+            video_codec_t *codec = encoder_get_video_codec_defaults(encoder_get_video_codec_ind_4cc("H264"));
+            int video_codec_ind = get_video_codec_list_index(codec->codec_id);
+            set_video_codec_ind(video_codec_ind);
+            set_audio_codec_ind(encoder_get_audio_codec_ind_name("AAC"));
+            set_video_muxer(ENCODER_MUX_MP4);
+    } else if ( strcasecmp(ext, "webm") == 0 )
 	{
         set_video_muxer(ENCODER_MUX_WEBM);
 

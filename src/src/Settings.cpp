@@ -61,6 +61,16 @@ void Settings::init()
     else
         m_settings = DSettings::fromJsonFile(":/resource/settings.json");
 
+    QStringList videoFormatList;
+    if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
+        videoFormatList << tr("mp4")
+                        << tr("webm");
+    } else {
+        videoFormatList << tr("webm");
+        m_settings->setOption("outsetting.outformat.vidformat", 0);
+    }
+    m_settings->option("outsetting.outformat.vidformat")->setData("items", videoFormatList);
+
     m_settings->setBackend(m_backend);
 
     connect(m_settings, &DSettings::valueChanged, this, &Settings::onValueChanged);
@@ -247,6 +257,14 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
     if (key.startsWith("photosetting.Flashlight.Flashlight")){
         bool bLight = m_settings->getOption("photosetting.Flashlight.Flashlight").toBool();
         emit flashLightChanged(bLight);
+    }
+
+    if (key.startsWith("outsetting.outformat.vidformat")) {
+        QPointer<DSettingsOption> formatOpt = m_settings->option("outsetting.outformat.vidformat");
+        if (value >= 0 && formatOpt->data("items").toStringList().size() > value.toInt()) {
+            QString videoFormat = formatOpt->data("items").toStringList()[value.toInt()];
+            emit videoFormatChanged(videoFormat);
+        }
     }
 }
 

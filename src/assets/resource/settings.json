@@ -171,8 +171,8 @@
                         {
                             "key": "vidformat",
                             "name": "Video:",
-                            "type":"formatLabel",
-                            "default": "  webm"
+                            "type":"combobox",
+                            "default": 0
                         }
                     ]
                 },

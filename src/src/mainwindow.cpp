@@ -842,7 +842,7 @@ void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList &fileL
 
     QDir dir(path);
     QStringList filters;
-    filters << QString("*.jpg") << /*QString("*.mp4") << */QString("*.webm");
+    filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
     dir.setNameFilters(filters);
     dir.setSorting(QDir::Time /*| QDir::Reversed*/);     //按时间逆序排序
     if (dir.exists()) {
@@ -1838,6 +1838,8 @@ void CMainWindow::initConnection()
     connect(&Settings::get(), SIGNAL(resolutionchanged(const QString &)), m_videoPre, SLOT(slotresolutionchanged(const QString &)));
     //切换网格类型
     connect(&Settings::get(), SIGNAL(gridTypeChanged(int)), m_videoPre, SLOT(slotGridTypeChanged(int)));
+    //切换录制视频格式
+    connect(&Settings::get(), SIGNAL(videoFormatChanged(const QString &)), m_videoPre, SLOT(slotVideoFormatChanged(const QString &)));
     //拍照
     connect(m_videoPre, SIGNAL(takePicOnce()), this, SLOT(onTakePicOnce()));
     //拍照取消
