@@ -422,10 +422,10 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
         tempExsitPaths << paths;
     }
 
+#ifndef UNITTEST
     DPrintPreviewDialog printDialog(parent);
     printDialog.setObjectName(PRINT_DIALOG);
     printDialog.setAccessibleName(PRINT_DIALOG);
-#ifndef UNITTEST
     //适配打印接口2.0，dtk大于 5.4.7 版才合入最新的2.0打印控件接口
 #if (DTK_VERSION_MAJOR > 5 \
     || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
@@ -456,8 +456,6 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
             this, SLOT(paintRequestSync(DPrinter *)));
 #endif
     printDialog.exec();
-#else
-    //printDialog.show();
 #endif
 }
 
