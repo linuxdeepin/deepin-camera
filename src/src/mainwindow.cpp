@@ -2287,6 +2287,7 @@ void CMainWindow::showChildWidget()
         showWidget(m_modeSwitchBox, false);
         showWidget(m_takePhotoSettingArea, false);
         showWidget(m_photoRecordBtn, true);
+        showWidget(m_filterName, false);
         return;
     }
     if (m_bRecording) {  //正在录像
@@ -2302,6 +2303,7 @@ void CMainWindow::showChildWidget()
     showWidget(m_modeSwitchBox, true);
     showWidget(m_photoRecordBtn, true);
     showWidget(m_takePhotoSettingArea, true);
+    showWidget(m_filterName, m_bShowFilterName);
 }
 
 void CMainWindow::showWidget(DWidget *widget, bool bShow)
