@@ -118,6 +118,8 @@ public:
         m_filtersGroupDislay = bDisplay;
     }
 
+    int getRecCount();
+
 protected:
     /**
      * @brief run 运行线程
@@ -202,6 +204,8 @@ private:
     EncodeEnv         m_eEncodeEnv;          //编码环境
     int               m_exposure = 0;
     bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
+    int               m_nCount;
+    uint64_t          m_firstPts;
 
     QImage            m_Img;   //mips、wayland下使用该变量
     QImage            m_filterImg; //滤镜预览类使用 大小40*40
