@@ -59,6 +59,8 @@ void MajorImageProcessingThread::init()
     m_bTake = false;
     m_videoDevice = nullptr;
     m_result = -1;
+    m_nCount = 0;
+    m_firstPts = 0;
 }
 
 void MajorImageProcessingThread::setFilter(QString filter)
@@ -69,6 +71,11 @@ void MajorImageProcessingThread::setFilter(QString filter)
 void MajorImageProcessingThread::setExposure(int exposure)
 {
     m_exposure = exposure;
+}
+
+int MajorImageProcessingThread::getRecCount()
+{
+    return m_nCount;
 }
 
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
@@ -333,6 +340,10 @@ void MajorImageProcessingThread::run()
                 if (!get_capture_pause()) {
                     //设置时间戳
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+                    if (m_firstPts == 0) {
+                        m_firstPts = m_frame->timestamp;
+                    }
+                    m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
                     //设置暂停时长
@@ -371,6 +382,9 @@ void MajorImageProcessingThread::run()
             } else if (m_bRecording) {
                 // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
                 emit sigRecordFrame(m_rgbPtr, rgbsize);
+            } else {
+                m_nCount = 0;
+                m_firstPts = 0;
             }
 
             QImage* imgTmp = nullptr;
