@@ -566,14 +566,14 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
 
             m_recordingTime->setText(strTime);
 
-            if ((m_nCount >= 3)) {
+//            if ((m_nCount >= 3)) {
                 //开启多线程，每100ms读取时间并显示
                 m_countTimer->stop();
                 m_recordingTimer->start(200);
-                return;
-            }
+//                return;
+//            }
 
-            m_nCount++;
+//            m_nCount++;
         }
         break;
 
@@ -760,13 +760,24 @@ void videowidget::showRecTime()
 {
     //获取写video的时间
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
-        m_nCount = static_cast<int>(get_video_time_capture());
+        /** On the equipment with poor performance, the coding time is long,
+         * which will cause 1 to 2S katto after exceeding 3S. Get recording duration.
+         *
+         * his change may lead to the short and shorter time of the video duration ratio,
+         * but this is an abnormal situation, but it should not belong to the bug.
+         *
+         * Reserved the relevant code first to prevent other unknown problems from emerging.
+         *
+         * powered by xxxxpf
+         */
+//        m_nCount = static_cast<int>(get_video_time_capture());
+        m_nCount = m_imgPrcThread->getRecCount();
 
         //过滤不正常的时间
-        if (m_nCount <= 3) {
-            qWarning() << "error time" << m_nCount;
-            return;
-        }
+//        if (m_nCount <= 3) {
+//            qWarning() << "error time" << m_nCount;
+//            return;
+//        }
     } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         m_nCount = Camera::instance()->getRecoderTime() / 1000;
         m_nCount += 2;

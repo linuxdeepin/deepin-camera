@@ -118,6 +118,12 @@ public:
         m_filtersGroupDislay = bDisplay;
     }
 
+    /**
+     * @brief getRecCount 获取当前写入的时间戳
+     * @return 当前试图写入的时间戳
+     */
+    int getRecCount();
+
 protected:
     /**
      * @brief run 运行线程
@@ -202,6 +208,8 @@ private:
     EncodeEnv         m_eEncodeEnv;          //编码环境
     int               m_exposure = 0;
     bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
+    int               m_nCount;                    //录像时当前的时间
+    uint64_t          m_firstPts;                  //开始录像时首帧时间
 
     QImage            m_Img;   //mips、wayland下使用该变量
     QImage            m_filterImg; //滤镜预览类使用 大小40*40
