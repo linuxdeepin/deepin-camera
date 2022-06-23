@@ -163,7 +163,7 @@ videowidget::videowidget(DWidget *parent)
     recordingwidgetlay->addWidget(m_recordingTime, 0, Qt::AlignCenter);
     recordingRedStatus->setPixmap(QPixmap(":/images/icons/light/circular.svg"));
     recordingRedStatus->setFixedSize(QSize(22, 22));
-    m_recordingTime->setFixedSize(73, 26);
+    m_recordingTime->setFixedSize(93, 26);
     m_recordingTime->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     QGraphicsDropShadowEffect *shadow_effect1 = new QGraphicsDropShadowEffect(this);
     shadow_effect1->setOffset(0, 0);              //阴影的偏移量
@@ -172,7 +172,7 @@ videowidget::videowidget(DWidget *parent)
     m_recordingTime->setGraphicsEffect(shadow_effect1);
     m_recordingTimeWidget->setLayout(recordingwidgetlay);
     m_recordingTimeWidget->hide(); //先隐藏
-    m_recordingTimeWidget->setFixedSize(95, 26);
+    m_recordingTimeWidget->setFixedSize(115, 26);
     m_dLabel->setAttribute(Qt::WA_TranslucentBackground);
     m_dLabel->setFocusPolicy(Qt::NoFocus);
     m_dLabel->setAlignment(Qt::AlignCenter);
