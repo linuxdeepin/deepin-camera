@@ -498,6 +498,7 @@ int Camera::saveConfig()
     if((fp = fopen(filename,"w")) == NULL)
     {
         fprintf(stderr, "deepin-camera: couldn't open %s for write: %s\n", filename, strerror(errno));
+        free(filename);
         return -1;
     }
 
