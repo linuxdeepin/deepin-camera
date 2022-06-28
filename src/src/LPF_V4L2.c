@@ -273,6 +273,7 @@ int camUnInit()
 
     if (vd)
         close_v4l2_device_handler();
+    return 0;
 }
 
 #ifdef __cplusplus
