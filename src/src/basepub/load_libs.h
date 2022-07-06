@@ -92,7 +92,8 @@ typedef void (*uos_swr_free)(struct SwrContext **s);
 //lswscale
 //void sws_freeContext(struct SwsContext *swsContext);
 typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
-
+typedef int (*uos_avcodec_is_open)(AVCodecContext *s);
+typedef int (*uos_av_codec_is_encoder)( AVCodec *codec);
 typedef struct _LoadLibNames {
     char *chAvcodec;
     char *chFfmpegthumbnailer;
@@ -132,6 +133,8 @@ typedef struct _LoadLibs {
     uos_av_init_packet m_av_init_packet;
     uos_av_packet_alloc m_av_packet_alloc;
 
+    uos_av_codec_is_encoder m_av_codec_is_encoder;
+    uos_avcodec_is_open m_avcodec_is_open;
 
     uos_video_thumbnailer m_video_thumbnailer;
     uos_video_thumbnailer_destroy m_video_thumbnailer_destroy;

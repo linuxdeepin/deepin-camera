@@ -151,6 +151,10 @@ static LoadLibs *newClass(void)
     PrintError();
     pLibs->m_av_packet_alloc = (uos_av_packet_alloc)dlsym(handle, "av_packet_alloc");
     PrintError();
+    pLibs->m_avcodec_is_open = (uos_avcodec_is_open)dlsym(handle, "avcodec_is_open");
+    PrintError();
+    pLibs->m_av_codec_is_encoder = (uos_av_codec_is_encoder)dlsym(handle, "av_codec_is_encoder");
+    PrintError();
 
     //libffmpegthumbnailer
     void *handle2 = dlopen(g_ldnames.chFfmpegthumbnailer/*"libffmpegthumbnailer.so.4"*/,RTLD_LAZY);
