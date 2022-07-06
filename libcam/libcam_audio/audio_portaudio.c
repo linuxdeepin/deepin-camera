@@ -141,7 +141,7 @@ __attribute__((unused))	void *outputBuffer,
 	for( i = 0; i < numSamples; ++i )
     {
         capture_buff[sample_index] = inputBuffer ? *rptr++ : 0;
-        sample_index++;
+       
         if(sample_index < audio_ctx->capture_buff_size){
             /*store peak value*/
             if(audio_ctx->capture_buff_level[chan] < capture_buff[sample_index])
@@ -150,6 +150,7 @@ __attribute__((unused))	void *outputBuffer,
             if(chan >= audio_ctx->channels)
                 chan = 0;
         }
+		 sample_index++;
         if(sample_index >= audio_ctx->capture_buff_size)
 		{
 			buff_ts = ts + ( i / audio_ctx->channels ) * frame_length;
@@ -293,6 +294,11 @@ static int audio_portaudio_list_devices(audio_context_t *audio_ctx)
 			printf("----------------------------------------------\n");
 	}
 
+	if (audio_ctx->num_input_dev <= 0)
+	{
+		printf( "AUDIO: Audio disabled: no input devices found (%i)\n", audio_ctx->num_input_dev );
+		return -1;
+	}
 	/*set defaults*/
 	audio_ctx->channels = audio_ctx->list_devices[audio_ctx->device].channels;
 	audio_ctx->samprate = audio_ctx->list_devices[audio_ctx->device].samprate;
