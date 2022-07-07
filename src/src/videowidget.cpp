@@ -26,6 +26,7 @@
 #include "capplication.h"
 #include "photorecordbtn.h"
 #include "camera.h"
+#include "eventlogutils.h"
 
 #include <DBlurEffectWidget>
 
@@ -982,6 +983,12 @@ void videowidget::onEndBtnClicked()
     }
 
     qInfo() << QString("-------------------stop record cost[%1]ms..----------------\n").arg(time.elapsed());
+
+    QJsonObject obj {
+        {"tid", EventLogUtils::EndRecording},
+        {"duration", m_nCount}
+    };
+    EventLogUtils::get().writeLogs(obj);
 
 #ifdef __sw_64__
     // 过滤停止录像编码期间的键鼠点击事件

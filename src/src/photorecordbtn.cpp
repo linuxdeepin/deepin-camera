@@ -166,6 +166,7 @@ void photoRecordBtn::mouseReleaseEvent(QMouseEvent *event)
     m_bFocus= true;
     update();
     emit clicked();
+
 }
 
 void photoRecordBtn::focusInEvent(QFocusEvent *event)
