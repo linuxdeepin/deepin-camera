@@ -31,6 +31,7 @@
 #include "switchcamerabtn.h"
 #include "windowstatethread.h"
 #include "camera.h"
+#include "eventlogutils.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -782,6 +783,13 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+    };
+    EventLogUtils::get().writeLogs(obj);
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -1459,6 +1467,13 @@ void CMainWindow::onModeSwitchBoxValueChanged(int type)
 
 void CMainWindow::onPhotoRecordBtnClked()
 {
+    QJsonObject obj {
+        {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
+        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+    };
+    if(!m_bRecording)
+        EventLogUtils::get().writeLogs(obj);
+
     //没有摄像机，不进行任何操作
     if (NOCAM == DataManager::instance()->getdevStatus()) {
         return;
