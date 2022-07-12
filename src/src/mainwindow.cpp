@@ -785,7 +785,7 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_pTitlebar->raise();
 
     QJsonObject obj{
-        {"tid", EventLogUtils::StartCameraApp},
+        {"tid", EventLogUtils::Start},
         {"mode", 1},
         {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
     };
