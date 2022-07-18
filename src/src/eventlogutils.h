@@ -12,7 +12,6 @@ public:
         ClosingTime     = 1000000001,
         Start           = 1000000003,
         Quit            = 1000000004,
-        StartCameraApp  = 1000200030,
         StartPhoto      = 1000200031,
         StartRecording  = 1000200032,
         EndRecording    = 1000200033,

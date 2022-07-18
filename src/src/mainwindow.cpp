@@ -32,6 +32,7 @@
 #include "windowstatethread.h"
 #include "camera.h"
 #include "eventlogutils.h"
+#include "config.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -787,6 +788,7 @@ CMainWindow::CMainWindow(QWidget *parent)
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"mode", 1},
+        {"version", VERSION},
         {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
     };
     EventLogUtils::get().writeLogs(obj);
@@ -1469,6 +1471,7 @@ void CMainWindow::onPhotoRecordBtnClked()
 {
     QJsonObject obj {
         {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
+        {"version", VERSION},
         {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
     };
     if(!m_bRecording)

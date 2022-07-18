@@ -27,6 +27,7 @@
 #include "photorecordbtn.h"
 #include "camera.h"
 #include "eventlogutils.h"
+#include "config.h"
 
 #include <DBlurEffectWidget>
 
@@ -986,6 +987,7 @@ void videowidget::onEndBtnClicked()
 
     QJsonObject obj {
         {"tid", EventLogUtils::EndRecording},
+        {"version", VERSION},
         {"duration", m_nCount}
     };
     EventLogUtils::get().writeLogs(obj);
