@@ -75,6 +75,8 @@ file (GLOB_RECURSE HEADERS
     )
 file (GLOB_RECURSE RESOURCES  ../src/assets/assets.qrc)
 
+configure_file(../src/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
+
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
     )
 
