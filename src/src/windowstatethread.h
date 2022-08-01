@@ -23,6 +23,7 @@
 #include <DMainWindow>
 #include <DForeignWindow>
 
+#include <thread>
 #include <QThread>
 #include <QMutex>
 
