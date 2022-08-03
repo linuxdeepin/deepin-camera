@@ -1469,13 +1469,13 @@ void CMainWindow::onModeSwitchBoxValueChanged(int type)
 
 void CMainWindow::onPhotoRecordBtnClked()
 {
-    QJsonObject obj {
-        {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
-        {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
-    };
-    if(!m_bRecording)
-        EventLogUtils::get().writeLogs(obj);
+//    QJsonObject obj {
+//        {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
+//        {"version", VERSION},
+//        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+//    };
+//    if(!m_bRecording)
+//        EventLogUtils::get().writeLogs(obj);
 
     //没有摄像机，不进行任何操作
     if (NOCAM == DataManager::instance()->getdevStatus()) {
