@@ -985,12 +985,12 @@ void videowidget::onEndBtnClicked()
 
     qInfo() << QString("-------------------stop record cost[%1]ms..----------------\n").arg(time.elapsed());
 
-//    QJsonObject obj {
-//        {"tid", EventLogUtils::EndRecording},
-//        {"version", VERSION},
-//        {"duration", m_nCount}
-//    };
-//    EventLogUtils::get().writeLogs(obj);
+    QJsonObject obj {
+        {"tid", EventLogUtils::EndRecording},
+        {"version", VERSION},
+        {"duration", m_nCount}
+    };
+    EventLogUtils::get().writeLogs(obj);
 
 #ifdef __sw_64__
     // 过滤停止录像编码期间的键鼠点击事件
