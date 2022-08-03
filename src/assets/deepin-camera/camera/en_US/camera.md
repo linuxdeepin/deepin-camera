@@ -55,7 +55,7 @@ You can run, close or create a desktop shortcut for Camera in the following ways
 </table>
 
 
-> ![notes](../common/notes.svg) The camera switching icon ![1](fig/switch.png) only shows when there are multiple cameras connected.
+> ![notes](../common/notes.svg) Notes: The camera switching icon ![1](fig/switch.png) only shows when there are multiple cameras connected.
 
 ## Operations
 
@@ -103,8 +103,7 @@ On the main menu, you can change settings for Camera, switch window themes, view
 
    - **Basic** settings: set up the **File location** for photos and videos as well as gridlines for photos.
    - **Shoot** settings: set up the **Sound effects**, **Burst mode**, **Self-timer delay**, **Mirror mode** and **Flashlight** options.
-
-   - **Output** settings: display the **Output format** and set up **Resolution settings** for photos and videos.
+   - **Output** settings: check the **Output format** of photos,  choose a format of videos, and set up **Resolution settings** for both.
 
      
 
@@ -127,5 +126,5 @@ There are three window themes, namely Light Theme, Dark Theme, and System Theme.
 
 ### Exit
 
-1.   Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
+1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
 2.  Click **Exit** to exit Camera.
