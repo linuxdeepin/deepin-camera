@@ -956,19 +956,23 @@ void videowidget::onEndBtnClicked()
 
     QTime time;
     time.start();
+    int duration = 0;
     if (getCapStatus()) { //录制完成处理
         qDebug() << "stop takeVideo";
 
         if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             if (video_capture_get_save_video() == 1) {
+                duration = round(get_video_time_capture());
                 set_video_time_capture(0);
                 stop_encoder_thread();
             }
         } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
             if (Camera::instance()->isRecording()) {
+                duration = Camera::instance()->getRecoderTime();
                 Camera::instance()->stopRecoder();
             }
         } else if (DataManager::instance()->encodeEnv() == GStreamer_Env) {
+            duration = m_nCount;
             if (m_audPrcThread != nullptr)
                 m_audPrcThread->stop();
             while (m_audPrcThread->isRunning());//等待音频线程结束
@@ -988,7 +992,7 @@ void videowidget::onEndBtnClicked()
     QJsonObject obj {
         {"tid", EventLogUtils::EndRecording},
         {"version", VERSION},
-        {"duration", m_nCount}
+        {"duration", duration}
     };
     EventLogUtils::get().writeLogs(obj);
 

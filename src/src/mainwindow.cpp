@@ -784,14 +784,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
-
-    QJsonObject obj{
-        {"tid", EventLogUtils::Start},
-        {"mode", 1},
-        {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
-    };
-    EventLogUtils::get().writeLogs(obj);
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -1275,6 +1267,14 @@ void CMainWindow::loadAfterShow()
     showChildWidget();
     m_windowStateThread = new windowStateThread(this);
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
+
+    QJsonObject obj{
+        {"tid", EventLogUtils::Start},
+        {"mode", 1},
+        {"version", VERSION},
+        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+    };
+    EventLogUtils::get().writeLogs(obj);
 }
 
 void CMainWindow::updateBlockSystem(bool bTrue)
