@@ -26,6 +26,7 @@
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
 static int64_t first_pts = 0;
+static int64_t last_pts = 0;
 
 AVFormatContext *mp4_create_context(const char *filename)
 {
@@ -115,14 +116,23 @@ int mp4_write_packet(
         AVRational video_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
 
-        getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
-        getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
+        if (video_pts > last_pts || video_pts == 0) {
+            getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
+            getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
+            set_video_time_capture((double)(pts)/1000/1000000);
+        } else {
+            fprintf(stderr,"pts err:video_pts: %d  last_pts: %d\n", video_pts, last_pts);
+        }
 
-        set_video_time_capture((double)(pts)/1000/1000000);
+        last_pts = video_pts;
         if (first_pts == 0) {
             first_pts = pts;
         } else {
-            video_pts = (double)(pts - first_pts) / 1000000 / 33;
+            video_pts = (double)(pts - first_pts) / 1000000.0 / 33.0;
+            if (video_pts == last_pts)  //pts must be strictly incremented
+                video_pts++;
+            if(video_pts < last_pts)
+                video_pts = last_pts + 1;
         }
     }
 
