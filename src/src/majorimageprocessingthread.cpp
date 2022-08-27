@@ -217,7 +217,6 @@ void MajorImageProcessingThread::run()
                     emit SendFilterImageProcessing(&m_filterImg);
     //                close_v4l2_device_handler();
                 }
-
                 continue;
             }
 
@@ -290,8 +289,7 @@ void MajorImageProcessingThread::run()
                 if (FFmpeg_Env == m_eEncodeEnv) {
                     // yu12到rgb数据高性能转换
                     yu12_to_rgb24_higheffic(m_rgbPtr, m_frame->yuv_frame, m_frame->width, m_frame->height);
-                }
-                else if (GStreamer_Env == m_eEncodeEnv) {
+                } else if (GStreamer_Env == m_eEncodeEnv) {
                     Q_ASSERT(m_rgbPtr);
                     memset(m_rgbPtr, 0, rgbsize * sizeof(uint8_t));
                     memcpy(m_rgbPtr, jpgImage.bits(), rgbsize);
@@ -398,10 +396,33 @@ void MajorImageProcessingThread::run()
                         || GStreamer_Env == m_eEncodeEnv) {
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
+                        emit sigReflushSnapshotLabel();  //
+                    }
+                } else if (FFmpeg_Env == m_eEncodeEnv) {
+                    //nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+
+                    uint8_t *rgbPtr = nullptr;
+                    uint nVdWidth = static_cast<unsigned int>(m_frame->width);
+                    uint nVdHeight = static_cast<unsigned int>(m_frame->height);
+                    if (rgbPtr != nullptr) {
+                        free(rgbPtr);
+                        rgbPtr = nullptr;
+                    }
+
+                    rgbsize = nVdWidth * nVdHeight * 3;
+                    rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
+
+                    yu12_to_rgb24_higheffic(rgbPtr, m_frame->yuv_frame, m_frame->width, m_frame->height);
+                    QImage* saveImg = nullptr;
+                    if (rgbPtr)
+                        saveImg = new QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
+                    if (saveImg->save(m_strPath, "JPG")) {
+                        nRet = 0;
                         emit sigReflushSnapshotLabel();
                     }
-                } else if (FFmpeg_Env == m_eEncodeEnv)
-                    nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
+                    if (saveImg)
+                        delete saveImg;
+                }
 
                 if (nRet < 0) {
                     qWarning() << "保存照片失败";
