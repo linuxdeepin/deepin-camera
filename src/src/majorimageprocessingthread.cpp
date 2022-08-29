@@ -233,6 +233,13 @@ void MajorImageProcessingThread::run()
 
                     yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                     m_yuvPtr = new uchar[yuvsize];
+                    if (m_rgbPtr != nullptr) {
+                        free(m_rgbPtr);
+                        m_rgbPtr = nullptr;
+                    }
+
+                    rgbsize = m_nVdWidth * m_nVdHeight * 3;
+                    m_rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
                 } else {
                     yuvsize = m_nVdWidth * m_nVdHeight * 3 / 2;
                 }
