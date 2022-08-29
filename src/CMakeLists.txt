@@ -14,6 +14,10 @@ set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 #add_definitions(-D__mips__)
 
+include(GNUInstallDirs)
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX /usr)
+endif ()
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
@@ -129,35 +133,31 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
 qt5_use_modules(${TARGET_NAME} ${QtModule})
 
 #application
-install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
+install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 #desk desktop
 install(FILES ${PROJECT_SOURCE_DIR}/deepin-camera.desktop
-    DESTINATION /usr/share/applications)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
 #table desktop
 install(FILES ${PROJECT_SOURCE_DIR}/table/deepin-camera.desktop
-    DESTINATION /usr/share/due-shell/shortcuts)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
 
 #icons
 install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
-    DESTINATION /usr/share/icons/hicolor/scalable/apps)
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 
 #table_icons
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION /usr/share/due-shell/shortcuts)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
 
 #manual
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
 
 #debus_service
-install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/share/dbus-1/services)
-
-##translations
-#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION /usr/share/${PROJECT_SOURCE_DIR}/translations)
-
-set(APPSHAREDIR  /usr/share/${TARGET_NAME})
+install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services)
 
 #translations
+set(APPSHAREDIR  ${CMAKE_INSTALL_DATADIR}/${TARGET_NAME})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
     DESTINATION ${APPSHAREDIR}
     FILES_MATCHING PATTERN "*.qm")
