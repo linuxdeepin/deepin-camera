@@ -17,12 +17,12 @@ add_definitions(-DLUT_DIR="${LUT_DIR}")
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
-    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE")
-    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-need -fPIE")
+    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-needed -fPIE")
+    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-needed -fPIE")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 else()
-    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -Wl,--as-need -fPIE")
-    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3  -Wl,--as-need -fPIE")
+    SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -Wl,--as-needed -fPIE")
+    SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3  -Wl,--as-needed -fPIE")
     SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 endif()
 
