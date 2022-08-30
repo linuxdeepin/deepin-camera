@@ -117,7 +117,9 @@ void PreviewOpenglWidget::initializeGL()
             gl_FragColor = vec4(rgb, 1); \
         }";
     } else {
-        fsrc = "precision mediump float; \
+        fsrc = "#ifdef GL_ES \
+                precision mediump float; \
+                #endif \
         varying vec2 textureOut; \
         uniform sampler2D tex_y; \
         uniform sampler2D tex_u; \
