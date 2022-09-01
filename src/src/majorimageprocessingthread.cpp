@@ -411,10 +411,7 @@ void MajorImageProcessingThread::run()
                     uint8_t *rgbPtr = nullptr;
                     uint nVdWidth = static_cast<unsigned int>(m_frame->width);
                     uint nVdHeight = static_cast<unsigned int>(m_frame->height);
-                    if (rgbPtr != nullptr) {
-                        free(rgbPtr);
-                        rgbPtr = nullptr;
-                    }
+
 
                     rgbsize = nVdWidth * nVdHeight * 3;
                     rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
@@ -429,6 +426,11 @@ void MajorImageProcessingThread::run()
                     }
                     if (saveImg)
                         delete saveImg;
+
+                    if (rgbPtr != nullptr) {
+                        free(rgbPtr);
+                        rgbPtr = nullptr;
+                    }
                 }
 
                 if (nRet < 0) {
