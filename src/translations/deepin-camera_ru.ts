@@ -176,6 +176,18 @@
         <source>Flashlight</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Gridlines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1*1 lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>2*2 lines</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Shortcut</name>
@@ -245,6 +257,14 @@
         <source>None</source>
         <translation>Ничего</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -305,10 +325,6 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Filters Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
