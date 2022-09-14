@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -9,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Otwórz folder</translation>
+        <translation type="vanished">Otwórz katalog</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -55,7 +53,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>Otwórz katalog</translation>
     </message>
     <message>
         <source>Print</source>
@@ -66,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie masz uprawnień do operowania na tym folderze</translation>
+        <translation>Nie posiadasz uprawnień do wykonywania działań na tym katalogu</translation>
     </message>
     <message>
         <source>Close</source>
@@ -74,11 +72,11 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Nieprawidłowy folder</translation>
+        <translation type="vanished">Nieprawidłowy katalog</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz folder</translation>
+        <translation>Otwórz katalog</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -90,7 +88,7 @@
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokalizacja pliku</translation>
+        <translation>Położenie pliku</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -106,7 +104,7 @@
     </message>
     <message>
         <source>Output</source>
-        <translation>Wynik</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <source>Output format</source>
@@ -178,15 +176,15 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linie siatki</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>1*1 linii</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>2*2 linii</translation>
     </message>
 </context>
 <context>
@@ -257,14 +255,6 @@
         <source>None</source>
         <translation>Brak</translation>
     </message>
-    <message>
-        <source>mp4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -317,7 +307,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Opóźnij migawkę</translation>
+        <translation>Opóźnienie przechwytywania</translation>
     </message>
     <message>
         <source>None</source>
@@ -329,18 +319,18 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Odsłonięcie</translation>
+        <translation>Wystawienie</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nie znaleziono kamery internetowej</translation>
+        <translation>Nie odnaleziono kamery internetowej</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera internetowa jest używana</translation>
+        <translation>Kamera internetowa jest już w użyciu</translation>
     </message>
     <message>
         <source>Stop recording</source>
