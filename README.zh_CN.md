@@ -56,7 +56,7 @@ We encourage you to report issues and contribute changes
 
 ## 协议
 
-This project is licensed under GPLv3 or any later version.
+deepin-camera 根据 [GPL-3.0-or-later]（许可证）获得许可.
 
 
 
