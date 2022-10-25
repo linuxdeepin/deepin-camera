@@ -768,6 +768,9 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
+
+    //修复在性能较差的电脑上启动闪烁白框
+    initUI();
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -1211,8 +1214,6 @@ void CMainWindow::loadAfterShow()
 {
     encodeenv = DataManager::instance()->encodeEnv();
     initDynamicLibPath();
-    //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
-    initUI();
     initShortcut();
     gviewencoder_init();
     v4l2core_init();
