@@ -247,9 +247,9 @@ void MajorImageProcessingThread::run()
 
             // 判断是否使用rgb数据
             bool bUseRgb = false;
-    #ifdef __mips__
+#if defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64) || defined (__mips__)
             bUseRgb = true;
-    #endif
+#endif
             if (get_wayland_status())
                 bUseRgb = true;
 
