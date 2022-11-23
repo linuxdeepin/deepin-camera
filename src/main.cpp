@@ -82,7 +82,7 @@ static bool CheckFFmpegEnv()
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    if (list.contains("libavcodec.so")) {
+    if (list.contains("libavcodec.so") || list.contains("libavcodec.so.58")) {
         return true;
     }
     return false;
