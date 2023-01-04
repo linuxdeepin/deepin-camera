@@ -154,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rezoluție:</translation>
+        <translation type="vanished">Rezoluție:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -186,6 +186,10 @@
     </message>
     <message>
         <source>2*2 lines</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -256,14 +260,6 @@
     <message>
         <source>None</source>
         <translation>Nimic</translation>
-    </message>
-    <message>
-        <source>mp4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>webm</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

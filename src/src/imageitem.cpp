@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -281,7 +281,8 @@ void ImageItem::onOpenFolder()
         //这里不能直接使用strFolder调replace函数
         m_path.replace(0, 1, QDir::homePath());
     }
-    Dtk::Widget::DDesktopServices::showFolder(m_path);
+    QString path = QFileInfo(m_path).absolutePath();
+    Dtk::Widget::DDesktopServices::showFolder(path);
     qDebug() << "Click the right mouse or press the shortcut to open the folder";
 }
 
@@ -311,33 +312,47 @@ void ImageItem::initShortcut()
 void ImageItem::openFile()
 {
     QFileInfo fileInfo(m_path);
-    QString program;
+    QString program("dde-file-manager"); //dbus调用失败，通过文管打开
     QStringList arguments;
     if (m_path.isEmpty()) {
         return;
     }
+
+    bool ret = false;
+
     if (fileInfo.suffix() == "jpg") {
-        program = "deepin-image-viewer"; //用看图打开
-        arguments << m_path;
+        //用看图打开
+        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.ImageViewer",
+                                   "/com/deepin/ImageViewer",
+                                   "com.deepin.ImageViewer",
+                                   "openFile");
+        message << m_path;
+        ret = QDBusConnection::sessionBus().send(message);
         qDebug() << "Open it with deepin-image-viewer";
     } else {
-        program = "deepin-movie"; //用影院打开
-        arguments << m_path;
+        //用影院打开
+        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie",
+                                   "/",
+                                   "com.deepin.movie",
+                                   "openFile");
+        message << m_path;
+        ret = QDBusConnection::sessionBus().send(message);
+
         qDebug() << "Open it with deepin-movie";
     }
 
     qInfo() << m_path;
     QProcess *myProcess = new QProcess(this);
-    bool bOK = myProcess->startDetached(program, arguments);
+//    bool bOK = myProcess->startDetached(program, arguments);
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
 
-    if (!bOK) { //打开失败，调用文管选择“打开方式”窗口
+    if (!ret) { //打开失败，调用文管选择“打开方式”窗口
         qWarning() << "QProcess startDetached error";
         arguments.clear();
         program = "dde-file-manager";
         arguments << "-o" << m_path;
-        bOK = myProcess->startDetached(program, arguments);
+        ret = myProcess->startDetached(program, arguments);
     }
 }
 

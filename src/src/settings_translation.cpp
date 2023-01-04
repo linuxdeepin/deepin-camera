@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -29,5 +29,5 @@ void GenerateSettingTranslate()
     auto outsetting_10pcs = QObject::tr("10 pcs");
     auto outsetting_none = QObject::tr("None");
     auto outsetting_resolutionsettingName = QObject::tr("Resolution settings");
-    auto outsetting_resolutionsetting_resolutionName = QObject::tr("Resolution:");
+    auto outsetting_resolutionsetting_resolutionName = QObject::tr("Maximum resolution:");
 }

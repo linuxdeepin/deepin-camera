@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,6 +27,8 @@ typedef AVCodec *(*uos_avcodec_find_encoder_by_name)(const char *name);
 typedef AVCodecContext *(*uos_avcodec_alloc_context)(const AVCodec *codec);
 typedef void (*uos_avcodec_free_context)(AVCodecContext **avctx);
 typedef AVCodecContext *(*uos_avcodec_alloc_context3)(const AVCodec *codec);
+//int avcodec_get_context_defaults3(AVCodecContext *s, const AVCodec *codec);
+typedef int (*uos_avcodec_get_context_defaults3)(AVCodecContext *s, const AVCodec *codec);
 //int avcodec_open2(AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options);
 typedef int (*uos_avcodec_open2)(AVCodecContext *avctx, const AVCodec *codec, AVDictionary **options);
 //void avcodec_flush_buffers(AVCodecContext *avctx);
@@ -98,6 +100,7 @@ typedef struct _LoadLibs {
     uos_avcodec_alloc_context m_avcodec_alloc_context;
     uos_avcodec_free_context m_avcodec_free_context;
     uos_avcodec_alloc_context3 m_avcodec_alloc_context3;
+    uos_avcodec_get_context_defaults3 m_avcodec_get_context_defaults3;
     uos_avcodec_open2 m_avcodec_open2;
     uos_avcodec_flush_buffers m_avcodec_flush_buffers;
     uos_avcodec_close m_avcodec_close;

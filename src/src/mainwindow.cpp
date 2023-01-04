@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -768,9 +768,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
-
-    //修复在性能较差的电脑上启动闪烁白框
-    initUI();
 }
 
 void CMainWindow::slotPopupSettingsDialog()
@@ -1214,6 +1211,8 @@ void CMainWindow::loadAfterShow()
 {
     encodeenv = DataManager::instance()->encodeEnv();
     initDynamicLibPath();
+    //该方法导致键盘可用性降低，调试时无法使用、触摸屏无法唤起多次右键菜单，改用备用方案
+    initUI();
     initShortcut();
     gviewencoder_init();
     v4l2core_init();
@@ -1881,8 +1880,8 @@ void CMainWindow::initConnection()
 
     //控制中心更改了本地时间，及时更新当前时间
     //避免时间往前切换过后，需要点击两次才能结束录制
-    QDBusConnection::sessionBus().connect("com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate",
-                                          "com.deepin.daemon.Timedate", "TimeUpdate", this,
+    QDBusConnection::sessionBus().connect("org.deepin.daemon.Timedate1", "/org/deepin/daemon/Timedate1",
+                                          "org.deepin.daemon.Timedate1", "TimeUpdate", this,
                                           SLOT(onLocalTimeChanged()));
 
     QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",

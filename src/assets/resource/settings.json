@@ -182,7 +182,7 @@
                     "options": [
                         {
                             "key": "resolution",
-                            "name": "Resolution:",
+                            "name": "Maximum resolution:",
                             "type":"combobox",
                             "default": " "
                         }

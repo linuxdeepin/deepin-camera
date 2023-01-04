@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pl" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pl">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -7,7 +9,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Otwórz katalog</translation>
+        <translation type="vanished">Otwórz folder</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -53,7 +55,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
     <message>
         <source>Print</source>
@@ -64,7 +66,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie posiadasz uprawnień do wykonywania działań na tym katalogu</translation>
+        <translation>Nie masz uprawnień do operowania na tym folderze</translation>
     </message>
     <message>
         <source>Close</source>
@@ -72,11 +74,11 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Nieprawidłowy katalog</translation>
+        <translation type="vanished">Nieprawidłowy folder</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otwórz katalog</translation>
+        <translation>Otwórz folder</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -88,7 +90,7 @@
     </message>
     <message>
         <source>File location</source>
-        <translation>Położenie pliku</translation>
+        <translation>Lokalizacja pliku</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -104,7 +106,7 @@
     </message>
     <message>
         <source>Output</source>
-        <translation>Wyjście</translation>
+        <translation>Wynik</translation>
     </message>
     <message>
         <source>Output format</source>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rozdzielczość:</translation>
+        <translation type="vanished">Rozdzielczość:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -176,15 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Linie siatki</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 linii</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 linii</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -307,7 +313,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Opóźnienie przechwytywania</translation>
+        <translation>Opóźnij migawkę</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,18 +325,18 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Wystawienie</translation>
+        <translation>Odsłonięcie</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Nie odnaleziono kamery internetowej</translation>
+        <translation>Nie znaleziono kamery internetowej</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera internetowa jest już w użyciu</translation>
+        <translation>Kamera internetowa jest używana</translation>
     </message>
     <message>
         <source>Stop recording</source>

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -47,10 +47,10 @@ void Settings::init()
 
     QStringList videoFormatList;
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
-        videoFormatList << tr("mp4")
-                        << tr("webm");
+        videoFormatList << "mp4"
+                        << "webm";
     } else {
-        videoFormatList << tr("webm");
+        videoFormatList << "webm";
         m_settings->setOption("outsetting.outformat.vidformat", 0);
     }
     m_settings->option("outsetting.outformat.vidformat")->setData("items", videoFormatList);

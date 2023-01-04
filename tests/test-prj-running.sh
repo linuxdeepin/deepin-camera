@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 remove_cache(){
     export DISPLAY=":0"
     export QT_QPA_PLATFORM=
