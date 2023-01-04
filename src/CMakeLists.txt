@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -14,20 +18,16 @@ set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 #add_definitions(-D__mips__)
 
-include(GNUInstallDirs)
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set(CMAKE_INSTALL_PREFIX /usr)
-endif ()
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
     SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-needed -fPIE")
     SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3 -ftree-vectorize -march=loongson3a -mhard-float -mno-micromips -mno-mips16 -flax-vector-conversions -mloongson-ext2 -mloongson-mmi -Wl,--as-needed -fPIE")
-    SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pie")
+    SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 else()
     SET(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -g -Wl,--as-needed -fPIE")
     SET(CMAKE_C_FLAGS "$ENV{CFLAGS} -O3  -Wl,--as-needed -fPIE")
-    SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -pie")
+    SET(CMAKE_EXE_LINKER_FLAGS  "-pie")
 endif()
 
 include_directories(${PROJECT_BINARY_DIR})
@@ -133,31 +133,35 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
 qt5_use_modules(${TARGET_NAME} ${QtModule})
 
 #application
-install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
 
 #desk desktop
 install(FILES ${PROJECT_SOURCE_DIR}/deepin-camera.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+    DESTINATION /usr/share/applications)
 
 #table desktop
 install(FILES ${PROJECT_SOURCE_DIR}/table/deepin-camera.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
+    DESTINATION /usr/share/due-shell/shortcuts)
 
 #icons
 install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
+    DESTINATION /usr/share/icons/hicolor/scalable/apps)
 
 #table_icons
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION /usr/share/due-shell/shortcuts)
 
 #manual
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
 
 #debus_service
-install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services)
+install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/share/dbus-1/services)
+
+##translations
+#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION /usr/share/${PROJECT_SOURCE_DIR}/translations)
+
+set(APPSHAREDIR  /usr/share/${TARGET_NAME})
 
 #translations
-set(APPSHAREDIR  ${CMAKE_INSTALL_DATADIR}/${TARGET_NAME})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
     DESTINATION ${APPSHAREDIR}
     FILES_MATCHING PATTERN "*.qm")

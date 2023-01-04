@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -82,7 +82,7 @@ static bool CheckFFmpegEnv()
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    if (list.contains("libavcodec.so") || list.contains("libavcodec.so.58")) {
+    if (list.contains("libavcodec.so.58")) {
         return true;
     }
     return false;
@@ -92,7 +92,8 @@ int main(int argc, char *argv[])
 {
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
-    bool bFFmpegEnv = CheckFFmpegEnv();
+//    bool bFFmpegEnv = CheckFFmpegEnv();
+    bool bFFmpegEnv = true;
     if (argc > 1) {
         if (QString(argv[1]) == "-g") {
             bFFmpegEnv = false;
@@ -106,14 +107,14 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
 
-    if (bWayland) {
+//    if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
-    }
+//    }
 
     QTime time;
     time.start();

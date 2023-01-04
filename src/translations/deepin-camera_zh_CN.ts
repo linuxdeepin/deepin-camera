@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="zh_CN" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="zh_CN">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>分辨率：</translation>
+        <translation type="vanished">分辨率：</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -185,6 +187,10 @@
     <message>
         <source>2*2 lines</source>
         <translation>井字网格</translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation>最大分辨率:</translation>
     </message>
 </context>
 <context>

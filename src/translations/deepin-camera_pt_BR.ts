@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="pt_BR" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="pt_BR">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolução:</translation>
+        <translation type="vanished">Resolução:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -176,15 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Linhas de grade</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Linhas 1*1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Linhas 2*2</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -260,35 +266,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Vívido</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Quente</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Frio</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Retro</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Cinema</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Cinzento</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>P&amp;B</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -315,11 +321,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtros</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Exposição</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
