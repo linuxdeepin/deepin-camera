@@ -23,6 +23,11 @@ Files: debian/*
 Copyright: None
 License: CC0-1.0
 
+# patchs
+Files: patches/*
+Copyright: None
+License: CC0-1.0
+
 # selinux
 Files: selinux/*
 Copyright: None
