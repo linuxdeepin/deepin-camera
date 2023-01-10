@@ -215,7 +215,7 @@ videowidget::videowidget(DWidget *parent)
     setGridType(Grid_None);
 
     if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt() ||
-            DataManager::instance()->encodeEnv() != FFmpeg_Env)
+            DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists())
         m_videoFormat = "webm";
 }
 
