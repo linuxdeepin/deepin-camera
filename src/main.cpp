@@ -82,7 +82,24 @@ static bool CheckFFmpegEnv()
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
+
     if (list.contains("libavcodec.so") || list.contains("libavcodec.so.58")) {
+        QLibrary libavcodec;  //检查编码器是否存在
+        libavcodec.setFileName("libavcodec.so");
+        qDebug() << "编码库是否加载成功: "<< libavcodec.load();
+        typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
+        p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
+        m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
+        AVCodec *pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
+
+        if (pCodec) {
+            qDebug() << "编码器存在 AVCodecID:" << AV_CODEC_ID_H264;
+            DataManager::instance()->setEncExists(true);
+        } else {
+            qWarning() << "Can not find output video encoder! (没有找到合适的编码器！) AVCodecID:" << AV_CODEC_ID_H264;
+            DataManager::instance()->setEncExists(false);
+        }
+
         return true;
     }
     return false;
