@@ -84,8 +84,15 @@ static bool CheckFFmpegEnv()
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
 
     if (list.contains("libavcodec.so") || list.contains("libavcodec.so.58")) {
+        QRegExp re("libavcodec.so.*"); //Sometimes libavcodec.so may not exist, so find it through regular expression.
         QLibrary libavcodec;  //检查编码器是否存在
-        libavcodec.setFileName("libavcodec.so");
+        for (int i = 0; i < list.count(); i++) {
+            if (re.exactMatch(list[i])) {
+                libavcodec.setFileName(list[i]);
+                break;
+            }
+        }
+
         qDebug() << "Whether the libavcodec is loaded successfully: "<< libavcodec.load();
         typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
         p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
