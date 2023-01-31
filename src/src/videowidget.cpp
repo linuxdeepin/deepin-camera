@@ -230,8 +230,6 @@ void videowidget::delayInit()
     setFlash(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
     setCapStatus(false);
     m_imgPrcThread->m_bTake = false;
-    connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
-            this, SLOT(ReceiveMajorImage(QImage *, int)));
     if (get_wayland_status() == true) {
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
