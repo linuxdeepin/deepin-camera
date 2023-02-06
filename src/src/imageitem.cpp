@@ -322,13 +322,19 @@ void ImageItem::openFile()
 
     if (fileInfo.suffix() == "jpg") {
         //用看图打开
-        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.ImageViewer",
-                                   "/com/deepin/ImageViewer",
-                                   "com.deepin.ImageViewer",
-                                   "openFile");
+        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.imageViewer",
+                                   "/",
+                                   "com.deepin.imageViewer",
+                                   "openImageFile");
         message << m_path;
-        ret = QDBusConnection::sessionBus().send(message);
-        qDebug() << "Open it with deepin-image-viewer";
+        QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
+
+        if (retMessage.type() != QDBusMessage::ErrorMessage) {
+            ret = true;
+            qDebug() << "Open it with deepin-image-viewer";
+        } else {
+            qWarning() << retMessage.errorMessage();
+        }
     } else {
         //用影院打开
         QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie",
@@ -336,9 +342,14 @@ void ImageItem::openFile()
                                    "com.deepin.movie",
                                    "openFile");
         message << m_path;
-        ret = QDBusConnection::sessionBus().send(message);
+        QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
 
-        qDebug() << "Open it with deepin-movie";
+        if (retMessage.type() != QDBusMessage::ErrorMessage) {
+            ret = true;
+            qDebug() << "Open it with deepin-movie";
+        } else {
+            qWarning() << retMessage.errorMessage();
+        }
     }
 
     qInfo() << m_path;
