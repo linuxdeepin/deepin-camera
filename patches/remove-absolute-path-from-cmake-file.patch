@@ -11,10 +11,10 @@ index c14914a..835a298 100644
  
  if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d0cb2f1..c1fa60a 100644
+index 262e232..f7b4eda 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -7,6 +7,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
+@@ -11,6 +11,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
  project(deepin-camera VERSION 1.0.0)
  set(CMD_NAME deepin-camera)
  set(TARGET_NAME deepin-camera)
@@ -23,7 +23,7 @@ index d0cb2f1..c1fa60a 100644
  #option (__mips__ "Use UNITTEST" ON)
  
  # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
-@@ -43,8 +45,8 @@ set(PROJECT_INCLUDE
+@@ -51,8 +53,8 @@ set(PROJECT_INCLUDE
      ./src/qtsingleapplication
      ./src/accessibility
      ./src/accessible
@@ -34,12 +34,7 @@ index d0cb2f1..c1fa60a 100644
      )
      
  # 设置Qt模块
-@@ -76,12 +78,16 @@ file (GLOB_RECURSE HEADERS
- 
- file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
- 
-+#pkg_check_modules(v4l REQUIRED  v4l-utils)
- pkg_check_modules(3rd_lib REQUIRED
+@@ -88,8 +90,11 @@ pkg_check_modules(3rd_lib REQUIRED
          dtkwidget dtkcore gobject-2.0
  #        libv4l2
  #        libudev
@@ -53,49 +48,50 @@ index d0cb2f1..c1fa60a 100644
  #        libavutil
  #        libavformat
  #        libswscale
-@@ -129,33 +135,33 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
+@@ -137,34 +142,34 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
  qt5_use_modules(${TARGET_NAME} ${QtModule})
  
  #application
--install(TARGETS ${TARGET_NAME} DESTINATION /usr/bin)
-+install(TARGETS ${TARGET_NAME} DESTINATION  ${CMAKE_INSTALL_PREFIX}/bin)
+-install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})
++install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
  
  #desk desktop
  install(FILES ${PROJECT_SOURCE_DIR}/deepin-camera.desktop
--    DESTINATION /usr/share/applications)
-+    DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/applications)
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
++    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/applications)
  
  #table desktop
  install(FILES ${PROJECT_SOURCE_DIR}/table/deepin-camera.desktop
--    DESTINATION /usr/share/due-shell/shortcuts)
-+    DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/due-shell/shortcuts)
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
++    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/due-shell/shortcuts)
  
  #icons
  install(FILES ${PROJECT_SOURCE_DIR}/assets/deepin-camera.svg
--    DESTINATION /usr/share/icons/hicolor/scalable/apps)
-+    DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
++    DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
  
  #table_icons
--install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION /usr/share/due-shell/shortcuts)
-+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/due-shell/shortcuts)
+-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION ${CMAKE_INSTALL_DATADIR}/due-shell/shortcuts)
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/panel/Icons DESTINATION ${CMAKE_INSTALL_PREFIX}/share/due-shell/shortcuts)
  
  #manual
--install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION /usr/share/deepin-manual/manual-assets/application/)
-+install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/deepin-manual/manual-assets/application/)
+-install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
++install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE_INSTALL_PREFIX}/share/deepin-manual/manual-assets/application/)
  
  #debus_service
--install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION /usr/share/dbus-1/services)
-+install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
+-install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services)
++install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_PREFIX}/share/dbus-1/services)
  
  ##translations
--#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION /usr/share/${PROJECT_SOURCE_DIR}/translations)
-+#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION  ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_SOURCE_DIR}/translations)
- 
--set(APPSHAREDIR  /usr/share/${TARGET_NAME})
-+set(APPSHAREDIR   ${CMAKE_INSTALL_PREFIX}/share/${TARGET_NAME})
+-#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_SOURCE_DIR}/translations)
++#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_SOURCE_DIR}/translations)
  
  #translations
+-set(APPSHAREDIR  ${CMAKE_INSTALL_DATADIR}/${TARGET_NAME})
++set(APPSHAREDIR ${CMAKE_INSTALL_PREFIX}/share/${TARGET_NAME})
  install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
+     DESTINATION ${APPSHAREDIR}
+     FILES_MATCHING PATTERN "*.qm")
 diff --git a/src/com.deepin.Camera.service b/src/com.deepin.Camera.service
 index bcc39d0..114a477 100644
 --- a/src/com.deepin.Camera.service
@@ -108,10 +104,10 @@ index bcc39d0..114a477 100644
 -Exec=/usr/bin/qdbus --literal com.deepin.SessionManager /com/deepin/StartManager com.deepin.StartManager.Launch /usr/share/applications/deepin-camera.desktop
 +Exec=/usr/bin/ll-cli run org.deepin.camera --exec deepin-camera
 diff --git a/src/src/mainwindow.cpp b/src/src/mainwindow.cpp
-index 8972250..17aa377 100644
+index d3c6f5c..8dc21d2 100644
 --- a/src/src/mainwindow.cpp
 +++ b/src/src/mainwindow.cpp
-@@ -798,18 +798,31 @@ void CMainWindow::slotPopupSettingsDialog()
+@@ -782,18 +782,31 @@ void CMainWindow::slotPopupSettingsDialog()
  QString CMainWindow::libPath(const QString &strlib)
  {
      QDir  dir;
