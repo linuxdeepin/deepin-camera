@@ -215,11 +215,15 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.drawPath(inside);
 }
 
+static bool mouseDblClick = false;
 void ImageItem::mousePressEvent(QMouseEvent *event)
 {
-    if (event->type() == QEvent::MouseButtonDblClick)
+    if (event->type() == QEvent::MouseButtonDblClick) {
+        mouseDblClick = true;
         return; //不响应双击事件
+    }
 
+    mouseDblClick = false;
     DLabel::mousePressEvent(event);
 }
 
@@ -232,8 +236,9 @@ void ImageItem::mouseMoveEvent(QMouseEvent *event)
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->type() == QEvent::MouseButtonDblClick)
+    if (event->type() == QEvent::MouseButtonDblClick || mouseDblClick) {
         return; //不响应双击事件
+    }
 
     if (!rect().contains(event->pos()))
         return;
