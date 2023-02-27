@@ -203,8 +203,8 @@ videowidget::videowidget(DWidget *parent)
     connect(m_recordingTimer, SIGNAL(timeout()), this, SLOT(showRecTime()));//显示录制时长
     m_flashTimer->setSingleShot(true);
 
-    //设置相机背景色为黑色
-    QColor bgColor(0, 0, 0);
+    //设置相机背景色为灰色
+    QColor bgColor(25, 25, 25);
     QPalette pal(this->palette());
     pal.setColor(QPalette::Background, bgColor);
     this->setAutoFillBackground(true);
@@ -425,6 +425,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             m_openglwidget->show();
 
         malloc_trim(0);
+        emit camAvailable();
     }
 }
 
@@ -480,6 +481,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         default:
             break;
         }
+        emit camAvailable();
     }
 }
 
