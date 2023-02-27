@@ -28,6 +28,7 @@
 #include "previewopenglwidget.h"
 #include "filterpreviewbutton.h"
 #include "gridline.h"
+#include "titlebar.h"
 
 #include "gstvideowriter.h"
 
@@ -120,6 +121,7 @@ signals:
     * @brief noCamAvailable　无相机可获取
     */
     void noCamAvailable();
+    void camAvailable();
 
     /**
     * @brief filename　文件名

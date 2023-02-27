@@ -31,7 +31,7 @@ public:
      */
     DTitlebar *titlebar();
 
-private slots:
+public slots:
     /**
      * @brief slotThemeTypeChanged 主题变化事件槽函数
      */
