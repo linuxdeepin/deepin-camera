@@ -1289,6 +1289,8 @@ void CMainWindow::updateBlockSystem(bool bTrue)
 
 void CMainWindow::onNoCam()
 {
+    m_pTitlebar->titlebar()->setBackgroundTransparent(false);
+    m_pTitlebar->slotThemeTypeChanged();
     showChildWidget();
     onEnableSettings(true);
 }
@@ -1858,6 +1860,9 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
+    connect(m_videoPre, &videowidget::camAvailable, this, [=](){
+        m_pTitlebar->titlebar()->setBackgroundTransparent(true);
+    });
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
 

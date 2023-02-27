@@ -8,6 +8,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QTimer>
+#include <QGraphicsDropShadowEffect>
 
 #include <DApplicationHelper>
 
@@ -35,6 +36,12 @@ RollingBox::RollingBox(QWidget *parent) :
     m_homingAnimation = new QPropertyAnimation(this, "deviation", this);
     m_homingAnimation->setDuration(300);
     m_homingAnimation->setEasingCurve(QEasingCurve::OutQuad);
+
+    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
+    shadowEffect->setOffset(0, 0);
+    shadowEffect->setColor(QColor(33, 33, 33, 125));
+    shadowEffect->setBlurRadius(8);
+    this->setGraphicsEffect(shadowEffect);
 }
 
 void RollingBox::setRange(int min, int max)
@@ -191,6 +198,9 @@ void RollingBox::paintEvent(QPaintEvent *e)
     QRect tmpLeftRect(centerRect.topLeft(), QSize(BTN_HEIGHT, BTN_HEIGHT));
     QRect tmpRightRect(centerRect.topRight() - QPoint(BTN_HEIGHT, 0), QSize(BTN_HEIGHT, BTN_HEIGHT));
     QPainterPath centerPath;
+
+//    painter.setPen(QColor(255, 0, 0));
+//    painter.drawRect(this->rect());
 
     centerPath.moveTo(tmpLeftRect.topRight());
     centerPath.arcTo(tmpLeftRect, 90, 180);

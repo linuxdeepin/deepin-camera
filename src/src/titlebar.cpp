@@ -78,8 +78,10 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
     linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
-    pa.setColor(QPalette::ButtonText, d->lightColor);
-    d->m_titlebar->setPalette(pa);
+    if(DataManager::instance()->getdevStatus() != NOCAM) {
+        pa.setColor(QPalette::ButtonText, d->lightColor);
+        d->m_titlebar->setPalette(pa);
+    }
 
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(QBrush(linearGradient));
