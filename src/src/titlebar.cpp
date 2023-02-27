@@ -36,9 +36,6 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     setLayout(layout);
 
     d->m_titlebar = new DTitlebar(this);
-    //d->m_titlebar->setFocusPolicy(Qt::NoFocus);
-//    d->m_titlebar->setWindowFlags(Qt::WindowMinMaxButtonsHint |
-//                                  Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
     d->m_titlebar->setBackgroundTransparent(true);
     d->m_titlebar->setBlurBackground(false);
     layout->addWidget(d->m_titlebar);
@@ -88,8 +85,10 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
     linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
-    pa.setColor(QPalette::ButtonText, d->lightColor);
-    d->m_titlebar->setPalette(pa);
+    if(DataManager::instance()->getdevStatus() != NOCAM) {
+        pa.setColor(QPalette::ButtonText, d->lightColor);
+        d->m_titlebar->setPalette(pa);
+    }
 
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(QBrush(linearGradient));
