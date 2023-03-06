@@ -2270,7 +2270,7 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         DataManager::instance()->m_tabIndex = 9;
     } else if (e->type() == QEvent::MouseButtonPress) {
         DataManager::instance()->m_tabIndex = 0;
-        m_videoPre->setFocus();
+        m_pTitlebar->setFocus();
     } else {
         QWidget::eventFilter(obj, e);//调用父类事件过滤器
     }
