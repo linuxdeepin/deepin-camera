@@ -172,6 +172,12 @@ static LoadLibs *newClass(void)
 
     pLibs->m_sws_freeContext = (uos_sws_freeContext)dlsym(handle4, "sws_freeContext");
     PrintError();
+//----vaapi----
+    pLibs->m_sws_getContext = (uos_sws_getContext)dlsym(handle4, "sws_getContext");  //libswscale/swscale.h
+    PrintError();
+    pLibs->m_sws_scale = (uos_sws_scale)dlsym(handle4, "sws_scale");  //libswscale/swscale.h
+    PrintError();
+
     assert(pLibs != NULL);
     return pLibs;
 }
@@ -338,7 +344,26 @@ static LoadAvutil *newAvutil(void)
     PrintError();
     Avutil->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
     PrintError();
-
+//----vaapi----
+    Avutil->m_av_hwdevice_ctx_create = (uos_av_hwdevice_ctx_create)dlsym(handle5, "av_hwdevice_ctx_create");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_hwframe_ctx_alloc = (uos_av_hwframe_ctx_alloc)dlsym(handle5, "av_hwframe_ctx_alloc");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_hwframe_get_buffer = (uos_av_hwframe_get_buffer)dlsym(handle5, "av_hwframe_get_buffer");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_frame_get_buffer = (uos_av_frame_get_buffer)dlsym(handle5, "av_frame_get_buffer");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_hwframe_ctx_init = (uos_av_hwframe_ctx_init)dlsym(handle5, "av_hwframe_ctx_init");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_hwframe_transfer_data = (uos_av_hwframe_transfer_data)dlsym(handle5, "av_hwframe_transfer_data");  //libavutil/hwcontext.h
+    PrintError();
+    Avutil->m_av_buffer_unref = (uos_av_buffer_unref)dlsym(handle5, "av_buffer_unref");  
+    PrintError();
+    Avutil->m_av_buffer_ref = (uos_av_buffer_ref)dlsym(handle5, "av_buffer_ref");  
+    PrintError();
+    Avutil->m_av_image_alloc = (uos_av_image_alloc)dlsym(handle5, "av_image_alloc");  
+    PrintError();
+    
     assert(Avutil != NULL);
     return Avutil;
 }
