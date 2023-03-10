@@ -78,6 +78,25 @@ typedef void (*uos_swr_free)(struct SwrContext **s);
 typedef void (*uos_sws_freeContext)(struct SwsContext *swsContext);
 typedef int (*uos_avcodec_is_open)(AVCodecContext *s);
 typedef int (*uos_av_codec_is_encoder)( AVCodec *codec);
+    //----VAAPI------
+typedef int (*uos_av_hwdevice_ctx_create)(AVBufferRef **device_ctx, enum AVHWDeviceType type, const char *device, AVDictionary *opts, int flags);
+typedef AVBufferRef *(*uos_av_hwframe_ctx_alloc)( AVBufferRef *device_ctx );  //AVBufferRef *av_hwframe_ctx_alloc(AVBufferRef *device_ctx);
+typedef int (*uos_av_hwframe_get_buffer)( AVBufferRef *hwframe_ctx, AVFrame *frame, int flags );
+typedef int (*uos_av_frame_get_buffer)( AVFrame *frame, int align );
+typedef int (*uos_av_hwframe_ctx_init)( AVBufferRef *ref);
+typedef int (*uos_av_hwframe_transfer_data)( AVFrame *dst, const AVFrame *src, int flags );
+typedef int (*uos_av_buffer_unref)( AVBufferRef **buf);
+typedef AVBufferRef *(*uos_av_buffer_ref)( AVBufferRef *buf);      //AVBufferRef *av_buffer_ref(AVBufferRef *buf);
+typedef int (*uos_av_image_alloc)( uint8_t *pointers[4], int linesizes[4],int w, int h, enum AVPixelFormat pix_fmt, int align); 
+typedef struct SwsContext  *(*uos_sws_getContext)( int srcW, int srcH, enum AVPixelFormat srcFormat,\
+                                  int dstW, int dstH, enum AVPixelFormat dstFormat,\
+                                  int flags, SwsFilter *srcFilter,\
+                                  SwsFilter *dstFilter, const double *param);
+typedef int (*uos_sws_scale)( struct SwsContext *c, const uint8_t *const srcSlice[],\
+              const int srcStride[], int srcSliceY, int srcSliceH,\
+              uint8_t *const dst[], const int dstStride[]);
+   //----VAAPI------
+
 typedef struct _LoadLibNames {
     char *chAvcodec;
     char *chFfmpegthumbnailer;
@@ -119,6 +138,11 @@ typedef struct _LoadLibs {
 
     uos_av_codec_is_encoder m_av_codec_is_encoder;
     uos_avcodec_is_open m_avcodec_is_open;
+
+
+    uos_sws_getContext  m_sws_getContext;
+    uos_sws_scale  m_sws_scale;
+    //----VAAPI------
 
     uos_video_thumbnailer m_video_thumbnailer;
     uos_video_thumbnailer_destroy m_video_thumbnailer_destroy;
@@ -231,6 +255,16 @@ typedef struct _LoadAvutil {
     uos_av_samples_get_buffer_size m_av_samples_get_buffer_size;
     uos_av_get_media_type_string m_av_get_media_type_string;//
     uos_av_image_get_buffer_size m_av_image_get_buffer_size;
+        //----VAAPI------
+    uos_av_hwdevice_ctx_create  m_av_hwdevice_ctx_create;
+    uos_av_hwframe_ctx_alloc  m_av_hwframe_ctx_alloc;
+    uos_av_hwframe_get_buffer  m_av_hwframe_get_buffer;
+    uos_av_frame_get_buffer  m_av_frame_get_buffer;
+    uos_av_hwframe_ctx_init  m_av_hwframe_ctx_init;
+    uos_av_hwframe_transfer_data  m_av_hwframe_transfer_data;
+    uos_av_buffer_unref  m_av_buffer_unref;
+    uos_av_buffer_ref  m_av_buffer_ref;
+    uos_av_image_alloc  m_av_image_alloc;
 
 } LoadAvutil;
 LoadAvutil *getAvutil();

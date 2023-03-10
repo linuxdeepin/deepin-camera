@@ -107,14 +107,14 @@ int main(int argc, char *argv[])
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
     }
 
-//    if (bWayland) {
+   if (bWayland) {
         //默认走xdgv6,该库没有维护了，因此需要添加该代码
         qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
-//    }
+   }
 
     QTime time;
     time.start();
