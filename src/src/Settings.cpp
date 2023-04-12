@@ -47,8 +47,12 @@ void Settings::init()
 
     QStringList videoFormatList;
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
-        videoFormatList << "mp4"
-                        << "webm";
+        if (DataManager::instance()->encExists()) {
+            videoFormatList << tr("mp4") << tr("webm");
+        } else {
+            videoFormatList << tr("webm");
+            m_settings->setOption("outsetting.outformat.vidformat", 0);
+        }
     } else {
         videoFormatList << "webm";
         m_settings->setOption("outsetting.outformat.vidformat", 0);
