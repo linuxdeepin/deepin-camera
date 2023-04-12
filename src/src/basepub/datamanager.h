@@ -140,6 +140,9 @@ public:
      */
     EncodeEnv encodeEnv();
 
+    void setEncExists(bool status);
+    bool encExists();
+
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -148,5 +151,6 @@ private:
     int m_videoCount;
     EncodeEnv m_encodeEnv;
     volatile enum DeviceStatus m_devStatus;
+    bool m_H264EncoderExists;
 };
 #endif // DATAMANAGER_H

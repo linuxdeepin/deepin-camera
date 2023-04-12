@@ -46,6 +46,15 @@ EncodeEnv DataManager::encodeEnv()
     return m_encodeEnv;
 }
 
+void DataManager::setEncExists(bool status)
+{
+    m_H264EncoderExists = status;
+}
+
+bool DataManager::encExists(){
+    return m_H264EncoderExists;
+}
+
 DataManager *DataManager::instance()
 {
     if (m_dataManager == nullptr) {
@@ -63,5 +72,6 @@ DataManager::DataManager()
     m_videoCount = 0;
     m_encodeEnv = GStreamer_Env;
     m_devStatus = DeviceStatus::NOCAM;
+    m_H264EncoderExists = false;
 }
 
