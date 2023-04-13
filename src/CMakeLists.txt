@@ -16,7 +16,14 @@ set(TARGET_NAME deepin-camera)
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
 set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
-#add_definitions(-D__mips__)
+
+# 判断系统环境
+file(STRINGS "/etc/os-version" MAJOR_STR REGEX "MajorVersion")
+string(REGEX MATCH "[0-9]+" MAJOR_VERSION "${MAJOR_STR}")
+if (MAJOR_VERSION MATCHES "23")
+    message("--------------------- OS_BUILD_V23 on")
+    add_definitions(-DOS_BUILD_V23)
+endif()
 
 include(GNUInstallDirs)
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

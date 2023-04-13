@@ -247,9 +247,9 @@ void MajorImageProcessingThread::run()
 
             // 判断是否使用rgb数据
             bool bUseRgb = false;
-    #ifdef __mips__
+#if defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64) || defined (__mips__)
             bUseRgb = true;
-    #endif
+#endif
             if (get_wayland_status())
                 bUseRgb = true;
 
@@ -396,6 +396,7 @@ void MajorImageProcessingThread::run()
                     uint nVdWidth = static_cast<unsigned int>(m_frame->width);
                     uint nVdHeight = static_cast<unsigned int>(m_frame->height);
 
+
                     rgbsize = nVdWidth * nVdHeight * 3;
                     rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
 
@@ -409,6 +410,7 @@ void MajorImageProcessingThread::run()
                     }
                     if (saveImg)
                         delete saveImg;
+
                     if (rgbPtr != nullptr) {
                         free(rgbPtr);
                         rgbPtr = nullptr;
@@ -459,6 +461,8 @@ void MajorImageProcessingThread::run()
     #ifdef UNITTEST
             break;
     #endif
+            //保证画面流畅的前提下降低刷新率
+            msleep(33);
         }
 
         v4l2core_stop_stream(m_videoDevice);
