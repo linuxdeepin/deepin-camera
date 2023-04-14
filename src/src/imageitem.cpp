@@ -324,7 +324,10 @@ void ImageItem::openFile()
     }
 
     bool ret = false;
+    QProcess *myProcess = new QProcess(this);
 
+#ifdef OS_BUILD_V23
+    //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
     if (fileInfo.suffix() == "jpg") {
         //用看图打开
         QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.imageViewer",
@@ -336,7 +339,7 @@ void ImageItem::openFile()
 
         if (retMessage.type() != QDBusMessage::ErrorMessage) {
             ret = true;
-            qDebug() << "Open it with deepin-image-viewer";
+            qDebug() << "[dbus] Open it with deepin-image-viewer";
         } else {
             qWarning() << retMessage.errorMessage();
         }
@@ -351,15 +354,25 @@ void ImageItem::openFile()
 
         if (retMessage.type() != QDBusMessage::ErrorMessage) {
             ret = true;
-            qDebug() << "Open it with deepin-movie";
+            qDebug() << "[dbus] Open it with deepin-movie";
         } else {
             qWarning() << retMessage.errorMessage();
         }
     }
-
+#else
+    if (fileInfo.suffix() == "jpg") {
+            program = "deepin-image-viewer"; //用看图打开
+            arguments << m_path;
+            qDebug() << "[process] Open it with deepin-image-viewer";
+        } else {
+            program = "deepin-movie"; //用影院打开
+            arguments << m_path;
+            qDebug() << "[process] Open it with deepin-movie";
+        }
+    ret = myProcess->startDetached(program, arguments);
+#endif
     qInfo() << m_path;
-    QProcess *myProcess = new QProcess(this);
-//    bool bOK = myProcess->startDetached(program, arguments);
+
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
 
