@@ -1400,6 +1400,10 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
             onStopPhotoAndRecord();
 
             m_videoPre->m_imgPrcThread->stop();
+
+            v4l2_dev_t *vd =  get_v4l2_device_handler();
+            if (vd != nullptr)
+                close_v4l2_device_handler();
             qDebug() << "lock end";
         } else {
             qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
