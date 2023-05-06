@@ -1392,31 +1392,30 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 {
     qDebug() << serviceName << key2value << endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
-    if (m_bWayland) {
+    //wayland下只需要停止录像，不需要停止线程，需要在锁屏状态下继续处理摄像头状态
+//    if (m_bWayland) {
 
+//        if (key2value.value("Locked").value<bool>()) {
+//            qDebug() << "locked";
+
+//            onStopPhotoAndRecord();
+
+//            m_videoPre->m_imgPrcThread->stop();
+
+//            v4l2_dev_t *vd =  get_v4l2_device_handler();
+//            qDebug() << "lock end";
+//        } else {
+//            qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+//            //打开摄像头
+//            m_videoPre->onChangeDev();
+//            qDebug() << "v4l2core_start_stream OK";
+//        }
+
+//    } else { //锁屏结束连拍
         if (key2value.value("Locked").value<bool>()) {
-            qDebug() << "locked";
-
-            onStopPhotoAndRecord();
-
-            m_videoPre->m_imgPrcThread->stop();
-
-            v4l2_dev_t *vd =  get_v4l2_device_handler();
-            if (vd != nullptr)
-                close_v4l2_device_handler();
-            qDebug() << "lock end";
-        } else {
-            qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
-            //打开摄像头
-            m_videoPre->onChangeDev();
-            qDebug() << "v4l2core_start_stream OK";
-        }
-
-    } else { //锁屏结束连拍
-        if (key2value.value("Locked").value<bool>()) {
             onStopPhotoAndRecord();
         }
-    }
+//    }
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
