@@ -11,6 +11,7 @@ extern "C"
 #include "capplication.h"
 #include "cameraconfig.h"
 #include "acobjectlist.h"
+#include "dbus_adpator.h"
 
 extern "C"
 {
@@ -210,6 +211,10 @@ int main(int argc, char *argv[])
 
     w.show();
     w.loadAfterShow();
+
+    ApplicationAdaptor adaptor(&w);
+    QDBusConnection::sessionBus().registerService("com.deepin.camera");
+    QDBusConnection::sessionBus().registerObject(QDir::separator(), &w);
 
     return qApp->exec();
 }
