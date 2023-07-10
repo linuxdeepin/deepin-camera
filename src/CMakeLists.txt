@@ -14,6 +14,12 @@ set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 #add_definitions(-D__mips__)
 
+execute_process(COMMAND cat /etc/os-version COMMAND grep MinorVersion COMMAND grep -o \\-\\?[0-9]\\+ OUTPUT_VARIABLE osversion)
+if(NOT (${osversion} LESS 1050))
+    message(${osversion})
+    add_definitions(-DKF5_WAYLAND_FLAGE_ON)
+endif()
+
 include(GNUInstallDirs)
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
@@ -82,6 +88,7 @@ file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkcore gobject-2.0
+        epoxy
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -127,7 +134,10 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
     imagevisualresult
+    KF5WaylandClient
     )
+
+include_directories("/usr/include/KF5")
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
