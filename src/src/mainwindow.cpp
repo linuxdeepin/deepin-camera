@@ -1250,7 +1250,7 @@ void CMainWindow::loadAfterShow()
     m_filterName->setText(filterPreviewButton::filterName(filter_Normal));
 
     showChildWidget();
-    m_windowStateThread = new windowStateThread(this);
+    m_windowStateThread = new windowStateThread(m_bWayland, this);
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 
     QJsonObject obj{
@@ -1480,7 +1480,7 @@ void CMainWindow::onPhotoRecordBtnClked()
             int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
             if (nContinuous > 1) {
                 // 仅在连拍模式下才开启窗口状态监听线程
-                if (!m_windowStateThread->isRunning()) {
+                if (!m_windowStateThread->isRunning() && !m_bWayland) {
                     m_windowStateThread->start();
                 }
             }
@@ -1495,7 +1495,7 @@ void CMainWindow::onPhotoRecordBtnClked()
                 return;
 
             m_videoPre->onTakeVideo();
-            if (!m_windowStateThread->isRunning()) {
+            if (!m_windowStateThread->isRunning() && !m_bWayland) {
                 m_windowStateThread->start();
             }
         }
@@ -1517,7 +1517,7 @@ void CMainWindow::onUpdateRecordState(int state)
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
     if (false == m_bRecording
-            && m_windowStateThread->isRunning()) {
+            && m_windowStateThread->isRunning() && !m_bWayland) {
         m_windowStateThread->requestInterruption();
     }
 }
@@ -1528,7 +1528,7 @@ void CMainWindow::onUpdatePhotoState(int state)
     m_photoState = state;
     showChildWidget();
     if (photoNormal == state
-            && m_windowStateThread->isRunning()) {
+            && m_windowStateThread->isRunning() && !m_bWayland) {
         m_windowStateThread->requestInterruption();
     }
 }
