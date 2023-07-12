@@ -8,6 +8,7 @@ Build-Depends:
  libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,qttools5-dev,
  qttools5-dev-tools,deepin-gettext-tools,libdframeworkdbus-dev,
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,
+ libkf5wayland-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,
  libx11-dev,libva-dev,libimageeditor-dev,libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,gstreamer1.0-plugins-good
 Standards-Version: 4.1.2

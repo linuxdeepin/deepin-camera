@@ -114,7 +114,11 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
 #    z
 
     imagevisualresult
+    KF5WaylandClient
     )
+
+include_directories("/usr/include/KF5")
+
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${PROJECT_NAME} ${QtModule})
