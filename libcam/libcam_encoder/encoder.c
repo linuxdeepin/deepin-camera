@@ -1791,9 +1791,14 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 
 	encoder_audio_context_t *enc_audio_ctx = encoder_ctx->enc_audio_ctx;
 
-	int outsize = 0;
+    int outsize = 0;
 
-	if(!enc_audio_ctx)
+    if (!audio_data) {
+        fprintf(stderr, "ENCODER: audio_data is empty.");
+        return outsize;
+    }
+
+    if(!enc_audio_ctx)
 	{
 		if(verbosity > 1)
 			printf("ENCODER: audio encoder not set\n");
