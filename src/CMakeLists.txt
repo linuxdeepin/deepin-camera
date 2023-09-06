@@ -154,6 +154,7 @@ if (USE_DEEPIN_WAYLAND)
     if (DWayland_FOUND)
         set(LIBS DWaylandClient DWaylandServer)
     else()
+        message("KF5 environment")
         set(LIBS KF5::WaylandClient KF5::WaylandServer)
     endif()
 endif()
@@ -168,6 +169,8 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     imagevisualresult
     ${LIBS}
     )
+
+include_directories("/usr/include")
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
