@@ -1699,7 +1699,10 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
     for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
     {
         if( my_width <= vd->list_stream_formats[format_index].list_stream_cap[i].width &&
-            my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height)
+            my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height &&
+            ((vd->list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+             && (vd->list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
+             && (vd->list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0))
         {
             my_width = vd->list_stream_formats[format_index].list_stream_cap[i].width;
             my_height = vd->list_stream_formats[format_index].list_stream_cap[i].height;

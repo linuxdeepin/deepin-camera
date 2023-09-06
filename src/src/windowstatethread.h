@@ -29,6 +29,8 @@
 using namespace KWayland::Client;
 #endif // USE_DEEPIN_WAYLAND
 
+DGUI_USE_NAMESPACE
+
 class windowStateThread : public QThread
 {
     Q_OBJECT
