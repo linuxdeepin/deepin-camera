@@ -62,7 +62,7 @@ private:
 private:
 #ifdef USE_DEEPIN_WAYLAND
     // 获取wayland窗口信息相关。 wayland获取窗口的方法对于x11有很大的区别
-    QThread *m_connectionThread;
+    QThread *m_connectionThread = nullptr;
     EventQueue *m_eventQueue = nullptr;
     ConnectionThread *m_connectionThreadObject;
     Compositor *m_compositor = nullptr;
