@@ -1704,6 +1704,8 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
              && (vd->list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
              && (vd->list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0))
         {
+            if (vd->list_stream_formats[format_index].list_stream_cap[i].width > 1920 && vd->list_stream_formats[format_index].list_stream_cap[i].height > 1080)
+                return;
             my_width = vd->list_stream_formats[format_index].list_stream_cap[i].width;
             my_height = vd->list_stream_formats[format_index].list_stream_cap[i].height;
         }
