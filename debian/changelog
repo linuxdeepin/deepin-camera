@@ -1,3 +1,10 @@
+deepin-camera (6.0.3) unstable; urgency=medium
+
+  * Merge release/eagle branch changes into the master branch.
+  * Fix some bugs: 198571 198939 200273 207319 217973
+
+ -- renbin <renbin@uniontech.com>  Fri, 13 Oct 2023 16:18:50 +0800
+
 deepin-camera (6.0.2) unstable; urgency=medium
 
   * New version 6.0.2
