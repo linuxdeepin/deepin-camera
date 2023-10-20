@@ -121,8 +121,7 @@ int main(int argc, char *argv[])
 {
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
-//    bool bFFmpegEnv = CheckFFmpegEnv();
-    bool bFFmpegEnv = true;
+    bool bFFmpegEnv = CheckFFmpegEnv();
     if (argc > 1) {
         if (QString(argv[1]) == "-g") {
             bFFmpegEnv = false;
