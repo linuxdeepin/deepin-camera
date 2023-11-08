@@ -433,6 +433,13 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
 void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
+    // 若窗口高度改变，需要刷新整个窗口，防止上一帧图像出现在其它区域
+    static int height = this->height();
+    if (height != this->height()) {
+        update();
+        height = this->height();
+    }
+
     if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
@@ -452,9 +459,8 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_openglwidget && m_openglwidget->isVisible())
                 m_openglwidget->hide();
             {
-                // OpenGL窗口等比例缩放画面
-                int widgetwidth = width();
-                int widgetheight = height();
+                int widgetwidth = this->width();
+                int widgetheight = this->height();
                 if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
                     QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                     m_framePixmap = QPixmap::fromImage(img);
