@@ -1518,7 +1518,6 @@ static int libav_send_encode(AVCodecContext *avctx, AVFrame *frame)
         fprintf(stderr, "ENCODER: codec not an encoder\n");
 
     if (frame) {
-
         if (avctx->codec_type == AVMEDIA_TYPE_AUDIO && frame->nb_samples != avctx->frame_size)
             fprintf(stderr, "ENCODER: audio samples differ from frame size\n");
         if (avctx->codec_type == AVMEDIA_TYPE_AUDIO && frame->channels <= 0) {
@@ -1756,7 +1755,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
     int outsize = 0;
 
     if (!audio_data) {
-        fprintf(stderr, "ENCODER: audio_data is empty.");
+        fprintf(stderr, "ENCODER: audio_data is empty.\n");
         return outsize;
     }
 
@@ -1994,7 +1993,7 @@ void encoder_close(encoder_context_t *encoder_ctx)
     /*close audio codec*/
     if (enc_audio_ctx) {
         //测试video时长是否正常
-        printf("video_duration:%d", enc_audio_ctx->duration);
+        printf("video_duration:%d\n", enc_audio_ctx->duration);
         audio_codec_data = (encoder_codec_data_t *) enc_audio_ctx->codec_data;
         if (audio_codec_data) {
             getLoadLibsInstance()->m_avcodec_flush_buffers(audio_codec_data->codec_context);
