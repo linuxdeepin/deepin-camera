@@ -108,6 +108,8 @@ static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
 
+static int encode_thread_running = 0;
+
 
 void set_video_time_capture(double video_time)
 {
@@ -1290,13 +1292,18 @@ void *capture_loop(void *data)
  */
 int start_encoder_thread(void *data)
 {
+    if (encode_thread_running)
+        return 0;
+
     int ret = __THREAD_CREATE(&encoder_thread, encoder_loop, data);
 
-    if(ret)
+    if(ret) {
         fprintf(stderr, "deepin-camera: encoder thread creation failed (%i)\n", ret);
-    else if(debug_level > 2)
-        printf("deepin-camera: created encoder thread with tid: %u\n",
-            (unsigned int) encoder_thread);
+    } else {
+        if(debug_level > 2)
+            printf("deepin-camera: created encoder thread with tid: %u\n", (unsigned int) encoder_thread);
+        encode_thread_running = 1;
+    }
 
     return ret;
 }
@@ -1323,6 +1330,8 @@ int stop_encoder_thread()
 
     if(debug_level > 1)
         printf("deepin-camera: encoder thread terminated and joined\n");
+
+    encode_thread_running = 0;
 
     return 0;
 }
