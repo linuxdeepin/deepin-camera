@@ -1,3 +1,12 @@
+deepin-camera (6.0.4) unstable; urgency=medium
+
+  * fix: static image appears blow when opening the camera
+  * fix: quick click on satrt/end button during high-resolution recording
+    causing crash
+  * fix: determine single instance execution through DTK interface 
+
+ -- fengli <fengli@uniontech.com>  Wed, 06 Dec 2023 13:22:50 +0800
+
 deepin-camera (6.0.3) unstable; urgency=medium
 
   * Merge release/eagle branch changes into the master branch.
