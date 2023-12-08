@@ -39,7 +39,7 @@ windowStateThread::windowStateThread(bool isWayland, QObject *parent /*= nullptr
 windowStateThread::~windowStateThread()
 {
 #ifdef USE_DEEPIN_WAYLAND
-    if (m_connectionThread == nullptr) {
+    if (m_connectionThread != nullptr) {
         m_connectionThread->quit();
         m_connectionThread->wait();
         m_connectionThreadObject->deleteLater();

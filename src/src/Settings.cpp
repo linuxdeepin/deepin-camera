@@ -8,6 +8,7 @@
 #include "gviewv4l2core.h"
 #include "capplication.h"
 #include "camera.h"
+#include "globalutils.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -48,7 +49,12 @@ void Settings::init()
     QStringList videoFormatList;
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         if (DataManager::instance()->encExists()) {
-            videoFormatList << tr("mp4") << tr("webm");
+            if (!GlobalUtils::isBXCBoard()) {
+                videoFormatList << tr("mp4") << tr("webm");
+            } else {
+                videoFormatList << tr("webm") << tr("mp4");
+            }
+
         } else {
             videoFormatList << tr("webm");
             m_settings->setOption("outsetting.outformat.vidformat", 0);
