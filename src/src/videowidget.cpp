@@ -12,6 +12,7 @@
 #include "camera.h"
 #include "eventlogutils.h"
 #include "config.h"
+#include "globalutils.h"
 
 #include <DBlurEffectWidget>
 
@@ -214,9 +215,15 @@ videowidget::videowidget(DWidget *parent)
     // 默认不显示网格线
     setGridType(Grid_None);
 
-    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt() ||
-            DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists())
+    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists() || GlobalUtils::isBXCBoard()) {
         m_videoFormat = "webm";
+    }
+    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt()) {
+        if (!GlobalUtils::isBXCBoard())
+            m_videoFormat = "webm";
+        else
+            m_videoFormat = "mp4";
+    }
 }
 
 //延迟加载
