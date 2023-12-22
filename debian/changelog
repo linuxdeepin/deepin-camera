@@ -1,3 +1,11 @@
+deepin-camera (6.0.5) unstable; urgency=medium
+
+  * fix: modify the default video format for recording to webm
+  * fix: Resolve the issue of camera icons not being visible in the
+    help manual
+
+ -- fengli <fengli@uniontech.com>  Fri, 22 Dec 2023 10:16:55 +0800
+
 deepin-camera (6.0.4) unstable; urgency=medium
 
   * fix: static image appears blow when opening the camera
