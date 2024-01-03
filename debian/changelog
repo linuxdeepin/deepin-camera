@@ -1,3 +1,9 @@
+deepin-camera (6.0.6) unstable; urgency=medium
+
+  * tag 6.0.6 
+
+ -- fengli <fengli@uniontech.com>  Wed, 03 Jan 2024 16:12:13 +0800
+
 deepin-camera (6.0.5) unstable; urgency=medium
 
   * fix: modify the default video format for recording to webm
