@@ -512,7 +512,7 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
     video_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(video_codec_data->codec);
 
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3(
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 && getLoadLibsInstance()->m_avcodec_get_context_defaults3(
         video_codec_data->codec_context,
         video_codec_data->codec);
 
@@ -761,7 +761,7 @@ static encoder_audio_context_t *encoder_audio_init(encoder_context_t *encoder_ct
     }
 
     audio_codec_data->codec_context = getLoadLibsInstance()->m_avcodec_alloc_context3(audio_codec_data->codec);
-    getLoadLibsInstance()->m_avcodec_get_context_defaults3(audio_codec_data->codec_context, audio_codec_data->codec);
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 && getLoadLibsInstance()->m_avcodec_get_context_defaults3(audio_codec_data->codec_context, audio_codec_data->codec);
 
     if (audio_codec_data->codec_context == NULL) {
         fprintf(stderr, "ENCODER: FATAL memory allocation failure (encoder_audio_init): %s\n", strerror(errno));
