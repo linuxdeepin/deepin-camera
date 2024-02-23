@@ -215,11 +215,11 @@ videowidget::videowidget(DWidget *parent)
     // 默认不显示网格线
     setGridType(Grid_None);
 
-    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists() || GlobalUtils::isBXCBoard()) {
+    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists() || GlobalUtils::isLowPerformanceBoard()) {
         m_videoFormat = "webm";
     }
     if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt()) {
-        if (!GlobalUtils::isBXCBoard())
+        if (!GlobalUtils::isLowPerformanceBoard())
             m_videoFormat = "webm";
         else
             m_videoFormat = "mp4";

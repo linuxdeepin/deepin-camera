@@ -11,7 +11,14 @@
 class GlobalUtils
 {
 public:
-    static bool isBXCBoard();
+    // 判断是否为低性能主板
+    static bool isLowPerformanceBoard();
+
+    // 加载相机配置
+    static void loadCameraConf();
+
+private:
+    static QStringList m_LowPerformanceBoards;
 };
 
 #endif // GLOBALUTILS_H
