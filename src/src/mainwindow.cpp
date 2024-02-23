@@ -17,6 +17,7 @@
 #include "camera.h"
 #include "eventlogutils.h"
 #include "config.h"
+#include "globalutils.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -768,6 +769,8 @@ CMainWindow::CMainWindow(QWidget *parent)
     titlebar()->deleteLater();
     setupTitlebar();
     m_pTitlebar->raise();
+
+    GlobalUtils::loadCameraConf();
 
     //修复在性能较差的电脑上启动闪烁白框
     initUI();

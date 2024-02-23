@@ -11,6 +11,12 @@
 #include <QDBusArgument>
 #include <QDBusReply>
 
+// 相机配置文件
+const QString CAMERA_CONF_PATH = "/usr/share/deepin-camera/camera.conf";
+#define LOW_PERFORMANCE_BOARD "LowPerformanceBoard"
+
+QStringList GlobalUtils::m_LowPerformanceBoards = QStringList();
+
 struct DMIInfo {
     QString biosManufacturer;
     QString biosVersion;
@@ -48,7 +54,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, DMIInfo &mystruct
     return argument;
 }
 
-bool GlobalUtils::isBXCBoard()
+bool GlobalUtils::isLowPerformanceBoard()
 {
     qDBusRegisterMetaType<DMIInfo>();
     QDBusInterface *monitorInterface = new QDBusInterface("com.deepin.system.SystemInfo", "/com/deepin/system/SystemInfo", "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
@@ -61,9 +67,23 @@ bool GlobalUtils::isBXCBoard()
     replay.value().variant().value<QDBusArgument>() >> dmiInfo;
 
     qDebug() << __func__ << "dmiInfo.productName: " << dmiInfo.productName;
-    if (dmiInfo.productName.contains("600F") || dmiInfo.productName.contains("NZ275D")) {
-        return true;
+
+    // BXC 600F/NZ2750、CC GWMNDA1GL1等主板不能满足mp4封装的性能要求，因此需要特殊适配
+    for (auto board : m_LowPerformanceBoards) {
+        if (dmiInfo.productName.contains(board))
+            return true;
+    }
+
+    return false;
+}
+
+void GlobalUtils::loadCameraConf()
+{
+    QSettings conf(CAMERA_CONF_PATH, QSettings::IniFormat);
+    QVariant value = conf.value(LOW_PERFORMANCE_BOARD);
+    if (value.isValid()) {
+        m_LowPerformanceBoards = value.toStringList();
     } else {
-        return false;
+        m_LowPerformanceBoards = QStringList();
     }
 }

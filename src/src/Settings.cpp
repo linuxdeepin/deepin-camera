@@ -49,7 +49,7 @@ void Settings::init()
     QStringList videoFormatList;
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         if (DataManager::instance()->encExists()) {
-            if (!GlobalUtils::isBXCBoard()) {
+            if (!GlobalUtils::isLowPerformanceBoard()) {
                 videoFormatList << tr("mp4") << tr("webm");
             } else {
                 videoFormatList << tr("webm") << tr("mp4");

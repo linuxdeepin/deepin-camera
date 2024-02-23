@@ -205,6 +205,9 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE
 #debus_service
 install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services)
 
+# Install camera config file.
+install(FILES assets/camera.conf DESTINATION ${CMAKE_INSTALL_PREFIX}/share/deepin-camera)
+
 ##translations
 #install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_SOURCE_DIR}/translations)
 
