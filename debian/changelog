@@ -1,3 +1,10 @@
+deepin-camera (6.0.7) unstable; urgency=medium
+
+  * fix: Fix the issue of crashing when connecting to a USB camera or a laptop with a built-in camera in v23 and starting the camera(Bug: 238775)
+  * fix: modify the default video format for recording to webm 2nd(Bug: 237059)
+
+ -- houchengqiu <houchengqiu@uniontech.com>  Tue, 27 Feb 2024 13:54:19 +0800
+
 deepin-camera (6.0.6) unstable; urgency=medium
 
   * tag 6.0.6 
