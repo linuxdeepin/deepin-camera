@@ -1,3 +1,9 @@
+deepin-camera (6.0.8) unstable; urgency=medium
+
+  * fix: dependency for ffmpeg
+
+ -- Chang Yang <yangchang@deepin.org>  Wed, 06 Mar 2024 09:51:01 +0800
+
 deepin-camera (6.0.7) unstable; urgency=medium
 
   * fix: Fix the issue of crashing when connecting to a USB camera or a laptop with a built-in camera in v23 and starting the camera(Bug: 238775)
