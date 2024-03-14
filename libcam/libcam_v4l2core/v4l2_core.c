@@ -1601,8 +1601,11 @@ void v4l2core_prepare_new_format(v4l2_dev_t *vd, int new_format)
 
 	int format_index = v4l2core_get_frame_format_index(vd, new_format);
 
-	if(format_index < 0)
-		format_index = 0;
+    if(format_index < 0) {
+        format_index = v4l2core_get_frame_format_index(vd, V4L2_PIX_FMT_MJPEG);
+        if (format_index < 0)
+            format_index = 0;
+    }
 
 	my_pixelformat = vd->list_stream_formats[format_index].format;
 }
@@ -1698,11 +1701,15 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 
     for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
     {
-        if( my_width <= vd->list_stream_formats[format_index].list_stream_cap[i].width &&
-            my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height &&
-            ((vd->list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
-             && (vd->list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
-             && (vd->list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0))
+        if ( my_width <= vd->list_stream_formats[format_index].list_stream_cap[i].width &&
+             my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height &&
+             ((vd->list_stream_formats[format_index].list_stream_cap[i].width > 0
+                && vd->list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
+                (vd->list_stream_formats[format_index].list_stream_cap[i].width < 7680
+                 && vd->list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
+                ((vd->list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+                 && (vd->list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
+                 && (vd->list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)))
         {
             my_width = vd->list_stream_formats[format_index].list_stream_cap[i].width;
             my_height = vd->list_stream_formats[format_index].list_stream_cap[i].height;
