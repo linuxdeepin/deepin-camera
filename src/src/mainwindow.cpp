@@ -770,8 +770,6 @@ CMainWindow::CMainWindow(QWidget *parent)
     setupTitlebar();
     m_pTitlebar->raise();
 
-    GlobalUtils::loadCameraConf();
-
     //修复在性能较差的电脑上启动闪烁白框
     initUI();
 }
