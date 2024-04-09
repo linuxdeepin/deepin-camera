@@ -1,3 +1,9 @@
+deepin-camera (6.0.8) unstable; urgency=medium
+
+  * tag 6.0.8
+
+ -- shuaijie <shuaijie@uniontech.com>  Tue, 09 Apr 2024 16:12:13 +0800
+
 deepin-camera (6.0.7) unstable; urgency=medium
 
   * fix: Fix the issue of crashing when connecting to a USB camera or a laptop with a built-in camera in v23 and starting the camera(Bug: 238775)
