@@ -40,9 +40,8 @@ windowStateThread::~windowStateThread()
 {
 #ifdef USE_DEEPIN_WAYLAND
     if (m_connectionThread != nullptr) {
-        m_connectionThread->quit();
+        m_connectionThread->terminate();
         m_connectionThread->wait();
-        m_connectionThreadObject->deleteLater();
     }
 #endif
 }
