@@ -2198,6 +2198,11 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
                     dev->device_id);
 
             if (0x8086 == dev->vendor_id) {            // intel gpu support vaapi， vendor_id ：0x8086   can find from file pci.ids
+                //Iris Xe Graphics don't suppot vaapi, so softening coding.
+                if (dev->device_id == 0xa7a0) {
+                    is_vaapi = HW_VAAPI_FAIL1;
+                    return NULL;
+                }
                 fprintf(stderr, "try this gpu card for vaapi\n");
                 break;
             }
