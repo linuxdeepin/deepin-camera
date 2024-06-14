@@ -114,27 +114,25 @@ void ImageItem::updatePicPath(const QString &filePath)
     if (fileInfo.suffix() == "webm" || fileInfo.suffix() == "mp4") {
         m_bVideo = true;
         if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
-            if (getLoadLibsInstance()->m_video_thumbnailer) {
-                video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
-                image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
+            video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
+            image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
 
-                try {
-                    //thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
-                    getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer, m_path.toUtf8().data(), m_image_data);
-                    QImage img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
-                    img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE, Qt::KeepAspectRatioByExpanding);
-                    pix = QPixmap::fromImage(img);
-                    malloc_trim(0);
-                } catch (...) {
-                    qWarning() << "generateThumbnail failed";
-                }
-
-                getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
-                getLoadLibsInstance()->m_video_thumbnailer_destroy(m_video_thumbnailer);
-
-                m_image_data = nullptr;
-                m_video_thumbnailer = nullptr;
+            try {
+                //thumber.generateThumbnail(m_path.toUtf8().toStdString(), ThumbnailerImageType::Png, buf);//异常视频这里老崩，给上游提交bug的出处
+                getLoadLibsInstance()->m_video_thumbnailer_generate_thumbnail_to_buffer(m_video_thumbnailer, m_path.toUtf8().data(), m_image_data);
+                QImage img = QImage::fromData(m_image_data->image_data_ptr, static_cast<int>(m_image_data->image_data_size), "png");
+                img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE, Qt::KeepAspectRatioByExpanding);
+                pix = QPixmap::fromImage(img);
+                malloc_trim(0);
+            } catch (...) {
+                qWarning() << "generateThumbnail failed";
             }
+
+            getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
+            getLoadLibsInstance()->m_video_thumbnailer_destroy(m_video_thumbnailer);
+
+            m_image_data = nullptr;
+            m_video_thumbnailer = nullptr;
         }
     } else if (fileInfo.suffix() == "jpg") {
         m_bVideo = false;
