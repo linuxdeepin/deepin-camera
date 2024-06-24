@@ -120,6 +120,24 @@ int main(int argc, char *argv[])
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
+
+        //判断是否是pgux
+        QStringList options;
+        options << QString(QStringLiteral("-c"));
+        options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
+        QProcess process;
+        process.start(QString(QStringLiteral("bash")), options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        QByteArray tempArray =  process.readAllStandardOutput();
+        char *charTemp = tempArray.data();
+        QString str_output = QString(QLatin1String(charTemp));
+        process.close();
+
+        if (str_output.contains("PGUX", Qt::CaseInsensitive)){
+            set_pugx_status(1);
+            qDebug() << "this is PGUX";
+        }
    }
 
     QTime time;
