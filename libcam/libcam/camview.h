@@ -431,6 +431,9 @@ void set_takeing_photo_sound(uint8_t status);
 
 int get_sound_of_takeing_photo(void);
 
+void set_pugx_status(int status);
+
+int get_pugx_status();
 
 #ifdef __cplusplus
 }

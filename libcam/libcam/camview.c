@@ -104,6 +104,8 @@ static int my_encoder_status = 0;
 
 static int is_wayland = 0; //是否是wayland的窗口管理器
 
+static int is_pgux = 0; //是否是pugx
+
 static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
@@ -794,7 +796,8 @@ static void *encoder_loop(__attribute__((unused))void *data)
         v4l2core_get_fps_num(my_vd),
         v4l2core_get_fps_denom(my_vd),
         channels,
-        samprate);
+        samprate,
+        get_pugx_status());
 
     /*store external SPS and PPS data if needed*/
     if(encoder_ctx->video_codec_ind == 0 && /*raw - direct input*/
@@ -1354,4 +1357,14 @@ void set_takeing_photo_sound(uint8_t status)
 int get_sound_of_takeing_photo()
 {
     return soundTakePhoto;
+}
+
+void set_pugx_status(int status)
+{
+    is_pgux = status;
+}
+
+int get_pugx_status()
+{
+    return is_pgux;
 }

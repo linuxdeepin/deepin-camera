@@ -428,7 +428,7 @@ static void encoder_set_raw_video_input(
  *
  * returns: pointer to encoder video context (NULL on none)
  */
-static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ctx)
+static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ctx, int pgux)
 {
     //assertions
     assert(encoder_ctx != NULL);
@@ -581,7 +581,11 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 
     if (video_defaults->gop_size > 0) {
-        video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+        if (pgux == 1) {
+            video_codec_data->codec_context->gop_size = 3;
+        } else {
+            video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+        }
     } else {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
     }
@@ -1134,7 +1138,8 @@ encoder_context_t *encoder_init(
     int fps_num,
     int fps_den,
     int audio_channels,
-    int audio_samprate)
+    int audio_samprate,
+    int use_pugx_code)
 {
     encoder_context_t *encoder_ctx = calloc(1, sizeof(encoder_context_t));
 
@@ -1162,7 +1167,7 @@ encoder_context_t *encoder_init(
     /******************* video **********************/
     encoder_video_init_vaapi(encoder_ctx);
     if (HW_VAAPI_OK != is_vaapi) {
-        encoder_video_init(encoder_ctx);
+        encoder_video_init(encoder_ctx, use_pugx_code);
         //hw_vaapi ng
     }
 
