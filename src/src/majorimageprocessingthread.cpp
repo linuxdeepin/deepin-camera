@@ -377,7 +377,7 @@ void MajorImageProcessingThread::run()
             }
 
             QImage* imgTmp = nullptr;
-            if (m_rgbPtr)
+            if (m_rgbPtr && bUseRgb)
                 imgTmp = new QImage(m_rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
 
             /*拍照*/
