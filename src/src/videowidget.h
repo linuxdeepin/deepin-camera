@@ -414,6 +414,11 @@ private:
     */
     int switchCamera(const char *device, const char *devName);
 
+    /**
+     * @brief getSaveFilePrefix
+     * @return UOS_ 专业版 DEEPIN_ 社区版 CAMERA_ 其他
+     */
+    QString getSaveFilePrefix();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
     AudioProcessingThread      *m_audPrcThread;

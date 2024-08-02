@@ -15,6 +15,7 @@
 #include "globalutils.h"
 
 #include <DBlurEffectWidget>
+#include <dsysinfo.h>
 
 #include <QPixmap>
 #include <QTimer>
@@ -684,7 +685,7 @@ void videowidget::showCountdown()
                 m_savePicFolder = strDefaultPath;
             }
 
-            QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
+            QString strFileName = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
             m_imgPrcThread->m_strPath = m_savePicFolder + QDir::separator() + strFileName;
             m_imgPrcThread->m_bTake = true; //保存图片标志
@@ -1116,6 +1117,17 @@ int videowidget::switchCamera(const char *device, const char *devName)
     return ret;
 }
 
+QString videowidget::getSaveFilePrefix()
+{
+    QString filePrefix = "Camera_";
+    if (DSysInfo::deepinType() == DSysInfo::DeepinProfessional) {
+        filePrefix = "UOS_";
+    } else if (DSysInfo::deepinType() == DSysInfo::DeepinDesktop) {
+        filePrefix = "DEEPIN_";
+    }
+    return filePrefix;
+}
+
 void videowidget::onTakePic(bool bTrue)
 {
     g_Enum_Camera_State = PICTRUE;
@@ -1273,7 +1285,7 @@ void videowidget::startTakeVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_"
+            DataManager::instance()->getstrFileName() = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_"
                     + QString::number(m_nFileID) + "." + m_videoFormat;
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
@@ -1339,7 +1351,7 @@ void videowidget::startCaptureVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start Gstreamer takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID);
+            DataManager::instance()->getstrFileName() = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID);
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
 
