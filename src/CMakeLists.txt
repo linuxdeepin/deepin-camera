@@ -42,7 +42,7 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif ()
 
 if (USE_DEEPIN_WAYLAND)
-  add_definitions("-DUSE_DEEPIN_WAYLAND")
+    add_definitions("-DUSE_DEEPIN_WAYLAND")
 endif()
 
 # 加速编译优化参数

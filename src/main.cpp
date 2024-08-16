@@ -115,8 +115,9 @@ int main(int argc, char *argv[])
     }
 
     if (bWayland) {
-        //默认走xdgv6,该库没有维护了，因此需要添加该代码
-        qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
+
+        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
+            qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
