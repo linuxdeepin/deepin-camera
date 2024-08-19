@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="es" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="es">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolución:</translation>
+        <translation type="vanished">Resolución:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -172,19 +174,23 @@
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Flash</translation>
+        <translation>Linterna</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Líneas de cuadrícula</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>líneas 1*1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>líneas 2*2</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

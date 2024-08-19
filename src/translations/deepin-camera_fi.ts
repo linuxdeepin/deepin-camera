@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fi" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fi">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Tarkkuus:</translation>
+        <translation type="vanished">Tarkkuus:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -176,15 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Ruudukkoviivat</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 viivaa</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 viivaa</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

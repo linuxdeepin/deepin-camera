@@ -104,9 +104,13 @@ static int my_encoder_status = 0;
 
 static int is_wayland = 0; //是否是wayland的窗口管理器
 
+static int is_pgux = 0; //是否是pugx
+
 static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
+
+static int encode_thread_running = 0;
 
 
 void set_video_time_capture(double video_time)
@@ -792,7 +796,8 @@ static void *encoder_loop(__attribute__((unused))void *data)
         v4l2core_get_fps_num(my_vd),
         v4l2core_get_fps_denom(my_vd),
         channels,
-        samprate);
+        samprate,
+        get_pugx_status());
 
     /*store external SPS and PPS data if needed*/
     if(encoder_ctx->video_codec_ind == 0 && /*raw - direct input*/
@@ -1290,13 +1295,18 @@ void *capture_loop(void *data)
  */
 int start_encoder_thread(void *data)
 {
+    if (encode_thread_running)
+        return 0;
+
     int ret = __THREAD_CREATE(&encoder_thread, encoder_loop, data);
 
-    if(ret)
+    if(ret) {
         fprintf(stderr, "deepin-camera: encoder thread creation failed (%i)\n", ret);
-    else if(debug_level > 2)
-        printf("deepin-camera: created encoder thread with tid: %u\n",
-            (unsigned int) encoder_thread);
+    } else {
+        if(debug_level > 2)
+            printf("deepin-camera: created encoder thread with tid: %u\n", (unsigned int) encoder_thread);
+        encode_thread_running = 1;
+    }
 
     return ret;
 }
@@ -1324,6 +1334,8 @@ int stop_encoder_thread()
     if(debug_level > 1)
         printf("deepin-camera: encoder thread terminated and joined\n");
 
+    encode_thread_running = 0;
+
     return 0;
 }
 
@@ -1345,4 +1357,14 @@ void set_takeing_photo_sound(uint8_t status)
 int get_sound_of_takeing_photo()
 {
     return soundTakePhoto;
+}
+
+void set_pugx_status(int status)
+{
+    is_pgux = status;
+}
+
+int get_pugx_status()
+{
+    return is_pgux;
 }

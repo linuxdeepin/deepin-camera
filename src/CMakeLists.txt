@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required(VERSION 3.0)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -7,28 +11,39 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
+find_package(DWayland)
+find_package(KF5Wayland)
+if (NOT DWayland_FOUND)
+    if (${KF5Wayland_VERSION} VERSION_GREATER 5.54.1)
+        option(USE_DEEPIN_WAYLAND "option for wayland support" ON)
+    endif()
+else()
+    option(USE_DEEPIN_WAYLAND "option for wayland support" ON)
+endif()
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
 set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
-#add_definitions(-D__mips__)
 
-if(EXISTS /etc/os-version)
-    execute_process(COMMAND cat /etc/os-version COMMAND grep MinorVersion COMMAND grep -o \\-\\?[0-9]\\+ OUTPUT_VARIABLE osversion)
-    message(${osversion})
-    if(NOT (${osversion} LESS 1050))
-        add_definitions(-DKF5_WAYLAND_FLAGE_ON)
-    endif()
-else()
-    message("/etc/os-version is not exist")
-    add_definitions(-DKF5_WAYLAND_FLAGE_ON)
+# 判断系统环境
+#file(STRINGS "/etc/os-version" MAJOR_STR REGEX "MajorVersion")
+execute_process(COMMAND cat /etc/os-version OUTPUT_VARIABLE OS_INFO_STR)
+string(REGEX MATCHALL "MajorVersion=[0-9]+" MAJOR_STR "${OS_INFO_STR}")
+string(REGEX MATCH "[0-9]+" MAJOR_VERSION "${MAJOR_STR}")
+if (MAJOR_VERSION MATCHES "23")
+    message("--------------------- OS_BUILD_V23 on")
+    add_definitions(-DOS_BUILD_V23)
 endif()
 
 include(GNUInstallDirs)
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
 endif ()
+
+if (USE_DEEPIN_WAYLAND)
+  add_definitions("-DUSE_DEEPIN_WAYLAND")
+endif()
 
 # 加速编译优化参数
 if (CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "mips64")
@@ -69,6 +84,17 @@ set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupp
 find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
+include(FindPkgConfig)
+if (USE_DEEPIN_WAYLAND)
+    if (DWayland_FOUND)
+        message("DWayland founded.")
+        add_definitions(-DDWAYLAND)
+    elseif(KF5Wayland_FOUND)
+        message("KF5Wayland founded.")
+        add_definitions(-DKF5WAYLAND)
+    endif()
+endif()
+
 file (GLOB_RECURSE CXXSOURCES
     ./src/*.cpp
     ./*.cpp
@@ -93,6 +119,7 @@ file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkcore gobject-2.0
+        pciaccess
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -129,6 +156,14 @@ endif ()
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
+if (USE_DEEPIN_WAYLAND)
+    if (DWayland_FOUND)
+        set(LIBS DWaylandClient DWaylandServer)
+    else()
+        message("KF5 environment")
+        set(LIBS KF5::WaylandClient KF5::WaylandServer)
+    endif()
+endif()
 
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
@@ -138,10 +173,10 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
     imagevisualresult
-    KF5WaylandClient
+    ${LIBS}
     )
 
-include_directories("/usr/include/KF5")
+include_directories("/usr/include")
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
@@ -170,8 +205,24 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/assets/deepin-camera DESTINATION ${CMAKE
 #debus_service
 install(FILES ${PROJECT_SOURCE_DIR}/com.deepin.Camera.service DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services)
 
+# Install camera config file.
+install(FILES assets/camera.conf DESTINATION ${CMAKE_INSTALL_PREFIX}/share/deepin-camera)
+
+##translations
+#install(FILES ${PROJECT_SOURCE_DIR}/translations/*.qm DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_SOURCE_DIR}/translations)
+
 #translations
 set(APPSHAREDIR  ${CMAKE_INSTALL_DATADIR}/${TARGET_NAME})
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
     DESTINATION ${APPSHAREDIR}
     FILES_MATCHING PATTERN "*.qm")
+
+#hw机型增加DConfig配置
+set(APPID org.deepin.camera)
+set(configFile ${PROJECT_SOURCE_DIR}/assets/org.deepin.camera.encode.json)
+if (DEFINED DSG_DATA_DIR)
+    message("-- DConfig is supported by DTK")
+    dconfig_meta_files(APPID ${APPID} FILES ${configFile})
+else()
+    install(FILES ${configFile} DESTINATION ${CMAKE_INSTALL_DATADIR}/dsg/configs/org.deepin.camera/)
+endif()

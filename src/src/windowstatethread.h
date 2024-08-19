@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,13 +13,23 @@
 #include <QThread>
 #include <QMutex>
 
-#ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef USE_DEEPIN_WAYLAND
+#ifdef DWAYLAND
+#include <DWayland/Client/clientmanagement.h>
+#include <DWayland/Client/registry.h>
+#include <DWayland/Client/connection_thread.h>
+#include <DWayland/Client/event_queue.h>
+#else
 #include <KF5/KWayland/Client/connection_thread.h>
 #include <KF5/KWayland/Client/clientmanagement.h>
 #include <KF5/KWayland/Client/event_queue.h>
 #include <KF5/KWayland/Client/registry.h>
-using namespace KWayland::Client;
 #endif
+
+using namespace KWayland::Client;
+#endif // USE_DEEPIN_WAYLAND
+
+DGUI_USE_NAMESPACE
 
 class windowStateThread : public QThread
 {
@@ -35,7 +45,7 @@ signals:
     void someWindowFullScreen();
 
 private:
-#ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef USE_DEEPIN_WAYLAND
     /**
      * @brief wayland获取屏幕窗口信息的安装注册函数
      * @param registry
@@ -50,9 +60,9 @@ private:
 #endif
 
 private:
-#ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef USE_DEEPIN_WAYLAND
     // 获取wayland窗口信息相关。 wayland获取窗口的方法对于x11有很大的区别
-    QThread *m_connectionThread;
+    QThread *m_connectionThread = nullptr;
     EventQueue *m_eventQueue = nullptr;
     ConnectionThread *m_connectionThreadObject;
     Compositor *m_compositor = nullptr;

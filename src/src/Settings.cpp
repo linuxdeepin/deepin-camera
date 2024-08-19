@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,6 +8,7 @@
 #include "gviewv4l2core.h"
 #include "capplication.h"
 #include "camera.h"
+#include "globalutils.h"
 
 #include <QtCore>
 #include <QtGui>
@@ -48,14 +49,19 @@ void Settings::init()
     QStringList videoFormatList;
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         if (DataManager::instance()->encExists()) {
-            videoFormatList << tr("mp4") << tr("webm");
+            GlobalUtils::loadCameraConf();
+            if (!GlobalUtils::isLowPerformanceBoard()) {
+                videoFormatList << tr("mp4") << tr("webm");
+            } else {
+                videoFormatList << tr("webm") << tr("mp4");
+            }
+
         } else {
             videoFormatList << tr("webm");
             m_settings->setOption("outsetting.outformat.vidformat", 0);
         }
-
     } else {
-        videoFormatList << tr("webm");
+        videoFormatList << "webm";
         m_settings->setOption("outsetting.outformat.vidformat", 0);
     }
     m_settings->option("outsetting.outformat.vidformat")->setData("items", videoFormatList);

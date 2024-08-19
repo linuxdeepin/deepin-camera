@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ru" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ru">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -19,15 +21,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation>Фото</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Видео</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Переключить камеру</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Разрешение:</translation>
+        <translation type="vanished">Разрешение:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -168,23 +170,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Зеркальный режим</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Фонарик</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Линии сетки</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -260,54 +266,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Обычный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Яркий</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Теплый</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Холодный</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Ретро</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Пленка</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Серый</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Черно-белый</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Фонарик</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>On</source>
-        <translation>Вкл</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Выкл</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Задержка снимка</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>None</source>
@@ -315,11 +321,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Фильтры</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Выдержка</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
 
 # 设置工程名字
 project(deepin-camera-test VERSION 1.0.0)
@@ -87,6 +84,7 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 pkg_check_modules(3rd_lib REQUIRED
         dtkgui
         dtkwidget gstreamer-1.0 gstreamer-app-1.0
+        pciaccess
 #        libv4l2
 #        libudev
 #        libusb-1.0
@@ -114,11 +112,7 @@ target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
 #    z
 
     imagevisualresult
-    KF5WaylandClient
     )
-
-include_directories("/usr/include/KF5")
-
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${PROJECT_NAME} ${QtModule})

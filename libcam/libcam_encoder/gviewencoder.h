@@ -331,7 +331,8 @@ encoder_context_t *encoder_init(
     int fps_num,
     int fps_den,
     int audio_channels,
-    int audio_samprate);
+    int audio_samprate,
+    int use_pugx_code);
 
 /*
  * initialization of the file muxer

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="en_US" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="en_US">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolution:</translation>
+        <translation type="vanished">Resolution:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -185,6 +187,10 @@
     <message>
         <source>2*2 lines</source>
         <translation>2*2 lines</translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation>Maximum resolution:</translation>
     </message>
 </context>
 <context>

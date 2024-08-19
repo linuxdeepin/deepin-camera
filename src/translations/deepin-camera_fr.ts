@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="fr" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="fr">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -19,15 +21,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation>Photo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Vidéo</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Changer de caméra</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Résolution : </translation>
+        <translation type="vanished">Résolution : </translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -168,23 +170,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Mode miroir</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Lampe de poche</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Lignes de grille</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 lignes</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 lignes</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -260,54 +266,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Normal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Vif</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Chaud</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Froid</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Rétro</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Film</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Gris</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>N&amp;B</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampe de poche</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>On</source>
-        <translation>On</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Retarder la capture</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>None</source>
@@ -315,11 +321,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtres</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Exposition</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
