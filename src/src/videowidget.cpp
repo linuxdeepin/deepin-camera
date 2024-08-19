@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,8 +12,10 @@
 #include "camera.h"
 #include "eventlogutils.h"
 #include "config.h"
+#include "globalutils.h"
 
 #include <DBlurEffectWidget>
+#include <dsysinfo.h>
 
 #include <QPixmap>
 #include <QTimer>
@@ -214,9 +216,15 @@ videowidget::videowidget(DWidget *parent)
     // 默认不显示网格线
     setGridType(Grid_None);
 
-    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt() ||
-            DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists())
+    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists() || GlobalUtils::isLowPerformanceBoard()) {
         m_videoFormat = "webm";
+    }
+    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt()) {
+        if (!GlobalUtils::isLowPerformanceBoard())
+            m_videoFormat = "webm";
+        else
+            m_videoFormat = "mp4";
+    }
 }
 
 //延迟加载
@@ -433,6 +441,13 @@ void videowidget::ReceiveOpenGLstatus(bool result)
 
 void videowidget::ReceiveMajorImage(QImage *image, int result)
 {
+    // 若窗口高度改变，需要刷新整个窗口，防止上一帧图像出现在其它区域
+    static int height = this->height();
+    if (height != this->height()) {
+        update();
+        height = this->height();
+    }
+
     if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
@@ -452,9 +467,8 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_openglwidget && m_openglwidget->isVisible())
                 m_openglwidget->hide();
             {
-                // OpenGL窗口等比例缩放画面
-                int widgetwidth = width();
-                int widgetheight = height();
+                int widgetwidth = this->width();
+                int widgetheight = this->height();
                 if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
                     QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                     m_framePixmap = QPixmap::fromImage(img);
@@ -671,7 +685,7 @@ void videowidget::showCountdown()
                 m_savePicFolder = strDefaultPath;
             }
 
-            QString strFileName = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
+            QString strFileName = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID) + ".jpg";
             emit filename(strFileName);
             m_imgPrcThread->m_strPath = m_savePicFolder + QDir::separator() + strFileName;
             m_imgPrcThread->m_bTake = true; //保存图片标志
@@ -1103,6 +1117,17 @@ int videowidget::switchCamera(const char *device, const char *devName)
     return ret;
 }
 
+QString videowidget::getSaveFilePrefix()
+{
+    QString filePrefix = "Camera_";
+    if (DSysInfo::deepinType() == DSysInfo::DeepinProfessional) {
+        filePrefix = "UOS_";
+    } else if (DSysInfo::deepinType() == DSysInfo::DeepinDesktop) {
+        filePrefix = "DEEPIN_";
+    }
+    return filePrefix;
+}
+
 void videowidget::onTakePic(bool bTrue)
 {
     g_Enum_Camera_State = PICTRUE;
@@ -1260,7 +1285,7 @@ void videowidget::startTakeVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_"
+            DataManager::instance()->getstrFileName() = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_"
                     + QString::number(m_nFileID) + "." + m_videoFormat;
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
@@ -1326,7 +1351,7 @@ void videowidget::startCaptureVideo()
     } else {
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
             qDebug() << "start Gstreamer takeVideo";
-            DataManager::instance()->getstrFileName() = "UOS_" + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID);
+            DataManager::instance()->getstrFileName() = getSaveFilePrefix() + QDateTime::currentDateTime().toString("yyyyMMddHHmmss") + "_" + QString::number(m_nFileID);
             emit filename(DataManager::instance()->getstrFileName());
             m_nFileID ++;
 

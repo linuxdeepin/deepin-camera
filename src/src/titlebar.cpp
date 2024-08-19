@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -28,7 +28,6 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     Q_D(Titlebar);
 
     setAttribute(Qt::WA_TranslucentBackground, true);
-    //setFocusPolicy(Qt::NoFocus);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -39,12 +38,6 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     d->m_titlebar->setBackgroundTransparent(true);
     d->m_titlebar->setBlurBackground(false);
     layout->addWidget(d->m_titlebar);
-
-//    d->m_shadowEffect = new QGraphicsDropShadowEffect(this);
-//    d->m_shadowEffect->setOffset(d->offsetX, d->offsetY);
-//    d->m_shadowEffect->setBlurRadius(d->offsetY);
-//    d->m_shadowEffect->setColor(d->darkEffectColor);
-//    this->setGraphicsEffect(d->m_shadowEffect);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
 }

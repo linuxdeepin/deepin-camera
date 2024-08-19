@@ -387,7 +387,7 @@ static video_codec_t listSupCodecs[] =
 		.trellis      = 0,
 		.me_method    = X264_ME_HEX,
 		.mpeg_quant   = 1,
-		.max_b_frames = 16,
+		.max_b_frames = 4,
 		.num_threads  = 4,
 #if LIBAVCODEC_VER_AT_LEAST(54,01)
 		.flags        = CODEC_FLAG2_INTRA_REFRESH

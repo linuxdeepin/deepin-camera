@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="cs" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="cs">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Rozlišení:</translation>
+        <translation type="vanished">Rozlišení:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -176,15 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Čáry mřížky</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1 ⨉ 1 čára</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2 ⨉ 2 čáry</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -260,35 +266,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Normální</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Živé</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Teplé</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Studené</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Retro</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Film</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Šedé</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>ČB</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -315,11 +321,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtry</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Expozice</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

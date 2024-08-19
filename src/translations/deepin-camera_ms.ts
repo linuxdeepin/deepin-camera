@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS language="ms" version="2.1">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ms">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -152,7 +154,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>Resolusi:</translation>
+        <translation type="vanished">Resolusi:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -176,15 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Garisan grid</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Garisan 1*1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Garisan 2*2</translation>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -260,35 +266,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Biasa</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Terang</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Panas</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Sejuk</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Retro</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Filem</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Kelabu</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>H&amp;P</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -315,11 +321,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Penapis</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Dedahan</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

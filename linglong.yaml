@@ -1,0 +1,67 @@
+package:
+  id: org.deepin.camera
+  name: "deepin-camera"
+  version: 1.4.0
+  kind: app
+  description: |
+    camera for deepin os.
+
+variables: 
+  extra_args: |
+    -DVERSION=${VERSION}
+
+runtime:
+  id: org.deepin.Runtime
+  version: 23.0.0
+
+#libxtst ffmpeg vlc
+depends:
+  - id: ffmpeg
+    version: 4.1.8
+  - id: "udisks2-qt5"
+    version: 5.0.3
+  - id: qtdbusextended
+    version: 0.0.3
+    type: runtime
+  - id: ffmpegthumbnailer
+    version: 2.1.1
+  - id: "gstreamer1.0"
+    version: 1.14.6
+  - id: "gst-plugins-base1.0" 
+    version: 1.14.5
+    type: runtime
+  - id: "gst-plugins-bad1.0" 
+    version: 1.14.4.2
+    type: runtime
+  - id: "image-editor" 
+    version: 1.0.9
+  - id: libusb-1.0
+    version: 1.0.24
+  - id: portaudio19
+    version: 19.6.0
+    type: runtime
+  - id: v4l-utils
+    version: 1.22.1
+    type: runtime
+  - id: icu 
+    version: 63.1
+    type: runtime
+  - id: xcb-util
+    version: 0.3.8.1
+    type: runtime
+
+source:
+  kind: local
+  url: "http://gerrit.uniontech.com/deepin-camera"
+  version: develop/snipe
+  commit: I08d14ec62ac8221581c0cea64f5fc0ae5ad09add
+  patch: patches/remove-absolute-path-from-cmake-file.patch
+build:
+  kind: manual
+  manual:
+    configure: |
+      mkdir build
+      cd build
+      cmake -DCMAKE_INSTALL_PREFIX=${PREFIX}  ${extra_args} ..
+      make -j6
+      make -j install

@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -55,18 +55,15 @@ void SwitchCameraBtn::paintEvent(QPaintEvent *event)
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(QColor(0,0,0,100)));
         painter.drawEllipse(rect3);
-    }
-    else{
+    } else {
         painter.setPen(Qt::NoPen);
         painter.setBrush(QBrush(QColor(0,0,0,100)));
         painter.drawEllipse(rect);
     }
 
-    if (m_bPressed)
-    {
+    if (m_bPressed) {
         m_pressedSvg->render(&painter);
-    }
-    else {
+    } else {
         m_normalSvg->render(&painter);
     }
 }

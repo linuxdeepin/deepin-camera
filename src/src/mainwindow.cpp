@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,6 +17,7 @@
 #include "camera.h"
 #include "eventlogutils.h"
 #include "config.h"
+#include "globalutils.h"
 
 #include <DLabel>
 #include <DApplication>
@@ -1889,9 +1890,15 @@ void CMainWindow::initConnection()
 
     //控制中心更改了本地时间，及时更新当前时间
     //避免时间往前切换过后，需要点击两次才能结束录制
+#ifdef OS_BUILD_V23
+    QDBusConnection::sessionBus().connect("org.deepin.daemon.Timedate1", "/org/deepin/daemon/Timedate1",
+                                          "org.deepin.daemon.Timedate1", "TimeUpdate", this,
+                                          SLOT(onLocalTimeChanged()));
+#else
     QDBusConnection::sessionBus().connect("com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate",
                                           "com.deepin.daemon.Timedate", "TimeUpdate", this,
                                           SLOT(onLocalTimeChanged()));
+#endif
 
     QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
                                          "org.freedesktop.login1.Manager", "PrepareForSleep", this, SLOT(stopCancelContinuousRecording(bool)));

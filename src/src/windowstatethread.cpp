@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -13,7 +13,7 @@ windowStateThread::windowStateThread(bool isWayland, QObject *parent /*= nullptr
     : QThread (parent)
 {
     setObjectName("windowStateThread");
-#ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef USE_DEEPIN_WAYLAND
     if (isWayland) {
         qInfo() << __FUNCTION__ << __LINE__  << "KF5_WAYLAND_FLAGE_ON is open!!";
         //wayland自动识别窗口
@@ -38,10 +38,11 @@ windowStateThread::windowStateThread(bool isWayland, QObject *parent /*= nullptr
 
 windowStateThread::~windowStateThread()
 {
-#ifdef KF5_WAYLAND_FLAGE_ON
-    m_connectionThread->quit();
-    m_connectionThread->wait();
-    m_connectionThreadObject->deleteLater();
+#ifdef USE_DEEPIN_WAYLAND
+    if (m_connectionThread != nullptr) {
+        m_connectionThread->terminate();
+        m_connectionThread->wait();
+    }
 #endif
 }
 
@@ -100,7 +101,7 @@ QList<DForeignWindow *> windowStateThread::workspaceWindows() const
     return windowList;
 }
 
-#ifdef KF5_WAYLAND_FLAGE_ON
+#ifdef USE_DEEPIN_WAYLAND
 void windowStateThread::setupRegistry(Registry *registry)
 {
     connect(registry, &Registry::compositorAnnounced, this,

@@ -1,10 +1,9 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-extern "C"
-{
+extern "C" {
 #include "camview.h"
 }
 #include "mainwindow.h"
@@ -13,8 +12,11 @@ extern "C"
 #include "acobjectlist.h"
 #include "dbus_adpator.h"
 
-extern "C"
-{
+#ifdef DTKCORE_CLASS_DConfigFile
+#include <DConfig>
+#endif
+
+extern "C" {
 #include <libimagevisualresult/visualresult.h>
 }
 
@@ -38,32 +40,6 @@ extern "C"
 
 DWIDGET_USE_NAMESPACE
 
-
-
-static bool runSingleInstance()
-{
-    QString userName = QDir::homePath().section("/", -1, -1);
-    std::string path = ("/home/" + userName + "/.cache/deepin/deepin-camera/").toStdString();
-    QDir tdir(path.c_str());
-    if (!tdir.exists()) {
-        tdir.mkpath(path.c_str());
-    }
-
-    path += "single";
-    int fd = open(path.c_str(), O_WRONLY | O_CREAT, 0644);
-    int flock = lockf(fd, F_TLOCK, 0);
-
-    if (fd == -1) {
-        qInfo() << strerror(errno);
-        return false;
-    }
-    if (flock == -1) {
-        qInfo() << strerror(errno);
-        return false;
-    }
-    return true;
-}
-
 //判断是否采用wayland显示服务器
 static bool CheckWayland()
 {
@@ -80,11 +56,11 @@ static bool CheckWayland()
 static bool CheckFFmpegEnv()
 {
     QDir dir;
-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
     QString libName = nullptr;
-    QRegExp re("libavcodec.so.*"); //Sometimes libavcodec.so may not exist, so find it through regular expression.
+    QRegExp re("libavcodec.so.*");   //Sometimes libavcodec.so may not exist, so find it through regular expression.
     for (int i = 0; i < list.count(); i++) {
         if (re.exactMatch(list[i])) {
             libName = list[i];
@@ -93,9 +69,9 @@ static bool CheckFFmpegEnv()
     }
 
     if (libName != nullptr) {
-        QLibrary libavcodec;  //检查编码器是否存在
+        QLibrary libavcodec;   //检查编码器是否存在
         libavcodec.setFileName(libName);
-        qDebug() << "Whether the libavcodec is loaded successfully: "<< libavcodec.load();
+        qDebug() << "Whether the libavcodec is loaded successfully: " << libavcodec.load();
         typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
         p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
         m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
@@ -119,6 +95,9 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
+    // Task 326583 不参与合成器崩溃重连
+    unsetenv("QT_WAYLAND_RECONNECT");
+
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
     bool bFFmpegEnv = CheckFFmpegEnv();
@@ -142,6 +121,42 @@ int main(int argc, char *argv[])
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
+
+        int mp4Encode = -1;
+#ifdef DTKCORE_CLASS_DConfigFile
+        //需要查询是否对PGUX设置MP4编码缓存特殊处理
+        DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
+        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
+            mp4Encode = dconfig->value("mp4EncodeMode").toInt();
+            set_pugx_status(mp4Encode);
+        }
+#endif
+        qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
+        if (mp4Encode == -1) {
+            //判断是否是pgux
+            QStringList options;
+            options << QString(QStringLiteral("-c"));
+            options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
+            QProcess process;
+            process.start(QString(QStringLiteral("bash")), options);
+            process.waitForFinished();
+            process.waitForReadyRead();
+            QByteArray tempArray = process.readAllStandardOutput();
+            char *charTemp = tempArray.data();
+            QString str_output = QString(QLatin1String(charTemp));
+            process.close();
+
+            if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
+                mp4Encode = 1;
+                qDebug() << "this is PGUX";
+            } else {
+                mp4Encode = 0;
+            }
+            qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
+        }
+
+        set_pugx_status(mp4Encode);
+        qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
     }
 
     QTime time;
@@ -151,7 +166,7 @@ int main(int argc, char *argv[])
     qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
-//    gst_init(&argc, &argv);
+    //gst_init(&argc, &argv);
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
@@ -187,7 +202,7 @@ int main(int argc, char *argv[])
 
     DApplicationSettings saveTheme;
 
-    if (!runSingleInstance()) {
+    if (!qApp->setSingleInstance("deepin-camera")) {
         qDebug() << "another deepin camera instance has started";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {

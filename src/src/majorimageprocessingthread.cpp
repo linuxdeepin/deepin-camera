@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -14,6 +14,8 @@ extern "C" {
 #include <QFile>
 #include <QDate>
 #include <QDir>
+#include <DSysInfo>
+DCORE_USE_NAMESPACE
 
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
@@ -250,6 +252,9 @@ void MajorImageProcessingThread::run()
 #if defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64) || defined (__mips__)
             bUseRgb = true;
 #endif
+            if(DSysInfo::majorVersion() == "23") {
+                bUseRgb = true;
+            }
             if (get_wayland_status())
                 bUseRgb = true;
 
@@ -377,7 +382,7 @@ void MajorImageProcessingThread::run()
             }
 
             QImage* imgTmp = nullptr;
-            if (m_rgbPtr && bUseRgb)
+            if (m_rgbPtr)
                 imgTmp = new QImage(m_rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
 
             /*拍照*/
