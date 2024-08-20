@@ -37,6 +37,7 @@ extern "C" {
 #include "encoder.h"
 #include "gviewencoder.h"
 #include "gview.h"
+#include "camview.h"
 
 #ifdef __cplusplus
 } // endof extern "C"
