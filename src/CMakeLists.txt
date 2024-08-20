@@ -34,6 +34,10 @@ string(REGEX MATCH "[0-9]+" MAJOR_VERSION "${MAJOR_STR}")
 if (MAJOR_VERSION MATCHES "23")
     message("--------------------- OS_BUILD_V23 on")
     add_definitions(-DOS_BUILD_V23)
+elseif(MAJOR_VERSION MATCHES "25")
+    message("--------------------- OS_BUILD_V25 on")
+    option(USE_DEEPIN_V25 "option for v25 support" ON)
+    add_definitions(-DOS_BUILD_V25)
 endif()
 
 include(GNUInstallDirs)
@@ -42,7 +46,9 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif ()
 
 if (USE_DEEPIN_WAYLAND)
-    add_definitions("-DUSE_DEEPIN_WAYLAND")
+    if(!USE_DEEPIN_V25)
+        add_definitions("-DUSE_DEEPIN_WAYLAND")
+    endif()
 endif()
 
 # 加速编译优化参数
