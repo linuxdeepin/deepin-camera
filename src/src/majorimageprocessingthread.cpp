@@ -252,7 +252,7 @@ void MajorImageProcessingThread::run()
 #if defined(_loongarch) || defined(__loongarch__) || defined(__loongarch64) || defined (__mips__)
             bUseRgb = true;
 #endif
-            if(DSysInfo::majorVersion() == "23") {
+            if(DSysInfo::majorVersion().toInt() >= 23) {
                 bUseRgb = true;
             }
             if (get_wayland_status())
