@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
 
         int mp4Encode = -1;
 #ifdef DTKCORE_CLASS_DConfigFile
-        //需要查询是否对PGUX设置MP4编码缓存特殊处理
+        //需要查询是否对X机型设置MP4编码缓存特殊处理
         DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
         if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
             mp4Encode = dconfig->value("mp4EncodeMode").toInt();
@@ -133,10 +133,11 @@ int main(int argc, char *argv[])
 #endif
         qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
         if (mp4Encode == -1) {
-            //判断是否是pgux
+            //判断是否是X机型
             QStringList options;
             options << QString(QStringLiteral("-c"));
-            options << QString(QStringLiteral("dmidecode -s system-product-name|awk '{print $NF}'"));
+            options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
+                                              "dmidecode -s system-product-name|awk '{print $NF}'"));
             QProcess process;
             process.start(QString(QStringLiteral("bash")), options);
             process.waitForFinished();
