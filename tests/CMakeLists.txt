@@ -35,9 +35,9 @@ set(PROJECT_INCLUDE
     ../src/src/qtsingleapplication
     ../src/
     ./stub
-    /usr/include
-    /usr/include/libusb-1.0
-    /usr/include/SDL2
+    ${CMAKE_INSTALL_PREFIX}/include
+    ${CMAKE_INSTALL_PREFIX}/include/libusb-1.0
+    ${CMAKE_INSTALL_PREFIX}/include/SDL2
     ${PROJECT_SOURCE_DIR}/../deepin-camera
     ${PROJECT_SOURCE_DIR}/googletest/include
     )
@@ -149,13 +149,13 @@ set(OBJECT_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/objects)
 #    COMMAND lcov --remove ./coverageResult/${PROJECT_NAME}_Coverage.info 'CMakeFiles/${PROJECT_NAME}.dir/${PROJECT_NAME}_autogen/*/*'
 #    '${PROJECT_NAME}_autogen/*/*'
 #    'googletest/*/*'
-#    '*/usr/include/*'
+#    '*${CMAKE_INSTALL_PREFIX}/include/*'
 #    '*/tests/*'
 #    '*/src/qtsingleapplication/*'
 #    '*/basepub/printoptionspage.cpp'
 #    '*/src/src/dbus_adpator.cpp'
 #    '*/src/src/settings_translation.cpp'
-#    '/usr/local/*'
+#    '${CMAKE_INSTALL_PREFIX}/local/*'
 #    -o ./coverageResult/${PROJECT_NAME}_Coverage_fileter.info
 #    COMMAND echo " =================== do filter end ==================== "
 

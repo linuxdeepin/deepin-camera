@@ -45,6 +45,7 @@
 #include <QStandardPaths>
 #include <QFormLayout>
 #include <QLibraryInfo>
+#include <QLibrary>
 
 #include <qsettingbackend.h>
 #include <dsettingswidgetfactory.h>
@@ -797,7 +798,22 @@ QString CMainWindow::libPath(const QString &strlib)
     if (list.size() > 0)
         return list.last();
 
-    return "";
+    // find all library paths by QLibrary
+    QString libName;
+    if (strlib.endsWith(".so"))
+        libName = strlib.mid(0, strlib.indexOf(".so"));
+    else
+        libName = strlib;
+
+    QLibrary lib(libName);
+    if (lib.load()) {
+        libName = lib.fileName();
+    } else {
+        qWarning() << QString("QLibrary try load : %1 FAILED! error:%2").arg(libName).arg(lib.errorString());
+        libName = strlib;
+    }
+
+    return libName;
 }
 
 void CMainWindow::reflushSnapshotLabel()

@@ -23,7 +23,7 @@ endif()
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
-set(LUT_DIR "/usr/share/libimagevisualresult/filter_cube")
+set(LUT_DIR "${CMAKE_INSTALL_PREFIX}/share/libimagevisualresult/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 
 # 判断系统环境
@@ -49,6 +49,15 @@ if (USE_DEEPIN_WAYLAND)
     if(!USE_DEEPIN_V25)
         add_definitions("-DUSE_DEEPIN_WAYLAND")
     endif()
+endif()
+
+if(DEFINED LINGLONG_BUILD_ON)
+    # 玲珑构建编译开关
+    add_definitions(-DLINGLONG_BUILD)
+    include_directories(/runtime/include)
+    message(STATUS "LINGLONG_BUILD is ON")
+else()
+    message(STATUS "LINGLONG_BUILD is OFF")
 endif()
 
 # 加速编译优化参数
@@ -79,8 +88,8 @@ set(PROJECT_INCLUDE
     ./src/qtsingleapplication
     ./src/accessibility
     ./src/accessible
-    /usr/include
-    /usr/include/libusb-1.0
+    ${CMAKE_INSTALL_PREFIX}/include
+    ${CMAKE_INSTALL_PREFIX}/include/libusb-1.0
     )
     
 # 设置Qt模块
@@ -138,7 +147,7 @@ pkg_check_modules(3rd_lib REQUIRED
 #        libpulse
 #        libswresample
         )
-list(APPEND PROJECT_INCLUDE /usr/include/glib-2.0 /usr/include/gstreamer-1.0)
+list(APPEND PROJECT_INCLUDE ${CMAKE_INSTALL_PREFIX}/include/glib-2.0 ${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0)
 
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
@@ -182,7 +191,7 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     ${LIBS}
     )
 
-include_directories("/usr/include")
+include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
 # 将工程与Qt模块链接起来
 qt5_use_modules(${TARGET_NAME} ${QtModule})
