@@ -798,22 +798,8 @@ QString CMainWindow::libPath(const QString &strlib)
     if (list.size() > 0)
         return list.last();
 
-    // find all library paths by QLibrary
-    QString libName;
-    if (strlib.endsWith(".so"))
-        libName = strlib.mid(0, strlib.indexOf(".so"));
-    else
-        libName = strlib;
-
-    QLibrary lib(libName);
-    if (lib.load()) {
-        libName = lib.fileName();
-    } else {
-        qWarning() << QString("QLibrary try load : %1 FAILED! error:%2").arg(libName).arg(lib.errorString());
-        libName = strlib;
-    }
-
-    return libName;
+    // Qt LibrariesPath 不包含，返回默认名称
+    return strlib;
 }
 
 void CMainWindow::reflushSnapshotLabel()

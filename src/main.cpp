@@ -59,7 +59,7 @@ static bool CheckFFmpegEnv()
     QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (QString("libavcodec") + "*"), QDir::NoDotAndDotDot | QDir::Files);
-    QString libName = nullptr;
+    QString libName = "libavcodec.so"; // set default name for load if not find in LibrariesPath 
     QRegExp re("libavcodec.so.*");   //Sometimes libavcodec.so may not exist, so find it through regular expression.
     for (int i = 0; i < list.count(); i++) {
         if (re.exactMatch(list[i])) {
@@ -68,29 +68,30 @@ static bool CheckFFmpegEnv()
         }
     }
 
-    if (libName != nullptr) {
-        QLibrary libavcodec;   //检查编码器是否存在
-        libavcodec.setFileName(libName);
-        qDebug() << "Whether the libavcodec is loaded successfully: " << libavcodec.load();
-        typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
-        p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
-        m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
-
-        AVCodec *pCodec = nullptr;
-        if (m_avcodec_find_encoder)
-            pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
-
-        if (pCodec) {
-            qDebug() << "Video encoder exists. AVCodecID:" << AV_CODEC_ID_H264;
-            DataManager::instance()->setEncExists(true);
-        } else {
-            qWarning() << "Can not find output video encoder! AVCodecID:" << AV_CODEC_ID_H264;
-            DataManager::instance()->setEncExists(false);
-        }
-
-        return true;
+    QLibrary libavcodec;   //检查编码器是否存在
+    libavcodec.setFileName(libName);
+    if (!libavcodec.load()) {
+        qWarning() << QString("Not found libavcodec: %1").arg(libavcodec.errorString());
+        return false;
     }
-    return false;
+    qDebug() << "The libavcodec is loaded successfully.";
+    typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
+    p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
+    m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
+
+    AVCodec *pCodec = nullptr;
+    if (m_avcodec_find_encoder)
+        pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
+
+    if (pCodec) {
+        qDebug() << "Video encoder exists. AVCodecID:" << AV_CODEC_ID_H264;
+        DataManager::instance()->setEncExists(true);
+    } else {
+        qWarning() << "Can not find output video encoder! AVCodecID:" << AV_CODEC_ID_H264;
+        DataManager::instance()->setEncExists(false);
+    }
+
+    return true;
 }
 
 int main(int argc, char *argv[])
