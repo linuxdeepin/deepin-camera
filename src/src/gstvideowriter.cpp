@@ -294,8 +294,9 @@ QString GstVideoWriter::libPath(const QString &strlib)
 
     if(list.size() > 0)
         return list.last();
-    else
-        return QString();
+
+    // Qt LibrariesPath 不包含，返回默认名称
+    return strlib;
 }
 
 GstBin *GstVideoWriter::getGstBin(GstElement *element)
