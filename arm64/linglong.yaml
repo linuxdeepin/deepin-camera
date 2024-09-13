@@ -7,7 +7,7 @@ version: "1"
 package:
   id: org.deepin.camera
   name: "deepin-camera"
-  version: 6.5.0.1
+  version: 6.5.1.1
   kind: app
   description: |
     camera for deepin os.
@@ -45,7 +45,7 @@ sources:
   #   url: https://github.com/linuxdeepin/deepin-camera
   #   commit: 2e6952433d31fc4ce6a651874f46c3d52bdee5ba
 
-  # linglong:gen_deb_source sources amd64 https://ci.deepin.com/repo/deepin/deepin-community/backup/rc2 beige main community
+  # linglong:gen_deb_source sources arm64 https://ci.deepin.com/repo/deepin/deepin-community/backup/rc2 beige main community
   # 运行环境已包含dtk和Qt通用库
   # linglong:gen_deb_source install libavutil-dev, libavformat-dev, libxtst-dev, libavcodec-dev, libavfilter-dev
   # linglong:gen_deb_source install libv4l-dev, libsdl2-dev, portaudio19-dev, libpng-dev, libasound2-dev, libpciaccess-dev
