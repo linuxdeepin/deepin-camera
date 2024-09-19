@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Videotallennus on käynnissä. Sulje ikkuna?</translation>
+        <translation>Tallennus on käynnissä. Suljetaanko ikkuna?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera on kuvan ja videon sieppaustyökalu, joka käyttää tietokoneen kameraa tai verkkokameraa.</translation>
+        <translation>Kamera on työkalu kuvan ja videon tallentamiseen. Käyttää tietokoneen kameraa tai verkkokameraa.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>Suurin tarkkuus:</translation>
     </message>
 </context>
 <context>
