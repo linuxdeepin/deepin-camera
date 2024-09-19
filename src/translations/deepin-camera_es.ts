@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="es">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="es">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -130,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Cámara de Deepin captura imágenes y vídeos con la cámara de su equipo o cámara web.</translation>
+        <translation>Cámara de Deepin es una utilidad de captura de imágenes y vídeos que utiliza la cámara de su equipo o cámara web.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -174,23 +172,23 @@
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Linterna</translation>
+        <translation>Flash</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Líneas de cuadrícula</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>líneas 1*1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>líneas 2*2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
