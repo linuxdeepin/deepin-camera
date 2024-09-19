@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pl">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Nagrywanie wideo w trakcie. Czy na pewno chcesz zamknąć okno? </translation>
+        <translation>Nagrywanie wideo w trakcie. Czy na pewno zamknąć okno?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -59,14 +57,14 @@
     </message>
     <message>
         <source>Print</source>
-        <translation>Wydrukuj</translation>
+        <translation>Drukuj</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nie masz uprawnień do operowania na tym folderze</translation>
+        <translation>Nie posiadasz uprawnień do wykonywania działań na tym folderze</translation>
     </message>
     <message>
         <source>Close</source>
@@ -86,11 +84,11 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation>Podstawowy</translation>
+        <translation>Podstawowe</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokalizacja pliku</translation>
+        <translation>Położenie pliku</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -98,7 +96,7 @@
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Tryb zdjęć seryjnych</translation>
+        <translation>Tryb seryjny</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
@@ -106,7 +104,7 @@
     </message>
     <message>
         <source>Output</source>
-        <translation>Wynik</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <source>Output format</source>
@@ -130,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą kamery komputera lub kamery internetowej.</translation>
+        <translation>Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą wbudowanej lub zewnętrznej kamery internetowej.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -178,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linie siatki</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>1*1 linii</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>2*2 linii</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -221,7 +219,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation>Wydrukuj</translation>
+        <translation>Drukuj</translation>
     </message>
     <message>
         <source>Help</source>
@@ -244,7 +242,7 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Zrobić zdjęcie</translation>
+        <translation type="vanished">Zrób zdjęcie</translation>
     </message>
     <message>
         <source>Record video</source>
@@ -313,7 +311,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Opóźnij migawkę</translation>
+        <translation>Opóźnienie przechwytywania</translation>
     </message>
     <message>
         <source>None</source>
@@ -325,7 +323,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Odsłonięcie</translation>
+        <translation>Ekspozycja</translation>
     </message>
 </context>
 <context>
@@ -336,7 +334,7 @@
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera internetowa jest używana</translation>
+        <translation>Kamera internetowa jest już w użyciu</translation>
     </message>
     <message>
         <source>Stop recording</source>
