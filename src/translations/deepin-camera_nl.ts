@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="nl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="nl">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -90,7 +88,7 @@
     </message>
     <message>
         <source>File location</source>
-        <translation>Bestandslocatie</translation>
+        <translation>Bestandslocaties</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -102,15 +100,15 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Vastlegvertraging</translation>
+        <translation>Wachttijd</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Uitvoer</translation>
+        <translation>Bestanden</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Uitvoerformaat</translation>
+        <translation>Bestandsformaten</translation>
     </message>
     <message>
         <source>4 pcs</source>
@@ -170,27 +168,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Spiegelmodus</translation>
+        <translation>Spiegelstand</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Zaklamp</translation>
+        <translation>Flits gebruiken</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Roosterlijnen tonen</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>1x1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>2x2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -301,7 +299,7 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Zaklamp</translation>
+        <translation>Flits gebruiken</translation>
     </message>
     <message>
         <source>On</source>
