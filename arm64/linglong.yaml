@@ -7,7 +7,7 @@ version: "1"
 package:
   id: org.deepin.camera
   name: "deepin-camera"
-  version: 6.5.2.1
+  version: 6.5.3.1
   kind: app
   description: |
     camera for deepin os.
@@ -42,6 +42,8 @@ build: |
 
   cmake --build build -j`nproc`
   cmake --build build --target install >app.install 2>&1
+
+  cp arm64/org.deepin.camera.install .
 
 sources:
   # - kind: git
