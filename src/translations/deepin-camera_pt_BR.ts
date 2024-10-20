@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>A gravação de vídeo está em andamento. Fechar a janela?</translation>
+        <translation>A gravação de vídeo está em andamento. Fechar janela?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Alternar câmera</translation>
+        <translation>Alternar câmeras</translation>
     </message>
 </context>
 <context>
@@ -92,7 +92,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Disparar</translation>
+        <translation>Capturar</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -112,11 +112,11 @@
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pçs</translation>
+        <translation>4 peças</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pçs</translation>
+        <translation>10 peças</translation>
     </message>
     <message>
         <source>None</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>O Câmera é um utilitário para capturar imagens e vídeos pela webcam.</translation>
+        <translation>A Câmera é uma ferramenta de captura de imagem e vídeo que utiliza a câmera do seu PC ou webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Configurações da resolução</translation>
+        <translation>Configurações de resolução</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Modo câmera frontal</translation>
+        <translation>Modo espelho</translation>
     </message>
     <message>
         <source>Flashlight</source>
