@@ -1,9 +1,9 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="id">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Rakaman video masih berlangsung. Mahu tutup tetingkap?</translation>
+        <translation>Perekaman video sedang berlangsung. Tutup jendela?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -11,11 +11,11 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Photo</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Tukar Kamera</translation>
+        <translation>Ganti Kamera</translation>
     </message>
 </context>
 <context>
@@ -49,7 +49,7 @@
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>Hapus</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Anda tiada keizinan mengendalikan folder ini</translation>
+        <translation>Anda tidak memiliki izin untuk mengoperasikan folder ini</translation>
     </message>
     <message>
         <source>Close</source>
@@ -72,7 +72,7 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Folder tidak sah</translation>
+        <translation type="vanished">Folder tidak valid</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -80,47 +80,47 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Asas</translation>
+        <translation>Dasar</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokasi fail</translation>
+        <translation>Lokasi file</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Syot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mod ledak</translation>
+        <translation>Mode burst</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Lengah swa-pemasa</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Output</source>
-        <translation>Output</translation>
+        <translation>Keluaran</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format output</translation>
+        <translation>Format keluaran</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 kpg</translation>
+        <translation>4 pcs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 kpg</translation>
+        <translation>10 pcs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera ialah sebuah utiliti tangkapan imej dan video menggunakan kamera PC atau kamera sesawang anda.</translation>
+        <translation>Kamera adalah utilitas pengambil gambar dan video menggunakan kamera PC atau webcam Anda</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Fail tidak disimpan</translation>
+        <translation>File tidak disimpan</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Tetapan resolusi</translation>
+        <translation>Pengaturan resolusi</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -164,27 +164,27 @@
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Kesan bunyi</translation>
+        <translation>Efek suara</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Mod cermin</translation>
+        <translation>Mode mirror </translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Lampu Denyar</translation>
+        <translation>Senter</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Garisan grid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Garisan 1*1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Garisan 2*2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -199,11 +199,11 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Henti rakaman</translation>
+        <translation>Berhenti merekam</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -211,7 +211,7 @@
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>Hapus</translation>
     </message>
     <message>
         <source>Open</source>
@@ -227,11 +227,11 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Pintasan paparan</translation>
+        <translation>Tampilkan pintasan</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Henti menangkap foto</translation>
+        <translation>Berhenti mengambil foto</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -242,41 +242,41 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Tangkap foto</translation>
+        <translation type="vanished">Ambil foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">Rakam video</translation>
+        <translation type="vanished">Rekam video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Henti menangkap foto</translation>
+        <translation type="vanished">Berhenti mengambil foto</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Kosong</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Biasa</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Terang</translation>
+        <translation>Vivid</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Panas</translation>
+        <translation>Warm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Sejuk</translation>
+        <translation>Cold</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -284,61 +284,61 @@
     </message>
     <message>
         <source>Film</source>
-        <translation>Filem</translation>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Kelabu</translation>
+        <translation>Gray</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>H&amp;P</translation>
+        <translation>B&amp;W</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampu denyar</translation>
+        <translation>Senter</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>Hidup</translation>
+        <translation>Nyalakan</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Mati</translation>
+        <translation>Padamkan</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Lengah tangkapan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Penapis</translation>
+        <translation>Filter</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Dedahan</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Tiada kamera sesawang ditemui</translation>
+        <translation>Webcam tidak ditemukan</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera sesawang sedang digunakan</translation>
+        <translation>Webcam sedang digunakan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Henti rakaman</translation>
+        <translation type="vanished">Berhenti merekam</translation>
     </message>
 </context>
 </TS>

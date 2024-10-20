@@ -1,190 +1,190 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ms">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ko">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Rakaman video masih berlangsung. Mahu tutup tetingkap?</translation>
+        <translation>비디오 녹화가 진행 중입니다. 창을 닫으시겠습니까?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Buka folder</translation>
+        <translation type="vanished">폴더 열기</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>설정</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>없음</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>Foto</translation>
+        <translation>사진</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Video</translation>
+        <translation>비디오</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Tukar Kamera</translation>
+        <translation>카메라 변경하기</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Batal</translation>
+        <translation>취소</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tutup</translation>
+        <translation>닫기</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Salin</translation>
+        <translation>복사</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>삭제</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation>폴더 열기</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Cetak</translation>
+        <translation>인쇄</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Anda tiada keizinan mengendalikan folder ini</translation>
+        <translation>이 폴더를 조작할 수 있는 권한이 없습니다.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Tutup</translation>
+        <translation>닫기</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Folder tidak sah</translation>
+        <translation type="vanished">올바르지 않은 폴더</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Buka folder</translation>
+        <translation>폴더 열기</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>설정</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Asas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokasi fail</translation>
+        <translation>파일 위치</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Syot</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mod ledak</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Lengah swa-pemasa</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Output</source>
-        <translation>Output</translation>
+        <translation>출력</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Format output</translation>
+        <translation>출력 형식</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 kpg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 kpg</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>없음</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>카메라</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera ialah sebuah utiliti tangkapan imej dan video menggunakan kamera PC atau kamera sesawang anda.</translation>
+        <translation>카메라는 PC 카메라 또는 웹캠을 사용하는 이미지 및 비디오 캡처 유틸리티입니다.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Fail tidak disimpan</translation>
+        <translation>파일이 저장되지 않음</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Simpan ke:</translation>
+        <translation type="vanished">저장 위치:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Foto:</translation>
+        <translation>사진:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Video:</translation>
+        <translation>비디오:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Tetapan resolusi</translation>
+        <translation>해상도 설정</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">Resolusi:</translation>
+        <translation type="vanished">해상도:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto:</translation>
+        <translation>사진:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video:</translation>
+        <translation>비디오:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Kesan bunyi</translation>
+        <translation>음향 효과</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Mod cermin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Lampu Denyar</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Garisan grid</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Garisan 1*1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Garisan 2*2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -195,150 +195,150 @@
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>카메라</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Tetapan</translation>
+        <translation>설정</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Henti rakaman</translation>
+        <translation>녹화 중지</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Salin</translation>
+        <translation>복사</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Padam</translation>
+        <translation>삭제</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Buka</translation>
+        <translation>열기</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Cetak</translation>
+        <translation>인쇄</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Bantuan</translation>
+        <translation>도움말</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Pintasan paparan</translation>
+        <translation>단축키 보이기</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Henti menangkap foto</translation>
+        <translation>사진 촬영 중지</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Menu konteks</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Tangkap foto</translation>
+        <translation type="vanished">사진 찍기</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">Rakam video</translation>
+        <translation type="vanished">비디오 녹화</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Henti menangkap foto</translation>
+        <translation type="vanished">사진 촬영 중지</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>없음</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Biasa</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Terang</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Panas</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Sejuk</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Retro</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Film</source>
-        <translation>Filem</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Kelabu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>H&amp;P</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampu denyar</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>On</source>
-        <translation>Hidup</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Off</source>
-        <translation>Mati</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Lengah tangkapan</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Tiada</translation>
+        <translation>없음</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Penapis</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Dedahan</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Tiada kamera sesawang ditemui</translation>
+        <translation>웹캠을 찾을 수 없음</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Kamera sesawang sedang digunakan</translation>
+        <translation>웹캠이 사용 중입니다</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Henti rakaman</translation>
+        <translation type="vanished">녹화 중지</translation>
     </message>
 </context>
 </TS>

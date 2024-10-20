@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ar">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -21,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"></translation>
+        <translation>صورة</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"></translation>
+        <translation>فيديو</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"></translation>
+        <translation>تبديل الكاميرات</translation>
     </message>
 </context>
 <context>
@@ -138,7 +136,7 @@
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">حفظ ل:</translation>
+        <translation type="vanished">حفظ إلى:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -170,27 +168,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"></translation>
+        <translation>وضع المرآة</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"></translation>
+        <translation>ضوء الفلاش</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>خطوط الشبكة</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>1*1 خطوط</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>2*2 خطوط</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -201,7 +199,7 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>العدادات</translation>
+        <translation>الإعدادات</translation>
     </message>
     <message>
         <source>Stop recording</source>
@@ -266,54 +264,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>عادي</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"></translation>
+        <translation>الحي</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"></translation>
+        <translation>الدافئ</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"></translation>
+        <translation>البارد</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"></translation>
+        <translation>العتيق</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"></translation>
+        <translation>الفيلم</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"></translation>
+        <translation>رصاصي</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"></translation>
+        <translation>الأسود و الأبيض</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"></translation>
+        <translation>ضوء الفلاش</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>وضع التشغيل</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>وضع إيقاف التشغيل</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"></translation>
+        <translation>تأخير الالتقاط</translation>
     </message>
     <message>
         <source>None</source>
@@ -321,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>مرشحات</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"></translation>
+        <translation>التعرض</translation>
     </message>
 </context>
 <context>
