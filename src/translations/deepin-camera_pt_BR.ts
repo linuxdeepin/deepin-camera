@@ -203,7 +203,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromper a gravação</translation>
+        <translation>Interromper gravação</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -250,7 +250,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Interromper a captura de fotos</translation>
+        <translation type="vanished">Interromper captura de fotos</translation>
     </message>
 </context>
 <context>
@@ -338,7 +338,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Interromper a gravação</translation>
+        <translation type="vanished">Interromper gravação</translation>
     </message>
 </context>
 </TS>
