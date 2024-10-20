@@ -180,11 +180,11 @@
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Linhas 1*1</translation>
+        <translation>Linhas 1x1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Linhas 2*2</translation>
+        <translation>Linhas 2x2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -231,7 +231,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromper a captura de fotos</translation>
+        <translation>Interromper captura de fotos</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -288,7 +288,7 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>Cinzento</translation>
+        <translation>Cinza</translation>
     </message>
     <message>
         <source>B&amp;W</source>
