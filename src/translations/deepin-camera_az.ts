@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="az">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="az">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -40,7 +38,7 @@
     </message>
     <message>
         <source>Close</source>
-        <translation>Bağlayın</translation>
+        <translation>Bağlamaq</translation>
     </message>
 </context>
 <context>
@@ -59,7 +57,7 @@
     </message>
     <message>
         <source>Print</source>
-        <translation>Çap edin</translation>
+        <translation>Çap etmək</translation>
     </message>
 </context>
 <context>
@@ -178,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Tor xətləri</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>1*1 xətlər</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>2*2 xətlər</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

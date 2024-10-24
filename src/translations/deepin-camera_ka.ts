@@ -1,344 +1,344 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ka">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Виконуємо запис відео. Закрити вікно попри це?</translation>
+        <translation>მიმდინარეობს ვიდეო ჩაწერა. დავხუროთ ფანჯარა?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Відкрити теку</translation>
+        <translation type="vanished">საქაღალდის გახსნა</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>პარამეტრები</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>არაფერი</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>Фото</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Video</source>
-        <translation>Відео</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Перемкнути камери</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation>გაუქმება</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрити</translation>
+        <translation>დახურვა</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Копіювати</translation>
+        <translation>კოპირება</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Вилучити</translation>
+        <translation>წაშლა</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Відкрити теку</translation>
+        <translation>საქაღალდის გახსნა</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Надрукувати</translation>
+        <translation>დაბეჭდვა</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>У вас немає прав доступу для роботи з цією текою</translation>
+        <translation>თქვენ არ გაქვთ საკმარისი უფლება აღნიშნულ საქაღალდეზე ქმედების განსახორციელებლად</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрити</translation>
+        <translation>დახურვა</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Некоректна тека</translation>
+        <translation type="vanished">არასწორი საქაღალდე</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Відкрити теку</translation>
+        <translation>საქაღალდის გახსნა</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>პარამეტრები</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Основні</translation>
+        <translation>საბაზო</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Розташування файла</translation>
+        <translation>ფაილის ლოკაცია</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Знімок</translation>
+        <translation>გადაღება</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Серійна знімання</translation>
+        <translation>პაკეტური რეჟიმი</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Затримка власного таймера</translation>
+        <translation>თვით ტაიმერი დაგვიანება</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Виведення</translation>
+        <translation>გამოსვლა</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Формат виведення</translation>
+        <translation>გამოსვლის ფორმატი</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 знімка</translation>
+        <translation>4 ცალი</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 знімків</translation>
+        <translation>10 ცალი</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>არაფერი</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>კამერა</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>«Камера» — допоміжна програма для захоплення зображень та відео з відеокамери вашого персонального комп&apos;ютера або вебкамери.</translation>
+        <translation>კამერა არის ხელსაწყო სურათის და ვიდეოს გადასაღებად, კომპიუტერის ინტეგრირებული კამერის ანდ დამატებითი ვებ კამერის გამოყენებით</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Файл не збережено</translation>
+        <translation>ფაილი არ შეინახა</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Зберегти до:</translation>
+        <translation type="vanished">შენახვა: </translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Фото:</translation>
+        <translation>სურათი: </translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Відео:</translation>
+        <translation>ვიდეო: </translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Параметри роздільності</translation>
+        <translation>გაფართოების პარამეტრები</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">Роздільна здатність:</translation>
+        <translation type="vanished">გაფართოება: </translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Фотографії:</translation>
+        <translation>სურათები: </translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Відео:</translation>
+        <translation>ვიდეო: </translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Звукові ефекти</translation>
+        <translation>ხმოვანი ეფექტები</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Дзеркальний режим</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Спалах</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Лінії сітки</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Лінії 1*1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Лінії 2*2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>Максимальна роздільність:</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>კამერა</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>პარამეტრები</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Зупинити записування</translation>
+        <translation>ჩაწერის გაჩერება</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копіювати</translation>
+        <translation>კოპირება</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Вилучити</translation>
+        <translation>წაშლა</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Відкрити</translation>
+        <translation>გახსნა</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Надрукувати</translation>
+        <translation>დაბეჭდვა</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Довідка</translation>
+        <translation>დახმარება</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Показати скорочення</translation>
+        <translation>იარლიყის ეკრანზე ჩვენება</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Зупинити створення фотографій</translation>
+        <translation>სურათის გადაღების გაჩერება</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Контекстне меню</translation>
+        <translation>კონტექსტუალური მენიუ</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Створити знімок</translation>
+        <translation type="vanished">სურათის გადაღება</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">Записати відео</translation>
+        <translation type="vanished">ვიდეოს ჩაწერა</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Зупинити створення фотографій</translation>
+        <translation type="vanished">სურათის გადაღების გაჩერება</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>არაფერი</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Звичайний</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Яскравий</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Теплий</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Холодний</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Ретро</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Film</source>
-        <translation>Плівка</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Сірий</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Чорно-білий</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Спалах</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>On</source>
-        <translation>Увімкн.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Off</source>
-        <translation>Вимкн.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Затримка знімка</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>არაფერი</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Фільтри</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Експонування</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Вебкамери не знайдено</translation>
+        <translation>ვებკამერა ვერ მოიძებნა</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Вебкамера використовується іншою програмою</translation>
+        <translation>ვებკამერა გამოყენებაშია</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Зупинити записування</translation>
+        <translation type="vanished">ჩაწერის გაჩერება</translation>
     </message>
 </context>
 </TS>
