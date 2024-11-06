@@ -1,3 +1,9 @@
+deepin-camera (6.5.4) unstable; urgency=medium
+
+  * remove kwayland-shell env
+
+ -- Liu zheng <liuzheng@uniontech.com>  Wed, 06 Nov 2024 16:54:40 +0800
+
 deepin-camera (6.5.3) unstable; urgency=medium
 
   * chore: Update linglong build script.

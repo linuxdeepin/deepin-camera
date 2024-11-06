@@ -116,9 +116,6 @@ int main(int argc, char *argv[])
     }
 
     if (bWayland) {
-
-        if (qEnvironmentVariable("DDE_CURRENT_COMPOSITOR") != "TreeLand")
-            qputenv("QT_WAYLAND_SHELL_INTEGRATION", "kwayland-shell");
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
