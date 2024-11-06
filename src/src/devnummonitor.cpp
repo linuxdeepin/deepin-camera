@@ -58,14 +58,12 @@ void DevNumMonitor::timeOutSlot()
         } else {
             m_noDevice = false;
             emit existDevice();
-            qDebug() << "There is a camera connected!";
         }
     } else {
         m_noDevice = false;
         emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();
-        qDebug() << "There are two or more cameras connected!";
     }
 
 }
