@@ -11,15 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
-find_package(DWayland)
-find_package(KF5Wayland)
-if (NOT DWayland_FOUND)
-    if (${KF5Wayland_VERSION} VERSION_GREATER 5.54.1)
-        option(USE_DEEPIN_WAYLAND "option for wayland support" ON)
-    endif()
-else()
-    option(USE_DEEPIN_WAYLAND "option for wayland support" ON)
-endif()
+
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
@@ -44,12 +36,6 @@ include(GNUInstallDirs)
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
 endif ()
-
-if (USE_DEEPIN_WAYLAND)
-    if(!USE_DEEPIN_V25)
-        add_definitions("-DUSE_DEEPIN_WAYLAND")
-    endif()
-endif()
 
 if(DEFINED LINGLONG_BUILD_ON)
     # 玲珑构建编译开关
@@ -100,15 +86,7 @@ find_package(Qt5 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
 include(FindPkgConfig)
-if (USE_DEEPIN_WAYLAND)
-    if (DWayland_FOUND)
-        message("DWayland founded.")
-        add_definitions(-DDWAYLAND)
-    elseif(KF5Wayland_FOUND)
-        message("KF5Wayland founded.")
-        add_definitions(-DKF5WAYLAND)
-    endif()
-endif()
+
 
 file (GLOB_RECURSE CXXSOURCES
     ./src/*.cpp
@@ -171,14 +149,6 @@ endif ()
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
 
-if (USE_DEEPIN_WAYLAND)
-    if (DWayland_FOUND)
-        set(LIBS DWaylandClient DWaylandServer)
-    else()
-        message("KF5 environment")
-        set(LIBS KF5::WaylandClient KF5::WaylandServer)
-    endif()
-endif()
 
 add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
