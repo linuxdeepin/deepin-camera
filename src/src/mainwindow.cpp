@@ -62,7 +62,7 @@ const int CMainWindow::minWindowWidth = 680;
 const int CMainWindow::minWindowHeight = 510;
 
 const int rightOffset = 10;
-const int SwitchcameraDiam = 40; //切换摄像头直径
+const int SwitchcameraDiam = 40;   //切换摄像头直径
 const int photeRecordDiam = 64;
 const int snapLabelDiam = 52;
 const int switchBtnWidth = 50;
@@ -118,7 +118,6 @@ static QString ElideText(const QString &text, const QSize &size,
 
         if (tmptextline.isValid())
             textlinestr.append("\n");
-
     }
 
     textLayout.endLayout();
@@ -141,19 +140,16 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
     main->setLayout(layout);
     main->setContentsMargins(0, 0, 0, 0);
     main->setMinimumWidth(240);
-    main->setMinimumHeight(20);
+    //main->setMinimumHeight(20);
     layout->addWidget(lab);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setAlignment(Qt::AlignVCenter);
     lab->setObjectName(OPTION_FORMAT_LABER);
     lab->setAccessibleName(OPTION_FORMAT_LABER);
-    lab->setMinimumHeight(20);
+    //lab->setMinimumHeight(20);
 
     lab->setText(option->value().toString());
-    QFont ft("SourceHanSansSC");
-    ft.setPixelSize(15);
-    ft.setWeight(QFont::Medium);
-    lab->setFont(ft);
+    DFontSizeManager::instance()->bind(lab, DFontSizeManager::T6);
     lab->setAlignment(Qt::AlignVCenter);
     lab->show();
     optionWidget->setObjectName(OPTION_FRAME);
@@ -162,7 +158,7 @@ static QWidget *createFormatLabelOptionHandle(QObject *opt)
 
     optionLayout->setSpacing(0);
     DLabel *dLabel = new DLabel(QObject::tr(option->name().toStdString().c_str()));
-    dLabel->setMinimumHeight(20);
+    //dLabel->setMinimumHeight(20);
     dLabel->setAlignment(Qt::AlignVCenter);
     optionLayout->addRow(dLabel, main);
     optionWidget->setContentsMargins(0, 0, 0, 0);
@@ -175,7 +171,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 {
     DTK_CORE_NAMESPACE::DSettingsOption *option = qobject_cast<DTK_CORE_NAMESPACE::DSettingsOption *>(opt);
     option->setObjectName(PIC_OPTION);
-    DLineEdit *picPathLineEdit = new DLineEdit;//文本框
+    DLineEdit *picPathLineEdit = new DLineEdit;   //文本框
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
     DSuggestButton *icon = new DSuggestButton(main);
@@ -191,15 +187,11 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     main->setContentsMargins(0, 0, 0, 0);
     horboxlayout->setAlignment(Qt::AlignTop);
     horboxlayout->setContentsMargins(0, 0, 0, 0);
-    QFont ft("SourceHanSansSC");
-    ft.setPixelSize(14);
-    ft.setWeight(QFont::Medium);
-    picPathLineEdit->setFont(ft);
-
+    DFontSizeManager::instance()->bind(picPathLineEdit, DFontSizeManager::T6);
     icon->setAutoDefault(false);
     icon->setObjectName(BUTTON_OPTION_PIC_LINE_EDIT);
     icon->setAccessibleName(BUTTON_OPTION_PIC_LINE_EDIT);
-    picPathLineEdit->setFixedHeight(37);
+    //picPathLineEdit->setFixedHeight(37);
     picPathLineEdit->setObjectName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     picPathLineEdit->setAccessibleName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     //获取当前设置的照片保存路径
@@ -211,22 +203,21 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
 
     //路径不存在
     if (!curPicSettingPathdir.exists()) {
-        picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
+        picPathLineEdit->setText(option->defaultValue().toString());   //更改文本框为默认路径~/Pictures/Camera
         curPicSettingPath = option->defaultValue().toString();
         if (curPicSettingPath.contains(relativeHomePath))
             curPicSettingPath.replace(0, 1, QDir::homePath());
-    }
-    else
-        picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
+    } else
+        picPathLineEdit->setText(option->value().toString());   //更改文本框为设置的路径
 
     lastPicPath = curPicSettingPath;
 
     QFontMetrics tem_fontmetrics = picPathLineEdit->fontMetrics();
-    QString picStrElideText = ElideText(picPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
+    QString picStrElideText = ElideText(picPathLineEdit->text(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
                                         picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
     picPathLineEdit->setText(picStrElideText);
 
-    option->connect(picPathLineEdit, &DLineEdit::focusChanged, [ = ](bool on) {
+    option->connect(picPathLineEdit, &DLineEdit::focusChanged, [=](bool on) {
         if (on) {
             QString settingPicPathValue = option->value().toString();
 
@@ -236,22 +227,23 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             QDir dir(settingPicPathValue);
 
             if (!dir.exists())
-                picPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Pictures/Camera
+                picPathLineEdit->setText(option->defaultValue().toString());   //更改文本框为默认路径~/Pictures/Camera
             else
-                picPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
+                picPathLineEdit->setText(option->value().toString());   //更改文本框为设置的路径
         }
     });
 
     icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
     icon->setIconSize(QSize(24, 24));
-    icon->setFixedSize(41, 37);
+    //icon->setFixedSize(41, 37);
+    icon->setFixedWidth(41);
 
     horboxlayout->addWidget(picPathLineEdit);
     horboxlayout->addWidget(icon);
 
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
-    optionWidget->setFixedHeight(37);
+    //optionWidget->setFixedHeight(37);
 
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
@@ -274,7 +266,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
      *@brief 照片文本框路径是否正确
      *@param name:图片保存路径, alert:提示
      */
-    auto validate = [ = ](QString name, bool alert = true) -> bool {
+    auto validate = [=](QString name, bool alert = true) -> bool {
         Q_UNUSED(alert);
         name = name.trimmed();
 
@@ -287,8 +279,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         QFileInfo fileinfo(name);
         QDir dir(name);
 
-        if (fileinfo.exists())
-        {
+        if (fileinfo.exists()) {
             QString picStr("/home/");
             if (!fileinfo.isDir())
                 return false;
@@ -299,8 +290,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
             if (!fileinfo.isReadable() || !fileinfo.isWritable())
                 return false;
 
-        } else
-        {
+        } else {
             if (relativeHomePath.contains(name))
                 return false;
 
@@ -318,8 +308,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     /**
      *@brief 打开照片文件夹按钮槽函数
      */
-    option->connect(icon, &DPushButton::clicked, [ = ]() {
-
+    option->connect(icon, &DPushButton::clicked, [=]() {
         QString selectPicSavePath;
         QString tmplastpicpath = lastPicPath;
 
@@ -331,7 +320,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         if (!dir.exists()) {
             //设置文本框为新的路径
             tmplastpicpath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                             + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
             QDir defaultdir(tmplastpicpath);
 
             if (!defaultdir.exists())
@@ -351,8 +340,8 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         if (validate(selectPicSavePath, false)) {
             option->setValue(selectPicSavePath);
             QFontMetrics tem_fontmetrics = picPathLineEdit->fontMetrics();
-            QString elideText = ElideText(picPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                                picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+            QString elideText = ElideText(picPathLineEdit->text(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                          picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
             picPathLineEdit->setText(elideText);
         }
 
@@ -368,13 +357,12 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     /**
      *@brief 照片文本框编辑完成槽函数
      */
-    option->connect(picPathLineEdit, &DLineEdit::editingFinished, option, [ = ]() {
-
+    option->connect(picPathLineEdit, &DLineEdit::editingFinished, option, [=]() {
         QString curPicEditStr = picPathLineEdit->text();
         QDir dir(curPicEditStr);
         //获取当前文本框路径
-        QString curPicElidePath = ElideText(curPicEditStr, {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                               picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+        QString curPicElidePath = ElideText(curPicEditStr, { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                            picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
 
         if (!validate(curPicEditStr, false)) {
             QFileInfo fn(dir.path());
@@ -408,7 +396,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         }
     });
 
-    option->connect(picPathLineEdit, &DLineEdit::textEdited, option, [ = ](const QString & newStr) {
+    option->connect(picPathLineEdit, &DLineEdit::textEdited, option, [=](const QString &newStr) {
         validate(newStr);
     });
 
@@ -416,18 +404,18 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
      *@brief 照片后台设置参数更改槽函数
      */
     option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, picPathLineEdit,
-    [ = ](const QVariant & value) {
-        auto pi = ElideText(value.toString(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                            picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
-        picPathLineEdit->setText(pi);
-        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << endl;
-        lastPicPath = value.toString();
-        option->setValue(value.toString());
-        qDebug() << "save pic last path:" << value.toString() << endl;
-        picPathLineEdit->update();
-    });
+                    [=](const QVariant &value) {
+                        auto pi = ElideText(value.toString(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                            picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+                        picPathLineEdit->setText(pi);
+                        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << endl;
+                        lastPicPath = value.toString();
+                        option->setValue(value.toString());
+                        qDebug() << "save pic last path:" << value.toString() << endl;
+                        picPathLineEdit->update();
+                    });
 
-    return  optionWidget;
+    return optionWidget;
 }
 
 static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
@@ -450,14 +438,11 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     main->setContentsMargins(0, 0, 0, 0);
     horboxlayout->setAlignment(Qt::AlignTop);
     horboxlayout->setContentsMargins(0, 0, 0, 0);
-    QFont ft("SourceHanSansSC");
-    ft.setPixelSize(14);
-    ft.setWeight(QFont::Medium);
-    videoPathLineEdit->setFont(ft);
+    DFontSizeManager::instance()->bind(videoPathLineEdit, DFontSizeManager::T6);
     icon->setAutoDefault(false);
     icon->setObjectName(BUTTON_OPTION_VIDEO_LINE_EDIT);
     icon->setAccessibleName(BUTTON_OPTION_VIDEO_LINE_EDIT);
-    videoPathLineEdit->setFixedHeight(37);
+    //videoPathLineEdit->setFixedHeight(37);
     videoPathLineEdit->setObjectName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     videoPathLineEdit->setAccessibleName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     QString curVideoSettingPath = option->value().toString();
@@ -468,22 +453,21 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
     //路径不存在
     if (!curVideoSettingPathdir.exists()) {
-        videoPathLineEdit->setText(option->defaultValue().toString());//更改文本框为默认路径~/Videos/Camera
+        videoPathLineEdit->setText(option->defaultValue().toString());   //更改文本框为默认路径~/Videos/Camera
         curVideoSettingPath = option->defaultValue().toString();
         if (curVideoSettingPath.contains(relativeHomePath))
             curVideoSettingPath.replace(0, 1, QDir::homePath());
-    }
-    else
-        videoPathLineEdit->setText(option->value().toString());//更改文本框为设置的路径
+    } else
+        videoPathLineEdit->setText(option->value().toString());   //更改文本框为设置的路径
 
     lastVideoPath = curVideoSettingPath;
 
     QFontMetrics tem_fontmetrics = videoPathLineEdit->fontMetrics();
-    QString vdStrElideText = ElideText(videoPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                          videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+    QString vdStrElideText = ElideText(videoPathLineEdit->text(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                       videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
     videoPathLineEdit->setText(vdStrElideText);
 
-    option->connect(videoPathLineEdit, &DLineEdit::focusChanged, [ = ](bool on) {
+    option->connect(videoPathLineEdit, &DLineEdit::focusChanged, [=](bool on) {
         if (on) {
             QString settingVideoPathValue = option->value().toString();
 
@@ -501,14 +485,15 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
     icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
     icon->setIconSize(QSize(24, 24));
-    icon->setFixedSize(41, 37);
+    //icon->setFixedSize(41, 37);
+    icon->setFixedWidth(41);
     horboxlayout->addWidget(videoPathLineEdit);
     horboxlayout->addWidget(icon);
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
-    optionWidget->setFixedHeight(37);
+    //optionWidget->setFixedHeight(37);
     main->setMinimumWidth(240);
     DLabel *lab = new DLabel(QObject::tr(option->name().toStdString().c_str()));
     lab->setAlignment(Qt::AlignVCenter);
@@ -525,7 +510,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
      *@brief 视频文本框路径是否正确
      *@param name:视频保存路径, alert:提示
      */
-    auto validate = [ = ](QString name, bool alert = true) -> bool {
+    auto validate = [=](QString name, bool alert = true) -> bool {
         Q_UNUSED(alert);
         name = name.trimmed();
 
@@ -538,8 +523,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         QFileInfo fileinfo(name);
         QDir dir(name);
 
-        if (fileinfo.exists())
-        {
+        if (fileinfo.exists()) {
             QString homeStr("/home/");
             if (!fileinfo.isDir())
                 return false;
@@ -550,8 +534,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
             if (!fileinfo.isReadable() || !fileinfo.isWritable())
                 return false;
 
-        } else
-        {
+        } else {
             if (relativeHomePath.contains(name))
                 return false;
 
@@ -569,8 +552,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     /**
      *@brief 打开视频文件夹按钮槽函数
      */
-    option->connect(icon, &DPushButton::clicked, [ = ]() {
-
+    option->connect(icon, &DPushButton::clicked, [=]() {
         QString selectVideoSavePath;
         QString tmplastvdcpath = lastVideoPath;
 
@@ -582,7 +564,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         if (!dir.exists()) {
             //设置文本框为新的路径
             tmplastvdcpath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                            + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
             QDir defaultdir(tmplastvdcpath);
 
             if (!defaultdir.exists()) {
@@ -605,8 +587,8 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         if (validate(selectVideoSavePath, false)) {
             option->setValue(selectVideoSavePath);
             QFontMetrics tem_fontmetrics = videoPathLineEdit->fontMetrics();
-            QString elideText = ElideText(videoPathLineEdit->text(), {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                                videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+            QString elideText = ElideText(videoPathLineEdit->text(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                          videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
             videoPathLineEdit->setText(elideText);
         }
 
@@ -614,14 +596,12 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
         if ((!fm.isReadable() || !fm.isWritable()) && !selectVideoSavePath.isEmpty())
             optinvaliddialog->show();
-
     });
 
     /**
      *@brief 视频文本框编辑完成槽函数
      */
-    option->connect(videoPathLineEdit, &DLineEdit::editingFinished, option, [ = ]() {
-
+    option->connect(videoPathLineEdit, &DLineEdit::editingFinished, option, [=]() {
         QString curVideoEditStr = videoPathLineEdit->text();
 
         // 视频保存路径暂时不能设置到smb网盘路径(会卡死在fwrite)，临时处理方案：重置回默认路径
@@ -630,8 +610,8 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
 
         QDir dir(curVideoEditStr);
         // 获取当前文本路径
-        QString curVdElidePath = ElideText(curVideoEditStr, {pathEditWidth, tem_fontmetrics.height()}, QTextOption::WrapAnywhere,
-                                                 videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
+        QString curVdElidePath = ElideText(curVideoEditStr, { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
+                                           videoPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
 
         if (!validate(curVideoEditStr, false)) {
             QFileInfo fn(dir.path());
@@ -665,7 +645,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         }
     });
 
-    option->connect(videoPathLineEdit, &DLineEdit::textEdited, option, [ = ](const QString & newStr) {
+    option->connect(videoPathLineEdit, &DLineEdit::textEdited, option, [=](const QString &newStr) {
         validate(newStr);
     });
 
@@ -673,19 +653,19 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
      *@brief 视频后台设置参数更改槽函数
      */
     option->connect(option, &DTK_CORE_NAMESPACE::DSettingsOption::valueChanged, videoPathLineEdit,
-    [ = ](const QVariant & value) {
-        auto pi = ElideText(value.toString(), {pathEditWidth, tem_fontmetrics.height()},
-                            QTextOption::WrapAnywhere, videoPathLineEdit->font(), Qt::ElideMiddle,
-                            tem_fontmetrics.height(), pathEditWidth);
-        videoPathLineEdit->setText(pi);
-        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << endl;
-        lastVideoPath = value.toString();
-        option->setValue(value.toString());
-        qDebug() << "save video last path:" << value.toString() << endl;
-        videoPathLineEdit->update();
-    });
+                    [=](const QVariant &value) {
+                        auto pi = ElideText(value.toString(), { pathEditWidth, tem_fontmetrics.height() },
+                                            QTextOption::WrapAnywhere, videoPathLineEdit->font(), Qt::ElideMiddle,
+                                            tem_fontmetrics.height(), pathEditWidth);
+                        videoPathLineEdit->setText(pi);
+                        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << endl;
+                        lastVideoPath = value.toString();
+                        option->setValue(value.toString());
+                        qDebug() << "save video last path:" << value.toString() << endl;
+                        videoPathLineEdit->update();
+                    });
 
-    return  optionWidget;
+    return optionWidget;
 }
 
 QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
@@ -695,13 +675,13 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
         lastPath = Settings::get().getOption("base.save.vddatapath").toString();
         if (lastPath.compare(Settings::get().settings()->option("base.save.vddatapath")->defaultValue().toString()) == 0)
             lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                       + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
 
     } else {
         lastPath = Settings::get().getOption("base.save.picdatapath").toString();
         if (lastPath.compare(Settings::get().settings()->option("base.save.picdatapath")->defaultValue().toString()) == 0)
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                       + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
     }
 
     // 包含主目录相对路径，QDir不能识别，必须转为绝对路径
@@ -714,17 +694,17 @@ QString CMainWindow::lastOpenedPath(QStandardPaths::StandardLocation standard)
     if (lastPath.isEmpty() || !lastDir.exists()) {
         if (standard == QStandardPaths::MoviesLocation) {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation)
-                       + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
         } else {
             lastPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)
-                       + QDir::separator() + "Camera";
+                    + QDir::separator() + "Camera";
         }
 
         QDir dirNew(lastPath);
         if (!dirNew.exists()) {
             if (!dirNew.mkdir(lastPath)) {
                 qWarning() << "make dir error:" << lastPath;
-                lastPath = QDir::currentPath();//这是错误的路径，但肯定存在
+                lastPath = QDir::currentPath();   //这是错误的路径，但肯定存在
                 qDebug() << "now lastVdPath is:" << lastPath;
             }
         }
@@ -786,10 +766,10 @@ void CMainWindow::slotPopupSettingsDialog()
 
 QString CMainWindow::libPath(const QString &strlib)
 {
-    QDir  dir;
-    QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
+    QDir dir;
+    QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
-    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
+    QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files);   //filter name with strlib
 
     if (list.contains(strlib))
         return strlib;
@@ -811,10 +791,10 @@ void CMainWindow::reflushSnapshotLabel()
     getMediaFileInfoList(m_videoPath, videoPathList);
     getMediaFileInfoList(m_picPath, picPathList);
     if (!videoPathList.isEmpty()
-            && picPathList.isEmpty()) {
+        && picPathList.isEmpty()) {
         lastFilePath = videoPathList[0].filePath();
     } else if (videoPathList.isEmpty()
-               && ! picPathList.isEmpty()) {
+               && !picPathList.isEmpty()) {
         lastFilePath = picPathList[0].filePath();
     } else if (!videoPathList.isEmpty()
                && !picPathList.isEmpty()) {
@@ -836,7 +816,7 @@ void CMainWindow::getMediaFileInfoList(const QString &path, QFileInfoList &fileL
     QStringList filters;
     filters << QString("*.jpg") << QString("*.mp4") << QString("*.webm");
     dir.setNameFilters(filters);
-    dir.setSorting(QDir::Time /*| QDir::Reversed*/);     //按时间逆序排序
+    dir.setSorting(QDir::Time /*| QDir::Reversed*/);   //按时间逆序排序
     if (dir.exists()) {
         fileList = dir.entryInfoList();
     }
@@ -880,10 +860,10 @@ void CMainWindow::initBlockShutdown()
                                          "org.freedesktop.login1.Manager",
                                          QDBusConnection::systemBus());
 
-    m_arg << QString("shutdown")             // what
-          << qApp->productName()           // who
-          << QObject::tr("File not saved")          // why
-          << QString("block");                        // mode
+    m_arg << QString("shutdown")   // what
+          << qApp->productName()   // who
+          << QObject::tr("File not saved")   // why
+          << QString("block");   // mode
 
     m_reply = m_pLoginManager->callWithArgumentList(QDBus::Block, "Inhibit", m_arg);
 
@@ -910,10 +890,10 @@ void CMainWindow::initBlockSleep()
                                           "org.freedesktop.login1.Manager",
                                           QDBusConnection::systemBus());
 
-    m_argSleep << QString("sleep")             // what
-               << qApp->productName()           // who
-               << QObject::tr("File not saved")          // why
-               << QString("block");                        // mode
+    m_argSleep << QString("sleep")   // what
+               << qApp->productName()   // who
+               << QObject::tr("File not saved")   // why
+               << QString("block");   // mode
 
     m_replySleep = m_pLoginMgrSleep->callWithArgumentList(QDBus::Block, "Inhibit", m_argSleep);
 
@@ -926,7 +906,6 @@ void CMainWindow::initBlockSleep()
         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
         qDebug() << "init Nublock sleep.";
     }
-
 }
 
 void CMainWindow::initTabOrder()
@@ -1007,7 +986,7 @@ void CMainWindow::initShortcut()
     scViewShortcut->setObjectName(SHORTCUT_VIEW);
     scSpaceShortcut->setObjectName(SHORTCUT_SPACE);
 
-    connect(scViewShortcut, &QShortcut::activated, this, [ = ] {
+    connect(scViewShortcut, &QShortcut::activated, this, [=] {
         qDebug() << "receive Ctrl+Shift+/";
         QRect rect = window()->geometry();
         QPoint pos(rect.x() + rect.width() / 2, rect.y() + rect.height() / 2);
@@ -1022,14 +1001,13 @@ void CMainWindow::initShortcut()
 #endif
     });
 
-    connect(scSpaceShortcut, &QShortcut::activated, this, [ = ] {
+    connect(scSpaceShortcut, &QShortcut::activated, this, [=] {
         if (QDateTime::currentMSecsSinceEpoch() < m_SpaceKeyInterval)
             //获取录制按钮第一次点击时间(ms)
             m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
 
         //第二次点击时间与第一次时间差
-        if (QDateTime::currentMSecsSinceEpoch() - m_SpaceKeyInterval > 300)
-        {
+        if (QDateTime::currentMSecsSinceEpoch() - m_SpaceKeyInterval > 300) {
             m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
             onPhotoRecordBtnClked();
             m_takePhotoSettingArea->closeAllGroup();
@@ -1037,13 +1015,12 @@ void CMainWindow::initShortcut()
     });
 
     //根据tab焦点进行Enter键操作
-    connect(scEnterShortcut, &QShortcut::activated, this, [ = ] {
+    connect(scEnterShortcut, &QShortcut::activated, this, [=] {
         DWindowMinButton *windowMinBtn = m_pTitlebar->titlebar()->findChild<DWindowMinButton *>("DTitlebarDWindowMinButton");
         DWindowOptionButton *windowoptionButton = m_pTitlebar->titlebar()->findChild<DWindowOptionButton *>("DTitlebarDWindowOptionButton");
         DWindowMaxButton *windowMaxBtn = m_pTitlebar->titlebar()->findChild<DWindowMaxButton *>("DTitlebarDWindowMaxButton");
         DWindowCloseButton *windowCloseBtn = m_pTitlebar->titlebar()->findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
         QWidget *focuswidget = focusWidget();
-
 
         /**
          *@brief 判断当前的焦点窗口在哪个控件上，通过enter键触发对应的点击操作
@@ -1066,7 +1043,6 @@ void CMainWindow::initShortcut()
         else
             return;
     });
-
 }
 
 void CMainWindow::settingDialog()
@@ -1083,19 +1059,17 @@ void CMainWindow::settingDialog()
 
     auto resolutionmodeFamily = Settings::get().settings()->option("outsetting.resolutionsetting.resolution");
 
-
-
     if (get_v4l2_device_handler() != nullptr) {
         //格式索引
         int format_index = v4l2core_get_frame_format_index(
-                               get_v4l2_device_handler(),
-                               v4l2core_get_requested_frame_format(get_v4l2_device_handler()));
+                get_v4l2_device_handler(),
+                v4l2core_get_requested_frame_format(get_v4l2_device_handler()));
         //分辨率索引
         int resolu_index = v4l2core_get_format_resolution_index(
-                               get_v4l2_device_handler(),
-                               format_index,
-                               v4l2core_get_frame_width(get_v4l2_device_handler()),
-                               v4l2core_get_frame_height(get_v4l2_device_handler()));
+                get_v4l2_device_handler(),
+                format_index,
+                v4l2core_get_frame_width(get_v4l2_device_handler()),
+                v4l2core_get_frame_height(get_v4l2_device_handler()));
 
         //获取当前摄像头的格式表
         v4l2_stream_formats_t *list_stream_formats = v4l2core_get_formats_list(get_v4l2_device_handler());
@@ -1107,15 +1081,15 @@ void CMainWindow::settingDialog()
         if (format_index >= 0 && resolu_index >= 0) {
 
             //format_index = -1 &&resolu_index = -1 表示设备被占用或者不存在
-            for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
+            for (int i = 0; i < list_stream_formats[format_index].numb_res; i++) {
 
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
-                        && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
-                        (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
-                        ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
-                         && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
-                         && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
+                     && list_stream_formats[format_index].list_stream_cap[i].height > 0)
+                    && (list_stream_formats[format_index].list_stream_cap[i].width < 7680
+                        && list_stream_formats[format_index].list_stream_cap[i].height < 4320)
+                    && ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
+                        && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
+                        && (list_stream_formats[format_index].list_stream_cap[i].height % 8) == 0)) {
                     //加入分辨率的字符串
                     QString res_str = QString("%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
 
@@ -1131,12 +1105,11 @@ void CMainWindow::settingDialog()
             for (int i = 0; i < resolutionDatabase.size() - 1; i++) {
                 int flag = 1;
 
-                for (int j = 0 ; j < len; j++) {
+                for (int j = 0; j < len; j++) {
                     QStringList resolutiontemp1 = resolutionDatabase[j].split("x");
                     QStringList resolutiontemp2 = resolutionDatabase[j + 1].split("x");
 
-                    if ((resolutiontemp1[0].toInt() < resolutiontemp2[0].toInt()) ||
-                            (resolutiontemp1[0].toInt() == resolutiontemp2[0].toInt() && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt()))) {
+                    if ((resolutiontemp1[0].toInt() < resolutiontemp2[0].toInt()) || (resolutiontemp1[0].toInt() == resolutiontemp2[0].toInt() && (resolutiontemp1[1].toInt() < resolutiontemp2[1].toInt()))) {
                         QString resolutionstr = resolutionDatabase[j + 1];
                         resolutionDatabase[j + 1] = resolutionDatabase[j];
                         resolutionDatabase[j] = resolutionstr;
@@ -1148,18 +1121,15 @@ void CMainWindow::settingDialog()
 
                 if (flag == 1)
                     continue;
-
             }
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
                 QStringList resolutiontemp = resolutionDatabase[i].split("x");
 
-                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                    defres = i; //设置分辨率下拉菜单当前索引
+                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) && (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
+                    defres = i;   //设置分辨率下拉菜单当前索引
                     break;
                 }
-
             }
 
             resolutionmodeFamily->setData("items", resolutionDatabase);
@@ -1180,9 +1150,8 @@ void CMainWindow::settingDialog()
             for (int i = 0; i < resolutionDatabase.size(); i++) {
                 QStringList resolutiontemp = resolutionDatabase[i].split("x");
 
-                if ((Camera::instance()->getCameraResolution().width() == resolutiontemp[0].toInt()) &&
-                        Camera::instance()->getCameraResolution().height() == resolutiontemp[1].toInt()) {
-                    defres = i; //设置分辨率下拉菜单当前索引
+                if ((Camera::instance()->getCameraResolution().width() == resolutiontemp[0].toInt()) && Camera::instance()->getCameraResolution().height() == resolutiontemp[1].toInt()) {
+                    defres = i;   //设置分辨率下拉菜单当前索引
                     break;
                 }
             }
@@ -1229,8 +1198,8 @@ void CMainWindow::loadAfterShow()
     initConnection();
     //后续修改为标准Qt用法
     QString strCache = QString(getenv("HOME")) + QDir::separator() + QString(".cache")
-                       + QDir::separator() + QString("deepin") + QDir::separator()
-                       + QString("deepin-camera") + QDir::separator();
+            + QDir::separator() + QString("deepin") + QDir::separator()
+            + QString("deepin-camera") + QDir::separator();
     QDir dir;
     dir.mkpath(strCache);
     initRightButtons();
@@ -1238,11 +1207,11 @@ void CMainWindow::loadAfterShow()
     initEventFilter();
     reflushSnapshotLabel();
 
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
-    if(DataManager::instance()->encodeEnv() != QCamera_Env) {
-        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
-        connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));   //显示切换按钮
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));   //多设备信号
+    if (DataManager::instance()->encodeEnv() != QCamera_Env) {
+        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));   //重启设备
+        connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));   //重启设备
     } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         initCameraConnection();
     }
@@ -1256,11 +1225,11 @@ void CMainWindow::loadAfterShow()
     m_windowStateThread = new windowStateThread(m_bWayland, this);
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 
-    QJsonObject obj{
-        {"tid", EventLogUtils::Start},
-        {"mode", 1},
-        {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+    QJsonObject obj {
+        { "tid", EventLogUtils::Start },
+        { "mode", 1 },
+        { "version", VERSION },
+        { "camera_connected", DataManager::instance()->getdevStatus() ? true : false }
     };
     EventLogUtils::get().writeLogs(obj);
 }
@@ -1314,10 +1283,10 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
     QString videoPath = Settings::get().getOption("base.save.vddatapath").toString();
     QString picPath = Settings::get().getOption("base.save.picdatapath").toString();
     if (videoPath.contains(relativeHomePath))
-            videoPath.replace(0, 1, QDir::homePath());
+        videoPath.replace(0, 1, QDir::homePath());
     if (picPath.contains(relativeHomePath))
         picPath.replace(0, 1, QDir::homePath());
-    QDir  dir(videoPath);
+    QDir dir(videoPath);
     if (!dir.exists()) {
         QString videoDefaultPath = lastOpenedPath(QStandardPaths::MoviesLocation);
         if (videoDefaultPath != videoPath) {
@@ -1396,29 +1365,29 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
     qDebug() << serviceName << key2value << endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
     //wayland下只需要停止录像，不需要停止线程，需要在锁屏状态下继续处理摄像头状态
-//    if (m_bWayland) {
+    //    if (m_bWayland) {
 
-//        if (key2value.value("Locked").value<bool>()) {
-//            qDebug() << "locked";
+    //        if (key2value.value("Locked").value<bool>()) {
+    //            qDebug() << "locked";
 
-//            onStopPhotoAndRecord();
+    //            onStopPhotoAndRecord();
 
-//            m_videoPre->m_imgPrcThread->stop();
+    //            m_videoPre->m_imgPrcThread->stop();
 
-//            v4l2_dev_t *vd =  get_v4l2_device_handler();
-//            qDebug() << "lock end";
-//        } else {
-//            qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
-//            //打开摄像头
-//            m_videoPre->onChangeDev();
-//            qDebug() << "v4l2core_start_stream OK";
-//        }
+    //            v4l2_dev_t *vd =  get_v4l2_device_handler();
+    //            qDebug() << "lock end";
+    //        } else {
+    //            qDebug() << "restart use camera cause ScreenBlack or PoweerLock";
+    //            //打开摄像头
+    //            m_videoPre->onChangeDev();
+    //            qDebug() << "v4l2core_start_stream OK";
+    //        }
 
-//    } else { //锁屏结束连拍
-        if (key2value.value("Locked").value<bool>()) {
-            onStopPhotoAndRecord();
-        }
-//    }
+    //    } else { //锁屏结束连拍
+    if (key2value.value("Locked").value<bool>()) {
+        onStopPhotoAndRecord();
+    }
+    //    }
 }
 
 void CMainWindow::onTrashFile(const QString &fileName)
@@ -1463,11 +1432,11 @@ void CMainWindow::onModeSwitchBoxValueChanged(int type)
 void CMainWindow::onPhotoRecordBtnClked()
 {
     QJsonObject obj {
-        {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
-        {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+        { "tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording },
+        { "version", VERSION },
+        { "camera_connected", DataManager::instance()->getdevStatus() ? true : false }
     };
-    if(!m_bRecording)
+    if (!m_bRecording)
         EventLogUtils::get().writeLogs(obj);
 
     //没有摄像机，不进行任何操作
@@ -1489,7 +1458,7 @@ void CMainWindow::onPhotoRecordBtnClked()
             }
             m_videoPre->onTakePic(true);
         }
-    } else { //录像模式下
+    } else {   //录像模式下
         if (true == m_bRecording) {
             m_videoPre->onEndBtnClicked();
         } else {
@@ -1520,7 +1489,7 @@ void CMainWindow::onUpdateRecordState(int state)
     m_actionSettings->setEnabled(!m_bRecording);
     showChildWidget();
     if (false == m_bRecording
-            && m_windowStateThread->isRunning() && !m_bWayland) {
+        && m_windowStateThread->isRunning() && !m_bWayland) {
         m_windowStateThread->requestInterruption();
     }
 }
@@ -1531,7 +1500,7 @@ void CMainWindow::onUpdatePhotoState(int state)
     m_photoState = state;
     showChildWidget();
     if (photoNormal == state
-            && m_windowStateThread->isRunning() && !m_bWayland) {
+        && m_windowStateThread->isRunning() && !m_bWayland) {
         m_windowStateThread->requestInterruption();
     }
 }
@@ -1570,7 +1539,7 @@ void CMainWindow::onKeyUp()
 {
     QWidget *pWidget = focusWidget();
     if (m_cameraSwitchBtn == pWidget
-            || m_takePhotoSettingArea == pWidget) {
+        || m_takePhotoSettingArea == pWidget) {
         m_windowoptionButton->setFocus();
     } else if (m_photoRecordBtn == pWidget) {
         if (m_cameraSwitchBtn->isHidden()) {
@@ -1585,9 +1554,9 @@ void CMainWindow::onKeyDown()
 {
     QWidget *pWidget = focusWidget();
     if (m_windowMinBtn == pWidget
-            || m_windowoptionButton == pWidget
-            || m_windowMaxBtn == pWidget
-            || m_windowCloseBtn == pWidget) {
+        || m_windowoptionButton == pWidget
+        || m_windowMaxBtn == pWidget
+        || m_windowCloseBtn == pWidget) {
         if (m_cameraSwitchBtn->isHidden()) {
             m_photoRecordBtn->setFocus();
         } else {
@@ -1604,8 +1573,8 @@ void CMainWindow::onKeyLeft()
 {
     QWidget *pWidget = focusWidget();
     if (m_cameraSwitchBtn == pWidget
-            || m_photoRecordBtn == pWidget
-            || m_snapshotLabel == pWidget) {
+        || m_photoRecordBtn == pWidget
+        || m_snapshotLabel == pWidget) {
         m_takePhotoSettingArea->setFocus();
     } else if (m_windowCloseBtn == pWidget) {
         m_windowMaxBtn->setFocus();
@@ -1647,7 +1616,7 @@ void CMainWindow::onShowFilterName(bool bShow)
     m_bShowFilterName = bShow;
 }
 
-void CMainWindow::onSetFilterName(const QString& name)
+void CMainWindow::onSetFilterName(const QString &name)
 {
     m_filterName->setText(name);
 }
@@ -1659,7 +1628,7 @@ void CMainWindow::initUI()
     m_videoPre->setObjectName(VIDEO_PREVIEW_WIDGET);
     m_videoPre->setAccessibleName(VIDEO_PREVIEW_WIDGET);
     setCentralWidget(m_videoPre);
-    paletteTime.setBrush(QPalette::Dark, QColor(0, 0, 0, 51)); //深色
+    paletteTime.setBrush(QPalette::Dark, QColor(0, 0, 0, 51));   //深色
     m_videoPre->setPalette(paletteTime);
 
     m_filterName = new QLabel(this);
@@ -1678,14 +1647,14 @@ void CMainWindow::initUI()
     m_filterName->move((defaultWindowWidth - labelFilterNameWidth) / 2, defaultWindowHeight - 20 - labelFilterNameHeight);
 
     QGraphicsDropShadowEffect *shadow_effect1 = new QGraphicsDropShadowEffect(this);
-    shadow_effect1->setOffset(0, 0);              //阴影的偏移量
-    shadow_effect1->setColor(QColor(33, 33, 33)); //阴影的颜色
-    shadow_effect1->setBlurRadius(15);             // 阴影圆角的大小
+    shadow_effect1->setOffset(0, 0);   //阴影的偏移量
+    shadow_effect1->setColor(QColor(33, 33, 33));   //阴影的颜色
+    shadow_effect1->setBlurRadius(15);   // 阴影圆角的大小
     m_filterName->setGraphicsEffect(shadow_effect1);
 
     m_takePhotoSettingArea = new takePhotoSettingAreaWidget(this);
 
-    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetDelayTakePhoto, this, [ = ](int delaytime) {
+    connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetDelayTakePhoto, this, [=](int delaytime) {
         m_videoPre->setInterval(delaytime);
 
         int setIndex = 0;
@@ -1696,7 +1665,7 @@ void CMainWindow::initUI()
 
         auto curIndex = dc::Settings::get().settings()->getOption(QString("photosetting.photosdelay.photodelays"));
 
-        if (curIndex.toInt() != setIndex)//防止循环设置
+        if (curIndex.toInt() != setIndex)   //防止循环设置
             dc::Settings::get().settings()->setOption(QString("photosetting.photosdelay.photodelays"), setIndex);
     });
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFlashlight, this, &CMainWindow::onSetFlash);
@@ -1708,8 +1677,7 @@ void CMainWindow::initUI()
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
-    connect(&Settings::get(), &Settings::delayTimeChanged, this, [ = ](const QString & str) {
-
+    connect(&Settings::get(), &Settings::delayTimeChanged, this, [=](const QString &str) {
         int delayTime = 0;
         if (str == "3s") {
             delayTime = 3;
@@ -1724,7 +1692,7 @@ void CMainWindow::initUI()
     m_takePhotoSettingArea->moveToParentLeft();
     m_takePhotoSettingArea->setVisible(true);
 
-    m_videoPath = lastOpenedPath(QStandardPaths::MoviesLocation);//如果路径不存在会自动使用并创建默认路径
+    m_videoPath = lastOpenedPath(QStandardPaths::MoviesLocation);   //如果路径不存在会自动使用并创建默认路径
     m_picPath = lastOpenedPath(QStandardPaths::PicturesLocation);
 
     m_fileWatcher.addPath(m_videoPath);
@@ -1736,7 +1704,7 @@ void CMainWindow::initUI()
     m_showCameraNameTimer->setInterval(2000);
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
-    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 0)); //深色
+    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 0));   //深色
     paletteName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
@@ -1749,9 +1717,9 @@ void CMainWindow::initUI()
     m_labelCameraName->move((width() - labelCameraNameWidth) / 2, height() - 20 - labelCameraNameHeight);
 
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-    shadow_effect->setOffset(0, 0);              //阴影的偏移量
-    shadow_effect->setColor(QColor(33, 33, 33)); //阴影的颜色
-    shadow_effect->setBlurRadius(15);             // 阴影圆角的大小
+    shadow_effect->setOffset(0, 0);   //阴影的偏移量
+    shadow_effect->setColor(QColor(33, 33, 33));   //阴影的颜色
+    shadow_effect->setBlurRadius(15);   // 阴影圆角的大小
     m_labelCameraName->setGraphicsEffect(shadow_effect);
 
     QDir dirVd(m_videoPath);
@@ -1772,7 +1740,7 @@ void CMainWindow::initUI()
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
     bool soundphoto = Settings::get().getOption("photosetting.audiosetting.soundswitchbtn").toBool();
 
-    switch (nContinuous) {//连拍次数
+    switch (nContinuous) {   //连拍次数
     case 1:
         nContinuous = 4;
         break;
@@ -1784,7 +1752,7 @@ void CMainWindow::initUI()
         break;
     }
 
-    switch (nDelayTime) {//延迟时间
+    switch (nDelayTime) {   //延迟时间
     case 1:
         nDelayTime = 3;
         break;
@@ -1822,9 +1790,8 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
-    connect(CamApp, &CApplication::popupConfirmDialog, this, [ = ] {
-        if (m_videoPre->getCapStatus())
-        {
+    connect(CamApp, &CApplication::popupConfirmDialog, this, [=] {
+        if (m_videoPre->getCapStatus()) {
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
@@ -1867,7 +1834,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCam()), this, SLOT(onNoCam()));
     //相机被抢占了，结束拍照、录制
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
-    connect(m_videoPre, &videowidget::camAvailable, this, [=](){
+    connect(m_videoPre, &videowidget::camAvailable, this, [=]() {
         m_pTitlebar->titlebar()->setBackgroundTransparent(true);
     });
     //设置新的分辨率
@@ -1878,7 +1845,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(updatePhotoState(int)), this, SLOT(onUpdatePhotoState(int)));
 
     // 更新滤镜预览帧图片
-    connect(m_videoPre, SIGNAL(updateFilterImage(QImage*)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage*)));
+    connect(m_videoPre, SIGNAL(updateFilterImage(QImage *)), m_takePhotoSettingArea, SLOT(onUpdateFilterImage(QImage *)));
 
     connect(m_videoPre, &videowidget::reflushSnapshotLabel, this, &CMainWindow::reflushSnapshotLabel);
 
@@ -1888,7 +1855,6 @@ void CMainWindow::initConnection()
     QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
                                           "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
                                           SLOT(onTimeoutLock(QString, QVariantMap, QStringList)));
-
 
     //控制中心更改了本地时间，及时更新当前时间
     //避免时间往前切换过后，需要点击两次才能结束录制
@@ -1916,7 +1882,7 @@ void CMainWindow::initCameraConnection()
     // 摄像头重连，刷新设置页分辨率下拉框内容
     connect(Camera::instance(), SIGNAL(cameraDevRestarted()), &Settings::get(), SLOT(setNewResolutionList()));
     // 当前无摄像头设备，给出无摄像头提示
-    connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=](){
+    connect(m_devnumMonitor, &DevNumMonitor::noDeviceFound, this, [=]() {
         Camera::instance()->stopCamera();
         DataManager::instance()->setdevStatus(NOCAM);
         m_videoPre->showNocam();
@@ -1924,14 +1890,14 @@ void CMainWindow::initCameraConnection()
         m_takePhotoSettingArea->onUpdateFilterImage(&image);
     });
     // 当前设备断开连接，给出无摄像头提示
-    connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=](){
+    connect(Camera::instance(), &Camera::currentCameraDisConnected, this, [=]() {
         Camera::instance()->stopCamera();
         DataManager::instance()->setdevStatus(NOCAM);
         m_videoPre->showNocam();
         QImage image;
         m_takePhotoSettingArea->onUpdateFilterImage(&image);
     });
-    connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=](){
+    connect(Camera::instance(), &Camera::cameraCannotUsed, this, [=]() {
         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
         m_videoPre->showCamUsed();
     });
@@ -2070,7 +2036,7 @@ void CMainWindow::resizeEvent(QResizeEvent *event)
     m_pTitlebar->setFixedWidth(this->size().width());
     m_pTitlebar->titlebar()->setFixedWidth(this->size().width());
 
-    QTimer::singleShot(1, this, [ = ] {
+    QTimer::singleShot(1, this, [=] {
         if (nullptr != m_takePhotoSettingArea) {
             m_takePhotoSettingArea->moveToParentLeft();
             m_takePhotoSettingArea->resizeScrollHeight(height() - minWindowHeight);
@@ -2120,10 +2086,10 @@ void CMainWindow::onSettingsDlgClose()
 {
     bool bPathChanged = false;
     QString setVideoPath = lastOpenedPath(QStandardPaths::MoviesLocation);
-    QString setPicPath  = lastOpenedPath(QStandardPaths::PicturesLocation);
+    QString setPicPath = lastOpenedPath(QStandardPaths::PicturesLocation);
 
     //判断图片路径是否改变
-    if (m_picPath != setPicPath) { //图片路径修改了
+    if (m_picPath != setPicPath) {   //图片路径修改了
         QDir setPicDir(setPicPath);
         QDir lastPicDir(m_picPath);
         setPicDir.cdUp();
@@ -2164,7 +2130,6 @@ void CMainWindow::onSettingsDlgClose()
         m_videoPath = setVideoPath;
         bPathChanged = true;
     }
-
 
     int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
     int nDelayTime = Settings::get().getOption("photosetting.photosdelay.photodelays").toInt();
@@ -2233,13 +2198,12 @@ void CMainWindow::onTakeVdDone()
 {
     onEnableSettings(true);
 
-    QTimer::singleShot(200, this, [ = ] {
+    QTimer::singleShot(200, this, [=] {
         QString strFileName = m_videoPath + QDir::separator() + DataManager::instance()->getstrFileName();
         QFile file(strFileName);
 
         if (!file.exists())
             usleep(200000);
-
     });
     qDebug() << "Taking video completed!";
     reflushSnapshotLabel();
@@ -2285,7 +2249,7 @@ bool CMainWindow::eventFilter(QObject *obj, QEvent *e)
         DataManager::instance()->m_tabIndex = 0;
         m_pTitlebar->setFocus();
     } else {
-        QWidget::eventFilter(obj, e);//调用父类事件过滤器
+        QWidget::eventFilter(obj, e);   //调用父类事件过滤器
     }
     return QWidget::eventFilter(obj, e);
 }
@@ -2310,7 +2274,7 @@ void CMainWindow::showChildWidget()
         showWidget(m_filterName, false);
         return;
     }
-    if (m_bRecording) {  //正在录像
+    if (m_bRecording) {   //正在录像
         showWidget(m_cameraSwitchBtn, false);
         showWidget(m_snapshotLabel, false);
         showWidget(m_modeSwitchBox, false);
