@@ -75,6 +75,11 @@ const int pathEditWidth = 285;
 const int defaultWindowWidth = 800;
 const int defaultWindowHeight = 600;
 
+static DSuggestButton *g_selectPohtoBt = nullptr;
+static DSuggestButton *g_selectVideoBt = nullptr;
+static QSpacerItem *g_pohtospace = nullptr;
+static QSpacerItem *g_videospace = nullptr;
+
 static void workaround_updateStyle(QWidget *parent, const QString &theme)
 {
     parent->setStyle(QStyleFactory::create(theme));
@@ -174,7 +179,17 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     DLineEdit *picPathLineEdit = new DLineEdit;   //文本框
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
-    DSuggestButton *icon = new DSuggestButton(main);
+    g_selectPohtoBt = new DSuggestButton(main);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::isCompactMode()) {
+        g_pohtospace = new QSpacerItem(8, 8);
+    } else {
+        g_pohtospace = new QSpacerItem(0, 0);
+    }
+#else
+    g_pohtospace = new QSpacerItem(0, 0);
+#endif
+
     QWidget *optionWidget = new QWidget;
     QFormLayout *optionLayout = new QFormLayout(optionWidget);
     DDialog *optinvaliddialog = new DDialog(optionWidget);
@@ -188,9 +203,9 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     horboxlayout->setAlignment(Qt::AlignTop);
     horboxlayout->setContentsMargins(0, 0, 0, 0);
     DFontSizeManager::instance()->bind(picPathLineEdit, DFontSizeManager::T6);
-    icon->setAutoDefault(false);
-    icon->setObjectName(BUTTON_OPTION_PIC_LINE_EDIT);
-    icon->setAccessibleName(BUTTON_OPTION_PIC_LINE_EDIT);
+    g_selectPohtoBt->setAutoDefault(false);
+    g_selectPohtoBt->setObjectName(BUTTON_OPTION_PIC_LINE_EDIT);
+    g_selectPohtoBt->setAccessibleName(BUTTON_OPTION_PIC_LINE_EDIT);
     //picPathLineEdit->setFixedHeight(37);
     picPathLineEdit->setObjectName(OPTION_PIC_SELECTABLE_LINE_EDIT);
     picPathLineEdit->setAccessibleName(OPTION_PIC_SELECTABLE_LINE_EDIT);
@@ -233,13 +248,21 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
         }
     });
 
-    icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
-    icon->setIconSize(QSize(24, 24));
+    g_selectPohtoBt->setIcon(DStyleHelper(g_selectPohtoBt->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
+    g_selectPohtoBt->setIconSize(QSize(24, 24));
     //icon->setFixedSize(41, 37);
-    icon->setFixedWidth(41);
-
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::isCompactMode()) {
+        g_selectPohtoBt->setFixedSize(28, 24);
+    } else {
+        g_selectPohtoBt->setFixedSize(41, 37);
+    }
+#else
+    g_selectPohtoBt->setFixedSize(41, 37);
+#endif
     horboxlayout->addWidget(picPathLineEdit);
-    horboxlayout->addWidget(icon);
+    horboxlayout->addItem(g_pohtospace);
+    horboxlayout->addWidget(g_selectPohtoBt);
 
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
@@ -308,7 +331,7 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     /**
      *@brief 打开照片文件夹按钮槽函数
      */
-    option->connect(icon, &DPushButton::clicked, [=]() {
+    option->connect(g_selectPohtoBt, &DPushButton::clicked, [=]() {
         QString selectPicSavePath;
         QString tmplastpicpath = lastPicPath;
 
@@ -426,7 +449,17 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     DLineEdit *videoPathLineEdit = new DLineEdit;
     DWidget *main = new DWidget;
     QHBoxLayout *horboxlayout = new QHBoxLayout;
-    DSuggestButton *icon = new DSuggestButton(main);
+    g_selectVideoBt = new DSuggestButton(main);
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::isCompactMode()) {
+        g_videospace = new QSpacerItem(8, 8);
+    } else {
+        g_videospace = new QSpacerItem(0, 0);
+    }
+#else
+    g_videospace = new QSpacerItem(0, 0);
+#endif
+
     QWidget *optionWidget = new QWidget;
     QFormLayout *optionLayout = new QFormLayout(optionWidget);
     DDialog *optinvaliddialog = new DDialog(optionWidget);
@@ -439,9 +472,9 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     horboxlayout->setAlignment(Qt::AlignTop);
     horboxlayout->setContentsMargins(0, 0, 0, 0);
     DFontSizeManager::instance()->bind(videoPathLineEdit, DFontSizeManager::T6);
-    icon->setAutoDefault(false);
-    icon->setObjectName(BUTTON_OPTION_VIDEO_LINE_EDIT);
-    icon->setAccessibleName(BUTTON_OPTION_VIDEO_LINE_EDIT);
+    g_selectVideoBt->setAutoDefault(false);
+    g_selectVideoBt->setObjectName(BUTTON_OPTION_VIDEO_LINE_EDIT);
+    g_selectVideoBt->setAccessibleName(BUTTON_OPTION_VIDEO_LINE_EDIT);
     //videoPathLineEdit->setFixedHeight(37);
     videoPathLineEdit->setObjectName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
     videoPathLineEdit->setAccessibleName(OPTION_VIDEO_SELECTABLE_LINE_EDIT);
@@ -483,12 +516,20 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
         }
     });
 
-    icon->setIcon(DStyleHelper(icon->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
-    icon->setIconSize(QSize(24, 24));
-    //icon->setFixedSize(41, 37);
-    icon->setFixedWidth(41);
+    g_selectVideoBt->setIcon(DStyleHelper(g_selectVideoBt->style()).standardIcon(DStyle::SP_SelectElement, nullptr));
+    g_selectVideoBt->setIconSize(QSize(24, 24));
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    if (DGuiApplicationHelper::isCompactMode()) {
+        g_selectVideoBt->setFixedSize(28, 24);
+    } else {
+        g_selectVideoBt->setFixedSize(41, 37);
+    }
+#else
+    g_selectVideoBt->setFixedSize(41, 37);
+#endif
     horboxlayout->addWidget(videoPathLineEdit);
-    horboxlayout->addWidget(icon);
+    horboxlayout->addItem(g_videospace);
+    horboxlayout->addWidget(g_selectVideoBt);
     optionWidget->setObjectName(OPTION_FRAME);
     optionWidget->setAccessibleName(OPTION_FRAME);
     optionLayout->setContentsMargins(0, 0, 0, 0);
@@ -552,7 +593,7 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
     /**
      *@brief 打开视频文件夹按钮槽函数
      */
-    option->connect(icon, &DPushButton::clicked, [=]() {
+    option->connect(g_selectVideoBt, &DPushButton::clicked, [=]() {
         QString selectVideoSavePath;
         QString tmplastvdcpath = lastVideoPath;
 
@@ -1778,9 +1819,39 @@ void CMainWindow::initUI()
     m_takePhotoSettingArea->setDelayTime(nDelayTime);
     m_takePhotoSettingArea->setFlashlight(dc::Settings::get().getOption("photosetting.Flashlight.Flashlight").toBool());
 
+#ifdef DTKWIDGET_CLASS_DSizeMode
+    // 紧凑模式信号处理
+    connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::sizeModeChanged, this, &CMainWindow::updateSizeMode);
+    updateSizeMode();
+#endif
+
     m_bUIinit = true;
 }
+void CMainWindow::updateSizeMode()
+{
+    if (g_selectPohtoBt && g_selectVideoBt && g_pohtospace && g_videospace) {
+#ifdef DTKWIDGET_CLASS_DSizeMode
 
+        if (DGuiApplicationHelper::isCompactMode()) {
+            g_selectPohtoBt->setFixedSize(28, 24);
+            g_selectVideoBt->setFixedSize(28, 24);
+            g_pohtospace->changeSize(8, 10);
+            g_videospace->changeSize(8, 10);
+        } else {
+            g_selectPohtoBt->setFixedSize(41, 37);
+            g_selectVideoBt->setFixedSize(41, 37);
+            g_pohtospace->changeSize(0, 0);
+            g_videospace->changeSize(0, 0);
+        }
+
+#else
+        g_selectPohtoBt->setFixedSize(41, 37);
+        g_selectVideoBt->setFixedSize(41, 37);
+        g_pohtospace->changeSize(0, 0);
+        g_videospace->changeSize(0, 0);
+#endif
+    }
+}
 void CMainWindow::initTitleBar()
 {
     m_pTitlebar->titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
