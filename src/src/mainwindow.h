@@ -385,6 +385,10 @@ private slots:
      * @param name 待设置的滤镜名称
      */
     void onSetFilterName(const QString& name);
+    /**
+     * @brief updateSizeMode 紧凑模式信号
+     */
+    void updateSizeMode();
 
 protected:
 
