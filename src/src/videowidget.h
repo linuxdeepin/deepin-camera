@@ -489,6 +489,7 @@ private:
     GstVideoWriter             *m_videoWriter;      //基于GStreamer实现的视频帧数据写入器
     efilterType                m_filterType;        //当前选择的滤镜名称
     int                        m_exposure;
+    bool                       m_isFalsh = false;
 
 };
 
