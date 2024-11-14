@@ -429,7 +429,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             }
         }
 
-        if (!m_openglwidget->isVisible())
+        if (!m_openglwidget->isVisible() && !m_isFalsh)
             m_openglwidget->show();
 
         malloc_trim(0);
@@ -452,7 +452,9 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         switch (result) {
         case 0:     //Success
 //            m_imgPrcThread->m_rwMtxImg.lock();
-            m_pNormalView->show();
+
+            if (!m_isFalsh)
+                m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
             m_pNormalItem->show();
@@ -663,8 +665,10 @@ void videowidget::showCountdown()
                 m_flashTimer->start(500);
                 qDebug() << "flashTimer->start();";
 
-                if (m_pNormalView)
+                if (m_pNormalView) {
+                    m_isFalsh = true;
                     m_pNormalView->hide();
+                }
                 if (m_openglwidget)
                     m_openglwidget->hide();
                 if (m_gridlinewidget)
@@ -837,9 +841,13 @@ void videowidget::flash()
         m_takePicSound->play();
 
 #ifndef __mips__
-    if (!get_wayland_status())
+    if (!get_wayland_status()) {
         if (!m_openglwidget->isVisible() && filter_Normal == m_filterType && 0 == m_exposure)
             m_openglwidget->show();
+    } else {
+        m_pNormalView->show();
+    }
+    m_isFalsh = false;
 
 #endif
     m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
