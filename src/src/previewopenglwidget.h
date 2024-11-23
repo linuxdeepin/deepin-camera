@@ -91,6 +91,7 @@ private:
     uint m_videoHeight;
 
     uchar *m_yuvPtr;
+    QSize m_imgSize;
 };
 
 #endif // PREVIEWOPENGLWIDGET_H

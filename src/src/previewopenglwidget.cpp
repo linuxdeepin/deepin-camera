@@ -159,12 +159,20 @@ void PreviewOpenglWidget::paintGL()
 {
     if (m_yuvPtr == nullptr)
         return;
-  
+    bool bReBuildImage = false;
+    if(m_imgSize != QSize(m_videoWidth, m_videoHeight)) {
+        bReBuildImage = true;
+        m_imgSize = QSize(m_videoWidth, m_videoHeight);
+    }
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
     glBindTexture(GL_TEXTURE_2D, m_idY); //绑定y分量纹理对象id到激活的纹理单元
 
     //使用内存中的数据创建真正的y分量纹理数据,https://blog.csdn.net/xipiaoyouzi/article/details/53584798 纹理参数解析
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, static_cast<int>(m_videoWidth), static_cast<int>(m_videoHeight), 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr);
+    if( bReBuildImage ) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, static_cast<int>(m_videoWidth), static_cast<int>(m_videoHeight), 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+    }
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, static_cast<int>(m_videoWidth), static_cast<int>(m_videoHeight), GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -174,7 +182,10 @@ void PreviewOpenglWidget::paintGL()
     glBindTexture(GL_TEXTURE_2D, m_idU);
 
     //使用内存中的数据创建真正的u分量纹理数据
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight);
+    if( bReBuildImage ) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+    }
+    glTexSubImage2D(GL_TEXTURE_2D, 0,  0, 0, m_videoWidth >> 1, m_videoHeight >> 1, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -184,7 +195,10 @@ void PreviewOpenglWidget::paintGL()
     glBindTexture(GL_TEXTURE_2D, m_idV);
 
     //使用内存中的数据创建真正的v分量纹理数据
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight * 5 / 4);
+    if( bReBuildImage ) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_videoWidth >> 1, m_videoHeight >> 1, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+    }
+    glTexSubImage2D(GL_TEXTURE_2D, 0,  0, 0, m_videoWidth >> 1, m_videoHeight >> 1, GL_RED, GL_UNSIGNED_BYTE, m_yuvPtr + m_videoWidth * m_videoHeight * 5 / 4);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
