@@ -75,6 +75,6 @@ Copyright: 2007 Free Software Foundation, Inc.
 License: BSD-3-Clause
 
 # linglong
-Files: install_dep arm64/org.deepin.camera.install org.deepin.camera.install
+Files: install_dep arm64/org.deepin.camera.install org.deepin.camera.install loong64/org.deepin.camera.install
 Copyright: UnionTech Software Technology Co., Ltd.
 License: GPL-3.0-or-later
