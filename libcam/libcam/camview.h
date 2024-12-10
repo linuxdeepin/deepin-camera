@@ -435,6 +435,10 @@ void set_pugx_status(int status);
 
 int get_pugx_status();
 
+void set_forceGles(int status);
+
+int is_forceGles();
+
 #ifdef __cplusplus
 }
 #endif
