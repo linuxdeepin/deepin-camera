@@ -96,9 +96,9 @@ void PreviewOpenglWidget::initializeGL()
         }";
 
     const char *fsrc;
-
-    if (get_wayland_status() == 0) {
-        fsrc = "varying vec2 textureOut; \
+    if (1 == is_forceGles()) {
+        fsrc = "precision mediump float; \
+        varying vec2 textureOut; \
         uniform sampler2D tex_y; \
         uniform sampler2D tex_u; \
         uniform sampler2D tex_v; \
@@ -114,11 +114,8 @@ void PreviewOpenglWidget::initializeGL()
                         1.13983, -0.58060,  0) * yuv; \
             gl_FragColor = vec4(rgb, 1); \
         }";
-    } else {
-        fsrc = "#ifdef GL_ES \
-                precision mediump float; \
-                #endif \
-        varying vec2 textureOut; \
+    } else if (get_wayland_status() == 0) {
+        fsrc = "varying vec2 textureOut; \
         uniform sampler2D tex_y; \
         uniform sampler2D tex_u; \
         uniform sampler2D tex_v; \

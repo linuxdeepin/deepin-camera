@@ -164,6 +164,12 @@ int main(int argc, char *argv[])
             set_pugx_status(mp4Encode);
             qDebug() << "Loaded MP4 encode mode from DConfig:" << mp4Encode;
         }
+
+        int forceGles = -1;
+        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("forceGles")) {
+            forceGles = dconfig->value("forceGles").toInt();
+            set_forceGles(forceGles);
+        }
 #endif
         qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
         if (mp4Encode == -1) {

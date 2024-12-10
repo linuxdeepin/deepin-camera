@@ -1,16 +1,26 @@
 {
-  "magic": "dsg.config.meta",
-  "version": "1.0",
-  "contents": {
-      "mp4EncodeMode": {
-          "value": -1,
-          "serial": 0,
-          "flags": ["global"],
-          "name": "pugx mp4 code mode",
-          "name[zh_CN]": "特殊编码模式",
-          "description": "pugx mp4 code mode",
-          "permissions": "readwrite",
-          "visibility": "private"
-      }
-  }
+    "magic": "dsg.config.meta",
+    "version": "1.0",
+    "contents": {
+        "mp4EncodeMode": {
+            "value": -1,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "pugx mp4 code mode",
+            "name[zh_CN]": "特殊编码模式",
+            "description": "pugx mp4 code mode",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+            "forceGles": {
+            "value": -1,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "forc elgs show in wayland",
+            "name[zh_CN]": "在 wayland 下特殊显示模式",
+            "description": "special mode do use gles to show",
+            "permissions": "readwrite",
+            "visibility": "private"
+        }
+    }
 }
