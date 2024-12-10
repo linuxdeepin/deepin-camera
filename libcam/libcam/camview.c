@@ -104,6 +104,8 @@ static int my_encoder_status = 0;
 
 static int is_wayland = 0; //是否是wayland的窗口管理器
 
+static int statusForceGles = 0; //forceGles   1,强走GLES
+
 static int is_pgux = 0; //是否是pugx
 
 static uint8_t soundTakePhoto = 1;//拍照声音提示
@@ -1344,9 +1346,21 @@ void set_wayland_status(int status)
     is_wayland = status;
 }
 
+void set_forceGles(int status)
+{
+    statusForceGles = status;
+}
+
+int is_forceGles()
+{
+    return statusForceGles;
+}
+
 int get_wayland_status()
 {
-    return is_wayland;
+    if (1 == is_forceGles())
+        return 0;
+   return is_wayland;
 }
 
 void set_takeing_photo_sound(uint8_t status)
