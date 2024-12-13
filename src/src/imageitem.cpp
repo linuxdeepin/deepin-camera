@@ -11,6 +11,7 @@
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
 #include <DApplicationHelper>
+#include <DSysInfo>
 
 #include <QFileInfo>
 #include <QPainterPath>
@@ -32,6 +33,8 @@ extern "C" {
 #include "malloc.h"
 #include "load_libs.h"
 }
+
+DCORE_USE_NAMESPACE
 
 QShortcutEx::QShortcutEx(const QKeySequence& key, QWidget *parent,
                          const char *member, const char *ambiguousMember,
@@ -317,7 +320,7 @@ void ImageItem::initShortcut()
 void ImageItem::openFile()
 {
     QFileInfo fileInfo(m_path);
-    QString program("dde-file-manager"); //dbus调用失败，通过文管打开
+    QString program("dde-file-manager");  // dbus调用失败，通过文管打开
     QStringList arguments;
     if (m_path.isEmpty()) {
         return;
@@ -326,49 +329,54 @@ void ImageItem::openFile()
     bool ret = false;
     QProcess *myProcess = new QProcess(this);
 
-#if defined(OS_BUILD_V23) || defined(OS_BUILD_V25)
-    //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
-    if (fileInfo.suffix() == "jpg") {
-        //用看图打开
-        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.imageViewer",
-                                   "/",
-                                   "com.deepin.imageViewer",
-                                   "openImageFile");
-        message << m_path;
-        QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
+    // check if os edition on v23 or later
+    static const int kMinOsEdition = 23;
+    const int osMajor = DSysInfo::majorVersion().toInt();
 
-        if (retMessage.type() != QDBusMessage::ErrorMessage) {
-            ret = true;
-            qDebug() << "[dbus] Open it with deepin-image-viewer";
+    if (osMajor >= kMinOsEdition) {
+        //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
+        if (fileInfo.suffix() == "jpg") {
+            //用看图打开
+            QDBusMessage message =
+                QDBusMessage::createMethodCall("com.deepin.imageViewer", "/", "com.deepin.imageViewer", "openImageFile");
+            message << m_path;
+            QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
+
+            if (retMessage.type() != QDBusMessage::ErrorMessage) {
+                ret = true;
+                qDebug() << "[dbus] Open it with deepin-image-viewer";
+            } else {
+                qWarning() << retMessage.errorMessage();
+            }
         } else {
-            qWarning() << retMessage.errorMessage();
-        }
-    } else {
-        //用影院打开
+            //用影院打开
 #if 1
-        program = "ll-cli";
-        arguments << "run" << "org.deepin.movie" << "--" << "deepin-movie" << m_path;
-        qDebug() << "[process] Open it with deepin-movie (ll-cli)";
-        ret = myProcess->startDetached(program, arguments);
+            program = "ll-cli";
+            arguments << "run"
+                      << "org.deepin.movie"
+                      << "--"
+                      << "deepin-movie" << m_path;
+            qDebug() << "[process] Open it with deepin-movie (ll-cli)";
+            ret = myProcess->startDetached(program, arguments);
 #else
-        QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie",
-                                   "/",
-                                   "com.deepin.movie",
-                                   "openFile");
-        message << m_path;
-        QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
+            QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie", "/", "com.deepin.movie", "openFile");
+            message << m_path;
+            QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
 
-        if (retMessage.type() != QDBusMessage::ErrorMessage) {
-            ret = true;
-            qDebug() << "[dbus] Open it with deepin-movie";
-        } else {
-            qWarning() << retMessage.errorMessage();
-        }
+            if (retMessage.type() != QDBusMessage::ErrorMessage) {
+                ret = true;
+                qDebug() << "[dbus] Open it with deepin-movie";
+            } else {
+                qWarning() << retMessage.errorMessage();
+            }
 #endif
+        }
     }
-#else
-    if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer"; //用看图打开
+
+    // try backup way
+    if (!ret) {
+        if (fileInfo.suffix() == "jpg") {
+            program = "deepin-image-viewer";  //用看图打开
             arguments << m_path;
             qDebug() << "[process] Open it with deepin-image-viewer";
         } else {
@@ -376,8 +384,9 @@ void ImageItem::openFile()
             arguments << m_path;
             qDebug() << "[process] Open it with deepin-movie";
         }
-    ret = myProcess->startDetached(program, arguments);
-#endif
+        ret = myProcess->startDetached(program, arguments);
+    }
+
     qInfo() << m_path;
 
     if (CamApp->isPanelEnvironment())
