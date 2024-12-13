@@ -326,7 +326,7 @@ void ImageItem::openFile()
     bool ret = false;
     QProcess *myProcess = new QProcess(this);
 
-#ifdef OS_BUILD_V23
+#if defined(OS_BUILD_V23) || defined(OS_BUILD_V25)
     //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
     if (fileInfo.suffix() == "jpg") {
         //用看图打开
@@ -345,6 +345,12 @@ void ImageItem::openFile()
         }
     } else {
         //用影院打开
+#if 1
+        program = "ll-cli";
+        arguments << "run" << "org.deepin.movie" << "--" << "deepin-movie" << m_path;
+        qDebug() << "[process] Open it with deepin-movie (ll-cli)";
+        ret = myProcess->startDetached(program, arguments);
+#else
         QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie",
                                    "/",
                                    "com.deepin.movie",
@@ -358,6 +364,7 @@ void ImageItem::openFile()
         } else {
             qWarning() << retMessage.errorMessage();
         }
+#endif
     }
 #else
     if (fileInfo.suffix() == "jpg") {
