@@ -32,7 +32,7 @@ build: |
   VERSION=$(head -1 debian/changelog | awk -F'[()]' '{print $2}')
 
   # service ll-cli launch up
-  find . -type f -name "*.service" -exec sed -i 's|^Exec=.*|Exec=/usr/bin/ll-cli run org.deepin.camera --exec deepin-camera|g' {} +
+  find . -type f -name "*.service" -exec sed -i 's|^Exec=.*|Exec=deepin-camera|g' {} +
   cmake -B build ${conf_args} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=${PREFIX} \
