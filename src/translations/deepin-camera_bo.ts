@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="bo">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="bo">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -130,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>པར་ཆས་ནི་སྤྱོད་ཐབས་བདེ་བའི་པར་ལེན་ཡོ་བྱད་ཞིག་ཡིན་པ་དང་།པར་ལེན་དང་བཪྙན་ཕབ་སོགས་བྱེད་ནུས་མངོན་གྱུར་བྱེད་ཐུབ།</translation>
+        <translation>པར་ཆས་ནི་སྤྱོད་ཐབས་བདེ་བའི་པར་ལེན་ཡོ་བྱད་ཞིག་ཡིན་པ་དང་། དེས་པར་ལེན་དང་བཪྙན་ཕབ་སོགས་བྱ་ཐུབ།</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -178,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>རི་མོའི་མཚོན་ཆ་བཀོད་སྒྲིག་དྲ་བ།</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>དྲ་མིག་ཀུ་རུ་ཁ།</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>དྲ་མིག་གྲུ་བཞི།</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>

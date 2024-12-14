@@ -1,344 +1,344 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="uk">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="id">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Виконуємо запис відео. Закрити вікно попри це?</translation>
+        <translation>Perekaman video sedang berlangsung. Tutup jendela?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Відкрити теку</translation>
+        <translation type="vanished">Buka folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>Фото</translation>
+        <translation>Foto</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Відео</translation>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Перемкнути камери</translation>
+        <translation>Ganti Kamera</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation>Batal</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрити</translation>
+        <translation>Tutup</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Копіювати</translation>
+        <translation>Salin</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Вилучити</translation>
+        <translation>Hapus</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Відкрити теку</translation>
+        <translation>Buka folder</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Надрукувати</translation>
+        <translation>Cetak</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>У вас немає прав доступу для роботи з цією текою</translation>
+        <translation>Anda tidak memiliki izin untuk mengoperasikan folder ini</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрити</translation>
+        <translation>Tutup</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Некоректна тека</translation>
+        <translation type="vanished">Folder tidak valid</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Відкрити теку</translation>
+        <translation>Buka folder</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Основні</translation>
+        <translation>Dasar</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Розташування файла</translation>
+        <translation>Lokasi file</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Знімок</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Серійна знімання</translation>
+        <translation>Mode burst</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Затримка власного таймера</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Output</source>
-        <translation>Виведення</translation>
+        <translation>Keluaran</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Формат виведення</translation>
+        <translation>Format keluaran</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 знімка</translation>
+        <translation>4 pcs</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 знімків</translation>
+        <translation>10 pcs</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>«Камера» — допоміжна програма для захоплення зображень та відео з відеокамери вашого персонального комп&apos;ютера або вебкамери.</translation>
+        <translation>Kamera adalah utilitas pengambil gambar dan video menggunakan kamera PC atau webcam Anda</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Файл не збережено</translation>
+        <translation>File tidak disimpan</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Зберегти до:</translation>
+        <translation type="vanished">Simpan ke:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Фото:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>Відео:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Параметри роздільності</translation>
+        <translation>Pengaturan resolusi</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">Роздільна здатність:</translation>
+        <translation type="vanished">Resolusi:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Фотографії:</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Відео:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Звукові ефекти</translation>
+        <translation>Efek suara</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Дзеркальний режим</translation>
+        <translation>Mode mirror </translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Спалах</translation>
+        <translation>Senter</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Лінії сітки</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>Лінії 1*1</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>Лінії 2*2</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>Максимальна роздільність:</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Камера</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Параметри</translation>
+        <translation>Pengaturan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Зупинити записування</translation>
+        <translation>Berhenti merekam</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копіювати</translation>
+        <translation>Salin</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Вилучити</translation>
+        <translation>Hapus</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Відкрити</translation>
+        <translation>Buka</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Надрукувати</translation>
+        <translation>Cetak</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Довідка</translation>
+        <translation>Bantuan</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Показати скорочення</translation>
+        <translation>Tampilkan pintasan</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Зупинити створення фотографій</translation>
+        <translation>Berhenti mengambil foto</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Контекстне меню</translation>
+        <translation>Menu konteks</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Створити знімок</translation>
+        <translation type="vanished">Ambil foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">Записати відео</translation>
+        <translation type="vanished">Rekam video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Зупинити створення фотографій</translation>
+        <translation type="vanished">Berhenti mengambil foto</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>Kosong</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Звичайний</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Яскравий</translation>
+        <translation>Vivid</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Теплий</translation>
+        <translation>Warm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Холодний</translation>
+        <translation>Cold</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Ретро</translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>Плівка</translation>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Сірий</translation>
+        <translation>Gray</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Чорно-білий</translation>
+        <translation>B&amp;W</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Спалах</translation>
+        <translation>Senter</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>Увімкн.</translation>
+        <translation>Nyalakan</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Вимкн.</translation>
+        <translation>Padamkan</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Затримка знімка</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>None</source>
-        <translation>Немає</translation>
+        <translation>Kosong</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Фільтри</translation>
+        <translation>Filter</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Експонування</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Вебкамери не знайдено</translation>
+        <translation>Webcam tidak ditemukan</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Вебкамера використовується іншою програмою</translation>
+        <translation>Webcam sedang digunakan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Зупинити записування</translation>
+        <translation type="vanished">Berhenti merekam</translation>
     </message>
 </context>
 </TS>
