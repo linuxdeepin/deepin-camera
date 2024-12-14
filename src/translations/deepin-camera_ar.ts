@@ -172,23 +172,23 @@
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>ضوء الفلاش</translation>
+        <translation>مصباح يدوي</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>خطوط الشبكة</translation>
+        <translation>شبكة</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 خطوط</translation>
+        <translation>خطوط 1x1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 خطوط</translation>
+        <translation>خطوط 2x2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>أقصى دقة</translation>
     </message>
 </context>
 <context>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>الإعدادات</translation>
+        <translation>العدادات</translation>
     </message>
     <message>
         <source>Stop recording</source>
@@ -264,54 +264,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>عادي</translation>
+        <translation>طبيعي</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>الحي</translation>
+        <translation>براق</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>الدافئ</translation>
+        <translation> دافئ</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>البارد</translation>
+        <translation>بارد</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>العتيق</translation>
+        <translation>ستيني</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>الفيلم</translation>
+        <translation>فيلم</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>رصاصي</translation>
+        <translation>رمادي</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>الأسود و الأبيض</translation>
+        <translation>أبيض وأسود</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>ضوء الفلاش</translation>
+        <translation>مصباح يدوي</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>وضع التشغيل</translation>
+        <translation> eingeschaltet</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>وضع إيقاف التشغيل</translation>
+        <translation>ausgeschaltet</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>تأخير الالتقاط</translation>
+        <translation>التقاط التأخير</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>مرشحات</translation>
+        <translation>الفلاتر</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>التعرض</translation>
+        <translation>النوافذ</translation>
     </message>
 </context>
 <context>
