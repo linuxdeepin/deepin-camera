@@ -350,7 +350,7 @@ void ImageItem::openFile()
             }
         } else {
             //用影院打开
-#if 1
+#if 0
             program = "ll-cli";
             arguments << "run"
                       << "org.deepin.movie"
