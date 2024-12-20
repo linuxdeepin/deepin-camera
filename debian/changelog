@@ -1,8 +1,14 @@
-deepin-camera (6.5.8) unstable; urgency=medium
+deepin-camera (6.5.9) unstable; urgency=medium
 
-  * chore: New version 6.5.8.
+  * chore: New version 6.5.9.
 
  -- xiepengfei <xiepengfei@uniontech.com>  Fri, 20 Dec 2024 11:52:13 +0800
+ 
+deepin-camera (6.5.8) unstable; urgency=medium
+
+  * Update version to 6.5.8
+
+ -- xiepengfei <xiepengfei@uniontech.com>  Sat, 14 Dec 2024 14:25:26 +0800
 
 deepin-camera (6.5.7) unstable; urgency=medium
 
