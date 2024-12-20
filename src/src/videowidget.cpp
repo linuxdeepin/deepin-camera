@@ -52,7 +52,7 @@
 static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
 
 // 重写QGraphicsView类，在子类中，直接将鼠标事件路由到QWidget，这样QGraphicsScene不会接收和处理鼠标事件
-// bug链接 https://pms.uniontech.com/zentao/bug-view-100791.html
+// bug 100791
 QGraphicsViewEx::QGraphicsViewEx(QWidget *parent)
     : QGraphicsView(parent)
 {
