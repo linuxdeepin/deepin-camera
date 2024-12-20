@@ -274,6 +274,7 @@ void videowidget::delayInit()
         qDebug() << "X11 detected";
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
+        ReceiveOpenGLstatus(true);
         connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
         connect(m_imgPrcThread, SIGNAL(sigYUVFrame(uchar *, uint, uint)),
                 m_openglwidget, SLOT(slotShowYuv(uchar *, uint, uint)));
@@ -681,6 +682,10 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
     if (m_gridlinewidget)
         m_gridlinewidget->resize(rect().size());
+
+    if(m_openglwidget && m_openglwidget->isVisible()) {
+        ReceiveOpenGLstatus(true);
+    }
     // qDebug() << "Exiting resizeEvent";
 }
 
