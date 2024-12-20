@@ -232,7 +232,7 @@ void ImageItem::mousePressEvent(QMouseEvent *event)
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
 {
-    //解决bug 在缩略图中可拖动相机界面，https://pms.uniontech.com/zentao/bug-view-100647.html
+    //解决bug 在缩略图中可拖动相机界面，bug 100647
     Q_UNUSED(event);
     return;
 }
