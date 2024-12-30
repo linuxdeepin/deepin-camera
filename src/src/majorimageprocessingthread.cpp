@@ -475,6 +475,7 @@ void MajorImageProcessingThread::run()
                     }
                 } else if (m_frame->yuv_frame){
     #ifndef __mips__
+                    emit sigRenderYuv(true);
                     emit sigYUVFrame(m_yuvPtr, m_nVdWidth, m_nVdHeight);
     #endif
                 }
