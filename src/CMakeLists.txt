@@ -120,6 +120,8 @@ file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 pkg_check_modules(3rd_lib REQUIRED
         dtkwidget dtkcore gobject-2.0
         pciaccess
+        libva
+        libva-x11
 #        libv4l2
 #        libudev
 #        libusb-1.0
