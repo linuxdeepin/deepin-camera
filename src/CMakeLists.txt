@@ -141,6 +141,8 @@ pkg_check_modules(3rd_lib REQUIRED
         dtk${DTK_VERSION}core
         gobject-2.0
         pciaccess
+        libva
+        libva-x11
 #        libv4l2
 #        libudev
 #        libusb-1.0
