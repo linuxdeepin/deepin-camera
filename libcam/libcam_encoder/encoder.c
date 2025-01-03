@@ -45,6 +45,8 @@
 #include <libintl.h>
 #include <pciaccess.h>
 
+#include <va/va.h>
+
 #include "cameraconfig.h"
 #include "gviewencoder.h"
 #include "encoder.h"
@@ -2154,6 +2156,84 @@ static int set_hwframe_ctx(AVCodecContext *ctx, AVBufferRef *hw_device_ctx, int 
     return err;
 }
 
+// 检查是否支持VAAPI硬编码的函数
+int check_vaapi_support() {
+    struct pci_device_iterator *iter;
+    struct pci_device *dev;
+    VADisplay va_display;
+    VAStatus status;
+    int major_version, minor_version;
+    int is_vaapi_supported = 0;
+
+    // 初始化PCI系统
+    if (pci_system_init() != 0) {
+        fprintf(stderr, "无法初始化PCI系统\n");
+        return 0;
+    }
+
+    iter = pci_slot_match_iterator_create(NULL);
+    if (iter == NULL) {
+        fprintf(stderr, "无法创建PCI插槽匹配迭代器\n");
+        pci_system_cleanup();
+        return 0;
+    }
+
+    va_display = vaGetDisplay(NULL); // 这里假设使用X11，如果是Wayland需要使用vaGetDisplayWl
+    if (va_display == NULL) {
+        fprintf(stderr, "无法打开VA显示\n");
+        pci_iterator_destroy(iter);
+        pci_system_cleanup();
+        return 0;
+    }
+
+    status = vaInitialize(va_display, &major_version, &minor_version);
+    if (status != VA_STATUS_SUCCESS) {
+        fprintf(stderr, "无法初始化VAAPI\n");
+        vaTerminate(va_display);
+        pci_iterator_destroy(iter);
+        pci_system_cleanup();
+        return 0;
+    }
+
+    // 遍历PCI设备
+    while ((dev = pci_device_next(iter)) != NULL) {
+        if (0x03 == ((dev->device_class >> 16) & 0x0ff)) { // 检查是否为显示设备
+            printf("检测到显示设备: %04x:%04x\n", dev->vendor_id, dev->device_id);
+
+            // 检查支持的配置文件
+            int num_profiles;
+            VAProfile *profiles;
+            status = vaQueryConfigProfiles(va_display, NULL, &num_profiles);
+            if (status != VA_STATUS_SUCCESS) {
+                fprintf(stderr, "无法查询配置文件\n");
+                continue;
+            }
+
+            profiles = (VAProfile *)malloc(sizeof(VAProfile) * num_profiles);
+            status = vaQueryConfigProfiles(va_display, profiles, &num_profiles);
+            if (status != VA_STATUS_SUCCESS) {
+                fprintf(stderr, "无法查询配置文件\n");
+                free(profiles);
+                continue;
+            }
+
+            printf("支持的VAAPI配置文件：\n");
+            for (int i = 0; i < num_profiles; i++) {
+                printf("  Profile %d\n", profiles[i]);
+                is_vaapi_supported = 1; // 如果找到任何支持的配置文件，设置支持标志
+            }
+
+            free(profiles);
+            break; // 找到一个支持的设备就可以退出循环
+        }
+    }
+
+    vaTerminate(va_display);
+    pci_iterator_destroy(iter);
+    pci_system_cleanup();
+
+    return is_vaapi_supported;
+}
 
 
 /*
@@ -2170,50 +2250,15 @@ static int set_hwframe_ctx(AVCodecContext *ctx, AVBufferRef *hw_device_ctx, int 
 static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *encoder_ctx)
 {
     struct pci_device_iterator *iter;
-    struct pci_device *dev;
     int ret;
     is_vaapi =  HW_VAAPI_OK;
-    ret = pci_system_init();
-    if (ret != 0) {
-        fprintf(stderr, "Couldn't initialize PCI system\n");
+
+   if(check_vaapi_support())
+   {
         is_vaapi =  HW_VAAPI_FAIL1;
+        fprintf(stderr, "no gpu card for vaapi\n");
         return NULL;
-    }
-    iter = pci_slot_match_iterator_create(NULL);
-
-    while (1) {
-        if ((dev = pci_device_next(iter)) == NULL) {
-            is_vaapi =  HW_VAAPI_FAIL1;
-            fprintf(stderr, "no gpu card for vaapi\n");
-            return NULL;
-        }
-
-        if (0x03 == ((dev->device_class >> 16) & 0x0ff)) {
-            fprintf(stderr, "  CLASS     0x%02x subclass 0x%02x prog-if_name 0x%02x  REVISION 0x%02x\n",
-                    (dev->device_class >> 16) & 0x0ff,
-                    (dev->device_class >>  8) & 0x0ff,
-                    (dev->device_class >>  0) & 0x0ff,
-                    dev->revision);
-            fprintf(stderr, "bus 0x%04x cardnum 0x%02x function 0x%02x:"
-                    " vendor 0x%04x device 0x%04x\n",
-                    dev->bus,
-                    dev->dev,
-                    dev->func,
-                    dev->vendor_id,
-                    dev->device_id);
-
-            if (0x8086 == dev->vendor_id) {            // intel gpu support vaapi， vendor_id ：0x8086   can find from file pci.ids
-                //Iris Xe Graphics don't suppot vaapi, so softening coding.
-                if (dev->device_id == 0xa7a0 || dev->device_id == 0x7d55) {
-                    is_vaapi = HW_VAAPI_FAIL1;
-                    return NULL;
-                }
-                fprintf(stderr, "try this gpu card for vaapi\n");
-                break;
-            }
-        }
-    }
-    pci_system_cleanup();
+   }
 
     //assertions
     assert(encoder_ctx != NULL);
