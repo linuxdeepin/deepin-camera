@@ -682,10 +682,11 @@ void videowidget::resizeEvent(QResizeEvent *size)
     if (m_gridlinewidget)
         m_gridlinewidget->resize(rect().size());
 
+#ifndef __mips__
     if(m_openglwidget && m_openglwidget->isVisible()) {
         ReceiveOpenGLstatus(true);
     }
-    // qDebug() << "Exiting resizeEvent";
+#endif
 }
 
 void videowidget::showCountdown()
