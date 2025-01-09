@@ -294,6 +294,7 @@ int enum_v4l2_devices()
     getUdev()->m_udev_enumerate_unref(enumerate);
 
     my_device_list.num_devices = num_dev;
+    printf("my_device_list.num_devices is %d\n", num_dev);
 
     return(E_OK);
 }
