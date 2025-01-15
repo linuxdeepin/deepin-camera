@@ -1105,7 +1105,9 @@ void takePhotoSettingAreaWidget::keyEnterClick()
 void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+#if QT_VERSION_MAJOR <= 5
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+#endif
 
     int width, height;
 

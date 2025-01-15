@@ -104,7 +104,11 @@ protected:
     * @brief enterEvent 鼠标进入事件
     * @param  event 事件参数
     */
+#if QT_VERSION_MAJOR > 5
+    void enterEvent(QEnterEvent *event) override;
+#else
     void enterEvent(QEvent *event) override;
+#endif
 
     /**
     * @brief focusInEvent 焦点进入事件

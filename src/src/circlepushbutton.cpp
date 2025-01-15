@@ -54,7 +54,11 @@ void circlePushButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+#if QT_VERSION_MAJOR > 5
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#else
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#endif
 
     int distance = 2;
     int tmpWidth = width();
@@ -141,7 +145,11 @@ void circlePushButton::paintEvent(QPaintEvent *event)
     painter.restore();
 }
 
+#if QT_VERSION_MAJOR > 5
+void circlePushButton::enterEvent(QEnterEvent *event)
+#else
 void circlePushButton::enterEvent(QEvent *event)
+#endif
 {
     Q_UNUSED(event);
     m_hover = true;

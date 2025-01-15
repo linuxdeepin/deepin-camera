@@ -223,7 +223,7 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
 {
     if (key.startsWith("outsetting.resolutionsetting.resolution")) {
         auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
-        if (value >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
+        if (value.toInt() >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
             QString mode = mode_opt->data("items").toStringList()[value.toInt()];
             emit resolutionchanged(mode);
         }
@@ -231,14 +231,14 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
 
     if (key.startsWith("base.photogrid.photogrids")) {
         auto grid_opt1 = m_settings->option("base.photogrid.photogrids");
-        if (value >= 0 && grid_opt1->data("items").toStringList().size() > value.toInt()) {
+        if (value.toInt() >= 0 && grid_opt1->data("items").toStringList().size() > value.toInt()) {
             emit gridTypeChanged(value.toInt());
         }
     }
 
     if (key.startsWith("photosetting.photosdelay.photodelays")) {
         auto mode_opt1 = m_settings->option("photosetting.photosdelay.photodelays");
-        if (value >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {
+        if (value.toInt() >= 0 && mode_opt1->data("items").toStringList().size() > value.toInt()) {
             QString mode1 = mode_opt1->data("items").toStringList()[value.toInt()];
             emit delayTimeChanged(mode1);
         }
@@ -256,7 +256,7 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
 
     if (key.startsWith("outsetting.outformat.vidformat")) {
         QPointer<DSettingsOption> formatOpt = m_settings->option("outsetting.outformat.vidformat");
-        if (value >= 0 && formatOpt->data("items").toStringList().size() > value.toInt()) {
+        if (value.toInt() >= 0 && formatOpt->data("items").toStringList().size() > value.toInt()) {
             QString videoFormat = formatOpt->data("items").toStringList()[value.toInt()];
             emit videoFormatChanged(videoFormat);
         }

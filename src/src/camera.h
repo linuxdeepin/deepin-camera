@@ -9,9 +9,15 @@
 #include <QObject>
 #include <QCamera>
 #include <QList>
-#include <QCameraInfo>
 #include <QMediaRecorder>
+#if QT_VERSION_MAJOR > 5
+#include <QMediaDevices>
+#include <QMediaCaptureSession>
+#include <QVideoSink>
+#else
+#include <QCameraInfo>
 #include <QCameraImageCapture>
+#endif
 
 typedef struct _cam_config_t {
     int  width;      /*width*/
@@ -25,7 +31,10 @@ typedef struct _cam_config_t {
     int fps_num;
     int fps_denom;
 } cam_config;
+#if QT_VERSION_MAJOR > 5
+#else
 class VideoSurface;
+#endif
 class Camera : public QObject
 {
     Q_OBJECT
@@ -69,7 +78,11 @@ public:
     /**
      * @brief startCamera 开始当前相机
      */
+#if QT_VERSION_MAJOR > 5
+    void startCamera(const QCameraDevice& device);
+#else
     void startCamera(const QString& devName);
+#endif
 
     /**
      * @brief stopCamera 停止当前相机
@@ -94,7 +107,11 @@ public:
 
     qint64 getRecoderTime();
 
+#if QT_VERSION_MAJOR > 5
+    QMediaRecorder::RecorderState getRecoderState();
+#else
     QMediaRecorder::State getRecoderState();
+#endif
 
     bool isRecording();
 
@@ -124,10 +141,12 @@ public slots:
      */
     void refreshCamDevList();
 
+#if QT_VERSION_MAJOR <= 5
     /**
      * @brief onCameraStatusChanged 相机状态监听
      */
     void onCameraStatusChanged(QCamera::Status status);
+#endif
 
 signals:
     // 发送摄像头每帧画面
@@ -152,12 +171,18 @@ private:
     static Camera               *m_instance;
     QCamera                     *m_camera;
     QMediaRecorder              *m_mediaRecoder;
+#if QT_VERSION_MAJOR > 5
+    QVideoSink                  *m_videoSink;
+    QCameraDevice               m_curDevice;
+    QList<QCameraDevice>        m_cameraDeviceList;
+#else
     QCameraImageCapture         *m_imageCapture;
-    VideoSurface                *m_videoSurface;
-
-    QString                     m_curDevName;          // 当前摄像头设备名
     QCameraViewfinderSettings   m_viewfinderSettings;
+    QString                     m_curDevName;          // 当前摄像头设备名
     QList<QString>              m_cameraDevList;       // 摄像头设备名列表
+    VideoSurface                *m_videoSurface;
+#endif
+
 
     bool                        m_bReadyRecord;
     bool                        m_bRecording;

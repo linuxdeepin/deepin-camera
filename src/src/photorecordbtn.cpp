@@ -5,12 +5,15 @@
 
 #include "photorecordbtn.h"
 
+#if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
+#else
+#include <DGuiApplicationHelper>
+#endif
 
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
-#include <QSvgRenderer>
 #include <QMouseEvent>
 
 photoRecordBtn::photoRecordBtn(QWidget *parent/* = nullptr*/)
@@ -29,7 +32,9 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+#if QT_VERSION_MAJOR <= 5
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+#endif
     painter.setBrush(Qt::NoBrush);
 
     QPainterPath path;
@@ -104,7 +109,11 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     }
 }
 
+#if QT_VERSION_MAJOR > 5
+void photoRecordBtn::enterEvent(QEnterEvent *event)
+#else
 void photoRecordBtn::enterEvent(QEvent *event)
+#endif
 {
     Q_UNUSED(event);
     m_bFocus = true;

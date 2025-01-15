@@ -12,6 +12,11 @@ project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
 
+set(QT_VERSION_MAJOR 6)
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    set(DTK_VERSION 6)
+endif()
+
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
@@ -33,9 +38,9 @@ elseif(MAJOR_VERSION MATCHES "25")
 endif()
 
 include(GNUInstallDirs)
-if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+# if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
-endif ()
+# endif ()
 
 if(DEFINED LINGLONG_BUILD_ON)
     # 玲珑构建编译开关
@@ -79,10 +84,10 @@ set(PROJECT_INCLUDE
     )
     
 # 设置Qt模块
-set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg)
+set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg SvgWidgets OpenGL OpenGLWidgets)
 
 # 查找Qt相关的库链接
-find_package(Qt5 REQUIRED ${QtModule})
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
 include(FindPkgConfig)
@@ -110,8 +115,28 @@ file (GLOB_RECURSE HEADERS
 
 file (GLOB_RECURSE RESOURCES  ${PROJECT_SOURCE_DIR}/assets/assets.qrc)
 
+if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    set(CXX_FILES_TO_REMOVE
+        ${PROJECT_SOURCE_DIR}/./src/videosurface.cpp
+    )
+    set(HEAD_FILES_TO_REMOVE
+        ${PROJECT_SOURCE_DIR}/./src/videosurface.h
+    )
+else()
+endif()
+
+foreach(file ${CXX_FILES_TO_REMOVE})
+    list(REMOVE_ITEM CXXSOURCES ${file})
+    # list(REMOVE_ITEM HEAD_FILES_TO_REMOVE ${file})
+endforeach()
+foreach(file ${HEAD_FILES_TO_REMOVE})
+    list(REMOVE_ITEM HEADERS ${file})
+endforeach()
+
 pkg_check_modules(3rd_lib REQUIRED
-        dtkwidget dtkcore gobject-2.0
+        dtk${DTK_VERSION}widget
+        dtk${DTK_VERSION}core
+        gobject-2.0
         pciaccess
 #        libv4l2
 #        libudev
@@ -140,11 +165,7 @@ file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET
 
 set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
 
-qt5_create_translation(QM ${CXXSOURCES} ${TS})
-
-if (NOT (${CMAKE_BUILD_TYPE} MATCHES "Debug"))
-    qt5_create_translation(QM ${CXXSOURCES} ${TS})
-endif ()
+qt_create_translation(QM ${CXXSOURCES} ${TS})
 
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
@@ -159,12 +180,15 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     dl
     imagevisualresult
     ${LIBS}
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Multimedia
+    Qt${QT_VERSION_MAJOR}::Svg
+    Qt${QT_VERSION_MAJOR}::SvgWidgets
+    Qt${QT_VERSION_MAJOR}::OpenGL
+    Qt${QT_VERSION_MAJOR}::OpenGLWidgets
     )
 
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
-
-# 将工程与Qt模块链接起来
-qt5_use_modules(${TARGET_NAME} ${QtModule})
 
 #application
 install(TARGETS ${TARGET_NAME} DESTINATION ${CMAKE_INSTALL_BINDIR})

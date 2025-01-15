@@ -12,14 +12,21 @@
 #include <DFontSizeManager>
 #include <DPushButton>
 #include <DGuiApplicationHelper>
+#if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
 #include <QtMultimedia/QSound>
-#include <QDateTime>
 #include <QSvgRenderer>
+#else
+#include <QtOpenGLWidgets/QOpenGLWidget>
+#include <QtOpenGL/QOpenGLBuffer>
+#include <QMediaPlayer>
+#include <QAudioOutput>
+#endif
+#include <QOpenGLFunctions>
+#include <QDateTime>
 #include <QGraphicsView>
 
 #include "LPF_V4L2.h"
@@ -43,7 +50,12 @@ class QGridLayout;
 class QVBoxLayout;
 class QHBoxLayout;
 class QSpacerItem;
+#if QT_VERSION_MAJOR > 5
+class QMediaPlayer;
+class QAudioOutput;
+#else
 class QSound;
+#endif
 class QGraphicsSvgItem;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
@@ -440,7 +452,12 @@ private:
     DLabel                     *m_recordingTime;    //录制时长
     QString                    m_videoFormat;       //录制视频格式
 
+#if QT_VERSION_MAJOR > 5
+    QMediaPlayer               *m_player;
+    QAudioOutput               *m_audioOutput;
+#else
     QSound                     *m_takePicSound;     //拍照声音
+#endif
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器

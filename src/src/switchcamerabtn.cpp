@@ -24,7 +24,9 @@ void SwitchCameraBtn::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+#if QT_VERSION_MAJOR <= 5
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+#endif
 
     QPainterPath path;
     if (nullptr == m_normalSvg
@@ -68,7 +70,11 @@ void SwitchCameraBtn::paintEvent(QPaintEvent *event)
     }
 }
 
+#if QT_VERSION_MAJOR > 5
+void SwitchCameraBtn::enterEvent(QEnterEvent *event)
+#else
 void SwitchCameraBtn::enterEvent(QEvent *event)
+#endif
 {
     Q_UNUSED(event);
     m_bFocus = true;

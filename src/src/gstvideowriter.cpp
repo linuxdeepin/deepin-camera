@@ -12,7 +12,11 @@ extern "C" {
 #include "audio.h"
 }
 
+#if QT_VERSION_MAJOR > 5
+#include <QtConcurrent/QtConcurrent>
+#else
 #include <QtConcurrent>
+#endif
 
 GST_DEBUG_CATEGORY(appsrc_pipeline_debug);
 

@@ -271,7 +271,9 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
     optionLayout->setContentsMargins(0, 0, 0, 0);
     optionLayout->setSpacing(0);
     optionLayout->setVerticalSpacing(0);
+#if QT_VERSION_MAJOR <= 5
     optionLayout->setMargin(0);
+#endif
 
     main->setMinimumWidth(240);
     DLabel *lab = new DLabel(QObject::tr(option->name().toStdString().c_str()));
@@ -431,10 +433,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
                         auto pi = ElideText(value.toString(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
                                             picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
                         picPathLineEdit->setText(pi);
-                        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << endl;
+                        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << Qt::endl;
                         lastPicPath = value.toString();
                         option->setValue(value.toString());
-                        qDebug() << "save pic last path:" << value.toString() << endl;
+                        qDebug() << "save pic last path:" << value.toString() << Qt::endl;
                         picPathLineEdit->update();
                     });
 
@@ -699,10 +701,10 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
                                             QTextOption::WrapAnywhere, videoPathLineEdit->font(), Qt::ElideMiddle,
                                             tem_fontmetrics.height(), pathEditWidth);
                         videoPathLineEdit->setText(pi);
-                        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << endl;
+                        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << Qt::endl;
                         lastVideoPath = value.toString();
                         option->setValue(value.toString());
-                        qDebug() << "save video last path:" << value.toString() << endl;
+                        qDebug() << "save video last path:" << value.toString() << Qt::endl;
                         videoPathLineEdit->update();
                     });
 
@@ -1394,7 +1396,11 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
     if (!tmpList.isEmpty()) {
         m_labelCameraName->setText(tmpList[0]);
     }
+#if QT_VERSION_MAJOR > 5
+    int width = m_labelCameraName->fontMetrics().boundingRect(tmpList[0]).width();
+#else
     int width = m_labelCameraName->fontMetrics().width(tmpList[0]);
+#endif
     m_labelCameraName->setFixedWidth(width);
     m_labelCameraName->show();
     m_filterName->hide();
@@ -1403,7 +1409,7 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
 
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
 {
-    qDebug() << serviceName << key2value << endl;
+    qDebug() << serviceName << key2value << Qt::endl;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
     //wayland下只需要停止录像，不需要停止线程，需要在锁屏状态下继续处理摄像头状态
     //    if (m_bWayland) {
@@ -1676,7 +1682,7 @@ void CMainWindow::initUI()
     m_filterName->hide();
     m_filterName->setFixedSize(labelFilterNameWidth, labelFilterNameHeight);
     QPalette paletteFilterName = m_filterName->palette();
-    paletteFilterName.setColor(QPalette::Background, QColor(0, 0, 0, 0));
+    paletteFilterName.setColor(QPalette::Window, QColor(0, 0, 0, 0));
     paletteFilterName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
     m_filterName->setAutoFillBackground(true);
     m_filterName->setPalette(paletteFilterName);
@@ -1745,13 +1751,17 @@ void CMainWindow::initUI()
     m_showCameraNameTimer->setInterval(2000);
     m_labelCameraName->setFixedSize(labelCameraNameWidth, labelCameraNameHeight);
     QPalette paletteName = m_labelCameraName->palette();
-    paletteName.setColor(QPalette::Background, QColor(0, 0, 0, 0));   //深色
+    paletteName.setColor(QPalette::Window, QColor(0, 0, 0, 0));   //深色
     paletteName.setColor(QPalette::WindowText, QColor(255, 255, 255, 255));
     m_labelCameraName->setAutoFillBackground(true);
     m_labelCameraName->setPalette(paletteName);
     QFont ft;
     ft.setFamily("SourceHanSansSC, SourceHanSansSC-Normal");
+#if QT_VERSION_MAJOR > 5
+    ft.setWeight(QFont::Thin);
+#else
     ft.setWeight(20);
+#endif
     ft.setPointSize(14);
     m_labelCameraName->setFont(ft);
     m_labelCameraName->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);

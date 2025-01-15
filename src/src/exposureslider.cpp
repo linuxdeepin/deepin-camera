@@ -136,7 +136,11 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 void ExposureSlider::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+#if QT_VERSION_MAJOR > 5
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+#else
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+#endif
 
     QRectF topRect(rect().topLeft(), QSize(WIDTH, WIDTH));
     QRectF centerRect(rect().topLeft() + QPoint(0, WIDTH / 2.0), QSize(WIDTH, HEIGHT - WIDTH));

@@ -10,7 +10,11 @@
 #include <QTimer>
 #include <QGraphicsDropShadowEffect>
 
+#if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
+#else
+#include <DGuiApplicationHelper>
+#endif
 
 #define BTN_WIDTH 50
 #define BTN_HEIGHT 26
@@ -135,6 +139,18 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
 
 void RollingBox::wheelEvent(QWheelEvent *e)
 {
+#if QT_VERSION_MAJOR > 5
+    if (e->angleDelta().y() > 0 && m_currentIndex <= m_rangeMin)
+        return;
+    if (e->angleDelta().y() < 0 && m_currentIndex >= m_rangeMax)
+        return;
+
+    if(e->angleDelta().y() / 90 > 0) {
+        m_deviation = (this->height()) / 4;
+    } else {
+        m_deviation = -(this->height()) / 4;
+    }
+#else
     if (e->delta() > 0 && m_currentIndex <= m_rangeMin)
         return;
     if (e->delta() < 0 && m_currentIndex >= m_rangeMax)
@@ -145,6 +161,7 @@ void RollingBox::wheelEvent(QWheelEvent *e)
     } else {
         m_deviation = -(this->height()) / 4;
     }
+#endif
 
     homing();
     update();

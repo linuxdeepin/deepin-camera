@@ -11,9 +11,16 @@
 #include <QObject>
 #include <QWidget>
 #include <QMutex>
-#include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#if QT_VERSION_MAJOR > 5
+#include <QtOpenGLWidgets/QOpenGLWidget>
+#include <QtOpenGL/QOpenGLBuffer>
+#include <QtOpenGL/QOpenGLTexture>
+#include <QtOpenGL/QOpenGLShaderProgram>
+#else
+#include <QOpenGLWidget>
 #include <QOpenGLBuffer>
+#endif
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
