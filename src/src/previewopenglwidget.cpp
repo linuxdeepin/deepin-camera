@@ -5,8 +5,13 @@
 
 #include "previewopenglwidget.h"
 
+#if QT_VERSION_MAJOR > 5
+#include <QtOpenGL/QOpenGLShaderProgram>
+#include <QtOpenGL/QOpenGLTexture>
+#else
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
+#endif
 
 #include <malloc.h>
 

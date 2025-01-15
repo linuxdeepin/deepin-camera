@@ -12,7 +12,12 @@ extern "C" {
 #include <QPainter>
 #include <QPainterPath>
 
+#if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
+#else
+#include <DGuiApplicationHelper>
+DGUI_USE_NAMESPACE
+#endif
 
 DWIDGET_USE_NAMESPACE;
 
@@ -83,7 +88,11 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
     QPainter painter(this);
+#if QT_VERSION_MAJOR > 5
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#else
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#endif
 
     QRect imageRect = QRect(MARGIN, MARGIN, IMAGE_SIZE, IMAGE_SIZE);
 
@@ -146,7 +155,11 @@ void filterPreviewButton::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+#if QT_VERSION_MAJOR > 5
+void filterPreviewButton::enterEvent(QEnterEvent *event)
+#else
 void filterPreviewButton::enterEvent(QEvent *event)
+#endif
 {
     Q_UNUSED(event);
     this->setFocus();

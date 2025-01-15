@@ -6,7 +6,10 @@
 #define TMPPATH "/tmp/tmp.jpg"
 
 #include "camera.h"
+#if QT_VERSION_MAJOR > 5
+#else
 #include "videosurface.h"
+#endif
 #include "datamanager.h"
 
 #ifdef __cplusplus
@@ -22,7 +25,9 @@ extern "C" {
 #include <unistd.h>
 
 #include <QUrl>
+#if QT_VERSION_MAJOR <= 5
 #include <QtMultimediaWidgets/QCameraViewfinder>
+#endif
 #include <QDir>
 
 #define MAXLINE 100
@@ -75,9 +80,12 @@ Camera::~Camera()
 Camera::Camera()
     : m_camera(nullptr)
     , m_mediaRecoder(nullptr)
+#if QT_VERSION_MAJOR > 5
+#else
     , m_imageCapture(nullptr)
     , m_videoSurface(nullptr)
     , m_curDevName("")
+#endif
     , m_bReadyRecord(false)
     , m_bRecording(false)
 {
@@ -88,8 +96,11 @@ Camera::Camera()
 void Camera::initMember()
 {
     // 连接相机surface，能够发送每帧QImage数据到外部
+#if QT_VERSION_MAJOR > 5
+#else
     m_videoSurface = new VideoSurface(this);
     connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
+#endif
 
     // 初始设备名为空，默认启动config中的摄像头设备，若config设备名为空，则启动defaultCamera
     switchCamera();
@@ -99,6 +110,17 @@ void Camera::switchCamera()
 {
     refreshCamDevList();
 
+#if QT_VERSION_MAJOR > 5
+    QCameraDevice nextDevice;
+
+    if (!m_cameraDeviceList.isEmpty()) {
+        int nCurIndex = m_cameraDeviceList.indexOf(m_curDevice);
+        nCurIndex = (nCurIndex + 1) % m_cameraDeviceList.size();
+        nextDevice = m_cameraDeviceList[nCurIndex];
+    }
+    nextDevice = QMediaDevices::defaultVideoInput();
+    startCamera(nextDevice);
+#else
     QString nextDevName;
 
     if (!m_cameraDevList.isEmpty()) {
@@ -110,10 +132,12 @@ void Camera::switchCamera()
     if (nextDevName.isEmpty())
         nextDevName = camConfig.device_location;
 
-    if (nextDevName.isEmpty())
+    if (nextDevName.isEmpty()) {
         nextDevName = QCameraInfo::defaultCamera().deviceName();
-
+    }
     startCamera(nextDevName);
+#endif
+
 }
 
 void Camera::refreshCamera()
@@ -121,31 +145,57 @@ void Camera::refreshCamera()
     refreshCamDevList();
 
     // 设备链表找不到当前设备，发送设备断开信号
+#if QT_VERSION_MAJOR > 5
+    if (!m_curDevice.isNull() && m_cameraDeviceList.indexOf(m_curDevice) == -1) {
+        m_curDevice = QCameraDevice();
+        emit currentCameraDisConnected();
+    }
+#else
     if (!m_curDevName.isEmpty() && m_cameraDevList.indexOf(m_curDevName) == -1) {
         m_curDevName = "";
         emit currentCameraDisConnected();
     }
+#endif
 
     // 若没有摄像头工作，则重启摄像头
     restartCamera();
 }
 
+#include <QtMultimedia>
 // 重启摄像头
 void Camera::restartCamera()
 {
-    if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
-        QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
-        if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
-                && !m_cameraDevList.isEmpty()) {
+#if QT_VERSION_MAJOR > 5
+    if (!m_camera) {
+        QList<QCameraDevice> availableCams = QMediaDevices::videoInputs();
+        if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(m_camera->cameraDevice()) != -1))
+#if QT_VERSION_MAJOR > 5
+            && !m_cameraDeviceList.isEmpty()) {
+#else
+            && !m_cameraDevList.isEmpty()) {
+#endif
             emit cameraCannotUsed();
             return;
         }
+#else
+    if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
+        QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
+        if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
+            && !m_cameraDevList.isEmpty()) {
+            emit cameraCannotUsed();
+            return;
+        }
+#endif
     }
 
     if (DataManager::instance()->getdevStatus() == CAM_CANUSE)
         return;
 
+#if QT_VERSION_MAJOR > 5
+    startCamera(QMediaDevices::defaultVideoInput());
+#else
     startCamera(QCameraInfo::defaultCamera().deviceName());
+#endif
 
     DataManager::instance()->setdevStatus(CAM_CANUSE);
 
@@ -154,13 +204,19 @@ void Camera::restartCamera()
 
 void Camera::refreshCamDevList()
 {
+#if QT_VERSION_MAJOR > 5
+    m_cameraDeviceList.clear();
+    m_cameraDeviceList = QMediaDevices::videoInputs();
+#else
     m_cameraDevList.clear();
 
     v4l2_device_list_t *devlist = get_device_list();
     for (int i = 0; i < devlist->num_devices; i++)
         m_cameraDevList.push_back(devlist->list_devices[i].device);
+#endif
 }
 
+#if QT_VERSION_MAJOR <= 5
 void Camera::onCameraStatusChanged(QCamera::Status status)
 {
     if (m_mediaRecoder) {
@@ -170,6 +226,7 @@ void Camera::onCameraStatusChanged(QCamera::Status status)
         }
     }
 }
+#endif
 
 QStringList Camera::getSupportResolutions()
 {
@@ -192,8 +249,14 @@ QStringList Camera::getSupportResolutions()
 QList<QSize> Camera::getSupportResolutionsSize()
 {
     QList<QSize> resolutions;
+#if QT_VERSION_MAJOR > 5
+    if (m_camera) {
+        resolutions = m_camera->cameraDevice().photoResolutions();
+    }
+#else
     if (m_imageCapture)
         resolutions = m_imageCapture->supportedResolutions();
+#endif
 
     return resolutions;
 }
@@ -201,6 +264,9 @@ QList<QSize> Camera::getSupportResolutionsSize()
 // 设置相机分辨率
 void Camera::setCameraResolution(QSize size)
 {
+#if QT_VERSION_MAJOR > 5
+    //TODO
+#else
     // 设置图片捕获器分辨率到相机
     if (m_imageCapture) {
         QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
@@ -208,7 +274,7 @@ void Camera::setCameraResolution(QSize size)
         m_imageCapture->setEncodingSettings(imageSettings);
     }
 
-    // 设置视频分辨率到相机
+           // 设置视频分辨率到相机
     if (m_mediaRecoder) {
         QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
         QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
@@ -217,12 +283,13 @@ void Camera::setCameraResolution(QSize size)
         m_mediaRecoder->setEncodingSettings(audioSettings, videoSettings, "video/webm");
     }
 
-    // 设置分辨率到相机
+           // 设置分辨率到相机
     if (m_camera) {
         QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
         viewfinderSettings.setResolution(size);
         m_camera->setViewfinderSettings(viewfinderSettings);
     }
+#endif
 
     // 同步有变更的分辨率到config
     camConfig.width = size.rwidth();
@@ -235,17 +302,26 @@ QSize Camera::getCameraResolution()
     return QSize(camConfig.width,camConfig.height);
 }
 
+#if QT_VERSION_MAJOR > 5
+void Camera::startCamera(const QCameraDevice &device)
+#else
 void Camera::startCamera(const QString &devName)
+#endif
 {
     // 存在上一相机，先停止
     if (m_camera)
         stopCamera();
 
+#if QT_VERSION_MAJOR > 5
+    m_camera = new QCamera(device);
+    m_videoSink = new QVideoSink(this);
+    m_curDevice = device;
+#else
     m_camera = new QCamera(devName.toStdString().c_str());
     QCameraInfo cameraInfo(*m_camera);
-    m_curDevName = devName;
-
     connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
+    m_curDevName = device.description();
+
 
     m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
@@ -260,7 +336,7 @@ void Camera::startCamera(const QString &devName)
 
     m_camera->start();
 
-    // 同步设备名称到config
+           // 同步设备名称到config
     if (camConfig.device_name) {
         free(camConfig.device_name);
         camConfig.device_name = nullptr;
@@ -277,19 +353,19 @@ void Camera::startCamera(const QString &devName)
     // 当前设备与config设备名不同，重置分辨率到最大值，并同步到config文件
     QString configDevName = QString(camConfig.device_location);
     if (m_curDevName != configDevName
-            || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
+        || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
         if (!supportList.isEmpty()) {
             camConfig.width = supportList.last().rwidth();
             camConfig.height = supportList.last().rheight();
         }
     }
 
-    // 若当前摄像头不支持该分辨率，重置为当前摄像头最大分辨率
+           // 若当前摄像头不支持该分辨率，重置为当前摄像头最大分辨率
     if (!supportList.isEmpty()) {
         bool bResetResolution = true;
         for (int i = 0; i < supportList.size(); i++) {
             if (supportList[i].width() == camConfig.width &&
-                    supportList[i].height() == camConfig.height) {
+                supportList[i].height() == camConfig.height) {
                 bResetResolution = false;
                 break;
             }
@@ -300,26 +376,32 @@ void Camera::startCamera(const QString &devName)
         }
     }
 
-    // 同步config分辨率到相机，并保存到文件
+           // 同步config分辨率到相机，并保存到文件
     setCameraResolution(QSize(camConfig.width, camConfig.height));
 
-    // 发送相机名称变更信号
+           // 发送相机名称变更信号
     emit cameraSwitched(cameraInfo.description());
+#endif
 }
 
 void Camera::stopCamera()
 {
     if (m_camera) {
+#if QT_VERSION_MAJOR <= 5
         connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
+#endif
         m_camera->stop();
         m_camera->deleteLater();
         m_camera = nullptr;
     }
 
+#if QT_VERSION_MAJOR > 5
+#else
     if (m_imageCapture) {
         m_imageCapture->deleteLater();
         m_imageCapture = nullptr;
     }
+#endif
 
     if (m_mediaRecoder) {
         m_mediaRecoder->deleteLater();
@@ -335,22 +417,28 @@ void Camera::setVideoOutPutPath(QString &path)
 
 void Camera::startRecoder()
 {
+#if QT_VERSION_MAJOR > 5
+#else
     m_bReadyRecord = true;
     if (m_camera && m_camera->captureMode() != QCamera::CaptureVideo) {
         m_camera->setCaptureMode(QCamera::CaptureVideo);
     }
 
     m_bRecording = true;
+#endif
 }
 
 void Camera::stopRecoder()
 {
+#if QT_VERSION_MAJOR > 5
+#else
     if (m_mediaRecoder)
         m_mediaRecoder->stop();
     if (m_camera && m_camera->captureMode() != QCamera::CaptureStillImage)
         m_camera->setCaptureMode(QCamera::CaptureStillImage);
 
     m_bRecording = false;
+#endif
 }
 
 qint64 Camera::getRecoderTime()
@@ -362,6 +450,16 @@ qint64 Camera::getRecoderTime()
     return nRecTime;
 }
 
+#if QT_VERSION_MAJOR > 5
+QMediaRecorder::RecorderState Camera::getRecoderState()
+{
+    QMediaRecorder::RecorderState recState = QMediaRecorder::StoppedState;
+    if (m_mediaRecoder)
+        recState = m_mediaRecoder->recorderState();
+
+    return recState;
+}
+#else
 QMediaRecorder::State Camera::getRecoderState()
 {
     QMediaRecorder::State recState = QMediaRecorder::StoppedState;
@@ -370,6 +468,7 @@ QMediaRecorder::State Camera::getRecoderState()
 
     return recState;
 }
+#endif
 
 bool Camera::isRecording()
 {

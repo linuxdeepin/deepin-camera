@@ -30,8 +30,13 @@
 #include <QGraphicsProxyWidget>
 #include <QStandardPaths>
 #include <QSvgRenderer>
-#include <QGraphicsSvgItem>
+#if QT_VERSION_MAJOR <= 5
 #include <QDesktopWidget>
+#include <QGraphicsSvgItem>
+#else
+#include <QtSvgWidgets/QGraphicsSvgItem>
+#include <QScreen>
+#endif
 
 #define COUNTDOWN_WIDTH 32
 #define COUNTDOWN_HEIGHT 61
@@ -83,17 +88,31 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalItem->setZValue(0);
 
     m_bActive = false;   //是否录制中
+#if QT_VERSION_MAJOR > 5
+    m_player = new QMediaPlayer(this);
+    m_audioOutput = new QAudioOutput(this);
+    m_player->setAudioOutput(m_audioOutput);
+    m_player->setSource(QUrl("qrc:/resource/Camera.wav"));
+#else
     m_takePicSound = new QSound(":/resource/Camera.wav");
+#endif
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
     m_pNormalView = new QGraphicsViewEx(this);
     m_gridlinewidget = new GridLineWidget(this);
     m_gridlinewidget->setGridType(Grid_None);
+#if QT_VERSION_MAJOR > 5
+    QScreen *screen = QGuiApplication::primaryScreen();
+    //获取设备屏幕大小
+    QRect screenRect = screen->geometry();
+    m_flashLabel  = new DLabel();
+#else
     QDesktopWidget *desktopWidget = QApplication::desktop();
     //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
     m_flashLabel  = new DLabel(desktopWidget);
+#endif
     m_flashLabel->setWindowFlags(m_flashLabel->windowFlags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     m_flashLabel->move(0, 0);
     m_flashLabel->setFixedSize(screenRect.width(), screenRect.height());
@@ -170,7 +189,7 @@ videowidget::videowidget(DWidget *parent)
     //wayland平台设置背景色为黑色
     if (get_wayland_status() == true) {
         QPalette pal(palette());
-        pal.setColor(QPalette::Background, Qt::black);
+        pal.setColor(QPalette::Window, Qt::black);
         setAutoFillBackground(true);
         setPalette(pal);
     }
@@ -191,7 +210,7 @@ videowidget::videowidget(DWidget *parent)
     m_dLabel->setPalette(pltLabel);
     QPalette pa_cb = m_recordingTime->palette();//不用槽函数，程序打开如果是深色主题，可以正常切换颜色，其他主题不行，DTK的bug？
 
-    pa_cb.setColor(QPalette::Background, QColor(255, 0, 0, 30));
+    pa_cb.setColor(QPalette::Window, QColor(255, 0, 0, 30));
     pa_cb.setColor(QPalette::WindowText, QColor(255, 255, 255));
     QFont ft("SourceHanSansSC-Medium");
     ft.setWeight(QFont::Medium);
@@ -208,7 +227,7 @@ videowidget::videowidget(DWidget *parent)
     //设置相机背景色为灰色
     QColor bgColor(25, 25, 25);
     QPalette pal(this->palette());
-    pal.setColor(QPalette::Background, bgColor);
+    pal.setColor(QPalette::Window, bgColor);
     this->setAutoFillBackground(true);
     this->setPalette(pal);
     m_pNormalScene->setBackgroundBrush(bgColor);
@@ -336,7 +355,7 @@ void videowidget::showNocam()
 
 void videowidget::showCamUsed()
 {
-    qDebug() << "show camUsed" << endl;
+    qDebug() << "show camUsed" << Qt::endl;
 
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
@@ -654,8 +673,13 @@ void videowidget::showCountdown()
         if (g_Enum_Camera_State == PICTRUE) {
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
                 if (m_flashEnable && 1 == m_nMaxContinuous) {
+#if QT_VERSION_MAJOR > 5
+                    QScreen *screen = QGuiApplication::primaryScreen();
+                    QRect rt = screen->geometry();
+#else
                     int index = QApplication::desktop()->screenNumber(this);
                     QRect rt = QApplication::desktop()->screenGeometry(index);
+#endif
                     m_flashLabel->setGeometry(rt);
                     m_flashLabel->setFixedSize(rt.size());
                     m_flashLabel->show();
@@ -833,8 +857,13 @@ void videowidget::showRecTime()
 
 void videowidget::flash()
 {
-    if (get_sound_of_takeing_photo())
+    if (get_sound_of_takeing_photo()) {
+#if QT_VERSION_MAJOR > 5
+        m_player->play();
+#else
         m_takePicSound->play();
+#endif
+    }
 
 #ifndef __mips__
     if (!get_wayland_status())
@@ -952,7 +981,11 @@ void videowidget::onEndBtnClicked()
         recordBtn->blockSignals(true);
 #endif
 
+#if QT_VERSION_MAJOR > 5
+    QElapsedTimer time;
+#else
     QTime time;
+#endif
     time.start();
     int duration = 0;
     if (getCapStatus()) { //录制完成处理
@@ -1579,17 +1612,22 @@ videowidget::~videowidget()
     delete m_flashLabel;
     m_flashLabel = nullptr;
 
-    delete m_takePicSound;
-    m_takePicSound = nullptr;
-
     delete m_pNormalView;
     m_pNormalView = nullptr;
 
     delete m_pNormalScene;
     m_pNormalScene = nullptr;
 
+#if QT_VERSION_MAJOR > 5
+    delete m_player;
+    m_player = nullptr;
+
+    delete m_audioOutput;
+    m_audioOutput = nullptr;
+#else
     delete m_takePicSound;
     m_takePicSound = nullptr;
+#endif
 
     delete m_pGridLayout;
     m_pGridLayout = nullptr;

@@ -10,7 +10,9 @@
 
 #include <DGuiApplicationHelper>
 #include <DDesktopServices>
+#if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
+#endif
 #include <DSysInfo>
 
 #include <QFileInfo>
@@ -23,7 +25,6 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
-
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 
 extern "C" {
@@ -183,7 +184,11 @@ void ImageItem::paintEvent(QPaintEvent *event)
     QFileInfo fileinfo(m_path);
     QString str = fileinfo.suffix();
 
+#if QT_VERSION_MAJOR > 5
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#else
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#endif
 
     pixmapRect.setX(rect().x() + 1);
     pixmapRect.setY(rect().y() + 1);
@@ -518,7 +523,11 @@ void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageR
             if (!img.isNull()) {
                 painter.setRenderHint(QPainter::Antialiasing);
                 painter.setRenderHint(QPainter::SmoothPixmapTransform);
+#if QT_VERSION_MAJOR > 5
+                QRect wRect = this->rect();
+#else
                 QRect wRect  = _printer->pageRect();
+#endif
                 QImage tmpMap;
 
                 if (img.width() > wRect.width() || img.height() > wRect.height())
@@ -552,7 +561,11 @@ void ImageItem::paintRequestSync(DPrinter *_printer)
         if (!img.isNull()) {
             painter.setRenderHint(QPainter::Antialiasing);
             painter.setRenderHint(QPainter::SmoothPixmapTransform);
+#if QT_VERSION_MAJOR > 5
+            QRect wRect = this->rect();
+#else
             QRect wRect  = _printer->pageRect();
+#endif
             QImage tmpMap;
 
             if (img.width() > wRect.width() || img.height() > wRect.height())
@@ -585,7 +598,11 @@ void AnimationWidget::paintEvent(QPaintEvent *e)
     QPainter painter(this);
     QPainterPath path;
 
+#if QT_VERSION_MAJOR > 5
+    painter.setRenderHints(QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#else
     painter.setRenderHints(QPainter::HighQualityAntialiasing | QPainter::SmoothPixmapTransform | QPainter::Antialiasing);
+#endif
 
     path.addRoundedRect(pixmapRect, width(), height());
     painter.fillPath(path, QBrush(m_animatePix));

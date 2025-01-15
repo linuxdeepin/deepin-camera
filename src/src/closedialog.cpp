@@ -11,7 +11,11 @@
 #include <DTitlebar>
 #include <DWindowCloseButton>
 
+#if QT_VERSION_MAJOR > 5
+#include <QRegularExpression>
+#else
 #include <QRegExp>
+#endif
 #include <QDebug>
 
 DWIDGET_USE_NAMESPACE
