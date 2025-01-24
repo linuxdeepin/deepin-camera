@@ -38,9 +38,9 @@ elseif(MAJOR_VERSION MATCHES "25")
 endif()
 
 include(GNUInstallDirs)
-# if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX /usr)
-# endif ()
+endif ()
 
 if(DEFINED LINGLONG_BUILD_ON)
     # 玲珑构建编译开关
