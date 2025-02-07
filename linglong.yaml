@@ -7,7 +7,7 @@ version: "1"
 package:
   id: org.deepin.camera
   name: "deepin-camera"
-  version: 6.5.11.1
+  version: 6.5.12.1
   kind: app
   description: |
     camera for deepin os.
@@ -21,10 +21,9 @@ command:
 build: |
   bash ./install_dep linglong/sources "${PREFIX}"
 
-  # set LD_LIBRARY_PATH to dynamically load libraries
-  mkdir $PREFIX/etc || true
-  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PREFIX/lib/${TRIPLET}/lapack:$PREFIX/lib/${TRIPLET}/blas
-  echo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH > $PREFIX/etc/profile
+  # 移动部分库到应用库目录，否则无法找到
+  mv ${PREFIX}/lib/${TRIPLET}/blas/* ${PREFIX}/lib/${TRIPLET}
+  mv ${PREFIX}/lib/${TRIPLET}/lapack/* ${PREFIX}/lib/${TRIPLET}
 
   # 修改路径
   find . -type f -name "*.service" -exec sed -i 's|^Exec=.*|Exec=deepin-camera|g' {} +
@@ -53,6 +52,9 @@ build: |
     libswresample.so
     libffmpegthumbnailer.so
     libavcodec.so
+    libblas.so
+    liblapack.so
+    libgfortran.so
   )
 
   # 生成.install 文件
