@@ -47,6 +47,13 @@ for LDFILE in "$@"; do
         FILE_PATH="${PREFIX}/bin/$LDFILE"
     fi
 
+    # 检查库缺失
+    EXIST_NOT_FOUND=`ldd $FILE_PATH | grep found | wc -l`
+    if [ $EXIST_NOT_FOUND -ne 0 ]; then
+       echo $FILE_PATH
+       ldd $FILE_PATH | grep found
+    fi
+
     # 获取依赖库
     DEPENDENCIES=$(ldd "$FILE_PATH" | grep "$PREFIX") || continue
     if [[ ! -z "$DEPENDENCIES" ]]; then
@@ -72,12 +79,3 @@ done
 # 排除静态链接库
 #echo '^'${PREFIX}'/'${TRIPLET}'/.+(?<!\.a)$' >> "${ID_VALUE}.install"
 #echo '^'${PREFIX}'/lib/.+(?<!\.a|\.pc|\.cmake|\.h|\.sh|\.prf|\.inc)$' >> "${ID_VALUE}.install"
-
-# 删除调试符号
-files=`cat ${ID_VALUE}.install`
-for file in $files
-do
-    if [[ -f "$file" && -x "$file" ]] || [[ "$file" == *.so ]]; then
-        strip -g $file || true
-    fi
-done
