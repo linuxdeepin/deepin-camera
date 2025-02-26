@@ -1,11 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="pt_BR">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>A gravação de vídeo está em andamento. Fechar a janela?</translation>
+        <translation>A gravação de vídeo está em andamento. Fechar janela?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -29,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Alternar câmera</translation>
+        <translation>Alternar câmeras</translation>
     </message>
 </context>
 <context>
@@ -94,7 +92,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Disparar</translation>
+        <translation>Capturar</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -114,11 +112,11 @@
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 pçs</translation>
+        <translation>4 peças</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 pçs</translation>
+        <translation>10 peças</translation>
     </message>
     <message>
         <source>None</source>
@@ -130,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>O Câmera é um utilitário para capturar imagens e vídeos pela webcam.</translation>
+        <translation>A Câmera é uma ferramenta de captura de imagem e vídeo que utiliza a câmera do seu PC ou webcam.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -150,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Configurações da resolução</translation>
+        <translation>Configurações de resolução</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -170,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Modo câmera frontal</translation>
+        <translation>Modo espelho</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -178,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linhas de grade</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linhas 1x1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linhas 2x2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation>Resolução máxima:</translation>
     </message>
 </context>
 <context>
@@ -205,7 +203,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Interromper a gravação</translation>
+        <translation>Interromper gravação</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -233,7 +231,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Interromper a captura de fotos</translation>
+        <translation>Interromper captura de fotos</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -252,7 +250,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Interromper a captura de fotos</translation>
+        <translation type="vanished">Interromper captura de fotos</translation>
     </message>
 </context>
 <context>
@@ -266,35 +264,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"></translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"></translation>
+        <translation>Vívido</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"></translation>
+        <translation>Quente</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"></translation>
+        <translation>Frio</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"></translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"></translation>
+        <translation>Cinema</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"></translation>
+        <translation>Cinza</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"></translation>
+        <translation>P&amp;B</translation>
     </message>
 </context>
 <context>
@@ -321,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"></translation>
+        <translation>Exposição</translation>
     </message>
 </context>
 <context>
@@ -340,7 +338,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Interromper a gravação</translation>
+        <translation type="vanished">Interromper gravação</translation>
     </message>
 </context>
 </TS>

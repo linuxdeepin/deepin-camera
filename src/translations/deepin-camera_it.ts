@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -179,19 +177,19 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"></translation>
+        <translation>Linee della griglia</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Griglia 1*1 linee</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Griglia 2*2 linee</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
