@@ -54,11 +54,11 @@ void DevNumMonitor::timeOutSlot()
                 emit noDeviceFound();
                 m_noDevice = true;
             }
-            qDebug() << "There is no camera connected!";
+            // qDebug() << "There is no camera connected!";
         } else {
             m_noDevice = false;
             emit existDevice();
-            qDebug() << "There is a camera connected!";
+            // qDebug() << "There is a camera connected!";
         }
     } else {
         m_noDevice = false;

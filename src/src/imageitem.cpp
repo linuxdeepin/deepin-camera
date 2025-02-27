@@ -461,135 +461,100 @@ void ImageItem::onPrint()
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 {
     m_imgs.clear();
-    QStringList tempExsitPaths;//保存存在的图片路径
-    tempExsitPaths.clear();
+    QStringList tempExistPaths;
 
+    // 加载有效图片并记录存在的路径
     for (const QString &path : paths) {
         QImage img(path);
-        if (!img.isNull())
+        if (!img.isNull()) {
             m_imgs << img;
-        tempExsitPaths << paths;
+            tempExistPaths << path;  // 修复原代码中错误的 paths 赋值
+        }
     }
 
-#ifndef UNITTEST
     DPrintPreviewDialog printDialog(parent);
     printDialog.setObjectName(PRINT_DIALOG);
     printDialog.setAccessibleName(PRINT_DIALOG);
-    //适配打印接口2.0，dtk大于 5.4.7 版才合入最新的2.0打印控件接口
-#if (DTK_VERSION_MAJOR > 5 \
-    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
 
-    if (DApplication::runtimeDtkVersion() >= DTK_VERSION_CHECK(5, 4, 10, 0)) {
-        bool suc = printDialog.setAsynPreview(m_imgs.size());//设置总页数，异步方式
-        //单张照片设置名称,可能多选照片，但能成功加载的可能只有一张，或从相册中选中的原图片不存在
-        if (tempExsitPaths.size() == 1) {
-            // 提供包含后缀的文件全名，由打印模块自己处理后缀
-            QString docName = QString(QFileInfo(tempExsitPaths.at(0)).completeBaseName());
-            docName += ".pdf";
-            printDialog.setDocName(docName);
-        }//else 多张照片不设置名称，默认使用print模块的print.pdf
+    // 版本兼容处理
+    const bool useNewAPI = (
+#if (DTK_VERSION_MAJOR > 5 || (DTK_VERSION_MAJOR ==5 && (DTK_VERSION_MINOR > 4 || (DTK_VERSION_MINOR ==4 && DTK_VERSION_PATCH >=10))))
+        DApplication::runtimeDtkVersion() >= DTK_VERSION_CHECK(5, 4, 10, 0)
+#else
+        false
+#endif
+    );
 
-        if (suc) //异步
-            connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
-                    this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
-        else //同步
-            connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
-                    this, SLOT(paintRequestSync(DPrinter *)));
+    // 设置文档名称
+    if (tempExistPaths.size() == 1) {
+        QFileInfo fi(tempExistPaths.first());
+        printDialog.setDocName(fi.completeBaseName() + ".pdf");
+    }
+
+    // 连接打印信号
+    if (useNewAPI && printDialog.setAsynPreview(m_imgs.size())) {
+        connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
+                this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
     } else {
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
                 this, SLOT(paintRequestSync(DPrinter *)));
     }
-#else
-    connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
-            this, SLOT(paintRequestSync(DPrinter *)));
-#endif
-    printDialog.exec();
-#endif
-}
 
 #ifndef UNITTEST
-#if (DTK_VERSION_MAJOR > 5 \
-    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
-void ImageItem::paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange)
-{
-    QPainter painter(_printer);
-    qDebug() << pageRange.count();
-    int index = 0;
-    for (int page : pageRange) {
-        if (page < m_imgs.count() + 1) {
-            QImage img = m_imgs.at(page - 1);
-            if (!img.isNull()) {
-                painter.setRenderHint(QPainter::Antialiasing);
-                painter.setRenderHint(QPainter::SmoothPixmapTransform);
-#if QT_VERSION_MAJOR > 5
-                QRect wRect = this->rect();
+    printDialog.exec();
 #else
-                QRect wRect  = _printer->pageRect();
+    printDialog.show();
 #endif
-                QImage tmpMap;
-
-                if (img.width() > wRect.width() || img.height() > wRect.height())
-                    tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-                else
-                    tmpMap = img;
-
-                QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
-                                          qreal(wRect.height() - tmpMap.height()) / 2,
-                                          tmpMap.width(), tmpMap.height());
-
-                painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
-                                         tmpMap.height()), tmpMap);
-            }
-            if (index < pageRange.size() - 1) {
-                _printer->newPage();
-                index++;
-            }
-        }
-    }
-    painter.end();
 }
-#endif
 
-void ImageItem::paintRequestSync(DPrinter *_printer)
+// 公共绘图方法
+void ImageItem::drawImageOnPage(DPrinter *printer, const QImage &img)
 {
-    int currentIndex = 0;
-    QPainter painter(_printer);
-    for (QImage img : m_imgs) {
-
-        if (!img.isNull()) {
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-#if QT_VERSION_MAJOR > 5
-            QRect wRect = this->rect();
-#else
-            QRect wRect  = _printer->pageRect();
-#endif
-            QImage tmpMap;
-
-            if (img.width() > wRect.width() || img.height() > wRect.height())
-                tmpMap = img.scaled(wRect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            else
-                tmpMap = img;
-
-            QRectF drawRectF = QRectF(qreal(wRect.width() - tmpMap.width()) / 2,
-                                      qreal(wRect.height() - tmpMap.height()) / 2,
-                                      tmpMap.width(), tmpMap.height());
-            painter.drawImage(QRectF(drawRectF.x(), drawRectF.y(), tmpMap.width(),
-                                     tmpMap.height()), tmpMap);
-        }
-
-        //不应该将多个相同的图片过滤掉
-        if (currentIndex != m_imgs.count() - 1) {
-            _printer->newPage();
-            currentIndex++;
-        }
-    }
+    QPainter painter(printer);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    const QRectF wRect = printer->pageRect(QPrinter::DevicePixel);
+    
+    // 计算最佳缩放比例
+    const qreal widthRatio = wRect.width() / img.width();
+    const qreal heightRatio = wRect.height() / img.height();
+    const qreal ratio = qMin(widthRatio, heightRatio);
+    
+    // 计算绘制位置
+    const QSizeF scaledSize = img.size() * ratio;
+    const QPointF position(
+        (wRect.width() - scaledSize.width()) / 2,
+        (wRect.height() - scaledSize.height()) / 2
+    );
+    
+    painter.drawImage(QRectF(position, scaledSize), img);
 
     painter.end();
 }
-#endif
+
+void ImageItem::paintRequestedAsyn(DPrinter *printer, const QVector<int> &pageRange)
+{
+    qDebug() << "Async paint pages:" << pageRange.size();
+
+    for (int i = 0; i < pageRange.size(); ++i) {
+        const int page = pageRange[i];
+        if (page >= 1 && page <= m_imgs.size()) {
+            drawImageOnPage(printer, m_imgs.at(page-1));
+            if (i != pageRange.size()-1) {
+                printer->newPage();
+            }
+        }
+    }
+}
+
+void ImageItem::paintRequestSync(DPrinter *printer)
+{
+    for (int i = 0; i < m_imgs.size(); ++i) {
+        drawImageOnPage(printer, m_imgs.at(i));
+        if (i != m_imgs.size()-1) {
+            printer->newPage();
+        }
+    }
+}
 
 void AnimationWidget::paintEvent(QPaintEvent *e)
 {
