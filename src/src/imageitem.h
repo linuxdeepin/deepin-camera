@@ -171,24 +171,19 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
 
 private slots:
-#ifndef UNITTEST
-#if (DTK_VERSION_MAJOR > 5 \
-    || (DTK_VERSION_MAJOR >=5 && DTK_VERSION_MINOR > 4) \
-    || (DTK_VERSION_MAJOR >= 5 && DTK_VERSION_MINOR >= 4 && DTK_VERSION_PATCH >= 10))//5.4.7暂时没有合入
     /**
      * @brief paintRequestedAsyn 同步打印
      * @param _printer 打印机
      * @param pageRange 页数
      */
     void paintRequestedAsyn(DPrinter *_printer, const QVector<int> &pageRange);
-#endif
 
     /**
      * @brief paintRequestSync 异步打印
      * @param _printer 打印机
      */
     void paintRequestSync(DPrinter *_printer);
-#endif
+
 private:
     /**
      * @brief initShortcut 初始化快捷键
@@ -199,6 +194,8 @@ private:
      * @brief showPrintDialog 显示打印对话框
      */
     void showPrintDialog(const QStringList &paths, QWidget *parent);
+
+    void drawImageOnPage(DPrinter *printer, const QImage &img);
 
 private:
     bool                m_bVideo;//是否视频
