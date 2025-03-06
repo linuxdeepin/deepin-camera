@@ -1,3 +1,10 @@
+deepin-camera (6.5.15) unstable; urgency=medium
+
+  * tag 6.5.15
+  * update linglong base&runtime.
+
+ -- re2zero <yangwu@uniontech.com>  Thu, 06 Mar 2025 10:48:45 +0800
+
 deepin-camera (6.5.14) unstable; urgency=medium
 
   * Bump version to 6.5.14
