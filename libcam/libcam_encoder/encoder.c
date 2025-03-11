@@ -2253,7 +2253,7 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
     int ret;
     is_vaapi =  HW_VAAPI_OK;
 
-   if(check_vaapi_support())
+   if(!check_vaapi_support())
    {
         is_vaapi =  HW_VAAPI_FAIL1;
         fprintf(stderr, "no gpu card for vaapi\n");
@@ -2278,6 +2278,7 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
     if (!video_defaults) {
         fprintf(stderr, "ENCODER: defaults for video codec index %i not found: using raw (direct input)\n",     encoder_ctx->video_codec_ind);
         is_vaapi =  HW_VAAPI_FAIL1;
+        return NULL;
     }
 
     encoder_video_context_t *enc_video_ctx = calloc(1, sizeof(encoder_video_context_t));
