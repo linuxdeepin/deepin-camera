@@ -263,6 +263,10 @@ void encoder_muxer_init(encoder_context_t *encoder_ctx, const char *filename)
 	assert(encoder_ctx->enc_video_ctx != NULL);
 
 	encoder_codec_data_t *video_codec_data = (encoder_codec_data_t *) encoder_ctx->enc_video_ctx->codec_data;
+    if(!video_codec_data) {
+        printf("deepin-camera: video_codec_data (encoder_ctx->enc_video_ctx->codec_data) is null\n");
+        return;
+    }
 
 	int video_codec_id = AV_CODEC_ID_NONE;
 
