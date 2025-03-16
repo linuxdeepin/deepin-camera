@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation type="unfinished"/>
+        <translation>録画が進行中です。ウィンドウを閉じてもよろしいですか?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -72,7 +72,7 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">無効なフォルダです</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -132,7 +132,7 @@
     </message>
     <message>
         <source>File not saved</source>
-        <translation type="unfinished"/>
+        <translation>ファイルが保存されませんでした</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -303,15 +303,15 @@
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>ON</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>OFF</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>セルフタイマー</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,22 +319,22 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>フィルター</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>露出</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation type="unfinished"/>
+        <translation>カメラが見つかりませんでした</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation type="unfinished"/>
+        <translation>カメラは使用中です</translation>
     </message>
     <message>
         <source>Stop recording</source>
