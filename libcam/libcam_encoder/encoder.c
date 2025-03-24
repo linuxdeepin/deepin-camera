@@ -583,10 +583,9 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
 
 
     if (video_defaults->gop_size > 0) {
+        video_codec_data->codec_context->gop_size = video_defaults->gop_size;
         if (pgux == 1 || is_forceGles()) {
-            video_codec_data->codec_context->gop_size = 3;
-        } else {
-            video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+            video_codec_data->codec_context->max_b_frames = 0;
         }
     } else {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
