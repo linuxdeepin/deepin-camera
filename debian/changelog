@@ -1,3 +1,9 @@
+deepin-camera (6.5.16) unstable; urgency=medium
+
+  * [deepin-camera] Updates for project Deepin Camera (#363)
+
+ -- renbin <renbin@uniontech.com>  Wed, 02 Apr 2025 15:47:08 +0800
+
 deepin-camera (6.5.15) unstable; urgency=medium
 
   * refactor: remove unnecessary shell command from Camera service file (#359)
