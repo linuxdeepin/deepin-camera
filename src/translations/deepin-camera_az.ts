@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>Maksimum qorxulma:</translation>
     </message>
 </context>
 <context>
