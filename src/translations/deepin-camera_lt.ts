@@ -1,146 +1,171 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sl">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="lt">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Video se snema. Naj zaprem okno?</translation>
+        <translation>Video transkripcija vyksta. Užverti langele?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">Odpri mapo</translation>
+        <translation type="vanished">Atverti folderį
+</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Nastavitve</translation>
+        <translation>Nustatymai
+</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brez</translation>
+        <translation>Nėra
+</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>Slika</translation>
+        <translation>Fotografija
+</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Video</translation>
+        <translation>Video
+</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Zamenjaj kamere</translation>
+        <translation>Pakeisti kamerą
+</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Prekini</translation>
+        <translation>Atšaukti
+</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zapri</translation>
+        <translation>Užverti
+</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Kopiraj</translation>
+        <translation>Kopijuoti
+</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Izbriši</translation>
+        <translation>Ištrinti
+</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Odpri mapo</translation>
+        <translation>Atverti folderį
+</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Tiskanje</translation>
+        <translation>Spausdinti
+</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Za to mapo nimate pravic</translation>
+        <translation>Neturiate leidimo veikti šiuo folderiu
+</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Zapri</translation>
+        <translation>Užverti
+</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">Neveljavna mapa</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Odpri mapo</translation>
+        <translation>Atverti folderį
+</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Nastavitve</translation>
+        <translation>Nustatymai
+</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>Osnovno</translation>
+        <translation>Pagrindinė
+</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Lokacija datoteke</translation>
+        <translation>Failo vieta
+</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Slikaj</translation>
+        <translation>Rašyti
+</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Zaporedje posnetkov</translation>
+        <translation>Žiūrovos režimas
+</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Časovni zamik</translation>
+        <translation>Sveikinimo trukmė
+</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Izhod</translation>
+        <translation>Išvestis
+</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Izhodni format</translation>
+        <translation>Išvesties formatas
+</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 kosi</translation>
+        <translation>4 pc
+</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 kosov</translation>
+        <translation>10 pc
+</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brez</translation>
+        <translation>Nėra</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Kameras</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera je orodje za zajem slik in videa, ki uporablja PC ali spletno kamero.</translation>
+        <translation>Kameras yra vaizdo ir video užklausos priemonė, kuri naudoja Jūsų PC kamerą ar webkamera.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Datoteka ni shranjena</translation>
+        <translation> failas nebuvo išsaugotas</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">Shrani v:</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Fotografija:</translation>
+        <translation>Vaizdas:</translation>
     </message>
     <message>
         <source>Video:</source>
@@ -148,135 +173,135 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Nastavitve ločljivosti</translation>
+        <translation>Nustatymai apie resoliuciją</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">Ločljivost</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotografije:</translation>
+        <translation>Vaizdai:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Video posnetki:</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>Zvočni učinki</translation>
+        <translation>Garsieji efektiškai</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Način zrcaljenja</translation>
+        <translation>Skritulio režimas</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Bliskavica</translation>
+        <translation>Sklyptuvas</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Mreža</translation>
+        <translation>Rėžių linijos</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 črt</translation>
+        <translation>1*1 linijos</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 črt</translation>
+        <translation>2*2 linijos</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>Maksimalna resolucija:</translation>
+        <translation>Nors didžiausioje resoliucijoje:</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Kamera</translation>
+        <translation>Kameras</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>Nastavitve</translation>
+        <translation>Nustatymai</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Zaustavi snemanje</translation>
+        <translation>Stabite įrašymą</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Kopiraj</translation>
+        <translation>Kopijuoti</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Izbriši</translation>
+        <translation>Ištrinti</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Odpri</translation>
+        <translation>Atidaryti</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>Tiskanje</translation>
+        <translation>Spausdinti</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Pomoč</translation>
+        <translation>Pagalba</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Prikaži bljižnice</translation>
+        <translation>Rodyti įspūdžius</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Zaustavi slikanje</translation>
+        <translation>Stošis nuo vaizdo įrašymo</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Kontekstualni meni</translation>
+        <translation>Kontekstinis meniu</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">Slikaj</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">Snemaj</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">Zaustavi slikanje</translation>
+        <translation type="vanished">Stošis nuo vaizdo įrašymo</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>Brez</translation>
+        <translation>Nėra</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Normalno</translation>
+        <translation>Normalus</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Živo</translation>
+        <translation>Ilguma</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>toplo</translation>
+        <translation>Gretas</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Hladno</translation>
+        <translation>Kaltas</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -284,61 +309,61 @@
     </message>
     <message>
         <source>Film</source>
-        <translation>Film</translation>
+        <translation>Filmas</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>Sivo</translation>
+        <translation>Grizlas</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>ČB</translation>
+        <translation>Balti ir raudonai</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Bliskavica</translation>
+        <translation>Ilguma</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>Vklopljeno</translation>
+        <translation>Išeinantis</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Izklopljeno</translation>
+        <translation>Išjungtas</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Zamik zajema</translation>
+        <translation>Pratęsti vaizdo įrašymą</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Brez</translation>
+        <translation>Nėra</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>Filtri</translation>
+        <translation>Filtras</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Osvetlitev</translation>
+        <translation>Išvaizdos išvaizda</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Ni spletne kamere</translation>
+        <translation>Nenorėjęs webkameros</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Spletna kamera je že v rabi</translation>
+        <translation>Webkamera yra naudojama</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">Zaustavi snemanje</translation>
+        <translation type="vanished">Stabite įrašymą</translation>
     </message>
 </context>
 </TS>
