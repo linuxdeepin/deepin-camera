@@ -15,12 +15,15 @@ set(TARGET_NAME deepin-camera)
 set(QT_VERSION_MAJOR 6)
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     set(DTK_VERSION 6)
+    set(IMAGEVISUALRESULT_SUFFIX "6")
+else()
+    set(IMAGEVISUALRESULT_SUFFIX "")
 endif()
 
 #option (__mips__ "Use UNITTEST" ON)
 
 # cube文件目录，libvisualresult在打包时，会自动将cube文件安装到share目录下
-set(LUT_DIR "${CMAKE_INSTALL_PREFIX}/share/libimagevisualresult/filter_cube")
+set(LUT_DIR "${CMAKE_INSTALL_PREFIX}/share/libimagevisualresult${IMAGEVISUALRESULT_SUFFIX}/filter_cube")
 add_definitions(-DLUT_DIR="${LUT_DIR}")
 
 # 判断系统环境
@@ -178,7 +181,7 @@ target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJE
 target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     pthread
     dl
-    imagevisualresult
+    imagevisualresult${IMAGEVISUALRESULT_SUFFIX}
     ${LIBS}
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Multimedia
@@ -186,7 +189,7 @@ target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
     Qt${QT_VERSION_MAJOR}::SvgWidgets
     Qt${QT_VERSION_MAJOR}::OpenGL
     Qt${QT_VERSION_MAJOR}::OpenGLWidgets
-    )
+)
 
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 
