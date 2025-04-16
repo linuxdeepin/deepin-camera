@@ -9,7 +9,7 @@ Build-Depends:
  qt6-tools-dev-tools,deepin-gettext-tools, qt6-svg-dev,
  libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,libpciaccess-dev,
  libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,
- libx11-dev,libva-dev,libimageeditor-dev,
+ libx11-dev,libva-dev,libimageeditor6-dev,
  libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,gstreamer1.0-plugins-good
 Standards-Version: 4.1.2
 Homepage: http://www.deepin.org
@@ -20,6 +20,6 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  libavcodec58 (>= 7:4.0) | libavcodec60, libavformat58 (>= 7:4.1) | libavformat60, libavutil56 (>= 7:4.0) | libavutil58, libswresample3 (>= 7:4.0) | libswresample4, libswscale5 (>= 7:4.0) | libswscale7, libffmpegthumbnailer4v5, libgl1, libpng16-16 (>= 1.6.2-1), libportaudio2 (>= 19+svn20101113), libgstreamer-plugins-base1.0-0 (>= 1.0.0), libgstreamer1.0-0 (>= 1.4.0)
-Recommends: libimageeditor, uos-reporter, deepin-event-log
+Recommends: libimageeditor6 | libimageeditor, uos-reporter, deepin-event-log
 Description:this package software for  UOS
  deepin-camera is a tool to view camera, and also a smart take photo and video in life.
