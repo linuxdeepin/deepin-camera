@@ -1,3 +1,9 @@
+deepin-camera (6.5.19) unstable; urgency=medium
+
+  * Fix linglong build fail
+
+ -- wangrong <wangrong@uniontech.com>  Thu, 17 Apr 2025 20:00:21 +0800
+
 deepin-camera (6.5.18) unstable; urgency=medium
 
   * Update version to 6.5.18. 
