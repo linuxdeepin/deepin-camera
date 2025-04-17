@@ -6,7 +6,11 @@
 #include "filterpreviewbutton.h"
 
 extern "C" {
-#include <libimagevisualresult/visualresult.h>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    #include <libimagevisualresult6/visualresult.h>
+#else
+    #include <libimagevisualresult/visualresult.h>
+#endif
 }
 
 #include <QPainter>
