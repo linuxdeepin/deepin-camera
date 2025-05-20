@@ -502,7 +502,9 @@ void MajorImageProcessingThread::run()
             break;
     #endif
             //保证画面流畅的前提下降低刷新率
-            msleep(33);
+            if(m_nVdWidth <= 1920) {
+                msleep(33);
+            }
         }
 
         // qDebug() << "Stopping video stream";
