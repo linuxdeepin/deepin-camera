@@ -14,6 +14,8 @@
 #include <DApplication>
 #include <QParallelAnimationGroup>
 
+#include <QDebug>
+
 #define WIDTH 40
 #define HEIGHT 192
 #define ANIMATION_DURATION 50
@@ -26,6 +28,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
   ,m_curValue(0)
   ,m_opacity(102)  //UI默认
 {
+    qDebug() << "Initializing ExposureSlider";
     resize(WIDTH, HEIGHT);
     QVBoxLayout *vLayout = new QVBoxLayout(this);
     vLayout->setContentsMargins(0, 0, 0, 0);
@@ -43,12 +46,15 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_pLabShowValue->setAlignment(Qt::AlignCenter);
     m_pLabShowValue->setText("0");
     m_pLabShowValue->setFixedWidth(30);
+    qDebug() << "Created value display label";
+
     //颜色不随主题变化
     QPalette pa = m_pLabShowValue->palette();
     pa.setColor(QPalette::BrightText, Qt::white);
     m_pLabShowValue->setPalette(pa);
     //字体大小不随系统变化
     connect(qApp, &QGuiApplication::fontChanged, this, [=](){
+        qDebug() << "Updating font settings for value display";
         QFont font("SourceHanSansSC");
         font.setPixelSize(15);
         font.setWeight(QFont::Medium);
@@ -74,16 +80,19 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
 
     m_pLabShowValue->hide();
     m_slider->hide();
+    qDebug() << "ExposureSlider initialization completed";
 }
 
 void ExposureSlider::setOpacity(int opacity)
 {
+    qDebug() << "Setting slider opacity to:" << opacity;
     m_opacity = opacity;
     update();
 }
 
 void ExposureSlider::showContent(bool show, bool isShortCut)
 {
+    qDebug() << "Showing exposure slider content:" << show << "isShortCut:" << isShortCut;
     QGraphicsOpacityEffect *effectSlider = new QGraphicsOpacityEffect(m_slider);
     m_slider->setGraphicsEffect(effectSlider);
     QPropertyAnimation *opacity = new QPropertyAnimation(effectSlider, "opacity", this);
@@ -107,8 +116,10 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
         opacity1->setEndValue(1);
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-            if (isShortCut) //键盘触发，需在此处理焦点
+            if (isShortCut) { //键盘触发，需在此处理焦点
+                qDebug() << "Setting focus to slider after shortcut activation";
                 m_slider->slider()->setFocus();
+            }
             pGroup->deleteLater();
         });
 
@@ -130,7 +141,6 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         pGroup->start();
     }
-
 }
 
 void ExposureSlider::paintEvent(QPaintEvent *event)
@@ -182,22 +192,29 @@ void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
 {
     switch (event->key()) {
     case Qt::Key_Down: {
-        if (m_curValue <= m_valueMin)
+        if (m_curValue <= m_valueMin) {
+            qDebug() << "Already at minimum value:" << m_valueMin;
             return;
+        }
         m_curValue -= 1;
         m_slider->setValue(m_curValue);
         break;
     }
     case Qt::Key_Up: {
-        if (m_curValue >= m_valueMax)
+        if (m_curValue >= m_valueMax) {
+            qDebug() << "Already at maximum value:" << m_valueMax;
             return;
+        }
         m_curValue += 1;
         m_slider->setValue(m_curValue);
         break;
     }
     case Qt::Key_Return: {
-        if (!m_slider->slider()->hasFocus())
+        if (!m_slider->slider()->hasFocus()) {
+            qDebug() << "Return key ignored - slider not focused";
             return;
+        }
+        qDebug() << "Enter button clicked";
         emit enterBtnClicked(true);
         break;
     }
@@ -217,17 +234,17 @@ bool ExposureSlider::eventFilter(QObject *obj, QEvent *e)
 
 void ExposureSlider::onValueChanged(int value)
 {
-    if (value > m_valueMax || value < m_valueMin)
+    if (value > m_valueMax || value < m_valueMin) {
+        qDebug() << "Value out of range:" << value << "min:" << m_valueMin << "max:" << m_valueMax;
         return;
+    }
 
     m_curValue = value;
-
     m_pLabShowValue->setText(QString("%1").arg(value));
-
     update();
 }
 
 ExposureSlider::~ExposureSlider()
 {
-
+    qDebug() << "Destroying ExposureSlider";
 }

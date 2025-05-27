@@ -78,10 +78,12 @@ videowidget::videowidget(DWidget *parent)
       m_exposure(0),
       m_videoFormat("mp4")
 {
+    qDebug() << "Initializing VideoWidget";
 #ifndef __mips__
     if (!get_wayland_status()) {
         m_openglwidget = new PreviewOpenglWidget(this);
         m_openglwidget->setFocusPolicy(Qt::ClickFocus);
+        qDebug() << "Created OpenGL widget for non-Wayland environment";
     }
 #endif
     m_pNormalItem = new QGraphicsPixmapItem;
@@ -244,11 +246,13 @@ videowidget::videowidget(DWidget *parent)
         else
             m_videoFormat = "mp4";
     }
+    qDebug() << "VideoWidget initialization complete";
 }
 
 //延迟加载
 void videowidget::delayInit()
 {
+    qDebug() << "Starting delayed initialization of VideoWidget";
     m_imgPrcThread = new MajorImageProcessingThread;
     m_imgPrcThread->setParent(this);
     m_imgPrcThread->setObjectName("MajorThread");
@@ -294,10 +298,12 @@ void videowidget::delayInit()
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      this, &videowidget::onThemeTypeChanged);
+    qDebug() << "Delayed initialization complete";
 }
 
 void videowidget::showNocam()
 {
+    qDebug() << "Showing no camera state";
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
@@ -348,6 +354,7 @@ void videowidget::showNocam()
     m_pSvgItem->show();
 
     emit noCam();
+    qDebug() << "No camera state displayed";
 
     if (getCapStatus())  //录制完成处理
         onEndBtnClicked();
@@ -355,6 +362,7 @@ void videowidget::showNocam()
 
 void videowidget::showCamUsed()
 {
+    qDebug() << "Showing camera in use state";
     qDebug() << "show camUsed" << Qt::endl;
 
     if (!m_pNormalView->isVisible())
@@ -400,6 +408,7 @@ void videowidget::showCamUsed()
     m_pCamErrItem->show();
     m_pSvgItem->show();
     emit noCamAvailable();
+    qDebug() << "Camera in use state displayed";
 
     if (getCapStatus())//录制完成处理
         onEndBtnClicked();
@@ -470,7 +479,6 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
     if (!image->isNull()) {
         switch (result) {
         case 0:     //Success
-//            m_imgPrcThread->m_rwMtxImg.lock();
             m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
@@ -498,7 +506,6 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
 
                 m_pNormalScene->setSceneRect(m_framePixmap.rect());
                 m_pNormalItem->setPixmap(m_framePixmap);
-//                m_imgPrcThread->m_rwMtxImg.unlock();
 
                 if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
                     if (get_encoder_status() == 0 && getCapStatus() == true)
@@ -512,6 +519,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             }
             break;
         default:
+            qWarning() << "Received invalid image with result code:" << result;
             break;
         }
         emit camAvailable();
@@ -520,6 +528,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
 
 void videowidget::onReachMaxDelayedFrames()
 {
+    qWarning() << "Reached maximum delayed frames, stopping camera";
     check_device_list_events(get_v4l2_device_handler());
     v4l2_dev_t *videoDevHand =  get_v4l2_device_handler();
 
@@ -539,6 +548,7 @@ void videowidget::onReachMaxDelayedFrames()
     m_pNormalItem->hide() ;
     if (m_openglwidget)
         m_openglwidget->hide();
+    qDebug() << "Camera stopped due to maximum delayed frames";
 }
 
 void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
@@ -607,7 +617,6 @@ void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
         m_recordingTimeWidget->hide();
         break;
     }
-
 }
 
 void videowidget::resizeEvent(QResizeEvent *size)
@@ -638,7 +647,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 void videowidget::showCountdown()
 {
     if (DataManager::instance()->getdevStatus() == NOCAM) {
-
+        qDebug() << "No camera available, stopping countdown";
         if (m_flashTimer->isActive())
             m_flashTimer->stop();
 
@@ -652,6 +661,7 @@ void videowidget::showCountdown()
     //显示倒数，m_nMaxInterval秒后结束，并拍照
     if (m_nInterval == 0 && DataManager::instance()->getdevStatus() == CAM_CANUSE) {
         //倒数到最后一次，隐藏计数器
+        qDebug() << "Countdown complete, current state:" << (g_Enum_Camera_State == VIDEO ? "Video" : "Photo");
         m_dLabel->hide();
         if (g_Enum_Camera_State == VIDEO) {
             if (!getCapStatus()) {
@@ -778,11 +788,11 @@ void videowidget::showCountdown()
         m_nInterval--;
         qInfo() << "m_nInterval:" << m_nInterval;
     }
-
 }
 
 void videowidget::showRecTime()
 {
+    qDebug() << "Updating recording time display";
     //获取写video的时间
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         /** On the equipment with poor performance, the coding time is long,
@@ -853,6 +863,7 @@ void videowidget::showRecTime()
     }
 
     m_recordingTime->setText(strTime);
+    qDebug() << "Recording time updated:" << strTime;
 }
 
 void videowidget::flash()
@@ -880,7 +891,6 @@ void videowidget::flash()
     if (0 == m_curTakePicTime) {
         emit updatePhotoState(CMainWindow::photoNormal);
     }
-
 }
 
 void videowidget::slotresolutionchanged(const QString &resolution)
@@ -916,7 +926,6 @@ void videowidget::slotresolutionchanged(const QString &resolution)
             request_format_update(1);
         }
     }
-
 }
 
 void videowidget::slotGridTypeChanged(int type)
@@ -943,6 +952,7 @@ void videowidget::onRecordAudio(uchar *data, uint size)
 
 void videowidget::onEndBtnClicked()
 {
+    qDebug() << "End button clicked, stopping recording";
     if (m_countTimer->isActive())
         m_countTimer->stop();
 
@@ -1033,7 +1043,7 @@ void videowidget::onEndBtnClicked()
     if (recordBtn)
         recordBtn->blockSignals(false);
 #endif
-
+    qDebug() << "Recording stopped, duration:" << duration << "ms";
 }
 
 void videowidget::onRestartDevices()
@@ -1056,6 +1066,7 @@ void videowidget::onRestartDevices()
 
 void videowidget::onChangeDev()
 {
+    qDebug() << "Changing camera device";
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
     if (m_imgPrcThread != nullptr)
@@ -1104,10 +1115,12 @@ void videowidget::onChangeDev()
             }
         }
     }
+    qDebug() << "Camera device change complete";
 }
 
 int videowidget::switchCamera(const char *device, const char *devName)
 {
+    qDebug() << "Switching camera to device:" << (device ? device : "null");
     if (NULL == device) {
         return -1;
     }
@@ -1126,6 +1139,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
             emit switchCameraSuccess(devName);
         }
         dc::Settings::get().setBackOption("device", device);
+        qDebug() << "Camera switch successful to device:" << (devName ? devName : "unknown");
     } else if (ret == E_FORMAT_ERR) {
         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
@@ -1138,6 +1152,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
             showCamUsed();
 
         DataManager::instance()->setdevStatus(CAM_CANNOT_USE);
+        qWarning() << "Camera switch failed - Format error";
     } else {
         v4l2_dev_t *vd =  get_v4l2_device_handler();
 
@@ -1146,6 +1161,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
 
         DataManager::instance()->setdevStatus(NOCAM);
         showNocam();
+        qWarning() << "Camera switch failed - Unknown error";
     }
     return ret;
 }
@@ -1163,6 +1179,7 @@ QString videowidget::getSaveFilePrefix()
 
 void videowidget::onTakePic(bool bTrue)
 {
+    qDebug() << "Take photo triggered:" << bTrue;
     g_Enum_Camera_State = PICTRUE;
 
     if (bTrue) {
@@ -1210,6 +1227,7 @@ void videowidget::onTakePic(bool bTrue)
 
 #endif
     }
+    qDebug() << "Photo operation complete";
 }
 
 void videowidget::onTakeVideo() //点一次开，再点一次关
@@ -1272,7 +1290,7 @@ void videowidget::onTakeVideo() //点一次开，再点一次关
         //向mainwindow 发送录像倒计时状态
         emit updateRecordState(photoRecordBtn::preRecord);
     }
-
+    qDebug() << "Video operation complete";
 }
 
 void videowidget::forbidScrollBar(QGraphicsView *view)
@@ -1285,7 +1303,7 @@ void videowidget::forbidScrollBar(QGraphicsView *view)
 
 void videowidget::startTakeVideo()
 {
-
+    qDebug() << "Starting video capture";
 #ifdef __sw_64__
     if (video_capture_get_save_video() == 1) {
         qInfo() << "-------------------------takeVideo reclicked..----------------------";
@@ -1365,10 +1383,12 @@ void videowidget::startTakeVideo()
         m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
                                     nHeight - m_recordingTimeWidget->height() - 15);
     }
+    qDebug() << "Video capture started with format:" << m_videoFormat;
 }
 
 void videowidget::startCaptureVideo()
 {
+    qDebug() << "Starting video capture with QCamera";
     QDir dir;
 
     QString strDefaultVdPath = QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + QDir::separator() + "Camera";
@@ -1418,6 +1438,7 @@ void videowidget::startCaptureVideo()
         m_recordingTimeWidget->move((nWidth - m_recordingTimeWidget->width() - 10) / 2,
                                     nHeight - m_recordingTimeWidget->height() - 15);
     }
+    qDebug() << "QCamera video capture started";
 }
 
 void videowidget::itemPosChange()
@@ -1556,6 +1577,7 @@ QRect videowidget::getFrameRect()
 
 void videowidget::setGridType(GridType type)
 {
+    qDebug() << "Setting grid type:" << type;
     if (type == m_GridType)
         return;
 
@@ -1576,10 +1598,12 @@ void videowidget::setGridType(GridType type)
             m_pGridLineItem->show();
         }
     }
+    qDebug() << "Grid type updated";
 }
 
 void videowidget::onExposureChanged(int exposure)
 {
+    qDebug() << "Exposure changed to:" << exposure;
     m_exposure = exposure;
     if (m_imgPrcThread)
         m_imgPrcThread->setExposure(exposure);
@@ -1587,12 +1611,14 @@ void videowidget::onExposureChanged(int exposure)
 
 void videowidget::onFilterDisplayChanged(int bDisplay)
 {
+    qDebug() << "Filter display changed:" << bDisplay;
     if (m_imgPrcThread)
         m_imgPrcThread->setFilterGroupState(bDisplay);
 }
 
 videowidget::~videowidget()
 {
+    qDebug() << "Cleaning up VideoWidget";
     m_imgPrcThread->stop();
     m_imgPrcThread->wait();
     delete m_imgPrcThread;
@@ -1651,4 +1677,5 @@ videowidget::~videowidget()
     m_videoWriter = nullptr;
 
     camUnInit();
+    qDebug() << "VideoWidget cleanup complete";
 }

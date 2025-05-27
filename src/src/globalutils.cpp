@@ -56,34 +56,45 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, DMIInfo &mystruct
 
 bool GlobalUtils::isLowPerformanceBoard()
 {
+    qDebug() << "Checking for low performance board";
     qDBusRegisterMetaType<DMIInfo>();
     QDBusInterface *monitorInterface = new QDBusInterface("com.deepin.system.SystemInfo", "/com/deepin/system/SystemInfo", "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
-    if (!monitorInterface->isValid())
+    if (!monitorInterface->isValid()) {
+        qWarning() << "Failed to connect to system info D-Bus interface";
         return false;
+    }
 
     DMIInfo dmiInfo;
     QDBusReply<QDBusVariant> replay = monitorInterface->call("Get", "com.deepin.system.SystemInfo", "DMIInfo");
 
     replay.value().variant().value<QDBusArgument>() >> dmiInfo;
 
-    qDebug() << __func__ << "dmiInfo.productName: " << dmiInfo.productName;
+    qDebug() << "System DMI info - Product Name:" << dmiInfo.productName;
+    qDebug() << "System DMI info - Manufacturer:" << dmiInfo.Manufacturer;
+    qDebug() << "System DMI info - Version:" << dmiInfo.version;
 
     // BXC 600F/NZ2750、CC GWMNDA1GL1等主板不能满足mp4封装的性能要求，因此需要特殊适配
     for (auto board : m_LowPerformanceBoards) {
-        if (dmiInfo.productName.contains(board))
+        if (dmiInfo.productName.contains(board)) {
+            qInfo() << "Detected low performance board:" << board;
             return true;
+        }
     }
 
+    qDebug() << "No low performance board detected";
     return false;
 }
 
 void GlobalUtils::loadCameraConf()
 {
+    qDebug() << "Loading camera configuration from:" << CAMERA_CONF_PATH;
     QSettings conf(CAMERA_CONF_PATH, QSettings::IniFormat);
     QVariant value = conf.value(LOW_PERFORMANCE_BOARD);
     if (value.isValid()) {
         m_LowPerformanceBoards = value.toStringList();
+        qDebug() << "Loaded low performance boards:" << m_LowPerformanceBoards;
     } else {
+        qWarning() << "No low performance boards configuration found in" << CAMERA_CONF_PATH;
         m_LowPerformanceBoards = QStringList();
     }
 }

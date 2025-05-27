@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <QGraphicsDropShadowEffect>
+#include <QDebug>
 
 #if QT_VERSION_MAJOR <= 5
 #include <DApplicationHelper>
@@ -30,6 +31,7 @@ RollingBox::RollingBox(QWidget *parent) :
     m_deviation(0),
     m_textSize(15)  //暂定15,后续修改
 {
+    qDebug() << "Initializing RollingBox";
     setContentsMargins(0, 0, 0, 0);
 
     m_pressResetTimer = new QTimer(this);
@@ -50,25 +52,32 @@ RollingBox::RollingBox(QWidget *parent) :
 
 void RollingBox::setRange(int min, int max)
 {
+    qDebug() << "Setting range:" << min << "to" << max;
     m_rangeMin = min;
     m_rangeMax = max;
 
-    if(m_currentIndex < min)
+    if(m_currentIndex < min) {
+        qDebug() << "Adjusting current index from" << m_currentIndex << "to minimum" << min;
         m_currentIndex = min;
-    if(m_currentIndex > max)
+    }
+    if(m_currentIndex > max) {
+        qDebug() << "Adjusting current index from" << m_currentIndex << "to maximum" << max;
         m_currentIndex = max;
+    }
 
     update();
 }
 
 void RollingBox::setContentList(const QList<QString> &content)
 {
+    qDebug() << "Setting content list with" << content.size() << "items";
     m_content = content;
     setRange(0, m_content.size() - 1);
 }
 
 int RollingBox::getCurrentValue()
 {
+    qDebug() << "Getting current value:" << m_currentIndex;
     return m_currentIndex;
 }
 
@@ -113,12 +122,14 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
 
         if (qAbs(m_deviation) <= this->height() / 6 ||
                 qAbs(m_deviation) >= this->height() / 2 - 10) {//点击当前选项、上下边界
+            qDebug() << "Click too close to current selection or boundary, ignoring";
             m_deviation = 0;
             return;
         }
 
         if (m_deviation < 0 && m_currentIndex >= m_rangeMax) {
             if (qAbs(m_deviation) >= this->height() / 6) {
+                qDebug() << "Cannot move down at maximum index";
                 m_deviation = 0;
                 return;
             }
@@ -126,6 +137,7 @@ void RollingBox::mouseReleaseEvent(QMouseEvent *e)
 
         if (m_deviation > 0 && m_currentIndex <= m_rangeMin) {
             if (qAbs(m_deviation) >= this->height() / 6) {
+                qDebug() << "Cannot move up at minimum index";
                 m_deviation = 0;
                 return;
             }
@@ -191,7 +203,6 @@ void RollingBox::keyReleaseEvent(QKeyEvent *event)
         } else {
             return;
         }
-
         break;
     case Qt::Key_Up:
         if (m_currentIndex > m_rangeMin) {
@@ -285,6 +296,7 @@ void RollingBox::paintContent(QPainter &painter, int num, int deviation)
 
 void RollingBox::homing()
 {
+    qDebug() << "Starting homing animation from deviation:" << m_deviation;
     if(m_deviation > height() / 6) {
         m_homingAnimation->setStartValue(height() / 6 - m_deviation);
         m_homingAnimation->setEndValue(0);

@@ -13,22 +13,25 @@ windowStateThread::windowStateThread(bool isWayland, QObject *parent /*= nullptr
     : QThread (parent)
 {
     setObjectName("windowStateThread");
+    qDebug() << "Initializing window state monitoring thread, Wayland:" << isWayland;
 }
 
 windowStateThread::~windowStateThread()
 {
-
+    qDebug() << "Cleaning up window state monitoring thread";
 }
 
 void windowStateThread::run()
 {
+    qDebug() << "Starting window state monitoring loop";
     while (!isInterruptionRequested()) {
-//        QMutexLocker locker(&m_mutex);
         //获取当前工作区域内所有的窗口
         auto list = workspaceWindows();
+        qDebug() << "Found" << list.size() << "windows in workspace";
 
         foreach(DForeignWindow *window, list) {
             if (window && window->windowState() == Qt::WindowState::WindowFullScreen) {
+                qDebug() << "Detected fullscreen window:" << window->title();
                 //去掉全屏的窗口信号处理
                 //emit someWindowFullScreen();
             }
@@ -39,19 +42,22 @@ void windowStateThread::run()
         break;
 #endif
     }
-    qInfo() << "windowStateThread end";
+    qInfo() << "Window state monitoring thread ended";
 }
 
 QList<DForeignWindow *> windowStateThread::workspaceWindows() const
 {
+    qDebug() << "Getting workspace windows list";
     QList<DForeignWindow *> windowList;
     QList<WId> currentApplicationWindowList;
     const QWindowList &list = qApp->allWindows();
 
     currentApplicationWindowList.reserve(list.size());
+    qDebug() << "Total application windows:" << list.size();
 
     for (auto window : list) {
         if (window->property("_q_foreignWinId").isValid()) {
+            qDebug() << "Skipping foreign window";
             continue;
         }
 
@@ -59,11 +65,13 @@ QList<DForeignWindow *> windowStateThread::workspaceWindows() const
     }
 
     QVector<quint32> wmClientList = DWindowManagerHelper::instance()->currentWorkspaceWindowIdList();
+    qDebug() << "Window manager client list size:" << wmClientList.size();
 
     bool currentWindow = false;
     for (WId wid : wmClientList) {
         if (currentApplicationWindowList.contains(wid)){
             currentWindow = true;
+            qDebug() << "Found current application window:" << wid;
             continue;
         }
         if (false == currentWindow){
@@ -71,8 +79,10 @@ QList<DForeignWindow *> windowStateThread::workspaceWindows() const
         }
         if (DForeignWindow *w = DForeignWindow::fromWinId(wid)) {
             windowList << w;
+            qDebug() << "Added foreign window to list:" << w->title();
         }
     }
+    qDebug() << "Returning" << windowList.size() << "workspace windows";
     return windowList;
 }
 
