@@ -38,6 +38,7 @@ static _cam_config_t camConfig = {1920, 1080, NULL, NULL, NULL, NULL, NULL, NULL
 Camera *Camera::instance()
 {
     if (m_instance == nullptr) {
+        qDebug() << "Creating new Camera instance";
         m_instance = new Camera;
     }
     return m_instance;
@@ -45,12 +46,14 @@ Camera *Camera::instance()
 
 void Camera::release()
 {
+    qDebug() << "Releasing Camera instance";
     delete m_instance;
     m_instance = nullptr;
 }
 
 Camera::~Camera()
 {
+    qDebug() << "Destroying Camera instance";
     if (camConfig.device_name) {
         free(camConfig.device_name);
         camConfig.device_name = nullptr;
@@ -75,6 +78,7 @@ Camera::~Camera()
         free(camConfig.photo_name);
         camConfig.photo_name = nullptr;
     }
+    qDebug() << "Camera instance destroyed";
 }
 
 Camera::Camera()
@@ -89,6 +93,7 @@ Camera::Camera()
     , m_bReadyRecord(false)
     , m_bRecording(false)
 {
+    qDebug() << "Initializing Camera";
     parseConfig();
     initMember();
 }
@@ -96,6 +101,7 @@ Camera::Camera()
 void Camera::initMember()
 {
     // 连接相机surface，能够发送每帧QImage数据到外部
+    qDebug() << "Initializing camera members";
 #if QT_VERSION_MAJOR > 5
 #else
     m_videoSurface = new VideoSurface(this);
@@ -108,6 +114,7 @@ void Camera::initMember()
 
 void Camera::switchCamera()
 {
+    qDebug() << "Switching camera";
     refreshCamDevList();
 
 #if QT_VERSION_MAJOR > 5
@@ -117,6 +124,7 @@ void Camera::switchCamera()
         int nCurIndex = m_cameraDeviceList.indexOf(m_curDevice);
         nCurIndex = (nCurIndex + 1) % m_cameraDeviceList.size();
         nextDevice = m_cameraDeviceList[nCurIndex];
+        qDebug() << "Switching to next camera device:" << nextDevice.description();
     }
     nextDevice = QMediaDevices::defaultVideoInput();
     startCamera(nextDevice);
@@ -127,6 +135,7 @@ void Camera::switchCamera()
         int nCurIndex = m_cameraDevList.indexOf(m_curDevName);
         nCurIndex = (nCurIndex + 1) % m_cameraDevList.size();
         nextDevName = m_cameraDevList[nCurIndex];
+        qDebug() << "Switching to next camera device:" << nextDevName;
     }
 
     if (nextDevName.isEmpty())
@@ -134,24 +143,27 @@ void Camera::switchCamera()
 
     if (nextDevName.isEmpty()) {
         nextDevName = QCameraInfo::defaultCamera().deviceName();
+        qDebug() << "Using default camera device:" << nextDevName;
     }
     startCamera(nextDevName);
 #endif
-
 }
 
 void Camera::refreshCamera()
 {
+    qDebug() << "Refreshing camera";
     refreshCamDevList();
 
     // 设备链表找不到当前设备，发送设备断开信号
 #if QT_VERSION_MAJOR > 5
     if (!m_curDevice.isNull() && m_cameraDeviceList.indexOf(m_curDevice) == -1) {
+        qWarning() << "Current camera device disconnected";
         m_curDevice = QCameraDevice();
         emit currentCameraDisConnected();
     }
 #else
     if (!m_curDevName.isEmpty() && m_cameraDevList.indexOf(m_curDevName) == -1) {
+        qWarning() << "Current camera device disconnected:" << m_curDevName;
         m_curDevName = "";
         emit currentCameraDisConnected();
     }
@@ -165,6 +177,7 @@ void Camera::refreshCamera()
 // 重启摄像头
 void Camera::restartCamera()
 {
+    qDebug() << "Restarting camera";
 #if QT_VERSION_MAJOR > 5
     if (!m_camera) {
         QList<QCameraDevice> availableCams = QMediaDevices::videoInputs();
@@ -174,6 +187,7 @@ void Camera::restartCamera()
 #else
             && !m_cameraDevList.isEmpty()) {
 #endif
+            qWarning() << "No available cameras found";
             emit cameraCannotUsed();
             return;
         }
@@ -182,14 +196,17 @@ void Camera::restartCamera()
         QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
         if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
             && !m_cameraDevList.isEmpty()) {
+            qWarning() << "No available cameras found";
             emit cameraCannotUsed();
             return;
         }
 #endif
     }
 
-    if (DataManager::instance()->getdevStatus() == CAM_CANUSE)
+    if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
+        qDebug() << "Camera is already in use";
         return;
+    }
 
 #if QT_VERSION_MAJOR > 5
     startCamera(QMediaDevices::defaultVideoInput());
@@ -198,21 +215,24 @@ void Camera::restartCamera()
 #endif
 
     DataManager::instance()->setdevStatus(CAM_CANUSE);
-
+    qInfo() << "Camera restarted successfully";
     emit cameraDevRestarted();
 }
 
 void Camera::refreshCamDevList()
 {
+    qDebug() << "Refreshing camera device list";
 #if QT_VERSION_MAJOR > 5
     m_cameraDeviceList.clear();
     m_cameraDeviceList = QMediaDevices::videoInputs();
+    qDebug() << "Found" << m_cameraDeviceList.size() << "camera devices";
 #else
     m_cameraDevList.clear();
 
     v4l2_device_list_t *devlist = get_device_list();
     for (int i = 0; i < devlist->num_devices; i++)
         m_cameraDevList.push_back(devlist->list_devices[i].device);
+    qDebug() << "Found" << m_cameraDevList.size() << "camera devices";
 #endif
 }
 
@@ -230,11 +250,12 @@ void Camera::onCameraStatusChanged(QCamera::Status status)
 
 QStringList Camera::getSupportResolutions()
 {
+    qDebug() << "Getting supported resolutions";
     QStringList resolutionsList;
 
     QList<QSize> supportResolutionList = getSupportResolutionsSize();
     if (supportResolutionList.isEmpty())
-        qInfo() << "Support Resolution is Empty!";
+        qWarning() << "No supported resolutions found";
 
     int size = supportResolutionList.size();
     resolutionsList.clear();
@@ -243,6 +264,7 @@ QStringList Camera::getSupportResolutions()
         resolutionsList.append(resol);
     }
 
+    qDebug() << "Supported resolutions:" << resolutionsList;
     return resolutionsList;
 }
 
@@ -264,6 +286,7 @@ QList<QSize> Camera::getSupportResolutionsSize()
 // 设置相机分辨率
 void Camera::setCameraResolution(QSize size)
 {
+    qDebug() << "Setting camera resolution to:" << size;
 #if QT_VERSION_MAJOR > 5
     //TODO
 #else
@@ -295,6 +318,7 @@ void Camera::setCameraResolution(QSize size)
     camConfig.width = size.rwidth();
     camConfig.height = size.rheight();
     saveConfig();
+    qDebug() << "Camera resolution set successfully";
 }
 
 QSize Camera::getCameraResolution()
@@ -309,19 +333,23 @@ void Camera::startCamera(const QString &devName)
 #endif
 {
     // 存在上一相机，先停止
-    if (m_camera)
+    qDebug() << "Starting camera";
+    if (m_camera) {
+        qDebug() << "Stopping existing camera";
         stopCamera();
+    }
 
 #if QT_VERSION_MAJOR > 5
     m_camera = new QCamera(device);
     m_videoSink = new QVideoSink(this);
     m_curDevice = device;
+    qDebug() << "Started camera device:" << device.description();
 #else
     m_camera = new QCamera(devName.toStdString().c_str());
     QCameraInfo cameraInfo(*m_camera);
     connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
     m_curDevName = device.description();
-
+    qDebug() << "Started camera device:" << m_curDevName;
 
     m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
@@ -355,6 +383,7 @@ void Camera::startCamera(const QString &devName)
     if (m_curDevName != configDevName
         || (m_curDevName.isEmpty() && m_curDevName == configDevName)) {
         if (!supportList.isEmpty()) {
+            qDebug() << "Resetting resolution to maximum supported:" << supportList.last();
             camConfig.width = supportList.last().rwidth();
             camConfig.height = supportList.last().rheight();
         }
@@ -371,6 +400,7 @@ void Camera::startCamera(const QString &devName)
             }
         }
         if (bResetResolution) {
+            qDebug() << "Current resolution not supported, resetting to:" << supportList.last();
             camConfig.width = supportList.last().width();
             camConfig.height = supportList.last().height();
         }
@@ -386,6 +416,7 @@ void Camera::startCamera(const QString &devName)
 
 void Camera::stopCamera()
 {
+    qDebug() << "Stopping camera";
     if (m_camera) {
 #if QT_VERSION_MAJOR <= 5
         connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
@@ -407,6 +438,7 @@ void Camera::stopCamera()
         m_mediaRecoder->deleteLater();
         m_mediaRecoder = nullptr;
     }
+    qDebug() << "Camera stopped successfully";
 }
 
 void Camera::setVideoOutPutPath(QString &path)
@@ -417,6 +449,7 @@ void Camera::setVideoOutPutPath(QString &path)
 
 void Camera::startRecoder()
 {
+    qDebug() << "Starting recorder";
 #if QT_VERSION_MAJOR > 5
 #else
     m_bReadyRecord = true;
@@ -425,11 +458,13 @@ void Camera::startRecoder()
     }
 
     m_bRecording = true;
+    qDebug() << "Recorder started successfully";
 #endif
 }
 
 void Camera::stopRecoder()
 {
+    qDebug() << "Stopping recorder";
 #if QT_VERSION_MAJOR > 5
 #else
     if (m_mediaRecoder)
@@ -438,6 +473,7 @@ void Camera::stopRecoder()
         m_camera->setCaptureMode(QCamera::CaptureStillImage);
 
     m_bRecording = false;
+    qDebug() << "Recorder stopped successfully";
 #endif
 }
 
@@ -482,6 +518,7 @@ bool Camera::isReadyRecord()
 
 int Camera::parseConfig()
 {
+    qDebug() << "Parsing camera configuration";
     char *config_path = smart_cat(getenv("HOME"), '/', ".config/deepin/deepin-camera");
     mkdir(config_path, 0777);
     char *config_file = smart_cat(config_path, '/', "deepin-camera");
@@ -496,9 +533,10 @@ int Camera::parseConfig()
     if((fp = fopen(config_file,"r")) == NULL)
     {
         free(config_file);
-        fprintf(stderr, "deepin-camera: couldn't open %s for read: %s\n", config_path, strerror(errno));
+        qWarning() << "Could not open config file for reading:" << strerror(errno);
         return -1;
     }
+
     while(fgets(bufr, MAXLINE, fp) != NULL)
     {
         line++;
@@ -535,7 +573,7 @@ int Camera::parseConfig()
         /*skip invalid lines */
         if(!token || !value || strlen(token) < 1 || strlen(value) < 1)
         {
-            fprintf(stderr, "deepin-camera: (config) skiping invalid config entry at line %i\n", line);
+            qWarning() << "Skipping invalid config entry at line" << line;
             if(token)
                 free(token);
             if(value)
@@ -565,13 +603,14 @@ int Camera::parseConfig()
     }
 
     free(config_file);
-
     fclose(fp);
+    qDebug() << "Configuration parsed successfully";
     return 0;
 }
 
 int Camera::saveConfig()
 {
+    qDebug() << "Saving camera configuration";
     QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
                           QDir::separator() + QString("deepin-camera") + QDir::separator() + QString("deepin-camera");
 
@@ -581,7 +620,7 @@ int Camera::saveConfig()
     /*open file for write*/
     if((fp = fopen(filename,"w")) == NULL)
     {
-        fprintf(stderr, "deepin-camera: couldn't open %s for write: %s\n", filename, strerror(errno));
+        qWarning() << "Could not open config file for writing:" << strerror(errno);
         free(filename);
         return -1;
     }
@@ -618,15 +657,15 @@ int Camera::saveConfig()
 
     /* flush stream buffers to filesystem */
     fflush(fp);
-
     free(filename);
 
     /* close file after fsync (sync file data to disk) */
     if (fsync(fileno(fp)) || fclose(fp))
     {
-        fprintf(stderr, "deeepin_camera: error writing configuration data to file: %s\n", strerror(errno));
+        qWarning() << "Error writing configuration data to file:" << strerror(errno);
         return -1;
     }
 
+    qDebug() << "Configuration saved successfully";
     return 0;
 }

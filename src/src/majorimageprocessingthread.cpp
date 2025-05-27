@@ -23,6 +23,7 @@ DCORE_USE_NAMESPACE
 
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
+    qDebug() << "Initializing MajorImageProcessingThread";
     m_yuvPtr = nullptr;
     m_rgbPtr = nullptr;
     m_bRecording = false;
@@ -38,11 +39,13 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
+    qDebug() << "Stopping MajorImageProcessingThread";
     m_stopped = 1;
 }
 
 void MajorImageProcessingThread::init()
 {
+    qDebug() << "Initializing thread state";
     m_stopped = 0;
     m_majorindex = -1;
     m_frame = nullptr;
@@ -55,11 +58,13 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::setFilter(QString filter)
 {
+    qDebug() << "Setting filter:" << filter;
     m_filter = filter;
 }
 
 void MajorImageProcessingThread::setExposure(int exposure)
 {
+    qDebug() << "Setting exposure value:" << exposure;
     m_exposure = exposure;
 }
 
@@ -97,6 +102,7 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
 
 void MajorImageProcessingThread::processingImage(QImage& img)
 {
+    qDebug() << "Processing image, size:" << img.size() << "format:" << img.format();
     // 镜像
     if (!m_bHorizontalMirror)
         img = img.mirrored(true,false);
@@ -109,6 +115,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
         emit SendFilterImageProcessing(&m_filterImg);
 
         if (!m_filter.isEmpty() || m_exposure) {
+            qDebug() << "Applying filter:" << m_filter << "and exposure:" << m_exposure;
             // 滤镜效果渲染
             uint8_t *rgb = img.bits();
             if (!m_filter.isEmpty())
@@ -124,12 +131,13 @@ void MajorImageProcessingThread::processingImage(QImage& img)
             if (!img.isNull()) {
                 if (img.save(m_strPath, "JPG")) {
                     nRet = 0;
+                    qInfo() << "Successfully saved photo to:" << m_strPath;
                     emit sigReflushSnapshotLabel();
                 }
             }
 
             if (nRet < 0) {
-                qWarning() << "保存照片失败";
+                qWarning() << "Failed to save photo to:" << m_strPath;
             }
 
             m_bTake = false;
@@ -142,6 +150,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
 
 void MajorImageProcessingThread::run()
 {
+    qInfo() << "Starting MajorImageProcessingThread run loop";
     if (m_eEncodeEnv != QCamera_Env) {
         m_videoDevice = get_v4l2_device_handler();
         v4l2core_start_stream(m_videoDevice);
@@ -152,6 +161,7 @@ void MajorImageProcessingThread::run()
         uint8_t* pOldYuvFrame = nullptr;
         while (m_stopped == 0) {
             if (get_resolution_status()) {
+                qDebug() << "Resolution change detected, updating format";
                 //reset
                 request_format_update(0);
                 v4l2core_stop_stream(m_videoDevice);
@@ -162,6 +172,7 @@ void MajorImageProcessingThread::run()
                 int ret = v4l2core_update_current_format(m_videoDevice);
 
                 if (ret != E_OK) {
+                    qWarning() << "Failed to set defined stream format, trying first listed format";
                     fprintf(stderr, "camera: could not set the defined stream format\n");
                     fprintf(stderr, "camera: trying first listed stream format\n");
 
@@ -170,13 +181,14 @@ void MajorImageProcessingThread::run()
                     ret = v4l2core_update_current_format(m_videoDevice);
 
                     if (ret != E_OK) {
+                        qCritical() << "Failed to set first listed stream format, stopping thread";
                         fprintf(stderr, "camera: also could not set the first listed stream format\n");
                         stop();
                     }
-
                 }
 
                 v4l2core_start_stream(m_videoDevice);
+                qDebug() << "Stream restarted with new format";
 
                 //保存新的分辨率//后续修改为标准Qt用法
                 QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
@@ -192,6 +204,7 @@ void MajorImageProcessingThread::run()
                 v4l2_device_list_t *devlist = get_device_list();
                 set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
                 config_save(config_file.toLatin1().data());
+                qDebug() << "Saved new resolution config:" << my_config->width << "x" << my_config->height;
             }
 
             m_result = -1;
@@ -200,12 +213,12 @@ void MajorImageProcessingThread::run()
             if (m_frame == nullptr) {
                 framedely++;
                 if (framedely == MAX_DELAYED_FRAMES) {
+                    qWarning() << "Reached maximum delayed frames, stopping thread";
                     m_stopped = 1;
                     //发送设备中断信号
                     emit reachMaxDelayedFrames();
                     m_filterImg =  QImage();
                     emit SendFilterImageProcessing(&m_filterImg);
-    //                close_v4l2_device_handler();
                 }
                 continue;
             }
@@ -309,7 +322,7 @@ void MajorImageProcessingThread::run()
 
             /*录像*/
             if (video_capture_get_save_video()) {
-
+                qDebug() << "Processing video frame for recording";
                 if (get_myvideo_bebin_timer() == 0)
                     set_myvideo_begin_timer(v4l2core_time_get_timestamp());
 
@@ -331,7 +344,6 @@ void MajorImageProcessingThread::run()
                         size = static_cast<int>(m_frame->raw_frame_size);
                         break;
                     }
-
                 }
 
                 /*把帧加入编码队列*/
@@ -340,6 +352,7 @@ void MajorImageProcessingThread::run()
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
                     if (m_firstPts == 0) {
                         m_firstPts = m_frame->timestamp;
+                        qDebug() << "First video frame timestamp:" << m_firstPts;
                     }
                     m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
@@ -351,7 +364,6 @@ void MajorImageProcessingThread::run()
                     } else {
                         set_video_pause_timestamp(static_cast<int64_t>(m_frame->timestamp) - timespausestamp);
                     }
-
                 }
 
                 /*
@@ -374,9 +386,7 @@ void MajorImageProcessingThread::run()
                         break;
                     }
                     }
-
                 }
-
             } else if (m_bRecording) {
                 // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
                 emit sigRecordFrame(m_rgbPtr, rgbsize);
@@ -391,20 +401,19 @@ void MajorImageProcessingThread::run()
 
             /*拍照*/
             if (m_bTake) {
+                qDebug() << "Processing photo capture";
                 int nRet = -1;
                 if (((!m_filter.isEmpty() || m_exposure) && imgTmp)
                         || GStreamer_Env == m_eEncodeEnv) {
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
-                        emit sigReflushSnapshotLabel();  //
+                        qInfo() << "Successfully saved photo to:" << m_strPath;
+                        emit sigReflushSnapshotLabel();
                     }
                 } else if (FFmpeg_Env == m_eEncodeEnv) {
-                    //nRet = v4l2core_save_image(m_frame, m_strPath.toStdString().c_str(), IMG_FMT_JPG);
-
                     uint8_t *rgbPtr = nullptr;
                     uint nVdWidth = static_cast<unsigned int>(m_frame->width);
                     uint nVdHeight = static_cast<unsigned int>(m_frame->height);
-
 
                     rgbsize = nVdWidth * nVdHeight * 3;
                     rgbPtr = static_cast<uint8_t *>(calloc(rgbsize, sizeof(uint8_t)));
@@ -415,6 +424,7 @@ void MajorImageProcessingThread::run()
                         saveImg = new QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
                     if (saveImg->save(m_strPath, "JPG")) {
                         nRet = 0;
+                        qInfo() << "Successfully saved photo to:" << m_strPath;
                         emit sigReflushSnapshotLabel();
                     }
                     if (saveImg)
@@ -427,7 +437,7 @@ void MajorImageProcessingThread::run()
                 }
 
                 if (nRet < 0) {
-                    qWarning() << "保存照片失败";
+                    qWarning() << "Failed to save photo to:" << m_strPath;
                 }
 
                 m_bTake = false;
@@ -474,13 +484,14 @@ void MajorImageProcessingThread::run()
             msleep(33);
         }
 
+        qDebug() << "Stopping video stream";
         v4l2core_stop_stream(m_videoDevice);
     }
 }
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
-
+    qDebug() << "Cleaning up MajorImageProcessingThread resources";
     if (m_yuvPtr) {
         delete [] m_yuvPtr;
         m_yuvPtr = nullptr;
@@ -492,5 +503,5 @@ MajorImageProcessingThread::~MajorImageProcessingThread()
     }
 
     config_clean();
-    qDebug() << "~MajorImageProcessingThread";
+    qDebug() << "MajorImageProcessingThread cleanup complete";
 }

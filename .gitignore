@@ -17,3 +17,5 @@ ui_*.h
 #linglong building dir
 linglong
 build
+.vscode
+.cursor

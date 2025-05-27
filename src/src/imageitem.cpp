@@ -111,12 +111,14 @@ ImageItem::ImageItem(QWidget *parent)
 
 void ImageItem::updatePicPath(const QString &filePath)
 {
+    qDebug() << "Updating picture path:" << filePath;
     m_path = filePath;
     QPixmap pix;
     QFileInfo fileInfo(filePath);
 
     if (fileInfo.suffix() == "webm" || fileInfo.suffix() == "mp4") {
         m_bVideo = true;
+        qDebug() << "Processing video file:" << filePath;
         if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
             image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
@@ -129,7 +131,7 @@ void ImageItem::updatePicPath(const QString &filePath)
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
-                qWarning() << "generateThumbnail failed";
+                qWarning() << "Failed to generate video thumbnail for:" << filePath;
             }
 
             getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
@@ -140,11 +142,13 @@ void ImageItem::updatePicPath(const QString &filePath)
         }
     } else if (fileInfo.suffix() == "jpg") {
         m_bVideo = false;
+        qInfo() << "Processing image file:" << filePath;
         QImage img(filePath);
         img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE, Qt::KeepAspectRatioByExpanding);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
+        qWarning() << "Unsupported file format:" << fileInfo.suffix();
         pix = QPixmap();
     }
     QTimer::singleShot(500, this, [ = ]() {
@@ -328,6 +332,7 @@ void ImageItem::openFile()
     QString program("dde-file-manager");  // dbus调用失败，通过文管打开
     QStringList arguments;
     if (m_path.isEmpty()) {
+        qWarning() << "Cannot open file: path is empty";
         return;
     }
 
@@ -339,6 +344,7 @@ void ImageItem::openFile()
     const int osMajor = DSysInfo::majorVersion().toInt();
 
     if (osMajor >= kMinOsEdition) {
+        qInfo() << "Using DBus to open file on OS v23+";
         //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
         if (fileInfo.suffix() == "jpg") {
             //用看图打开
@@ -349,9 +355,9 @@ void ImageItem::openFile()
 
             if (retMessage.type() != QDBusMessage::ErrorMessage) {
                 ret = true;
-                qDebug() << "[dbus] Open it with deepin-image-viewer";
+                qDebug() << "Successfully opened image with deepin-image-viewer via DBus";
             } else {
-                qWarning() << retMessage.errorMessage();
+                qWarning() << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
             }
         } else {
             //用影院打开
@@ -370,9 +376,9 @@ void ImageItem::openFile()
 
             if (retMessage.type() != QDBusMessage::ErrorMessage) {
                 ret = true;
-                qDebug() << "[dbus] Open it with deepin-movie";
+                qDebug() << "Successfully opened video with deepin-movie via DBus";
             } else {
-                qWarning() << retMessage.errorMessage();
+                qWarning() << "Failed to open video with deepin-movie via DBus:" << retMessage.errorMessage();
             }
 #endif
         }
@@ -380,25 +386,24 @@ void ImageItem::openFile()
 
     // try backup way
     if (!ret) {
+        qDebug() << "Using backup method to open file";
         if (fileInfo.suffix() == "jpg") {
             program = "deepin-image-viewer";  //用看图打开
             arguments << m_path;
-            qDebug() << "[process] Open it with deepin-image-viewer";
+            qDebug() << "Attempting to open image with deepin-image-viewer";
         } else {
             program = "deepin-movie"; //用影院打开
             arguments << m_path;
-            qDebug() << "[process] Open it with deepin-movie";
+            qDebug() << "Attempting to open video with deepin-movie";
         }
         ret = myProcess->startDetached(program, arguments);
     }
 
-    qInfo() << m_path;
-
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
 
-    if (!ret) { //打开失败，调用文管选择“打开方式”窗口
-        qWarning() << "QProcess startDetached error";
+    if (!ret) { //打开失败，调用文管选择"打开方式"窗口
+        qWarning() << "Failed to open file with default applications, trying file manager";
         arguments.clear();
         program = "dde-file-manager";
         arguments << "-o" << m_path;
@@ -436,14 +441,12 @@ void ImageItem::onCopy()
 
 void ImageItem::onShortcutDel()
 {
-    qDebug() << "onShortcutDel";
+    qDebug() << "Delete shortcut triggered";
     //改用datetime，避免跨天之后判断错误
     QDateTime timeNow = QDateTime::currentDateTime();
 
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
-        qDebug() << "del too fast";
-        qInfo() << timeNow;
-        qInfo() << m_lastDelTime;
+        qWarning() << "Delete operation too frequent, ignoring";
         return;
     }
 
@@ -460,6 +463,7 @@ void ImageItem::onPrint()
 
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 {
+    qDebug() << "Opening print dialog for" << paths.size() << "files";
     m_imgs.clear();
     QStringList tempExistPaths;
 
@@ -493,9 +497,11 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 
     // 连接打印信号
     if (useNewAPI && printDialog.setAsynPreview(m_imgs.size())) {
+        qDebug() << "Using async preview for printing";
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
                 this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
     } else {
+        qDebug() << "Using sync preview for printing";
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
                 this, SLOT(paintRequestSync(DPrinter *)));
     }

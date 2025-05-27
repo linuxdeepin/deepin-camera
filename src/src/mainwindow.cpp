@@ -1331,6 +1331,7 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
         picPath.replace(0, 1, QDir::homePath());
     QDir dir(videoPath);
     if (!dir.exists()) {
+        qInfo() << "Video directory does not exist, creating default path";
         QString videoDefaultPath = lastOpenedPath(QStandardPaths::MoviesLocation);
         if (videoDefaultPath != videoPath) {
             QDir setVideoDir(videoDefaultPath);
@@ -1360,6 +1361,7 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
 
     dir = QDir(picPath);
     if (!dir.exists()) {
+        qInfo() << "Picture directory does not exist, creating default path";
         QString picDefaultPath = lastOpenedPath(QStandardPaths::PicturesLocation);
         if (picDefaultPath != picPath) {
             QDir setPicDir(picDefaultPath);
@@ -1439,11 +1441,15 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
 
 void CMainWindow::onTrashFile(const QString &fileName)
 {
+    qDebug() << "Deleting file:" << fileName;
     QFile file(fileName);
     if (!file.exists()) {
+        qWarning() << "File does not exist:" << fileName;
         return;
     }
-    file.remove();
+    if (!file.remove()) {
+        qWarning() << "Failed to delete file:" << fileName;
+    }
     //删除文件后，filewatcher会自动刷新缩略图
 }
 
@@ -1488,16 +1494,21 @@ void CMainWindow::onPhotoRecordBtnClked()
 
     //没有摄像机，不进行任何操作
     if (NOCAM == DataManager::instance()->getdevStatus()) {
+        qWarning() << "No camera available, ignoring photo/record request";
         return;
     }
+
     //拍照模式下
     if (true == m_photoRecordBtn->photoState()) {
+        qDebug() << "Photo mode activated";
         //正在拍照
         if (photoNormal != m_photoState) {
+            qDebug() << "Taking photo";
             m_videoPre->onTakePic(false);
         } else {
             int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
             if (nContinuous > 1) {
+                qInfo() << "Starting continuous photo mode with" << nContinuous << "shots";
                 // 仅在连拍模式下才开启窗口状态监听线程
                 if (!m_windowStateThread->isRunning() && !m_bWayland) {
                     m_windowStateThread->start();
@@ -1507,12 +1518,16 @@ void CMainWindow::onPhotoRecordBtnClked()
         }
     } else {   //录像模式下
         if (true == m_bRecording) {
+            qDebug() << "Stopping video recording";
             m_videoPre->onEndBtnClicked();
         } else {
             QFileInfo fi(m_videoPath);
-            if (!fi.isWritable())
+            if (!fi.isWritable()) {
+                qWarning() << "Video save path is not writable:" << m_videoPath;
                 return;
+            }
 
+            qDebug() << "Starting video recording";
             m_videoPre->onTakeVideo();
             if (!m_windowStateThread->isRunning() && !m_bWayland) {
                 m_windowStateThread->start();
@@ -1531,6 +1546,7 @@ void CMainWindow::onShowCameraNameTimer()
 
 void CMainWindow::onUpdateRecordState(int state)
 {
+    qDebug() << "Recording state changed to:" << state;
     m_photoRecordBtn->setRecordState(state);
     m_bRecording = (photoRecordBtn::Normal != state);
     m_actionSettings->setEnabled(!m_bRecording);
@@ -1543,6 +1559,7 @@ void CMainWindow::onUpdateRecordState(int state)
 
 void CMainWindow::onUpdatePhotoState(int state)
 {
+    qDebug() << "Photo state changed to:" << state;
     m_actionSettings->setEnabled(photoNormal == state);
     m_photoState = state;
     showChildWidget();
@@ -1554,6 +1571,7 @@ void CMainWindow::onUpdatePhotoState(int state)
 
 void CMainWindow::onStopPhotoAndRecord()
 {
+    qDebug() << "Stopping all photo and recording operations";
     if (photoNormal != m_photoState) {
         m_videoPre->onTakePic(false);
     }
@@ -1670,6 +1688,7 @@ void CMainWindow::onSetFilterName(const QString &name)
 
 void CMainWindow::initUI()
 {
+    qDebug() << "Initializing main window UI";
     m_videoPre = new videowidget(this);
     QPalette paletteTime = m_videoPre->palette();
     m_videoPre->setObjectName(VIDEO_PREVIEW_WIDGET);
@@ -1836,7 +1855,9 @@ void CMainWindow::initUI()
 #endif
 
     m_bUIinit = true;
+    qDebug() << "Main window UI initialization completed";
 }
+
 void CMainWindow::updateSizeMode()
 {
     if (g_selectPohtoBt && g_selectVideoBt && g_pohtospace && g_videospace) {
@@ -1862,6 +1883,7 @@ void CMainWindow::updateSizeMode()
 #endif
     }
 }
+
 void CMainWindow::initTitleBar()
 {
     m_pTitlebar->titlebar()->setIcon(QIcon::fromTheme("deepin-camera"));
@@ -1871,8 +1893,10 @@ void CMainWindow::initTitleBar()
 
 void CMainWindow::initConnection()
 {
+    qDebug() << "Initializing main window connections";
     connect(CamApp, &CApplication::popupConfirmDialog, this, [=] {
         if (m_videoPre->getCapStatus()) {
+            qDebug() << "Video recording in progress, showing close confirmation dialog";
             CloseDialog closeDlg(this, tr("Video recording is in progress. Close the window?"));
 #ifdef UNITTEST
             closeDlg.show();
@@ -1882,13 +1906,16 @@ void CMainWindow::initConnection()
             int ret = closeDlg.exec();
 
             if (ret == 1) {
+                qDebug() << "User confirmed closing during recording, stopping recording";
                 m_videoPre->onEndBtnClicked();
                 usleep(200);
                 qApp->quit();
             }
 #endif
-        } else
+        } else {
+            qDebug() << "No recording in progress, closing application";
             qApp->quit();
+        }
     });
 
     //设置按钮信号
@@ -1954,6 +1981,7 @@ void CMainWindow::initConnection()
 
     QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
                                          "org.freedesktop.login1.Manager", "PrepareForShutdown", this, SLOT(stopCancelContinuousRecording(bool)));
+    qDebug() << "Main window connections initialized";
 }
 
 void CMainWindow::initCameraConnection()

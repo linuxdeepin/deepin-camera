@@ -4,6 +4,7 @@
 
 #include "titlebar.h"
 #include "datamanager.h"
+#include <QDebug>
 
 class TitlebarPrivate
 {
@@ -26,6 +27,7 @@ public:
 Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new TitlebarPrivate(this))
 {
     Q_D(Titlebar);
+    qDebug() << "Initializing Titlebar";
 
     setAttribute(Qt::WA_TranslucentBackground, true);
 
@@ -40,6 +42,7 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     layout->addWidget(d->m_titlebar);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
+    qDebug() << "Titlebar initialization complete";
 }
 
 DTitlebar *Titlebar::titlebar()
@@ -53,13 +56,16 @@ void Titlebar::slotThemeTypeChanged()
     Q_D(const Titlebar);
     QPalette pa;
     if(DataManager::instance()->getdevStatus() != NOCAM) {
+        qDebug() << "Setting light color palette for active camera";
         pa.setColor(QPalette::ButtonText, d->lightColor);
         d->m_titlebar->setPalette(pa);
-    } else{
+    } else {
         if(DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
+            qDebug() << "Setting light color palette for dark theme";
             pa.setColor(QPalette::ButtonText, d->lightColor);
             d->m_titlebar->setPalette(pa);
         } else {
+            qDebug() << "Setting dark color palette for light theme";
             pa.setColor(QPalette::ButtonText, d->darkColor);
             d->m_titlebar->setPalette(pa);
         }
@@ -91,5 +97,5 @@ void Titlebar::paintEvent(QPaintEvent *pe)
 
 Titlebar::~Titlebar()
 {
-
+    qDebug() << "Cleaning up Titlebar";
 }

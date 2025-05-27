@@ -15,6 +15,7 @@ extern "C"
 
 DevNumMonitor::DevNumMonitor()
 {
+    qDebug() << "Initializing DevNumMonitor";
     m_noDevice = false;
     m_pTimer = nullptr;
 }
@@ -25,10 +26,12 @@ DevNumMonitor::DevNumMonitor()
  */
 void DevNumMonitor::startCheck()
 {
+    qDebug() << "Starting device number monitoring";
     m_pTimer = new QTimer;
     m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
+    qDebug() << "Device monitoring timer started with 500ms interval";
 }
 
 //void DevNumMonitor::run()
@@ -46,33 +49,34 @@ void DevNumMonitor::timeOutSlot()
 {
     check_device_list_events(get_v4l2_device_handler());
 
-    if (get_device_list()->num_devices <= 1) {
+    int deviceCount = get_device_list()->num_devices;
+
+    if (deviceCount <= 1) {
         emit seltBtnStateDisable();
-        if (get_device_list()->num_devices < 1) {
-            //没有设备发送信号
+        
+        if (deviceCount < 1) {
             if (!m_noDevice) {
+                qWarning() << "No camera devices found";
                 emit noDeviceFound();
                 m_noDevice = true;
             }
-            // qDebug() << "There is no camera connected!";
         } else {
             m_noDevice = false;
             emit existDevice();
-            // qDebug() << "There is a camera connected!";
         }
     } else {
         m_noDevice = false;
         emit existDevice();
         //显示切换按钮
         emit seltBtnStateEnable();
-        qDebug() << "There are two or more cameras connected!";
     }
-
 }
 
 DevNumMonitor::~DevNumMonitor()
 {
+    qDebug() << "Destroying DevNumMonitor";
     if (nullptr != m_pTimer) {
+        qDebug() << "Stopping and cleaning up monitoring timer";
         m_pTimer->stop();
         m_pTimer->deleteLater();
         m_pTimer = nullptr;

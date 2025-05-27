@@ -113,23 +113,29 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
+    qInfo() << "Starting deepin-camera application...";
+    
     // Task 326583 不参与合成器崩溃重连
     unsetenv("QT_WAYLAND_RECONNECT");
 
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
+    qInfo() << "Wayland status:" << (bWayland ? "enabled" : "disabled");
+    
     bool bFFmpegEnv = CheckFFmpegEnv();
     if (argc > 1) {
         if (QString(argv[1]) == "-g") {
             bFFmpegEnv = false;
-            qDebug() << "当前为gstreamer测试环境..";
+            qDebug() << "Running in gstreamer test environment";
         }
     }
     DataManager::instance()->setEncodeEnv(bFFmpegEnv ? FFmpeg_Env : GStreamer_Env);
+    qInfo() << "Encoding environment:" << (bFFmpegEnv ? "FFmpeg" : "GStreamer");
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
+        qDebug() << "Set XDG_CURRENT_DESKTOP to Deepin";
     }
 
     if (bWayland) {
@@ -137,6 +143,7 @@ int main(int argc, char *argv[])
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
+        qDebug() << "Configured OpenGLES for Wayland";
 
         int mp4Encode = -1;
 #ifdef DTKCORE_CLASS_DConfigFile
@@ -145,6 +152,7 @@ int main(int argc, char *argv[])
         if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
             mp4Encode = dconfig->value("mp4EncodeMode").toInt();
             set_pugx_status(mp4Encode);
+            qDebug() << "Loaded MP4 encode mode from DConfig:" << mp4Encode;
         }
 #endif
         qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
@@ -164,15 +172,15 @@ int main(int argc, char *argv[])
 
             if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
                 mp4Encode = 1;
-                qDebug() << "this is PGUX";
+                qDebug() << "Detected PGUX system";
             } else {
                 mp4Encode = 0;
             }
-            qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
+            qInfo() << "Process find mp4EncodeMode value is:" << get_pugx_status();
         }
 
         set_pugx_status(mp4Encode);
-        qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
+        qInfo() << "Final mp4EncodeMode value is:" << get_pugx_status();
     }
 
 #if QT_VERSION_MAJOR > 5
@@ -183,16 +191,16 @@ int main(int argc, char *argv[])
     time.start();
     QString lutDir = LUT_DIR;
     initFilters(lutDir.toStdString().c_str());
-    qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
+    qDebug() << QString("Filter initialization completed in %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
-    //gst_init(&argc, &argv);
+    qDebug() << "Application instance created";
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
-    // overwrite DApplication default value
     qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
+    qDebug() << "High DPI and raster settings configured";
 #endif
 
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -205,30 +213,33 @@ int main(int argc, char *argv[])
     qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //设置产品名称
     qApp->setProductName(QObject::tr("Camera"));
+    
     //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
+    qInfo() << "Log system initialized. Log file:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     qApp->setWindowIcon(myIcon);
     qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
+    qDebug() << "Application version:" << DApplication::buildVersion(VERSION);
 
     //应用描述
     qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     dc::Settings::get().init();
+    qDebug() << "Application settings initialized";
 
 #if QT_VERSION_MAJOR <= 5
     DApplicationSettings saveTheme;
 #endif
 
     if (!qApp->setSingleInstance("deepin-camera")) {
-        qDebug() << "another deepin camera instance has started";
+        qWarning() << "Another deepin camera instance is already running";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
-            qDebug() << "deepin-camera raise";
+            qDebug() << "Attempting to raise existing instance";
             iface.asyncCall("Raise");
         }
 
@@ -237,21 +248,28 @@ int main(int argc, char *argv[])
 
     CMainWindow w;
     a.setMainWindow(&w);
+    qDebug() << "Main window created and set";
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
     //判断是否是平板环境
-    if (CamApp->isPanelEnvironment())
+    if (CamApp->isPanelEnvironment()) {
         w.showMaximized();
-    else
+        qDebug() << "Running in panel environment, showing maximized window";
+    } else {
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
+        qDebug() << "Running in desktop environment, showing normal window";
+    }
 
     w.show();
     w.loadAfterShow();
+    qInfo() << "Main window displayed and initialized";
 
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.camera");
     QDBusConnection::sessionBus().registerObject(QDir::separator(), &w);
+    qDebug() << "DBus service and object registered";
 
+    qInfo() << "Application startup completed successfully";
     return qApp->exec();
 }

@@ -14,6 +14,7 @@
 
 circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radius(20)
 {
+    qDebug() << "Initializing CirclePushButton with radius:" << m_radius;
     m_color.setRgb(0, 0, 0, m_opacity);
 
     m_hover = false;
@@ -34,6 +35,7 @@ void circlePushButton::setbackground(QColor color)
 
 void circlePushButton::setPixmap(QString normalPath, QString hoverPath, QString pressPath)
 {
+    qDebug() << "Setting button pixmaps - Normal:" << normalPath << "Hover:" << hoverPath << "Press:" << pressPath;
     m_normalSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(normalPath));
     m_hoverSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(hoverPath));
     m_pressSvg = QSharedPointer<QSvgRenderer>(new QSvgRenderer(pressPath));
@@ -41,6 +43,7 @@ void circlePushButton::setPixmap(QString normalPath, QString hoverPath, QString 
 
 void circlePushButton::setSelected(bool selected)
 {
+    qDebug() << "Setting button selected state to:" << selected;
     m_isSelected = selected;
     update();
 }
@@ -219,15 +222,19 @@ void circlePushButton::mouseReleaseEvent(QMouseEvent *event)
 
 void circlePushButton::setButtonRadius(int radius)
 {
-    if (radius <= 0)
+    if (radius <= 0) {
+        qWarning() << "Invalid button radius:" << radius;
         return;
+    }
 
+    qDebug() << "Setting button radius to:" << radius;
     m_radius = radius;
     resize(2 * m_radius, 2 * m_radius);
 }
 
 void circlePushButton::copyPixmap(const circlePushButton &other)
 {
+    qDebug() << "Copying pixmaps from another button";
     m_normalSvg = other.m_normalSvg;
     m_hoverSvg = other.m_hoverSvg;
     m_pressSvg = other.m_pressSvg;
@@ -235,36 +242,39 @@ void circlePushButton::copyPixmap(const circlePushButton &other)
 
 void circlePushButton::setDisableSelect(bool disable)
 {
+    qDebug() << "Setting disable select to:" << disable;
     m_disableSelect = disable;
 }
 
 void circlePushButton::setOpacity(int opacity)
 {
+    qDebug() << "Setting button opacity to:" << opacity;
     m_opacity = opacity;
     m_color.setAlpha(opacity);
-    qDebug() << opacity;
     update();
 }
 
 void circlePushButton::setIconOpacity(qreal opacity)
 {
+    qDebug() << "Setting icon opacity to:" << opacity;
     m_iconOpacity = opacity;
-    qDebug() << m_iconOpacity;
     update();
 }
 
 void circlePushButton::setRotate(int rotate)
 {
+    qDebug() << "Setting button rotation to:" << rotate;
     m_rotate = rotate;
     update();
 }
 
-void circlePushButton::setNewNotification (const bool set_new)
+void circlePushButton::setNewNotification(const bool set_new)
 {
+    qDebug() << "Setting new notification to:" << set_new;
     m_isNewNotification = set_new;
 }
 
 circlePushButton::~circlePushButton()
 {
-
+    qDebug() << "Destroying CirclePushButton";
 }

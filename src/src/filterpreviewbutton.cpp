@@ -36,6 +36,7 @@ filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* =
     if (objName.isEmpty())
         objName = "normal";
     setObjectName(objName);
+    qDebug() << "Initializing filter preview button with type:" << objName;
 
     m_color.setRgb(44, 44, 44);
 
@@ -50,6 +51,7 @@ filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* =
 
 void filterPreviewButton::setbackground(QColor color)
 {
+    qDebug() << "Setting button background color:" << color;
     m_color = color;
 }
 
@@ -60,12 +62,15 @@ void filterPreviewButton::setImage(QImage *img)
     if (isHidden() && !img->isNull())
         return;
 
+    qDebug() << "Setting filter preview image, size:" << img->width() << "x" << img->height();
     uint8_t* frame = img->bits();
     int width = img->width();
     int height = img->height();
     QString filterName_CUBE = filterPreviewButton::filterName_CUBE(m_filterType);
-    if (!filterName_CUBE.isEmpty())
+    if (!filterName_CUBE.isEmpty()) {
+        qDebug() << "Applying filter:" << filterName_CUBE;
         imageFilter24(frame, width, height, filterName_CUBE.toStdString().c_str(), 100);
+    }
 
     m_pixmap = QPixmap::fromImage(QImage(frame, width, height, QImage::Format_RGB888));
     update();
@@ -73,6 +78,7 @@ void filterPreviewButton::setImage(QImage *img)
 
 void filterPreviewButton::setSelected(bool selected)
 {
+    qDebug() << "Setting button selected state to:" << selected;
     m_isSelected = selected;
     update();
 }
@@ -84,6 +90,7 @@ bool filterPreviewButton::isSelected()
 
 void filterPreviewButton::setButtonRadius(int radius)
 {
+    qDebug() << "Setting button radius to:" << radius;
     m_radius = radius;
     update();
 }
@@ -226,6 +233,7 @@ void filterPreviewButton::setDisableSelect(bool disable)
 
 void filterPreviewButton::setOpacity(int opacity)
 {
+    qDebug() << "Setting button opacity to:" << opacity;
     m_opacity = opacity;
     m_color.setAlpha(opacity);
     update();
@@ -238,7 +246,7 @@ efilterType filterPreviewButton::getFiltertype()
 
 filterPreviewButton::~filterPreviewButton()
 {
-
+    qDebug() << "Destroying filter preview button";
 }
 
 QString filterPreviewButton::filterName(efilterType type)
