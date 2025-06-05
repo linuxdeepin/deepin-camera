@@ -5,11 +5,15 @@
 
 #include "globalutils.h"
 
+#include <DSysInfo>
+
 #include <QDebug>
 #include <QtDBus>
 #include <QDBusInterface>
 #include <QDBusArgument>
 #include <QDBusReply>
+
+DCORE_USE_NAMESPACE
 
 // 相机配置文件
 const QString CAMERA_CONF_PATH = "/usr/share/deepin-camera/camera.conf";
@@ -58,14 +62,25 @@ bool GlobalUtils::isLowPerformanceBoard()
 {
     qDebug() << "Checking for low performance board";
     qDBusRegisterMetaType<DMIInfo>();
-    QDBusInterface *monitorInterface = new QDBusInterface("com.deepin.system.SystemInfo", "/com/deepin/system/SystemInfo", "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
+
+    QString systemInfoService = "com.deepin.system.SystemInfo";
+    QString systemInfoPath = "/com/deepin/system/SystemInfo";
+    QString systemInfoInterface = "com.deepin.system.SystemInfo";
+    auto ver = DSysInfo::majorVersion().toInt();
+    if (ver > 20) {
+        systemInfoService = "org.deepin.dde.SystemInfo1";
+        systemInfoPath = "/org/deepin/dde/SystemInfo1";
+        systemInfoInterface = "org.deepin.dde.SystemInfo1";
+    }
+
+    QDBusInterface *monitorInterface = new QDBusInterface(systemInfoService, systemInfoPath, "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
     if (!monitorInterface->isValid()) {
         qWarning() << "Failed to connect to system info D-Bus interface";
         return false;
     }
 
     DMIInfo dmiInfo;
-    QDBusReply<QDBusVariant> replay = monitorInterface->call("Get", "com.deepin.system.SystemInfo", "DMIInfo");
+    QDBusReply<QDBusVariant> replay = monitorInterface->call("Get", systemInfoInterface, "DMIInfo");
 
     replay.value().variant().value<QDBusArgument>() >> dmiInfo;
 
