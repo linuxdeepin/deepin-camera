@@ -37,6 +37,7 @@
 #include <DWindowQuitFullButton>
 #include <DStyleHelper>
 #include <DStyle>
+#include <DSysInfo>
 
 #include <QListWidgetItem>
 #include <QTextLayout>
@@ -1959,22 +1960,34 @@ void CMainWindow::initConnection()
 
     connect(m_showCameraNameTimer, SIGNAL(timeout()), this, SLOT(onShowCameraNameTimer()));
 
+    QString sessionManagerService = "com.deepin.SessionManager";
+    QString sessionManagerPath = "/com/deepin/SessionManager";
+    QString timedateService = "com.deepin.daemon.Timedate";
+    QString timedatePath = "/com/deepin/daemon/Timedate";
+    QString timedateInterface = "com.deepin.daemon.Timedate";
+    auto ver = DSysInfo::majorVersion().toInt();
+    if (ver > 20) {
+        sessionManagerService = "org.deepin.dde.SessionManager1";
+        sessionManagerPath = "/org/deepin/dde/SessionManager1";
+        timedateService = "org.deepin.dde.Timedate1";
+        timedatePath = "/org/deepin/dde/Timedate1";
+        timedateInterface = "org.deepin.dde.Timedate1";
+    }
+
     //连拍在锁屏、熄屏情况下都要结束，与平台无关
-    QDBusConnection::sessionBus().connect("com.deepin.SessionManager", "/com/deepin/SessionManager",
+    if (!QDBusConnection::sessionBus().connect(sessionManagerService, sessionManagerPath,
                                           "org.freedesktop.DBus.Properties", "PropertiesChanged", this,
-                                          SLOT(onTimeoutLock(QString, QVariantMap, QStringList)));
+                                          SLOT(onTimeoutLock(QString, QVariantMap, QStringList)))) {
+        qWarning() << "Failed to connect to session manager service";
+    }
 
     //控制中心更改了本地时间，及时更新当前时间
     //避免时间往前切换过后，需要点击两次才能结束录制
-#ifdef OS_BUILD_V23
-    QDBusConnection::sessionBus().connect("org.deepin.daemon.Timedate1", "/org/deepin/daemon/Timedate1",
-                                          "org.deepin.daemon.Timedate1", "TimeUpdate", this,
-                                          SLOT(onLocalTimeChanged()));
-#else
-    QDBusConnection::sessionBus().connect("com.deepin.daemon.Timedate", "/com/deepin/daemon/Timedate",
-                                          "com.deepin.daemon.Timedate", "TimeUpdate", this,
-                                          SLOT(onLocalTimeChanged()));
-#endif
+    if (!QDBusConnection::sessionBus().connect(timedateService, timedatePath,
+                                          timedateInterface, "TimeUpdate", this,
+                                          SLOT(onLocalTimeChanged()))) {
+        qWarning() << "Failed to connect to timedate service";
+    }
 
     QDBusConnection::systemBus().connect("org.freedesktop.login1", "/org/freedesktop/login1",
                                          "org.freedesktop.login1.Manager", "PrepareForSleep", this, SLOT(stopCancelContinuousRecording(bool)));
