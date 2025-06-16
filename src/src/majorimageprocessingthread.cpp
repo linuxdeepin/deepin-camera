@@ -265,9 +265,6 @@ void MajorImageProcessingThread::run()
             if (GStreamer_Env == m_eEncodeEnv)
                 bUseRgb = true;
 
-            if (1 == is_forceGles())
-                bUseRgb = false;
-
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
                     m_nVdWidth = static_cast<unsigned int>(m_frame->width);
