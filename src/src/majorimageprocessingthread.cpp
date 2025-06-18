@@ -334,10 +334,13 @@ void MajorImageProcessingThread::run()
                 if (!get_capture_pause()) {
                     //设置时间戳
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+
                     if (m_firstPts == 0) {
                         m_firstPts = m_frame->timestamp;
                     }
                     m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
+
+                    lasttimestamp = m_frame->timestamp;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
                     //设置暂停时长
