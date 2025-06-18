@@ -362,11 +362,14 @@ void MajorImageProcessingThread::run()
                     // qDebug() << "Processing video frame for recording";
                     //设置时间戳
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+
                     if (m_firstPts == 0) {
                         m_firstPts = m_frame->timestamp;
                         // qDebug() << "First video frame timestamp:" << m_firstPts;
                     }
                     m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
+
+                    lasttimestamp = m_frame->timestamp;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
                     // qDebug() << "Processing video frame for recording";

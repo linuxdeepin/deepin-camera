@@ -21,12 +21,21 @@
 
 #include "mp4.h"
 #include <libavutil/mathematics.h>
+#include "camview.h"
 #include "load_libs.h"
+#include <stdlib.h>  // 为abs函数添加头文件
+
+extern int verbosity;  // 添加verbosity声明
 
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
 static int64_t first_pts = 0;
 static int64_t last_pts = 0;
+static int64_t last_video_timestamp = 0;  // 添加上一帧视频时间戳记录
+
+// 添加同步检查变量
+static int frame_count = 0;
+static int64_t last_sync_check_time = 0;
 
 AVFormatContext *mp4_create_context(const char *filename)
 {
@@ -121,18 +130,67 @@ int mp4_write_packet(
             getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
             set_video_time_capture((double)(pts)/1000/1000000);
         } else {
-            fprintf(stderr,"pts err:video_pts: %d  last_pts: %d\n", video_pts, last_pts);
+            fprintf(stderr,"pts err:video_pts: %ld  last_pts: %ld\n", video_pts, last_pts);
         }
 
         last_pts = video_pts;
         if (first_pts == 0) {
             first_pts = pts;
+            last_video_timestamp = pts;
+            video_pts = 0;  // 第一个视频包的PTS为0
         } else {
-            video_pts = (double)(pts - first_pts) / 1000000.0 / 33.0;
+            // 使用真实时间戳计算，而不是硬编码的33ms
+            // 将纳秒时间戳转换为帧数（基于time_base）
+            int64_t timestamp_diff = pts - first_pts;  // 从开始录制的时间差（纳秒）
+            
+            // 根据编码器的time_base计算PTS
+            // time_base通常是1/fps，所以pts = 时间差 * fps
+            if (time_base.den > 0 && time_base.num > 0) {
+                video_pts = (timestamp_diff * time_base.den) / (time_base.num * 1000000000LL);
+            } else {
+                // 如果time_base无效，使用动态帧率计算
+                int64_t frame_duration = pts - last_video_timestamp;
+                if (frame_duration > 0) {
+                    // 基于实际帧间隔计算
+                    video_pts = timestamp_diff / frame_duration;
+                } else {
+                    // 回退到固定帧率（但使用更精确的计算）
+                    video_pts = timestamp_diff / 33333333LL;  // 30fps = 33.33ms
+                }
+            }
+            
+            last_video_timestamp = pts;
+            
             if (video_pts == last_pts)  //pts must be strictly incremented
                 video_pts++;
             if(video_pts < last_pts)
                 video_pts = last_pts + 1;
+                
+            if (verbosity > 2) {
+                fprintf(stderr, "video_pts: %ld (timestamp: %ld, first_pts: %ld)\n", 
+                        video_pts, pts, first_pts);
+            }
+            
+            // 每100帧检查一次音视频同步状态
+            frame_count++;
+            if (frame_count % 100 == 0) {
+                int64_t video_time_ms = (pts - first_pts) / 1000000;  // 视频实际时间（毫秒）
+                int64_t video_pts_time_ms = 0;
+                
+                // 根据time_base计算视频PTS对应的时间
+                if (time_base.den > 0 && time_base.num > 0) {
+                    video_pts_time_ms = (video_pts * time_base.num * 1000) / time_base.den;
+                }
+                
+                int64_t sync_diff = video_time_ms - video_pts_time_ms;
+                
+                if (verbosity > 0 && abs(sync_diff) > 100) {  // 如果差异超过100ms
+                    fprintf(stderr, "SYNC CHECK: Frame %d, Real time: %ldms, PTS time: %ldms, Diff: %ldms\n",
+                            frame_count, video_time_ms, video_pts_time_ms, sync_diff);
+                }
+                
+                last_sync_check_time = pts;
+            }
         }
     }
 
@@ -147,9 +205,31 @@ int mp4_write_packet(
         getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, audio_time);
         getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
 
-        //AAC音频标准是1024
-        //MP3音频标准是1152
-        audio_pts+= 1024;
+        // 使用基于真实时间的音频PTS计算
+        if (first_pts == 0) {
+            first_pts = pts;  // 设置first_pts
+            audio_pts = 0;    // 第一个音频包的PTS为0
+        } else {
+            // 将纳秒时间戳转换为音频时间基准
+            int64_t timestamp_diff = pts - first_pts;  // 从开始录制的时间差（纳秒）
+            
+            if (time_base.den > 0 && time_base.num > 0) {
+                // 根据音频编码器的time_base计算PTS
+                audio_pts = (timestamp_diff * time_base.den) / (time_base.num * 1000000000LL);
+            } else {
+                // 如果time_base无效，使用采样率计算
+                int sample_rate = codec_data->codec_context->sample_rate;
+                if (sample_rate <= 0) sample_rate = 48000;  // 默认采样率
+                
+                // 基于真实时间和采样率计算音频PTS
+                audio_pts = (timestamp_diff * sample_rate) / 1000000000LL;
+            }
+        }
+        
+        if (verbosity > 2) {
+            fprintf(stderr, "audio_pts: %ld (timestamp: %ld, first_pts: %ld)\n", 
+                    audio_pts, pts, first_pts);
+        }
     }
 
     if(outpacket->data){
@@ -166,6 +246,10 @@ void mp4_destroy_context(AVFormatContext *mp4_ctx)
     video_pts = 0;
     audio_pts = 0;
     first_pts = 0;
+    last_pts = 0;
+    last_video_timestamp = 0;  // 重置新增的变量
+    frame_count = 0;           // 重置帧计数
+    last_sync_check_time = 0;  // 重置同步检查时间
     if(mp4_ctx != NULL)
     {
         getAvformat()->m_avformat_free_context(mp4_ctx);

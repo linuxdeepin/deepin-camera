@@ -581,7 +581,6 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
     else
         video_codec_data->codec_context->time_base = (AVRational) {1, 15}; //fallback to 15 fps (e.g gspca)
 
-
     if (video_defaults->gop_size > 0) {
         video_codec_data->codec_context->gop_size = video_defaults->gop_size;
         if (pgux == 1 || is_forceGles()) {
@@ -1947,7 +1946,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 void encoder_close(encoder_context_t *encoder_ctx)
 {
     encoder_clean_video_ring_buffer();
-
+    
     if (!encoder_ctx)
         return;
 
