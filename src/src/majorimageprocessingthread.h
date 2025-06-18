@@ -191,6 +191,8 @@ private:
     int               m_nCount;
     uint64_t          m_firstPts;
 
+    uint64_t lasttimestamp;
+
     QImage            m_Img;   //mips、wayland下使用该变量
     QImage            m_filterImg; //滤镜预览类使用 大小40*40
     QImage            m_jpgImage; // 从v4l2获取的jpg格式的视频帧图片
