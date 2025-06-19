@@ -75,7 +75,7 @@
 
 ### 录制视频 
 
-在相机主界面，单击 **视频**，进入视频模式。单击录制视频按钮 ![transcribe](../common/record.svg) 进行录制，录制完成后单击结束录制按钮 ![stop](../common/stop.svg)，视频文件会展示在界面，也会保存在默认路径下。
+在相机主界面，单击 **视频**，进入视频模式。单击录制视频按钮 <img src="../common/record.svg" alt="transcribe" style="zoom:33%;" /> 进行录制，录制完成后单击结束录制按钮 <img src="../common/stop.svg" alt="stop" style="zoom: 33%;" />，视频文件会展示在界面，也会保存在默认路径下。
 
 <img src="fig/video.png" alt="video" style="zoom:80%;" />
 
