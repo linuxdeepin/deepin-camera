@@ -1,130 +1,123 @@
-# Camera|deepin-camera|
+# Camera | deepin-camera
 
 ## Overview
 
-Camera is an easy-to-use camera application that supports multiple functions such as taking photos, recording videos, and switching between multiple camera devices.
+Camera is a simple and easy-to-use camera application that enables photo capture, video recording, and supports multiple camera switching.
 
-## Guide
+## Getting Started
 
-You can run, close or create a desktop shortcut for Camera in the following ways.
+You can run or close the Camera, or create shortcuts through the following methods.
 
-### Run Camera
+### Running Camera
 
-1. Click the Launcher icon ![launcher](../common/deepin_launcher.svg) in the Dock and enter the Launcher interface.
-2. Locate Camera ![camera](../common/camera.svg) by scrolling the mouse wheel or searching "camera" in the Launcher interface and click it to run.
-3. Right-click ![camera](../common/camera.svg) and you can:
+1. Click the Launcher icon ![deepin_launcher](../common/deepin_launcher.svg) on the taskbar to enter the Launcher interface.
+2. Scroll the mouse wheel or search to locate the Camera icon ![camera](../common/camera.svg), then click to run.
+3. Right-click ![camera](../common/camera.svg) to:
+   - Click **Send to Desktop** to create a desktop shortcut.
+   - Click **Pin to Taskbar** to pin the application to the taskbar.
+   - Click **Start on Boot** to add the application to startup items, automatically running when the computer starts.
 
- - Click **Send to desktop** to create a desktop shortcut.
- - Click **Send to dock** to fix the application in the Dock.
- - Click **Add to startup** to add the application to startup and it will automatically run when the system starts up.
+### Closing Camera
 
-### Exit Camera
+- Click ![close](../common/close.svg) in the Camera interface to exit.
+- Right-click ![camera](../common/camera.svg) on the taskbar and select **Close All** to exit Camera.
+- Click ![icon_menu](../common/icon_menu.svg) in the Camera interface and select **Exit** to exit Camera.
 
-- On the Camera interface, click![close_icon](../common/close.svg)to exit Camera.
-- Right-click ![camera](../common/camera.svg) in the Dock and select **Close All** to exit Camera.
-- On the Camera interface, click ![icon_menu](../common/icon_menu.svg) and select **Exit** to exit Camera.
+## Icon Introduction
 
-## Icon Descriptions
 <table class="block1">
     <tbody>
         <tr>
-            <td><img src="../common/photograph.png" alt="Photo" class="inline" /></td>
-            <td>Photo</td>
+            <td><img src="../common/photograph.png" alt="Take Photo" class="inline" /></td>
+            <td>Take Photo</td>
             <td><img src="../common/record.png" alt="Video" class="inline" /></td>
             <td>Video</td>
-            <td><img src="../common/switch.png" alt="Switch Cameras" class="inline" /></td>
-            <td>Switch Cameras</td>
+            <td><img src="../common/switch.png" alt="Switch Camera" class="inline" /></td>
+            <td>Switch Camera</td>
         </tr>
         <tr>
-            <td><img src="../common/more.png" alt="Fold" class="inline" /></td>
-            <td>Fold Toolbar</td>
-            <td><img src="../common/fold.png" alt="Unfold Toolbar" class="inline" /></td>
-            <td>Unfold Toolbar</td>
-            <td><img src="../common/delay.png" alt="Delay Capture" class="inline" /></td>
-            <td>Delay Capture</td>
+            <td><img src="../common/more.png" alt="Expand" class="inline" /></td>
+            <td>Expand Toolbar</td>
+            <td><img src="../common/fold.png" alt="Collapse" class="inline" /></td>
+            <td>Collapse Toolbar</td>
+            <td><img src="../common/delay.png" alt="Timer" class="inline" /></td>
+            <td>Timer Shooting</td>
        </tr>   
        <tr>
-            <td><img src="../common/flashlight.png" alt="flashlight" class="inline" /></td>
-            <td>Enable flashlight</td>
-            <td><img src="../common/filter.png" alt="Filters" class="inline" /></td>
-            <td>Set filters</td>
+            <td><img src="../common/flashlight.png" alt="Flash" class="inline" /></td>
+            <td>Turn On Flash</td>
+            <td><img src="../common/filter.png" alt="Filter" class="inline" /></td>
+            <td>Set Filter</td>
             <td><img src="../common/exposure.png" alt="Exposure" class="inline" /></td>
-            <td>Adjust the exposure level</td>
+            <td>Adjust Exposure</td>
         </tr>
     </tbody>
 </table>
 
+> ![notes](../common/notes.svg) Note: The camera switch button ![icon](../common/switch.png) will only appear when multiple cameras are connected.
 
-> ![notes](../common/notes.svg) Notes: The camera switching icon ![1](fig/switch.png) only shows when there are multiple cameras connected.
+## Operations Guide
 
-## Operations
+Using Camera requires a built-in or external camera. After opening Camera, click **Take Photo** or **Video** to switch modes. You can also enable mirror camera in **Settings > Photo Settings** to flip the image horizontally.
 
-You can use the Camera application if your computer comes with a camera or is connected to a camera. Select the photo or video mode on the Camera interface to take photos and record videos. You can also enable the **Mirror mode** in **Settings > Shoot** to flip the photo horizontally.
+> ![notes](../common/notes.svg) Note: Supported features may vary depending on decoding technology; refer to the actual interface.
 
-> ![notes](../common/notes.svg) Notes: The actual functions supported may differ according to the decoding method adopted.  Please refer to the interface.
+### Taking Photos
 
-### Take Photos
+After opening Camera, it defaults to photo mode. Click the photo button ![photograph](../common/photograph.png), and the captured image will be displayed in the interface.
 
-Photo mode is defaulted when Camera starts up. Click the ![photograph](../common/photograph.png) icon to take photos, and the photos will be displayed on the interface.
+<img src="fig/image.png" alt="image" style="zoom: 80%;" />
 
-![image](fig/image.png)
+### Recording Video
 
-### Record Videos
+In the Camera main interface, click **Video** to enter video mode. Click the record button <img src="../common/record.svg" alt="Record" style="zoom:33%;" /> to start recording. After recording, click the stop button <img src="../common/stop.svg" alt="Stop" style="zoom: 33%;" />. The video file will be displayed in the interface and saved to the default path.
 
-On the Camera interface, click **Video** to to enter the video mode. Click  the![transcribe](../common/record.svg) icon to start recording, and click the ![stop](../common/stop.svg) icon to stop recording after video recording is completed. Video files will be displayed on the interface, and will also be saved in the default path.
+<img src="fig/video.png" alt="video" style="zoom:80%;" />
 
-![video](fig/video.png)
+### Managing Photos/Videos
 
-### Process Photos and Videos
+In the Camera main interface, right-click on a photo/video file to choose copy, delete, print, or open folder.
 
-On the Camera interface, right-click the photos or video files to select copy, delete, print and open folder.
+- Copy: Copy selected photo/video to another path.
+- Delete: Delete selected photo/video.
+- Print: Print selected photo. Click **Print** to jump to the print preview interface where you can adjust settings before printing.
 
-> ![notes](../common/notes.svg) Notes: The printing function is only available for photo files. 
+   > ![notes](../common/notes.svg)Note: Only photo files support printing; video files won't show the print button.
 
-- Copy: Copy the selected photo/video to another path.
+- Open Folder: Open the folder containing the photo/video.
 
-- Delete: Delete the selected photo/video.
-
-- Print: Print the selected photo. Click **Print** and you will be direct to the print preview interface. Set the relevant printing parameters and click the **Save** icon to finish printing.
-
-- Open folder: Open the folder where photos and videos are located.
-
-
-![rightmenu](fig/right_menu.png)
+<img src="fig/right_menu.png" alt="right_menu" style="zoom:80%;" />
 
 ## Main Menu
 
-On the main menu, you can change settings for Camera, switch window themes, view help manual, and get more information about Camera.
+In the main menu, you can configure camera settings, switch window themes, view help manuals, etc.
 
 ### Settings
 
-1. Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
-2. Click **Settings** to adjust **Basic**, **Shoot** and **Output** settings.
+1. In the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+2. Click **Settings** to configure basic settings, photo settings, and output settings.
 
-   - **Basic** settings: set up the **File location** for photos and videos as well as gridlines for photos.
-   - **Shoot** settings: set up the **Sound effects**, **Burst mode**, **Self-timer delay**, **Mirror mode** and **Flashlight** options.
-   - **Output** settings: check the **Output format** of photos,  choose a format of videos, and set up **Resolution settings** for both.
-
-     
+   - Basic Settings: Set default storage path for photos/videos, choose grid composition style.
+   - Photo Settings: Configure sound effects, burst count, timer delay; enable/disable mirror camera and flash.
+   - Output Settings: Display image output format; set video output format; configure photo/video resolution.
 
 ### Theme
 
-There are three window themes, namely Light Theme, Dark Theme, and System Theme.
-
-1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
-2.  Click **Theme** to select a theme.
+Window themes include Light, Dark, and System.
+1. In the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+2. Click **Theme** and select a theme color.
 
 ### Help
 
-1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
-2.  Click **Help** to view the manual of Camera.
+1. In the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+2. Click **Help** to view the help manual and learn more about using Camera.
 
 ### About
 
-1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
-2.  Click **About** to view the version and introduction of Camera. 
+1. In the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+2. Click **About** to view the version and introduction of Camera.
 
 ### Exit
 
-1.  Click ![icon_menu](../common/icon_menu.svg) on the Camera interface.
-2.  Click **Exit** to exit Camera.
+1. In the Camera interface, click ![icon_menu](../common/icon_menu.svg).
+2. Click **Exit**.
