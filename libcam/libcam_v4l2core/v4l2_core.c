@@ -1115,7 +1115,7 @@ static int process_input_buffer(v4l2_dev_t *vd)
      * driver timestamp is unreliable
 	 * use monotonic system time
 	 */
-	vd->frame_queue[qind].timestamp = ns_time_monotonic();
+    vd->frame_queue[qind].timestamp = ns_time_monotonic();
 	
     vd->frame_queue[qind].index = (int)vd->buf.index;
 	 

@@ -58,7 +58,7 @@ void DevNumMonitor::timeOutSlot()
         } else {
             m_noDevice = false;
             emit existDevice();
-            qDebug() << "existDevice!";
+            // qDebug() << "existDevice!";
         }
     } else {
         m_noDevice = false;
