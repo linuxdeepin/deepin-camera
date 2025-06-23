@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>ფოტო</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>ვიდეო</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>კამერების გადაკეთება</translation>
     </message>
 </context>
 <context>
@@ -168,27 +168,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>არასიმეტრიული რეჟიმი</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>ფლაში</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"/>
+        <translation>ქრისტალური ხაზები</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation>1*1 ხაზები</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation>2*2 ხაზებს</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>მაქსიმალური გადაწყვიტილება:</translation>
     </message>
 </context>
 <context>
@@ -264,54 +264,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>ნორმალური</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>სიადმი</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>სითბის</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>სიცოცხლის</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>რეტრო</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>ფილმი</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>გრიზი</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>ბაის ანდ უი</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>ფლაში</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>ჩართული</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>გამორთული</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>დასაშვები ამოღება</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>ფილტრები</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>გამოსახულება</translation>
     </message>
 </context>
 <context>
