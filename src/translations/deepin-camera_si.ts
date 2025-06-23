@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>වීඩියෝ අභ්‍යෝසනය අවසන් වී නොමින් තිබේ. වින්ඩෝව අවසන් කරන්න?</translation>
+        <translation>වීඩියෝ ප්‍රතිඵලය අවමින් පවතියෝ. පිටින් පිටින් පිටින් පවතියෝ?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -11,23 +11,23 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>සැකසුම්</translation>
+        <translation>සැකසීම්</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>කිසියම්</translation>
+        <translation>වියදම්</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>වීඩියෝ</translation>
+        <translation>පොටො</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>දෘශ්‍යකය</translation>
+        <translation>වීඩියෝ</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>කාමරා පරිවර්තනය</translation>
+        <translation>කාමරා පවතියෝ</translation>
     </message>
 </context>
 <context>
@@ -38,22 +38,22 @@
     </message>
     <message>
         <source>Close</source>
-        <translation>වසන්න</translation>
+        <translation>විවර්ගනය කරන්න</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>පිටපත්</translation>
+        <translation>කොපි කරන්න</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ඇතුළු කරන්න</translation>
+        <translation>ඉවත් කරන්න</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>බහාලුම විවෘත කරන්න</translation>
+        <translation>ෆෝල්ඩරය පවතියෝ</translation>
     </message>
     <message>
         <source>Print</source>
@@ -64,11 +64,11 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>ඔබට මෙම පොර්ට් වෙනි අතර ක්‍රියාත්මක කරන්න සඳහා පමණිත් නොමින් තිබේ</translation>
+        <translation>ඔබ මෙම පොත් පවත්වා ගැනීමට අවමාనයක් නොමැත</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>වසන්න</translation>
+        <translation>විවර්තනය කරන්න</translation>
     </message>
     <message>
         <source>Invalid folder</source>
@@ -76,23 +76,23 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>බහාලුම විවෘත කරන්න</translation>
+        <translation>පොත් පවත්වන්න</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>සැකසුම්</translation>
+        <translation>සැකසීම්</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>මූලික</translation>
+        <translation>මූල් සැකෙසිම්</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>ගොනුවේ ස්ථානය</translation>
+        <translation>ගොනුවේ ලොක්කෝණය</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>ලියා දෙන්න</translation>
+        <translation>ලියාපදිංචි කරන්න</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>සෙල් ටිමර් දිග</translation>
+        <translation>සෙල් තයිමර් දිගේ</translation>
     </message>
     <message>
         <source>Output</source>
@@ -108,19 +108,19 @@
     </message>
     <message>
         <source>Output format</source>
-        <translation>අອත්පත් ආකාරය</translation>
+        <translation>ප්‍රතිදානය ස්වර්තය</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 ප්‍රාකාරය</translation>
+        <translation>4 ප්‍රොත්ස්</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 ප්‍රාකාරය</translation>
+        <translation>10 ප්‍රොත්ස්</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>කිසියම්</translation>
+        <translation>කිසිවත්</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"/>
+        <translation>කාමරා යනු ඔබගේ ප්‍රින්ටර් කාමරා හෝ වීබ්මෙබ් භාවිතය සඳහා පොටො සහ වීඩියෝ ප්‍රතිඵලය අවමින් පවතියෝ.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>ගොනුව සුරැකුණේ නැත</translation>
+        <translation>ගොනුව නොසාදා තිබේ</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -140,15 +140,15 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>වීඩියෝ:</translation>
+        <translation>පොටො අභිරූපය:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>දෘශ්‍යකය:</translation>
+        <translation>වීඩියෝ අභිරූපය:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>විභේදන සැකසුම්</translation>
+        <translation>කුලියෝජන සැකසීම්</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -156,39 +156,39 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>වීඩියෝව:</translation>
+        <translation>පොටො අභිරූපය:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>දෘශ්‍යක:</translation>
+        <translation>වීඩියෝ අභිරූපය:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>සෝන්ඩ් එෆ්‍ක්ට්ස්</translation>
+        <translation>සෝන්ඩ් අල්ලාගැනීම</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>මිරර් මෝඩ්</translation>
+        <translation>ස්මිර් මෝඩ්</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>ෆ්ලැස්හිට්</translation>
+        <translation>ලීලා රූපය</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>ග්‍රිඩ් ලයින්</translation>
+        <translation>ස්තර වියෝජනය</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 ලයින්</translation>
+        <translation>1*1 ස්තර</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 ලයින්</translation>
+        <translation>2*2 ස්තර</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>මාඟ්මා ප්‍රමාණය:</translation>
+        <translation>ජාඩා කුලියෝජනය:</translation>
     </message>
 </context>
 <context>
@@ -199,23 +199,23 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>සැකසුම්</translation>
+        <translation>සිත්තුවා තියා යන්න</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>පටිගත වීම නවතන්න</translation>
+        <translation>රූප ප්‍රතිරූපනය අවලඟා තියා යන්න</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>පිටපත්</translation>
+        <translation>කොපි කරන්න</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ඇතුළු කරන්න</translation>
+        <translation>ලියා අඟින්න</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>විවෘත</translation>
+        <translation>උඹා තියා යන්න</translation>
     </message>
     <message>
         <source>Print</source>
@@ -223,19 +223,19 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>උදව්</translation>
+        <translation>හෙල්ප්</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>ස්කොට් කොට්ස් ප්‍රදර්ෂනය කරන්න</translation>
+        <translation>සිත්තුවා තියා යන්න</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>වීඩියෝ අභ්‍යෝසනය අවසන් කරන්න</translation>
+        <translation>රූප ප්‍රතිරූපනය අවලඟා තියා යන්න</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>විස්තර ප්‍රමාණය</translation>
+        <translation>සිත්තුවා තියා යන්න</translation>
     </message>
 </context>
 <context>
@@ -257,7 +257,7 @@
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>කිසිමේ</translation>
+        <translation>කිසිවත්</translation>
     </message>
 </context>
 <context>
@@ -272,15 +272,15 @@
     </message>
     <message>
         <source>Warm</source>
-        <translation>වැඩි</translation>
+        <translation>වැඩි තාප්‍යතා</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>සුදු</translation>
+        <translation>ලඟින් තාප්‍යතා</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>රෙටෝ</translation>
+        <translation>රෙට්‍රෝ</translation>
     </message>
     <message>
         <source>Film</source>
@@ -288,53 +288,53 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>ග්‍රේය්</translation>
+        <translation>ග්‍රේ</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>බ්‍රේව් හා විශ්‍රාම්</translation>
+        <translation>බී වී</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>ලෙස් ප්‍රකාශනය</translation>
+        <translation>ප්‍රතිරූපනය අඟින්න</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>සක්‍රීයයි</translation>
+        <translation>අන්</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>අක්‍රීයයි</translation>
+        <translation>අඟින්</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>කාලීන් ගැනීම</translation>
+        <translation>කාලය අඟින්</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>කිසිමේ</translation>
+        <translation>කිසිවත්</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>අංශු ප්‍රමාණය</translation>
+        <translation>ෆිල්ටර්ස්</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>ප්‍රකාශනය</translation>
+        <translation>අක්‍රියතාව</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>වීඩියෝ කැමරා නොමැත</translation>
+        <translation>වෙබ්කැම් නොතිබේ</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>වීඩියෝ කැමරා භ්‍යාවාදී සිටී</translation>
+        <translation>වෙබ්කැම් භාවිතා කර ඇත</translation>
     </message>
     <message>
         <source>Stop recording</source>
