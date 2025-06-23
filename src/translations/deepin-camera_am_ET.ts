@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>የቮድዮ ተጠቅል የሚፈጸም የት ነው. የውይዝ ማጓጓል?</translation>
+        <translation>วิดีโอการบันทึกกำลังดำเนินอยู่ ปิดหน้าต่าง?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -11,200 +11,38 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>ማስተካከል</translation>
+        <translation>การตั้งค่า</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>ይ የም</translation>
+        <translation>啥</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>ፎቶ</translation>
+        <translation>รูปภาพ</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>ቮድዮ</translation>
+        <translation>วิดีโอ</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>ካሜራዎች በመቀየር</translation>
+        <translation>เปลี่ยนกล้อง</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>መጥ/tags</translation>
+        <translation>ยกเลิก</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>ዝ</translation>
+        <translation>ปิด</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
-    <message>
-        <source>Copy</source>
-        <translation>ኮፎ</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation>ይ የም</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>ክፍል ማው.open</translation>
-    </message>
-    <message>
-        <source>Print</source>
-        <translation>ፕሪንት</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>You don&apos;t have permission to operate this folder</source>
-        <translation>ምርቶ የም ከዚህ አገልግሎት አይደሉም</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>ዝ</translation>
-    </message>
-    <message>
-        <source>Invalid folder</source>
-        <translation type="vanished">ሌላ አገልግሎት የም</translation>
-    </message>
-    <message>
-        <source>Open folder</source>
-        <translation>ክፍል ማው.open</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>ማስተካከል</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation>መሰረት</translation>
-    </message>
-    <message>
-        <source>File location</source>
-        <translation>የไฟል የት የም</translation>
-    </message>
-    <message>
-        <source>Shoot</source>
-        <translation>ሽዩ</translation>
-    </message>
-    <message>
-        <source>Burst mode</source>
-        <translation>ብርስ ማድ</translation>
-    </message>
-    <message>
-        <source>Self-timer delay</source>
-        <translation>መነሻ ማድ</translation>
-    </message>
-    <message>
-        <source>Output</source>
-        <translation>ኦዩትፕዩት</translation>
-    </message>
-    <message>
-        <source>Output format</source>
-        <translation>ኦዩትፕዩት ማድ</translation>
-    </message>
-    <message>
-        <source>4 pcs</source>
-        <translation>4 የም</translation>
-    </message>
-    <message>
-        <source>10 pcs</source>
-        <translation>10 የም</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>ይ የም</translation>
-    </message>
-    <message>
-        <source>Camera</source>
-        <translation>ካሜራ</translation>
-    </message>
-    <message>
-        <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>ካሜራ የፎቶ እና ቮድዮ ተጠቅል የሚሰራ የአገልግሎት ምስክ ማሽን የም እና ሰሌዳ የም</translation>
-    </message>
-    <message>
-        <source>File not saved</source>
-        <translation>ไฟล์ไม่ได้ถูกบันทึก</translation>
-    </message>
-    <message>
-        <source>Save to:</source>
-        <translation type="vanished">บันทึกไปยัง:</translation>
-    </message>
-    <message>
-        <source>Photo:</source>
-        <translation>ภาพ:</translation>
-    </message>
-    <message>
-        <source>Video:</source>
-        <translation>วิดีโอ:</translation>
-    </message>
-    <message>
-        <source>Resolution settings</source>
-        <translation>การตั้งค่าความละเอียด</translation>
-    </message>
-    <message>
-        <source>Resolution:</source>
-        <translation type="vanished">ความละเอียด:</translation>
-    </message>
-    <message>
-        <source>Photos:</source>
-        <translation>ภาพ:</translation>
-    </message>
-    <message>
-        <source>Videos:</source>
-        <translation>วิดีโอ:</translation>
-    </message>
-    <message>
-        <source>Sound effects</source>
-        <translation>เอฟเฟกต์เสียง</translation>
-    </message>
-    <message>
-        <source>Mirror mode</source>
-        <translation>โหมดกระจก</translation>
-    </message>
-    <message>
-        <source>Flashlight</source>
-        <translation>แฟลชไลท์</translation>
-    </message>
-    <message>
-        <source>Gridlines</source>
-        <translation>เส้นกริด</translation>
-    </message>
-    <message>
-        <source>1*1 lines</source>
-        <translation>เส้น 1*1</translation>
-    </message>
-    <message>
-        <source>2*2 lines</source>
-        <translation>เส้น 2*2</translation>
-    </message>
-    <message>
-        <source>Maximum resolution:</source>
-        <translation>ความละเอียดสูงสุด:</translation>
-    </message>
-</context>
-<context>
-    <name>Shortcut</name>
-    <message>
-        <source>Camera</source>
-        <translation>กล้อง</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation>ตั้งค่า</translation>
-    </message>
-    <message>
-        <source>Stop recording</source>
-        <translation>หยุดบันทึก</translation>
-    </message>
     <message>
         <source>Copy</source>
         <translation>คัดลอก</translation>
@@ -214,20 +52,182 @@
         <translation>ลบ</translation>
     </message>
     <message>
-        <source>Open</source>
-        <translation>เปิด</translation>
+        <source>Open folder</source>
+        <translation>เปิดโฟลเดอร์</translation>
     </message>
     <message>
         <source>Print</source>
         <translation>พิมพ์</translation>
     </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>You don&apos;t have permission to operate this folder</source>
+        <translation>Դուք აյդ კატეგორიის მომხმარებლად უფლება არ გაქთა</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>დახურვა</translation>
+    </message>
+    <message>
+        <source>Invalid folder</source>
+        <translation type="vanished">ሌላ አገልግሎት የም</translation>
+    </message>
+    <message>
+        <source>Open folder</source>
+        <translation>კატეგორიის გახსნა</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>პარამეტრები</translation>
+    </message>
+    <message>
+        <source>Basic</source>
+        <translation>საბაზისო</translation>
+    </message>
+    <message>
+        <source>File location</source>
+        <translation>ფაილის ადგილმდებარეობა</translation>
+    </message>
+    <message>
+        <source>Shoot</source>
+        <translation>გადასვლა</translation>
+    </message>
+    <message>
+        <source>Burst mode</source>
+        <translation>ბურსტ რეჟიმი</translation>
+    </message>
+    <message>
+        <source>Self-timer delay</source>
+        <translation>სელფ-ტაიმერის დახურვის დახურვის დახურვა</translation>
+    </message>
+    <message>
+        <source>Output</source>
+        <translation>გამომავალი</translation>
+    </message>
+    <message>
+        <source>Output format</source>
+        <translation>გამომავალი ფორმატი</translation>
+    </message>
+    <message>
+        <source>4 pcs</source>
+        <translation>4 ცალი</translation>
+    </message>
+    <message>
+        <source>10 pcs</source>
+        <translation>10 ცალი</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>ნებისმიერი</translation>
+    </message>
+    <message>
+        <source>Camera</source>
+        <translation>กล้อง</translation>
+    </message>
+    <message>
+        <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
+        <translation>กล้องคือเครื่องมือการบันทึกภาพและวิดีโอที่ใช้กล้องคอมพิวเตอร์หรือกล้องเว็บแคมของคุณ</translation>
+    </message>
+    <message>
+        <source>File not saved</source>
+        <translation>ფაილი არ შენახულაა</translation>
+    </message>
+    <message>
+        <source>Save to:</source>
+        <translation type="vanished">บันทึกไปยัง:</translation>
+    </message>
+    <message>
+        <source>Photo:</source>
+        <translation>ფოტო:</translation>
+    </message>
+    <message>
+        <source>Video:</source>
+        <translation>ვიდეო:</translation>
+    </message>
+    <message>
+        <source>Resolution settings</source>
+        <translation>რეზოლუციის პარამეტრები</translation>
+    </message>
+    <message>
+        <source>Resolution:</source>
+        <translation type="vanished">ความละเอียด:</translation>
+    </message>
+    <message>
+        <source>Photos:</source>
+        <translation>ფოტოები:</translation>
+    </message>
+    <message>
+        <source>Videos:</source>
+        <translation>ვიდეოები:</translation>
+    </message>
+    <message>
+        <source>Sound effects</source>
+        <translation>სუნდეფექტები</translation>
+    </message>
+    <message>
+        <source>Mirror mode</source>
+        <translation>სიმეტრიული რეჟიმი</translation>
+    </message>
+    <message>
+        <source>Flashlight</source>
+        <translation>ფლაშლიტი</translation>
+    </message>
+    <message>
+        <source>Gridlines</source>
+        <translation>გრიდლინები</translation>
+    </message>
+    <message>
+        <source>1*1 lines</source>
+        <translation>1*1 ხაზები</translation>
+    </message>
+    <message>
+        <source>2*2 lines</source>
+        <translation>2*2 ხაზები</translation>
+    </message>
+    <message>
+        <source>Maximum resolution:</source>
+        <translation>უმაღლესი რეზოლუცია:</translation>
+    </message>
+</context>
+<context>
+    <name>Shortcut</name>
+    <message>
+        <source>Camera</source>
+        <translation>კამერა</translation>
+    </message>
+    <message>
+        <source>Settings</source>
+        <translation>اعدادات</translation>
+    </message>
+    <message>
+        <source>Stop recording</source>
+        <translation>หยุดบันทึก</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>ቀ coppie</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>ጥቅም</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>ክፈት</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation>ampa</translation>
+    </message>
     <message>
         <source>Help</source>
-        <translation>ความช่วยเหลือ</translation>
+        <translation>እርዳታ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>แสดงคำสั่งลัด</translation>
+        <translation>መ 표 ምስል እንደገና ማሳያ</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -235,7 +235,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation>เมนูบริบท</translation>
+        <translation>תפריט ምስል</translation>
     </message>
 </context>
 <context>
@@ -257,84 +257,84 @@
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>ไม่มี</translation>
+        <translation>ይህ</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>ჩვეულებრივი</translation>
+        <translation>ትክክል</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>სიცოცხლესმიelic</translation>
+        <translation>በ ተጽዕ</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>სუფთა</translation>
+        <translation>በ የ ምግላ</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>ცისკენ</translation>
+        <translation>በ የ ምግላ የ ምግላ</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>რეტრო</translation>
+        <translation>በ የ ምግላ ተጽዕ</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>ფილმის სტილი</translation>
+        <translation>በ ምግላ</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>გრიზი</translation>
+        <translation>በ ምግላ ምግላ</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>შავ-თეთრი</translation>
+        <translation>በ ምግላ ምግላ</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>ფლაშლიტი</translation>
+        <translation>የ የ ምግላ</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>ჩართული</translation>
+        <translation>በ የ ምጭ</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>გამართული</translation>
+        <translation>ከ የ ምጭ</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>დაგეგმული ამოღება</translation>
+        <translation>መ ምግላ እድገት</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>არცერთი</translation>
+        <translation>ይህ</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>ფილტრები</translation>
+        <translation>መ ምግላ</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>გამართული ამოღება</translation>
+        <translation>መ ምግላ</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>ვებკამი ვერ მოიძებნა</translation>
+        <translation>የ ምግላ ምጭ የ ምጭ አይገኝ</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>ვებკამი სამუშაო სტატუსში არის</translation>
+        <translation>የ ምግላ ምጭ ተጠቅመ ነው</translation>
     </message>
     <message>
         <source>Stop recording</source>
