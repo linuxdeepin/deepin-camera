@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>تسجيل الفيديو جاري. هل تريد إغلاق النافذة؟</translation>
+        <translation>ویڈیو ریکارڈنگ جاری ہے۔ ونڈو بند کریں؟</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -11,41 +11,41 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>الإعدادات</translation>
+        <translation>سیٹنگس</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>لا شيء</translation>
+        <translation>هیچ</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>صورة</translation>
+        <translation>فوتو</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>فيديو</translation>
+        <translation>ویڈیو</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>التبديل بين الكاميرات</translation>
+        <translation>کیمیرا تبدیل کریں</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>إلغاء</translation>
+        <translation>ریvoke</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>إغلاق</translation>
+        <translation>بند</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>نسخ</translation>
+        <translation>کاپی</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -53,11 +53,11 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>فتح المجلد</translation>
+        <translation>فولڈر کھولیں</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>طباعة</translation>
+        <translation>پرنٹ</translation>
     </message>
 </context>
 <context>
@@ -84,11 +84,11 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation>أساسي</translation>
+        <translation>الأساسية</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>مكان الملف</translation>
+        <translation>مجلد الملف</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -96,11 +96,11 @@
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>وضع التصوير المتتالي</translation>
+        <translation>وضع الاطلاقات المتتالية</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>تأخير المؤقت الذاتي</translation>
+        <translation>تأخير مصباح الذات</translation>
     </message>
     <message>
         <source>Output</source>
@@ -124,15 +124,15 @@
     </message>
     <message>
         <source>Camera</source>
-        <translation>الكاميرا</translation>
+        <translation>کیمیرا</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>الكاميرا هي أداة لالتقاط الصور والفيديو باستخدام كاميرا جهاز الكمبيوتر أو كاميرا الويب.</translation>
+        <translation>کیمیرا ایک تصویر اور ویڈیو حاصل کرنے کی تیاری ہے جو آپ کے پی سی کیمیرا یا ویب کیم کا استعمال کرتی ہے۔</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>فائل نیچ محفوظ کریکو</translation>
+        <translation>لم يتم حفظ الملف</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -140,15 +140,15 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>تصویر:</translation>
+        <translation>الصورة:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation> ویڈیو:</translation>
+        <translation>الفيديو:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>ریزولوشن سیٹنگز</translation>
+        <translation>إعدادات الدقة</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -156,86 +156,86 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>تصاویر:</translation>
+        <translation>الصور:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation> ویڈیو:</translation>
+        <translation>الفيديوهات:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>سونڈ ایفکٹس</translation>
+        <translation>التأثيرات الصوتية</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>میرر مڈ</translation>
+        <translation>وضع المرآة</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>فلش لائٹ</translation>
+        <translation>مصباح</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>گریڈ لائن</translation>
+        <translation>الخطوط الشبكية</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 لائن</translation>
+        <translation>خطوط 1×1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 لائن</translation>
+        <translation>خطوط 2×2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>میکسیمم ریزولوشن:</translation>
+        <translation>الدقة القصوى:</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>کیمرا</translation>
+        <translation>الكاميرا</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>سیٹنگز</translation>
+        <translation>Settings</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>ریکارڈنگ روکیں</translation>
+        <translation>Stop recording</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>کاپی</translation>
+        <translation>Copy</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>ڈیلیٹ</translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>open</translation>
+        <translation>Open</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>پرنٹ</translation>
+        <translation>Print</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>ہیلپ</translation>
+        <translation>Help</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>شورٹ کٹس دکھاوا</translation>
+        <translation>Display shortcuts</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>تصاویر لینے روکیں</translation>
+        <translation>Stop taking photos</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>کنٹیکس مینو</translation>
+        <translation>Context menu</translation>
     </message>
 </context>
 <context>
@@ -257,57 +257,57 @@
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>کچھ نہیں</translation>
+        <translation>None</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>نرمل</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>ویوید</translation>
+        <translation>Vivid</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>ورم</translation>
+        <translation>Warm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>کول</translation>
+        <translation>Cold</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>ریٹرو</translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>فلم</translation>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>گرے</translation>
+        <translation>Gray</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>بی این وائ</translation>
+        <translation>B&amp;W</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>فلاش لائٹ</translation>
+        <translation>Flashlight</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>آن</translation>
+        <translation>On</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>اوف</translation>
+        <translation>Off</translation>
     </message>
     <message>
         <source>Delay capture</source>
@@ -315,26 +315,26 @@
     </message>
     <message>
         <source>None</source>
-        <translation>نن</translation>
+        <translation>None</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>فیلٹرز</translation>
+        <translation>Filters</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>ایکسپوچر</translation>
+        <translation>Exposure</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>کامیک بیک ناملا</translation>
+        <translation>No webcam found</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>کامیک بیک استعمال ہورہی ہے</translation>
+        <translation>The webcam is in use</translation>
     </message>
     <message>
         <source>Stop recording</source>
