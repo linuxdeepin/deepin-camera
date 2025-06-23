@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Filmen är pågående. Stäng fönstret?</translation>
+        <translation>Videoinspelning pågår. Stäng fönstret?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Byt kamera</translation>
+        <translation>Växla kameror</translation>
     </message>
 </context>
 <context>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Du har inte tillstånd att hantera denna mapp</translation>
+        <translation>Du har inte tillstånd att arbeta med detta mapp</translation>
     </message>
     <message>
         <source>Close</source>
@@ -92,7 +92,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Fotografera</translation>
+        <translation>Skapa</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,27 +100,27 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Selvtimedelay</translation>
+        <translation>Auto-läge</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>Utdata</translation>
+        <translation>Utdrag</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>Utdataformat</translation>
+        <translation>Utdragsformat</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 st</translation>
+        <translation>4 st.</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 st</translation>
+        <translation>10 st.</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Ingen</translation>
+        <translation>Ingenting</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera är en bild- och videoupptagningstjänst som använder din datorkamera eller webkamera.</translation>
+        <translation>Kamera är ett verktyg för att fånga bilder och videor med din datorkamera eller webbkamera.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Filen har inte sparats</translation>
+        <translation>Filen är inte sparad</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Inställningar för upplösning</translation>
+        <translation>Upplösningsinställningar</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -156,7 +156,7 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto:</translation>
+        <translation>Fotografier:</translation>
     </message>
     <message>
         <source>Videos:</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Speglingsläge</translation>
+        <translation>Spegel-läge</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -227,11 +227,11 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>Visa snabbtangentsskinst</translation>
+        <translation>Visa snabbtaster</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stoppa fotoövning</translation>
+        <translation>Stoppa fotoåtkomst</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -268,7 +268,7 @@
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Vivid</translation>
+        <translation>Livlig</translation>
     </message>
     <message>
         <source>Warm</source>
@@ -292,14 +292,14 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Svart och Vitt</translation>
+        <translation>Svartvit</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampa</translation>
+        <translation>Lampan</translation>
     </message>
     <message>
         <source>On</source>
@@ -323,7 +323,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Exponering</translation>
+        <translation>Exposition</translation>
     </message>
 </context>
 <context>
