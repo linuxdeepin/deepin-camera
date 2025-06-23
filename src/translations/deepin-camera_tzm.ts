@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>التسجيل فيديو في إجراء. إغلاق النافذة؟</translation>
+        <translation>التسجيل فيديو في إجراء. هل ترغب في إغلاق النافذة؟</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -64,11 +64,11 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>لا تملك صلاحية تشغيل هذا المجلد</translation>
+        <translation>مَتَيْنَ دُرَكْتَيْنَ تَرْفَعْ لَمَتْكَ لِتَخْرِج لَمَتْكَ</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>إغلاق</translation>
+        <translation>تَخْرِج</translation>
     </message>
     <message>
         <source>Invalid folder</source>
@@ -76,63 +76,63 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>فتح المجلد</translation>
+        <translation>تَرْفَعْ لَمَتْكَ</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>الإعدادات</translation>
+        <translation>تَرْتِيبَتْ</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>أساسي</translation>
+        <translation>تَرْتِيبَتْ تَكْمِلِي</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>مكان الملف</translation>
+        <translation>مَكان الْفَيْلْ</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>التقاط</translation>
+        <translation>تَرْفَعْ</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>وضع التصوير المتتالي</translation>
+        <translation>تَرْفَعْ بِتَكْمِلِي</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>تأخير المؤقت الذاتي</translation>
+        <translation>تَرْفَعْ تَكْمِلِي</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>الإخراج</translation>
+        <translation>الْخَرَج</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>صيغة الإخراج</translation>
+        <translation>الْخَرَج تَكْمِلِي</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 قطع</translation>
+        <translation>4 مَرَقَتْ</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 قطع</translation>
+        <translation>10 مَرَقَتْ</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>لا شيء</translation>
+        <translation>لا</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>Takamṛa</translation>
+        <translation>كاميرا</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>الكاميرا هي أداة لالتقاط الصور والفيديو باستخدام كاميرا جهاز الكمبيوتر الخاص بك أو كاميرا الويب.</translation>
+        <translation>الكاميرا هي أداة لالتقاط الصور والفيديو باستخدام كاميرا جهاز الكمبيوتر أو كاميرا الويب.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>الملف لم يتم حفظه</translation>
+        <translation>الْفَيْلْ لَمْ يَنْتَهِ بِتَخْرِج</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -140,15 +140,15 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>صُورَة:</translation>
+        <translation>الْفُوتوغرافيا:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>فِيلِم:</translation>
+        <translation>الْفُوتوغرافيا:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>تَوْضِيحَاتِ التَّرْتِيبِ</translation>
+        <translation>تَرْتِيبَتْ دُرَكْتَيْنَ</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -156,86 +156,86 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>صُورَات:</translation>
+        <translation>الْفُوتوغرافيات:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>فِيلِمَات:</translation>
+        <translation>الْفُوتوغرافيات:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>أَصْوَاء التَّأَثِيرَات</translation>
+        <translation>الْأَصْوَات</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>تَمْثِيلِ التَّمْرِيْر</translation>
+        <translation>تَرْفَعْ مَرْآة</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>الْفَلَشْلِيت</translation>
+        <translation>الْفَلَشْ</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>الْمَحَافِظَات</translation>
+        <translation>الْكُرَسِيَتْ</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 مَحَافِظَات</translation>
+        <translation>1*1 كُرَسِيَتْ</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 مَحَافِظَات</translation>
+        <translation>2*2 كُرَسِيَتْ</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>الْتَرْتِيبِ الأَكْثَرِ:</translation>
+        <translation>دُرَكْتَيْنَ تَكْمِلِي:</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>Takamṛa</translation>
+        <translation>كَامِرَة</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>تَوْضِيحَات</translation>
+        <translation>تَتْتَيْتْ</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>تَوْضِيحَاتِ الْتَوْضِيح</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>تَكْرِير</translation>
+        <translation>كُوْبْ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>تَحْذِيف</translation>
+        <translation>دِلْتَيْتْ</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>تَوْصِيل</translation>
+        <translation>أُبْنْ</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>تَصْمِيم</translation>
+        <translation>بِرْنْ</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>تَمْكِين</translation>
+        <translation>هِلْبْ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>تَمْكِينِ التَّمْكِين</translation>
+        <translation>أَكْشَرْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>تَوْصِيلِ الْتَوْصِيل</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ لَفْكْ</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>تَمْكِينِ الْمَنْوَع</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ لَفْكْ</translation>
     </message>
 </context>
 <context>
@@ -257,84 +257,84 @@
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>لا</translation>
+        <translation>الْلا</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>عَادِي</translation>
+        <translation>تَتْتَيْتْ</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>مَحْرُوَك</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>يما</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>كول</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>رетرو</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>فلم</translation>
+        <translation>فِلْم</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>غراي</translation>
+        <translation>غْرَي</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>أسود وبياض</translation>
+        <translation>بِيْنْ وَهْوْ</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>فلاش ليت</translation>
+        <translation>فَلْشْ لِتْ</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>مكفي</translation>
+        <translation>أَنْ</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>مكفي</translation>
+        <translation>أُفْ</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>تاي كابير</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ لَفْكْ</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>هند</translation>
+        <translation>الْلا</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>فلاير</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>إكسبيزيور</translation>
+        <translation>إِكْسْتْ</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>لا توجد كاميرا فيديو</translation>
+        <translation>لا تَتْتَيْتْ لَمْتَيْتْ لَفْكْ</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>الكاميرا فيديو في الاستخدام</translation>
+        <translation>تَتْتَيْتْ لَمْتَيْتْ لَفْكْ تَتْتَيْتْ لَمْتَيْتْ</translation>
     </message>
     <message>
         <source>Stop recording</source>
