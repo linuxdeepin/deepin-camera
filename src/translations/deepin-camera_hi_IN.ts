@@ -176,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"/>
+        <translation>नेटलाइन</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation>1*1 लाइन</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation>2*2 लाइन</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>अधिकतम रिज़ॉलूशन:</translation>
     </message>
 </context>
 <context>
@@ -264,35 +264,35 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>सामान्य</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>जीवंत</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>गर्म</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>ठंडा</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>रिट्रो</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>फिल्म</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>ग्रे</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>ब्लैक एंड व्हाइट</translation>
     </message>
 </context>
 <context>
@@ -319,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>फ़िल्टर</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>अभिविष्टि</translation>
     </message>
 </context>
 <context>
