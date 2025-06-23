@@ -180,7 +180,7 @@
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>十字網格 </translation>
+        <translation>十字網格</translation>
     </message>
     <message>
         <source>2*2 lines</source>
@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>最大解析度:</translation>
     </message>
 </context>
 <context>
