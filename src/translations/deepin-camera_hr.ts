@@ -19,15 +19,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation type="unfinished"/>
+        <translation>Фото</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation type="unfinished"/>
+        <translation>Видео</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation type="unfinished"/>
+        <translation>Prebacite kamera</translation>
     </message>
 </context>
 <context>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation type="unfinished"/>
+        <translation>Nemate dozvolu za rad s ovom mapom</translation>
     </message>
     <message>
         <source>Close</source>
@@ -92,31 +92,31 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation type="unfinished"/>
+        <translation>Snimi</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation type="unfinished"/>
+        <translation>Mod strujanja</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation type="unfinished"/>
+        <translation>Zakaži zaštitni vremenski odziv</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"/>
+        <translation>Izlaz</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation type="unfinished"/>
+        <translation>Format izlaza</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation type="unfinished"/>
+        <translation>4 komada</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation type="unfinished"/>
+        <translation>10 komada</translation>
     </message>
     <message>
         <source>None</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation type="unfinished"/>
+        <translation>Kamera je alat za prikupljanje slika i video sadržaja koristeći vašu računarsku kameru ili web kamere.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -168,27 +168,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>Mod ogledala</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Fotokamera</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"/>
+        <translation>Rasponi</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation>1×1 linije</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation>2×2 linije</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>Maksimalna rezolucija:</translation>
     </message>
 </context>
 <context>
@@ -264,54 +264,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>Normalan</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>Živahni</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>Top</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>Hladan</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>Sivo</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>B&amp;W</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>Fotokamera</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>Uključen</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>Isključen</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Zakaži snimanje</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>Filteri</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Izlaganje</translation>
     </message>
 </context>
 <context>
