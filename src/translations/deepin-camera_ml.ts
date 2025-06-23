@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>വീഡിയോ റെക്കോർഡിംഗ് പ്രോഗ്രസ്സിലാണ്. വിൻഡോ അടച്ചുകളയുക?</translation>
+        <translation>വിഡിയോ രേഖകരണം പ്രവർത്തനത്തിലാണ്. വിൻഡോ അടച്ചു വയ്ക്കാൻ?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -15,7 +15,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation>ഇല്ല</translation>
+        <translation>ഇത് ഒന്നുമില്ല</translation>
     </message>
     <message>
         <source>Photo</source>
@@ -23,11 +23,11 @@
     </message>
     <message>
         <source>Video</source>
-        <translation>വീഡിയോ</translation>
+        <translation>വിഡിയോ</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>ക്യാമറകൾ മാറ്റുക</translation>
+        <translation>ക്യാമറ മാറ്റുക</translation>
     </message>
 </context>
 <context>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>നിങ്ങൾക്ക് ഈ ഫോൾഡർ പ്രവർത്തിപ്പിക്കാനുള്ള അവകാശമില്ല</translation>
+        <translation>നിങ്ങൾ ഈ ഫോൾഡറിൽ പ്രവർത്തിക്കാനുള്ള അവകാശമില്ല</translation>
     </message>
     <message>
         <source>Close</source>
@@ -84,15 +84,15 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation>ബേസിക്</translation>
+        <translation>അടിഭാഗം</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>ഫൈൽ സ്ഥലം</translation>
+        <translation>ഫയൽ സ്ഥലം</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>ഷൂട്ട്</translation>
+        <translation>ഫോട്ടോ എടുക്കുക</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>സെല്ഫ് ടൈമർ ഡെലേ</translation>
+        <translation>സെൽഫ് ടൈമർ വേണ്ടാതെ വ留下了</translation>
     </message>
     <message>
         <source>Output</source>
@@ -112,15 +112,15 @@
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 പിസി</translation>
+        <translation>4 പീസ്</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 പിസി</translation>
+        <translation>10 പീസ്</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>ഇല്ല</translation>
+        <translation>ഒന്നുമില്ല</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>ക്യാമറ ഒരു ഇമേജ് ആൻഡ് വീഡിയോ കെപ്ചർ ഉപകരണമാണ്, നിങ്ങളുടെ PC ക്യാമറ അല്ലെങ്കിൽ വെബ്ക്യാമറ ഉപയോഗിച്ചാണ്.</translation>
+        <translation>ക്യാമറ ഒരു പ്രൊസസ്സിംഗ് ഉപയോഗിക്കുന്ന പിസി ക്യാമറ അല്ലെങ്കിൽ വെബ്ക്യാമറ ഉപയോഗിച്ച് ഇമേജ് ആൻഡ് വിഡിയോ പിച്ചുകയും ചെയ്യുന്ന ഒരു ഉപകരണമാണ്.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>പ്രവിശ്യ വിഭാഗം ചെയ്യാതെ വച്ചിരിക്കുന്നു</translation>
+        <translation>ഫയൽ സേവ് ചെയ്യാതെ വ留下了</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>വിശദമായ സംവിധാനങ്ങൾ</translation>
+        <translation>റെസലൂഷൻ സെറ്റിംഗ്സ്</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -164,15 +164,15 @@
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>ശബ്ദ പ്രഭാവങ്ങൾ</translation>
+        <translation>സൌണ്ട് ഇഫക്ട്സ്</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>പ്രതിഫലന മോഡ്</translation>
+        <translation>മിറർ മോഡ്</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>ഫ്ലാഷ് ലൈറ്റ്</translation>
+        <translation>ഫ്ലാഷ്ലൈറ്റ്</translation>
     </message>
     <message>
         <source>Gridlines</source>
@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>ഉയർന്ന വിശദമായി:</translation>
+        <translation>മാക്സിമം റെസലൂഷൻ:</translation>
     </message>
 </context>
 <context>
@@ -199,11 +199,11 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>സംവിധാനങ്ങൾ</translation>
+        <translation>സെറ്റിംഗ്സ്</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>രേഖകൾ താമസം ചെയ്യുക</translation>
+        <translation>രേഖകൾ താമസം നിർത്തുക</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -223,11 +223,11 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>ഹെല്പ്</translation>
+        <translation>ഹെൽപ്</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>ശ്രുതികൾ കാണിക്കുക</translation>
+        <translation>ശേഖരിക്കുക എന്നതിനെ കാണിക്കുക</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
@@ -235,7 +235,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation>സാഹചര്യ മെനു</translation>
+        <translation>സ്ഥിരമായ മെനു</translation>
     </message>
 </context>
 <context>
@@ -264,7 +264,7 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>നാര്‍മല്‍</translation>
+        <translation>നോർമൽ</translation>
     </message>
     <message>
         <source>Vivid</source>
@@ -276,7 +276,7 @@
     </message>
     <message>
         <source>Cold</source>
-        <translation>കോള്‍ഡ്</translation>
+        <translation>കോൾഡ്</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -292,7 +292,7 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>ബി അന്ഡ് വൈ</translation>
+        <translation>ബി എൻ ഡി</translation>
     </message>
 </context>
 <context>
@@ -303,11 +303,11 @@
     </message>
     <message>
         <source>On</source>
-        <translation>ഓണ്‍</translation>
+        <translation>ഓൺ</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>ഓഫ്</translation>
+        <translation>ഔഫ്</translation>
     </message>
     <message>
         <source>Delay capture</source>
@@ -315,26 +315,26 @@
     </message>
     <message>
         <source>None</source>
-        <translation>ഇനിയുമായി</translation>
+        <translation>ഒന്നുമില്ല</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>ഫില്‍ട്ടറുകൾ</translation>
+        <translation>ഫില്ട്ടർസ്</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>ഇക്സ്‌പോസര്‍</translation>
+        <translation>എക്സ്പോസർ</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>വീഡിയോ ക്യാമറ കണ്ടെത്താനായില്ല</translation>
+        <translation>വെബ്ക്യാമി കണ്ടെത്തിയില്ല</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>വീഡിയോ ക്യാമറ ഉപയോഗത്തിലാണ്</translation>
+        <translation>വെബ്ക്യാമിന്റെ ഉപയോഗത്തിലാണ്</translation>
     </message>
     <message>
         <source>Stop recording</source>
