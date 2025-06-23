@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Video sa zaznamenáva. Zatvoríte okno?</translation>
+        <translation>Video je v prebiehu. Zatvoríte okno?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Zmeniť kamery</translation>
+        <translation>Prepnúť kamery</translation>
     </message>
 </context>
 <context>
@@ -49,7 +49,7 @@
     </message>
     <message>
         <source>Delete</source>
-        <translation>Odstrániť</translation>
+        <translation>Vymazať</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nemáte oprávnenie pracovať s týmto priečinkom</translation>
+        <translation>Nemáte oprávnenie pracovať s touto priečinkou</translation>
     </message>
     <message>
         <source>Close</source>
@@ -76,7 +76,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>Otvoriť priečinok</translation>
+        <translation>Otvoriť priečinku</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -92,11 +92,11 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Začať zaznamenávať</translation>
+        <translation>Začať</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Režim rýchleho sledu</translation>
+        <translation>Režim série</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
@@ -112,11 +112,11 @@
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 ks</translation>
+        <translation>4 kusy</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 ks</translation>
+        <translation>10 kusov</translation>
     </message>
     <message>
         <source>None</source>
@@ -128,11 +128,11 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera je nástroj na záznam obrazov a videa pomocou kamery počítača alebo webkamery.</translation>
+        <translation>Kamera je nástroj na zachytávanie obrazov a videa pomocou kamery počítača alebo webkamery.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>Súbor sa nepodarilo uložiť</translation>
+        <translation>Súbor nie je uložený</translation>
     </message>
     <message>
         <source>Save to:</source>
@@ -156,7 +156,7 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Foto:</translation>
+        <translation>Fotografie:</translation>
     </message>
     <message>
         <source>Videos:</source>
@@ -168,11 +168,11 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Režim zrkadlenia</translation>
+        <translation>Režim zrkadla</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Flashlight</translation>
+        <translation>Bleskovka</translation>
     </message>
     <message>
         <source>Gridlines</source>
@@ -211,7 +211,7 @@
     </message>
     <message>
         <source>Delete</source>
-        <translation>Vymazať</translation>
+        <translation>Odstrániť</translation>
     </message>
     <message>
         <source>Open</source>
@@ -231,7 +231,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Zastaviť fotozáznam</translation>
+        <translation>Zastaviť fotenie</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -292,7 +292,7 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Černobílý</translation>
+        <translation>Čierno-biele</translation>
     </message>
 </context>
 <context>
@@ -303,19 +303,19 @@
     </message>
     <message>
         <source>On</source>
-        <translation>Zapnutý</translation>
+        <translation>Zapnuté</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Vypnutý</translation>
+        <translation>Vypnuté</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Zpožděná zápis</translation>
+        <translation>Zdržanie zápisu</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Žádný</translation>
+        <translation>Žiadne</translation>
     </message>
     <message>
         <source>Filters</source>
@@ -330,11 +330,11 @@
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Webkamera nie je nájdená</translation>
+        <translation>Žiadna webkamera nie je nájdená</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Webkamera sa používa</translation>
+        <translation>Webkamera je v použití</translation>
     </message>
     <message>
         <source>Stop recording</source>
