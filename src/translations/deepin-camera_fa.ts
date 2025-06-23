@@ -15,7 +15,7 @@
     </message>
     <message>
         <source>None</source>
-        <translation>هیچ</translation>
+        <translation>هیچ یک</translation>
     </message>
     <message>
         <source>Photo</source>
@@ -38,7 +38,7 @@
     </message>
     <message>
         <source>Close</source>
-        <translation>بندی</translation>
+        <translation>ببند</translation>
     </message>
 </context>
 <context>
@@ -64,11 +64,11 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>شما به کنترل این پوشه دسترسی ندارید</translation>
+        <translation>شما به این پوشه دسترسی ندارید</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>بندی</translation>
+        <translation>بستن</translation>
     </message>
     <message>
         <source>Invalid folder</source>
@@ -76,7 +76,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>پوشه را باز کنید</translation>
+        <translation>باز کردن پوشه</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -92,15 +92,15 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>شوت کنید</translation>
+        <translation>شوت</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>حالت چنده فایل</translation>
+        <translation>مود سریع</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>محدوده تاخیر خودکار</translation>
+        <translation>مقدار تاخیر چهارچوب</translation>
     </message>
     <message>
         <source>Output</source>
@@ -120,15 +120,15 @@
     </message>
     <message>
         <source>None</source>
-        <translation>هیچ</translation>
+        <translation>هیچ کدام</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>دوربین</translation>
+        <translation>کامرا</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>کامرا یک ابزار ثبت تصویر و فیلم است که از دوربین شخصی یا کامرا وب استفاده می‌کند.</translation>
+        <translation>کامرا یک ابزار ثبت عکس و فیلم است که از کامرا یا کامرا وب شما استفاده می‌کند.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>تنظیمات رزولوشن</translation>
+        <translation> تنظیمات قابلیت رزولوشن</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -164,15 +164,15 @@
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>اثر صدا</translation>
+        <translation>اثرات صوتی</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>حالت آینه</translation>
+        <translation>مود آینه</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>چراغ نور</translation>
+        <translation>فلاش</translation>
     </message>
     <message>
         <source>Gridlines</source>
@@ -180,11 +180,11 @@
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>خطوط ۱×۱</translation>
+        <translation>1*1 خطوط</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>خطوط ۲×۲</translation>
+        <translation>2*2 خطوط</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -203,7 +203,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>توقف از ضبط</translation>
+        <translation>پایان دادن به ضبط</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -227,15 +227,15 @@
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>نمایش کلیدهای کمکی</translation>
+        <translation>نمایش کلیدهای کوتاه</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>توقف از گرفتن عکس</translation>
+        <translation>پایان دادن به گرفتن عکس</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>منوی سیتم</translation>
+        <translation>منوی سیستم</translation>
     </message>
 </context>
 <context>
@@ -268,7 +268,7 @@
     </message>
     <message>
         <source>Vivid</source>
-        <translation>زیبایی</translation>
+        <translation>شاد</translation>
     </message>
     <message>
         <source>Warm</source>
@@ -280,7 +280,7 @@
     </message>
     <message>
         <source>Retro</source>
-        <translation>رتر</translation>
+        <translation>رетرو</translation>
     </message>
     <message>
         <source>Film</source>
@@ -288,7 +288,7 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>گری</translation>
+        <translation>سیاه و سفید</translation>
     </message>
     <message>
         <source>B&amp;W</source>
@@ -299,19 +299,19 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>فلاش لایت</translation>
+        <translation>فلاش</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>روشن</translation>
+        <translation>فعال</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>خاموش</translation>
+        <translation>غیر فعال</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>تاخیر در ثبت</translation>
+        <translation>تاخیر در گرفتن عکس</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,18 +323,18 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>چشمه</translation>
+        <translation>فراشکنی</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>کاميرای ویدئویی پیدا نشد</translation>
+        <translation>کامِرای ویدئویی پیدا نشد</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>کاميرای ویدئویی در حال استفاده است</translation>
+        <translation>کامِرای ویدئویی در حال استفاده است</translation>
     </message>
     <message>
         <source>Stop recording</source>
