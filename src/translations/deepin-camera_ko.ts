@@ -84,7 +84,7 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation type="unfinished"/>
+        <translation>기본</translation>
     </message>
     <message>
         <source>File location</source>
@@ -92,15 +92,15 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation type="unfinished"/>
+        <translation>사진 촬영</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation type="unfinished"/>
+        <translation>버스트 모드</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation type="unfinished"/>
+        <translation>자체 타이머 지연 시간</translation>
     </message>
     <message>
         <source>Output</source>
@@ -112,11 +112,11 @@
     </message>
     <message>
         <source>4 pcs</source>
-        <translation type="unfinished"/>
+        <translation>4개</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation type="unfinished"/>
+        <translation>10개</translation>
     </message>
     <message>
         <source>None</source>
@@ -168,27 +168,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation type="unfinished"/>
+        <translation>거울 모드</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>플래시라이트</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"/>
+        <translation>그리드라인</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation>1x1 줄</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation>2x2 줄</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>최대 해상도:</translation>
     </message>
 </context>
 <context>
@@ -235,7 +235,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation type="unfinished"/>
+        <translation>컨텍스트 메뉴</translation>
     </message>
 </context>
 <context>
@@ -264,54 +264,54 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation type="unfinished"/>
+        <translation>정상</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation type="unfinished"/>
+        <translation>생동감 있는</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation type="unfinished"/>
+        <translation>따뜻한</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation type="unfinished"/>
+        <translation>차가운</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation type="unfinished"/>
+        <translation>레트로</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation type="unfinished"/>
+        <translation>필름</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation type="unfinished"/>
+        <translation>회색</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation type="unfinished"/>
+        <translation>흑백</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation type="unfinished"/>
+        <translation>플래시라이트</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"/>
+        <translation>켜짐</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"/>
+        <translation>꺼짐</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>지연 촬영</translation>
     </message>
     <message>
         <source>None</source>
@@ -319,11 +319,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"/>
+        <translation>필터</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>노출</translation>
     </message>
 </context>
 <context>
