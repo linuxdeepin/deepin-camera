@@ -92,7 +92,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation type="unfinished"/>
+        <translation>Ambil</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,7 +100,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation type="unfinished"/>
+        <translation>Waktu penundaan self-timer</translation>
     </message>
     <message>
         <source>Output</source>
@@ -176,19 +176,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation type="unfinished"/>
+        <translation>Garis grid</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation type="unfinished"/>
+        <translation>1*1 garis</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation type="unfinished"/>
+        <translation>2*2 garis</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>Resolusi maksimum:</translation>
     </message>
 </context>
 <context>
@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation type="unfinished"/>
+        <translation>Tunda pengambilan</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,7 +323,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation type="unfinished"/>
+        <translation>Pengaturan eksposur</translation>
     </message>
 </context>
 <context>
