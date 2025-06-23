@@ -1,344 +1,344 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_TW">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sv">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>正在錄製影片，是否關閉？</translation>
+        <translation>Filmen är pågående. Stäng fönstret?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">開啟資料夾</translation>
+        <translation type="vanished">Öppna mapp</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ingen</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>拍照</translation>
+        <translation>Foto</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>影片</translation>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>切換攝影機</translation>
+        <translation>Byt kamera</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>Stäng</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Kopiera</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Radera</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>Öppna mapp</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation>Skriv ut</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>您沒有權限操作此資料夾</translation>
+        <translation>Du har inte tillstånd att hantera denna mapp</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>Stäng</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">資料夾無效</translation>
+        <translation type="vanished">Ogiltig mapp</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>Öppna mapp</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>基本設定</translation>
+        <translation>Grundläggande</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>儲存路徑</translation>
+        <translation>Filplats</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>拍照設定</translation>
+        <translation>Fotografera</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>連拍</translation>
+        <translation>Burst-läge</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延時設定</translation>
+        <translation>Selvtimedelay</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>輸出設定</translation>
+        <translation>Utdata</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>輸出格式</translation>
+        <translation>Utdataformat</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4張</translation>
+        <translation>4 st</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10張</translation>
+        <translation>10 st</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ingen</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>相機是一款簡單易用的攝影機應用工具，可實現拍照、錄製影片等功能。</translation>
+        <translation>Kamera är en bild- och videoupptagningstjänst som använder din datorkamera eller webkamera.</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>文件未儲存</translation>
+        <translation>Filen har inte sparats</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">儲存位置：</translation>
+        <translation type="vanished">Spara till:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>照片：</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>影片：</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>解析度設定</translation>
+        <translation>Inställningar för upplösning</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">解析度：</translation>
+        <translation type="vanished">Upplösning:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>照片存儲位置：</translation>
+        <translation>Foto:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>影片存儲位置：</translation>
+        <translation>Video:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>音效</translation>
+        <translation>Ljudeffekter</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>鏡像攝影機</translation>
+        <translation>Speglingsläge</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>閃光燈</translation>
+        <translation>Lamp</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>構圖網格</translation>
+        <translation>Rutnät</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>十字網格</translation>
+        <translation>1*1 linjer</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>井字網格</translation>
+        <translation>2*2 linjer</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>最大解析度:</translation>
+        <translation>Maximal upplösning:</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>Kamera</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>Inställningar</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>Stoppa inspelning</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>Kopiera</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>Radera</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>打開</translation>
+        <translation>Öppna</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation>Skriv ut</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>說明</translation>
+        <translation>Hjälp</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>顯示快捷鍵</translation>
+        <translation>Visa snabbtangentsskinst</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>Stoppa fotoövning</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>喚起右鍵菜單</translation>
+        <translation>Kontextmeny</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">拍照</translation>
+        <translation type="vanished">Ta foto</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">錄製影片</translation>
+        <translation type="vanished">Spara video</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">結束拍照</translation>
+        <translation type="vanished">Stoppa fotoövning</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ingen</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>標準</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>鮮明</translation>
+        <translation>Vivid</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>暖色</translation>
+        <translation>Varm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>冷色</translation>
+        <translation>Kall</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>復古</translation>
+        <translation>Retro</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>沖印</translation>
+        <translation>Film</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>灰度</translation>
+        <translation>Grå</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>黑白</translation>
+        <translation>Svart och Vitt</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>閃光燈</translation>
+        <translation>Lampa</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>開啟</translation>
+        <translation>På</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>關閉</translation>
+        <translation>Av</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>延時拍攝</translation>
+        <translation>Försening av bildtagning</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>Ingen</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>濾鏡</translation>
+        <translation>Filter</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>曝光</translation>
+        <translation>Exponering</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>未連接攝影機</translation>
+        <translation>Ingen webbkamera hittades</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>攝影機已被占用</translation>
+        <translation>Webbkameran används redan</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">結束錄製</translation>
+        <translation type="vanished">Stoppa inspelning</translation>
     </message>
 </context>
 </TS>

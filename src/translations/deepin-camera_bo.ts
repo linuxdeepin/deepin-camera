@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"/>
+        <translation>ཞིབ་ཕྱིར་གྱི་གྲངས་ཆེན་པོ</translation>
     </message>
 </context>
 <context>

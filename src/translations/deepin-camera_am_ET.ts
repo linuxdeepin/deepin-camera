@@ -1,344 +1,344 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="zh_TW">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="am_ET">
 <context>
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>正在錄製影片，是否關閉？</translation>
+        <translation>የቮድዮ ተጠቅል የሚፈጸም የት ነው. የውይዝ ማጓጓል?</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation type="vanished">開啟資料夾</translation>
+        <translation type="vanished">ክፍል ማው.open</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>ማስተካከል</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>ይ የም</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>拍照</translation>
+        <translation>ፎቶ</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>影片</translation>
+        <translation>ቮድዮ</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>切換攝影機</translation>
+        <translation>ካሜራዎች በመቀየር</translation>
     </message>
 </context>
 <context>
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>取消</translation>
+        <translation>መጥ/tags</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>ዝ</translation>
     </message>
 </context>
 <context>
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>ኮፎ</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>ይ የም</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>ክፍል ማው.open</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation>ፕሪንት</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>您沒有權限操作此資料夾</translation>
+        <translation>ምርቶ የም ከዚህ አገልግሎት አይደሉም</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>關閉</translation>
+        <translation>ዝ</translation>
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="vanished">資料夾無效</translation>
+        <translation type="vanished">ሌላ አገልግሎት የም</translation>
     </message>
     <message>
         <source>Open folder</source>
-        <translation>開啟資料夾</translation>
+        <translation>ክፍል ማው.open</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>ማስተካከል</translation>
     </message>
     <message>
         <source>Basic</source>
-        <translation>基本設定</translation>
+        <translation>መሰረት</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>儲存路徑</translation>
+        <translation>የไฟል የት የም</translation>
     </message>
     <message>
         <source>Shoot</source>
-        <translation>拍照設定</translation>
+        <translation>ሽዩ</translation>
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>連拍</translation>
+        <translation>ብርስ ማድ</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>拍照延時設定</translation>
+        <translation>መነሻ ማድ</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation>輸出設定</translation>
+        <translation>ኦዩትፕዩት</translation>
     </message>
     <message>
         <source>Output format</source>
-        <translation>輸出格式</translation>
+        <translation>ኦዩትፕዩት ማድ</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4張</translation>
+        <translation>4 የም</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10張</translation>
+        <translation>10 የም</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>ይ የም</translation>
     </message>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>ካሜራ</translation>
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>相機是一款簡單易用的攝影機應用工具，可實現拍照、錄製影片等功能。</translation>
+        <translation>ካሜራ የፎቶ እና ቮድዮ ተጠቅል የሚሰራ የአገልግሎት ምስክ ማሽን የም እና ሰሌዳ የም</translation>
     </message>
     <message>
         <source>File not saved</source>
-        <translation>文件未儲存</translation>
+        <translation>ไฟล์ไม่ได้ถูกบันทึก</translation>
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="vanished">儲存位置：</translation>
+        <translation type="vanished">บันทึกไปยัง:</translation>
     </message>
     <message>
         <source>Photo:</source>
-        <translation>照片：</translation>
+        <translation>ภาพ:</translation>
     </message>
     <message>
         <source>Video:</source>
-        <translation>影片：</translation>
+        <translation>วิดีโอ:</translation>
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>解析度設定</translation>
+        <translation>การตั้งค่าความละเอียด</translation>
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="vanished">解析度：</translation>
+        <translation type="vanished">ความละเอียด:</translation>
     </message>
     <message>
         <source>Photos:</source>
-        <translation>照片存儲位置：</translation>
+        <translation>ภาพ:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>影片存儲位置：</translation>
+        <translation>วิดีโอ:</translation>
     </message>
     <message>
         <source>Sound effects</source>
-        <translation>音效</translation>
+        <translation>เอฟเฟกต์เสียง</translation>
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>鏡像攝影機</translation>
+        <translation>โหมดกระจก</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>閃光燈</translation>
+        <translation>แฟลชไลท์</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>構圖網格</translation>
+        <translation>เส้นกริด</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>十字網格</translation>
+        <translation>เส้น 1*1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>井字網格</translation>
+        <translation>เส้น 2*2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>最大解析度:</translation>
+        <translation>ความละเอียดสูงสุด:</translation>
     </message>
 </context>
 <context>
     <name>Shortcut</name>
     <message>
         <source>Camera</source>
-        <translation>相機</translation>
+        <translation>กล้อง</translation>
     </message>
     <message>
         <source>Settings</source>
-        <translation>設定</translation>
+        <translation>ตั้งค่า</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>結束錄製</translation>
+        <translation>หยุดบันทึก</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>複製</translation>
+        <translation>คัดลอก</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>刪除</translation>
+        <translation>ลบ</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>打開</translation>
+        <translation>เปิด</translation>
     </message>
     <message>
         <source>Print</source>
-        <translation>列印</translation>
+        <translation>พิมพ์</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>說明</translation>
+        <translation>ความช่วยเหลือ</translation>
     </message>
     <message>
         <source>Display shortcuts</source>
-        <translation>顯示快捷鍵</translation>
+        <translation>แสดงคำสั่งลัด</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>結束拍照</translation>
+        <translation>หยุดถ่ายภาพ</translation>
     </message>
     <message>
         <source>Context menu</source>
-        <translation>喚起右鍵菜單</translation>
+        <translation>เมนูบริบท</translation>
     </message>
 </context>
 <context>
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="vanished">拍照</translation>
+        <translation type="vanished">ถ่ายภาพ</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="vanished">錄製影片</translation>
+        <translation type="vanished">บันทึกวิดีโอ</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation type="vanished">結束拍照</translation>
+        <translation type="vanished">หยุดถ่ายภาพ</translation>
     </message>
 </context>
 <context>
     <name>dc::Settings</name>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>ไม่มี</translation>
     </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>標準</translation>
+        <translation>ჩვეულებრივი</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>鮮明</translation>
+        <translation>სიცოცხლესმიelic</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>暖色</translation>
+        <translation>სუფთა</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>冷色</translation>
+        <translation>ცისკენ</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>復古</translation>
+        <translation>რეტრო</translation>
     </message>
     <message>
         <source>Film</source>
-        <translation>沖印</translation>
+        <translation>ფილმის სტილი</translation>
     </message>
     <message>
         <source>Gray</source>
-        <translation>灰度</translation>
+        <translation>გრიზი</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>黑白</translation>
+        <translation>შავ-თეთრი</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>閃光燈</translation>
+        <translation>ფლაშლიტი</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>開啟</translation>
+        <translation>ჩართული</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>關閉</translation>
+        <translation>გამართული</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>延時拍攝</translation>
+        <translation>დაგეგმული ამოღება</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>無</translation>
+        <translation>არცერთი</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation>濾鏡</translation>
+        <translation>ფილტრები</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>曝光</translation>
+        <translation>გამართული ამოღება</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>未連接攝影機</translation>
+        <translation>ვებკამი ვერ მოიძებნა</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>攝影機已被占用</translation>
+        <translation>ვებკამი სამუშაო სტატუსში არის</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation type="vanished">結束錄製</translation>
+        <translation type="vanished">ჩანაწერის გაჩერება</translation>
     </message>
 </context>
 </TS>

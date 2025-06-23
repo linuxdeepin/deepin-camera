@@ -86,7 +86,7 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Neteisingas aplankas</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -161,7 +161,7 @@
     </message>
     <message>
         <source>Save to:</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Išsaugoti į:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -177,7 +177,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Raiškė:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -267,11 +267,11 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Fotografuoti</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation type="unfinished"/>
+        <translation type="vanished">Įrašyti vaizdo įrašą</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
