@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Видеозаписта се извършва. Да затвориш прозореца?</translation>
+        <translation>Видеозаписването е в ход. Да затвориш прозореца?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -15,11 +15,11 @@
     </message>
     <message>
         <source>None</source>
-        <translation>Няма</translation>
+        <translation>Нито едно</translation>
     </message>
     <message>
         <source>Photo</source>
-        <translation>Снимка</translation>
+        <translation>Фото</translation>
     </message>
     <message>
         <source>Video</source>
@@ -27,7 +27,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Промени камери</translation>
+        <translation>Сменете камери</translation>
     </message>
 </context>
 <context>
@@ -45,11 +45,11 @@
     <name>ImageItem</name>
     <message>
         <source>Copy</source>
-        <translation>Копиране</translation>
+        <translation>Копирай</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Изтриване</translation>
+        <translation>Изтрий</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -64,7 +64,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Нямаш разрешение да работиш с тази папка</translation>
+        <translation>Нямаш разрешение да работиш с този файлов касет</translation>
     </message>
     <message>
         <source>Close</source>
@@ -84,11 +84,11 @@
     </message>
     <message>
         <source>Basic</source>
-        <translation>Основно</translation>
+        <translation>Основни</translation>
     </message>
     <message>
         <source>File location</source>
-        <translation>Разположение на файла</translation>
+        <translation>Локация на файла</translation>
     </message>
     <message>
         <source>Shoot</source>
@@ -96,11 +96,11 @@
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Режим на бързо снимане</translation>
+        <translation>Режим на серии</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Задирайка на самозаписа</translation>
+        <translation>Задиране на самозапуска</translation>
     </message>
     <message>
         <source>Output</source>
@@ -108,19 +108,19 @@
     </message>
     <message>
         <source>Output format</source>
-        <translation>Формат на изхода</translation>
+        <translation>Формат на изход</translation>
     </message>
     <message>
         <source>4 pcs</source>
-        <translation>4 штука</translation>
+        <translation>4 шт.</translation>
     </message>
     <message>
         <source>10 pcs</source>
-        <translation>10 штука</translation>
+        <translation>10 шт.</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Няма</translation>
+        <translation>Нищо</translation>
     </message>
     <message>
         <source>Camera</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Камера е приложение за заснемане на видео и снимки с уеб камера или камерата на вашият компютър.</translation>
+        <translation>Камерата е утилита за извличане на снимки и видеозапис, използваща камерата на вашия компютър или вебкамера.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -140,7 +140,7 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Снимък:</translation>
+        <translation>Снимка:</translation>
     </message>
     <message>
         <source>Video:</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Настройки на разрешението</translation>
+        <translation>Настройки за резолюция</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Режим огледален</translation>
+        <translation>Режим на огледало</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -176,7 +176,7 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Сетки</translation>
+        <translation>Решетка</translation>
     </message>
     <message>
         <source>1*1 lines</source>
@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>Максимално разрешение:</translation>
+        <translation>Максимална резолюция:</translation>
     </message>
 </context>
 <context>
@@ -203,7 +203,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Стопи записа</translation>
+        <translation>Престанете да записвате</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -231,7 +231,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Стопи снимането</translation>
+        <translation>Престанете да печатате снимки</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -264,7 +264,7 @@
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Нормален</translation>
+        <translation>Нормално</translation>
     </message>
     <message>
         <source>Vivid</source>
@@ -272,11 +272,11 @@
     </message>
     <message>
         <source>Warm</source>
-        <translation>Топъл</translation>
+        <translation>Топло</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Хладен</translation>
+        <translation>Хладно</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -288,11 +288,11 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>Сив</translation>
+        <translation>Сиво</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Черно-бяло</translation>
+        <translation>Бяло-черно</translation>
     </message>
 </context>
 <context>
@@ -303,19 +303,19 @@
     </message>
     <message>
         <source>On</source>
-        <translation>Включено</translation>
+        <translation>Вкл.</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Изключено</translation>
+        <translation>Изкл.</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Задължително снимане</translation>
+        <translation>Задължително възприемане</translation>
     </message>
     <message>
         <source>None</source>
-        <translation>Няма</translation>
+        <translation>Нищо</translation>
     </message>
     <message>
         <source>Filters</source>
