@@ -3,7 +3,7 @@
     <name>CMainWindow</name>
     <message>
         <source>Video recording is in progress. Close the window?</source>
-        <translation>Video-optagning er i gang. Lukker du vinduet?</translation>
+        <translation>Videooptagning foregår. Lukk vinduet?</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -34,7 +34,7 @@
     <name>CloseDialog</name>
     <message>
         <source>Cancel</source>
-        <translation>Annuller</translation>
+        <translation>Annullér</translation>
     </message>
     <message>
         <source>Close</source>
@@ -68,7 +68,7 @@
     </message>
     <message>
         <source>Close</source>
-        <translation>Lukk</translation>
+        <translation>Luk</translation>
     </message>
     <message>
         <source>Invalid folder</source>
@@ -128,7 +128,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera er et værktøj til at optage billeder og video ved hjælp af din PC-kamera eller webkamera.</translation>
+        <translation>Kamera er en værktøj til optagelse af billeder og video, der bruger dit PC-kamera eller webkamera.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -140,7 +140,7 @@
     </message>
     <message>
         <source>Photo:</source>
-        <translation>Foto:</translation>
+        <translation>Billede:</translation>
     </message>
     <message>
         <source>Video:</source>
@@ -148,7 +148,7 @@
     </message>
     <message>
         <source>Resolution settings</source>
-        <translation>Indstillinger for oppløsning</translation>
+        <translation>Oppløsningsindstillinger</translation>
     </message>
     <message>
         <source>Resolution:</source>
@@ -156,11 +156,11 @@
     </message>
     <message>
         <source>Photos:</source>
-        <translation>Fotos:</translation>
+        <translation>Billeder:</translation>
     </message>
     <message>
         <source>Videos:</source>
-        <translation>Videos:</translation>
+        <translation>Videoer:</translation>
     </message>
     <message>
         <source>Sound effects</source>
@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Spejlbænksmode</translation>
+        <translation>Spejlingstilstand</translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -176,7 +176,7 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Rækvæske</translation>
+        <translation>Ruter</translation>
     </message>
     <message>
         <source>1*1 lines</source>
@@ -188,7 +188,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>Maksimale oppløsning:</translation>
+        <translation>Maksimal oppløsning:</translation>
     </message>
 </context>
 <context>
@@ -199,11 +199,11 @@
     </message>
     <message>
         <source>Settings</source>
-        <translation>Indstillinger</translation>
+        <translation>Instillinger</translation>
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>Stop optagelse</translation>
+        <translation>Sluk optagelse</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -231,7 +231,7 @@
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>Stop med at tage billeder</translation>
+        <translation>Sluk for at tage billeder</translation>
     </message>
     <message>
         <source>Context menu</source>
@@ -272,11 +272,11 @@
     </message>
     <message>
         <source>Warm</source>
-        <translation>Warm</translation>
+        <translation>Varm</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Cold</translation>
+        <translation>Kold</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -292,14 +292,14 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Svart og Hvit</translation>
+        <translation>Svart og hvid</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampe</translation>
+        <translation>Tændstik</translation>
     </message>
     <message>
         <source>On</source>
@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Forsinket optagelse</translation>
+        <translation>Forsink optagelse</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,18 +323,18 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Udholdenhed</translation>
+        <translation>Ekspotering</translation>
     </message>
 </context>
 <context>
     <name>videowidget</name>
     <message>
         <source>No webcam found</source>
-        <translation>Ingen webkamera fundet</translation>
+        <translation>Ingen webcam fundet</translation>
     </message>
     <message>
         <source>The webcam is in use</source>
-        <translation>Webkameraen er i brug</translation>
+        <translation>Webcamen er i brug</translation>
     </message>
     <message>
         <source>Stop recording</source>
