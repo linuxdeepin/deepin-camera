@@ -1,4 +1,4 @@
-# Camera | deepin-camera
+# Camera|deepin-camera|
 
 ## Overview
 
