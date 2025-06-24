@@ -1,3 +1,9 @@
+deepin-camera (6.5.23) unstable; urgency=medium
+
+  * fix: Update camera markdown formatting
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Tue, 24 Jun 2025 17:25:11 +0800
+
 deepin-camera (6.5.22) unstable; urgency=medium
 
   * update version to 6.5.22.

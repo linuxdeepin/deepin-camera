@@ -1,4 +1,4 @@
-# 相機 | deepin-camera
+# 相機|deepin-camera|
 
 ## 概述
 
