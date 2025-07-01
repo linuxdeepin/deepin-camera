@@ -284,6 +284,14 @@
         <source>None</source>
         <translation>Nėra</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
