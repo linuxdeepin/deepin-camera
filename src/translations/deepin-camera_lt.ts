@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="lt">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="lt">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -85,10 +87,6 @@
 </translation>
     </message>
     <message>
-        <source>Invalid folder</source>
-        <translation>Neteisingas aplankas</translation>
-    </message>
-    <message>
         <source>Open folder</source>
         <translation>Atverti folderį
 </translation>
@@ -160,10 +158,6 @@
         <translation> failas nebuvo išsaugotas</translation>
     </message>
     <message>
-        <source>Save to:</source>
-        <translation>Išsaugoti į:</translation>
-    </message>
-    <message>
         <source>Photo:</source>
         <translation>Vaizdas:</translation>
     </message>
@@ -174,10 +168,6 @@
     <message>
         <source>Resolution settings</source>
         <translation>Nustatymai apie resoliuciją</translation>
-    </message>
-    <message>
-        <source>Resolution:</source>
-        <translation>Raiškė:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -266,14 +256,6 @@
 <context>
     <name>ThumbnailsBar</name>
     <message>
-        <source>Take photo</source>
-        <translation>Fotografuoti</translation>
-    </message>
-    <message>
-        <source>Record video</source>
-        <translation>Įrašyti vaizdo įrašą</translation>
-    </message>
-    <message>
         <source>Stop taking photos</source>
         <translation type="vanished">Stošis nuo vaizdo įrašymo</translation>
     </message>
@@ -283,6 +265,14 @@
     <message>
         <source>None</source>
         <translation>Nėra</translation>
+    </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
     </message>
 </context>
 <context>

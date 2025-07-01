@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ka">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ka">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -168,27 +170,27 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>არასიმეტრიული რეჟიმი</translation>
+        <translation>სიმეტრიული რეჟიმი</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>ფლაში</translation>
+        <translation>ფლაშის სიგარე</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>ქრისტალური ხაზები</translation>
+        <translation>ქვეშ ხაზები</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 ხაზები</translation>
+        <translation>1×1 ხაზები</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 ხაზებს</translation>
+        <translation>2×2 ხაზები</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>მაქსიმალური გადაწყვიტილება:</translation>
+        <translation>უდიდესი გადასა trans მატერიალი:</translation>
     </message>
 </context>
 <context>
@@ -259,24 +261,32 @@
         <source>None</source>
         <translation>არაფერი</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>მპ4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>ვებმ</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>ნორმალური</translation>
+        <translation>ნორმალი</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>სიადმი</translation>
+        <translation>სიმართლე</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>სითბის</translation>
+        <translation>თბილი</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>სიცოცხლის</translation>
+        <translation>ხანდაზმული</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -292,14 +302,14 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>ბაის ანდ უი</translation>
+        <translation>ბანდი</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>ფლაში</translation>
+        <translation>ფლაშის სიგარე</translation>
     </message>
     <message>
         <source>On</source>
@@ -311,7 +321,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>დასაშვები ამოღება</translation>
+        <translation>დასაყოლი ფიქსირება</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,7 +333,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>გამოსახულება</translation>
+        <translation>გამასხვრავა</translation>
     </message>
 </context>
 <context>

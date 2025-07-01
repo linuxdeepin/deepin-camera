@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hr">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -19,15 +21,15 @@
     </message>
     <message>
         <source>Photo</source>
-        <translation>Фото</translation>
+        <translation>Slika</translation>
     </message>
     <message>
         <source>Video</source>
-        <translation>Видео</translation>
+        <translation>Video</translation>
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Prebacite kamera</translation>
+        <translation>Prebaciti kamere</translation>
     </message>
 </context>
 <context>
@@ -64,7 +66,7 @@
     <name>QObject</name>
     <message>
         <source>You don&apos;t have permission to operate this folder</source>
-        <translation>Nemate dozvolu za rad s ovom mapom</translation>
+        <translation>Nemate dopuštenje za rad u ovom folderu</translation>
     </message>
     <message>
         <source>Close</source>
@@ -96,11 +98,11 @@
     </message>
     <message>
         <source>Burst mode</source>
-        <translation>Mod strujanja</translation>
+        <translation>Režim serije</translation>
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Zakaži zaštitni vremenski odziv</translation>
+        <translation>Zadnji odziv</translation>
     </message>
     <message>
         <source>Output</source>
@@ -128,7 +130,7 @@
     </message>
     <message>
         <source>Camera is an image and video capture utility using your PC camera or webcam.</source>
-        <translation>Kamera je alat za prikupljanje slika i video sadržaja koristeći vašu računarsku kameru ili web kamere.</translation>
+        <translation>Kamera je alat za snimanje slika i videa koristeći vašu računarsku kameru ili webkameru.</translation>
     </message>
     <message>
         <source>File not saved</source>
@@ -168,23 +170,23 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Mod ogledala</translation>
+        <translation>Zrcalni režim</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Fotokamera</translation>
+        <translation>Reflektor</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Rasponi</translation>
+        <translation>Mreža</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1×1 linije</translation>
+        <translation>1*1 linije</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2×2 linije</translation>
+        <translation>2*2 linije</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>NIjedan</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -268,7 +278,7 @@
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Živahni</translation>
+        <translation>Živahan</translation>
     </message>
     <message>
         <source>Warm</source>
@@ -288,7 +298,7 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>Sivo</translation>
+        <translation>Siva</translation>
     </message>
     <message>
         <source>B&amp;W</source>
@@ -299,7 +309,7 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Fotokamera</translation>
+        <translation>Reflektor</translation>
     </message>
     <message>
         <source>On</source>
@@ -307,11 +317,11 @@
     </message>
     <message>
         <source>Off</source>
-        <translation>Isključen</translation>
+        <translation>Isključeno</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Zakaži snimanje</translation>
+        <translation>Zadliječi snimanje</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,7 +333,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Izlaganje</translation>
+        <translation>Osvetljenje</translation>
     </message>
 </context>
 <context>

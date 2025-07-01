@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ar">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -258,6 +260,14 @@
     <message>
         <source>None</source>
         <translation>لا أحد</translation>
+    </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>فريم</translation>
     </message>
 </context>
 <context>

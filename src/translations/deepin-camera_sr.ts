@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="sr">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="sr">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -176,7 +178,7 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Ретка</translation>
+        <translation>Мрежа линија</translation>
     </message>
     <message>
         <source>1*1 lines</source>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>Ништа</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>вебм</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -292,7 +302,7 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Бео-сива</translation>
+        <translation>Бео-сиво</translation>
     </message>
 </context>
 <context>
@@ -319,11 +329,11 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>Филтри</translation>
+        <translation>Филтери</translation>
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Експозиција</translation>
+        <translation>Експозија</translation>
     </message>
 </context>
 <context>

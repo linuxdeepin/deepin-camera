@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="el">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="el">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -27,7 +29,7 @@
     </message>
     <message>
         <source>Switch Cameras</source>
-        <translation>Αλλαγή Καμερών</translation>
+        <translation>Αλλαγή καμερών</translation>
     </message>
 </context>
 <context>
@@ -168,15 +170,15 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Λεπτομερής λειτουργία</translation>
+        <translation>Λευκός κατακόρυφος</translation>
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Φλασχλιτ</translation>
+        <translation>Φλασχλίτσα</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>Γραμμές πεδίου</translation>
+        <translation>Γραμμές περιοχής</translation>
     </message>
     <message>
         <source>1*1 lines</source>
@@ -235,7 +237,7 @@
     </message>
     <message>
         <source>Context menu</source>
-        <translation>Μενού περιβάλλοντος</translation>
+        <translation>Μενού πεδίου</translation>
     </message>
 </context>
 <context>
@@ -259,28 +261,36 @@
         <source>None</source>
         <translation>Κανένα</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
     <message>
         <source>Normal</source>
-        <translation>Κανονικό</translation>
+        <translation>Κανονική</translation>
     </message>
     <message>
         <source>Vivid</source>
-        <translation>Εντονό</translation>
+        <translation>Ζωντανή</translation>
     </message>
     <message>
         <source>Warm</source>
-        <translation>Θερμό</translation>
+        <translation>Θερμή</translation>
     </message>
     <message>
         <source>Cold</source>
-        <translation>Ψυχρό</translation>
+        <translation>Ψυχρή</translation>
     </message>
     <message>
         <source>Retro</source>
-        <translation>Ρετρό</translation>
+        <translation>Αντίστροφη</translation>
     </message>
     <message>
         <source>Film</source>
@@ -292,26 +302,26 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>Μαύρο-Λευκό</translation>
+        <translation>Μαύρο-Πίνακας</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Φλασχλιτ</translation>
+        <translation>Φλασχλίτσα</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>Ενεργό</translation>
+        <translation>Ενεργός</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Απενεργό</translation>
+        <translation>Απενεργοποιημένο</translation>
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Καθυστέρηση αποτύπωσης</translation>
+        <translation>Αποστολή με καθυστέρηση</translation>
     </message>
     <message>
         <source>None</source>
@@ -323,7 +333,7 @@
     </message>
     <message>
         <source>Exposure</source>
-        <translation>Εκτίμηση</translation>
+        <translation>Εξομάλυνση</translation>
     </message>
 </context>
 <context>
