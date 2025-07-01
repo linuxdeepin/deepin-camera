@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ko">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ko">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -92,7 +94,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>사진 촬영</translation>
+        <translation>촬영</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,7 +102,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>자체 타이머 지연 시간</translation>
+        <translation>자동 촬영 지연</translation>
     </message>
     <message>
         <source>Output</source>
@@ -172,19 +174,19 @@
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>플래시라이트</translation>
+        <translation>플래시</translation>
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>그리드라인</translation>
+        <translation>그리드 라인</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1x1 줄</translation>
+        <translation>1x1 라인</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2x2 줄</translation>
+        <translation>2x2 라인</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>없음</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>웨브M</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -280,7 +290,7 @@
     </message>
     <message>
         <source>Retro</source>
-        <translation>레트로</translation>
+        <translation>리tro</translation>
     </message>
     <message>
         <source>Film</source>
@@ -288,7 +298,7 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>회색</translation>
+        <translation>그레이</translation>
     </message>
     <message>
         <source>B&amp;W</source>
@@ -299,7 +309,7 @@
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>플래시라이트</translation>
+        <translation>플래시</translation>
     </message>
     <message>
         <source>On</source>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="hi_IN">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="hi_IN">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -176,19 +178,19 @@
     </message>
     <message>
         <source>Gridlines</source>
-        <translation>नेटलाइन</translation>
+        <translation>नेटलाइन्स</translation>
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 लाइन</translation>
+        <translation>1*1 लाइन्स</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 लाइन</translation>
+        <translation>2*2 लाइन्स</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>अधिकतम रिज़ॉलूशन:</translation>
+        <translation>अधिकतम रेज़ोलूशन:</translation>
     </message>
 </context>
 <context>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>कुछ नहीं</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>एमपी4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>वेबएम</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -280,7 +290,7 @@
     </message>
     <message>
         <source>Retro</source>
-        <translation>रिट्रो</translation>
+        <translation>रेट्रो</translation>
     </message>
     <message>
         <source>Film</source>
@@ -292,7 +302,7 @@
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>ब्लैक एंड व्हाइट</translation>
+        <translation>बेलांक</translation>
     </message>
 </context>
 <context>
@@ -319,7 +329,7 @@
     </message>
     <message>
         <source>Filters</source>
-        <translation>फ़िल्टर</translation>
+        <translation>फ़िल्टर्स</translation>
     </message>
     <message>
         <source>Exposure</source>

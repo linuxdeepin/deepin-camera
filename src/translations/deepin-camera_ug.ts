@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ug">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ug">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -188,7 +190,7 @@
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation>كۈچلىك تەسىرلىكلىك:</translation>
+        <translation>ئەڭ كۆرۈكچىلىك ئەساسيى:</translation>
     </message>
 </context>
 <context>
@@ -258,6 +260,14 @@
     <message>
         <source>None</source>
         <translation>يوق</translation>
+    </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>ۋېبم</translation>
     </message>
 </context>
 <context>

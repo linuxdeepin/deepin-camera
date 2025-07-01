@@ -261,6 +261,14 @@
         <source>None</source>
         <translation>None</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>MP4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>WebM</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>

@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ro">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="ro">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -172,7 +174,7 @@
     </message>
     <message>
         <source>Flashlight</source>
-        <translation>Lampa de lumină</translation>
+        <translation>Fotocamere</translation>
     </message>
     <message>
         <source>Gridlines</source>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>Nimic</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -276,7 +286,7 @@
     </message>
     <message>
         <source>Cold</source>
-        <translation>Rece</translation>
+        <translation>Refrigerat</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -288,26 +298,26 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>Albăstruie</translation>
+        <translation>Albă-negru</translation>
     </message>
     <message>
         <source>B&amp;W</source>
-        <translation>N&amp;B</translation>
+        <translation>Albă-negru</translation>
     </message>
 </context>
 <context>
     <name>takePhotoSettingAreaWidget</name>
     <message>
         <source>Flashlight</source>
-        <translation>Lampa de lumină</translation>
+        <translation>Fotocamere</translation>
     </message>
     <message>
         <source>On</source>
-        <translation>On</translation>
+        <translation>Pornit</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation>Off</translation>
+        <translation>Oprit</translation>
     </message>
     <message>
         <source>Delay capture</source>

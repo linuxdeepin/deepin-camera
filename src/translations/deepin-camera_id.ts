@@ -1,4 +1,6 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="id">
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.1" language="id">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -92,7 +94,7 @@
     </message>
     <message>
         <source>Shoot</source>
-        <translation>Ambil</translation>
+        <translation>Tekan</translation>
     </message>
     <message>
         <source>Burst mode</source>
@@ -100,7 +102,7 @@
     </message>
     <message>
         <source>Self-timer delay</source>
-        <translation>Waktu penundaan self-timer</translation>
+        <translation>Waktu penundaan diri</translation>
     </message>
     <message>
         <source>Output</source>
@@ -180,11 +182,11 @@
     </message>
     <message>
         <source>1*1 lines</source>
-        <translation>1*1 garis</translation>
+        <translation>Garis 1*1</translation>
     </message>
     <message>
         <source>2*2 lines</source>
-        <translation>2*2 garis</translation>
+        <translation>Garis 2*2</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
@@ -259,6 +261,14 @@
         <source>None</source>
         <translation>Kosong</translation>
     </message>
+    <message>
+        <source>mp4</source>
+        <translation>mp4</translation>
+    </message>
+    <message>
+        <source>webm</source>
+        <translation>webm</translation>
+    </message>
 </context>
 <context>
     <name>filterPreviewButton</name>
@@ -311,7 +321,7 @@
     </message>
     <message>
         <source>Delay capture</source>
-        <translation>Tunda pengambilan</translation>
+        <translation>Penundaan pengambilan gambar</translation>
     </message>
     <message>
         <source>None</source>
