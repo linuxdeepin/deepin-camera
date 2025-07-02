@@ -1037,50 +1037,79 @@ void videowidget::onRestartDevices()
 void videowidget::onChangeDev()
 {
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
-
     if (m_imgPrcThread != nullptr)
         m_imgPrcThread->stop();
-
     while (m_imgPrcThread->isRunning());
     QString str;
-
     if (devicehandler != nullptr) {
         str = QString(devicehandler->videodevice);
         close_v4l2_device_handler();
     }
-
     v4l2_device_list_t *devlist = get_device_list();
-    if (devlist->num_devices == 2) {
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-            if (str != str1) {
-                if (E_OK == switchCamera(devlist->list_devices[i].device, devlist->list_devices[i].name)) {
+    QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *> > > vGroupData;
+    int groupNum = getUSBCameraGroup(devlist, vGroupData);
+    if (groupNum == 1) {
+        if (devlist->num_devices == 2) {
+            for (int i = 0 ; i < devlist->num_devices; i++) {
+                QString str1 = QString(devlist->list_devices[i].device);
+                if (str != str1) {
+                    if (E_OK == switchCamera(devlist->list_devices[i].device, devlist->list_devices[i].name)) {
+                        break;
+                    }
+                }
+            }
+        } else {
+            if (devlist->num_devices == 0) {
+                DataManager::instance()->setdevStatus(NOCAM);
+                showNocam();
+            }
+            for (int i = 0 ; i < devlist->num_devices; i++) {
+                QString str1 = QString(devlist->list_devices[i].device);
+                if (str == str1) {
+                    if (i == devlist->num_devices - 1) {
+                        switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
+                        break;
+                    } else {
+                        switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
+                        break;
+                    }
+                }
+                if (str.isEmpty()) {
+                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
                     break;
                 }
             }
         }
     } else {
-        if (devlist->num_devices == 0) {
-            DataManager::instance()->setdevStatus(NOCAM);
-            showNocam();
-        }
-
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-
-            if (str == str1) {
-                if (i == devlist->num_devices - 1) {
-                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                    break;
-                } else {
-                    switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
-                    break;
+        if (groupNum == 2) {
+            for (int i = 0 ; i < vGroupData.count(); i++) {
+                QString str1 = QString(vGroupData[i].second[0]->device);
+                if (str != str1) {
+                    if (E_OK == switchCamera(vGroupData[i].second[0]->device, vGroupData[i].second[0]->name)) {
+                        break;
+                    }
                 }
             }
-
-            if (str.isEmpty()) {
-                switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                break;
+        } else {
+            if (devlist->num_devices == 0) {
+                DataManager::instance()->setdevStatus(NOCAM);
+                showNocam();
+            }
+            for (int i = 0 ; i < vGroupData.count(); i++) {
+                QString str1 =  QString(vGroupData[i].second[0]->device);
+                if (str == str1) {
+                    if (i == vGroupData.count() - 1) {
+                        switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
+                        break;
+                    } else {
+                        switchCamera(vGroupData[i + 1].second[0]->device, vGroupData[i + 1].second[0]->name);
+                        break;
+                    }
+                }
+                if (str.isEmpty()) {
+                    switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
+                    break;
+                }
             }
         }
     }
@@ -1128,6 +1157,29 @@ int videowidget::switchCamera(const char *device, const char *devName)
         showNocam();
     }
     return ret;
+}
+
+int videowidget::getUSBCameraGroup(v4l2_device_list_t *devlist, QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *> > > &vGroupData)
+{
+    for (int i = 0 ; i < devlist->num_devices; i++) {
+        QString str1 = QString(devlist->list_devices[i].location);
+
+        int j = 0;
+        for (; j < vGroupData.count(); j++) {
+            if (str1 == vGroupData.at(j).first) {
+                break;
+            }
+        }
+        if (j == vGroupData.count()) {
+            QVector<v4l2_dev_sys_data_t *> vList;
+            vList.append(&devlist->list_devices[i]);
+            vGroupData.append(qMakePair(str1, vList));
+        } else {
+            QVector<v4l2_dev_sys_data_t *> &vlist = vGroupData[j].second;
+            vlist.append(&devlist->list_devices[i]);
+        }
+    }
+    return vGroupData.count();
 }
 
 QString videowidget::getSaveFilePrefix()

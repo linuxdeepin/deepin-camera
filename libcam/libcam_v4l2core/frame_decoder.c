@@ -99,7 +99,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 					exit(-1);
 				}
 
-                vd->frame_queue[i].yuv_frame = calloc((uint8_t)framesizeIn, sizeof(uint8_t));
+                vd->frame_queue[i].yuv_frame = calloc((size_t)framesizeIn, sizeof(uint8_t));
 				if(vd->frame_queue[i].yuv_frame == NULL)
 				{
 					fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (alloc_v4l2_frames): %s\n", strerror(errno));
@@ -108,7 +108,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 
 			}
 
-            vd->h264_last_IDR = calloc((uint8_t)(width * height), sizeof(uint8_t));
+            vd->h264_last_IDR = calloc((size_t)(width * height), sizeof(uint8_t));
 			if(vd->h264_last_IDR == NULL)
 			{
 				fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (alloc_v4l2_frames): %s\n", strerror(errno));
