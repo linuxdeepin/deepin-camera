@@ -114,8 +114,6 @@ void Settings::setNewResolutionList()
             for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
                 if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
                         && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
-                        (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
                         ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
                          && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
                          && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
