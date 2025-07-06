@@ -261,11 +261,11 @@
     </message>
     <message>
         <source>mp4</source>
-        <translation type="unfinished"/>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>WebM</translation>
     </message>
 </context>
 <context>
