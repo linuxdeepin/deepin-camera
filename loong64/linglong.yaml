@@ -136,11 +136,11 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/d/dpkg/dpkg_1.22.6deepin4_loong64.deb
     digest: ed2c4a87410d3beea4622bbe835dab07b458a8e286be591ca34e97f2a6f6d730
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/fontconfig-config_2.14.2-6_loong64.deb
-    digest: 17c510572e0a51ecc5a4eba486a1cfcb55d2ac297c84f35bc7c58cbc31e6471b
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/fontconfig-config_2.15.0-2.3deepin1_loong64.deb
+    digest: 06fd1e3b51d4e56571e9e974fd7936aa7010220f954b9a78b239b42bbf6e94fc
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/fontconfig_2.14.2-6_loong64.deb
-    digest: 85fed3d569a4fc895efd890e842e276016aa92848ddc3419c6fdaabc02280c7f
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/fontconfig_2.15.0-2.3deepin1_loong64.deb
+    digest: 383b6417f02a2850dc8dc08613ba4f188f63943deef4f707fb03b50e34627c30
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fonts-noto/fonts-croscore_20201225-deepin_all.deb
     digest: afbaf120869a08aa7dd14da9ad014de48a751aa4330534b531410bb86c411b55
@@ -262,29 +262,29 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/liba/libavc1394/libavc1394-0_0.5.4-5_loong64.deb
     digest: 1ed606d4b28e3d3e128353bffe960abe6a0abc3bc32198e8712a2aeff3fea287
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavcodec-dev_6.1.1-2deepin2_loong64.deb
-    digest: 920d3ec849e71760f05fc0cf7f057bc5d6a9fb5ff224ade98e4da2769b41ce52
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavcodec-dev_6.1.1-2deepin5_loong64.deb
+    digest: a05c8f27ea5c612af73074fa38cd2a6d57633774439fd9aa3c7cc46b30cc4a0f
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavcodec60_6.1.1-2deepin2_loong64.deb
-    digest: 7a20afa0f9aacb210e8aedb636f8ec29905d19c8862664a4bc898e89c4a4ccc0
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavcodec60_6.1.1-2deepin5_loong64.deb
+    digest: 07f5f5b252e647f447c10dbc496e502e6c6e3e791f07a7ffc6bf1e11c30b1ca5
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavfilter-dev_6.1.1-2deepin2_loong64.deb
-    digest: bc346a3a2f1077a8de9cdfda98f4fdbb133168c230e9fbda4ec4bf5f3d17c9e6
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavfilter-dev_6.1.1-2deepin5_loong64.deb
+    digest: 102af47db2525afcabcc826af81b27fc329b251d59d9482baa87774674e7ce12
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavfilter9_6.1.1-2deepin2_loong64.deb
-    digest: 36b58f1381c4204e13ea236c977c367d16e57c3aa29985c186979e8a38711b75
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavfilter9_6.1.1-2deepin5_loong64.deb
+    digest: eeee76955e31ad70c90d0d9755c09615a160374df7434fabae703d4308b3ffcb
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavformat-dev_6.1.1-2deepin2_loong64.deb
-    digest: efcfaafc0b770753c5b0465199d8f81de739aa591f5e1ee521835fbb1de474b5
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavformat-dev_6.1.1-2deepin5_loong64.deb
+    digest: 9c84a81ae426b7e618e3db6e4ceda6f1f2be466eaf8447f2b5f9ceaf502fcdbd
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavformat60_6.1.1-2deepin2_loong64.deb
-    digest: 2423da906a4fb65e9abf19a59910c614e58899ac2e4aaa522850cad7bb9576f6
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavformat60_6.1.1-2deepin5_loong64.deb
+    digest: 8b045a2001e0e3e10adfcbbc4a6eee767a1af5fec93c82543eea497141d3276d
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavutil-dev_6.1.1-2deepin2_loong64.deb
-    digest: 0a1a51e680e29dd5240728088846f31704524f393f66833c2f1bc46a875ceff7
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavutil-dev_6.1.1-2deepin5_loong64.deb
+    digest: c3864e737e7a2165253e4f0383447c43ada9f86ad18619ee7984b6c428c0e7ad
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavutil58_6.1.1-2deepin2_loong64.deb
-    digest: 356dfdd307a6a564c2f253378fd07f5925d481d84ea650d5aaa922009dffdb8f
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libavutil58_6.1.1-2deepin5_loong64.deb
+    digest: 9dffa490932e29633146b2e971046d4dd38e83e9d72ee9e01202cf529346a232
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libb/libb2/libb2-1_0.98.1-1.1_loong64.deb
     digest: 43c9bedf808d5c2b85351f73dab25e81c5674c499c293be875ac5250c4b8cca0
@@ -373,8 +373,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libx/libxcrypt/libcrypt1_4.4.36-5_loong64.deb
     digest: a9dcd576d5cd80ada64381a1727a3116545e93cf447f59c7414d1777e2993fec
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/c/cryptsetup/libcryptsetup12_2.7.5-1deepin2.1_loong64.deb
-    digest: 66c9628b7026bd09af0defc6c1ceae6fc5536260b55b7b2f652e3ef1b54e505d
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/c/cryptsetup/libcryptsetup12_2.7.5-1deepin2.3_loong64.deb
+    digest: b0e1b8d1e52719495d16cca3ddd302cce8bb39738cd9bb6158f181688ad104ba
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/b/binutils/libctf-nobfd0_2.41-6deepin7_loong64.deb
     digest: c06121aeae9359ded8ff84c74ade5b03d1325b77c4a938fbd9931c8fe2caa84b
@@ -436,8 +436,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/l/lvm2/libdevmapper1.02.1_1.02.201-1_loong64.deb
     digest: f52242c7bc863bdf87fda9ef7accf1e12816999fb5dbfb590325399eace9052d
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/u/util-dfm/libdfm6-io_1.3.31_loong64.deb
-    digest: 41de45b216369423e366b00e474f09744d2be1ced1962b18c6f80f47c01719f6
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/u/util-dfm/libdfm6-io_1.3.32_loong64.deb
+    digest: f259e42128137cd958f1f25aba20f1afaa6fbac7ed57d889e4ff56b97e723677
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/d/double-conversion/libdouble-conversion3_3.3.0-1_loong64.deb
     digest: 1cb1deef108f4163f884f564e9fcfd429adc315e9509c30ff3bcf936824ac543
@@ -547,8 +547,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fmtlib/libfmt10_10.1.1+ds1-4deepin0+rb1_loong64.deb
     digest: afa51b193209a8d67f9f610e43bc9dffadd90f61fd77112ca1f0cfb87a7bd269
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/libfontconfig1_2.14.2-6_loong64.deb
-    digest: db05b74e370f34d39ff896e5070fee3351a4cb938e86bc6dc852c624cc9534cb
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/fontconfig/libfontconfig1_2.15.0-2.3deepin1_loong64.deb
+    digest: e4faee509dbabd22ea70b8d59aedef53701693356ca681d32eeb855026312c03
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libf/libfontenc/libfontenc1_1.1.4-1_loong64.deb
     digest: 36450772f287a243ed0ff6c3b5e491021c7d63f6f68a9e71711fbb6e5884c868
@@ -712,8 +712,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libi/libice/libice6_1.0.10-1_loong64.deb
     digest: 71f07175fac63f8a51f001299a9329a38c4320df6b46e6bdda20768aa90a3456
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/i/icu/libicu74_74.2-1deepin1_loong64.deb
-    digest: 2ed8252419a84421d4df376a90e03cc9eb4d1a6d4ec4120a64ab4935f80e3ba8
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/i/icu/libicu74_74.2-1deepin4_loong64.deb
+    digest: d60c34f7df7c6c7b8b950d3b2996bd1dda6ea510d77de2869bd13c614a1fe00a
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libi/libidn2/libidn2-0_2.3.2-2_loong64.deb
     digest: b235fca3fd81c2e6918d54b8d71f79757d6b818cf897fde7cb3826dc23ce85b3
@@ -1000,11 +1000,11 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/p/portaudio19/libportaudiocpp0_19.6.0-1.2_loong64.deb
     digest: 99ac0d1040667fcba1faa5226737ab55bc675d1b319d5b30174582cfc7708380
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libpostproc-dev_6.1.1-2deepin2_loong64.deb
-    digest: fca2fd4994638d5279b835b66c617e05835201a9f6909db66c0b3d72a9618554
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libpostproc-dev_6.1.1-2deepin5_loong64.deb
+    digest: 8485e48986ec91a18a4a50e5a36467fa1866a72250c11ae6606ef5698c72a2a6
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libpostproc57_6.1.1-2deepin2_loong64.deb
-    digest: f8b456061231d8a60d142a4acfc334423bde9b68688a4123d97b0a1ac8948bb8
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libpostproc57_6.1.1-2deepin5_loong64.deb
+    digest: 6300c6ae6f8bcd6d0bef4a0d2007561ee359c7c23f9867a9cbfbcdb3a09c0292
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libp/libproxy/libproxy1v5_0.5.9-1_loong64.deb
     digest: 450c63cece1053b61ad1db303e20cf3008cd130f59907df2610dee985a1ac250
@@ -1261,8 +1261,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/srt/libsrt1.4-gnutls_1.4.4-4deepin0_loong64.deb
     digest: dea4a89cee5d7d70b6143ef55501595bfa963aee8777e0f1b10f46a78dc9e578
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libssh/libssh-gcrypt-4_0.10.6-2_loong64.deb
-    digest: 55cc8ef205639767d2c5162b6424297d7866b3d77be3ec600b70ddf3345cd6d9
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libssh/libssh-4_0.11.2-1_loong64.deb
+    digest: 88319c457cf55da790af61d2607fd89ebbce4e14ca4361f4d23461ad5fb41e75
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/libs/libssh2/libssh2-1_1.11.1-1deepin1_loong64.deb
     digest: bb45ae77a9bd5170e8616a550c54e2c419435abce629ade62605dcf0aa544d11
@@ -1279,17 +1279,17 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/svt-av1/libsvtav1enc1d1_1.7.0+dfsg-2_loong64.deb
     digest: d402b79e3fbfa42586f89b0b86c376772ec033ff6252032e0ea7edb831a9bf2d
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswresample-dev_6.1.1-2deepin2_loong64.deb
-    digest: 68892b6c67bece2121e7b91ef42f9cf8c6537fa3887417953dc82837a245b36d
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswresample-dev_6.1.1-2deepin5_loong64.deb
+    digest: 4ad1494e6ff8cf49be63b33e86e5269d574167f9957df2fa216fac78aef96d7d
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswresample4_6.1.1-2deepin2_loong64.deb
-    digest: 62165ae4da8e988e34843872acc420a44bcc4dd65c725bec9012e3dbc97383e7
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswresample4_6.1.1-2deepin5_loong64.deb
+    digest: e720f4941d04c0107977e1fb4f7a8a72f85f1883deda6e0e7873068a35d26692
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswscale-dev_6.1.1-2deepin2_loong64.deb
-    digest: 73970fbf24f51bb28c72c74bd4f7ee2f73a7234fb41dd3c8c8c030cb94cb7135
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswscale-dev_6.1.1-2deepin5_loong64.deb
+    digest: e86fbe106d49495cae30bc124830b64f1fb17d5fa4e12658549b396400170f12
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswscale7_6.1.1-2deepin2_loong64.deb
-    digest: cdc134708e57d8d48bfc3379da2ae325de64d2409ec5c2217abe303f3c3d0554
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/f/ffmpeg/libswscale7_6.1.1-2deepin5_loong64.deb
+    digest: fbc99b9f58a6f950d7e885668e20702b17ba88dd5886ffec4b9adf74ac992e82
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/systemd/libsystemd-shared_255.2-4deepin11_loong64.deb
     digest: 0c01dcf425021825701db5f5dca0601bde53e63fc69b547ee6132bd8d0431e7f
@@ -1723,8 +1723,8 @@ sources:
     url: http://10.20.64.92:8080/testing25_daily/pool/main/n/netbase/netbase_6.4_all.deb
     digest: 5fd05a5d63864b96453ba55a4c5efa287b8e7e53fbd833e7a944e066d30e1eb1
   - kind: file
-    url: http://10.20.64.92:8080/testing25_daily/pool/main/o/ocl-icd/ocl-icd-libopencl1_2.2.14-3_loong64.deb
-    digest: 8569bcf5afca194968c0e49c3a71fbf106bdb5f6281db535142a5b8ea1a46e18
+    url: http://10.20.64.92:8080/testing25_daily/pool/main/o/ocl-icd/ocl-icd-libopencl1_2.3.3-1_loong64.deb
+    digest: 7f3efc85c206a71b7442ee3e18dfe4f2dba6c0c62c28ab38b4960be5d28998ae
   - kind: file
     url: http://10.20.64.92:8080/testing25_daily/pool/main/s/shadow/passwd_4.16.0-7deepin1_loong64.deb
     digest: 06dfab06bbb4884f103471b61fffbb496236146102b609ad897f054cf0b27e0b
