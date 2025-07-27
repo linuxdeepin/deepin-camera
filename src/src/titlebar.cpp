@@ -27,7 +27,10 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
 {
     Q_D(Titlebar);
 
-    setAttribute(Qt::WA_TranslucentBackground, true);
+    // 设置DBlurEffectWidget为完全透明
+    setBlurEnabled(false);          // 关闭模糊效果
+    setMaskAlpha(0);               // 设置遮罩完全透明
+    setMaskColor(QColor(0, 0, 0, 0)); // 设置遮罩颜色为完全透明
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -38,6 +41,13 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     d->m_titlebar->setBackgroundTransparent(true);
     d->m_titlebar->setBlurBackground(false);
     layout->addWidget(d->m_titlebar);
+
+    d->m_shadowEffect = new QGraphicsDropShadowEffect(this);
+    d->m_shadowEffect->setOffset(d->offsetX, d->offsetX);
+    d->m_shadowEffect->setBlurRadius(d->offsetX);
+    d->m_shadowEffect->setColor(Qt::transparent);
+
+    this->setGraphicsEffect(d->m_shadowEffect);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
 }
@@ -72,11 +82,6 @@ void Titlebar::paintEvent(QPaintEvent *pe)
 
     QPainter painter(this);
     QPalette pa;
-    QPen pen(QColor(0, 0, 0, 0));
-    QLinearGradient linearGradient(width(), 0, width(), height());
-
-    linearGradient.setColorAt(0, QColor(0, 0, 0, 255 * 0.5));   //垂直线性渐变
-    linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
     if(DataManager::instance()->getdevStatus() != NOCAM) {
         pa.setColor(QPalette::ButtonText, d->lightColor);
@@ -84,8 +89,7 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     }
 
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setBrush(QBrush(linearGradient));
-    painter.setPen(pen);
+    painter.setPen(Qt::transparent);
     painter.drawRect(rect());
 }
 

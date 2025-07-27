@@ -765,6 +765,7 @@ CMainWindow::CMainWindow(QWidget *parent)
     m_SpaceKeyInterval = QDateTime::currentMSecsSinceEpoch();
     this->setObjectName(MAIN_WINDOW);
     this->setAccessibleName(MAIN_WINDOW);
+    setTitlebarShadowEnabled(false);
 
     titlebar()->deleteLater();
     setupTitlebar();
