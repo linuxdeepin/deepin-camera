@@ -1255,6 +1255,11 @@ void CMainWindow::loadAfterShow()
     m_windowStateThread = new windowStateThread(m_bWayland, this);
     connect(m_windowStateThread, &windowStateThread::someWindowFullScreen, this, &CMainWindow::onStopPhotoAndRecord);
 
+    QTimer::singleShot(100, this, [=](){
+        resize(this->size() + QSize(1, 1));
+        resize(this->size() + QSize(-1, -1));
+    });
+
     QJsonObject obj{
         {"tid", EventLogUtils::Start},
         {"mode", 1},
