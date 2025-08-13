@@ -30,6 +30,7 @@ Comment[hu]=A Kamera egy kép- és videofelvételi segédprogram, amely a szám�
 Comment[it]=Camera è un'app di acquisizione immagini e video che sfrutta la camera integrata nel tuo dispositivo. Localizzazione italiana a cura di Massimo A. Carofano.
 Comment[ka]=კამერა არის ხელსაწყო სურათის და ვიდეოს გადასაღებად, კომპიუტერის ინტეგრირებული კამერის ანდ დამატებითი ვებ კამერის გამოყენებით
 Comment[ko]=카메라는 PC 카메라 또는 웹캠을 사용하는 이미지 및 비디오 캡처 유틸리티입니다.
+Comment[lo]=ກ້ອງຖ່າຍຮູບແມ່ນເຄື່ອງມືຖ່າຍຮູບ ແລະ ບັນທຶກວິດີໂອໂດຍໃຊ້ກ້ອງຂອງຄອມພິວເຕີ ຫຼື ເວັບແຄມ
 Comment[ms]=Kamera ialah sebuah utiliti tangkapan imej dan video menggunakan kamera PC atau kamera sesawang anda.
 Comment[nl]=Met Camera kun je foto's en video's maken met je camera of webcam.
 Comment[pl]=Kamera to narzędzie do przechwytywania obrazów i wideo za pomocą kamery komputera lub kamery internetowej.
@@ -62,6 +63,7 @@ GenericName[hu]=Kamera
 GenericName[it]=Camera
 GenericName[ka]=კამერა
 GenericName[ko]=카메라
+GenericName[lo]=ກ້ອງຖ່າຍຮູບ
 GenericName[ms]=Kamera
 GenericName[nl]=Camera
 GenericName[pl]=Kamera
@@ -94,6 +96,7 @@ Name[hu]=Deepin® Kamera
 Name[it]=Deepin Camera
 Name[ka]=კამერა
 Name[ko]=Deepin 카메라
+Name[lo]=Deepin ກ້ອງຖ່າຍຮູບ
 Name[ms]=Kamera Deepin
 Name[nl]=Deepin Camera
 Name[pl]=Kamera Deepin
