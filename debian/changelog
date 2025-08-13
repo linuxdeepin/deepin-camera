@@ -1,3 +1,9 @@
+deepin-camera (6.5.31) unstable; urgency=medium
+
+  * chore: Update desktop file translations
+
+ -- dengzhongyuan <dengzhongyuan@uniontech.com>  Wed, 13 Aug 2025 14:15:42 +0800
+
 deepin-camera (6.5.30) unstable; urgency=medium
 
   * chore: Add new Lao translation file
