@@ -592,6 +592,8 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
     switch (video_defaults->codec_id) {
     case AV_CODEC_ID_H264: {
         video_codec_data->codec_context->me_range = 16;
+        video_codec_data->codec_context->gop_size = 250;
+        video_codec_data->codec_context->max_b_frames = 0;
         //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
         getAvutil()->m_av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
         getAvutil()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
