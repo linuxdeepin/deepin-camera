@@ -12,13 +12,23 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-            "forceGles": {
+        "forceGles": {
             "value": -1,
             "serial": 0,
             "flags": ["global"],
             "name": "forc elgs show in wayland",
             "name[zh_CN]": "在 wayland 下特殊显示模式",
             "description": "special mode do use gles to show",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "projectID": {
+            "value": "",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "project ID",
+            "name[zh_CN]": "不同项目下的定制内容",
+            "description": "Customized content under different projects",
             "permissions": "readwrite",
             "visibility": "private"
         }
