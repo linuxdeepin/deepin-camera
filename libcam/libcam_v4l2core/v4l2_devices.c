@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <linux/version.h>
 
+#include "camview.h"
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
 #include "cameraconfig.h"
@@ -206,9 +207,39 @@ static int is_standard_camera_device(int fd, struct v4l2_capability *cap, const 
         printf("V4L2_CORE: Device check - %s [%s]: standard_fmt=%d, is_isp=%d, is_uvc=%d, is_usb=%d\n",
                device_path, cap->card, has_standard_format, is_isp_device, is_uvc_device, is_usb_device);
     }
-    
-    // 返回判断结果：有标准格式且不是ISP设备
-    return (has_standard_format && !is_isp_device);
+
+    // 5. 智能ISP设备处理：保留有用的ISP输出设备
+    int is_useful_isp = 0;
+    if (is_isp_device) {
+        // 专门过滤有问题的设备：/dev/video12 (selfpath有底层问题)
+        if (strstr((char *)device_path, "/dev/video12") != NULL) {
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Filtering problematic device: %s [%s] - hardware issue\n", device_path, cap->card);
+            }
+            return 0;  // 明确过滤video12
+        }
+        
+        // 检查是否为有用的ISP输出设备（只保留mainpath，不要selfpath）
+        if (strstr((char *)cap->card, "mainpath") != NULL) {
+            is_useful_isp = 1;
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Keeping useful ISP device: %s [%s]\n", device_path, cap->card);
+            }
+        }
+        
+        // 过滤无用的ISP设备（统计、参数、selfpath等）
+        if (strstr((char *)cap->card, "statistics") != NULL ||
+            strstr((char *)cap->card, "params") != NULL ||
+            strstr((char *)cap->card, "selfpath") != NULL) {
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Filtering useless ISP device: %s [%s]\n", device_path, cap->card);
+            }
+            return 0;  // 明确过滤
+        }
+    }
+
+    // 返回判断结果：有标准格式且（不是ISP设备 或 是有用的ISP设备）
+    return (has_standard_format && (!is_isp_device || is_useful_isp));
 }
 
 /*
