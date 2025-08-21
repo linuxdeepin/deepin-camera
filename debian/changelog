@@ -1,3 +1,9 @@
+deepin-camera (6.5.32) unstable; urgency=medium
+
+  * Update version to 6.5.32. 
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Thu, 21 Aug 2025 16:37:50 +0800
+
 deepin-camera (6.5.31) unstable; urgency=medium
 
   * chore: Update desktop file translations
