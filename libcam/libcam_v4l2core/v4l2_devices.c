@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <linux/version.h>
+#include <camview.h>
 
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
@@ -314,14 +315,17 @@ int enum_v4l2_devices()
             continue; /*next dir entry*/
         }
         
-        // 检查是否为标准摄像头设备，过滤掉ISP管道设备
-        if (!is_standard_camera_device(fd, &v4l2_cap, v4l2_device)) {
-            if (verbosity > 0) {
-                fprintf(stderr, "V4L2_CORE: ignore device %s - not a standard camera (driver: %s, card: %s)\n", 
-                       v4l2_device, v4l2_cap.driver, v4l2_cap.card);
+        // when project_id equals UOS2025073011543 filter out ISP devices
+        const char* current_project_id = get_project_id();
+        if (current_project_id != NULL && strcmp(current_project_id, UOS2025073011543) == 0) {
+            if (!is_standard_camera_device(fd, &v4l2_cap, v4l2_device)) {
+                if (verbosity > 0) {
+                    fprintf(stderr, "V4L2_CORE: ignore device %s - not a standard camera (driver: %s, card: %s) [project_id: %s]\n", 
+                           v4l2_device, v4l2_cap.driver, v4l2_cap.card, current_project_id);
+                }
+                getV4l2()->m_v4l2_close(fd);
+                continue; /*next dir entry*/
             }
-            getV4l2()->m_v4l2_close(fd);
-            continue; /*next dir entry*/
         }
 #endif
         getV4l2()->m_v4l2_close(fd);
