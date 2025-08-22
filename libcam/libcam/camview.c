@@ -114,6 +114,7 @@ static char status_message[80];
 
 static int encode_thread_running = 0;
 
+static char project_id[200];
 
 void set_video_time_capture(double video_time)
 {
@@ -1381,4 +1382,19 @@ void set_pugx_status(int status)
 int get_pugx_status()
 {
     return is_pgux;
+}
+
+void set_project_id(const char *id)
+{
+    if (id != NULL) {
+        memset(project_id, 0, sizeof(project_id));
+        strncpy(project_id, id, sizeof(project_id) - 1);
+    } else {
+        memset(project_id, 0, sizeof(project_id));
+    }
+}
+
+const char* get_project_id(void)
+{
+    return project_id;
 }

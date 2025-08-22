@@ -121,50 +121,56 @@ int main(int argc, char *argv[])
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
-
-        int mp4Encode = -1;
-#ifdef DTKCORE_CLASS_DConfigFile
-        //需要查询是否对X机型设置MP4编码缓存特殊处理
-        DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
-            mp4Encode = dconfig->value("mp4EncodeMode").toInt();
-            set_pugx_status(mp4Encode);
-        }
-
-        int forceGles = -1;
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("forceGles")) {
-            forceGles = dconfig->value("forceGles").toInt();
-            set_forceGles(forceGles);
-        }
-#endif
-        qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
-        if (mp4Encode == -1) {
-            //判断是否是X机型
-            QStringList options;
-            options << QString(QStringLiteral("-c"));
-            options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
-                                              "dmidecode -s system-product-name|awk '{print $NF}'"));
-            QProcess process;
-            process.start(QString(QStringLiteral("bash")), options);
-            process.waitForFinished();
-            process.waitForReadyRead();
-            QByteArray tempArray = process.readAllStandardOutput();
-            char *charTemp = tempArray.data();
-            QString str_output = QString(QLatin1String(charTemp));
-            process.close();
-
-            if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
-                mp4Encode = 1;
-                qDebug() << "this is PGUX";
-            } else {
-                mp4Encode = 0;
-            }
-            qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
-        }
-
-        set_pugx_status(mp4Encode);
-        qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
     }
+    int mp4Encode = -1;
+#ifdef DTKCORE_CLASS_DConfigFile
+    //需要查询是否对X机型设置MP4编码缓存特殊处理
+    DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
+        mp4Encode = dconfig->value("mp4EncodeMode").toInt();
+        set_pugx_status(mp4Encode);
+    }
+
+    int forceGles = -1;
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("forceGles")) {
+        forceGles = dconfig->value("forceGles").toInt();
+        set_forceGles(forceGles);
+    }
+
+    QString projectId = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("projectID")) {
+        projectId = dconfig->value("projectID").toString();
+        set_project_id(projectId.toUtf8().constData());
+    }
+#endif
+    qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
+    qInfo() << "projectID value is:" << get_project_id();
+    if (mp4Encode == -1) {
+        //判断是否是X机型
+        QStringList options;
+        options << QString(QStringLiteral("-c"));
+        options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
+                                          "dmidecode -s system-product-name|awk '{print $NF}'"));
+        QProcess process;
+        process.start(QString(QStringLiteral("bash")), options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        QByteArray tempArray = process.readAllStandardOutput();
+        char *charTemp = tempArray.data();
+        QString str_output = QString(QLatin1String(charTemp));
+        process.close();
+
+        if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
+            mp4Encode = 1;
+            qDebug() << "this is PGUX";
+        } else {
+            mp4Encode = 0;
+        }
+        qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
+    }
+
+    set_pugx_status(mp4Encode);
+    qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
 
     QTime time;
     time.start();

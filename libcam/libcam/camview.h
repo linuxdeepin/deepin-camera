@@ -34,6 +34,7 @@ extern "C" {
 #define VERTEXIN 0
 #define TEXTUREIN 1
 
+#define UOS2025073011543 "UOS2025073011543"
 typedef struct _capture_loop_data_t {
     void *options;
     void *config;
@@ -438,6 +439,30 @@ int get_pugx_status();
 void set_forceGles(int status);
 
 int is_forceGles();
+
+/*
+ * set project id
+ * args:
+ *    project_id - project id string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_project_id(const char *project_id);
+
+/*
+ * get project id
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to project id string
+ */
+const char* get_project_id(void);
 
 #ifdef __cplusplus
 }
