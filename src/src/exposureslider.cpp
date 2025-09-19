@@ -46,7 +46,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_pLabShowValue->setAlignment(Qt::AlignCenter);
     m_pLabShowValue->setText("0");
     m_pLabShowValue->setFixedWidth(30);
-    qDebug() << "Created value display label";
+    // qDebug() << "Created value display label";
 
     //颜色不随主题变化
     QPalette pa = m_pLabShowValue->palette();
@@ -110,12 +110,14 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
     pGroup->addAnimation(opacity1);
 
     if (show) {
+        qDebug() << "Condition check: Showing content (fade in)";
         opacity->setStartValue(0);
         opacity->setEndValue(1);
         opacity1->setStartValue(0);
         opacity1->setEndValue(1);
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            qDebug() << "Animation finished, handling cleanup";
             if (isShortCut) { //键盘触发，需在此处理焦点
                 qDebug() << "Setting focus to slider after shortcut activation";
                 m_slider->slider()->setFocus();
@@ -127,6 +129,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
         m_slider->show();
         pGroup->start();
     } else {
+        qDebug() << "Condition check: Hiding content (fade out)";
         opacity->setStartValue(1);
         opacity->setEndValue(0);
         opacity1->setStartValue(1);
@@ -134,6 +137,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, &ExposureSlider::contentHided);
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
+            qDebug() << "Animation finished, hiding widgets";
             m_pLabShowValue->hide();
             m_slider->hide();
             pGroup->deleteLater();
@@ -141,10 +145,12 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         pGroup->start();
     }
+    qDebug() << "Function completed: showContent";
 }
 
 void ExposureSlider::paintEvent(QPaintEvent *event)
 {
+    // qDebug() << "Function started: paintEvent";
     QPainter painter(this);
 #if QT_VERSION_MAJOR > 5
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -167,6 +173,7 @@ void ExposureSlider::paintEvent(QPaintEvent *event)
     painter.fillPath(path, QBrush(QColor(0, 0, 0, m_opacity)));
 
     if (m_curValue) {
+        // qDebug() << "Drawing circle";
         QRectF rect = this->rect();
         rect.setTopLeft(QPoint(29, rect.height() / 2 + 10));
         rect.setSize(QSize(4, 4));
@@ -174,26 +181,33 @@ void ExposureSlider::paintEvent(QPaintEvent *event)
         painter.setBrush(QBrush(QColor(255, 255, 255, 0.8 * 255)));
         painter.drawEllipse(rect);
     }
+    // qDebug() << "Function completed: paintEvent";
 }
 
 void ExposureSlider::wheelEvent(QWheelEvent *event)
 {
+    // qDebug() << "Function started: wheelEvent";
     if (m_curValue >= m_valueMax)
         m_curValue = m_valueMax;
 
-    if (m_curValue <= m_valueMin)
+    if (m_curValue <= m_valueMin) {
+        // qDebug() << "Condition check: At minimum value, capping";
         m_curValue = m_valueMin;
+    }
 
     m_curValue += event->angleDelta().y() / 120;
     m_slider->setValue(m_curValue);
+    // qDebug() << "Function completed: wheelEvent";
 }
 
 void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
 {
+    // qDebug() << "Function started: keyReleaseEvent";
     switch (event->key()) {
     case Qt::Key_Down: {
+        // qDebug() << "Condition check: Down key pressed";
         if (m_curValue <= m_valueMin) {
-            qDebug() << "Already at minimum value:" << m_valueMin;
+            // qDebug() << "Already at minimum value:" << m_valueMin;
             return;
         }
         m_curValue -= 1;
@@ -201,8 +215,9 @@ void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
         break;
     }
     case Qt::Key_Up: {
+        // qDebug() << "Condition check: Up key pressed";
         if (m_curValue >= m_valueMax) {
-            qDebug() << "Already at maximum value:" << m_valueMax;
+            // qDebug() << "Already at maximum value:" << m_valueMax;
             return;
         }
         m_curValue += 1;
@@ -210,21 +225,25 @@ void ExposureSlider::keyReleaseEvent(QKeyEvent *event)
         break;
     }
     case Qt::Key_Return: {
+        // qDebug() << "Condition check: Return key pressed";
         if (!m_slider->slider()->hasFocus()) {
-            qDebug() << "Return key ignored - slider not focused";
+            // qDebug() << "Return key ignored - slider not focused";
             return;
         }
-        qDebug() << "Enter button clicked";
+        // qDebug() << "Enter button clicked";
         emit enterBtnClicked(true);
         break;
     }
     }
     QWidget::keyReleaseEvent(event);
+    // qDebug() << "Function completed: keyReleaseEvent";
 }
 
 bool ExposureSlider::eventFilter(QObject *obj, QEvent *e)
 {
+    // qDebug() << "Function started: eventFilter";
     if (obj == m_slider->slider() && e->type() == QEvent::Hide) {
+        // qDebug() << "Condition check: Slider hide event detected";
         QWidget* fw = QApplication::focusWidget();
         if (fw == m_slider->slider())
             m_slider->slider()->clearFocus();
@@ -234,17 +253,19 @@ bool ExposureSlider::eventFilter(QObject *obj, QEvent *e)
 
 void ExposureSlider::onValueChanged(int value)
 {
+    // qDebug() << "Function started: onValueChanged";
     if (value > m_valueMax || value < m_valueMin) {
-        qDebug() << "Value out of range:" << value << "min:" << m_valueMin << "max:" << m_valueMax;
+        // qDebug() << "Value out of range:" << value << "min:" << m_valueMin << "max:" << m_valueMax;
         return;
     }
 
     m_curValue = value;
     m_pLabShowValue->setText(QString("%1").arg(value));
     update();
+    // qDebug() << "Function completed: onValueChanged";
 }
 
 ExposureSlider::~ExposureSlider()
 {
-    qDebug() << "Destroying ExposureSlider";
+    // qDebug() << "Destroying ExposureSlider";
 }

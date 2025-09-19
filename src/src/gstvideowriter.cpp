@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "gstvideowriter.h"
+#include <QDebug>
 extern "C" {
 #include <gst/app/gstappsrc.h>
 #include "v4l2_core.h"
@@ -27,8 +28,10 @@ static mvideo_gst_message_parse_error g_mvideo_gst_message_parse_error = nullptr
 static gboolean
 bus_message(GstBus * bus, GstMessage  * message, GstVideoWriter * app)
 {
+    // qDebug() << "Function started: bus_message";
     switch (message->type) {
     case GST_MESSAGE_ERROR: {
+        // qDebug() << "Condition check: GST_MESSAGE_ERROR received";
         GError *err = NULL;
         gchar *dbg_info = NULL;
 
@@ -49,6 +52,7 @@ bus_message(GstBus * bus, GstMessage  * message, GstVideoWriter * app)
         break;
     }
     case GST_MESSAGE_EOS: {
+        // qDebug() << "Condition check: GST_MESSAGE_EOS received";
         // 结束录制任务
         g_main_loop_quit(app->getGloop());
         // 停止管道
@@ -56,9 +60,11 @@ bus_message(GstBus * bus, GstMessage  * message, GstVideoWriter * app)
         break;
     }
     default:
+        // qDebug() << "Condition check: Unhandled message type, ignoring";
         break;
     }
 
+    // qDebug() << "Function completed: bus_message";
     return TRUE;
 }
 
@@ -76,6 +82,7 @@ GstVideoWriter::GstVideoWriter(const QString& videoPath):
   , m_filesink(nullptr)
   , m_bus(nullptr)
 {
+    // qDebug() << "Function started: GstVideoWriter constructor";
     QLibrary gstreamerLibrary(libPath("libgstreamer-1.0.so"));
     QLibrary gstreamerAppLibrary(libPath("libgstapp-1.0.so"));
 
@@ -100,10 +107,12 @@ GstVideoWriter::GstVideoWriter(const QString& videoPath):
     g_mvideo_gst_message_parse_error = (mvideo_gst_message_parse_error) gstreamerLibrary.resolve("gst_message_parse_error");
 
     init();
+    // qDebug() << "Function completed: GstVideoWriter constructor";
 }
 
 GstVideoWriter::~GstVideoWriter()
 {
+    // qDebug() << "Function started: GstVideoWriter destructor";
     g_mvideo_gst_object_unref(m_pipeline);
     g_mvideo_gst_object_unref(m_appsrc);
     g_mvideo_gst_object_unref(m_audsrc);
@@ -111,118 +120,157 @@ GstVideoWriter::~GstVideoWriter()
     g_mvideo_gst_object_unref(m_filesink);
     g_mvideo_gst_object_unref(m_bus);
     g_main_loop_unref(m_gloop);
+    // qDebug() << "Function completed: GstVideoWriter destructor";
 }
 
 void GstVideoWriter::start()
 {
+    qDebug() << "Function started: start";
     // 设置视频帧数据格式
     loadAppSrcCaps();
 
 #if defined(__mips__) || defined(__aarch64__)
     // mips/arm下，牺牲了成像质量
+    qDebug() << "Condition check: MIPS/ARM architecture detected, adjusting quantizer";
     if (m_nWidth >= 1920) {
+        qDebug() << "Condition check: High resolution (>=1920), setting quantizer to 30";
         setQuantizer(30);
     }
     else if (m_nWidth >= 1280) {
+        qDebug() << "Condition check: Medium resolution (>=1280), setting quantizer to 10";
         setQuantizer(10);
     }
-    else
+    else {
+        qDebug() << "Condition check: Low resolution, setting quantizer to 5";
         setQuantizer(5);
+    }
 #endif
 
     // 启动管道
+    qDebug() << "Starting GStreamer pipeline";
     g_mvideo_gst_element_set_state(m_pipeline, GST_STATE_PLAYING);
 
     // 将录制任务放到线程中运行，bus回调收到eos信号，结束录制任务
+    qDebug() << "Running main loop in separate thread";
     QtConcurrent::run(g_main_loop_run, m_gloop);
+    qDebug() << "Function completed: start";
 }
 
 void GstVideoWriter::stop()
 {
+    qDebug() << "Function started: stop";
     GstFlowReturn ret;
 
     // 停止音频流
-    if (m_audsrc)
+    if (m_audsrc) {
+        qDebug() << "Condition check: Stopping audio stream";
         g_signal_emit_by_name(m_audsrc, "end-of-stream", &ret);
+    }
 
     // 停止视频流
-    if (m_appsrc)
+    if (m_appsrc) {
+        qDebug() << "Condition check: Stopping video stream";
         g_signal_emit_by_name(m_appsrc, "end-of-stream", &ret);
+    }
+    qDebug() << "Function completed: stop";
 }
 
 void GstVideoWriter::setVideoPath(const QString &videoPath)
 {
+    qDebug() << "Function started: setVideoPath";    
     if (!videoPath.isEmpty() && m_videoPath != videoPath)
         m_videoPath = videoPath;
 
     if (m_filesink)
         g_object_set(m_filesink, "location", videoPath.toStdString().c_str(), NULL);
+    qDebug() << "Function completed: setVideoPath";
 }
 
 void GstVideoWriter::setQuantizer(uint quantizer)
 {
+    qDebug() << "Function started: setQuantizer";
     m_nQuantizer = quantizer;
 
     if (m_vp8enc)
         g_object_set(m_vp8enc, "min-quantizer", m_nQuantizer, NULL);
+    qDebug() << "Function completed: setQuantizer";
 }
 
 bool GstVideoWriter::writeFrame(uchar *rgb, uint size)
 {
+    qDebug() << "Function started: writeFrame";
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr) {
+        qDebug() << "Condition check: Memory allocation successful";
         memcpy(ptr, rgb, size);
         GstBuffer *buffer = g_mvideo_gst_buffer_new_wrapped((void*)ptr, size);
 
         //设置时间戳
-        if (m_pipeline)
+        if (m_pipeline) {
+            qDebug() << "Condition check: Setting timestamp for video buffer";
             GST_BUFFER_PTS(buffer) = g_mvideo_gst_clock_get_time(m_pipeline->clock) - m_pipeline->base_time;
+        }
 
         //注入视频帧数据
-        if (m_appsrc)
+        if (m_appsrc) {
+            qDebug() << "Condition check: Pushing video buffer to app source";
             g_signal_emit_by_name(m_appsrc, "push-buffer", buffer, &ret);
+        }
 
         g_mvideo_gst_mini_object_unref(GST_MINI_OBJECT_CAST(buffer));
     }
 
+    qDebug() << "Function completed: writeFrame, result:" << (ret == GST_FLOW_OK ? "success" : "failed");
     return ret == GST_FLOW_OK;
 }
 
 bool GstVideoWriter::writeAudio(uchar *audio, uint size)
 {
+    qDebug() << "Function started: writeAudio";
     GstFlowReturn ret = GST_FLOW_CUSTOM_ERROR;
     guint8 *ptr = (guint8 *)g_malloc(size * sizeof(uchar));
     if (ptr) {
+        qDebug() << "Condition check: Memory allocation successful";
         memcpy(ptr, audio, size);
         GstBuffer *buffer = g_mvideo_gst_buffer_new_wrapped((void*)ptr, size);
 
         // 设置时间戳
-        if (m_pipeline)
+        if (m_pipeline) {
+            qDebug() << "Condition check: Setting timestamp for audio buffer";
             GST_BUFFER_PTS(buffer) = g_mvideo_gst_clock_get_time(m_pipeline->clock) - m_pipeline->base_time;
+        }
 
         // 注入音频帧数据
         if (m_audsrc) {
+            qDebug() << "Condition check: Pushing audio buffer to audio source";
             g_signal_emit_by_name(m_audsrc, "push-buffer", buffer, &ret);
         }
 
         g_mvideo_gst_mini_object_unref(GST_MINI_OBJECT_CAST(buffer));
     }
 
+    qDebug() << "Function completed: writeAudio, result:" << (ret == GST_FLOW_OK ? "success" : "failed");
     return ret == GST_FLOW_OK;
 }
 
 float GstVideoWriter::getRecrodTime()
 {
+    qDebug() << "Function started: getRecrodTime";
     float pts = 0;
-    if (m_pipeline)
+    if (m_pipeline) {
+        qDebug() << "Condition check: Pipeline exists, getting timestamp";
         pts = g_mvideo_gst_clock_get_time(m_pipeline->clock) - m_pipeline->base_time;
+    }
 
-    return pts / 1000 / 1000 / 1000;
+    float result = pts / 1000 / 1000 / 1000;
+    qDebug() << "Function completed: getRecrodTime, result:" << result << "seconds";
+    return result;
 }
 
 void GstVideoWriter::init()
 {
+    qDebug() << "Function started: init";
     g_mvideo_gst_init(nullptr, nullptr);
     // 使用vp8编码录制视频裸流数据、使用vorbis编码录制音频裸流数据
     QString pipDesc = QString("webmmux name=mux ! filesink name=filename "
@@ -242,12 +290,15 @@ void GstVideoWriter::init()
     m_vp8enc = g_mvideo_gst_bin_get_by_name(getGstBin(m_pipeline), "encoder");
 
     m_bus = g_mvideo_gst_pipeline_get_bus(getGstPipline(m_pipeline));
-    if (m_bus)
+    if (m_bus) {
+        qDebug() << "Condition check: Bus exists, adding message watch";
         g_mvideo_gst_bus_add_watch(m_bus, (GstBusFunc)bus_message, this);
+    }
 
     /* 设置视频src属性 */
     m_appsrc = g_mvideo_gst_bin_get_by_name(getGstBin(m_pipeline), "source");
     if (m_appsrc) {
+        qDebug() << "Condition check: Video app source exists, configuring properties";
         loadAppSrcCaps();
         g_object_set(m_appsrc, "format", GST_FORMAT_TIME, NULL);
         g_object_set(m_appsrc, "is-live", TRUE, NULL);
@@ -256,6 +307,7 @@ void GstVideoWriter::init()
     /* 设置音频src属性 */
     m_audsrc = g_mvideo_gst_bin_get_by_name(getGstBin(m_pipeline), "audiosource");
     if (m_audsrc) {
+        qDebug() << "Condition check: Audio app source exists, configuring properties";
         GstCaps *audiocaps = g_mvideo_gst_caps_new_simple("audio/x-raw",
             "format", G_TYPE_STRING, "F32LE",
             "layout", G_TYPE_STRING, "interleaved",
@@ -266,14 +318,18 @@ void GstVideoWriter::init()
         g_object_set(m_audsrc, "format", GST_FORMAT_TIME, NULL);
         g_object_set(m_audsrc, "is-live", TRUE, NULL);
     }
+
+    qDebug() << "Function completed: init";
 }
 
 void GstVideoWriter::loadAppSrcCaps()
 {
+    qDebug() << "Function started: loadAppSrcCaps";
     // 获取当前相机分辨率
     m_nWidth = v4l2core_get_frame_width(get_v4l2_device_handler());
     m_nHeight = v4l2core_get_frame_height(get_v4l2_device_handler());
     if (m_nWidth > 0 && m_nHeight > 0 && m_appsrc) {
+        qDebug() << "Condition check: Valid resolution and app source exist, setting caps";
         GstCaps *caps = g_mvideo_gst_caps_new_simple("video/x-raw",
             "format", G_TYPE_STRING, "RGB",
             "width", G_TYPE_INT, m_nWidth,
@@ -282,38 +338,49 @@ void GstVideoWriter::loadAppSrcCaps()
             NULL);
         g_mvideo_gst_app_src_set_caps(getGstAppSrc(m_appsrc), caps);
     }
+
+    qDebug() << "Function completed: loadAppSrcCaps";
 }
 
 QString GstVideoWriter::libPath(const QString &strlib)
 {
+    // qDebug() << "Function started: libPath";
     QDir  dir;
     QString path  = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
     QStringList list = dir.entryList(QStringList() << (strlib + "*"), QDir::NoDotAndDotDot | QDir::Files); //filter name with strlib
     if (list.contains(strlib)) {
+        // qDebug() << "Condition check: Exact library name found in list, return: " << strlib;
         return strlib;
     } else {
+        // qDebug() << "Condition check: Exact library name not found, sorting available libraries";
         list.sort();
     }
 
-    if(list.size() > 0)
+    if(list.size() > 0) {
+        // qDebug() << "Condition check: Libraries found, returning latest version: " << list.last();
         return list.last();
+    }
 
     // Qt LibrariesPath 不包含，返回默认名称
+    // qDebug() << "Condition check: No libraries found, returning default name: " << strlib;
     return strlib;
 }
 
 GstBin *GstVideoWriter::getGstBin(GstElement *element)
 {
+    // qDebug() << "Function started: getGstBin";
     return (GstBin *)g_type_check_instance_cast((GTypeInstance *)element, g_mvideo_gst_bin_get_type());
 }
 
 GstPipeline* GstVideoWriter::getGstPipline(GstElement *element)
 {
+    // qDebug() << "Function started: getGstPipline";
     return (GstPipeline*) g_type_check_instance_cast((GTypeInstance *)element, g_mvideo_gst_pipeline_get_type());
 }
 
 GstAppSrc* GstVideoWriter::getGstAppSrc(GstElement *element)
 {
+    // qDebug() << "Function started: getGstAppSrc";
     return (GstAppSrc*) g_type_check_instance_cast((GTypeInstance *)element, g_mvideo_gst_app_src_get_type());
 }

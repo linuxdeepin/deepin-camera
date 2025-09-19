@@ -19,23 +19,29 @@
 QtSingleApplication::QtSingleApplication(int &argc, char **argv)
     : QObject(nullptr)
 {
+    // qDebug() << "Function started: QtSingleApplication constructor";
 #if (DTK_VERSION < DTK_VERSION_CHECK(5, 4, 0, 0))
     _app = new DApplication(argc, argv);
 #else
     _app = DApplication::globalApplication(argc, argv);
 #endif
+    // qDebug() << "Function completed: QtSingleApplication constructor";
 }
 
 DApplication *QtSingleApplication::dApplication()
 {
+    // qDebug() << "Entering dApplication";
     return _app;
 }
 
 
 QtSingleApplication::~QtSingleApplication()
 {
+    // qDebug() << "Function started: QtSingleApplication destructor";
     if (_app != nullptr) {
+        // qDebug() << "QtSingleApplication destructor: Enter if branch (app exists, deleting)";
         _app->deleteLater();
         _app = nullptr;
     }
+    // qDebug() << "Function completed: QtSingleApplication destructor";
 }

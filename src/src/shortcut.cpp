@@ -8,6 +8,7 @@
 Shortcut::Shortcut(QObject *parent)
     : QObject(parent)
 {
+    // qDebug() << "Function started: Shortcut constructor";
     ShortcutGroup group1;
     ShortcutGroup group3;
 
@@ -41,10 +42,12 @@ Shortcut::Shortcut(QObject *parent)
     }
 
     m_shortcutObj.insert("shortcut", jsonGroups);
+    // qDebug() << "Function completed: Shortcut constructor";
 }
 
 QString Shortcut::toStr()
 {
+    // qDebug() << "Function started: toStr";
     QJsonDocument doc(m_shortcutObj);
     return doc.toJson().data();
 }

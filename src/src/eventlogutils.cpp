@@ -13,14 +13,18 @@ EventLogUtils *EventLogUtils::m_instance(nullptr);
 
 EventLogUtils &EventLogUtils::get()
 {
+    // qDebug() << "Function started: get";
     if (m_instance == nullptr) {
+        // qDebug() << "Condition check: Creating new EventLogUtils instance";
         m_instance = new EventLogUtils;
     }
+    // qDebug() << "Function completed: get";
     return *m_instance;
 }
 
 EventLogUtils::EventLogUtils()
 {
+    // qDebug() << "Function started: EventLogUtils constructor";
     QLibrary library("libdeepin-event-log.so");
 
     init =reinterpret_cast<bool (*)(const std::string &, bool)>(library.resolve("Initialize"));
@@ -30,13 +34,16 @@ EventLogUtils::EventLogUtils()
         return;
 
     init("deepin-camera", true);
+    // qDebug() << "Function completed: EventLogUtils constructor";
 }
 
 void EventLogUtils::writeLogs(QJsonObject &data)
 {
+    // qDebug() << "Function started: writeLogs";
     if (writeEventLog == nullptr)
         return;
 
     //std::string str = QJsonDocument(data).toJson(QJsonDocument::Compact).toStdString();
     writeEventLog(QJsonDocument(data).toJson(QJsonDocument::Compact).toStdString());
+    // qDebug() << "Function completed: writeLogs";
 }
