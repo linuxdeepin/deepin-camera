@@ -25,6 +25,7 @@ typedef DLabel QLbtoDLabel;
 CloseDialog::CloseDialog(QWidget *parent, QString strText)
     : DDialog(parent), m_leftNamebtn(tr("Cancel")), m_rightNamebtn(tr("Close"))
 {
+    qDebug() << "Function started: CloseDialog constructor";
     this->setIcon(QIcon(":/images/icons/warning.svg"));
     setFixedSize(380, 140);
     m_widget = new DWidget(this);
@@ -62,4 +63,6 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText)
     DWindowCloseButton *windowCloseBtn = findChild<DWindowCloseButton *>("DTitlebarDWindowCloseButton");
     setTabOrder(windowCloseBtn, cancelBtn);
     setTabOrder(cancelBtn, closeBtn);
+
+    qDebug() << "Function completed: CloseDialog constructor";
 }

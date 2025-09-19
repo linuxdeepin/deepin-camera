@@ -37,48 +37,56 @@ Camera *Camera::m_instance = nullptr;
 static _cam_config_t camConfig = {1920, 1080, NULL, NULL, NULL, NULL, NULL, NULL, 1, 30};
 Camera *Camera::instance()
 {
+    // qDebug() << "Function started: Camera::instance";
     if (m_instance == nullptr) {
-        qDebug() << "Creating new Camera instance";
+        // qDebug() << "Condition check: Creating new Camera instance";
         m_instance = new Camera;
     }
+    // qDebug() << "Function completed: Camera::instance";
     return m_instance;
 }
 
 void Camera::release()
 {
-    qDebug() << "Releasing Camera instance";
+    // qDebug() << "Releasing Camera instance";
     delete m_instance;
     m_instance = nullptr;
 }
 
 Camera::~Camera()
 {
-    qDebug() << "Destroying Camera instance";
+    // qDebug() << "Destroying Camera instance";
     if (camConfig.device_name) {
+        // qDebug() << "Condition check: Freeing device_name";
         free(camConfig.device_name);
         camConfig.device_name = nullptr;
     }
     if (camConfig.device_location) {
+        // qDebug() << "Condition check: Freeing device_location";
         free(camConfig.device_location);
         camConfig.device_location = nullptr;
     }
     if (camConfig.video_path) {
+        // qDebug() << "Condition check: Freeing video_path";
         free(camConfig.video_path);
         camConfig.video_path = nullptr;
     }
     if (camConfig.video_name) {
+        // qDebug() << "Condition check: Freeing video_name";
         free(camConfig.video_name);
         camConfig.video_name = nullptr;
     }
     if (camConfig.photo_path) {
+        // qDebug() << "Condition check: Freeing photo_path";
         free(camConfig.photo_path);
         camConfig.photo_path = nullptr;
     }
     if (camConfig.photo_name) {
+        // qDebug() << "Condition check: Freeing photo_name";
         free(camConfig.photo_name);
         camConfig.photo_name = nullptr;
     }
-    qDebug() << "Camera instance destroyed";
+    // qDebug() << "Camera instance destroyed";
 }
 
 Camera::Camera()
@@ -103,13 +111,16 @@ void Camera::initMember()
     // 连接相机surface，能够发送每帧QImage数据到外部
     qDebug() << "Initializing camera members";
 #if QT_VERSION_MAJOR > 5
+    qDebug() << "Condition check: Qt6 detected, using QVideoSink";
 #else
+    qDebug() << "Condition check: Qt5 detected, using VideoSurface";
     m_videoSurface = new VideoSurface(this);
     connect(m_videoSurface, &VideoSurface::presentImage, this, &Camera::presentImage);
 #endif
 
     // 初始设备名为空，默认启动config中的摄像头设备，若config设备名为空，则启动defaultCamera
     switchCamera();
+    qDebug() << "Function completed: Camera::initMember";
 }
 
 void Camera::switchCamera()
@@ -121,6 +132,7 @@ void Camera::switchCamera()
     QCameraDevice nextDevice;
 
     if (!m_cameraDeviceList.isEmpty()) {
+        qDebug() << "Condition check: Camera device list not empty";
         int nCurIndex = m_cameraDeviceList.indexOf(m_curDevice);
         nCurIndex = (nCurIndex + 1) % m_cameraDeviceList.size();
         nextDevice = m_cameraDeviceList[nCurIndex];
@@ -132,21 +144,26 @@ void Camera::switchCamera()
     QString nextDevName;
 
     if (!m_cameraDevList.isEmpty()) {
+        qDebug() << "Condition check: Camera device list not empty";
         int nCurIndex = m_cameraDevList.indexOf(m_curDevName);
         nCurIndex = (nCurIndex + 1) % m_cameraDevList.size();
         nextDevName = m_cameraDevList[nCurIndex];
         qDebug() << "Switching to next camera device:" << nextDevName;
     }
 
-    if (nextDevName.isEmpty())
+    if (nextDevName.isEmpty()) {
+        qDebug() << "Condition check: No camera device selected, using config";
         nextDevName = camConfig.device_location;
+    }
 
     if (nextDevName.isEmpty()) {
+        qDebug() << "Condition check: No device in config, using default";
         nextDevName = QCameraInfo::defaultCamera().deviceName();
         qDebug() << "Using default camera device:" << nextDevName;
     }
     startCamera(nextDevName);
 #endif
+    qDebug() << "Function completed: Camera::switchCamera";
 }
 
 void Camera::refreshCamera()
@@ -171,6 +188,7 @@ void Camera::refreshCamera()
 
     // 若没有摄像头工作，则重启摄像头
     restartCamera();
+    qDebug() << "Function completed: Camera::refreshCamera";
 }
 
 #include <QtMultimedia>
@@ -180,6 +198,7 @@ void Camera::restartCamera()
     qDebug() << "Restarting camera";
 #if QT_VERSION_MAJOR > 5
     if (!m_camera) {
+        qDebug() << "Condition check: No camera instance exists";
         QList<QCameraDevice> availableCams = QMediaDevices::videoInputs();
         if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(m_camera->cameraDevice()) != -1))
 #if QT_VERSION_MAJOR > 5
@@ -193,6 +212,7 @@ void Camera::restartCamera()
         }
 #else
     if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
+        qDebug() << "Condition check: Camera needs restart";
         QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
         if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
             && !m_cameraDevList.isEmpty()) {
@@ -217,6 +237,7 @@ void Camera::restartCamera()
     DataManager::instance()->setdevStatus(CAM_CANUSE);
     qInfo() << "Camera restarted successfully";
     emit cameraDevRestarted();
+    qDebug() << "Function completed: Camera::restartCamera";
 }
 
 void Camera::refreshCamDevList()
@@ -239,7 +260,9 @@ void Camera::refreshCamDevList()
 #if QT_VERSION_MAJOR <= 5
 void Camera::onCameraStatusChanged(QCamera::Status status)
 {
+    qDebug() << "Camera status changed to:" << status;
     if (m_mediaRecoder) {
+        qDebug() << "Media recorder exists, checking status";
         if (m_bReadyRecord && status == QCamera::ActiveStatus) {
             m_mediaRecoder->record();
             m_bReadyRecord = false;
@@ -270,9 +293,11 @@ QStringList Camera::getSupportResolutions()
 
 QList<QSize> Camera::getSupportResolutionsSize()
 {
+    qDebug() << "Function started: Camera::getSupportResolutionsSize";
     QList<QSize> resolutions;
 #if QT_VERSION_MAJOR > 5
     if (m_camera) {
+        qDebug() << "Condition check: Camera instance exists";
         resolutions = m_camera->cameraDevice().photoResolutions();
     }
 #else
@@ -280,6 +305,7 @@ QList<QSize> Camera::getSupportResolutionsSize()
         resolutions = m_imageCapture->supportedResolutions();
 #endif
 
+    qDebug() << "Function completed: Camera::getSupportResolutionsSize";
     return resolutions;
 }
 
@@ -292,6 +318,7 @@ void Camera::setCameraResolution(QSize size)
 #else
     // 设置图片捕获器分辨率到相机
     if (m_imageCapture) {
+        qDebug() << "Condition check: Setting image capture resolution";
         QImageEncoderSettings imageSettings = m_imageCapture->encodingSettings();
         imageSettings.setResolution(size);
         m_imageCapture->setEncodingSettings(imageSettings);
@@ -299,6 +326,7 @@ void Camera::setCameraResolution(QSize size)
 
            // 设置视频分辨率到相机
     if (m_mediaRecoder) {
+        qDebug() << "Condition check: Setting media recorder resolution";
         QAudioEncoderSettings audioSettings = m_mediaRecoder->audioSettings();
         QVideoEncoderSettings videoSettings = m_mediaRecoder->videoSettings();
         videoSettings.setCodec("video/x-vp8");
@@ -308,6 +336,7 @@ void Camera::setCameraResolution(QSize size)
 
            // 设置分辨率到相机
     if (m_camera) {
+        qDebug() << "Condition check: Setting camera viewfinder resolution";
         QCameraViewfinderSettings viewfinderSettings = m_camera->viewfinderSettings();
         viewfinderSettings.setResolution(size);
         m_camera->setViewfinderSettings(viewfinderSettings);
@@ -323,6 +352,7 @@ void Camera::setCameraResolution(QSize size)
 
 QSize Camera::getCameraResolution()
 {
+    qDebug() << "Getting camera resolution";
     return QSize(camConfig.width,camConfig.height);
 }
 
@@ -429,12 +459,14 @@ void Camera::stopCamera()
 #if QT_VERSION_MAJOR > 5
 #else
     if (m_imageCapture) {
+        qDebug() << "Condition check: Image capture instance exists";
         m_imageCapture->deleteLater();
         m_imageCapture = nullptr;
     }
 #endif
 
     if (m_mediaRecoder) {
+        qDebug() << "Condition check: Media recorder instance exists";
         m_mediaRecoder->deleteLater();
         m_mediaRecoder = nullptr;
     }
@@ -443,6 +475,7 @@ void Camera::stopCamera()
 
 void Camera::setVideoOutPutPath(QString &path)
 {
+    qDebug() << "Setting video output path:" << path;
     if (m_mediaRecoder)
         m_mediaRecoder->setOutputLocation(QUrl::fromLocalFile(path));
 }
@@ -454,6 +487,7 @@ void Camera::startRecoder()
 #else
     m_bReadyRecord = true;
     if (m_camera && m_camera->captureMode() != QCamera::CaptureVideo) {
+        qDebug() << "Condition check: Setting camera to video capture mode";
         m_camera->setCaptureMode(QCamera::CaptureVideo);
     }
 
@@ -479,46 +513,54 @@ void Camera::stopRecoder()
 
 qint64 Camera::getRecoderTime()
 {
+    qDebug() << "Function started: getRecoderTime";
     qint64 nRecTime = 0;
     if (m_mediaRecoder)
         nRecTime = m_mediaRecoder->duration();
 
+    qDebug() << "Function completed: getRecoderTime:" << nRecTime;
     return nRecTime;
 }
 
 #if QT_VERSION_MAJOR > 5
 QMediaRecorder::RecorderState Camera::getRecoderState()
 {
+    qDebug() << "Function started: Camera::getRecoderState";
     QMediaRecorder::RecorderState recState = QMediaRecorder::StoppedState;
     if (m_mediaRecoder)
         recState = m_mediaRecoder->recorderState();
 
+    qDebug() << "Function completed: Camera::getRecoderState";
     return recState;
 }
 #else
 QMediaRecorder::State Camera::getRecoderState()
 {
+    qDebug() << "Function started: Camera::getRecoderState";
     QMediaRecorder::State recState = QMediaRecorder::StoppedState;
     if (m_mediaRecoder)
         recState = m_mediaRecoder->state();
 
+    qDebug() << "Function completed: Camera::getRecoderState";
     return recState;
 }
 #endif
 
 bool Camera::isRecording()
 {
+    // qDebug() << "Function started: Camera::isRecording";
     return m_bRecording;
 }
 
 bool Camera::isReadyRecord()
 {
+    // qDebug() << "Function started: Camera::isReadyRecord";
     return m_bReadyRecord;
 }
 
 int Camera::parseConfig()
 {
-    qDebug() << "Parsing camera configuration";
+    // qDebug() << "Parsing camera configuration";
     char *config_path = smart_cat(getenv("HOME"), '/', ".config/deepin/deepin-camera");
     mkdir(config_path, 0777);
     char *config_file = smart_cat(config_path, '/', "deepin-camera");
@@ -532,6 +574,7 @@ int Camera::parseConfig()
     /*open file for read*/
     if((fp = fopen(config_file,"r")) == NULL)
     {
+        // qDebug() << "Condition check: Failed to open config file";
         free(config_file);
         qWarning() << "Could not open config file for reading:" << strerror(errno);
         return -1;
@@ -550,6 +593,7 @@ int Camera::parseConfig()
         int size = strlen(bufp);
         if(size < 1 || *bufp == '#')
         {
+            // qDebug() << "Condition check: Skipping empty or commented line" << line;
             continue;
         }
 
@@ -583,14 +627,18 @@ int Camera::parseConfig()
 
         /*check tokens*/
         if(strcmp(token, "width") == 0) {
+            qDebug() << "Condition check: Setting width";
             camConfig.width = (int) strtoul(value, NULL, 10);
         } else if(strcmp(token, "height") == 0) {
+            qDebug() << "Condition check: Setting height";
             camConfig.height = (int) strtoul(value, NULL, 10);
         } else if(strcmp(token, "device_name") == 0 && strlen(value) > 0) {
+            qDebug() << "Condition check: Setting device_name";
             if(camConfig.device_name)
                 free(camConfig.device_name);
             camConfig.device_name = strdup(value);
         } else if(strcmp(token, "device_location") == 0 && strlen(value) > 0) {
+            qDebug() << "Condition check: Setting device_location";
             if(camConfig.device_location)
                 free(camConfig.device_location);
             camConfig.device_location = strdup(value);

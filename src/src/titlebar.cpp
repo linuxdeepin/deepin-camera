@@ -47,33 +47,37 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
 
 DTitlebar *Titlebar::titlebar()
 {
+    // qDebug() << "Function started: titlebar";
     Q_D(const Titlebar);
     return d->m_titlebar;
 }
 
 void Titlebar::slotThemeTypeChanged()
 {
+    // qDebug() << "Function started: slotThemeTypeChanged";
     Q_D(const Titlebar);
     QPalette pa;
     if(DataManager::instance()->getdevStatus() != NOCAM) {
-        qDebug() << "Setting light color palette for active camera";
+        // qDebug() << "Setting light color palette for active camera";
         pa.setColor(QPalette::ButtonText, d->lightColor);
         d->m_titlebar->setPalette(pa);
     } else {
         if(DGuiApplicationHelper::instance()->themeType() == DGuiApplicationHelper::DarkType) {
-            qDebug() << "Setting light color palette for dark theme";
+            // qDebug() << "Setting light color palette for dark theme";
             pa.setColor(QPalette::ButtonText, d->lightColor);
             d->m_titlebar->setPalette(pa);
         } else {
-            qDebug() << "Setting dark color palette for light theme";
+            // qDebug() << "Setting dark color palette for light theme";
             pa.setColor(QPalette::ButtonText, d->darkColor);
             d->m_titlebar->setPalette(pa);
         }
     }
+    // qDebug() << "Function completed: slotThemeTypeChanged";
 }
 
 void Titlebar::paintEvent(QPaintEvent *pe)
 {
+    // qDebug() << "Function started: Titlebar::paintEvent";
     Q_D(const Titlebar);
 
     QPainter painter(this);
@@ -85,6 +89,7 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     linearGradient.setColorAt(1, QColor(0, 0, 0, 0));
 
     if(DataManager::instance()->getdevStatus() != NOCAM) {
+        // qDebug() << "Setting light color palette for active camera";
         pa.setColor(QPalette::ButtonText, d->lightColor);
         d->m_titlebar->setPalette(pa);
     }
@@ -93,9 +98,10 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     painter.setBrush(QBrush(linearGradient));
     painter.setPen(pen);
     painter.drawRect(rect());
+    // qDebug() << "Function completed: Titlebar::paintEvent";
 }
 
 Titlebar::~Titlebar()
 {
-    qDebug() << "Cleaning up Titlebar";
+    // qDebug() << "Cleaning up Titlebar";
 }

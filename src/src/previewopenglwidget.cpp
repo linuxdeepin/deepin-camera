@@ -18,6 +18,7 @@
 PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
+    qDebug() << "Function started: PreviewOpenglWidget constructor";
     m_textureY = nullptr;
     m_textureU = nullptr;
     m_textureV = nullptr;
@@ -25,35 +26,43 @@ PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     m_program = nullptr;
     m_videoWidth = 0;
     m_videoHeight = 0;
+    qDebug() << "Function completed: PreviewOpenglWidget constructor";
 }
 
 int PreviewOpenglWidget::getFrameHeight()
 {
+    // qDebug() << "Function started: getFrameHeight";
     return static_cast<int>(m_videoHeight);
 }
 
 int PreviewOpenglWidget::getFrameWidth()
 {
+    // qDebug() << "Function started: getFrameWidth";
     return static_cast<int>(m_videoWidth);
 }
 
 #ifndef __mips__
 void PreviewOpenglWidget::slotShowYuv(uchar *ptr, uint width, uint height)
 {
+    qDebug() << "Function started: slotShowYuv";
     m_Rendermutex.lock();
     m_videoWidth = width;
     m_videoHeight = height;
     m_yuvPtr = ptr;//数据拷贝挪到major类
 
-    if (m_yuvPtr)
+    if (m_yuvPtr) {
+        qDebug() << "PreviewOpenglWidget::slotShowYuv: Enter if branch (yuv ptr valid, calling update)";
         update();
+    }
 
     m_Rendermutex.unlock();
+    qDebug() << "Function completed: slotShowYuv";
 }
 #endif
 
 void PreviewOpenglWidget::initializeGL()
 {
+    qDebug() << "Function started: initializeGL";
 
     makeCurrent();
     initializeOpenGLFunctions();
@@ -152,18 +161,24 @@ void PreviewOpenglWidget::initializeGL()
     m_idU = m_textureU->textureId();
     m_idV = m_textureV->textureId();
     glClearColor(0.0, 0.0, 0.0, 0.0);
+    qDebug() << "Function completed: initializeGL";
 }
 
 void PreviewOpenglWidget::resizeGL(int w, int h)
 {
+    // qDebug() << "Function started: resizeGL";
     glViewport(0, 0, w, h);
     update();
+    // qDebug() << "Function completed: resizeGL";
 }
 
 void PreviewOpenglWidget::paintGL()
 {
-    if (m_yuvPtr == nullptr)
+    // qDebug() << "Function started: PreviewOpenglWidget::paintGL";
+    if (m_yuvPtr == nullptr) {
+        // qDebug() << "PreviewOpenglWidget::paintGL: Enter if branch (yuv ptr null, returning early)";
         return;
+    }
   
     glActiveTexture(GL_TEXTURE0);  //激活纹理单元GL_TEXTURE0,系统里面的
     glBindTexture(GL_TEXTURE_2D, m_idY); //绑定y分量纹理对象id到激活的纹理单元
@@ -206,30 +221,36 @@ void PreviewOpenglWidget::paintGL()
 
     //使用顶点数组方式绘制图形
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    // qDebug() << "Function completed: PreviewOpenglWidget::paintGL";
 }
 
 
 PreviewOpenglWidget::~PreviewOpenglWidget()
 {
+    // qDebug() << "Function started: PreviewOpenglWidget destructor";
     m_vbo.destroy();
 
     if (m_textureY) {
+        // qDebug() << "PreviewOpenglWidget destructor: Enter if branch (destroying texture Y)";
         m_textureY->destroy();
         delete m_textureY;
         m_textureY = nullptr;
     }
 
     if (m_textureU) {
+        // qDebug() << "PreviewOpenglWidget destructor: Enter if branch (destroying texture U)";
         m_textureU->destroy();
         delete m_textureU;
         m_textureU = nullptr;
     }
 
     if (m_textureV) {
+        // qDebug() << "PreviewOpenglWidget destructor: Enter if branch (destroying texture V)";
         m_textureV->destroy();
         delete m_textureV;
         m_textureV = nullptr;
     }
 
     doneCurrent();
+    // qDebug() << "Function completed: PreviewOpenglWidget destructor";
 }

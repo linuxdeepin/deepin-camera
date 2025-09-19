@@ -41,6 +41,7 @@ QShortcutEx::QShortcutEx(const QKeySequence& key, QWidget *parent,
                          const char *member, const char *ambiguousMember,
                          Qt::ShortcutContext context):QShortcut (key, parent, member, ambiguousMember, context)
 {
+    // qDebug() << "Function started: QShortcutEx constructor";
     setAutoRepeat(false);
 }
 
@@ -48,6 +49,7 @@ ImageItem::ImageItem(QWidget *parent)
     : DLabel(parent),
       m_bFocus(false)
 {
+    // qDebug() << "Function started: ImageItem constructor";
     m_bVideo = false;
     m_actPrint = nullptr;
     m_pAniWidget = new AnimationWidget(QPixmap(), this);
@@ -107,6 +109,7 @@ ImageItem::ImageItem(QWidget *parent)
     }, Qt::QueuedConnection);
 
     m_lastDelTime = QDateTime::currentDateTime();
+    // qDebug() << "Function completed: ImageItem constructor";
 }
 
 void ImageItem::updatePicPath(const QString &filePath)
@@ -155,10 +158,12 @@ void ImageItem::updatePicPath(const QString &filePath)
         updatePic(pix);
         pix.scaled(this->size(), Qt::KeepAspectRatio);
     });
+    qDebug() << "Function completed: updatePicPath";
 }
 
 void ImageItem::updatePic(QPixmap pixmap)
 {
+    qDebug() << "Function started: updatePic";
     m_pAniWidget->setVisible(true);
     m_pAniWidget->setPixmap(pixmap);
 
@@ -177,10 +182,12 @@ void ImageItem::updatePic(QPixmap pixmap)
         update();
         m_pAniWidget->setVisible(false);
     });
+    qDebug() << "Function completed: updatePic";
 }
 
 void ImageItem::paintEvent(QPaintEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::paintEvent";
     Q_UNUSED(event);
     QPainter painter(this);
     QRect pixmapRect = rect();
@@ -225,76 +232,100 @@ void ImageItem::paintEvent(QPaintEvent *event)
     painter.setBrush(Qt::transparent);
     painter.setPen(QColor(255, 255, 255, 0.2 * 255));
     painter.drawPath(inside);
+    // qDebug() << "Function completed: ImageItem::paintEvent";
 }
 
 static bool mouseDblClick = false;
 void ImageItem::mousePressEvent(QMouseEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::mousePressEvent";
     if (event->type() == QEvent::MouseButtonDblClick) {
+        // qDebug() << "ImageItem::mousePressEvent: Enter if branch (mouse double click)";
         mouseDblClick = true;
         return; //不响应双击事件
     }
 
+    // qDebug() << "ImageItem::mousePressEvent: Setting mouse double click to false";
     mouseDblClick = false;
     DLabel::mousePressEvent(event);
+    // qDebug() << "Function completed: ImageItem::mousePressEvent";
 }
 
 void ImageItem::mouseMoveEvent(QMouseEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::mouseMoveEvent";
     //解决bug 在缩略图中可拖动相机界面，bug 100647
     Q_UNUSED(event);
+    // qDebug() << "Function completed: ImageItem::mouseMoveEvent";
     return;
 }
 
 void ImageItem::mouseReleaseEvent(QMouseEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::mouseReleaseEvent";
     if (event->type() == QEvent::MouseButtonDblClick || mouseDblClick) {
+        // qDebug() << "ImageItem::mouseReleaseEvent: Enter if branch (mouse double click, returning early)";
         return; //不响应双击事件
     }
 
-    if (!rect().contains(event->pos()))
+    if (!rect().contains(event->pos())) {
+        // qDebug() << "ImageItem::mouseReleaseEvent: Enter if branch (position not in rect, returning early)";
         return;
+    }
 
     if (event->button() == Qt::LeftButton) {
+        // qDebug() << "ImageItem::mouseReleaseEvent: Enter if branch (left button clicked)";
         openFile();
     }
 
+    // qDebug() << "Function completed: ImageItem::mouseReleaseEvent";
     return;
 }
 
 void ImageItem::focusInEvent(QFocusEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::focusInEvent";
     Q_UNUSED(event);
     m_bFocus = true;
     update();
+    // qDebug() << "Function completed: ImageItem::focusInEvent";
 }
 
 void ImageItem::focusOutEvent(QFocusEvent *event)
 {
+    // qDebug() << "Function started: ImageItem::focusOutEvent";
     Q_UNUSED(event);
     m_bFocus = false;
     update();
+    // qDebug() << "Function completed: ImageItem::focusOutEvent";
 }
 
 void ImageItem::onShowMenu()
 {
+    qDebug() << "Function started: onShowMenu";
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
     if (m_bVideo) {
+        qDebug() << "ImageItem::onShowMenu: Enter if branch (video mode, removing print action)";
         m_menu->removeAction(m_actPrint);
     } else {
+        qDebug() << "ImageItem::onShowMenu: Enter else branch (image mode, inserting print action)";
         m_menu->insertAction(m_actOpenFolder, m_actPrint);
     }
 #ifndef UNITTEST
     if (!m_path.isEmpty()) {
+        qDebug() << "ImageItem::onShowMenu: Enter if branch (path not empty, executing menu)";
         m_menu->exec(screen_centerpos);
     }
 #endif
+    qDebug() << "Function completed: onShowMenu";
 }
 
 void ImageItem::onOpenFolder()
 {
+    qDebug() << "Function started: onOpenFolder";
     if (!m_path.isEmpty() && m_path == '~') {
+        qDebug() << "ImageItem::onOpenFolder: Enter if branch (path is home shortcut)";
         //这里不能直接使用strFolder调replace函数
         m_path.replace(0, 1, QDir::homePath());
     }
@@ -305,6 +336,7 @@ void ImageItem::onOpenFolder()
 
 void ImageItem::initShortcut()
 {
+    qDebug() << "Function started: initShortcut";
     QShortcutEx *shortcutCopy = new QShortcutEx(QKeySequence("ctrl+c"), this);
     shortcutCopy->setObjectName(SHORTCUT_COPY);
     connect(shortcutCopy, SIGNAL(activated()), this, SLOT(onCopy()));
@@ -324,10 +356,12 @@ void ImageItem::initShortcut()
     QShortcutEx *shortcutPrint = new QShortcutEx(QKeySequence("Ctrl+P"), this);
     shortcutPrint->setObjectName(SHORTCUT_PRINT);
     connect(shortcutPrint, SIGNAL(activated()), this, SLOT(onPrint()));
+    qDebug() << "Function completed: initShortcut";
 }
 
 void ImageItem::openFile()
 {
+    qDebug() << "Function started: openFile";
     QFileInfo fileInfo(m_path);
     QString program("dde-file-manager");  // dbus调用失败，通过文管打开
     QStringList arguments;
@@ -409,10 +443,12 @@ void ImageItem::openFile()
         arguments << "-o" << m_path;
         ret = myProcess->startDetached(program, arguments);
     }
+    qDebug() << "Function completed: openFile";
 }
 
 void ImageItem::onCopy()
 {
+    qDebug() << "Function started: onCopy";
     QStringList paths;
     paths << m_path;
 
@@ -437,6 +473,7 @@ void ImageItem::onCopy()
     newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
 
     cb->setMimeData(newMimeData, QClipboard::Clipboard);
+    qDebug() << "Function completed: onCopy";
 }
 
 void ImageItem::onShortcutDel()
@@ -452,13 +489,17 @@ void ImageItem::onShortcutDel()
 
     m_lastDelTime = timeNow;
     emit trashFile(m_path);
+    qDebug() << "Function completed: onShortcutDel";
 }
 
 void ImageItem::onPrint()
 {
+    qDebug() << "Function started: onPrint";
     if (!m_bVideo) {
+        qDebug() << "ImageItem::onPrint: Enter if branch (not video, showing print dialog)";
         showPrintDialog(QStringList(m_path), this);
     }
+    qDebug() << "Function completed: onPrint";
 }
 
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
@@ -511,11 +552,13 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 #else
     printDialog.show();
 #endif
+    qDebug() << "Function completed: showPrintDialog";
 }
 
 // 公共绘图方法
 void ImageItem::drawImageOnPage(DPrinter *printer, const QImage &img)
 {
+    // qDebug() << "Function started: drawImageOnPage";
     QPainter painter(printer);
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     const QRectF wRect = printer->pageRect(QPrinter::DevicePixel);
@@ -535,11 +578,12 @@ void ImageItem::drawImageOnPage(DPrinter *printer, const QImage &img)
     painter.drawImage(QRectF(position, scaledSize), img);
 
     painter.end();
+    // qDebug() << "Function completed: drawImageOnPage";
 }
 
 void ImageItem::paintRequestedAsyn(DPrinter *printer, const QVector<int> &pageRange)
 {
-    qDebug() << "Async paint pages:" << pageRange.size();
+    // qDebug() << "Async paint pages:" << pageRange.size();
 
     for (int i = 0; i < pageRange.size(); ++i) {
         const int page = pageRange[i];
@@ -550,20 +594,24 @@ void ImageItem::paintRequestedAsyn(DPrinter *printer, const QVector<int> &pageRa
             }
         }
     }
+    // qDebug() << "Function completed: paintRequestedAsyn";
 }
 
 void ImageItem::paintRequestSync(DPrinter *printer)
 {
+    // qDebug() << "Function started: paintRequestSync";
     for (int i = 0; i < m_imgs.size(); ++i) {
         drawImageOnPage(printer, m_imgs.at(i));
         if (i != m_imgs.size()-1) {
             printer->newPage();
         }
     }
+    // qDebug() << "Function completed: paintRequestSync";
 }
 
 void AnimationWidget::paintEvent(QPaintEvent *e)
 {
+    // qDebug() << "Function started: AnimationWidget::paintEvent";
     Q_UNUSED(e);
     QRect pixmapRect = rect();
     QPainter painter(this);
@@ -577,24 +625,28 @@ void AnimationWidget::paintEvent(QPaintEvent *e)
 
     path.addRoundedRect(pixmapRect, width(), height());
     painter.fillPath(path, QBrush(m_animatePix));
+    // qDebug() << "Function completed: AnimationWidget::paintEvent";
 }
 
 AnimationWidget::AnimationWidget(QPixmap pixmap, QWidget *parent) : m_animatePix(pixmap)
 {
+    // qDebug() << "Function started: AnimationWidget constructor";
     this->setParent(parent);
     setMargin(0);
     setContentsMargins(0, 0, 0, 0);
     resize(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE);
+    // qDebug() << "Function completed: AnimationWidget constructor";
 }
 
 AnimationWidget::~AnimationWidget()
 {
-
+    // qDebug() << "Function started: AnimationWidget destructor";
 }
 
 ImageItem::~ImageItem()
 {
+    // qDebug() << "Function started: ImageItem destructor";
     delete m_pAniWidget;
     m_pAniWidget = nullptr;
-
+    // qDebug() << "Function completed: ImageItem destructor";
 }

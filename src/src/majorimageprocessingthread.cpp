@@ -39,7 +39,7 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
-    qDebug() << "Stopping MajorImageProcessingThread";
+    // qDebug() << "Stopping MajorImageProcessingThread";
     m_stopped = 1;
 }
 
@@ -58,23 +58,25 @@ void MajorImageProcessingThread::init()
 
 void MajorImageProcessingThread::setFilter(QString filter)
 {
-    qDebug() << "Setting filter:" << filter;
+    // qDebug() << "Setting filter:" << filter;
     m_filter = filter;
 }
 
 void MajorImageProcessingThread::setExposure(int exposure)
 {
-    qDebug() << "Setting exposure value:" << exposure;
+    // qDebug() << "Setting exposure value:" << exposure;
     m_exposure = exposure;
 }
 
 int MajorImageProcessingThread::getRecCount()
 {
+    // qDebug() << "Getting recording count:" << m_nCount;
     return m_nCount;
 }
 
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
 {
+    qDebug() << "Function started: ImageHorizontalMirror";
     /*
     yu12
     y1 y2 y3 y4                       y4 y3 y2 y1
@@ -98,6 +100,7 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
             uvLineStartIndex += width;
         }
     }
+    qDebug() << "Function completed: ImageHorizontalMirror";
 }
 
 void MajorImageProcessingThread::processingImage(QImage& img)
@@ -108,6 +111,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
         img = img.mirrored(true,false);
 
     if (m_bPhoto) {
+        qDebug() << "Processing image in photo mode";
         img = img.convertToFormat(QImage::Format_RGB888);
 
         // 滤镜预览
@@ -127,6 +131,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
 
         /*拍照*/
         if (m_bTake) {
+            qDebug() << "Processing photo in photo mode";
             int nRet = -1;
             if (!img.isNull()) {
                 if (img.save(m_strPath, "JPG")) {
@@ -146,12 +151,14 @@ void MajorImageProcessingThread::processingImage(QImage& img)
     }
 
     emit SendMajorImageProcessing(&img, 0);
+    qDebug() << "Function completed: processingImage";
 }
 
 void MajorImageProcessingThread::run()
 {
     qInfo() << "Starting MajorImageProcessingThread run loop";
     if (m_eEncodeEnv != QCamera_Env) {
+        qDebug() << "Processing video frame in video mode";
         m_videoDevice = get_v4l2_device_handler();
         v4l2core_start_stream(m_videoDevice);
         int framedely = 0;
@@ -161,7 +168,7 @@ void MajorImageProcessingThread::run()
         uint8_t* pOldYuvFrame = nullptr;
         while (m_stopped == 0) {
             if (get_resolution_status()) {
-                qDebug() << "Resolution change detected, updating format";
+                // qDebug() << "Resolution change detected, updating format";
                 //reset
                 request_format_update(0);
                 v4l2core_stop_stream(m_videoDevice);
@@ -188,7 +195,7 @@ void MajorImageProcessingThread::run()
                 }
 
                 v4l2core_start_stream(m_videoDevice);
-                qDebug() << "Stream restarted with new format";
+                // qDebug() << "Stream restarted with new format";
 
                 //保存新的分辨率//后续修改为标准Qt用法
                 QString config_file = QString(getenv("HOME")) + QDir::separator() + QString(".config") + QDir::separator() + QString("deepin") +
@@ -204,7 +211,7 @@ void MajorImageProcessingThread::run()
                 v4l2_device_list_t *devlist = get_device_list();
                 set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
                 config_save(config_file.toLatin1().data());
-                qDebug() << "Saved new resolution config:" << my_config->width << "x" << my_config->height;
+                // qDebug() << "Saved new resolution config:" << my_config->width << "x" << my_config->height;
             }
 
             m_result = -1;
@@ -213,7 +220,7 @@ void MajorImageProcessingThread::run()
             if (m_frame == nullptr) {
                 framedely++;
                 if (framedely == MAX_DELAYED_FRAMES) {
-                    qWarning() << "Reached maximum delayed frames, stopping thread";
+                    // qWarning() << "Reached maximum delayed frames, stopping thread";
                     m_stopped = 1;
                     //发送设备中断信号
                     emit reachMaxDelayedFrames();
@@ -225,6 +232,7 @@ void MajorImageProcessingThread::run()
 
             QImage jpgImage;
             if (FFmpeg_Env == m_eEncodeEnv) {
+                // qDebug() << "Processing video frame in FFmpeg environment";
                 // FFmpeg环境下，解码后的帧数据为yu12格式
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
                     m_nVdWidth = static_cast<unsigned int>(m_frame->width);
@@ -255,6 +263,7 @@ void MajorImageProcessingThread::run()
                 pOldYuvFrame = m_frame->yuv_frame;
                 m_frame->yuv_frame = m_yuvPtr;
             } else if (GStreamer_Env == m_eEncodeEnv) {
+                // qDebug() << "Processing video frame in GStreamer environment";
                 // GStreamer环境下，获取的帧数据为jpg格式，需要转换为rgb格式，GStreamer底层才能处理
                 QByteArray temp;
                 temp.append((const char *)m_frame->raw_frame, m_frame->raw_frame_max_size);
@@ -283,6 +292,7 @@ void MajorImageProcessingThread::run()
                 bUseRgb = true;
 
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
+                // qDebug() << "Processing video frame in rgb mode";
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
                     m_nVdWidth = static_cast<unsigned int>(m_frame->width);
                     m_nVdHeight = static_cast<unsigned int>(m_frame->height);
@@ -311,6 +321,7 @@ void MajorImageProcessingThread::run()
 
                 // 拍照状态下，曝光和滤镜功能才有效
                 if (m_bPhoto) {
+                    // qDebug() << "Processing photo in photo mode";
                     // 滤镜效果渲染
                     if (!m_filter.isEmpty())
                         imageFilter24(m_rgbPtr, m_frame->width, m_frame->height, m_filter.toStdString().c_str(), 100);
@@ -322,7 +333,7 @@ void MajorImageProcessingThread::run()
 
             /*录像*/
             if (video_capture_get_save_video()) {
-                qDebug() << "Processing video frame for recording";
+                // qDebug() << "Processing video frame for recording";
                 if (get_myvideo_bebin_timer() == 0)
                     set_myvideo_begin_timer(v4l2core_time_get_timestamp());
 
@@ -348,15 +359,17 @@ void MajorImageProcessingThread::run()
 
                 /*把帧加入编码队列*/
                 if (!get_capture_pause()) {
+                    // qDebug() << "Processing video frame for recording";
                     //设置时间戳
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
                     if (m_firstPts == 0) {
                         m_firstPts = m_frame->timestamp;
-                        qDebug() << "First video frame timestamp:" << m_firstPts;
+                        // qDebug() << "First video frame timestamp:" << m_firstPts;
                     }
                     m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
+                    // qDebug() << "Processing video frame for recording";
                     //设置暂停时长
                     timespausestamp = get_video_timestamptmp();
                     if (timespausestamp == 0) {
@@ -373,6 +386,7 @@ void MajorImageProcessingThread::run()
                  */
                 double time_sched = encoder_buff_scheduler(ENCODER_SCHED_LIN, 0.5, 250);
                 if (time_sched > 0) {
+                    // qDebug() << "Processing video frame for recording";
                     switch (v4l2core_get_requested_frame_format(m_videoDevice)) {
                     case V4L2_PIX_FMT_H264: {
                         uint32_t framerate = static_cast<uint32_t>(lround(time_sched * 1E6)); /*nanosec*/
@@ -388,9 +402,11 @@ void MajorImageProcessingThread::run()
                     }
                 }
             } else if (m_bRecording) {
+                // qDebug() << "Processing video frame for recording";
                 // GStreamer环境下，发送rgb格式帧数据到视频写入器，完成后续视频编码任务
                 emit sigRecordFrame(m_rgbPtr, rgbsize);
             } else {
+                // qDebug() << "Processing video frame for recording";
                 m_nCount = 0;
                 m_firstPts = 0;
             }
@@ -401,16 +417,18 @@ void MajorImageProcessingThread::run()
 
             /*拍照*/
             if (m_bTake) {
-                qDebug() << "Processing photo capture";
+                // qDebug() << "Processing photo capture";
                 int nRet = -1;
                 if (((!m_filter.isEmpty() || m_exposure) && imgTmp)
                         || GStreamer_Env == m_eEncodeEnv) {
+                    // qDebug() << "Processing photo capture";
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
                         qInfo() << "Successfully saved photo to:" << m_strPath;
                         emit sigReflushSnapshotLabel();
                     }
                 } else if (FFmpeg_Env == m_eEncodeEnv) {
+                    // qDebug() << "Processing photo capture";
                     uint8_t *rgbPtr = nullptr;
                     uint nVdWidth = static_cast<unsigned int>(m_frame->width);
                     uint nVdHeight = static_cast<unsigned int>(m_frame->height);
@@ -484,24 +502,26 @@ void MajorImageProcessingThread::run()
             msleep(33);
         }
 
-        qDebug() << "Stopping video stream";
+        // qDebug() << "Stopping video stream";
         v4l2core_stop_stream(m_videoDevice);
     }
 }
 
 MajorImageProcessingThread::~MajorImageProcessingThread()
 {
-    qDebug() << "Cleaning up MajorImageProcessingThread resources";
+    // qDebug() << "Cleaning up MajorImageProcessingThread resources";
     if (m_yuvPtr) {
+        // qDebug() << "Cleaning up MajorImageProcessingThread resources";
         delete [] m_yuvPtr;
         m_yuvPtr = nullptr;
     }
 
     if (m_rgbPtr) {
+        // qDebug() << "Cleaning up MajorImageProcessingThread resources";
         free(m_rgbPtr);
         m_rgbPtr = nullptr;
     }
 
     config_clean();
-    qDebug() << "MajorImageProcessingThread cleanup complete";
+    // qDebug() << "MajorImageProcessingThread cleanup complete";
 }

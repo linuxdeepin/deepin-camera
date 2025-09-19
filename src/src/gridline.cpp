@@ -13,25 +13,31 @@ const QColor gridLineColor = QColor(255, 255, 255, 0.5 * 255);// 网格线颜色
 
 GridLineItem::GridLineItem(QGraphicsItem *parent) : QGraphicsItem (parent)
 {
-
+    // qDebug() << "Function started: GridLineItem constructor";
 }
 
 void GridLineItem::setGridType(GridType type)
 {
-    if (type == m_gridType)
+    // qDebug() << "Function started: setGridType";
+    if (type == m_gridType) {
+        // qDebug() << "Condition check: Grid type unchanged, skipping update";
         return;
+    }
 
     m_gridType = type;
     update();
+    // qDebug() << "Function completed: setGridType";
 }
 
 QRectF GridLineItem::boundingRect() const
 {
+    // qDebug() << "Function started: boundingRect";
     return m_boundingRect;
 }
 
 void GridLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    // qDebug() << "Function started: GridLineItem::paint";
     // 画布大小-1，保证网格线显示在画面内
     m_boundingRect = scene()->sceneRect().adjusted(0, 0, -1, -1);
   
@@ -62,31 +68,39 @@ void GridLineItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->drawLine(VLine);
     }
     painter->restore();
+    // qDebug() << "Function completed: GridLineItem::paint";
 }
 
 GridLineWidget::GridLineWidget(QWidget *parent) : QWidget(parent)
 {
+    // qDebug() << "Function started: GridLineWidget constructor";
     m_videowidget = qobject_cast<videowidget*>(parent);
 }
 
 void GridLineWidget::setGridType(GridType type)
 {
+    // qDebug() << "Function started: setGridType";
     m_gridType = type;
     update();
 }
 
 void GridLineWidget::paintEvent(QPaintEvent *e)
 {
+    // qDebug() << "Function started: paintEvent";
     QRect rtGrid = rect();
 
     //if the video frame area is zero, it will not be repainted,
     //otherwize it will be repainted outside the video frame.
-    if (m_videowidget->getFrameRect().isNull())
+    if (m_videowidget->getFrameRect().isNull()) {
+        // qDebug() << "Condition check: Video frame rect is null, skipping paint";
         return;
+    }
 
-    if (m_videowidget)
+    if (m_videowidget) {
+        // qDebug() << "Condition check: Video widget exists";
         // 画面大小-1，是为了保证网格线等分距离与网格线图元等分距离相等，这样能保证两种网格线能重合显示，避免视觉上网格线微移情况
         rtGrid = m_videowidget->getFrameRect().adjusted(0, 0, -1, -1);
+    }
 
     QPainter painter(this);
     QPen pen;
@@ -98,8 +112,10 @@ void GridLineWidget::paintEvent(QPaintEvent *e)
     painter.restore();
     painter.setPen(pen);
 
-    if (Grid_None == m_gridType)
+    if (Grid_None == m_gridType) {
+        // qDebug() << "Condition check: Grid type none, skipping paint";
         return;
+    }
 
     // 绘制网格线
     painter.save();
@@ -113,4 +129,5 @@ void GridLineWidget::paintEvent(QPaintEvent *e)
         painter.drawLine(VLine);
     }
     painter.restore();
+    // qDebug() << "Function completed: paintEvent";
 }
