@@ -8,11 +8,12 @@
 ApplicationAdaptor::ApplicationAdaptor(CMainWindow *mw)
     : QDBusAbstractAdaptor(mw), m_mw(mw)
 {
+    // qDebug() << "Function started: ApplicationAdaptor constructor";
 }
 
 void ApplicationAdaptor::Raise()
 {
-    qDebug() << "raise window from dbus";
+    // qDebug() << "raise window from dbus";
     m_mw->showNormal();
     m_mw->raise();
     m_mw->activateWindow();
@@ -20,7 +21,9 @@ void ApplicationAdaptor::Raise()
 
 ApplicationAdaptor::~ApplicationAdaptor()
 {
+    // qDebug() << "Function started: ApplicationAdaptor destructor";
     if (m_mw) {
+        // qDebug() << "Deleting main window";
         m_mw->deleteLater();
         m_mw = nullptr;
     }

@@ -39,6 +39,7 @@ Q_DECLARE_METATYPE(DMIInfo)
 // Marshall the MyStructure data into a D-Bus argument
 QDBusArgument &operator<<(QDBusArgument &argument, const DMIInfo &mystruct)
 {
+    // qDebug() << "Marshall the MyStructure data into a D-Bus argument";
     argument.beginStructure();
     argument << mystruct.biosManufacturer << mystruct.biosVersion << mystruct.biosRelease << mystruct.productName
              << mystruct.serialNumber << mystruct.Manufacturer << mystruct.version << mystruct.sysProductName
@@ -50,6 +51,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const DMIInfo &mystruct)
 // Retrieve the MyStructure data from the D-Bus argument
 const QDBusArgument &operator>>(const QDBusArgument &argument, DMIInfo &mystruct)
 {
+    // qDebug() << "Retrieving MyStructure data from D-Bus argument";
     argument.beginStructure();
     argument >> mystruct.biosManufacturer >> mystruct.biosVersion >> mystruct.biosRelease >> mystruct.productName
             >> mystruct.serialNumber >> mystruct.Manufacturer >> mystruct.version >> mystruct.sysProductName
@@ -60,7 +62,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, DMIInfo &mystruct
 
 bool GlobalUtils::isLowPerformanceBoard()
 {
-    qDebug() << "Checking for low performance board";
+    // qDebug() << "Checking for low performance board";
     qDBusRegisterMetaType<DMIInfo>();
 
     QString systemInfoService = "com.deepin.system.SystemInfo";
@@ -68,6 +70,7 @@ bool GlobalUtils::isLowPerformanceBoard()
     QString systemInfoInterface = "com.deepin.system.SystemInfo";
     auto ver = DSysInfo::majorVersion().toInt();
     if (ver > 20) {
+        qDebug() << "Condition check: System version > 20, using newer D-Bus interface";
         systemInfoService = "org.deepin.dde.SystemInfo1";
         systemInfoPath = "/org/deepin/dde/SystemInfo1";
         systemInfoInterface = "org.deepin.dde.SystemInfo1";
@@ -106,10 +109,11 @@ void GlobalUtils::loadCameraConf()
     QSettings conf(CAMERA_CONF_PATH, QSettings::IniFormat);
     QVariant value = conf.value(LOW_PERFORMANCE_BOARD);
     if (value.isValid()) {
+        qDebug() << "Condition check: Configuration value valid";
         m_LowPerformanceBoards = value.toStringList();
-        qDebug() << "Loaded low performance boards:" << m_LowPerformanceBoards;
     } else {
         qWarning() << "No low performance boards configuration found in" << CAMERA_CONF_PATH;
         m_LowPerformanceBoards = QStringList();
     }
+    qDebug() << "Function completed: loadCameraConf";
 }

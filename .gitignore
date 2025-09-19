@@ -14,8 +14,12 @@ ui_*.h
 #else
 *.autosave
 
+.cache/
+
 #linglong building dir
 linglong
 build
 .vscode
 .cursor
+.spec-workflow/
+.promptx/

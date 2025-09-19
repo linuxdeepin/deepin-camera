@@ -7,6 +7,7 @@
 
 void GenerateSettingTranslate()
 {
+    // qDebug() << "Function started: GenerateSettingTranslate";
     auto group_settings = QObject::tr("Settings");
     auto group_baseName = QObject::tr("Basic");
     auto group_base_savaName = QObject::tr("File location");
@@ -30,4 +31,5 @@ void GenerateSettingTranslate()
     auto outsetting_none = QObject::tr("None");
     auto outsetting_resolutionsettingName = QObject::tr("Resolution settings");
     auto outsetting_resolutionsetting_resolutionName = QObject::tr("Maximum resolution:");
+    // qDebug() << "Function completed: GenerateSettingTranslate";
 }

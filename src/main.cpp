@@ -49,18 +49,22 @@ DWIDGET_USE_NAMESPACE
 //判断是否采用wayland显示服务器
 static bool CheckWayland()
 {
+    qDebug() << "Function started: CheckWayland";
     auto e = QProcessEnvironment::systemEnvironment();
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
 
     if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
+        qDebug() << "Condition check: Wayland environment detected";
         return true;
-    } else
-        return false;
+    }
+    qDebug() << "Condition check: Non-Wayland environment detected";
+    return false;
 }
 
 static bool CheckFFmpegEnv()
 {
+    qDebug() << "Function started: CheckFFmpegEnv";
     QDir dir;
     QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
@@ -72,6 +76,7 @@ static bool CheckFFmpegEnv()
         QRegularExpressionMatch match = re.match(list[i]);
         if (match.hasMatch()) {
             libName = list[i];
+            qDebug() << "Found matching library:" << libName;
             break;
         }
     }
@@ -80,6 +85,7 @@ static bool CheckFFmpegEnv()
     for (int i = 0; i < list.count(); i++) {
         if (re.exactMatch(list[i])) {
             libName = list[i];
+            qDebug() << "Found matching library:" << libName;
             break;
         }
     }
@@ -88,6 +94,7 @@ static bool CheckFFmpegEnv()
     QLibrary libavcodec;   //检查编码器是否存在
     libavcodec.setFileName(libName);
     if (!libavcodec.load()) {
+        qDebug() << "Condition check: Library loading failed";
         qWarning() << QString("Not found libavcodec: %1").arg(libavcodec.errorString());
         return false;
     }
@@ -108,6 +115,7 @@ static bool CheckFFmpegEnv()
         DataManager::instance()->setEncExists(false);
     }
 
+    qDebug() << "Function completed: CheckFFmpegEnv";
     return true;
 }
 
@@ -124,6 +132,7 @@ int main(int argc, char *argv[])
     
     bool bFFmpegEnv = CheckFFmpegEnv();
     if (argc > 1) {
+        qDebug() << "Condition check: Arguments found";
         if (QString(argv[1]) == "-g") {
             bFFmpegEnv = false;
             qDebug() << "Running in gstreamer test environment";
@@ -139,6 +148,7 @@ int main(int argc, char *argv[])
     }
 
     if (bWayland) {
+        qDebug() << "Condition check: Wayland configuration required";
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
@@ -157,6 +167,7 @@ int main(int argc, char *argv[])
 #endif
         qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
         if (mp4Encode == -1) {
+            qDebug() << "Condition check: MP4 encode mode detection required";
             QStringList options;
             options << QString(QStringLiteral("-c"));
             options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
@@ -171,6 +182,7 @@ int main(int argc, char *argv[])
             process.close();
 
             if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
+                qDebug() << "Condition check: PGUX system detected";
                 mp4Encode = 1;
                 qDebug() << "Detected PGUX system";
             } else {
@@ -194,13 +206,11 @@ int main(int argc, char *argv[])
     qDebug() << QString("Filter initialization completed in %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
-    qDebug() << "Application instance created";
 
     qApp->setObjectName("deepin-camera");
 #ifndef __mips__
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
     qApp->setAttribute(Qt::AA_ForceRasterWidgets, false);
-    qDebug() << "High DPI and raster settings configured";
 #endif
 
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
@@ -243,6 +253,7 @@ int main(int argc, char *argv[])
             iface.asyncCall("Raise");
         }
 
+        qDebug() << "Function completed: main (exit due to existing instance)";
         exit(0);
     }
 
