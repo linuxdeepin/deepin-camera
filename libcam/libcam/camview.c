@@ -1432,3 +1432,19 @@ const char* get_libvdpau_driver_name(void)
 {
     return libvdpau_driver_name;
 }
+
+int is_driver_available(const char *driver_name)
+{
+    /* Check if driver name is not NULL, not empty, and not "none" or similar invalid values */
+    if (driver_name != NULL &&
+        driver_name[0] != '\0' &&
+        strcmp(driver_name, "none") != 0 &&
+        strcmp(driver_name, "null") != 0 &&
+        strcmp(driver_name, "invalid") != 0 &&
+        strcmp(driver_name, "undefined") != 0 &&
+        strcmp(driver_name, "unknown") != 0) {
+        return 1;  /* Valid driver exists */
+    }
+
+    return 0;  /* No valid driver */
+}
