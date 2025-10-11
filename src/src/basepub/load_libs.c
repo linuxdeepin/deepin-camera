@@ -121,6 +121,8 @@ static LoadLibs *newClass(void)
     PrintError();
     pLibs->m_avcodec_receive_packet = (uos_avcodec_receive_packet)dlsym(handle, "avcodec_receive_packet");
     PrintError();
+    pLibs->m_avcodec_get_hw_config = (uos_avcodec_get_hw_config)dlsym(handle, "avcodec_get_hw_config");
+    PrintError();
     pLibs->m_av_packet_free = (uos_av_packet_free)dlsym(handle, "av_packet_free");
     PrintError();
     pLibs->m_avcodec_fill_audio_frame = (uos_avcodec_fill_audio_frame)dlsym(handle, "avcodec_fill_audio_frame");
@@ -341,6 +343,8 @@ static LoadAvutil *newAvutil(void)
     Avutil->m_av_samples_get_buffer_size = (uos_av_samples_get_buffer_size)dlsym(handle5, "av_samples_get_buffer_size");
     PrintError();
     Avutil->m_av_get_media_type_string = (uos_av_get_media_type_string)dlsym(handle5, "av_get_media_type_string");
+    PrintError();
+    Avutil->m_av_get_pix_fmt_name = (uos_av_get_pix_fmt_name)dlsym(handle5, "av_get_pix_fmt_name");
     PrintError();
     Avutil->m_av_image_get_buffer_size = (uos_av_image_get_buffer_size)dlsym(handle5, "av_image_get_buffer_size");
     PrintError();
