@@ -31,6 +31,26 @@
             "description": "Customized content under different projects",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "libVaDriverName": {
+            "value": "",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "libVa driver name",
+            "name[zh_CN]": "启用VAAPI硬件编解码的驱动名称，配置环境变量LIBVA_DRIVER_NAME，如LIBVA_DRIVER_NAME=zx",
+            "description": "Name of the VAAPI driver for enabling hardware codec",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
+        "libVdpauDriver": {
+            "value": "",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "lib vdpau driver",
+            "name[zh_CN]": "启用VDPAU硬件编解码的驱动名称，配置环境变量VDPAU_DRIVER，如VDPAU_DRIVER=nvidia_vdpau",
+            "description": "Name of the VDPAU driver for enabling hardware codec",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
