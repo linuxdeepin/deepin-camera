@@ -512,6 +512,18 @@ void set_libvdpau_driver_name(const char *name);
  */
 const char* get_libvdpau_driver_name(void);
 
+/*
+ * check if driver is available and valid
+ * args:
+ *    driver_name - pointer to driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: 1 if valid driver exists, 0 otherwise
+ */
+int is_driver_available(const char *driver_name);
+
 #ifdef __cplusplus
 }
 #endif
