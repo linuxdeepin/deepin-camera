@@ -45,6 +45,8 @@ typedef int (*uos_avcodec_send_packet)(AVCodecContext *avctx, const AVPacket *av
 typedef int (*uos_avcodec_receive_frame)(AVCodecContext *avctx, AVFrame *frame);
 //int avcodec_receive_packet(AVCodecContext *avctx, AVPacket *avpkt);
 typedef int (*uos_avcodec_receive_packet)(AVCodecContext *avctx, AVPacket *avpkt);
+//const AVCodecHWConfig *avcodec_get_hw_config(const AVCodec *codec, int index);
+typedef const AVCodecHWConfig *(*uos_avcodec_get_hw_config)(const AVCodec *codec, int index);
 //void av_packet_free(AVPacket **pkt);
 typedef void (*uos_av_packet_free)(AVPacket **pkt);
 //int avcodec_fill_audio_frame(AVFrame *frame, int nb_channels,enum AVSampleFormat sample_fmt, const uint8_t *buf,int buf_size, int align);
@@ -128,6 +130,7 @@ typedef struct _LoadLibs {
     uos_avcodec_send_packet m_avcodec_send_packet;
     uos_avcodec_receive_frame m_avcodec_receive_frame;
     uos_avcodec_receive_packet m_avcodec_receive_packet;
+    uos_avcodec_get_hw_config m_avcodec_get_hw_config;
     uos_av_packet_free m_av_packet_free;
     uos_avcodec_fill_audio_frame m_avcodec_fill_audio_frame;
     uos_av_packet_unref m_av_packet_unref;
@@ -235,6 +238,8 @@ typedef int (*uos_av_samples_get_buffer_size)(int *linesize, int nb_channels, in
                                               enum AVSampleFormat sample_fmt, int align);
 //const char *av_get_media_type_string(enum AVMediaType media_type);
 typedef const char *(*uos_av_get_media_type_string)(enum AVMediaType media_type);
+//const char *av_get_pix_fmt_name(enum AVPixelFormat pix_fmt);
+typedef const char *(*uos_av_get_pix_fmt_name)(enum AVPixelFormat pix_fmt);
 //int av_image_get_buffer_size(enum AVPixelFormat pix_fmt, int width, int height, int align);
 typedef int (*uos_av_image_get_buffer_size)(enum AVPixelFormat pix_fmt, int width, int height, int align);
 
@@ -254,6 +259,7 @@ typedef struct _LoadAvutil {
     uos_av_free m_av_free;
     uos_av_samples_get_buffer_size m_av_samples_get_buffer_size;
     uos_av_get_media_type_string m_av_get_media_type_string;//
+    uos_av_get_pix_fmt_name m_av_get_pix_fmt_name;
     uos_av_image_get_buffer_size m_av_image_get_buffer_size;
         //----VAAPI------
     uos_av_hwdevice_ctx_create  m_av_hwdevice_ctx_create;

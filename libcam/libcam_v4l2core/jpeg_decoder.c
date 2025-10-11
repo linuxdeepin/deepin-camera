@@ -37,6 +37,7 @@
 #include <errno.h>
 #include <assert.h>
 
+#include "camview.h"
 #include "gviewv4l2core.h"
 #include "colorspaces.h"
 #include "frame_decoder.h"
@@ -1356,9 +1357,11 @@ void jpeg_close_decoder()
 
 typedef struct _codec_data_t
 {
-	AVCodec *codec;
-	AVCodecContext *context;
-	AVFrame *picture;
+    AVCodec *codec;
+    AVCodecContext *context;
+    AVFrame *picture;
+    AVBufferRef *hw_device_ctx;    // hardware device context
+    enum AVPixelFormat hw_pix_fmt; // hardware pixel format
 } codec_data_t;
 
 /*
@@ -1378,73 +1381,114 @@ int jpeg_init_decoder(int width, int height)
     getLoadLibsInstance()->m_avcodec_init();
 #endif
 #if !LIBAVCODEC_VER_AT_LEAST(58,9)
-	/*
-	 * register all the codecs (we can also register only the codec
-	 * we wish to have smaller code)
-	 */
+    /*
+     * register all the codecs (we can also register only the codec
+     * we wish to have smaller code)
+     */
     getLoadLibsInstance()->m_avcodec_register_all();
 #endif
     getAvutil()->m_av_log_set_level(AV_LOG_PANIC);
 
-	if(jpeg_ctx != NULL)
-		jpeg_close_decoder();
+    if(jpeg_ctx != NULL)
+        jpeg_close_decoder();
 
-	jpeg_ctx = calloc(1, sizeof(jpeg_decoder_context_t));
-	if(jpeg_ctx == NULL)
-	{
-		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
-		exit(-1);
-	}
+    jpeg_ctx = calloc(1, sizeof(jpeg_decoder_context_t));
+    if(jpeg_ctx == NULL)
+    {
+        fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
+        exit(-1);
+    }
 
-	codec_data_t *codec_data = calloc(1, sizeof(codec_data_t));
-	if(codec_data == NULL)
-	{
-		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
-		exit(-1);
-	}
+    codec_data_t *codec_data = calloc(1, sizeof(codec_data_t));
+    if(codec_data == NULL)
+    {
+        fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
+        exit(-1);
+    }
 
     codec_data->codec = getLoadLibsInstance()->m_avcodec_find_decoder(AV_CODEC_ID_MJPEG);
-	if(!codec_data->codec)
-	{
-		fprintf(stderr, "V4L2_CORE: (mjpeg decoder) codec not found\n");
-		free(jpeg_ctx);
-		free(codec_data);
-		jpeg_ctx = NULL;
-		return E_NO_CODEC;
-	}
+    if(!codec_data->codec)
+    {
+        fprintf(stderr, "V4L2_CORE: (mjpeg decoder) codec not found\n");
+        free(jpeg_ctx);
+        free(codec_data);
+        jpeg_ctx = NULL;
+        return E_NO_CODEC;
+    }
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
     codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context3(codec_data->codec);
-     getLoadLibsInstance()->m_avcodec_get_context_defaults3 && getLoadLibsInstance()->m_avcodec_get_context_defaults3 (codec_data->context, codec_data->codec);
+    getLoadLibsInstance()->m_avcodec_get_context_defaults3 && getLoadLibsInstance()->m_avcodec_get_context_defaults3 (codec_data->context, codec_data->codec);
 #else
-    codec_data->context = getLoadLibsInstance()->m_avcodec_alloc_context();
-    getLoadLibsInstance()->m_avcodec_get_context_defaults(codec_data->context);
+    codec_data->dec_ctx = getLoadLibsInstance()->m_avcodec_alloc_context();
+    getLoadLibsInstance()->m_avcodec_get_context_defaults(codec_data->dec_ctx);
 #endif
-	if(codec_data->context == NULL)
-	{
-		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (h264_init_decoder): %s\n", strerror(errno));
-		exit(-1);
-	}
+    if(codec_data->context == NULL)
+    {
+        fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (h264_init_decoder): %s\n", strerror(errno));
+        exit(-1);
+    }
 
-	codec_data->context->pix_fmt = AV_PIX_FMT_YUV422P;
-	codec_data->context->width = width;
-	codec_data->context->height = height;
-	//jpeg_ctx->context->dsp_mask = (FF_MM_MMX | FF_MM_MMXEXT | FF_MM_SSE);
+    codec_data->context->pix_fmt = AV_PIX_FMT_YUV422P;
+    codec_data->context->width = width;
+    codec_data->context->height = height;
+    //jpeg_ctx->context->dsp_mask = (FF_MM_MMX | FF_MM_MMXEXT | FF_MM_SSE);
+
+    // Initialize hardware device context  (VA-API)
+    if (is_driver_available(get_libva_driver_name())) {
+        int ret = getAvutil()->m_av_hwdevice_ctx_create(&codec_data->hw_device_ctx, AV_HWDEVICE_TYPE_VAAPI, NULL, NULL, 0);
+        if (ret < 0) {
+            fprintf(stderr, "V4L2_CORE: Unable to create VA-API hardware context\n");
+            // If hardware decoding initialization fails, continue using software decoding
+            codec_data->hw_device_ctx = NULL;
+        } else {
+            codec_data->context->hw_device_ctx = getAvutil()->m_av_buffer_ref(codec_data->hw_device_ctx);
+
+            // Check whether the decoder supports JPEG hardware acceleration
+            int ret = -1;
+            for (int i = 0;; i++) {
+                const AVCodecHWConfig *config = getLoadLibsInstance()->m_avcodec_get_hw_config(codec_data->codec, i);
+                if (!config) break;
+
+                if (config->device_type == AV_HWDEVICE_TYPE_VAAPI &&
+                    config->methods & AV_CODEC_HW_CONFIG_METHOD_HW_DEVICE_CTX) {
+                    codec_data->hw_pix_fmt = config->pix_fmt;
+                    ret = 0;
+                    fprintf(stderr, "V4L2_CORE: (mjpeg decoder) Find supported VA-API hardware acceleration configurations\n");
+                    break;
+                }
+            }
+            if (ret < 0) {
+                fprintf(stderr, "V4L2_CORE: (mjpeg decoder) The decoder does not support VA-API JPEG hardware acceleration and will use software decoding\n");
+                // Cleaning up hardware device context
+                if (codec_data->hw_device_ctx) {
+                    getAvutil()->m_av_buffer_unref(&codec_data->hw_device_ctx);
+                    codec_data->hw_device_ctx = NULL;
+                }
+            } else {
+                fprintf(stderr, "V4L2_CORE: (mjpeg decoder) Use VA-API hardware acceleration, pixel format: %s\n",
+                        getAvutil()->m_av_get_pix_fmt_name(codec_data->hw_pix_fmt));
+            }
+        }
+    }
 
 #if LIBAVCODEC_VER_AT_LEAST(53,6)
     if (getLoadLibsInstance()->m_avcodec_open2(codec_data->context, codec_data->codec, NULL) < 0)
 #else
-    if (getLoadLibsInstance()->m_avcodec_open(codec_data->context, codec_data->codec) < 0)
+    if (getLoadLibsInstance()->m_avcodec_open(codec_data->dec_ctx, codec_data->codec) < 0)
 #endif
-	{
-		fprintf(stderr, "V4L2_CORE: (mjpeg decoder) couldn't open codec\n");
+    {
+        fprintf(stderr, "V4L2_CORE: (mjpeg decoder) couldn't open codec\n");
+        if (codec_data->hw_device_ctx) {
+            getAvutil()->m_av_buffer_unref(&codec_data->hw_device_ctx);
+        }
         getLoadLibsInstance()->m_avcodec_close(codec_data->context);
-		free(codec_data->context);
-		free(codec_data);
-		free(jpeg_ctx);
-		jpeg_ctx = NULL;
-		return E_NO_CODEC;
-	}
+        free(codec_data->context);
+        free(codec_data);
+        free(jpeg_ctx);
+        jpeg_ctx = NULL;
+        return E_NO_CODEC;
+    }
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
     codec_data->picture = getAvutil()->m_av_frame_alloc();
@@ -1454,23 +1498,23 @@ int jpeg_init_decoder(int width, int height)
     getLoadLibsInstance()->m_avcodec_get_frame_defaults(codec_data->picture);
 #endif
 
-	/*alloc temp buffer*/
+    /*alloc temp buffer*/
     jpeg_ctx->tmp_frame = calloc((size_t)(width*height*2), sizeof(uint8_t));
-	if(jpeg_ctx->tmp_frame == NULL)
-	{
-		fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
-		exit(-1);
-	}
+    if(jpeg_ctx->tmp_frame == NULL)
+    {
+        fprintf(stderr, "V4L2_CORE: FATAL memory allocation failure (jpeg_init_decoder): %s\n", strerror(errno));
+        exit(-1);
+    }
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
     jpeg_ctx->pic_size = getAvutil()->m_av_image_get_buffer_size(codec_data->context->pix_fmt, width, height, 1);
 #else
-	jpeg_ctx->pic_size = avpicture_get_size(codec_data->context->pix_fmt, width, height);
+    jpeg_ctx->pic_size = avpicture_get_size(codec_data->dec_ctx->pix_fmt, width, height);
 #endif
-	jpeg_ctx->width = width;
-	jpeg_ctx->height = height;
-	jpeg_ctx->codec_data = codec_data;
+    jpeg_ctx->width = width;
+    jpeg_ctx->height = height;
+    jpeg_ctx->codec_data = codec_data;
 
-	return E_OK;
+    return E_OK;
 }
 
 /*
@@ -1489,39 +1533,79 @@ int jpeg_init_decoder(int width, int height)
  */
 int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 {
-	/*asserts*/
-	assert(jpeg_ctx != NULL);
-	assert(in_buf != NULL);
-	assert(out_buf != NULL);
+    /*asserts*/
+    assert(jpeg_ctx != NULL);
+    assert(in_buf != NULL);
+    assert(out_buf != NULL);
 
-	AVPacket avpkt;
+    AVPacket avpkt;
 
     getLoadLibsInstance()->m_av_init_packet(&avpkt);
 
-	avpkt.size = size;
-	avpkt.data = in_buf;
+    avpkt.size = size;
+    avpkt.data = in_buf;
 
-	codec_data_t *codec_data = (codec_data_t *) jpeg_ctx->codec_data;
+    codec_data_t *codec_data = (codec_data_t *) jpeg_ctx->codec_data;
 
-	int got_frame = 0;
-	int ret = libav_decode(codec_data->context, codec_data->picture, &got_frame, &avpkt);
+    int got_frame = 0;
+    int ret = libav_decode(codec_data->context, codec_data->picture, &got_frame, &avpkt);
 
-	if(ret < 0)
-	{
-		fprintf(stderr, "V4L2_CORE: (jpeg decoder) error while decoding frame\n");
-		return ret;
-	}
+    if(ret < 0)
+    {
+        fprintf(stderr, "V4L2_CORE: (jpeg decoder) error while decoding frame\n");
+        return ret;
+    }
 
-	if(got_frame)
-	{
+    if(got_frame)
+    {
+        // check use hwdec work ok
+        if (codec_data->hw_device_ctx && codec_data->picture->format == codec_data->hw_pix_fmt) {
+            AVFrame *sw_frame = getAvutil()->m_av_frame_alloc();
+            if (!sw_frame) {
+                fprintf(stderr, "V4L2_CORE: (jpeg decoder) Failed to allocate software frame\n");
+                return -1;
+            }
+
+            // Transfer hardware frame data to system memory
+            if (getAvutil()->m_av_hwframe_transfer_data(sw_frame, codec_data->picture, 0) < 0) {
+                fprintf(stderr, "V4L2_CORE: (jpeg decoder) Failed to transfer hardware frame data\n");
+                getAvutil()->m_av_frame_free(&sw_frame);
+                return -1;
+            }
+            if (verbosity > 0) {
+                printf("  Width: %d pixels\n", sw_frame->width);
+                printf("  Height: %d pixels\n", sw_frame->height);
+                printf("  Pixel format: %s\n", getAvutil()->m_av_get_pix_fmt_name((enum AVPixelFormat)sw_frame->format));
+                printf("  Hardware pixel format: %s\n", getAvutil()->m_av_get_pix_fmt_name(codec_data->hw_pix_fmt));
+                printf("  Linesize[0]: %d\n", sw_frame->linesize[0]);
+                printf("-------------------------\n");
+                printf(" - %s\n", getAvutil()->m_av_get_pix_fmt_name((enum AVPixelFormat)AV_PIX_FMT_YUV420P));
+            }
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-        getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
-                             (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
-                             codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
+            getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+                                                   (const uint8_t * const*) sw_frame->data, sw_frame->linesize,
+                                                   sw_frame->format, jpeg_ctx->width, jpeg_ctx->height, 1);
+            if (sw_frame->format == AV_PIX_FMT_NV12) {
+                nv12_to_yu12(out_buf, jpeg_ctx->tmp_frame, jpeg_ctx->width, jpeg_ctx->height);
+                getAvutil()->m_av_frame_free(&sw_frame);
+                return jpeg_ctx->pic_size;
+            }
 #else
-		avpicture_layout((AVPicture *) codec_data->picture, codec_data->context->pix_fmt,
-			jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
+            avpicture_layout((AVPicture *) sw_frame, sw_frame->format,
+                             jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
 #endif
+            getAvutil()->m_av_frame_free(&sw_frame);
+        } else {
+            // Software decoding: Use decoded frames directly
+#if LIBAVUTIL_VER_AT_LEAST(54,6)
+            getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+                                                   (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
+                                                   codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
+#else
+            avpicture_layout((AVPicture *) codec_data->picture, codec_data->dec_ctx->pix_fmt,
+                             jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
+#endif
+        }
 
         if (codec_data->context->pix_fmt == AV_PIX_FMT_YUVJ422P) {
             /* libavcodec output is in yuvj422p */
@@ -1539,9 +1623,9 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
             return jpeg_ctx->pic_size;
         }else
             return 0;
-	}
-	else
-		return 0;
+    }
+    else
+        return 0;
 
 }
 
@@ -1557,32 +1641,37 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
  */
 void jpeg_close_decoder()
 {
-	if(jpeg_ctx == NULL)
-		return;
+    if(jpeg_ctx == NULL)
+        return;
 
-	codec_data_t *codec_data = (codec_data_t *) jpeg_ctx->codec_data;
+    codec_data_t *codec_data = (codec_data_t *) jpeg_ctx->codec_data;
 
     getLoadLibsInstance()->m_avcodec_close(codec_data->context);
 
-	free(codec_data->context);
+    free(codec_data->context);
 
 #if LIBAVCODEC_VER_AT_LEAST(55,28)
     getAvutil()->m_av_frame_free(&codec_data->picture);
 #else
-	#if LIBAVCODEC_VER_AT_LEAST(54,28)
-            getLoadLibsInstance()->m_avcodec_free_frame(&codec_data->picture);
-	#else
-			av_freep(&codec_data->picture);
-	#endif
+#if LIBAVCODEC_VER_AT_LEAST(54,28)
+    getLoadLibsInstance()->m_avcodec_free_frame(&codec_data->picture);
+#else
+    av_freep(&codec_data->picture);
+#endif
 #endif
 
-	if(jpeg_ctx->tmp_frame)
-		free(jpeg_ctx->tmp_frame);
+    // Release hardware device context
+    if (codec_data->hw_device_ctx) {
+        getAvutil()->m_av_buffer_unref(&codec_data->hw_device_ctx);
+    }
 
-	free(codec_data);
-	free(jpeg_ctx);
+    if(jpeg_ctx->tmp_frame)
+        free(jpeg_ctx->tmp_frame);
 
-	jpeg_ctx = NULL;
+    free(codec_data);
+    free(jpeg_ctx);
+
+    jpeg_ctx = NULL;
 }
 
 #endif
