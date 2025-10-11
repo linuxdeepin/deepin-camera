@@ -174,9 +174,33 @@ int main(int argc, char *argv[])
         projectId = dconfig->value("projectID").toString();
         set_project_id(projectId.toUtf8().constData());
     }
+
+    QString libVaDriverName = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("libVaDriverName")) {
+        libVaDriverName = dconfig->value("libVaDriverName").toString();
+        set_libva_driver_name(libVaDriverName.toUtf8().constData());
+    }
+
+    QString libVdpauDriverName = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("libVdpauDriver")) {
+        libVdpauDriverName = dconfig->value("libVdpauDriver").toString();
+        set_libvdpau_driver_name(libVdpauDriverName.toUtf8().constData());
+    }
+
+    if (!libVaDriverName.isEmpty()) {
+        qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
+    }
+
+    if (!libVdpauDriverName.isEmpty()) {
+        qputenv("VDPAU_DRIVER", libVdpauDriverName.toLocal8Bit());
+    }
 #endif
     qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
     qInfo() << "projectID value is:" << get_project_id();
+    qInfo() << "libVaDriverName value is:" << get_libva_driver_name();
+    qInfo() << "libVdpauDriverName value is:" << get_libvdpau_driver_name();
+    qInfo() << "LIBVA_DRIVER_NAME value is:" << qgetenv("LIBVA_DRIVER_NAME");
+    qInfo() << "VDPAU_DRIVER value is:" << qgetenv("VDPAU_DRIVER");
     if (mp4Encode == -1) {
         //判断是否是X机型
         QStringList options;
