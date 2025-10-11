@@ -464,6 +464,54 @@ void set_project_id(const char *project_id);
  */
 const char* get_project_id(void);
 
+/*
+ * set libva driver name
+ * args:
+ *    name - libva driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_libva_driver_name(const char *name);
+
+/*
+ * get libva driver name
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to libva driver name string
+ */
+const char* get_libva_driver_name(void);
+
+/*
+ * set libvdpau driver name
+ * args:
+ *    name - libvdpau driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_libvdpau_driver_name(const char *name);
+
+/*
+ * get libvdpau driver name
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to libvdpau driver name string
+ */
+const char* get_libvdpau_driver_name(void);
+
 #ifdef __cplusplus
 }
 #endif
