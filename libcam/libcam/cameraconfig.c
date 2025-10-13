@@ -48,27 +48,28 @@ static config_t my_config =
     .device_name = NULL,
     .device_location = NULL,
     .format = V4L2_PIX_FMT_MJPEG,
-	.render = "sdl",
-	.gui = "qt5",
-	.audio = "port",
-	.capture = "mmap",
+    .render = "sdl",
+    .gui = "qt5",
+    .audio = "port",
+    .capture = "mmap",
     .video_codec = "mjpg",/*yuy2,mjpg,mpeg,flv1,wmv1,mpg2,mp43,dx50,h264,hevc,vp80,vp90,theo*/
     .audio_codec = "aac",
-	.profile_name = NULL,
-	.profile_path = NULL,
+    .profile_name = NULL,
+    .profile_path = NULL,
     .video_name = NULL,
-	.video_path = NULL,
-	.photo_name = NULL,
-	.photo_path = NULL,
-	.video_sufix = 1,
-	.photo_sufix = 1,
-	.fps_num = 1,
+    .video_path = NULL,
+    .photo_name = NULL,
+    .photo_path = NULL,
+    .video_sufix = 1,
+    .photo_sufix = 1,
+    .fps_num = 1,
     .fps_denom = 30,
     .audio_device = -1,/*will use API default in this case*/
-	.video_fx = 0, /*no video fx*/
-	.audio_fx = 0, /*no audio fx*/
-	.osd_mask = 0, /*REND_OSD_NONE*/
-	.crosshair_color=0x0000FF00, /*osd crosshair rgb color (0x00RRGGBB)*/
+    .video_fx = 0, /*no video fx*/
+    .audio_fx = 0, /*no audio fx*/
+    .osd_mask = 0, /*REND_OSD_NONE*/
+    .crosshair_color=0x0000FF00, /*osd crosshair rgb color (0x00RRGGBB)*/
+    .verbosity=0
 };
 
 /*
@@ -149,9 +150,10 @@ int config_save(const char *filename)
 	fprintf(fp, "#OSD mask \n");
 	fprintf(fp, "osd_mask=0x%x\n", my_config.osd_mask);
 	fprintf(fp, "crosshair_color=0x%x\n", my_config.crosshair_color);
-
+	fprintf(fp, "#verbosity \n");
+	fprintf(fp, "verbosity=%i\n", my_config.verbosity);
 	/* return to system locale */
-    setlocale(LC_NUMERIC, "");
+    	setlocale(LC_NUMERIC, "");
 
 	/* flush stream buffers to filesystem */
 	fflush(fp);
@@ -310,6 +312,10 @@ int config_load(const char *filename)
                 free(my_config.photo_path);
             my_config.photo_path = strdup(value);
         }
+        else if(strcmp(token, "verbosity") == 0)
+        {
+            my_config.verbosity = (int) strtoul(value, NULL, 10);
+        }
 //		else if(strcmp(token, "video_sufix") == 0)
 //		{
 //			my_config.video_sufix = (int) strtoul(value, NULL, 10);
@@ -454,7 +460,9 @@ void config_update(options_t *my_options)
 			free(my_config.photo_path);
 		my_config.photo_path = strdup(my_options->photo_path);
 	}
-
+    /*check for verbosity options*/
+    if(my_options->verbosity >= 0)
+        my_config.verbosity = my_options->verbosity;
 }
 
 /*
