@@ -49,11 +49,12 @@ int camInit(const char *devicename)
     free(device_name);
     /*加载配置文件*/
     config_load(config_file);
-    /*用option更新配置文件*/
-    config_update(my_options);
     /*获取配置项数据*/
     config_t *my_config = config_get();
-    debug_level = my_options->verbosity;
+    debug_level = my_config->verbosity;
+    my_options->verbosity = my_config->verbosity;
+    /*用option更新配置文件*/
+    config_update(my_options);
 
     int audio = AUDIO_PORTAUDIO;
 
