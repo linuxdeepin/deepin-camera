@@ -35,6 +35,8 @@ void photoRecordBtn::paintEvent(QPaintEvent *event)
     QPainter painter(this);
 #if QT_VERSION_MAJOR <= 5
     painter.setRenderHint(QPainter::HighQualityAntialiasing, true);
+#else
+    painter.setRenderHint(QPainter::Antialiasing, true);
 #endif
     painter.setBrush(Qt::NoBrush);
 
