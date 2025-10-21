@@ -279,6 +279,7 @@ void videowidget::delayInit()
 
 void videowidget::showNocam()
 {
+    qDebug() << __func__;
     if (!m_pNormalView->isVisible())
         m_pNormalView->show();
 
@@ -388,6 +389,7 @@ void videowidget::showCamUsed()
 #ifndef __mips__
 void videowidget::ReceiveOpenGLstatus(bool result)
 {
+    //qDebug() << "ReceiveOpenGLstatus" << result;
     if (result && m_openglwidget) {
         //Success
         if (m_pCamErrItem->isVisible())
@@ -625,6 +627,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
 
 void videowidget::showCountdown()
 {
+    qDebug() << __func__;
     if (DataManager::instance()->getdevStatus() == NOCAM) {
 
         if (m_flashTimer->isActive())
@@ -842,6 +845,7 @@ void videowidget::showRecTime()
 
 void videowidget::flash()
 {
+    qDebug() << __func__;
     if (get_sound_of_takeing_photo())
         m_takePicSound->play();
 
@@ -1019,9 +1023,11 @@ void videowidget::onEndBtnClicked()
 void videowidget::onRestartDevices()
 {
     if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
+        qDebug() << "Device status:" << DataManager::instance()->getdevStatus();
         onChangeDev();
 
         if (DataManager::instance()->getdevStatus() == CAM_CANUSE) {
+            qDebug() << "Device status:" << DataManager::instance()->getdevStatus();
             emit sigDeviceChange();
             QPalette plt = palette();
             plt.setColor(QPalette::Window, Qt::white);
@@ -1036,6 +1042,7 @@ void videowidget::onRestartDevices()
 
 void videowidget::onChangeDev()
 {
+    qDebug() << __func__;
     v4l2_dev_t *devicehandler =  get_v4l2_device_handler();
 
     if (m_imgPrcThread != nullptr)
@@ -1088,6 +1095,7 @@ void videowidget::onChangeDev()
 
 int videowidget::switchCamera(const char *device, const char *devName)
 {
+    qWarning() << __func__ << device << devName;
     if (NULL == device) {
         return -1;
     }
@@ -1097,6 +1105,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
     } else {
         ret = 0;
     }
+    qInfo() << "Camera init:" << ret;
     if (ret == E_OK) {
         m_imgPrcThread->init();
         m_imgPrcThread->start();
@@ -1143,6 +1152,7 @@ QString videowidget::getSaveFilePrefix()
 
 void videowidget::onTakePic(bool bTrue)
 {
+    qDebug() << __func__ << bTrue;
     g_Enum_Camera_State = PICTRUE;
 
     if (bTrue) {
@@ -1410,6 +1420,7 @@ void videowidget::itemPosChange()
 
 void videowidget::stopEverything()
 {
+    qDebug() << __func__;
     if (m_countTimer->isActive())
         m_countTimer->stop();
 

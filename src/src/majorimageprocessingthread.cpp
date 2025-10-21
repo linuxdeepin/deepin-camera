@@ -34,11 +34,13 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
+    qDebug() << __func__;
     m_stopped = 1;
 }
 
 void MajorImageProcessingThread::init()
 {
+    qDebug() << __func__;
     m_stopped = 0;
     m_majorindex = -1;
     m_frame = nullptr;
@@ -138,6 +140,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
 
 void MajorImageProcessingThread::run()
 {
+    qDebug() << __func__;
     if (m_eEncodeEnv != QCamera_Env) {
         m_videoDevice = get_v4l2_device_handler();
         v4l2core_start_stream(m_videoDevice);
