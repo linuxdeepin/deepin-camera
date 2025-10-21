@@ -1210,6 +1210,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
         qDebug() << "encodeEnv is QCamera_Env";
         ret = 0;
     }
+    qInfo() << "Camera init:" << ret;
     if (ret == E_OK) {
         qDebug() << "ret is E_OK";
         m_imgPrcThread->init();
