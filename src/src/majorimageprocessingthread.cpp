@@ -39,7 +39,7 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
-    // qDebug() << "Stopping MajorImageProcessingThread";
+    qDebug() << __func__;
     m_stopped = 1;
 }
 
