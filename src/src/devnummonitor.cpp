@@ -61,6 +61,9 @@ void DevNumMonitor::timeOutSlot()
                 m_noDevice = true;
             }
         } else {
+            if (m_noDevice) {
+                qWarning() << "Device found";
+            }
             m_noDevice = false;
             emit existDevice();
         }
