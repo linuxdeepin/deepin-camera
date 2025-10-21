@@ -2056,6 +2056,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     connect(m_videoPre, &videowidget::camAvailable, this, [=]() {
         m_pTitlebar->titlebar()->setBackgroundTransparent(true);
+        m_pTitlebar->slotThemeTypeChanged();
     });
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));
