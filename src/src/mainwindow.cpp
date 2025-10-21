@@ -1297,6 +1297,7 @@ void CMainWindow::updateBlockSystem(bool bTrue)
 
 void CMainWindow::onNoCam()
 {
+    qDebug() << __func__;
     m_pTitlebar->titlebar()->setBackgroundTransparent(false);
     m_pTitlebar->slotThemeTypeChanged();
     showChildWidget();
@@ -1384,6 +1385,7 @@ void CMainWindow::onDirectoryChanged(const QString &filePath)
 
 void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
 {
+    qWarning() << __func__ << cameraName;
     QStringList tmpList = cameraName.split(":");
     if (!tmpList.isEmpty()) {
         m_labelCameraName->setText(tmpList[0]);
@@ -1873,6 +1875,7 @@ void CMainWindow::initConnection()
     connect(m_videoPre, SIGNAL(noCamAvailable()), this, SLOT(onNoCam()));
     connect(m_videoPre, &videowidget::camAvailable, this, [=](){
         m_pTitlebar->titlebar()->setBackgroundTransparent(true);
+        m_pTitlebar->slotThemeTypeChanged();
     });
     //设置新的分辨率
     connect(m_videoPre, SIGNAL(sigDeviceChange()), &Settings::get(), SLOT(setNewResolutionList()));

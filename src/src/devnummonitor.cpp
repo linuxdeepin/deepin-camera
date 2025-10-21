@@ -51,11 +51,15 @@ void DevNumMonitor::timeOutSlot()
         if (get_device_list()->num_devices < 1) {
             //没有设备发送信号
             if (!m_noDevice) {
+                qWarning() << "No device found";
                 emit noDeviceFound();
                 m_noDevice = true;
             }
             qDebug() << "There is no camera connected!";
         } else {
+            if (m_noDevice) {
+                qWarning() << "Device found";
+            }
             m_noDevice = false;
             emit existDevice();
             // qDebug() << "existDevice!";

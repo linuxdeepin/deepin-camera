@@ -95,6 +95,12 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
+    // 将日志配置提前，以确保所有日志没有遗漏
+    //qputenv("QT_LOGGING_RULES", "*.debug=true;*.info=true");
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
+    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
+
     // Task 326583 不参与合成器崩溃重连
     unsetenv("QT_WAYLAND_RECONNECT");
 
@@ -108,6 +114,7 @@ int main(int argc, char *argv[])
         }
     }
     DataManager::instance()->setEncodeEnv(bFFmpegEnv ? FFmpeg_Env : GStreamer_Env);
+    qWarning() << "EncodeEnv:" << (bFFmpegEnv ? "FFmpeg_Env" : "GStreamer_Env");
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
@@ -222,12 +229,9 @@ int main(int argc, char *argv[])
     qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //设置产品名称
     qApp->setProductName(QObject::tr("Camera"));
-    //日志
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
+    qWarning() << "Version:" << DApplication::buildVersion(VERSION);
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     qApp->setWindowIcon(myIcon);
     qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
