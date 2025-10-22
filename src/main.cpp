@@ -203,8 +203,8 @@ int main(int argc, char *argv[])
     time.start();
     QString lutDir = LUT_DIR;
     initFilters(lutDir.toStdString().c_str());
+    qDebug() << "LUT_DIR: " << lutDir;
     qDebug() << QString("Filter initialization completed in %1 ms").arg(time.elapsed());
-
     CApplication a(argc, argv);
 
     qApp->setObjectName("deepin-camera");

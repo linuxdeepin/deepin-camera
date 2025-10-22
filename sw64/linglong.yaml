@@ -60,6 +60,30 @@ build: |
   # 生成.install 文件
   bash ./deploy_dep "${LDD_FILES[@]}"
 
+  # Add resource files from libimageeditor (any version)
+  ID_VALUE=$(awk -F ': ' '/^  id: / {print $2}' linglong.yaml)
+
+  echo "=== QT Version Detection ===" >&2
+  if [ -z "$QT_VERSION_MAJOR" ]; then
+      if command -v qmake >/dev/null 2>&1; then
+          QT_VERSION=$(qmake -query QT_VERSION 2>/dev/null || echo "unknown")
+          QT_MAJOR=$(qmake -query QT_VERSION 2>/dev/null | cut -d. -f1 || echo "6")
+          echo "Using QT_MAJOR from qmake: $QT_MAJOR" >&2
+      else
+          QT_MAJOR=6  # default value
+          echo "qmake not found, using default QT_MAJOR: $QT_MAJOR" >&2
+      fi
+  else
+      QT_MAJOR=$QT_VERSION_MAJOR
+      echo "Using QT_MAJOR from environment: $QT_MAJOR" >&2
+  fi
+
+  version=$QT_MAJOR
+  lib_path="${PREFIX}/share/libimagevisualresult${version}"
+  echo "Full library path: $lib_path" >&2
+  find "$lib_path" >> "${ID_VALUE}.install"
+  echo "================================"
+
 sources:
   # linglong:gen_deb_source sources sw64  https://pools.uniontech.com/desktop-professional-V25 snipe/2500 main community
   # linglong:gen_deb_source install qt6-base-dev, libdtk6gui-dev, libdtk6widget-dev, qt6-multimedia-dev, libavutil-dev, libavformat-dev, libavcodec-dev, libavfilter-dev, qt6-tools-dev, qt6-tools-dev-tools, deepin-gettext-tools, qt6-svg-dev, libv4l-dev, libsdl2-dev, portaudio19-dev, libpng-dev, libasound2-dev, libpciaccess-dev, libusb-1.0-0-dev, zlib1g-dev, libudev-dev, libswscale-dev, libswresample-dev, libffmpegthumbnailer-dev, libx11-dev, libva-dev, libimageeditor6-dev, libimageeditor6, libgstreamer1.0-dev, libgstreamer-plugins-base1.0-dev, gstreamer1.0-plugins-good, deepin-event-log
