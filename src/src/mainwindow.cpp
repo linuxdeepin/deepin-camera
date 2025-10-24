@@ -63,8 +63,8 @@ const int CMainWindow::minWindowWidth = 680;
 const int CMainWindow::minWindowHeight = 510;
 
 const int rightOffset = 10;
-const int SwitchcameraDiam = 40;   //切换摄像头直径
-const int photeRecordDiam = 64;
+const int SwitchcameraDiam = 40; //切换摄像头直径
+const int photoRecordDiam = 64;
 const int snapLabelDiam = 52;
 const int switchBtnWidth = 50;
 const int switchBtnHeight = 26;
@@ -948,7 +948,7 @@ void CMainWindow::initBlockShutdown()
     if (m_reply.isValid()) {
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
         m_reply = QDBusReply<QDBusUnixFileDescriptor>();
-        qDebug() << "init Nublock shutdown.";
+        qDebug() << "init Unblock shutdown.";
     }
     qDebug() << "Function completed: initBlockShutdown";
 }
@@ -980,7 +980,7 @@ void CMainWindow::initBlockSleep()
     if (m_replySleep.isValid()) {
         QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
         m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-        qDebug() << "init Nublock sleep.";
+        qDebug() << "init Unblock sleep.";
     }
     qDebug() << "Function completed: initBlockSleep";
 }
@@ -1341,7 +1341,7 @@ void CMainWindow::updateBlockSystem(bool bTrue)
         } else {
             QDBusReply<QDBusUnixFileDescriptor> tmp = m_reply;
             m_reply = QDBusReply<QDBusUnixFileDescriptor>();
-            qDebug() << "Nublock shutdown.";
+            qDebug() << "Unblock shutdown.";
         }
     }
     if (m_bWayland) {
@@ -1353,7 +1353,7 @@ void CMainWindow::updateBlockSystem(bool bTrue)
         } else {
             QDBusReply<QDBusUnixFileDescriptor> tmp = m_replySleep;
             m_replySleep = QDBusReply<QDBusUnixFileDescriptor>();
-            qDebug() << "Nublock sleep.";
+            qDebug() << "Unblock sleep.";
         }
     }
     qDebug() << "Function completed: updateBlockSystem";
@@ -2149,7 +2149,7 @@ void CMainWindow::initRightButtons()
     m_cameraSwitchBtn->setToolTip(tr("Switch Cameras"));
 
     m_photoRecordBtn = new photoRecordBtn(this);
-    m_photoRecordBtn->setFixedSize(photeRecordDiam, photeRecordDiam);
+    m_photoRecordBtn->setFixedSize(photoRecordDiam, photoRecordDiam);
     m_photoRecordBtn->setObjectName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setAccessibleName(BUTTON_PICTURE_VIDEO);
     m_photoRecordBtn->setToolTip(tr("Photo"));
@@ -2196,10 +2196,10 @@ void CMainWindow::locateRightButtons()
     if (nullptr == m_photoRecordBtn) {
         return;
     }
-    int buttonCenterX = width() - rightOffset - photeRecordDiam / 2;
+    int buttonCenterX = width() - rightOffset - photoRecordDiam / 2;
     int buttonCenterY = height() / 2;
-    int photoRecordLeftX = buttonCenterX - photeRecordDiam / 2;
-    int photoRecordLeftY = buttonCenterY - photeRecordDiam / 2;
+    int photoRecordLeftX = buttonCenterX - photoRecordDiam / 2;
+    int photoRecordLeftY = buttonCenterY - photoRecordDiam / 2;
     m_photoRecordBtn->move(photoRecordLeftX, photoRecordLeftY);
 
     int switchCameraOffset = height() / 15;
@@ -2208,7 +2208,7 @@ void CMainWindow::locateRightButtons()
     m_cameraSwitchBtn->move(switchCameraX, switchCameraY);
 
     int switchBtnX = buttonCenterX - switchBtnWidth / 2;
-    int switchBtnY = photoRecordLeftY + photeRecordDiam;
+    int switchBtnY = photoRecordLeftY + photoRecordDiam;
     m_modeSwitchBox->move(switchBtnX, switchBtnY);
 
     int snapLabelOffset = height() / 10;
