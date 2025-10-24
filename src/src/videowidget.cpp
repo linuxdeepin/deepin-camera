@@ -35,9 +35,9 @@
 
 #define COUNTDOWN_WIDTH 32
 #define COUNTDOWN_HEIGHT 61
-#define COUNTDOWN_OFFECT 20
+#define COUNTDOWN_OFFSET 20
 
-static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
+static PREVIEW_ENUM_STATE g_Enum_Camera_State = PICTURE;
 
 // 重写QGraphicsView类，在子类中，直接将鼠标事件路由到QWidget，这样QGraphicsScene不会接收和处理鼠标事件
 // bug 100791
@@ -431,7 +431,7 @@ void videowidget::ReceiveOpenGLstatus(bool result)
             }
         }
 
-        if (!m_openglwidget->isVisible() && !m_isFalsh)
+        if (!m_openglwidget->isVisible() && !m_isFlash)
             m_openglwidget->show();
 
         malloc_trim(0);
@@ -455,7 +455,7 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
         case 0:     //Success
 //            m_imgPrcThread->m_rwMtxImg.lock();
 
-            if (!m_isFalsh)
+            if (!m_isFlash)
                 m_pNormalView->show();
             m_pCamErrItem->hide();
             m_pSvgItem->hide();
@@ -526,11 +526,11 @@ void videowidget::onReachMaxDelayedFrames()
         m_openglwidget->hide();
 }
 
-void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
+void videowidget::showCountDownLabel(PREVIEW_ENUM_STATE state)
 {
     QString str;
     switch (state) {
-    case PICTRUE:
+    case PICTURE:
         m_recordingTimeWidget->hide();
         break;
 
@@ -604,7 +604,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
                                 height() - m_recordingTimeWidget->height() - 15);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
-                   (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
+                   (height() - m_dLabel->height()) - COUNTDOWN_OFFSET);
 
 
     if (m_pCamErrItem->isVisible()) {
@@ -661,7 +661,7 @@ void videowidget::showCountdown()
             emit updateRecordState(photoRecordBtn::Recording);
         }
 
-        if (g_Enum_Camera_State == PICTRUE) {
+        if (g_Enum_Camera_State == PICTURE) {
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
                 if (m_flashEnable && 1 == m_nMaxContinuous) {
                     int index = QApplication::desktop()->screenNumber(this);
@@ -674,7 +674,7 @@ void videowidget::showCountdown()
                 qDebug() << "flashTimer->start();";
 
                 if (m_pNormalView) {
-                    m_isFalsh = true;
+                    m_isFlash = true;
                     m_pNormalView->hide();
                 }
                 if (m_openglwidget)
@@ -762,7 +762,7 @@ void videowidget::showCountdown()
     } else {
         m_dLabel->setText(QString::number(m_nInterval));
         m_dLabel->show();
-        showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
+        showCountDownLabel(PICTURE); //拍照录像都要显示倒计时
         m_nInterval--;
         qInfo() << "m_nInterval:" << m_nInterval;
     }
@@ -856,7 +856,7 @@ void videowidget::flash()
     } else {
         m_pNormalView->show();
     }
-    m_isFalsh = false;
+    m_isFlash = false;
 
 #endif
     m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
@@ -1153,7 +1153,7 @@ QString videowidget::getSaveFilePrefix()
 void videowidget::onTakePic(bool bTrue)
 {
     qDebug() << __func__ << bTrue;
-    g_Enum_Camera_State = PICTRUE;
+    g_Enum_Camera_State = PICTURE;
 
     if (bTrue) {
         //1、重置状态
