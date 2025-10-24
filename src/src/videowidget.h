@@ -60,9 +60,9 @@ class QGraphicsSvgItem;
 
 #define FLASH_TIME 500//拍照闪光时间，500毫秒
 /**
-* @brief PRIVIEW_ENUM_STATE　枚举拍照，无设备，录像
+* @brief PREVIEW_ENUM_STATE　枚举拍照，无设备，录像
 */
-enum PRIVIEW_ENUM_STATE {PICTRUE, NODEVICE, VIDEO};
+enum PREVIEW_ENUM_STATE {PICTURE, NODEVICE, VIDEO};
 
 // 重写QGraphicsView类，在子类中，直接将鼠标事件路由到QWidget，这样QGraphicsScene不会接收和处理鼠标事件
 class QGraphicsViewEx : public QGraphicsView
@@ -390,7 +390,7 @@ private:
     * @brief showCountDownLabel　显示录制和拍照倒计时
     * @param state 当前状态（拍照，没有设备，视频）
     */
-    void showCountDownLabel(PRIVIEW_ENUM_STATE state);
+    void showCountDownLabel(PREVIEW_ENUM_STATE state);
 
     /**
     * @brief forbidScrollBar　禁止滚轮显示区域
