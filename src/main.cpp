@@ -277,8 +277,8 @@ int main(int argc, char *argv[])
     qInfo() << "Main window displayed and initialized";
 
     ApplicationAdaptor adaptor(&w);
-    QDBusConnection::sessionBus().registerService("com.deepin.camera");
-    QDBusConnection::sessionBus().registerObject(QDir::separator(), &w);
+    QDBusConnection::sessionBus().registerService("com.deepin.Camera");
+    QDBusConnection::sessionBus().registerObject("/com/deepin/camera", &w);
     qDebug() << "DBus service and object registered";
 
     qInfo() << "Application startup completed successfully";

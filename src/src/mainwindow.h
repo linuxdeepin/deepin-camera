@@ -293,6 +293,7 @@ private slots:
      */
     void onTrashFile(const QString &fileName);
 
+public slots:
     /**
      * @brief onSwitchPhotoBtnClked 拍照按钮点击
      */
@@ -309,6 +310,7 @@ private slots:
      */
     void onModeSwitchBoxValueChanged(int);
 
+private slots:
     /**
      * @brief onPhotoRecordBtnClked 拍照/录像按钮点击事件
      */
@@ -419,6 +421,12 @@ private:
 public:
     static const int                minWindowWidth;//最小窗口宽度
     static const int                minWindowHeight;//最小窗口高度
+    
+    /**
+     * @brief getVideoWidget 获取视频预览组件
+     * @return 视频预览组件指针
+     */
+    videowidget* getVideoWidget() { return m_videoPre; }
 
 private:
     enum ActType                    m_nActTpye;

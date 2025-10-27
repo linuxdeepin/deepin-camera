@@ -286,6 +286,10 @@ void videowidget::delayInit()
     connect(m_imgPrcThread, SIGNAL(sigReflushSnapshotLabel()),
             this, SIGNAL(reflushSnapshotLabel()));
 
+    connect(m_imgPrcThread, &MajorImageProcessingThread::sigReflushSnapshotLabel, [=](const QString &filePath){
+        emit reflushSnapshotLabel(filePath);
+    });
+
     connect(m_imgPrcThread, SIGNAL(sigRecordFrame(uchar*, uint)),
             this, SLOT(onRecordFrame(uchar*, uint)));
 
@@ -1248,6 +1252,11 @@ QString videowidget::getSaveFilePrefix()
     }
     qDebug() << "Exiting getSaveFilePrefix";
     return filePrefix;
+}
+
+QString videowidget::getSaveVdFolder() const
+{
+    return m_saveVdFolder;
 }
 
 void videowidget::onTakePic(bool bTrue)
