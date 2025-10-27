@@ -137,7 +137,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
                 if (img.save(m_strPath, "JPG")) {
                     nRet = 0;
                     qInfo() << "Successfully saved photo to:" << m_strPath;
-                    emit sigReflushSnapshotLabel();
+                    emit sigReflushSnapshotLabel(m_strPath);
                 }
             }
 
@@ -425,7 +425,7 @@ void MajorImageProcessingThread::run()
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
                         qInfo() << "Successfully saved photo to:" << m_strPath;
-                        emit sigReflushSnapshotLabel();
+                        emit sigReflushSnapshotLabel(m_strPath);
                     }
                 } else if (FFmpeg_Env == m_eEncodeEnv) {
                     // qDebug() << "Processing photo capture";
@@ -443,7 +443,7 @@ void MajorImageProcessingThread::run()
                     if (saveImg->save(m_strPath, "JPG")) {
                         nRet = 0;
                         qInfo() << "Successfully saved photo to:" << m_strPath;
-                        emit sigReflushSnapshotLabel();
+                        emit sigReflushSnapshotLabel(m_strPath);
                     }
                     if (saveImg)
                         delete saveImg;

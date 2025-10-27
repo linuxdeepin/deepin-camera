@@ -147,6 +147,9 @@ void ImageItem::updatePicPath(const QString &filePath)
         m_bVideo = false;
         qInfo() << "Processing image file:" << filePath;
         QImage img(filePath);
+        if (img.isNull()) {
+            img.load(filePath);
+        }
         img = img.scaled(THUMBNAIL_PIXMAP_SIZE, THUMBNAIL_PIXMAP_SIZE, Qt::KeepAspectRatioByExpanding);
         pix = QPixmap::fromImage(img);
         malloc_trim(0);

@@ -167,7 +167,7 @@ signals:
     /**
      * @brief reflushSnapshotLabel 刷新照片预览图信号
      */
-    void reflushSnapshotLabel();
+    void reflushSnapshotLabel(const QString &filePath);
 
 public:
     /**
@@ -434,6 +434,13 @@ private:
 public:
     MajorImageProcessingThread *m_imgPrcThread;
     AudioProcessingThread      *m_audPrcThread;
+
+    /**
+     * @brief getSaveVdFolder
+     * @return 保存视频默认文件夹
+     */
+    QString getSaveVdFolder() const;
+
 private:
     bool                       m_bActive;           //是否录制中
     int                        m_nMaxContinuous;    //最大连拍数：0,4,10

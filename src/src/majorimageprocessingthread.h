@@ -127,7 +127,7 @@ signals:
     /**
      * @brief sigReflushSnapshotLabel 发送刷新照片预览图信号
      */
-    void sigReflushSnapshotLabel();
+    void sigReflushSnapshotLabel(const QString &filePath);
 
 #ifndef __mips__
     /**

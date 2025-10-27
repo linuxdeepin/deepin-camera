@@ -1,0 +1,42 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.deepin.Camera">
+    <method name="showWindow">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="hideWindow">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="raiseWindow">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="quitWindow">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="takePhoto">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="startRecording">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="stopRecording">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="getRecordingStatus">
+      <arg type="b" direction="out"/>
+    </method>
+    <signal name="recordingStatusChanged">
+      <arg type="b" name="isRecording"/>
+    </signal>
+    <signal name="photoTaken">
+      <arg type="s" name="filePath"/>
+    </signal>
+    <signal name="recordingStarted">
+      <arg type="s" name="filePath"/>
+    </signal>
+    <signal name="recordingStopped">
+      <arg type="s" name="filePath"/>
+    </signal>
+  </interface>
+</node>
