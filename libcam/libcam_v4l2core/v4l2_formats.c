@@ -678,27 +678,32 @@ int get_format_resolution_index(v4l2_dev_t *vd, int format, int width, int heigh
 		return (-1);
 	}
 
+	// 查找输入的分辨率是否在支持的分辨率列表中（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
 	int i=0;
 	for(i=0; i < vd->list_stream_formats[format].numb_res; i++)
 	{
-		if( width == vd->list_stream_formats[format].list_stream_cap[i].width &&
-		    height == vd->list_stream_formats[format].list_stream_cap[i].height)
-			return (i);
+		int w = vd->list_stream_formats[format].list_stream_cap[i].width;
+		int h = vd->list_stream_formats[format].list_stream_cap[i].height;
+		if (width == w && height == h && is_valid_resolution(w, h)) {
+			return i;
+		}
 	}
-    int tempwidth = 0;
-    int tempheight = 0;
-    int index = -1;
-    for(i=0; i < vd->list_stream_formats[format].numb_res; i++)
-    {
-        if( tempwidth <= vd->list_stream_formats[format].list_stream_cap[i].width &&
-            tempheight <= vd->list_stream_formats[format].list_stream_cap[i].height)
-        {
-            tempwidth = vd->list_stream_formats[format].list_stream_cap[i].width;
-            tempheight = vd->list_stream_formats[format].list_stream_cap[i].height;
-            index = i;
-        }
-    }
-    return (index);
+
+	// 查找可以支持的最大分辨率（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
+	int tempwidth = 0;
+	int tempheight = 0;
+	int index = -1;
+	for(i=0; i < vd->list_stream_formats[format].numb_res; i++)
+	{
+		int w = vd->list_stream_formats[format].list_stream_cap[i].width;
+		int h = vd->list_stream_formats[format].list_stream_cap[i].height;
+		if (tempwidth <= w && tempheight <= h && is_valid_resolution(w, h)) {
+			tempwidth  = w;
+			tempheight = h;
+			index = i;
+		}
+	}
+	return index;
 }
 
 /*
@@ -737,4 +742,10 @@ void free_frame_formats(v4l2_dev_t *vd)
 	}
 	free(vd->list_stream_formats);
 	vd->list_stream_formats = NULL;
+}
+
+int is_valid_resolution(int width, int height)
+{
+	// 目前类似8000x6000的解码问题未解决，故要限制最大分辨率
+	return (width < MAX_WIDTH_LIMIT && height < MAX_HEIGHT_LIMIT) && (width % 16 == 0 && height % 8 == 0);
 }
