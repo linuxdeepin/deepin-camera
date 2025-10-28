@@ -1696,18 +1696,19 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
         }
     }
 
-    for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
-    {
-        if( my_width <= vd->list_stream_formats[format_index].list_stream_cap[i].width &&
-            my_height <= vd->list_stream_formats[format_index].list_stream_cap[i].height &&
-            ((vd->list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
-             && (vd->list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
-             && (vd->list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0))
-        {
-            my_width = vd->list_stream_formats[format_index].list_stream_cap[i].width;
-            my_height = vd->list_stream_formats[format_index].list_stream_cap[i].height;
-        }
-    }
+	// 查找可以支持的最大分辨率（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
+	printf("V4L2_CORE: valid resolution counts: %d\n", vd->list_stream_formats[format_index].numb_res);
+	for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
+	{
+		int w = vd->list_stream_formats[format_index].list_stream_cap[i].width;
+		int h = vd->list_stream_formats[format_index].list_stream_cap[i].height;
+		printf("V4L2_CORE: - valid resolution(%dx%d)\n", w, h);
+		if (my_width <= w && my_height <= h && is_valid_resolution(w, h)) {
+			my_width  = w;
+			my_height = h;
+		}
+	}
+	printf("V4L2_CORE: select resolution(%dx%d)\n", my_width, my_height);
 }
 
 /*
