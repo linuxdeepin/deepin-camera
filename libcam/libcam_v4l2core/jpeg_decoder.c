@@ -1552,7 +1552,7 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
 
     if(ret < 0)
     {
-        fprintf(stderr, "V4L2_CORE: (jpeg decoder) error while decoding frame\n");
+        fprintf(stderr, "V4L2_CORE: (jpeg decoder) error while decoding frame, code(%d)\n", ret);
         return ret;
     }
 
