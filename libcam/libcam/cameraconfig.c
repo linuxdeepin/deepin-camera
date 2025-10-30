@@ -29,7 +29,8 @@
 #include <fcntl.h>
 #include <assert.h>
 #include <libintl.h>
-
+#include <sys/time.h>
+#include <stdint.h>
 
 #include "gviewv4l2core.h"
 #include "gview.h"
@@ -37,6 +38,8 @@
 #include "gui.h"
 #include "cameraconfig.h"
 
+#define MAX_FILENAME_LENGTH 1000
+#define BACKUP_SUFFIX ".bak"
 #define MAXLINE 100 /*100 char lines max*/
 
 extern int debug_level;
@@ -83,6 +86,7 @@ static config_t my_config =
  */
 int config_save(const char *filename)
 {
+	long long start_time_ms = get_timestamp();
 	FILE *fp;
 
 	/*open file for write*/
@@ -164,8 +168,10 @@ int config_save(const char *filename)
 	}
 
 	if(debug_level > 1)
-        printf("deeepin_camera: saving config to %s\n", filename);
+        printf("deepin_camera: saving config to %s\n", filename);
 
+	long long end_time_ms = get_timestamp();
+	printf("deepin-camera: %s cost %lld ms\n", __func__, end_time_ms - start_time_ms);
 	return 0;
 }
 
@@ -181,6 +187,7 @@ int config_save(const char *filename)
  */
 int config_load(const char *filename)
 {
+	printf("deepin-camera: load config file(%s).\n", filename);
 	FILE *fp;
 	char bufr[MAXLINE];
 	int line = 0;
@@ -188,7 +195,14 @@ int config_load(const char *filename)
 	/*open file for read*/
 	if((fp = fopen(filename,"r")) == NULL)
 	{
-        fprintf(stderr, "deepin-camera: couldn't open %s for read: %s\n", filename, strerror(errno));
+		fprintf(stderr, "deepin-camera: couldn't open file(%s) for read: %s\n", filename, strerror(errno));
+		if (filename && strlen(filename) > 4 && strlen(filename) < MAX_FILENAME_LENGTH && strcmp(filename + strlen(filename) - 4, BACKUP_SUFFIX) != 0) {
+			char bak_file[1024] = {0};
+			snprintf(bak_file, sizeof(bak_file) - 1, "%s%s", filename, BACKUP_SUFFIX);
+			printf("deepin-camera: try to load config from backup file(%s).\n", bak_file);
+			return config_load(bak_file);
+		}
+
 		return -1;
 	}
 
@@ -231,7 +245,7 @@ int config_load(const char *filename)
 		/*skip invalid lines */
 		if(!token || !value || strlen(token) < 1 || strlen(value) < 1)
 		{
-            fprintf(stderr, "deepin-camera: (config) skiping invalid config entry at line %i\n", line);
+            fprintf(stderr, "deepin-camera: (config) skipping invalid config entry at line %i: %s\n", line, bufp);
 			if(token)
 				free(token);
 			if(value)
@@ -509,4 +523,54 @@ void config_clean()
 config_t *config_get()
 {
     return &my_config;
+}
+
+long long get_timestamp()
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
+
+int backup_file(const char *src)
+{
+	long long start_time_ms = get_timestamp();
+	if (src == NULL) {
+		fprintf(stderr, "file name is NULL\n");
+		return -1;
+	}
+
+	FILE *source_file = fopen(src, "rb");
+	if (source_file == NULL) {
+		fprintf(stderr, "cannot open file(%s): %s\n", src, strerror(errno));
+		return -1;
+	}
+
+	if (strlen(src) > MAX_FILENAME_LENGTH) {
+		fprintf(stderr, "file name too long(%s)\n", src);
+		return -1;
+	}
+
+	char dst[1024] = {0};
+	snprintf(dst, sizeof(dst) - 1, "%s%s", src, BACKUP_SUFFIX);
+	FILE *dest_file = fopen(dst, "wb");
+	if (dest_file == NULL) {
+		fprintf(stderr, "cannot create file(%s): %s\n", dst, strerror(errno));
+		fclose(source_file);
+		return -1;
+	}
+
+	char buffer[4096];
+	size_t bytes_read;
+	while ((bytes_read = fread(buffer, 1, sizeof(buffer), source_file)) > 0) {
+		fwrite(buffer, 1, bytes_read, dest_file);
+	}
+
+	fclose(source_file);
+	fflush(dest_file);
+	fsync(fileno(dest_file));
+	fclose(dest_file);
+	long long end_time_ms = get_timestamp();
+	printf("deepin-camera: %s cost %lld ms\n", __func__, end_time_ms - start_time_ms);
+	return 0;
 }

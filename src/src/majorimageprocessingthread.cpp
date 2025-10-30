@@ -15,6 +15,7 @@ extern "C" {
 #include <QDate>
 #include <QDir>
 #include <DSysInfo>
+#include <QTimer>
 DCORE_USE_NAMESPACE
 
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
@@ -190,7 +191,12 @@ void MajorImageProcessingThread::run()
                 my_config->format = static_cast<uint>(m_videoDevice->format.fmt.pix.pixelformat);
                 v4l2_device_list_t *devlist = get_device_list();
                 set_device_name(devlist->list_devices[get_v4l2_device_handler()->this_device].name);
+                qInfo() << "Save config file:" << config_file;
                 config_save(config_file.toLatin1().data());
+                QTimer::singleShot(5000, this, [config_file] {
+                    qInfo() << "Backup file:" << config_file;
+                    backup_file(config_file.toLatin1().data());
+                });
             }
 
             m_result = -1;

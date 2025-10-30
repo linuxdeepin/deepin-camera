@@ -230,4 +230,28 @@ void set_video_sufix_flag(int flag);
  */
 void config_clean();
 
+/*
+ * get timestamp in milliseconds
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: timestamp in milliseconds
+ */
+long long get_timestamp();
+
+/*
+ * backup file
+ * args:
+ *    src: source file
+ *
+ * asserts:
+ *    none
+ *
+ * returns: error code
+ */
+int backup_file(const char *src);
+
 #endif
