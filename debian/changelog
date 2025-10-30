@@ -1,3 +1,9 @@
+deepin-camera (6.5.35) unstable; urgency=medium
+
+  * feat(dbus): implement complete D-Bus interface for camera application
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 30 Oct 2025 19:20:31 +0800
+
 deepin-camera (6.5.34) unstable; urgency=medium
 
   * fix: Add dynamic Qt version detection and resource deployment for linglong
