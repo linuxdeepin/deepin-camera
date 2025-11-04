@@ -1500,6 +1500,8 @@ void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2valu
         onStopPhotoAndRecord();
     }
     //    }
+    // 锁屏时，停用摄像头，因为用户可能需要人脸解锁。解锁后，恢复使用摄像头。
+    m_videoPre->onLockedScreen(key2value.value("Locked").value<bool>());
     qDebug() << "Function completed: onTimeoutLock";
 }
 

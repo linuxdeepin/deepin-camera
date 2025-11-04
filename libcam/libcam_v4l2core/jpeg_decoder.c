@@ -1598,6 +1598,12 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
         } else {
             // Software decoding: Use decoded frames directly
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
+            if (verbosity > 0) {
+                printf("codec_data size(%dx%d) linesize(%d) format(%s) jpeg_ctx size(%dx%d) pic_size(%d)\n", codec_data->picture->width, codec_data->picture->height,
+                        codec_data->picture->linesize[0],
+                        getAvutil()->m_av_get_pix_fmt_name((enum AVPixelFormat)codec_data->picture->format),
+                        jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->pic_size);
+            }
             getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
                                                    (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
                                                    codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
