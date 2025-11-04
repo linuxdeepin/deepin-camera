@@ -231,7 +231,7 @@ int config_load(const char *filename)
 		/*skip invalid lines */
 		if(!token || !value || strlen(token) < 1 || strlen(value) < 1)
 		{
-            fprintf(stderr, "deepin-camera: (config) skiping invalid config entry at line %i\n", line);
+			fprintf(stderr, "deepin-camera: (config) skipping invalid config entry at line %i: %s\n", line, bufp);
 			if(token)
 				free(token);
 			if(value)

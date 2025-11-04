@@ -58,7 +58,10 @@ void DevNumMonitor::timeOutSlot()
             qDebug() << "There is no camera connected!";
         } else {
             if (m_noDevice) {
-                qWarning() << "Device found";
+                v4l2_dev_sys_data_t *v4l2_devices = get_device_list()->list_devices;
+                if (v4l2_devices) {
+                    qWarning() << "Device found:" << v4l2_devices[0].device << v4l2_devices[0].name;
+                }
             }
             m_noDevice = false;
             emit existDevice();
