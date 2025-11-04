@@ -332,6 +332,12 @@ public slots:
      */
     void onFilterDisplayChanged(int bDisplay);
 
+    /**
+     * @brief 锁屏事件
+     * @param bLocked 是否处于锁屏状态
+     */
+    void onLockedScreen(bool bLocked);
+
 private slots:
     /**
     * @brief ReceiveMajorImage　处理视频帧 mips、wayland下使用
@@ -490,7 +496,7 @@ private:
     efilterType                m_filterType;        //当前选择的滤镜名称
     int                        m_exposure;
     bool                       m_isFlash = false;
-
+    bool                       m_isLockedScreen = false; // 是否处于锁屏状态
 };
 
 #endif // VIDEOWIDGET_H
