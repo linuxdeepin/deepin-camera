@@ -503,6 +503,15 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
     }
 }
 
+void videowidget::onLockedScreen(bool bLocked)
+{
+    m_isLockedScreen = bLocked;
+    if (m_isLockedScreen) {
+        // 复用现有函数，达到关闭摄像头的效果
+        this->onReachMaxDelayedFrames();
+    }
+}
+
 void videowidget::onReachMaxDelayedFrames()
 {
     check_device_list_events(get_v4l2_device_handler());
@@ -1022,6 +1031,11 @@ void videowidget::onEndBtnClicked()
 
 void videowidget::onRestartDevices()
 {
+    if (m_isLockedScreen) {
+        qDebug() << __func__ << "bypass reason(locked screen)";
+        return;
+    }
+
     if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
         qDebug() << "Device status:" << DataManager::instance()->getdevStatus();
         onChangeDev();

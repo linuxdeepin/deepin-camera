@@ -425,7 +425,7 @@ int enum_v4l2_devices()
     getUdev()->m_udev_enumerate_unref(enumerate);
 
     my_device_list.num_devices = num_dev;
-    printf("my_device_list.num_devices is %d\n", num_dev);
+    printf("V4L2_CORE: num_devices is %d\n", num_dev);
 
     return(E_OK);
 }
@@ -467,16 +467,16 @@ void v4l2core_init_device_list()
  *   none
  * 
  * returns:
- *   videodevice index in device list [0 - num_devices[ or -1 on error
+ *   videodevice index in device list [0 - num_devices] or -1 on error
  */ 
 int v4l2core_get_device_index(const char *videodevice)
 {
-    if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL && videodevice != NULL)
+	if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL && videodevice != NULL)
 	{
 		int dev_index = 0;
 		for(dev_index = 0; dev_index < my_device_list.num_devices; ++dev_index)
 		{
-            fprintf(stderr,"v4l2core_get_device_index dev_index(%d) videodevice:%x device:%x\n", dev_index, (unsigned int)videodevice, (unsigned int)(my_device_list.list_devices[dev_index].device));
+			fprintf(stderr,"V4L2CORE: v4l2core_get_device_index: dev_index(%d) videodevice(%s) device(%s)\n", dev_index, videodevice, my_device_list.list_devices[dev_index].device);
 			if(strcmp(videodevice, my_device_list.list_devices[dev_index].device)==0)
 			{
 				my_device_list.list_devices[dev_index].current = 1;
