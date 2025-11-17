@@ -215,7 +215,21 @@ void MajorImageProcessingThread::run()
             }
 
             m_result = -1;
-            m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+            if (config_get()->verbosity > 0) {
+                static QElapsedTimer decodeTimer;
+                static int decodeCount = 0;
+                if (decodeCount % LOGGING_INTERVAL == LOGGING_INTERVAL - 1) {
+                    decodeTimer.start();
+                    m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+                    qDebug() << "v4l2 decoded time:" << decodeTimer.elapsed() << "ms";
+                    decodeCount = 0;
+                } else {
+                    m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+                    decodeCount++;
+                }
+            } else {
+                m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+            }
 
             if (m_frame == nullptr) {
                 framedely++;
