@@ -440,6 +440,8 @@ static LoadUdev *newUdev(void)
     PrintError();
     pUdev->m_udev_monitor_receive_device = (uos_udev_monitor_receive_device)dlsym(handle, "udev_monitor_receive_device");
     PrintError();
+    pUdev->m_udev_device_get_subsystem = (uos_udev_device_get_subsystem)dlsym(handle, "udev_device_get_subsystem");
+    PrintError();
     pUdev->m_udev_device_get_devtype = (uos_udev_device_get_devtype)dlsym(handle, "udev_device_get_devtype");
     PrintError();
     pUdev->m_udev_device_get_action = (uos_udev_device_get_action)dlsym(handle, "udev_device_get_action");
