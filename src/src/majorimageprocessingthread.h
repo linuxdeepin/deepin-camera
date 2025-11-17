@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QElapsedTimer>
 
 #include "datamanager.h"
 
