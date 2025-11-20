@@ -865,9 +865,8 @@ void videowidget::flash()
     } else {
         m_pNormalView->show();
     }
-    m_isFlash = false;
-
 #endif
+    m_isFlash = false;
     m_flashLabel->hide(); //为避免没有关闭，放到定时器里边关闭
 
     if (m_curTakePicTime == 0)
