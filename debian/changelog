@@ -1,3 +1,19 @@
+deepin-camera (6.5.36) unstable; urgency=medium
+
+  * chore: Update version to 6.5.36
+  * chore: Adapt dbus for linglong
+  * fix: 修复录制视频时卡住闪退
+  * fix: check vaapi encoder fail
+  * fix: 修复mips问题
+  * fix: 优化显示界面 (#346)
+  * fix: 优化相机显示与录制卡顿回跳问题
+  * fix: optimize delay for show
+  * fix: m_isFlash is placed in the wrong place.
+  * fix: make screen flash stable during take photo
+  * fix(udev): add subsystem and devtype function loading
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 11 Dec 2025 18:47:05 +0800
+
 deepin-camera (6.5.35) unstable; urgency=medium
 
   * feat(dbus): implement complete D-Bus interface for camera application
