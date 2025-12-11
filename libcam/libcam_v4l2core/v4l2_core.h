@@ -91,3 +91,8 @@ struct _v4l2_dev_t
 };
 void /*__attribute__ ((constructor))*/ v4l2core_init();
 #endif
+
+/*
+ * logging interval
+ */
+#define LOGGING_INTERVAL 5

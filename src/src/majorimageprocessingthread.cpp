@@ -39,7 +39,7 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
-    // qDebug() << "Stopping MajorImageProcessingThread";
+    qDebug() << __func__;
     m_stopped = 1;
 }
 
@@ -215,7 +215,21 @@ void MajorImageProcessingThread::run()
             }
 
             m_result = -1;
-            m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+            if (config_get()->verbosity > 0) {
+                static QElapsedTimer decodeTimer;
+                static int decodeCount = 0;
+                if (decodeCount % LOGGING_INTERVAL == LOGGING_INTERVAL - 1) {
+                    decodeTimer.start();
+                    m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+                    qDebug() << "v4l2 decoded time:" << decodeTimer.elapsed() << "ms";
+                    decodeCount = 0;
+                } else {
+                    m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+                    decodeCount++;
+                }
+            } else {
+                m_frame = v4l2core_get_decoded_frame(m_videoDevice);
+            }
 
             if (m_frame == nullptr) {
                 framedely++;
@@ -291,9 +305,6 @@ void MajorImageProcessingThread::run()
             if (GStreamer_Env == m_eEncodeEnv)
                 bUseRgb = true;
 
-            if (1 == is_forceGles())
-                bUseRgb = false;
-
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
                 // qDebug() << "Processing video frame in rgb mode";
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
@@ -365,11 +376,14 @@ void MajorImageProcessingThread::run()
                     // qDebug() << "Processing video frame for recording";
                     //设置时间戳
                     set_video_timestamptmp(static_cast<int64_t>(m_frame->timestamp));
+
                     if (m_firstPts == 0) {
                         m_firstPts = m_frame->timestamp;
                         // qDebug() << "First video frame timestamp:" << m_firstPts;
                     }
                     m_nCount = (m_frame->timestamp - m_firstPts) / 1000000000;
+
+                    lasttimestamp = m_frame->timestamp;
                     encoder_add_video_frame(input_frame, size, static_cast<int64_t>(m_frame->timestamp), m_frame->isKeyframe);
                 } else {
                     // qDebug() << "Processing video frame for recording";
@@ -502,7 +516,9 @@ void MajorImageProcessingThread::run()
             break;
     #endif
             //保证画面流畅的前提下降低刷新率
-            msleep(33);
+            if(m_nVdWidth <= 1920) {
+                msleep(33);
+            }
         }
 
         // qDebug() << "Stopping video stream";

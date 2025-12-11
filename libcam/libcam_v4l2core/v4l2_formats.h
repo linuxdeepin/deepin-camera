@@ -24,6 +24,9 @@
 #include "gviewv4l2core.h"
 #include "v4l2_core.h"
 
+#define MAX_WIDTH_LIMIT 7680
+#define MAX_HEIGHT_LIMIT 4320
+
 /*
  * check pixelformat against decoder support formats
  * args:
@@ -92,5 +95,19 @@ int get_format_resolution_index(v4l2_dev_t *vd, int format, int width, int heigh
  * returns: void
  */
 void free_frame_formats(v4l2_dev_t *vd);
+
+/*
+ * check if requested resolution is valid
+ * args:
+ *   width - requested width
+ *   height - requested height
+ *
+ * asserts:
+ *   none
+ *
+ * returns: TRUE(1) if valid
+ *          FALSE(0) if not
+ */
+int is_valid_resolution(int width, int height);
 
 #endif

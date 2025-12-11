@@ -34,6 +34,7 @@ extern "C" {
 #define VERTEXIN 0
 #define TEXTUREIN 1
 
+#define UOS2025073011543 "UOS2025073011543"
 typedef struct _capture_loop_data_t {
     void *options;
     void *config;
@@ -438,6 +439,90 @@ int get_pugx_status();
 void set_forceGles(int status);
 
 int is_forceGles();
+
+/*
+ * set project id
+ * args:
+ *    project_id - project id string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_project_id(const char *project_id);
+
+/*
+ * get project id
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to project id string
+ */
+const char* get_project_id(void);
+
+/*
+ * set libva driver name
+ * args:
+ *    name - libva driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_libva_driver_name(const char *name);
+
+/*
+ * get libva driver name
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to libva driver name string
+ */
+const char* get_libva_driver_name(void);
+
+/*
+ * set libvdpau driver name
+ * args:
+ *    name - libvdpau driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_libvdpau_driver_name(const char *name);
+
+/*
+ * get libvdpau driver name
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to libvdpau driver name string
+ */
+const char* get_libvdpau_driver_name(void);
+
+/*
+ * check if driver is available and valid
+ * args:
+ *    driver_name - pointer to driver name string
+ *
+ * asserts:
+ *    none
+ *
+ * returns: 1 if valid driver exists, 0 otherwise
+ */
+int is_driver_available(const char *driver_name);
 
 #ifdef __cplusplus
 }

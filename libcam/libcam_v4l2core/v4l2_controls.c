@@ -180,32 +180,24 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			printf("\tmin:%d max:%d step:%d def:%d curr:%d\n",
 				control->control.minimum, control->control.maximum, control->control.step,
 				control->control.default_value, control->value);
-            free(control->name);
-            control->name=NULL;
 			break;
 
 		case V4L2_CTRL_TYPE_INTEGER64:
 			printf("control[%d]:(int64) 0x%x '%s'\n",i ,control->control.id, control->name);
 			printf ("\tcurr:%" PRId64 "\n", control->value64);
-            free(control->name);
-            control->name=NULL;
 			break;
 
 		case V4L2_CTRL_TYPE_STRING:
 			printf("control[%d]:(str) 0x%x '%s'\n",i ,control->control.id, control->name);
 			printf ("\tmin:%d max:%d step:%d curr: %s\n",
 				control->control.minimum, control->control.maximum, 
-				control->control.step, control->string);
-            free(control->name);
-            control->name=NULL;
+                		control->control.step, control->string);
 			break;
 
 		case V4L2_CTRL_TYPE_BOOLEAN:
 			printf("control[%d]:(bool) 0x%x '%s'\n",i ,control->control.id, control->name);
 			printf ("\tdef:%d curr:%d\n",
-				control->control.default_value, control->value);
-            free(control->name);
-            control->name=NULL;
+                		control->control.default_value, control->value);
 			break;
 
 		case V4L2_CTRL_TYPE_MENU:
@@ -213,10 +205,8 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			printf("\tmin:%d max:%d def:%d curr:%d\n",
 				control->control.minimum, control->control.maximum,
 				control->control.default_value, control->value);
-            for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
+			for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
 				printf("\tmenu[%d]: [%d] -> '%s'\n", j, control->menu[j].index, control->menu_entry[j]);
-            free(control->name);
-            control->name=NULL;
 			break;
 
 		case V4L2_CTRL_TYPE_INTEGER_MENU:
@@ -224,18 +214,14 @@ static void print_control(v4l2_ctrl_t *control, int i)
 			printf("\tmin:%d max:%d def:%d curr:%d\n",
 				control->control.minimum, control->control.maximum,
 				control->control.default_value, control->value);
-            for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
+			for (j = 0; (__s32)control->menu[j].index <= control->control.maximum; j++)
 				printf("\tmenu[%d]: [%d] -> %" PRId64 " (0x%" PRIx64 ")\n", j, control->menu[j].index,
 					(int64_t) control->menu[j].value,
 					(int64_t) control->menu[j].value);
-            free(control->name);
-            control->name=NULL;
-            break;
+			break;
 
 		case V4L2_CTRL_TYPE_BUTTON:
 			printf("control[%d]:(button) 0x%x '%s'\n",i ,control->control.id, control->name);
-            free(control->name);
-            control->name=NULL;
 			break;
 
 		case V4L2_CTRL_TYPE_BITMASK:
@@ -249,8 +235,6 @@ static void print_control(v4l2_ctrl_t *control, int i)
 		default:
 			printf("control[%d]:(unknown - 0x%x) 0x%x '%s'\n",i ,control->control.type,
 				control->control.id, control->control.name);
-            free(control->name);
-            control->name=NULL;
 			break;
 	}
 }

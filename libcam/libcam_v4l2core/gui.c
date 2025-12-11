@@ -690,7 +690,7 @@ void set_photo_name(const char *name)
 
 		fprintf(stderr, "deepin-camera: no valid file extension for image file %s\n",
 			name);
-		fprintf(stderr, "deepin-camera: using format %i\n", get_photo_format());
+		fprintf(stderr, "deepin-camera: using format %i (1:IMG_FMT_JPG, 2:IMG_FMT_PNG, 3:IMG_FMT_BMP)\n", get_photo_format());
 		switch(get_photo_format())
 		{
 			case IMG_FMT_JPG:

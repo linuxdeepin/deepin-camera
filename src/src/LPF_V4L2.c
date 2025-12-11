@@ -49,11 +49,12 @@ int camInit(const char *devicename)
     free(device_name);
     /*加载配置文件*/
     config_load(config_file);
-    /*用option更新配置文件*/
-    config_update(my_options);
     /*获取配置项数据*/
     config_t *my_config = config_get();
-    debug_level = my_options->verbosity;
+    debug_level = my_config->verbosity;
+    my_options->verbosity = my_config->verbosity;
+    /*用option更新配置文件*/
+    config_update(my_options);
 
     int audio = AUDIO_PORTAUDIO;
 
@@ -210,6 +211,12 @@ int camInit(const char *devicename)
 
         if ((strcmp(my_config->device_name, devlist->list_devices[my_vd->this_device].name) == 0) && (strcmp(my_config->device_location, my_vd->videodevice) == 0)) {
             v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
+            // 分辨率可能已经被校正
+            if (my_config->width != get_my_width() || my_config->height != get_my_height()) {
+                printf("%s: adjust resolution(%dx%d => %dx%d)\n", __func__, my_config->width, my_config->height, get_my_width(), get_my_height());
+                my_config->width  = get_my_width();
+                my_config->height = get_my_height();
+            }
             ret = v4l2core_update_old_format(my_vd, my_config->width, my_config->height, v4l2core_get_requested_frame_format(my_vd));
         } else {
             v4l2core_prepare_valid_resolution(my_vd);

@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <linux/version.h>
 
+#include "camview.h"
 #include "gviewv4l2core.h"
 #include "v4l2_devices.h"
 #include "cameraconfig.h"
@@ -124,6 +125,123 @@ static void free_device_list()
 	my_device_list.list_devices = NULL;
 }
  
+/*
+ * 检查设备是否为标准摄像头设备
+ * args:
+ *   fd - 设备文件描述符
+ *   v4l2_cap - 设备能力结构体
+ *   device_path - 设备节点路径 (如 /dev/video0)
+ *
+ * returns: 1 if standard camera, 0 if not
+ */
+static int is_standard_camera_device(int fd, struct v4l2_capability *cap, const char *device_path)
+{
+    struct v4l2_fmtdesc fmt;
+    int has_standard_format = 0;
+    
+    // 1. 检查是否支持标准用户级视频格式
+    memset(&fmt, 0, sizeof(fmt));
+    fmt.index = 0;
+    fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+    
+    // 标准视频格式列表
+    static const uint32_t standard_formats[] = {
+        V4L2_PIX_FMT_MJPEG,  // Motion-JPEG
+        V4L2_PIX_FMT_YUYV,   // YUYV 4:2:2
+        V4L2_PIX_FMT_H264,   // H.264
+        V4L2_PIX_FMT_UYVY,   // UYVY 4:2:2
+        V4L2_PIX_FMT_NV12,   // Y/UV 4:2:0
+        V4L2_PIX_FMT_NV21,   // Y/VU 4:2:0
+        V4L2_PIX_FMT_YUV420  // YUV 4:2:0
+    };
+    static const int num_standard_formats = sizeof(standard_formats) / sizeof(standard_formats[0]);
+    
+    while (xioctl(fd, VIDIOC_ENUM_FMT, &fmt) == 0) {
+        // 检查是否支持标准格式
+        for (int i = 0; i < num_standard_formats; i++) {
+            if (fmt.pixelformat == standard_formats[i]) {
+                has_standard_format = 1;
+                break;
+            }
+        }
+        if (has_standard_format) {
+            break;  // 找到标准格式后立即退出
+        }
+        fmt.index++;
+    }
+    
+    // 2. 检查设备驱动和名称，过滤ISP设备
+    static const char* isp_driver_keywords[] = {
+        "rkcif", "rkisp"
+    };
+    static const char* isp_card_keywords[] = {
+        "rkisp", "rkcif", "statistics", "mainpath", "selfpath"
+    };
+    static const int num_driver_keywords = sizeof(isp_driver_keywords) / sizeof(isp_driver_keywords[0]);
+    static const int num_card_keywords = sizeof(isp_card_keywords) / sizeof(isp_card_keywords[0]);
+    
+    int is_isp_device = 0;
+    
+    // 检查驱动名称
+    for (int i = 0; i < num_driver_keywords && !is_isp_device; i++) {
+        if (strstr((char *)cap->driver, isp_driver_keywords[i]) != NULL) {
+            is_isp_device = 1;
+        }
+    }
+    
+    // 检查card名称
+    for (int i = 0; i < num_card_keywords && !is_isp_device; i++) {
+        if (strstr((char *)cap->card, isp_card_keywords[i]) != NULL) {
+            is_isp_device = 1;
+        }
+    }
+    
+    // 3. 可以添加更多过滤条件
+    // 检查是否为UVC驱动（标准USB摄像头）
+    int is_uvc_device = (strstr((char *)cap->driver, "uvcvideo") != NULL);
+    
+    // 4. 检查总线信息（USB设备通常包含"usb"）
+    int is_usb_device = (strstr((char *)cap->bus_info, "usb") != NULL);
+    
+    if (verbosity > 1) {
+        printf("V4L2_CORE: Device check - %s [%s]: standard_fmt=%d, is_isp=%d, is_uvc=%d, is_usb=%d\n",
+               device_path, cap->card, has_standard_format, is_isp_device, is_uvc_device, is_usb_device);
+    }
+
+    // 5. 智能ISP设备处理：保留有用的ISP输出设备
+    int is_useful_isp = 0;
+    if (is_isp_device) {
+        // 专门过滤有问题的设备：/dev/video12 (selfpath有底层问题)
+        if (strstr((char *)device_path, "/dev/video12") != NULL) {
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Filtering problematic device: %s [%s] - hardware issue\n", device_path, cap->card);
+            }
+            return 0;  // 明确过滤video12
+        }
+        
+        // 检查是否为有用的ISP输出设备（只保留mainpath，不要selfpath）
+        if (strstr((char *)cap->card, "mainpath") != NULL) {
+            is_useful_isp = 1;
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Keeping useful ISP device: %s [%s]\n", device_path, cap->card);
+            }
+        }
+        
+        // 过滤无用的ISP设备（统计、参数、selfpath等）
+        if (strstr((char *)cap->card, "statistics") != NULL ||
+            strstr((char *)cap->card, "params") != NULL ||
+            strstr((char *)cap->card, "selfpath") != NULL) {
+            if (verbosity > 1) {
+                printf("V4L2_CORE: Filtering useless ISP device: %s [%s]\n", device_path, cap->card);
+            }
+            return 0;  // 明确过滤
+        }
+    }
+
+    // 返回判断结果：有标准格式且（不是ISP设备 或 是有用的ISP设备）
+    return (has_standard_format && (!is_isp_device || is_useful_isp));
+}
+
 /*
  * enumerate available v4l2 devices
  * and creates list in vd->list_devices
@@ -226,6 +344,19 @@ int enum_v4l2_devices()
             getV4l2()->m_v4l2_close(fd);
             continue; /*next dir entry*/
         }
+        
+        // when project_id equals UOS2025073011543 filter out ISP devices
+        const char* current_project_id = get_project_id();
+        if (current_project_id != NULL && strcmp(current_project_id, UOS2025073011543) == 0) {
+            if (!is_standard_camera_device(fd, &v4l2_cap, v4l2_device)) {
+                if (verbosity > 0) {
+                    fprintf(stderr, "V4L2_CORE: ignore device %s - not a standard camera (driver: %s, card: %s) [project_id: %s]\n", 
+                           v4l2_device, v4l2_cap.driver, v4l2_cap.card, current_project_id);
+                }
+                getV4l2()->m_v4l2_close(fd);
+                continue; /*next dir entry*/
+            }
+        }
 #endif
         getV4l2()->m_v4l2_close(fd);
 
@@ -294,6 +425,7 @@ int enum_v4l2_devices()
     getUdev()->m_udev_enumerate_unref(enumerate);
 
     my_device_list.num_devices = num_dev;
+    printf("V4L2_CORE: num_devices is %d\n", num_dev);
 
     return(E_OK);
 }
@@ -335,16 +467,16 @@ void v4l2core_init_device_list()
  *   none
  * 
  * returns:
- *   videodevice index in device list [0 - num_devices[ or -1 on error
+ *   videodevice index in device list [0 - num_devices] or -1 on error
  */ 
 int v4l2core_get_device_index(const char *videodevice)
 {
-    if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL && videodevice != NULL)
+	if(my_device_list.num_devices > 0 && my_device_list.list_devices != NULL && videodevice != NULL)
 	{
 		int dev_index = 0;
 		for(dev_index = 0; dev_index < my_device_list.num_devices; ++dev_index)
 		{
-            fprintf(stderr,"v4l2core_get_device_index dev_index(%d) videodevice:%x device:%x\n", dev_index, (unsigned int)videodevice, (unsigned int)(my_device_list.list_devices[dev_index].device));
+			fprintf(stderr,"V4L2CORE: v4l2core_get_device_index: dev_index(%d) videodevice(%s) device(%s)\n", dev_index, videodevice, my_device_list.list_devices[dev_index].device);
 			if(strcmp(videodevice, my_device_list.list_devices[dev_index].device)==0)
 			{
 				my_device_list.list_devices[dev_index].current = 1;

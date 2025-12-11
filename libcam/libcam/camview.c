@@ -108,12 +108,17 @@ static int statusForceGles = 0; //forceGles   1,强走GLES
 
 static int is_pgux = 0; //是否是pugx
 
+static char libva_driver_name[200];
+
+static char libvdpau_driver_name[200];
+
 static uint8_t soundTakePhoto = 1;//拍照声音提示
 
 static char status_message[80];
 
 static int encode_thread_running = 0;
 
+static char project_id[200];
 
 void set_video_time_capture(double video_time)
 {
@@ -1381,4 +1386,65 @@ void set_pugx_status(int status)
 int get_pugx_status()
 {
     return is_pgux;
+}
+
+void set_project_id(const char *id)
+{
+    if (id != NULL) {
+        memset(project_id, 0, sizeof(project_id));
+        strncpy(project_id, id, sizeof(project_id) - 1);
+    } else {
+        memset(project_id, 0, sizeof(project_id));
+    }
+}
+
+const char* get_project_id(void)
+{
+    return project_id;
+}
+
+void set_libva_driver_name(const char *name)
+{
+    if (name != NULL) {
+        memset(libva_driver_name, 0, sizeof(libva_driver_name));
+        strncpy(libva_driver_name, name, sizeof(libva_driver_name) - 1);
+    } else {
+        memset(libva_driver_name, 0, sizeof(libva_driver_name));
+    }
+}
+
+const char* get_libva_driver_name(void)
+{
+    return libva_driver_name;
+}
+
+void set_libvdpau_driver_name(const char *name)
+{
+    if (name != NULL) {
+        memset(libvdpau_driver_name, 0, sizeof(libvdpau_driver_name));
+        strncpy(libvdpau_driver_name, name, sizeof(libvdpau_driver_name) - 1);
+    } else {
+        memset(libvdpau_driver_name, 0, sizeof(libvdpau_driver_name));
+    }
+}
+
+const char* get_libvdpau_driver_name(void)
+{
+    return libvdpau_driver_name;
+}
+
+int is_driver_available(const char *driver_name)
+{
+    /* Check if driver name is not NULL, not empty, and not "none" or similar invalid values */
+    if (driver_name != NULL &&
+        driver_name[0] != '\0' &&
+        strcmp(driver_name, "none") != 0 &&
+        strcmp(driver_name, "null") != 0 &&
+        strcmp(driver_name, "invalid") != 0 &&
+        strcmp(driver_name, "undefined") != 0 &&
+        strcmp(driver_name, "unknown") != 0) {
+        return 1;  /* Valid driver exists */
+    }
+
+    return 0;  /* No valid driver */
 }

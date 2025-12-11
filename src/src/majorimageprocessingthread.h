@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QElapsedTimer>
 
 #include "datamanager.h"
 
@@ -190,6 +191,8 @@ private:
     bool              m_filtersGroupDislay = false;//滤镜按钮组是否显示
     int               m_nCount;
     uint64_t          m_firstPts;
+
+    uint64_t lasttimestamp;
 
     QImage            m_Img;   //mips、wayland下使用该变量
     QImage            m_filterImg; //滤镜预览类使用 大小40*40

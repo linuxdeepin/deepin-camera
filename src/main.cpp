@@ -121,8 +121,13 @@ static bool CheckFFmpegEnv()
 
 int main(int argc, char *argv[])
 {
+    // 将日志配置提前，以确保所有日志没有遗漏
+    //qputenv("QT_LOGGING_RULES", "*.debug=true;*.info=true");
+    DLogManager::registerConsoleAppender();
+    DLogManager::registerFileAppender();
     qInfo() << "Starting deepin-camera application...";
-    
+    qInfo() << "LogFile:" << DLogManager::getlogFilePath();
+
     // Task 326583 不参与合成器崩溃重连
     unsetenv("QT_WAYLAND_RECONNECT");
 
@@ -153,53 +158,80 @@ int main(int argc, char *argv[])
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
         set_wayland_status(1);
-        qDebug() << "Configured OpenGLES for Wayland";
-
-        int mp4Encode = -1;
-#ifdef DTKCORE_CLASS_DConfigFile
-        //需要查询是否对不同机型设置MP4编码缓存特殊处理
-        DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
-            mp4Encode = dconfig->value("mp4EncodeMode").toInt();
-            set_pugx_status(mp4Encode);
-            qDebug() << "Loaded MP4 encode mode from DConfig:" << mp4Encode;
-        }
-
-        int forceGles = -1;
-        if (dconfig && dconfig->isValid() && dconfig->keyList().contains("forceGles")) {
-            forceGles = dconfig->value("forceGles").toInt();
-            set_forceGles(forceGles);
-        }
-#endif
-        qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
-        if (mp4Encode == -1) {
-            qDebug() << "Condition check: MP4 encode mode detection required";
-            QStringList options;
-            options << QString(QStringLiteral("-c"));
-            options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
-                                              "dmidecode -s system-product-name|awk '{print $NF}'"));
-            QProcess process;
-            process.start(QString(QStringLiteral("bash")), options);
-            process.waitForFinished();
-            process.waitForReadyRead();
-            QByteArray tempArray = process.readAllStandardOutput();
-            char *charTemp = tempArray.data();
-            QString str_output = QString(QLatin1String(charTemp));
-            process.close();
-
-            if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
-                qDebug() << "Condition check: PGUX system detected";
-                mp4Encode = 1;
-                qDebug() << "Detected PGUX system";
-            } else {
-                mp4Encode = 0;
-            }
-            qInfo() << "Process find mp4EncodeMode value is:" << get_pugx_status();
-        }
-
-        set_pugx_status(mp4Encode);
-        qInfo() << "Final mp4EncodeMode value is:" << get_pugx_status();
     }
+    int mp4Encode = -1;
+#ifdef DTKCORE_CLASS_DConfigFile
+    //需要查询是否对X机型设置MP4编码缓存特殊处理
+    DConfig *dconfig = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("mp4EncodeMode")) {
+        mp4Encode = dconfig->value("mp4EncodeMode").toInt();
+        set_pugx_status(mp4Encode);
+    }
+
+    int forceGles = -1;
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("forceGles")) {
+        forceGles = dconfig->value("forceGles").toInt();
+        set_forceGles(forceGles);
+    }
+
+    QString projectId = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("projectID")) {
+        projectId = dconfig->value("projectID").toString();
+        set_project_id(projectId.toUtf8().constData());
+    }
+
+    QString libVaDriverName = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("libVaDriverName")) {
+        libVaDriverName = dconfig->value("libVaDriverName").toString();
+        set_libva_driver_name(libVaDriverName.toUtf8().constData());
+    }
+
+    QString libVdpauDriverName = "";
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("libVdpauDriver")) {
+        libVdpauDriverName = dconfig->value("libVdpauDriver").toString();
+        set_libvdpau_driver_name(libVdpauDriverName.toUtf8().constData());
+    }
+
+    if (!libVaDriverName.isEmpty()) {
+        qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
+    }
+
+    if (!libVdpauDriverName.isEmpty()) {
+        qputenv("VDPAU_DRIVER", libVdpauDriverName.toLocal8Bit());
+    }
+#endif
+    qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
+    qInfo() << "projectID value is:" << get_project_id();
+    qInfo() << "libVaDriverName value is:" << get_libva_driver_name();
+    qInfo() << "libVdpauDriverName value is:" << get_libvdpau_driver_name();
+    qInfo() << "LIBVA_DRIVER_NAME value is:" << qgetenv("LIBVA_DRIVER_NAME");
+    qInfo() << "VDPAU_DRIVER value is:" << qgetenv("VDPAU_DRIVER");
+    if (mp4Encode == -1) {
+        //判断是否是X机型
+        QStringList options;
+        options << QString(QStringLiteral("-c"));
+        options << QString(QStringLiteral("dmidecode -t 11 | grep 'String 4' | awk '{print $NF}' && "
+                                          "dmidecode -s system-product-name|awk '{print $NF}'"));
+        QProcess process;
+        process.start(QString(QStringLiteral("bash")), options);
+        process.waitForFinished();
+        process.waitForReadyRead();
+        QByteArray tempArray = process.readAllStandardOutput();
+        char *charTemp = tempArray.data();
+        QString str_output = QString(QLatin1String(charTemp));
+        process.close();
+
+        if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
+            mp4Encode = 1;
+            qDebug() << "this is PGUX";
+        } else {
+            mp4Encode = 0;
+        }
+        qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
+    }
+
+    set_pugx_status(mp4Encode);
+    qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
 
 #if QT_VERSION_MAJOR > 5
     QElapsedTimer time;
@@ -229,13 +261,9 @@ int main(int argc, char *argv[])
     qApp->setApplicationDisplayName(QObject::tr("Camera"));
     //设置产品名称
     qApp->setProductName(QObject::tr("Camera"));
-    
-    //日志
-    DLogManager::registerConsoleAppender();
-    DLogManager::registerFileAppender();
-    qInfo() << "Log system initialized. Log file:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
+    qWarning() << "Version:" << DApplication::buildVersion(VERSION);
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     qApp->setWindowIcon(myIcon);
     qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取

@@ -165,6 +165,7 @@ void PreviewOpenglWidget::resizeGL(int w, int h)
 {
     // qDebug() << "Function started: resizeGL";
     glViewport(0, 0, w, h);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     update();
     // qDebug() << "Function completed: resizeGL";
 }

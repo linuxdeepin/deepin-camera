@@ -40,9 +40,9 @@
 
 #define COUNTDOWN_WIDTH 32
 #define COUNTDOWN_HEIGHT 61
-#define COUNTDOWN_OFFECT 20
+#define COUNTDOWN_OFFSET 20
 
-static PRIVIEW_ENUM_STATE g_Enum_Camera_State = PICTRUE;
+static PREVIEW_ENUM_STATE g_Enum_Camera_State = PICTURE;
 
 // 重写QGraphicsView类，在子类中，直接将鼠标事件路由到QWidget，这样QGraphicsScene不会接收和处理鼠标事件
 // bug链接 bug 100791
@@ -556,6 +556,15 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
     qDebug() << "Received major image";
 }
 
+void videowidget::onLockedScreen(bool bLocked)
+{
+    m_isLockedScreen = bLocked;
+    if (m_isLockedScreen) {
+        // 复用现有函数，达到关闭摄像头的效果
+        this->onReachMaxDelayedFrames();
+    }
+}
+
 void videowidget::onReachMaxDelayedFrames()
 {
     qWarning() << "Reached maximum delayed frames, stopping camera";
@@ -581,12 +590,12 @@ void videowidget::onReachMaxDelayedFrames()
     qDebug() << "Camera stopped due to maximum delayed frames";
 }
 
-void videowidget::showCountDownLabel(PRIVIEW_ENUM_STATE state)
+void videowidget::showCountDownLabel(PREVIEW_ENUM_STATE state)
 {
     // qDebug() << "Entering showCountDownLabel";
     QString str;
     switch (state) {
-    case PICTRUE:
+    case PICTURE:
         // qDebug() << "Showing countdown label for photo";
         m_recordingTimeWidget->hide();
         break;
@@ -665,7 +674,7 @@ void videowidget::resizeEvent(QResizeEvent *size)
                                 height() - m_recordingTimeWidget->height() - 15);
 
     m_dLabel->move((width() - m_dLabel->width()) / 2,
-                   (height() - m_dLabel->height()) - COUNTDOWN_OFFECT);
+                   (height() - m_dLabel->height()) - COUNTDOWN_OFFSET);
 
 
     if (m_pCamErrItem->isVisible()) {
@@ -727,7 +736,7 @@ void videowidget::showCountdown()
             emit updateRecordState(photoRecordBtn::Recording);
         }
 
-        if (g_Enum_Camera_State == PICTRUE) {
+        if (g_Enum_Camera_State == PICTURE) {
             qDebug() << "Showing countdown label for photo";
             if (m_nInterval == 0 && m_curTakePicTime >= 0) {
                 if (m_flashEnable && 1 == m_nMaxContinuous) {
@@ -839,7 +848,7 @@ void videowidget::showCountdown()
         qDebug() << "Showing countdown label for photo";
         m_dLabel->setText(QString::number(m_nInterval));
         m_dLabel->show();
-        showCountDownLabel(PICTRUE); //拍照录像都要显示倒计时
+        showCountDownLabel(PICTURE); //拍照录像都要显示倒计时
         m_nInterval--;
         qInfo() << "m_nInterval:" << m_nInterval;
     }
@@ -1120,6 +1129,11 @@ void videowidget::onEndBtnClicked()
 void videowidget::onRestartDevices()
 {
     qDebug() << "Entering onRestartDevices";
+    if (m_isLockedScreen) {
+        qDebug() << __func__ << "bypass reason(locked screen)";
+        return;
+    }
+
     if (DataManager::instance()->getdevStatus() != CAM_CANUSE) {
         qDebug() << "Device status is not CAM_CANUSE";
         onChangeDev();
@@ -1210,6 +1224,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
         qDebug() << "encodeEnv is QCamera_Env";
         ret = 0;
     }
+    qInfo() << "Camera init:" << ret;
     if (ret == E_OK) {
         qDebug() << "ret is E_OK";
         m_imgPrcThread->init();
@@ -1273,7 +1288,7 @@ QString videowidget::getSaveVdFolder() const
 void videowidget::onTakePic(bool bTrue)
 {
     qDebug() << "Take photo triggered:" << bTrue;
-    g_Enum_Camera_State = PICTRUE;
+    g_Enum_Camera_State = PICTURE;
 
     if (bTrue) {
         qDebug() << "Taking photo";

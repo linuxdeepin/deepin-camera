@@ -581,12 +581,10 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
     else
         video_codec_data->codec_context->time_base = (AVRational) {1, 15}; //fallback to 15 fps (e.g gspca)
 
-
     if (video_defaults->gop_size > 0) {
+        video_codec_data->codec_context->gop_size = video_defaults->gop_size;
         if (pgux == 1 || is_forceGles()) {
-            video_codec_data->codec_context->gop_size = 3;
-        } else {
-            video_codec_data->codec_context->gop_size = video_defaults->gop_size;
+            video_codec_data->codec_context->max_b_frames = 0;
         }
     } else {
         video_codec_data->codec_context->gop_size = video_codec_data->codec_context->time_base.den;
@@ -594,6 +592,8 @@ static encoder_video_context_t *encoder_video_init(encoder_context_t *encoder_ct
     switch (video_defaults->codec_id) {
     case AV_CODEC_ID_H264: {
         video_codec_data->codec_context->me_range = 16;
+        video_codec_data->codec_context->gop_size = 250;
+        video_codec_data->codec_context->max_b_frames = 0;
         //av_dict_set(&video_codec_data->private_options, "rc_lookahead", "1", 0);
         getAvutil()->m_av_dict_set(&video_codec_data->private_options, "crf", "23", 0);
         getAvutil()->m_av_dict_set(&video_codec_data->private_options, "preset", "ultrafast", 0);
@@ -1948,7 +1948,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
 void encoder_close(encoder_context_t *encoder_ctx)
 {
     encoder_clean_video_ring_buffer();
-
+    
     if (!encoder_ctx)
         return;
 
