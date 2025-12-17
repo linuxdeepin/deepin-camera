@@ -24,8 +24,8 @@
 #include "gviewv4l2core.h"
 #include "v4l2_core.h"
 
-#define MAX_WIDTH_LIMIT 7680
-#define MAX_HEIGHT_LIMIT 4320
+#define MAX_WIDTH_LIMIT 3840
+#define MAX_HEIGHT_LIMIT 2160
 
 /*
  * check pixelformat against decoder support formats

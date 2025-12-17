@@ -3,6 +3,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+extern "C" {
+#include "v4l2_formats.h"
+}
 #include "Settings.h"
 #include "camview.h"
 #include "gviewv4l2core.h"
@@ -128,15 +131,11 @@ void Settings::setNewResolutionList()
         if (format_index >= 0 && resolu_index >= 0) {
             qDebug() << "Processing available resolutions";
             for (int i = 0 ; i < list_stream_formats[format_index].numb_res; i++) {
-                if ((list_stream_formats[format_index].list_stream_cap[i].width > 0
-                        && list_stream_formats[format_index].list_stream_cap[i].height > 0) &&
-                        (list_stream_formats[format_index].list_stream_cap[i].width < 7680
-                         && list_stream_formats[format_index].list_stream_cap[i].height < 4320) &&
-                        ((list_stream_formats[format_index].list_stream_cap[i].width % 8) == 0
-                         && (list_stream_formats[format_index].list_stream_cap[i].width % 16) == 0
-                         && (list_stream_formats[format_index].list_stream_cap[i].height % 8) ==  0)) {
+                int w = list_stream_formats[format_index].list_stream_cap[i].width;
+                int h = list_stream_formats[format_index].list_stream_cap[i].height;
+                if (is_valid_resolution(w, h)) {
                     //加入分辨率的字符串
-                    QString res_str = QString("%1x%2").arg(list_stream_formats[format_index].list_stream_cap[i].width).arg(list_stream_formats[format_index].list_stream_cap[i].height);
+                    QString res_str = QString("%1x%2").arg(w).arg(h);
                     //去重
                     if (resolutionDatabase.contains(res_str) == false) {
                         resolutionDatabase.append(res_str);
