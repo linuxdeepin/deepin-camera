@@ -31,6 +31,7 @@ extern "C" {
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <csignal>
 
 #ifndef DEEPIN_CAMERA_PRO
 #include "config.h"
@@ -93,8 +94,19 @@ static bool CheckFFmpegEnv()
     return false;
 }
 
+// 由于DDE在某些情况下会kill掉deepin-camera进程，同时埋点会认为deepin-camera出错，所以这里监听信号，正常退出
+// 添加信号处理函数
+static void handleSignal(int sig)
+{
+    qWarning() << "Received signal:" << sig;
+    exit(0);
+}
+
 int main(int argc, char *argv[])
 {
+    // 注册信号处理函数
+    signal(SIGTERM, handleSignal);  // kill默认发送的信号
+
     // 将日志配置提前，以确保所有日志没有遗漏
     //qputenv("QT_LOGGING_RULES", "*.debug=true;*.info=true");
     DLogManager::registerConsoleAppender();
