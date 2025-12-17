@@ -1696,7 +1696,8 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
         }
     }
 
-	// 查找可以支持的最大分辨率（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
+	// 查找可以支持的最大分辨率
+	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
 	printf("V4L2_CORE: valid resolution counts: %d\n", vd->list_stream_formats[format_index].numb_res);
 	for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
 	{

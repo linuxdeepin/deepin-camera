@@ -678,7 +678,8 @@ int get_format_resolution_index(v4l2_dev_t *vd, int format, int width, int heigh
 		return (-1);
 	}
 
-	// 查找输入的分辨率是否在支持的分辨率列表中（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
+	// 查找输入的分辨率是否在支持的分辨率列表中
+	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
 	int i=0;
 	for(i=0; i < vd->list_stream_formats[format].numb_res; i++)
 	{
@@ -689,7 +690,8 @@ int get_format_resolution_index(v4l2_dev_t *vd, int format, int width, int heigh
 		}
 	}
 
-	// 查找可以支持的最大分辨率（目前类似8000x6000的解码问题未解决，故要限制最大分辨率）
+	// 查找可以支持的最大分辨率
+	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
 	int tempwidth = 0;
 	int tempheight = 0;
 	int index = -1;
@@ -746,6 +748,8 @@ void free_frame_formats(v4l2_dev_t *vd)
 
 int is_valid_resolution(int width, int height)
 {
-	// 目前类似8000x6000的解码问题未解决，故要限制最大分辨率
-	return (width < MAX_WIDTH_LIMIT && height < MAX_HEIGHT_LIMIT) && (width % 16 == 0 && height % 8 == 0);
+	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
+	return (width > 0 && height > 0) 
+			&& (width <= MAX_WIDTH_LIMIT && height <= MAX_HEIGHT_LIMIT) 
+			&& (width % 16 == 0 && height % 8 == 0);
 }
