@@ -442,10 +442,10 @@ static QWidget *createPicSelectableLineEditOptionHandle(QObject *opt)
                         auto pi = ElideText(value.toString(), { pathEditWidth, tem_fontmetrics.height() }, QTextOption::WrapAnywhere,
                                             picPathLineEdit->font(), Qt::ElideMiddle, tem_fontmetrics.height(), pathEditWidth);
                         picPathLineEdit->setText(pi);
-                        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text() << Qt::endl;
+                        qDebug() << "picPathLineEdit text:" << picPathLineEdit->text();
                         lastPicPath = value.toString();
                         option->setValue(value.toString());
-                        qDebug() << "save pic last path:" << value.toString() << Qt::endl;
+                        qDebug() << "save pic last path:" << value.toString();
                         picPathLineEdit->update();
                     });
 
@@ -712,10 +712,10 @@ static QWidget *createVdSelectableLineEditOptionHandle(QObject *opt)
                                             QTextOption::WrapAnywhere, videoPathLineEdit->font(), Qt::ElideMiddle,
                                             tem_fontmetrics.height(), pathEditWidth);
                         videoPathLineEdit->setText(pi);
-                        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text() << Qt::endl;
+                        qDebug() << "picPathLineEdit text:" << videoPathLineEdit->text();
                         lastVideoPath = value.toString();
                         option->setValue(value.toString());
-                        qDebug() << "save video last path:" << value.toString() << Qt::endl;
+                        qDebug() << "save video last path:" << value.toString();
                         videoPathLineEdit->update();
                     });
 
@@ -1474,7 +1474,7 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
 
 void CMainWindow::onTimeoutLock(const QString &serviceName, QVariantMap key2value, QStringList)
 {
-    qDebug() << serviceName << key2value << Qt::endl;
+    qDebug() << serviceName << key2value;
     //仅wayland需要锁屏结束录制并停止使用摄像头，从锁屏恢复重新开启摄像头
     //wayland下只需要停止录像，不需要停止线程，需要在锁屏状态下继续处理摄像头状态
     //    if (m_bWayland) {
