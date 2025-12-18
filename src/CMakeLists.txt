@@ -12,7 +12,12 @@ project(deepin-camera VERSION 1.0.0)
 set(CMD_NAME deepin-camera)
 set(TARGET_NAME deepin-camera)
 
-set(QT_VERSION_MAJOR 6)
+find_package(Qt6 QUIET)
+if (Qt6_FOUND)
+    set(QT_VERSION_MAJOR 6)
+else()
+    set(QT_VERSION_MAJOR 5)
+endif()
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     set(DTK_VERSION 6)
     set(IMAGEVISUALRESULT_SUFFIX "6")
@@ -87,7 +92,11 @@ set(PROJECT_INCLUDE
     )
     
 # 设置Qt模块
-set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg SvgWidgets OpenGL OpenGLWidgets)
+if (Qt6_FOUND)
+    set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg SvgWidgets OpenGL OpenGLWidgets)
+else()
+    set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg OpenGL)
+endif()
 
 # 查找Qt相关的库链接
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED ${QtModule})
@@ -155,7 +164,12 @@ pkg_check_modules(3rd_lib REQUIRED
 #        libpulse
 #        libswresample
         )
-list(APPEND PROJECT_INCLUDE ${CMAKE_INSTALL_PREFIX}/include/glib-2.0 ${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0)
+
+if (Qt6_FOUND)
+    list(APPEND PROJECT_INCLUDE ${CMAKE_INSTALL_PREFIX}/include/glib-2.0 ${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0)
+else()
+    list(APPEND PROJECT_INCLUDE /usr/include /usr/include/libusb-1.0 /usr/include/glib-2.0 /usr/include/gstreamer-1.0)
+endif()
 
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
@@ -170,7 +184,11 @@ file (GLOB TS LIST_DIRECTORIES false ${PROJECT_SOURCE_DIR}/translations/${TARGET
 
 set_source_files_properties(${TS} PROPERTIES OUTPUT_LOCATION ${PROJECT_SOURCE_DIR}/translations)
 
-qt_create_translation(QM ${CXXSOURCES} ${TS})
+if (Qt6_FOUND)
+    qt_create_translation(QM ${CXXSOURCES} ${TS})
+else()
+    qt5_create_translation(QM ${CXXSOURCES} ${TS})
+endif()
 
 # 设置不删除生成的文件夹内容文件
 set_directory_properties(PROPERTIES CLEAN_NO_CUSTOM 1)
@@ -180,18 +198,32 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES} ${QM} )
 
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
-    pthread
-    dl
-    imagevisualresult${IMAGEVISUALRESULT_SUFFIX}
-    ${LIBS}
-    Qt${QT_VERSION_MAJOR}::Widgets
-    Qt${QT_VERSION_MAJOR}::Multimedia
-    Qt${QT_VERSION_MAJOR}::Svg
-    Qt${QT_VERSION_MAJOR}::SvgWidgets
-    Qt${QT_VERSION_MAJOR}::OpenGL
-    Qt${QT_VERSION_MAJOR}::OpenGLWidgets
-)
+if (Qt6_FOUND)
+    target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
+        pthread
+        dl
+        imagevisualresult${IMAGEVISUALRESULT_SUFFIX}
+        ${LIBS}
+        Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Multimedia
+        Qt${QT_VERSION_MAJOR}::Svg
+        Qt${QT_VERSION_MAJOR}::SvgWidgets
+        Qt${QT_VERSION_MAJOR}::OpenGL
+        Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+    )
+else()
+    target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
+        pthread
+        dl
+        imagevisualresult${IMAGEVISUALRESULT_SUFFIX}
+        ${LIBS}
+        Qt${QT_VERSION_MAJOR}::Widgets
+        Qt${QT_VERSION_MAJOR}::Multimedia
+        Qt${QT_VERSION_MAJOR}::Svg
+        Qt${QT_VERSION_MAJOR}::OpenGL
+        Qt${QT_VERSION_MAJOR}::Concurrent
+    )
+endif()
 
 include_directories("${CMAKE_INSTALL_PREFIX}/include")
 

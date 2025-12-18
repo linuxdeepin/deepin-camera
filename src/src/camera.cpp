@@ -378,7 +378,7 @@ void Camera::startCamera(const QString &devName)
     m_camera = new QCamera(devName.toStdString().c_str());
     QCameraInfo cameraInfo(*m_camera);
     connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
-    m_curDevName = device.description();
+    m_curDevName = devName;
     qDebug() << "Started camera device:" << m_curDevName;
 
     m_imageCapture = new QCameraImageCapture(m_camera);

@@ -3,14 +3,40 @@ Section: utils
 Priority: optional
 Maintainer: Deepin Packages Builder <packages@deepin.com>
 Build-Depends:
- debhelper (>=9),cmake,
- pkg-config,qt6-base-dev,libdtk6gui-dev,libdtk6widget-dev,qt6-multimedia-dev,
- libavutil-dev, libavformat-dev, libavcodec-dev,libavfilter-dev,qt6-tools-dev,
- qt6-tools-dev-tools,deepin-gettext-tools, qt6-svg-dev,
- libv4l-dev,libsdl2-dev,portaudio19-dev,libpng-dev,libasound2-dev,libpciaccess-dev,
- libusb-1.0-0-dev,zlib1g-dev,libudev-dev,libswscale-dev,libswresample-dev,libffmpegthumbnailer-dev,
- libx11-dev,libva-dev,libimageeditor6-dev,
- libgstreamer1.0-dev,libgstreamer-plugins-base1.0-dev,gstreamer1.0-plugins-good
+    debhelper (>=9),
+    cmake,
+    pkg-config,
+    libavutil-dev,
+    libavformat-dev,
+    libavcodec-dev,
+    libavfilter-dev,
+    deepin-gettext-tools,
+    libv4l-dev,
+    libsdl2-dev,
+    portaudio19-dev,
+    libpng-dev,
+    libasound2-dev,
+    libpciaccess-dev,
+    libusb-1.0-0-dev,
+    zlib1g-dev,
+    libudev-dev,
+    libswscale-dev,
+    libswresample-dev,
+    libffmpegthumbnailer-dev,
+    libx11-dev,
+    libva-dev,
+    libimageeditor6-dev | libimageeditor-dev,
+    libgstreamer1.0-dev,
+    libgstreamer-plugins-base1.0-dev,
+    gstreamer1.0-plugins-good,
+# Qt
+    qt6-base-dev | qtbase5-dev,
+    libdtk6gui-dev | libdtkgui-dev,
+    libdtk6widget-dev | libdtkwidget-dev,
+    qt6-multimedia-dev | qtmultimedia5-dev,
+    qt6-tools-dev | qttools5-dev,
+    qt6-tools-dev-tools | qttools5-dev-tools,
+    qt6-svg-dev | libqt5svg5-dev
 Standards-Version: 4.1.2
 Homepage: http://www.deepin.org
 
