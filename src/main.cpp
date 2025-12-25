@@ -99,14 +99,13 @@ static bool CheckFFmpegEnv()
 static void handleSignal(int sig)
 {
     qWarning() << "Received signal:" << sig;
-    exit(0);
+    // 在HW机器、SW机器上，发现使用exit(0)退出会导致Qt某些函数空指针异常，从而导致崩溃，疑似在资源回收环节出了问题。所以我们使用QApplication::quit()更优雅地退出。
+    QApplication::quit();
+    //exit(0);
 }
 
 int main(int argc, char *argv[])
 {
-    // 注册信号处理函数
-    signal(SIGTERM, handleSignal);  // kill默认发送的信号
-
     // 将日志配置提前，以确保所有日志没有遗漏
     //qputenv("QT_LOGGING_RULES", "*.debug=true;*.info=true");
     DLogManager::registerConsoleAppender();
@@ -222,6 +221,9 @@ int main(int argc, char *argv[])
     qDebug() << QString("initFilters cost %1 ms").arg(time.elapsed());
 
     CApplication a(argc, argv);
+    // 注册信号处理函数
+    // 放在此处，是为了确保Application已经创建了实例
+    signal(SIGTERM, handleSignal);  // kill默认发送的信号
     //gst_init(&argc, &argv);
 
     qApp->setObjectName("deepin-camera");
