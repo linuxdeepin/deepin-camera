@@ -131,7 +131,13 @@ static void audio_free_buffers()
 
 	for(i = 0; i < AUDBUFF_NUM; ++i)
 	{
+		// 在兆芯处理器上，audio_buffers[i].data 概率性出现空指针/重复释放的情况，所以这里需要增加判断
+		if (audio_buffers[i].data == NULL) {
+			continue;
+		}
+
 		free(audio_buffers[i].data);
+		audio_buffers[i].data = NULL;
 	}
 
 	free(audio_buffers);
