@@ -343,6 +343,10 @@
             <translation>未連接鏡頭</translation>
         </message>
         <message>
+            <source>Your camera might not be turned on. If you need to use it, please check whether the hardware switch of the camera or the camera hotkey on the keyboard is enabled</source>
+            <translation>你的鏡頭可能未開啟，如需使用，請檢查鏡頭的硬體開關或鍵盤上的鏡頭熱鍵是否開啟</translation>
+        </message>
+        <message>
             <source>The webcam is in use</source>
             <translation>鏡頭已被佔用</translation>
         </message>

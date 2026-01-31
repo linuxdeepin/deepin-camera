@@ -143,6 +143,17 @@ public:
     void setEncExists(bool status);
     bool encExists();
 
+    /**
+     * @brief 设置是否带有摄像头开关
+     * @param isTrue
+     */
+    void setIsSupportCameraSwitch(bool isTrue) { m_isSupportCameraSwitch = isTrue; };
+    /**
+     * @brief 获取是否带有摄像头开关
+     * @return
+     */
+    bool isSupportCameraSwitch() { return m_isSupportCameraSwitch; };
+
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -152,5 +163,6 @@ private:
     EncodeEnv m_encodeEnv;
     volatile enum DeviceStatus m_devStatus;
     bool m_H264EncoderExists;
+    bool m_isSupportCameraSwitch = false; // 是否带有摄像头开关
 };
 #endif // DATAMANAGER_H
