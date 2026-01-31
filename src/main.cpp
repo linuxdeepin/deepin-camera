@@ -11,6 +11,7 @@ extern "C" {
 #include "cameraconfig.h"
 #include "acobjectlist.h"
 #include "dbus_adpator.h"
+#include <datamanager.h>
 
 #ifdef DTKCORE_CLASS_DConfigFile
 #include <DConfig>
@@ -171,6 +172,10 @@ int main(int argc, char *argv[])
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("libVdpauDriver")) {
         libVdpauDriverName = dconfig->value("libVdpauDriver").toString();
         set_libvdpau_driver_name(libVdpauDriverName.toUtf8().constData());
+    }
+
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("supportCameraSwitch")) {
+        DataManager::instance()->setIsSupportCameraSwitch(dconfig->value("supportCameraSwitch").toBool());
     }
 
     if (!libVaDriverName.isEmpty()) {
