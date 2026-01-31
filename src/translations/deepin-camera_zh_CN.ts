@@ -335,6 +335,10 @@
         <translation>未连接摄像头</translation>
     </message>
     <message>
+        <source>Your camera might not be turned on. If you need to use it, please check whether the hardware switch of the camera or the camera hotkey on the keyboard is enabled</source>
+        <translation>你的摄像头可能未开启，如需使用，请检查摄像头的硬件开关或键盘上的摄像头热键是否开启</translation>
+    </message>
+    <message>
         <source>The webcam is in use</source>
         <translation>摄像头已被占用</translation>
     </message>

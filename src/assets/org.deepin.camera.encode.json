@@ -51,6 +51,16 @@
             "description": "Name of the VDPAU driver for enabling hardware codec",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "supportCameraSwitch": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "is support camera switch or not",
+            "name[zh_CN]": "是否带有摄像头开关",
+            "description": "is support camera switch or not",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

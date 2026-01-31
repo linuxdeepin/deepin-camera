@@ -465,6 +465,7 @@ private:
     QGraphicsPixmapItem        *m_pNormalItem;
 
     QGraphicsTextItem          *m_pCamErrItem;      //摄像头异常提示
+    QGraphicsTextItem          *m_pCamErrItemSub;   //摄像头异常提示，二级提示
     bool                       m_flashEnable;       //是否闪光灯
     bool                       m_bPhoto = true;     //相机当前状态，默认为拍照状态
 
