@@ -1,3 +1,37 @@
+deepin-camera (6.5.37) unstable; urgency=medium
+
+  * chore: Update compiler flags for security enhancements
+  * build: modify debian/control to depends libqt5opengl5-dev
+  * build(debian): separate Qt5/Qt6 build configurations for V25/V20 support
+  * fix: Listen for SIGTERM and exit the application gracefully
+  * fix: audio_free_buffers() add a NULL check
+  * fix: Limit the available resolution to 3840x2160
+  * feat: Listen for SIGTERM and exit the application gracefully
+  * feat: Issues of compile on v20 Qt5
+  * feat(perf): add periodic decode timing measurements and reduce verbose logging
+  * fix: [log] verbosity configuration initialization order
+  * fix: When the screen is locked while using the camera, face recognition fails to work after unlocking
+  * fix: Temporarily block 8K resolution to avoid app crashes
+  * fix: Address potential data truncation issue
+  * chore: Correction of some misspelled words
+  * fix: Occasional abnormal color of title bar buttons
+  * feat: Add VA-API hardware acceleration for MJPEG decoding
+  * feat: Implement hardware acceleration driver configuration support
+  * feat: Add hardware acceleration driver configuration options
+  * feat: Add project-specific device filtering control
+  * fix: Filter ISP pipeline devices to show only standard cameras
+  * fix: Improve audio-video sync compatibility in camera recording
+  * fix: Improve close button visibility when USB camera is connected
+  * fix: Fix crash when enabling verbose logging
+  * fix: 移除透明磨砂标题栏
+  * fix: 修复长时间录制视频音视频不同步
+  * fix: 修复调整曝光度的显示问题
+  * fix: 修复4k显示卡顿
+  * fix: 修复相机上方边框显示一条白线
+  * fix: Recording video with audio and video out of sync
+
+ -- wangrong <wangrong@uniontech.com>  Wed, 04 Feb 2026 14:08:31 +0800
+
 deepin-camera (6.5.36) unstable; urgency=medium
 
   * chore: Update version to 6.5.36
