@@ -1,3 +1,9 @@
+deepin-camera (6.5.38) unstable; urgency=medium
+
+  * fix: Fix build fail
+
+ -- wangrong <wangrong@uniontech.com>  Wed, 04 Feb 2026 16:17:47 +0800
+
 deepin-camera (6.5.37) unstable; urgency=medium
 
   * chore: Update compiler flags for security enhancements
