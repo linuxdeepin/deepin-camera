@@ -145,9 +145,9 @@ foreach(file ${HEAD_FILES_TO_REMOVE})
     list(REMOVE_ITEM HEADERS ${file})
 endforeach()
 
+find_package(Dtk${DTK_VERSION}Widget REQUIRED)
+
 pkg_check_modules(3rd_lib REQUIRED
-        dtk${DTK_VERSION}widget
-        dtk${DTK_VERSION}core
         gobject-2.0
         pciaccess
         libva
@@ -210,6 +210,8 @@ if (Qt6_FOUND)
         Qt${QT_VERSION_MAJOR}::SvgWidgets
         Qt${QT_VERSION_MAJOR}::OpenGL
         Qt${QT_VERSION_MAJOR}::OpenGLWidgets
+        Dtk${DTK_VERSION}::Core
+        Dtk${DTK_VERSION}::Widget
     )
 else()
     target_link_libraries(${TARGET_NAME} ${3rd_lib_LIBRARIES}
@@ -222,6 +224,8 @@ else()
         Qt${QT_VERSION_MAJOR}::Svg
         Qt${QT_VERSION_MAJOR}::OpenGL
         Qt${QT_VERSION_MAJOR}::Concurrent
+        Dtk${DTK_VERSION}::Core
+        Dtk${DTK_VERSION}::Widget
     )
 endif()
 
@@ -266,9 +270,8 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
 #hw机型增加DConfig配置
 set(APPID org.deepin.camera)
 set(configFile ${PROJECT_SOURCE_DIR}/assets/org.deepin.camera.encode.json)
-if (DEFINED DSG_DATA_DIR)
-    message("-- DConfig is supported by DTK")
-    dconfig_meta_files(APPID ${APPID} FILES ${configFile})
+if (DTK_VERSION EQUAL "6")
+    dtk_add_config_meta_files(APPID ${APPID} FILES ${configFile})
 else()
     install(FILES ${configFile} DESTINATION ${CMAKE_INSTALL_DATADIR}/dsg/configs/org.deepin.camera/)
 endif()
