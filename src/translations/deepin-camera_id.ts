@@ -168,7 +168,7 @@
     </message>
     <message>
         <source>Mirror mode</source>
-        <translation>Mode mirror </translation>
+        <translation>Mode cermin </translation>
     </message>
     <message>
         <source>Flashlight</source>
@@ -261,11 +261,11 @@
     </message>
     <message>
         <source>mp4</source>
-        <translation type="unfinished"/>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"/>
+        <translation>WebM</translation>
     </message>
 </context>
 <context>
@@ -284,7 +284,7 @@
     </message>
     <message>
         <source>Cold</source>
-        <translation>Cold</translation>
+        <translation>Dingin</translation>
     </message>
     <message>
         <source>Retro</source>
@@ -296,7 +296,7 @@
     </message>
     <message>
         <source>Gray</source>
-        <translation>Gray</translation>
+        <translation>Abu-abu</translation>
     </message>
     <message>
         <source>B&amp;W</source>
