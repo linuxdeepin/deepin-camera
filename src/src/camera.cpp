@@ -157,8 +157,14 @@ void Camera::refreshCamDevList()
     m_cameraDevList.clear();
 
     v4l2_device_list_t *devlist = get_device_list();
-    for (int i = 0; i < devlist->num_devices; i++)
+    for (int i = 0; i < devlist->num_devices; i++) {
+        // 有黑名单的存在，跳过无效的设备
+        if (!devlist->list_devices[i].valid) {
+            continue;
+        }
+
         m_cameraDevList.push_back(devlist->list_devices[i].device);
+    }
 }
 
 void Camera::onCameraStatusChanged(QCamera::Status status)

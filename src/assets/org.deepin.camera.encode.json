@@ -61,6 +61,16 @@
             "description": "is support camera switch or not",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "deviceBlacklist": {
+            "value": ["254a,0c10,Smart Camera : Record Camera", "254a,0c10,Smart Camera : AI Tele Left Cam", "254a,0c10,Smart Camera : AI Tele Right Ca", "254a,0c10,Smart Camera : AI Camera", "1ff7,0532,Smart Camera : Record Camera", "1ff7,0532,Smart Camera : AI Tele Left Cam", "1ff7,0532,Smart Camera : AI Tele Right Ca", "1ff7,0532,Smart Camera : AI Camera"],
+            "serial": 0,
+            "flags": ["global"],
+            "name": "device blacklist",
+            "name[zh_CN]": "设备黑名单",
+            "description": "device blacklist",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

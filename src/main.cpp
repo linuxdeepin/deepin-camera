@@ -178,6 +178,12 @@ int main(int argc, char *argv[])
         DataManager::instance()->setIsSupportCameraSwitch(dconfig->value("supportCameraSwitch").toBool());
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("deviceBlacklist")) {
+        QStringList deviceBlacklist = dconfig->value("deviceBlacklist").toStringList();
+        qWarning() << "deviceBlacklist:" << deviceBlacklist;
+        DataManager::instance()->setDeviceBlacklist(deviceBlacklist);
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

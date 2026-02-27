@@ -153,6 +153,16 @@ public:
      * @return
      */
     bool isSupportCameraSwitch() { return m_isSupportCameraSwitch; };
+    /**
+     * @brief 设置Camera设备黑名单
+     * @param blacklist
+     */
+    void setDeviceBlacklist(const QStringList &blacklist) { m_deviceBlacklist = blacklist; };
+    /**
+     * @brief 检查当前设备是否有效
+     * @return
+     */
+    bool isDeviceValid(const QString &vid, const QString &pid, const QString &name) { return !m_deviceBlacklist.contains(vid + "," + pid + "," + name); };
 
 private:
     DataManager();
@@ -164,5 +174,6 @@ private:
     volatile enum DeviceStatus m_devStatus;
     bool m_H264EncoderExists;
     bool m_isSupportCameraSwitch = false; // 是否带有摄像头开关
+    QStringList m_deviceBlacklist; // 设备黑名单
 };
 #endif // DATAMANAGER_H

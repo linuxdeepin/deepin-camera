@@ -425,6 +425,12 @@ private:
      * @return UOS_ 专业版 DEEPIN_ 社区版 CAMERA_ 其他
      */
     QString getSaveFilePrefix();
+
+    /**
+     * @brief 获取第一个有效的设备
+     * @return 没找到时返回空字符串
+     */
+    QString getFirstValidDevice();
 public:
     MajorImageProcessingThread *m_imgPrcThread;
     AudioProcessingThread      *m_audPrcThread;

@@ -277,7 +277,23 @@ void videowidget::delayInit()
 
     QString device = dc::Settings::get().getBackOption("device").toString();
     //启动视频
-    switchCamera(device.toStdString().c_str(), "");
+    int idx = v4l2core_get_device_index(device.toStdString().c_str());
+    if (device.isEmpty() || idx < 0) {
+        QString validDevice = getFirstValidDevice();
+        qWarning() << "INVALID device from config:" << device << "found first valid device:" << validDevice;
+        switchCamera(validDevice.toStdString().c_str(), "");
+    } else {
+        v4l2_dev_sys_data_t *v4l2_devices = get_device_list()->list_devices;
+        QString vid = QString("%1").arg(v4l2_devices[idx].vendor, 4, 16, QLatin1Char('0'));
+        QString pid = QString("%1").arg(v4l2_devices[idx].product, 4, 16, QLatin1Char('0'));
+        if (!DataManager::instance()->isDeviceValid(vid, pid, v4l2_devices[idx].name)) {
+            QString validDevice = getFirstValidDevice();
+            qWarning() << "INVALID device(blacklist) from config:" << device << "found first valid device:" << validDevice;
+            switchCamera(validDevice.toStdString().c_str(), "");
+        } else {
+            switchCamera(device.toStdString().c_str(), "");
+        }
+    }
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      this, &videowidget::onThemeTypeChanged);
@@ -1664,6 +1680,24 @@ void videowidget::onFilterDisplayChanged(int bDisplay)
 {
     if (m_imgPrcThread)
         m_imgPrcThread->setFilterGroupState(bDisplay);
+}
+
+QString videowidget::getFirstValidDevice()
+{
+    v4l2_dev_sys_data_t *v4l2_devices = get_device_list()->list_devices;
+    for (int i = 0; i < get_device_list()->num_devices; i++) {
+        if (!v4l2_devices[i].valid) {
+            continue;
+        }
+
+        QString vid = QString("%1").arg(v4l2_devices[i].vendor, 4, 16, QLatin1Char('0'));
+        QString pid = QString("%1").arg(v4l2_devices[i].product, 4, 16, QLatin1Char('0'));
+        if (DataManager::instance()->isDeviceValid(vid, pid, v4l2_devices[i].name)) {
+            return v4l2_devices[i].device;
+        }
+    }
+
+    return "";
 }
 
 videowidget::~videowidget()

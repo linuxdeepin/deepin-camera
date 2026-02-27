@@ -2036,6 +2036,27 @@ void CMainWindow::onLocalTimeChanged()
 
 void CMainWindow::setSelBtnShow()
 {
+    int validCounts = 0;
+    v4l2_dev_sys_data_t *v4l2_devices = get_device_list()->list_devices;
+    for (int i = 0; i < get_device_list()->num_devices; i++) {
+        if (!v4l2_devices[i].valid) {
+            continue;
+        }
+
+        QString vid = QString("%1").arg(v4l2_devices[i].vendor, 4, 16, QLatin1Char('0'));
+        QString pid = QString("%1").arg(v4l2_devices[i].product, 4, 16, QLatin1Char('0'));
+        if (!DataManager::instance()->isDeviceValid(vid, pid, v4l2_devices[i].name)) {
+            qWarning() << "Device is invalid(blacklist):" << vid << pid << v4l2_devices[i].name;
+            v4l2_devices[i].valid = 0;
+            continue;
+        }
+
+        validCounts++;
+    }
+    if (validCounts <= 1) {
+        return;
+    }
+
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()) {
         showChildWidget();
