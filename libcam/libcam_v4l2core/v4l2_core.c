@@ -1867,8 +1867,11 @@ v4l2_dev_t* v4l2core_init_dev(const char *device)
 	}
 
     vd->this_device = v4l2core_get_device_index(vd->videodevice);
-	if(vd->this_device < 0)
-		vd->this_device = 0;
+	if (vd->this_device < 0) {
+		fprintf(stderr, "V4L2_CORE: Can not find device(%s) in device list, maybe the device is changed.\n", vd->videodevice);
+		clean_v4l2_dev(vd);
+		return (NULL);
+	}
 
 	v4l2_device_list_t *device_list = get_device_list();
 	

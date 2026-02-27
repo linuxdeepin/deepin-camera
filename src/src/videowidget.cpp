@@ -277,7 +277,12 @@ void videowidget::delayInit()
 
     QString device = dc::Settings::get().getBackOption("device").toString();
     //启动视频
-    switchCamera(device.toStdString().c_str(), "");
+    if (!device.isEmpty() && v4l2core_get_device_index(device.toStdString().c_str()) < 0) {
+        qWarning() << "INVALID device from config:" << device;
+        switchCamera("", "");
+    } else {
+        switchCamera(device.toStdString().c_str(), "");
+    }
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      this, &videowidget::onThemeTypeChanged);

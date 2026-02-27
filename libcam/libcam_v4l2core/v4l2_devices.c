@@ -360,6 +360,55 @@ int enum_v4l2_devices()
 #endif
         getV4l2()->m_v4l2_close(fd);
 
+        /* The device pointed to by dev contains information about
+        the v4l2 device. In order to get information about the
+        USB device, get the parent device with the
+        subsystem/devtype pair of "usb"/"usb_device". This will
+        be several levels up the tree, but the function will find
+        it.*/
+        dev = getUdev()->m_udev_device_get_parent_with_subsystem_devtype(
+                dev,
+                "usb",
+                "usb_device");
+        if (!dev)
+        {
+            fprintf(stderr, "V4L2_CORE: Unable to find parent usb device.");
+            continue;
+        }
+
+        // seevision厂家（VID=254a PID=0c10）要求限制某些设备的可见性
+        // CVTE厂家（VID=1ff7 PID=0532）
+        static const struct {
+            const char *vid;
+            const char *pid;
+        } restricted_vendors[] = {
+            {"254a", "0c10"}, // SeeVision
+            {"1ff7", "0532"}  // CVTE
+        };
+        static const char *SMART_CAMERA_NAME_PREFIX = "Smart Camera";
+        static const char *SMART_CAMERA_NAME        = "Smart Camera : Smart Camera";
+
+        const char *vid          = getUdev()->m_udev_device_get_sysattr_value(dev, "idVendor");
+        const char *pid          = getUdev()->m_udev_device_get_sysattr_value(dev, "idProduct");
+        const char *manufacturer = getUdev()->m_udev_device_get_sysattr_value(dev, "manufacturer");
+
+        int is_restricted = 0;
+        for (size_t i = 0; i < sizeof(restricted_vendors) / sizeof(restricted_vendors[0]); i++) {
+            if (vid && pid && strcmp(vid, restricted_vendors[i].vid) == 0 && 
+                strcmp(pid, restricted_vendors[i].pid) == 0) {
+                is_restricted = 1;
+                break;
+            }
+        }
+
+        if (is_restricted && strncmp((const char *)v4l2_cap.card, SMART_CAMERA_NAME_PREFIX, strlen(SMART_CAMERA_NAME_PREFIX)) == 0) {
+            if (strncmp((const char *)v4l2_cap.card, SMART_CAMERA_NAME, strlen(SMART_CAMERA_NAME)) != 0) {
+                printf("V4L2_CORE: IGNORE camera: VID(%s) PID(%s) manufacturer(%s) device(%s) card(%s)\n", vid, pid, manufacturer, v4l2_device, v4l2_cap.card);
+                getUdev()->m_udev_device_unref(dev);
+                continue;
+            }
+        }
+
         num_dev++;
         /* Update the device list*/
         my_device_list.list_devices = realloc(my_device_list.list_devices, num_dev * sizeof(v4l2_dev_sys_data_t));
@@ -374,22 +423,6 @@ int enum_v4l2_devices()
         my_device_list.list_devices[num_dev-1].location = strdup((char *) v4l2_cap.bus_info);
         my_device_list.list_devices[num_dev-1].valid = 1;
         my_device_list.list_devices[num_dev-1].current = 0;
-				
-        /* The device pointed to by dev contains information about
-            the v4l2 device. In order to get information about the
-            USB device, get the parent device with the
-            subsystem/devtype pair of "usb"/"usb_device". This will
-            be several levels up the tree, but the function will find
-            it.*/
-        dev = getUdev()->m_udev_device_get_parent_with_subsystem_devtype(
-                dev,
-                "usb",
-                "usb_device");
-        if (!dev)
-        {
-            fprintf(stderr, "V4L2_CORE: Unable to find parent usb device.");
-            continue;
-        }
 
         /* From here, we can call get_sysattr_value() for each file
             in the device's /sys entry. The strings passed into these
