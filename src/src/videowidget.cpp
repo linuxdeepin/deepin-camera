@@ -303,8 +303,10 @@ void videowidget::showNocam()
         m_openglwidget->hide();
 
     if (m_GridType != Grid_None) {
-        if (!m_pGridLineItem->isVisible())
-            m_pGridLineItem->show();
+        // 提示界面不显示井字格
+        if (m_pGridLineItem->isVisible()) {
+            m_pGridLineItem->hide();
+        }
         if (m_gridlinewidget->isVisible())
             m_gridlinewidget->hide();
     }
@@ -374,8 +376,10 @@ void videowidget::showCamUsed()
         m_openglwidget->hide();
 
     if (m_GridType != Grid_None) {
-        if (!m_pGridLineItem->isVisible())
-            m_pGridLineItem->show();
+        // 提示界面不显示井字格
+        if (m_pGridLineItem->isVisible()) {
+            m_pGridLineItem->hide();
+        }
         if (m_gridlinewidget->isVisible())
             m_gridlinewidget->hide();
     }
@@ -1648,7 +1652,10 @@ void videowidget::setGridType(GridType type)
             m_pGridLineItem->hide();
         } else {
             m_gridlinewidget->hide();
-            m_pGridLineItem->show();
+            // 提示界面不显示井字格
+            if (!m_pSvgItem->isVisible()) {
+                m_pGridLineItem->show();
+            }
         }
     }
 }
