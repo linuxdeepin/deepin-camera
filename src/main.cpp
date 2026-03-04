@@ -178,6 +178,10 @@ int main(int argc, char *argv[])
         DataManager::instance()->setIsSupportCameraSwitch(dconfig->value("supportCameraSwitch").toBool());
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("previewNoDelay")) {
+        DataManager::instance()->setPreviewNoDelay(dconfig->value("previewNoDelay").toBool());
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

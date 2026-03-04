@@ -61,6 +61,16 @@
             "description": "is support camera switch or not",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "previewNoDelay": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "is preview no delay or not",
+            "name[zh_CN]": "是否预览无延迟",
+            "description": "is preview no delay or not",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
