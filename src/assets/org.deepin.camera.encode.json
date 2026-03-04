@@ -61,6 +61,16 @@
             "description": "Whether the device has a physical camera switch",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "previewNoDelay": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "preview no delay",
+            "name[zh_CN]": "是否预览无延迟",
+            "description": "is preview no delay or not",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
