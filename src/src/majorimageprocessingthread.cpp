@@ -515,8 +515,10 @@ void MajorImageProcessingThread::run()
     #ifdef UNITTEST
             break;
     #endif
-            //保证画面流畅的前提下降低刷新率
-            if(m_nVdWidth <= 1920) {
+            // 保证画面流畅的前提下降低刷新率
+            // 无延迟模式下可能增加CPU/GPU负载,某些客户要求更加实时的效果会使用此配置。
+            static bool noDelay = DataManager::instance()->isPreviewNoDelay();
+            if (!noDelay && m_nVdWidth <= 1920) {
                 msleep(33);
             }
         }
