@@ -154,6 +154,17 @@ public:
      */
     bool isSupportCameraSwitch() { return m_isSupportCameraSwitch; };
 
+    /**
+     * @brief 设置是否预览无延迟
+     * @param isTrue
+     */
+    void setPreviewNoDelay(bool isTrue) { m_isPreviewNoDelay = isTrue; };
+    /**
+     * @brief 获取是否预览无延迟
+     * @return
+     */
+    bool isPreviewNoDelay() { return m_isPreviewNoDelay; };
+
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -164,5 +175,6 @@ private:
     volatile enum DeviceStatus m_devStatus;
     bool m_H264EncoderExists;
     bool m_isSupportCameraSwitch = false; // 是否带有摄像头开关
+    bool m_isPreviewNoDelay = false; // 是否预览无延迟
 };
 #endif // DATAMANAGER_H
