@@ -586,7 +586,7 @@ void videowidget::showCountDownLabel(PREVIEW_ENUM_STATE state)
 
     case VIDEO:
         m_pCamErrItem->hide();
-        m_pCamErrItemSub->show();
+        m_pCamErrItemSub->hide();
         m_pSvgItem->hide();
 
         if (!get_capture_pause()) {//判断是否是暂停状态
