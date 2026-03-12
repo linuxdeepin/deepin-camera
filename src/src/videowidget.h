@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 -2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -431,6 +431,14 @@ private:
     * @return 0 成功 其他 失败
     */
     int switchCamera(const char *device, const char *devName);
+
+    /**
+     * @brief 获取USB摄像头分组
+     * @param devlist 设备列表
+     * @param vGroupData 分组
+     * @return 分组个数
+     */
+    int getUSBCameraGroup(v4l2_device_list_t *devlist, QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> &vGroupData);
 
     /**
      * @brief getSaveFilePrefix

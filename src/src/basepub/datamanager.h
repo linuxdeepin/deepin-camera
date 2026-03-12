@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -165,6 +165,16 @@ public:
      */
     bool isPreviewNoDelay() const { return m_isPreviewNoDelay; };
 
+    /**
+     * @brief 设置是否启用USB摄像头分组
+     * @param enable
+     */
+    void setEnableUsbGroup(bool enable) { m_enableUsbGroup = enable; };
+    /**
+     * @brief 获取是否启用USB摄像头分组
+     * @return
+     */
+    bool isEnableUsbGroup() const { return m_enableUsbGroup; };
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -176,5 +186,6 @@ private:
     bool m_H264EncoderExists;
     bool m_isSupportCameraSwitch = false; // 是否带有摄像头开关
     bool m_isPreviewNoDelay = false; // 是否预览无延迟
+    bool m_enableUsbGroup = false; // 是否启用USB摄像头分组
 };
 #endif // DATAMANAGER_H
