@@ -1118,37 +1118,89 @@ void videowidget::onChangeDev()
     }
 
     v4l2_device_list_t *devlist = get_device_list();
-    if (devlist->num_devices == 2) {
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-            if (str != str1) {
-                if (E_OK == switchCamera(devlist->list_devices[i].device, devlist->list_devices[i].name)) {
+    if (devlist == nullptr) {
+        qWarning() << "get device list FAILED";
+        return;
+    }
+
+    // USB摄像头分组相关逻辑来自xiwo分支，是否开启由DConfig控制
+    int groupNum = 1;
+    QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> vGroupData;
+    // 如果未启用USB摄像头分组，则分组数默认为1，保持原有逻辑；
+    // 如果启用USB摄像头分组，则实际获取USB分组情况，根据分组结果进行处理；
+    if (DataManager::instance()->isEnableUsbGroup()) {
+        // 必须确保 devlist 的生命周期长于 vGroupData 的使用周期。
+        // 如果 devlist 在 vGroupData 使用完毕前被释放，将导致悬空指针，引发崩溃。
+        // 好在 vGroupData 只在本函数中使用，不会在其他地方被引用，所以不会导致悬空指针问题。
+        groupNum = getUSBCameraGroup(devlist, vGroupData);
+        qInfo() << __func__ << "groupNum:" << groupNum;
+    }
+    if (groupNum == 1) {
+        if (devlist->num_devices == 2) {
+            for (int i = 0 ; i < devlist->num_devices; i++) {
+                const char *curDev = devlist->list_devices[i].device;
+                if (str != curDev) {
+                    if (E_OK == switchCamera(curDev, devlist->list_devices[i].name)) {
+                        break;
+                    }
+                }
+            }
+        } else {
+            if (devlist->num_devices == 0) {
+                DataManager::instance()->setdevStatus(NOCAM);
+                showNocam();
+            }
+
+            for (int i = 0 ; i < devlist->num_devices; i++) {
+                const char *curDev = devlist->list_devices[i].device;
+                if (str == curDev) {
+                    if (i == devlist->num_devices - 1) {
+                        switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
+                        break;
+                    } else {
+                        switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
+                        break;
+                    }
+                }
+
+                if (str.isEmpty()) {
+                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
                     break;
                 }
             }
         }
     } else {
-        if (devlist->num_devices == 0) {
-            DataManager::instance()->setdevStatus(NOCAM);
-            showNocam();
-        }
-
-        for (int i = 0 ; i < devlist->num_devices; i++) {
-            QString str1 = QString(devlist->list_devices[i].device);
-
-            if (str == str1) {
-                if (i == devlist->num_devices - 1) {
-                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                    break;
-                } else {
-                    switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
-                    break;
+        if (groupNum == 2) {
+            for (int i = 0 ; i < vGroupData.count(); i++) {
+                const char *curDev = vGroupData[i].second[0]->device;
+                if (str != curDev) {
+                    if (E_OK == switchCamera(curDev, vGroupData[i].second[0]->name)) {
+                        break;
+                    }
                 }
             }
+        } else {
+            if (devlist->num_devices == 0) {
+                DataManager::instance()->setdevStatus(NOCAM);
+                showNocam();
+            }
 
-            if (str.isEmpty()) {
-                switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                break;
+            for (int i = 0 ; i < vGroupData.count(); i++) {
+                const char *curDev = vGroupData[i].second[0]->device;
+                if (str == curDev) {
+                    if (i == vGroupData.count() - 1) {
+                        switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
+                        break;
+                    } else {
+                        switchCamera(vGroupData[i + 1].second[0]->device, vGroupData[i + 1].second[0]->name);
+                        break;
+                    }
+                }
+
+                if (str.isEmpty()) {
+                    switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
+                    break;
+                }
             }
         }
     }
@@ -1198,6 +1250,37 @@ int videowidget::switchCamera(const char *device, const char *devName)
         showNocam();
     }
     return ret;
+}
+
+int videowidget::getUSBCameraGroup(v4l2_device_list_t *devlist, QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> &vGroupData)
+{
+    // 来自xiwo分支，根据location进行分组
+    // 收到建议使用 QMap<QString, QVector<v4l2_dev_sys_data_t *>> 来存储分组数据，但我们担心影响现有代码逻辑，
+    // 所以暂时保留 QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> 来存储分组数据。
+    if (devlist == nullptr) {
+        qWarning() << __func__ << "devlist is NULL!";
+        return 0;
+    }
+
+    for (int i = 0 ; i < devlist->num_devices; i++) {
+        QString location = QString(devlist->list_devices[i].location);
+
+        int j = 0;
+        for (; j < vGroupData.count(); j++) {
+            if (location == vGroupData.at(j).first) {
+                break;
+            }
+        }
+        if (j == vGroupData.count()) {
+            QVector<v4l2_dev_sys_data_t *> vList;
+            vList.append(&devlist->list_devices[i]);
+            vGroupData.append(qMakePair(location, vList));
+        } else {
+            QVector<v4l2_dev_sys_data_t *> &vlist = vGroupData[j].second;
+            vlist.append(&devlist->list_devices[i]);
+        }
+    }
+    return vGroupData.count();
 }
 
 QString videowidget::getSaveFilePrefix()

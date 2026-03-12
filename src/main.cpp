@@ -182,6 +182,12 @@ int main(int argc, char *argv[])
         DataManager::instance()->setPreviewNoDelay(dconfig->value("previewNoDelay").toBool());
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("enableUsbGroup")) {
+        bool enable = dconfig->value("enableUsbGroup").toBool();
+        qInfo() << "enable USB group:" << enable;
+        DataManager::instance()->setEnableUsbGroup(enable);
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

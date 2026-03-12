@@ -71,6 +71,16 @@
             "description": "is preview no delay or not",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "enableUsbGroup": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "enable USB group",
+            "name[zh_CN]": "是否启用USB摄像头分组",
+            "description": "Enable USB group",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

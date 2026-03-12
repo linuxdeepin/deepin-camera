@@ -421,6 +421,14 @@ private:
     int switchCamera(const char *device, const char *devName);
 
     /**
+     * @brief 获取USB摄像头分组
+     * @param devlist 设备列表
+     * @param vGroupData 分组
+     * @return 分组个数
+     */
+    int getUSBCameraGroup(v4l2_device_list_t *devlist, QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> &vGroupData);
+
+    /**
      * @brief getSaveFilePrefix
      * @return UOS_ 专业版 DEEPIN_ 社区版 CAMERA_ 其他
      */
