@@ -119,6 +119,9 @@ static uint32_t decoder_supported_formats[] =
 	0
 };
 
+// 是否开启8K预览
+static int enable_8k_preview = 0;
+
 /* FIXME: doesn't support bigendian formats=> fourcc | (1 << 31)
  * get pixelformat from fourcc
  * args:
@@ -748,8 +751,45 @@ void free_frame_formats(v4l2_dev_t *vd)
 
 int is_valid_resolution(int width, int height)
 {
+	// 希沃的8K分辨率是8192x2772，过多限制会导致此分辨率不可用
+	if (enable_8k_preview) {
+		return (width > 0 && height > 0)
+				&& (width % 16 == 0 && height % 4 == 0);
+	}
+
 	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
 	return (width > 0 && height > 0) 
 			&& (width <= MAX_WIDTH_LIMIT && height <= MAX_HEIGHT_LIMIT) 
 			&& (width % 16 == 0 && height % 8 == 0);
+}
+
+/*
+ * set enable 8k preview
+ * args:
+ *   enable - enable 8k preview
+ *
+ * asserts:
+ *   none
+ *
+ * returns: void
+ */
+void set_enable_8k_preview(int enable)
+{
+	enable_8k_preview = enable;
+}
+
+/*
+ * check if 8k preview is enabled
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: TRUE(1) if enabled
+ *          FALSE(0) if not
+ */
+int is_enable_8k_preview()
+{
+	return enable_8k_preview;
 }

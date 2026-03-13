@@ -36,6 +36,11 @@ public:
     */
     int getCurrentValue();
 
+    /**
+    * @brief 重置至初始位置
+    */
+    void reset();
+
 protected:
     /**
     * @brief 鼠标按下事件

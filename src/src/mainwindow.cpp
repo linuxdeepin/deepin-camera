@@ -1467,6 +1467,7 @@ void CMainWindow::onSwitchCameraSuccess(const QString &cameraName)
     m_labelCameraName->show();
     m_filterName->hide();
     m_showCameraNameTimer->start();
+    showChildWidget();
     qDebug() << "Function completed: onSwitchCameraSuccess";
 }
 
@@ -2428,7 +2429,6 @@ void CMainWindow::onSettingsDlgClose()
     if (bPathChanged) {
         reflushSnapshotLabel();
     }
-    qDebug() << "Function completed: onSettingsDlgClose";
 }
 
 void CMainWindow::onEnableSettings(bool bTrue)
@@ -2550,9 +2550,12 @@ void CMainWindow::showChildWidget()
         showWidget(m_photoRecordBtn, true);
         return;
     }
+
+    // 8k分辨率时不显示录像功能
+    bool isResolutionTooHigh = checkResolutionTooHigh();
     showWidget(m_snapshotLabel, true);
     showWidget(m_cameraSwitchBtn, m_bSwitchCameraShowEnable);
-    showWidget(m_modeSwitchBox, true);
+    showWidget(m_modeSwitchBox, !isResolutionTooHigh);
     showWidget(m_photoRecordBtn, true);
     showWidget(m_takePhotoSettingArea, true);
     showWidget(m_filterName, m_bShowFilterName);
@@ -2573,6 +2576,21 @@ void CMainWindow::showWidget(DWidget *widget, bool bShow)
         }
     }
     qDebug() << "Function completed: showWidget";
+}
+
+bool CMainWindow::checkResolutionTooHigh() const
+{
+    int currentWidth  = 0;
+    int currentHeight = 0;
+    v4l2_dev_t *fd = get_v4l2_device_handler();
+    if (fd) {
+        currentWidth  = v4l2core_get_frame_width(fd);
+        currentHeight = v4l2core_get_frame_height(fd);
+    }
+    bool isTrue = currentWidth > MAX_WIDTH_LIMIT || currentHeight > MAX_HEIGHT_LIMIT;
+    qInfo() << __func__ << isTrue << currentWidth << "x" << currentHeight;
+
+    return isTrue;
 }
 
 CMainWindow::~CMainWindow()

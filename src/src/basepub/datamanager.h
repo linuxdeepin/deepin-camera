@@ -175,6 +175,18 @@ public:
      * @return
      */
     bool isEnableUsbGroup() const { return m_enableUsbGroup; };
+
+    /**
+     * @brief 设置是否启用8K预览
+     * @param enable
+     */
+    void setEnable8kPreview(bool enable) { m_enable8kPreview = enable; };
+
+    /**
+     * @brief 获取是否启用8K预览
+     * @return
+     */
+    bool isEnable8kPreview() const { return m_enable8kPreview; };
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -187,5 +199,6 @@ private:
     bool m_isSupportCameraSwitch = false; // 是否带有摄像头开关
     bool m_isPreviewNoDelay = false; // 是否预览无延迟
     bool m_enableUsbGroup = false; // 是否启用USB摄像头分组
+    bool m_enable8kPreview = false; // 是否启用8K预览
 };
 #endif // DATAMANAGER_H
