@@ -201,6 +201,11 @@ private:
     */
     void getMediaFileInfoList(const QString &path, QFileInfoList &fileList);
 
+    /**
+    * @brief 检测分辨率是否太高，8K分辨率不显示录像功能
+    */
+    bool checkResolutionTooHigh() const;
+
 private slots:
     /**
      * @brief setSelBtnHide 设置切换相机按钮隐藏
