@@ -5,6 +5,7 @@
 
 extern "C" {
 #include "camview.h"
+#include "v4l2_formats.h"
 }
 #include "mainwindow.h"
 #include "capplication.h"
@@ -186,6 +187,16 @@ int main(int argc, char *argv[])
         bool enable = dconfig->value("enableUsbGroup").toBool();
         qInfo() << "enable USB group:" << enable;
         DataManager::instance()->setEnableUsbGroup(enable);
+    }
+
+    // 是否开启8K预览通过DConfig控制，目前要求开启8K预览的厂家是希沃
+    // 希沃的8K分辨率是8192x2772，希沃在8K预览的时候表现正常，在录像的时候表现异常，所以在开启8K预览的时候我们会禁用录像功能
+    // 8K预览功能默认关闭，因为多个厂家的摄像头在8K预览的时候表现异常
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("enable8kPreview")) {
+        bool enable = dconfig->value("enable8kPreview").toBool();
+        qInfo() << "enable 8K preview:" << enable;
+        DataManager::instance()->setEnable8kPreview(enable);
+        set_enable_8k_preview(enable ? 1 : 0);
     }
 
     if (!libVaDriverName.isEmpty()) {

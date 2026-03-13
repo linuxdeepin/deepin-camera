@@ -301,3 +301,10 @@ void RollingBox::setDeviation(int n)
     update();
 }
 
+void RollingBox::reset()
+{
+    m_currentIndex = m_rangeMin;
+    m_deviation = 0;
+    emit currentValueChanged(m_currentIndex);
+    update();
+}
