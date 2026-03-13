@@ -81,6 +81,16 @@
             "description": "Enable USB group",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "enable8kPreview": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "enable 8k preview",
+            "name[zh_CN]": "是否启用8K预览",
+            "description": "Enable 8k preview",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
