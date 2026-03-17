@@ -60,6 +60,11 @@ signals:
     */
     void existDevice();
 
+    /**
+    * @brief deviceListChanged 相机设备列表改变信号
+    */
+    void deviceListChanged();
+
 protected:
     /**
     * @brief run 运行
