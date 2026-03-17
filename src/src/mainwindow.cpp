@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -1294,11 +1294,12 @@ void CMainWindow::loadAfterShow()
     initEventFilter();
     reflushSnapshotLabel();
 
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));   //显示切换按钮
-    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));   //多设备信号
-    if (DataManager::instance()->encodeEnv() != QCamera_Env) {
-        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));   //重启设备
-        connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));   //重启设备
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateEnable()), this, SLOT(setSelBtnShow()));//显示切换按钮
+    connect(m_devnumMonitor, SIGNAL(seltBtnStateDisable()), this, SLOT(setSelBtnHide()));//多设备信号
+    if(DataManager::instance()->encodeEnv() != QCamera_Env) {
+        connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+        connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+        connect(m_devnumMonitor, SIGNAL(deviceListChanged()), m_videoPre, SLOT(updateValidDevices())); // 更新可用设备列表
     } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         initCameraConnection();
     }
@@ -2238,6 +2239,11 @@ void CMainWindow::onLocalTimeChanged()
 void CMainWindow::setSelBtnShow()
 {
     qDebug() << "Function started: setSelBtnShow";
+    // 有效设备个数小于等于1，不显示切换按钮
+    if (m_videoPre->getValidDeviceNum() <= 1) {
+        return;
+    }
+
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()) {
         showChildWidget();

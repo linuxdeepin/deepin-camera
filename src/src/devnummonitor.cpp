@@ -47,7 +47,10 @@ void DevNumMonitor::startCheck()
 
 void DevNumMonitor::timeOutSlot()
 {
-    check_device_list_events(get_v4l2_device_handler());
+    // 检查设备列表变化事件
+    if (check_device_list_events(get_v4l2_device_handler())) {
+        emit deviceListChanged();
+    }
 
     int deviceCount = get_device_list()->num_devices;
 
