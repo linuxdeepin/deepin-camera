@@ -187,6 +187,17 @@ public:
      * @return
      */
     bool isEnable8kPreview() const { return m_enable8kPreview; };
+
+    /**
+     * @brief 设置Camera设备黑名单
+     * @param blacklist
+     */
+    void setDeviceBlacklist(const QStringList &blacklist);
+    /**
+     * @brief 检查当前设备是否有效
+     * @return
+     */
+    bool isDeviceValid(const QString &vid, const QString &pid, const QString &name);
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -200,5 +211,6 @@ private:
     bool m_isPreviewNoDelay = false; // 是否预览无延迟
     bool m_enableUsbGroup = false; // 是否启用USB摄像头分组
     bool m_enable8kPreview = false; // 是否启用8K预览
+    QSet<QString> m_deviceBlacklistSet; // 设备黑名单
 };
 #endif // DATAMANAGER_H
