@@ -91,6 +91,16 @@
             "description": "Enable 8k preview",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "deviceBlacklist": {
+            "value": [],
+            "serial": 0,
+            "flags": ["global"],
+            "name": "device blacklist",
+            "name[zh_CN]": "设备黑名单",
+            "description": "Set device blacklist, format: vid,pid,name",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }

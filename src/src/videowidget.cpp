@@ -276,8 +276,18 @@ void videowidget::delayInit()
     m_flashLabel->hide();
 
     QString device = dc::Settings::get().getBackOption("device").toString();
-    //启动视频
-    switchCamera(device.toStdString().c_str(), "");
+    // 启动视频预览
+    // 如果配置的设备无效，切换到第一个有效的设备
+    // 如果有效的设备也不存在，走默认流程
+    updateValidDevices();
+    if (!isDeviceValidByDevice(device)) {
+        QString validDevice = getFirstValidDevice();
+        qWarning() << "INVALID device from config:" << device << ", found first valid device:" << validDevice;
+        switchCamera(validDevice.toStdString().c_str(), "");
+    } else {
+        qInfo() << "VALID device from config:" << device;
+        switchCamera(device.toStdString().c_str(), ""); // 走默认逻辑
+    }
 
     QObject::connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged,
                      this, &videowidget::onThemeTypeChanged);
@@ -1135,38 +1145,25 @@ void videowidget::onChangeDev()
         groupNum = getUSBCameraGroup(devlist, vGroupData);
         qInfo() << __func__ << "groupNum:" << groupNum;
     }
-    if (groupNum == 1) {
-        if (devlist->num_devices == 2) {
-            for (int i = 0 ; i < devlist->num_devices; i++) {
-                const char *curDev = devlist->list_devices[i].device;
-                if (str != curDev) {
-                    if (E_OK == switchCamera(curDev, devlist->list_devices[i].name)) {
-                        break;
-                    }
-                }
-            }
+    // 如果摄像头设备个数为0，分组情况就不用考虑了，直接显示无摄像头提示
+    if (devlist->num_devices == 0) {
+        DataManager::instance()->setdevStatus(NOCAM);
+        showNocam();
+    } else if (groupNum == 0) {
+        switchCamera("", ""); // 无有效设备，但是有设备，走默认逻辑
+    } else if (groupNum == 1) {
+        if (m_validDevices.empty()) {
+            switchCamera("", ""); // 无有效设备，但是有设备，走默认逻辑
         } else {
-            if (devlist->num_devices == 0) {
-                DataManager::instance()->setdevStatus(NOCAM);
-                showNocam();
-            }
-
-            for (int i = 0 ; i < devlist->num_devices; i++) {
-                const char *curDev = devlist->list_devices[i].device;
-                if (str == curDev) {
-                    if (i == devlist->num_devices - 1) {
-                        switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                        break;
-                    } else {
-                        switchCamera(devlist->list_devices[i + 1].device, devlist->list_devices[i + 1].name);
-                        break;
-                    }
-                }
-
-                if (str.isEmpty()) {
-                    switchCamera(devlist->list_devices[0].device, devlist->list_devices[0].name);
-                    break;
-                }
+            int idx = getValidDeviceIndexByDevice(str);
+            if (idx == -1 || idx >= m_validDevices.size() - 1) {
+                // 获取第一个有效设备，直接切换到该设备
+                const ValidDevice &dev = m_validDevices[0];
+                switchCamera(dev.getDevice().toStdString().c_str(), dev.getName().toStdString().c_str());
+            } else {
+                // 切换到当前设备的下一个有效设备
+                const ValidDevice &dev = m_validDevices[idx + 1];
+                switchCamera(dev.getDevice().toStdString().c_str(), dev.getName().toStdString().c_str());
             }
         }
     } else {
@@ -1180,14 +1177,11 @@ void videowidget::onChangeDev()
                 }
             }
         } else {
-            if (devlist->num_devices == 0) {
-                DataManager::instance()->setdevStatus(NOCAM);
-                showNocam();
-            }
-
+            bool found = false; // 标记是否找到当前设备
             for (int i = 0 ; i < vGroupData.count(); i++) {
                 const char *curDev = vGroupData[i].second[0]->device;
                 if (str == curDev) {
+                    found = true;
                     if (i == vGroupData.count() - 1) {
                         switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
                         break;
@@ -1196,11 +1190,10 @@ void videowidget::onChangeDev()
                         break;
                     }
                 }
-
-                if (str.isEmpty()) {
-                    switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
-                    break;
-                }
+            }
+            if (!found) {
+                // 未找到当前设备，切换到第一个设备
+                switchCamera(vGroupData[0].second[0]->device, vGroupData[0].second[0]->name);
             }
         }
     }
@@ -1257,12 +1250,16 @@ int videowidget::getUSBCameraGroup(v4l2_device_list_t *devlist, QVector<QPair<QS
     // 来自xiwo分支，根据location进行分组
     // 收到建议使用 QMap<QString, QVector<v4l2_dev_sys_data_t *>> 来存储分组数据，但我们担心影响现有代码逻辑，
     // 所以暂时保留 QVector<QPair<QString, QVector<v4l2_dev_sys_data_t *>>> 来存储分组数据。
-    if (devlist == nullptr) {
+    if (devlist == nullptr || devlist->list_devices == nullptr || devlist->num_devices == 0) {
         qWarning() << __func__ << "devlist is NULL!";
         return 0;
     }
 
-    for (int i = 0 ; i < devlist->num_devices; i++) {
+    for (int i = 0; i < devlist->num_devices; i++) {
+        if (!isDeviceValidByDevice(devlist->list_devices[i].device)) {
+            continue; // 无效设备不参与分组
+        }
+
         QString location = QString(devlist->list_devices[i].location);
 
         int j = 0;
@@ -1754,6 +1751,79 @@ void videowidget::onFilterDisplayChanged(int bDisplay)
 {
     if (m_imgPrcThread)
         m_imgPrcThread->setFilterGroupState(bDisplay);
+}
+
+QString videowidget::getFirstValidDevice()
+{
+    // 加锁，确保线程安全
+    QReadLocker locker(&m_mutexValidDevices);
+    if (m_validDevices.isEmpty()) {
+        qWarning() << __func__ << "no valid device!";
+        return "";
+    }
+
+    // 返回第一个有效相机设备的设备节点路径
+    const ValidDevice &dev = m_validDevices.first();
+    qInfo() << __func__ << dev.getVid() << dev.getPid() << dev.getName() << dev.getDevice();
+    return dev.getDevice();
+}
+
+void videowidget::updateValidDevices()
+{
+    qInfo() << __func__;
+    // 加锁，确保线程安全
+    QWriteLocker locker(&m_mutexValidDevices);
+    m_validDevices.clear(); // 清空有效相机设备列表
+
+    v4l2_device_list_t *devList = get_device_list();
+    if (!devList) {
+        qWarning() << __func__ << "get device list FAILED!";
+        return;
+    }
+
+    v4l2_dev_sys_data_t *v4l2_devices = devList->list_devices;
+    if (!v4l2_devices) {
+        qWarning() << __func__ << "get device list FAILED!";
+        return;
+    }
+
+    for (int i = 0; i < devList->num_devices; i++) {
+        // 获取设备的VID和PID，不足4位用0填充
+        QString vid = formatDeviceId(v4l2_devices[i].vendor);
+        QString pid = formatDeviceId(v4l2_devices[i].product);
+        if (DataManager::instance()->isDeviceValid(vid, pid, v4l2_devices[i].name)) {
+            qInfo() << __func__ << "found valid device:" << vid << pid << v4l2_devices[i].name << v4l2_devices[i].device;
+            // 添加有效相机设备
+            m_validDevices.push_back(ValidDevice(vid, pid, v4l2_devices[i].name, v4l2_devices[i].device));
+            continue;
+        }
+
+        qInfo() << __func__ << "found invalid device(blacklist):" << vid << pid << v4l2_devices[i].name << v4l2_devices[i].device;
+    }
+}
+
+bool videowidget::isDeviceValidByDevice(const QString &device)
+{
+    return getValidDeviceIndexByDevice(device) != -1;
+}
+
+int videowidget::getValidDeviceIndexByDevice(const QString &device)
+{
+    // 加锁，确保线程安全
+    QReadLocker locker(&m_mutexValidDevices);
+    for (int i = 0; i < m_validDevices.size(); i++) {
+        if (m_validDevices[i].getDevice() == device) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int videowidget::getValidDeviceNum()
+{
+    // 加锁，确保线程安全
+    QReadLocker locker(&m_mutexValidDevices);
+    return m_validDevices.size();
 }
 
 videowidget::~videowidget()

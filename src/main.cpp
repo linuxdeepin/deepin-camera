@@ -199,6 +199,12 @@ int main(int argc, char *argv[])
         set_enable_8k_preview(enable ? 1 : 0);
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("deviceBlacklist")) {
+        QStringList deviceBlacklist = dconfig->value("deviceBlacklist").toStringList();
+        qInfo() << "device blacklist:" << deviceBlacklist;
+        DataManager::instance()->setDeviceBlacklist(deviceBlacklist);
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

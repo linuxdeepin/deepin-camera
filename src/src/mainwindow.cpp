@@ -1240,6 +1240,7 @@ void CMainWindow::loadAfterShow()
     if(DataManager::instance()->encodeEnv() != QCamera_Env) {
         connect(m_devnumMonitor, SIGNAL(existDevice()), m_videoPre, SLOT(onRestartDevices()));//重启设备
         connect(m_devnumMonitor, SIGNAL(noDeviceFound()), m_videoPre, SLOT(onRestartDevices()));//重启设备
+        connect(m_devnumMonitor, SIGNAL(deviceListChanged()), m_videoPre, SLOT(updateValidDevices())); // 更新可用设备列表
     } else if (DataManager::instance()->encodeEnv() == QCamera_Env) {
         initCameraConnection();
     }
@@ -2037,6 +2038,11 @@ void CMainWindow::onLocalTimeChanged()
 
 void CMainWindow::setSelBtnShow()
 {
+    // 有效设备个数小于等于1，不显示切换按钮
+    if (m_videoPre->getValidDeviceNum() <= 1) {
+        return;
+    }
+
     m_bSwitchCameraShowEnable = true;
     if (m_cameraSwitchBtn->isHidden()) {
         showChildWidget();
