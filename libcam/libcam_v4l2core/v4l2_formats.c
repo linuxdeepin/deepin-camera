@@ -121,6 +121,9 @@ static uint32_t decoder_supported_formats[] =
 
 // 是否开启8K预览
 static int enable_8k_preview = 0;
+// 首选分辨率
+static int preferred_resolution_width  = 0;
+static int preferred_resolution_height = 0;
 
 /* FIXME: doesn't support bigendian formats=> fourcc | (1 << 31)
  * get pixelformat from fourcc
@@ -792,4 +795,56 @@ void set_enable_8k_preview(int enable)
 int is_enable_8k_preview()
 {
 	return enable_8k_preview;
+}
+
+/**
+ * set preferred resolution
+ * args:
+ *   width - preferred width
+ *   height - preferred height
+ *
+ * asserts:
+ *   none
+ *
+ * returns: void
+ */
+void set_preferred_resolution(int width, int height)
+{
+	if (width <= 0 || height <= 0) {
+		printf("V4L2_CORE: Invalid preferred resolution: %dx%d\n", width, height);
+		return;
+	}
+
+	preferred_resolution_width  = width;
+	preferred_resolution_height = height;
+}
+
+/**
+ * get preferred resolution width
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: preferred width
+ */
+int get_preferred_resolution_width()
+{
+	return preferred_resolution_width;
+}
+
+/**
+ * get preferred resolution height
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: preferred height
+ */
+int get_preferred_resolution_height()
+{
+	return preferred_resolution_height;
 }

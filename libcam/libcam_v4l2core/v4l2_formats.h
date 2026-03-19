@@ -135,4 +135,41 @@ void set_enable_8k_preview(int enable);
  */
 int is_enable_8k_preview();
 
+/**
+ * set preferred resolution
+ * args:
+ *   width - preferred width
+ *   height - preferred height
+ *
+ * asserts:
+ *   none
+ *
+ * returns: void
+ */
+void set_preferred_resolution(int width, int height);
+
+/**
+ * get preferred resolution width
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: preferred width
+ */
+int get_preferred_resolution_width();
+
+/**
+ * get preferred resolution height
+ * args:
+ *   none
+ *
+ * asserts:
+ *   none
+ *
+ * returns: preferred height
+ */
+int get_preferred_resolution_height();
+
 #endif
