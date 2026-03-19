@@ -3,6 +3,10 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+extern "C" {
+#include "v4l2_formats.h"
+}
+
 #include "datamanager.h"
 #include "../capplication.h"
 
@@ -103,6 +107,48 @@ bool DataManager::isDeviceValid(const QString &vid, const QString &pid, const QS
     return !m_deviceBlacklistSet.contains(key);
 }
 
+void DataManager::setPreferredResolution(const QString &resolution)
+{
+    if (resolution.isEmpty()) {
+        qInfo() << "Preferred resolution is empty";
+        return;
+    }
+
+    QStringList parts = resolution.split("x");
+    if (parts.size() != 2) {
+        qWarning() << "Invalid resolution format:" << resolution << "Expected format: WIDTHxHEIGHT";
+        return;
+    }
+
+    bool widthOk, heightOk;
+    int width  = parts[0].toInt(&widthOk);
+    int height = parts[1].toInt(&heightOk);
+
+    if (!widthOk || !heightOk || width <= 0 || height <= 0) {
+        qWarning() << "Invalid resolution values:" << resolution;
+        return;
+    }
+
+    // 添加合理的上限检查，例如16K
+    static const int MAX_RESOLUTION = 16384; 
+    if (width > MAX_RESOLUTION || height > MAX_RESOLUTION) {
+        qWarning() << "Resolution exceeds maximum limit:" << resolution;
+        return;
+    }
+
+    if (!is_valid_resolution(width, height)) {
+        qWarning() << "Resolution does not meet validation requirements:" << resolution;
+        return;
+    }
+
+    m_preferredResolution = QSize(width, height);
+}
+
+QSize DataManager::getPreferredResolution()
+{
+    return m_preferredResolution;
+}
+
 DataManager *DataManager::instance()
 {
     if (m_dataManager == nullptr) {
@@ -121,5 +167,6 @@ DataManager::DataManager()
     m_encodeEnv = GStreamer_Env;
     m_devStatus = DeviceStatus::NOCAM;
     m_H264EncoderExists = false;
+    m_preferredResolution = QSize(0, 0);
 }
 

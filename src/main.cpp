@@ -205,6 +205,18 @@ int main(int argc, char *argv[])
         DataManager::instance()->setDeviceBlacklist(deviceBlacklist);
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("preferredResolution")) {
+        QString preferredResolution = dconfig->value("preferredResolution").toString();
+        qInfo() << "preferred resolution:" << preferredResolution;
+        if (!preferredResolution.isEmpty()) {
+            DataManager::instance()->setPreferredResolution(preferredResolution);
+            QSize size = DataManager::instance()->getPreferredResolution();
+            if (!size.isNull()) {
+                set_preferred_resolution(size.width(), size.height());
+            }
+        }
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

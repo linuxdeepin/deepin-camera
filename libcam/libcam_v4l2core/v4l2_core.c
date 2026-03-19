@@ -1696,20 +1696,50 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
         }
     }
 
-	// 查找可以支持的最大分辨率
-	// 由于上游guvcview项目在解码3840x2160分辨率以上时会出现异常（出现条纹、崩溃等），所以我们需要限制可用分辨率到3840x2160
-	printf("V4L2_CORE: valid resolution counts: %d\n", vd->list_stream_formats[format_index].numb_res);
-	for(int i=0; i < vd->list_stream_formats[format_index].numb_res; i++)
+	int found_preferred = 0; // 是否找到首选分辨率
+	int pref_w = get_preferred_resolution_width();
+	int pref_h = get_preferred_resolution_height();
+	// 最大分辨率
+	int max_width  = 0;
+	int max_height = 0;
+	// 通过一次遍历，找出首选分辨率，同时找出最大分辨率。虽然最大分辨率可能用不到，但是便于调试分析
+	for (int i = 0; i < vd->list_stream_formats[format_index].numb_res; i++)
 	{
 		int w = vd->list_stream_formats[format_index].list_stream_cap[i].width;
 		int h = vd->list_stream_formats[format_index].list_stream_cap[i].height;
-		printf("V4L2_CORE: - valid resolution(%dx%d)\n", w, h);
-		if (my_width <= w && my_height <= h && is_valid_resolution(w, h)) {
-			my_width  = w;
-			my_height = h;
+		if (is_valid_resolution(w, h))
+		{
+			// 找出首选分辨率
+			printf("V4L2_CORE: check valid resolution, width: %d, height: %d, preferred width: %d, preferred height: %d\n",
+					w, h, pref_w, pref_h);
+			if (!found_preferred && pref_w != 0 && pref_h != 0 && w == pref_w && h == pref_h) {
+				printf("V4L2_CORE: preferred resolution found, width: %d, height: %d\n", w, h);
+				found_preferred = 1;
+			}
+
+			// 找出最大分辨率
+			if (w > max_width || (w == max_width && h > max_height)) {
+				max_width  = w;
+				max_height = h;
+			}
 		}
 	}
-	printf("V4L2_CORE: select resolution(%dx%d)\n", my_width, my_height);
+	printf("V4L2_CORE: max resolution found, width: %d, height: %d\n", max_width, max_height);
+	if (found_preferred) {
+		// 有首选分辨率，使用首选分辨率
+		printf("V4L2_CORE: use preferred resolution, width: %d, height: %d\n", pref_w, pref_h);
+		my_width  = pref_w;
+		my_height = pref_h;
+	} else {
+		// 没有首选分辨率，使用最大分辨率
+		printf("V4L2_CORE: use max resolution, width: %d, height: %d\n", max_width, max_height);
+		my_width  = max_width;
+		my_height = max_height;
+		// 极端情况，没有可用分辨率，发出错误提示
+		if (max_width == 0 || max_height == 0) {
+			printf("V4L2_CORE: ERROR: no valid resolution found!\n");
+		}
+	}
 }
 
 /*

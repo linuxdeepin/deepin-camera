@@ -101,6 +101,16 @@
             "description": "Set device blacklist, format: vid,pid,name",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "preferredResolution": {
+            "value": "",
+            "serial": 0,
+            "flags": ["global"],
+            "name": "preferred resolution",
+            "name[zh_CN]": "首选分辨率",
+            "description": "Set preferred resolution",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
