@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QSet>
+#include <QSize>
 
 enum GridType
 {
@@ -198,6 +199,18 @@ public:
      * @return
      */
     bool isDeviceValid(const QString &vid, const QString &pid, const QString &name);
+
+    /**
+     * @brief 设置首选分辨率
+     * @param resolution 分辨率字符串，格式如 "1920x1080"
+     */
+    void setPreferredResolution(const QString &resolution);
+
+    /**
+     * @brief 获取首选分辨率
+     * @return 分辨率
+     */
+    QSize getPreferredResolution();
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -212,5 +225,6 @@ private:
     bool m_enableUsbGroup = false; // 是否启用USB摄像头分组
     bool m_enable8kPreview = false; // 是否启用8K预览
     QSet<QString> m_deviceBlacklistSet; // 设备黑名单
+    QSize m_preferredResolution; // 首选分辨率
 };
 #endif // DATAMANAGER_H
