@@ -59,7 +59,6 @@ void Settings::init()
             } else {
                 videoFormatList << tr("webm") << tr("mp4");
             }
-            
         } else {
             videoFormatList << tr("webm");
             m_settings->setOption("outsetting.outformat.vidformat", 0);
