@@ -54,8 +54,11 @@ void Settings::init()
     if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
         if (DataManager::instance()->encExists()) {
             GlobalUtils::loadCameraConf();
-            // webm 作为默认格式（索引0），mp4 作为备选（索引1）
-            videoFormatList << tr("webm") << tr("mp4");
+            if (!GlobalUtils::isLowPerformanceBoard()) {
+                videoFormatList << tr("mp4") << tr("webm");
+            } else {
+                videoFormatList << tr("webm") << tr("mp4");
+            }
         } else {
             videoFormatList << tr("webm");
             m_settings->setOption("outsetting.outformat.vidformat", 0);
