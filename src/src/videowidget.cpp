@@ -222,17 +222,14 @@ videowidget::videowidget(DWidget *parent)
     // 默认不显示网格线
     setGridType(Grid_None);
 
-    // 默认使用 webm 格式
-    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists()) {
+    if (DataManager::instance()->encodeEnv() != FFmpeg_Env || !DataManager::instance()->encExists() || GlobalUtils::isLowPerformanceBoard()) {
         m_videoFormat = "webm";
-    } else {
-        // 根据配置选择格式：0=webm(默认), 1=mp4
-        int formatIndex = dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt();
-        if (formatIndex == 1) {
-            m_videoFormat = "mp4";
-        } else {
+    }
+    if (dc::Settings::get().getOption("outsetting.outformat.vidformat").toInt()) {
+        if (!GlobalUtils::isLowPerformanceBoard())
             m_videoFormat = "webm";
-        }
+        else
+            m_videoFormat = "mp4";
     }
 }
 
