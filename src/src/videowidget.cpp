@@ -230,6 +230,7 @@ videowidget::videowidget(DWidget *parent)
             m_videoFormat = "webm";
         else
             m_videoFormat = "mp4";
+        } 
     }
 }
 
