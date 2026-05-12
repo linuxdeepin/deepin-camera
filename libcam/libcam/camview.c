@@ -37,6 +37,7 @@
 #include <libintl.h>
 
 #include "gviewv4l2core.h"
+#include "core_time.h"
 #include "gviewrender.h"
 #include "gviewencoder.h"
 #include "gview.h"
@@ -728,6 +729,11 @@ static void *audio_processing_loop(void *data)
 
     render_set_osd_mask(osd_mask);
 
+    /* init reference to system monotonic clock on first run */
+    if (audio_timestamp_reference == 0) {
+        audio_timestamp_reference = ns_time_monotonic();
+        audio_timestamp_tmp = audio_timestamp_reference;
+    }
     while(video_capture_get_save_video())
     {
         if(get_capture_pause())
@@ -735,7 +741,7 @@ static void *audio_processing_loop(void *data)
             int ret = audio_get_next_buffer(audio_ctx, audio_buff, sample_type, my_audio_mask);
             if(ret == 0)
             {
-                audio_pause_timestamp = audio_buff->timestamp - audio_timestamp_tmp;
+                audio_pause_timestamp = ns_time_monotonic() - audio_timestamp_tmp;
             }
             continue;
         }
@@ -743,7 +749,7 @@ static void *audio_processing_loop(void *data)
         int ret = audio_get_next_buffer(audio_ctx, audio_buff,
                 sample_type, my_audio_mask);
 
-        audio_timestamp_tmp = audio_buff->timestamp;
+        audio_timestamp_tmp = ns_time_monotonic();
         if(audio_pause_timestamp != 0) {
             audio_timestamp_reference += audio_pause_timestamp;
             audio_pause_timestamp = 0;
@@ -758,7 +764,7 @@ static void *audio_processing_loop(void *data)
                 .tv_nsec = 1000000};/*nanosec*/
              nanosleep(&req, NULL);
         } else if(ret == 0) {
-            encoder_ctx->enc_audio_ctx->pts = audio_buff->timestamp - audio_timestamp_reference;
+            encoder_ctx->enc_audio_ctx->pts = ns_time_monotonic() - audio_timestamp_reference;
 
             /*OSD vu meter level*/
             render_set_vu_level(audio_buff->level_meter);

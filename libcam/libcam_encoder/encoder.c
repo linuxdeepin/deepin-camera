@@ -48,6 +48,7 @@
 #include <va/va.h>
 
 #include "cameraconfig.h"
+#include "core_time.h"
 #include "gviewencoder.h"
 #include "encoder.h"
 #include "stream_io.h"
@@ -1361,7 +1362,7 @@ int encoder_flush_video_buffer(encoder_context_t *encoder_ctx)
     if (verbosity > 1)
         printf("ENCODER: flushed %i delayed video frames\n", flushed_frame_counter);
 
-    if (!buffer_count) {
+	if (!buffer_count) {
         fprintf(stderr, "ENCODER: (flush video buffer) max processed buffers reached\n");
         return -1;
     }
@@ -1941,6 +1942,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
                     audio_codec_data->codec_context->time_base.den);
         }
     }
+    enc_audio_ctx->original_pts = enc_audio_ctx->pts;
     ret = libav_send_encode(
               audio_codec_data->codec_context,
               audio_codec_data->frame);
