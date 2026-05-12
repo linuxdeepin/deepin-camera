@@ -2055,6 +2055,9 @@ AVFrame *swsframe = NULL;
 struct SwsContext *swsContext = NULL;
 AVFrame   *hw_frame = NULL;
 uint8_t *out_uuvv = NULL;
+uint8_t *out_yy = NULL;
+static int vaapi_coded_w = 0;
+static int vaapi_coded_h = 0;
 
 void  vaapi_over(void)
 {
@@ -2063,6 +2066,7 @@ void  vaapi_over(void)
     getLoadLibsInstance()->m_sws_freeContext(swsContext);
     getAvutil()->m_av_frame_free(&swsframe);
     free(out_uuvv);
+    free(out_yy);
 }
 
 /*
@@ -2348,8 +2352,17 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
 
     /*set codec defaults*/
     // video_codec_data->codec_context->bit_rate = video_defaults->bit_rate;
-    video_codec_data->codec_context->width = encoder_ctx->video_width;
-    video_codec_data->codec_context->height = encoder_ctx->video_height;
+    /* Align codec context dimensions to 16 pixels for H.264 macroblock requirements.
+     * VAAPI hardware encoder requires surface dimensions to match codec_context exactly.
+     * The muxer uses encoder_ctx->video_width/height (original), so the container
+     * metadata records the correct display resolution regardless. */
+    if (video_defaults->codec_id == AV_CODEC_ID_H264) {
+        video_codec_data->codec_context->width = ((encoder_ctx->video_width + 15) / 16) * 16;
+        video_codec_data->codec_context->height = ((encoder_ctx->video_height + 15) / 16) * 16;
+    } else {
+        video_codec_data->codec_context->width = encoder_ctx->video_width;
+        video_codec_data->codec_context->height = encoder_ctx->video_height;
+    }
 
     video_codec_data->codec_context->flags |= video_defaults->flags;
     if (video_defaults->num_threads > 0)
@@ -2525,7 +2538,13 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
 
     is_vaapi =  HW_VAAPI_OK;
     swsframe   = getAvutil()->m_av_frame_alloc();
-    out_uuvv = (uint8_t *)malloc(encoder_ctx->video_width * encoder_ctx->video_height / 2);
+    /* Save the aligned dimensions the encoder was opened with for use in encode path.
+     * codec_context->width/height stay aligned (VAAPI requirement); muxer uses
+     * encoder_ctx->video_width/height directly, so the container records original resolution. */
+    vaapi_coded_w = video_codec_data->codec_context->width;
+    vaapi_coded_h = video_codec_data->codec_context->height;
+    out_uuvv = (uint8_t *)malloc(vaapi_coded_w * vaapi_coded_h / 2);
+    out_yy = (uint8_t *)malloc(vaapi_coded_w * vaapi_coded_h);
     fprintf(stderr, "Success to encoder_video_init_vaapi.\n");
     return (enc_video_ctx);
 #endif
@@ -2599,26 +2618,54 @@ int encoder_encode_video_vaapi(encoder_context_t *encoder_ctx, void *input_frame
             // video_codec_data->frame->data[1] = swsframe->data[1]; //Uv
         */
 
-        uint8_t *uv = out_uuvv;
-        uint8_t *iu = input_frame + size;
-        uint8_t *iv = input_frame + size + size / 4;
-        for (int hh = 0; hh < height; hh++) {
-            for (int ww = 0; ww < width / 4; ww++) {
-                *uv++ = *iu++;
-                *uv++ = *iv++;
-//               fprintf(stderr, "--hh--%d,--ww--%d\n",hh,ww);
+        /* Prepare NV12 frame for VAAPI, handling alignment if needed.
+         * vaapi_coded_w/h hold the aligned dimensions the encoder was opened with. */
+        uint8_t *y_plane = input_frame;
+        uint8_t *uv_plane = out_uuvv;
+        int aligned_width = vaapi_coded_w;
+        int aligned_height = vaapi_coded_h;
+
+        if (aligned_width != width || aligned_height != height) {
+            /* Input is smaller than codec context: build padded NV12 frame.
+             * Y plane: copy row by row into aligned-width linesize buffer.
+             * UV plane: interleave U/V with padding rows filled to neutral gray. */
+            uint8_t *iu = input_frame + size;
+            uint8_t *iv = input_frame + size + size / 4;
+
+            memset(out_yy, 0, aligned_width * aligned_height);
+            for (int row = 0; row < height; row++)
+                memcpy(out_yy + row * aligned_width, input_frame + row * width, width);
+            y_plane = out_yy;
+
+            memset(out_uuvv, 0x80, aligned_width * aligned_height / 2);
+            for (int hh = 0; hh < height / 2; hh++) {
+                for (int ww = 0; ww < width / 2; ww++) {
+                    out_uuvv[hh * aligned_width + ww * 2] = iu[hh * width / 2 + ww];
+                    out_uuvv[hh * aligned_width + ww * 2 + 1] = iv[hh * width / 2 + ww];
+                }
+            }
+        } else {
+            /* Dimensions already aligned: original NV12 interleaving */
+            uint8_t *uv = out_uuvv;
+            uint8_t *iu = input_frame + size;
+            uint8_t *iv = input_frame + size + size / 4;
+            for (int hh = 0; hh < height; hh++) {
+                for (int ww = 0; ww < width / 4; ww++) {
+                    *uv++ = *iu++;
+                    *uv++ = *iv++;
+                }
             }
         }
 
-        video_codec_data->frame->format = AV_PIX_FMT_NV12;  //AV_PIX_FMT_YUV420P;
-        video_codec_data->frame->width = width;
-        video_codec_data->frame->height = height;
+        video_codec_data->frame->format = AV_PIX_FMT_NV12;
+        video_codec_data->frame->width = aligned_width;
+        video_codec_data->frame->height = aligned_height;
 
-        video_codec_data->frame->data[0] = input_frame; //Y
-        video_codec_data->frame->data[1] = out_uuvv; //Uv
+        video_codec_data->frame->data[0] = y_plane; //Y
+        video_codec_data->frame->data[1] = uv_plane; //Uv
 
-        video_codec_data->frame->linesize[0] = width;
-        video_codec_data->frame->linesize[1] = width ;
+        video_codec_data->frame->linesize[0] = aligned_width;
+        video_codec_data->frame->linesize[1] = aligned_width;
         video_codec_data->frame->linesize[2] = 0;
     }
 
