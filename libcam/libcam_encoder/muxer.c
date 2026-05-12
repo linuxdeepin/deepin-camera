@@ -218,7 +218,7 @@ int encoder_write_audio_data(encoder_context_t *encoder_ctx)
                     1,
                     enc_audio_ctx->outbuf,
             (uint32_t)enc_audio_ctx->outbuf_coded_size,
-            (uint64_t)enc_audio_ctx->pts,
+            (uint64_t)enc_audio_ctx->original_pts,
                     enc_audio_ctx->flags);
             break;
 

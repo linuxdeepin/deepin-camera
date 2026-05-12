@@ -183,6 +183,7 @@ typedef struct _encoder_audio_context_t {
     int outbuf_coded_size;
 
     int64_t pts;
+    int64_t original_pts;    /* 纳秒时间戳，不被编码器覆盖，用于 muxer PTS 计算 */
     int64_t dts;
     int flags;
     int duration;
