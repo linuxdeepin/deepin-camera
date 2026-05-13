@@ -161,6 +161,12 @@ typedef struct _encoder_video_context_t {
     int flags;
     int duration;
 
+    /* VAAPI-specific state: aligned dimensions and working buffers */
+    int vaapi_coded_w;       /* aligned width for VAAPI encoding */
+    int vaapi_coded_h;       /* aligned height for VAAPI encoding */
+    uint8_t *vaapi_out_yy;   /* Y plane buffer with aligned linesize */
+    uint8_t *vaapi_out_uuvv; /* UV plane buffer with aligned layout */
+
 } encoder_video_context_t;
 
 /*Audio*/
