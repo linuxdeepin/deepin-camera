@@ -1545,6 +1545,10 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
         m_flashlightUnfoldBtn->setOpacity(102);
         m_filtersUnfoldBtn->setOpacity(102);
         m_exposureBtn->setOpacity(102);
+        m_flashlightUnfoldBtn->setIconOpacity(1);
+        m_delayUnfoldBtn->setIconOpacity(1);
+        m_filtersUnfoldBtn->setIconOpacity(1);
+        m_exposureBtn->setIconOpacity(1);
     } else {
         m_flashlightUnfoldBtn->setVisible(false);
         m_filtersUnfoldBtn->setVisible(false);
