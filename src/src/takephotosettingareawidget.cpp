@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -1545,6 +1545,10 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
         m_flashlightUnfoldBtn->setOpacity(102);
         m_filtersUnfoldBtn->setOpacity(102);
         m_exposureBtn->setOpacity(102);
+        m_flashlightUnfoldBtn->setIconOpacity(1);
+        m_delayUnfoldBtn->setIconOpacity(1);
+        m_filtersUnfoldBtn->setIconOpacity(1);
+        m_exposureBtn->setIconOpacity(1);
     } else {
         m_flashlightUnfoldBtn->setVisible(false);
         m_filtersUnfoldBtn->setVisible(false);
