@@ -16,7 +16,7 @@ extern "C" {
 
 DWIDGET_USE_NAMESPACE;
 
-#define MARGIN 5
+#define MARGIN 6
 #define IMAGE_SIZE 40
 #define BUTTON_SIZE (IMAGE_SIZE + MARGIN * 2)
 
