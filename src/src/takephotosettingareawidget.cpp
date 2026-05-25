@@ -152,7 +152,7 @@ void takePhotoSettingAreaWidget::initButtons()
     m_scrollAreaWidget->setAttribute(Qt::WA_TranslucentBackground, true);
     QVBoxLayout *scrollLayout = new QVBoxLayout(m_scrollAreaWidget);
     scrollLayout->setContentsMargins(0, 0, 0, 0);
-    scrollLayout->setSpacing(2);
+    scrollLayout->setSpacing(0);
     m_scrollAreaWidget->setLayout(scrollLayout);
     m_scrollArea = new QScrollArea(this);
     m_scrollArea->setFrameShape(QFrame::NoFrame);
