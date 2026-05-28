@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -155,17 +155,23 @@ void Settings::setNewResolutionList()
 
             for (int i = 0; i < resolutionDatabase.size(); i++) {
                 QStringList resolutiontemp = resolutionDatabase[i].split("x");
-                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
+                if (resolutiontemp.size() >= 2 &&
+                        v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt() &&
+                        v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt()) {
                     defres = i; //set selected resolution index
                     break;
                 }
             }
-
+            // 抑制中间态的 resolutionchanged, 仅在最后发射一次正确值
+            m_updatingResolution = true;
             resolutionmodeFamily->setData("items", resolutionDatabase);
-
-            //设置当前分辨率的索引
             m_settings->setOption(QString("outsetting.resolutionsetting.resolution"), defres);
+            QTimer::singleShot(0, this, [this, resolutionDatabase, defres]() {
+                m_updatingResolution = false;
+                if (defres >= 0 && defres < resolutionDatabase.size()) {
+                    emit resolutionchanged(resolutionDatabase[defres]);
+                }
+            });
         } else {
             resolutionDatabase.clear();
             resolutionDatabase.append(QString(tr("None")));
@@ -222,6 +228,8 @@ QVariant Settings::getBackOption(const QString &opt)
 void Settings::onValueChanged(const QString & key, const QVariant & value)
 {
     if (key.startsWith("outsetting.resolutionsetting.resolution")) {
+        if (m_updatingResolution)
+            return;
         auto mode_opt = m_settings->option("outsetting.resolutionsetting.resolution");
         if (value >= 0 && mode_opt->data("items").toStringList().size() > value.toInt()) {
             QString mode = mode_opt->data("items").toStringList()[value.toInt()];

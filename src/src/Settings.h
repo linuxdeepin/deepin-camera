@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -160,6 +160,7 @@ private:
     QString             m_configPath;
     QPointer<DSettings> m_settings;
     QSettingBackend*    m_backend;
+    bool                m_updatingResolution = false;
 };
 
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -1148,15 +1148,21 @@ void CMainWindow::settingDialog()
 
             }
 
-            for (int i = 0; i < resolutionDatabase.size(); i++) {
-                QStringList resolutiontemp = resolutionDatabase[i].split("x");
+            int savedRes = resolutionmodeFamily->value().toInt();
+            if (savedRes >= 0 && savedRes < resolutionDatabase.size()) {
+                defres = savedRes;
+            } else {
+                for (int i = 0; i < resolutionDatabase.size(); i++) {
+                    QStringList resolutiontemp = resolutionDatabase[i].split("x");
 
-                if ((v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt()) &&
-                        (v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt())) {
-                    defres = i; //设置分辨率下拉菜单当前索引
-                    break;
+                    if (resolutiontemp.size() >= 2 &&
+                            v4l2core_get_frame_width(get_v4l2_device_handler()) == resolutiontemp[0].toInt() &&
+                            v4l2core_get_frame_height(get_v4l2_device_handler()) == resolutiontemp[1].toInt()) {
+                        defres = i; //设置分辨率下拉菜单当前索引
+                        break;
+                    }
+
                 }
-
             }
 
             resolutionmodeFamily->setData("items", resolutionDatabase);
@@ -1994,6 +2000,7 @@ void CMainWindow::initRightButtons()
     connect(&m_fileWatcherUp, SIGNAL(fileChanged(const QString &)), this, SLOT(onDirectoryChanged(const QString &)));
     //摄像头切换成功信号
     connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString &)), this, SLOT(onSwitchCameraSuccess(const QString &)));
+    connect(m_videoPre, SIGNAL(switchCameraSuccess(const QString &)), &Settings::get(), SLOT(setNewResolutionList()));
     locateRightButtons();
 }
 
