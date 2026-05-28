@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -1217,9 +1217,7 @@ int videowidget::switchCamera(const char *device, const char *devName)
         m_imgPrcThread->start();
         DataManager::instance()->setdevStatus(CAM_CANUSE);
         //切换摄像机成功，发送设备名称信号到主界面。
-        if (devName && strlen(devName)) {
-            emit switchCameraSuccess(devName);
-        }
+        emit switchCameraSuccess(devName ? devName : "");
         dc::Settings::get().setBackOption("device", device);
     } else if (ret == E_FORMAT_ERR) {
         v4l2_dev_t *vd =  get_v4l2_device_handler();
