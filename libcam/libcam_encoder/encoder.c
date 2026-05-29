@@ -1582,6 +1582,61 @@ static int libav_get_encode(AVCodecContext *avctx, AVPacket *pkt, int *got_packe
 // }
 
 /*
+ * Ensure output buffer is large enough for the encoded packet.
+ * Dynamically resizes the buffer if needed (1.5x reserved space, capped at
+ * max(width*height/2, 2MB)). Drops the frame if it exceeds the reasonable
+ * upper limit or if realloc fails.
+ *
+ * Returns: 1 if data was successfully copied to outbuf,
+ *          0 if frame was dropped (caller must continue to next iteration).
+ */
+static int resize_outbuf_if_needed(encoder_video_context_t *enc_video_ctx,
+                                    encoder_context_t *encoder_ctx,
+                                    AVPacket *pkt)
+{
+    /* Guard against invalid negative pkt->size to prevent memcpy overflow,
+     * since negative int is implicitly converted to a huge size_t value. */
+    if (pkt->size < 0) {
+        fprintf(stderr, "ENCODER: invalid packet size %d, dropping frame\n", pkt->size);
+        return 0;
+    }
+
+    if (pkt->size <= enc_video_ctx->outbuf_size) {
+        memcpy(enc_video_ctx->outbuf, pkt->data, pkt->size);
+        return 1;
+    }
+
+    /* Buffer limit: width * height / 2, with 2MB minimum protection */
+    int max_reasonable_size = encoder_ctx->video_width * encoder_ctx->video_height / 2;
+    if (max_reasonable_size < 2 * 1024 * 1024)
+        max_reasonable_size = 2 * 1024 * 1024;
+
+    if (pkt->size > max_reasonable_size) {
+        fprintf(stderr, "ENCODER: packet size %d exceeds reasonable limit (%d), dropping frame\n",
+                pkt->size, max_reasonable_size);
+        return 0;
+    }
+
+    /* Reserve extra space (1.5x) to avoid frequent reallocations */
+    int alloc_size = pkt->size + (pkt->size >> 1);
+    if (alloc_size > max_reasonable_size)
+        alloc_size = max_reasonable_size;
+
+    fprintf(stderr, "ENCODER: resizing output buffer (%i -> %i, reserved %i)\n",
+            enc_video_ctx->outbuf_size, pkt->size, alloc_size);
+    uint8_t *new_buf = realloc(enc_video_ctx->outbuf, alloc_size);
+    if (new_buf) {
+        enc_video_ctx->outbuf = new_buf;
+        enc_video_ctx->outbuf_size = alloc_size;
+        memcpy(enc_video_ctx->outbuf, pkt->data, pkt->size);
+        return 1;
+    }
+
+    fprintf(stderr, "ENCODER: failed to allocate %d bytes, dropping frame\n", alloc_size);
+    return 0;
+}
+
+/*
  * encode video frame
  * args:
  *   encoder_ctx - pointer to encoder context
@@ -1702,10 +1757,11 @@ int encoder_encode_video(encoder_context_t *encoder_ctx, void *input_frame)
         enc_video_ctx->flags = pkt->flags;
         enc_video_ctx->duration = pkt->duration;
 
-        if (pkt->size <= enc_video_ctx->outbuf_size)
-            memcpy(enc_video_ctx->outbuf, pkt->data, pkt->size);
-        else
-            fprintf(stderr, "video packet size is bigger than output buffer(%i>%i)\n", pkt->size, enc_video_ctx->outbuf_size);
+        if (!resize_outbuf_if_needed(enc_video_ctx, encoder_ctx, pkt)) {
+            last_video_pts = enc_video_ctx->pts;
+            getLoadLibsInstance()->m_av_packet_unref(pkt);
+            continue;
+        }
 
         /* free any side data since we cannot return it */
         if (pkt->side_data_elems > 0) {
@@ -2682,10 +2738,11 @@ int encoder_encode_video_vaapi(encoder_context_t *encoder_ctx, void *input_frame
         enc_video_ctx->flags = pkt->flags;
         enc_video_ctx->duration = pkt->duration;
 
-        if (pkt->size <= enc_video_ctx->outbuf_size)
-            memcpy(enc_video_ctx->outbuf, pkt->data, pkt->size);
-        else
-            fprintf(stderr, "video packet size is bigger than output buffer(%i>%i)\n", pkt->size, enc_video_ctx->outbuf_size);
+        if (!resize_outbuf_if_needed(enc_video_ctx, encoder_ctx, pkt)) {
+            last_video_pts = enc_video_ctx->pts;
+            getLoadLibsInstance()->m_av_packet_unref(pkt);
+            continue;
+        }
 
         /* free any side data since we cannot return it */
         if (pkt->side_data_elems > 0) {
