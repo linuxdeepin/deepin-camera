@@ -25,7 +25,7 @@
 #include "ac-deepin-camera-define.h"
 #include "stub/addr_pri.h"
 #include "datamanager.h"
-#include <QtTest/QTest>
+#include <QTest>
 
 
 ACCESS_PRIVATE_FUN(videowidget, void(), showNocam);
@@ -36,7 +36,7 @@ ACCESS_PRIVATE_FUN(videowidget, void(), stopEverything);
 ACCESS_PRIVATE_FUN(videowidget, void(), onReachMaxDelayedFrames);
 ACCESS_PRIVATE_FUN(videowidget, void(), flash);
 ACCESS_PRIVATE_FUN(videowidget, void(QGraphicsView *view), forbidScrollBar);
-ACCESS_PRIVATE_FUN(videowidget, void(PRIVIEW_ENUM_STATE state), showCountDownLabel);
+ACCESS_PRIVATE_FUN(videowidget, void(PREVIEW_ENUM_STATE state), showCountDownLabel);
 ACCESS_PRIVATE_FUN(videowidget, void(const QString &resolution), slotresolutionchanged);
 
 ACCESS_PRIVATE_FIELD(videowidget, QGraphicsTextItem *, m_pCamErrItem);

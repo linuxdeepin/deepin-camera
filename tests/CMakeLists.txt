@@ -1,10 +1,11 @@
 
+# 定义需要的cmake版本
+cmake_minimum_required(VERSION 3.16)
+
 # 设置工程名字
 project(deepin-camera-test VERSION 1.0.0)
 set(CMD_NAME deepin-camera-test)
 set(TARGET_NAME deepin-camera-test)
-# 定义需要的cmake版本
-cmake_minimum_required(VERSION 3.0)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
@@ -37,24 +38,35 @@ set(PROJECT_INCLUDE
     ./stub
     ${CMAKE_INSTALL_PREFIX}/include
     ${CMAKE_INSTALL_PREFIX}/include/libusb-1.0
+    /usr/include/libusb-1.0
     ${CMAKE_INSTALL_PREFIX}/include/SDL2
     ${PROJECT_SOURCE_DIR}/../deepin-camera
     ${PROJECT_SOURCE_DIR}/googletest/include
     )
-# 设置Qt模块
-set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg)
+# 设置Qt6模块
+set(QtModule Core Gui Widgets DBus Concurrent LinguistTools Multimedia PrintSupport Svg SvgWidgets OpenGLWidgets Xml Test)
 
-# 查找Qt相关的库链接
-find_package(Qt5 REQUIRED ${QtModule})
+# 查找Qt6相关的库链接
+find_package(Qt6 REQUIRED ${QtModule})
 find_package(PkgConfig REQUIRED)
 
 file (GLOB_RECURSE CXXSOURCES
     ./*.cpp
     ../src/src/basepub/*.cpp
-    ../src/src/*.cpp
     ../src/src/qtsingleapplication/*.cpp
     ./stub/*.cpp
     )
+
+# 收集 src/src/*.cpp (排除 videosurface.cpp)
+file(GLOB_RECURSE SRC_CXXSOURCES ../src/src/*.cpp)
+
+# 将 src/src/*.cpp (排除 videosurface.cpp) 加入编译
+foreach(src_file ${SRC_CXXSOURCES})
+    get_filename_component(src_name ${src_file} NAME)
+    if(NOT src_name STREQUAL "videosurface.cpp")
+        list(APPEND CXXSOURCES ${src_file})
+    endif()
+endforeach()
 
 file (GLOB_RECURSE CSOURCES
     ../src/src/*.c
@@ -82,40 +94,55 @@ add_executable( ${TARGET_NAME} ${CXXSOURCES} ${CSOURCES} ${RESOURCES}
 
 
 pkg_check_modules(3rd_lib REQUIRED
-        dtkgui
-        dtkwidget gstreamer-1.0 gstreamer-app-1.0
+        dtk6gui
+        dtk6widget
+        gstreamer-1.0
+        gstreamer-app-1.0
         pciaccess
-#        libv4l2
-#        libudev
-#        libusb-1.0
-#        libavcodec
-#        libavutil
-#        libavformat
-#        libswscale
-#        libpng
-#        sdl2
-#        libpulse
-#        libswresample
-#        libffmpegthumbnailer
+        libva
+        libavcodec
+        libavutil
+        libavformat
+        libswscale
+        libswresample
+        libudev
         )
 # 添加第三方库的所有文件夹路径到工程中来(注意 *_INCLUDE_DIRS)
 
 target_include_directories(${TARGET_NAME} PUBLIC ${3rd_lib_INCLUDE_DIRS} ${PROJECT_INCLUDE} ${GLOB_RECURSE})
 # 将第三方库链接进来(注意 *_LIBRARIES)
-target_link_libraries(${PROJECT_NAME} ${3rd_lib_LIBRARIES}
+target_link_libraries(${TARGET_NAME} PRIVATE
+    ${3rd_lib_LIBRARIES}
     gtest
     pthread
-    Qt5Test
+    Qt6::Test
     dl
-#    portaudio
-#    asound
-#    z
+    va
+    va-x11
 
-    imagevisualresult
+    imagevisualresult6
     )
 
-# 将工程与Qt模块链接起来
-qt5_use_modules(${PROJECT_NAME} ${QtModule})
+# 将工程与Qt6模块链接起来
+target_link_libraries(${TARGET_NAME} PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::DBus
+    Qt6::Concurrent
+    Qt6::Multimedia
+    Qt6::PrintSupport
+    Qt6::Svg
+    Qt6::SvgWidgets
+    Qt6::OpenGLWidgets
+)
+
+# 链接DTK6库
+target_link_libraries(${TARGET_NAME} PRIVATE
+    dtk6core
+    dtk6gui
+    dtk6widget
+)
 
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})

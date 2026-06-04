@@ -10,10 +10,10 @@
 #include <QVariantMap>
 #include <QStandardPaths>
 
-#include <DWindowMaxButton>
-#include <DWindowMinButton>
-#include <DWindowCloseButton>
-#include <DPrintPreviewDialog>
+#include <dtk6/DWidget/DWindowMaxButton>
+#include <dtk6/DWidget/DWindowMinButton>
+#include <dtk6/DWidget/DWindowCloseButton>
+#include <dtk6/DWidget/DPrintPreviewDialog>
 
 #include "MainwindowTest.h"
 #include "DButtonBox"

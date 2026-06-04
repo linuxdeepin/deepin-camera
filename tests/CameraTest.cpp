@@ -24,21 +24,22 @@
 #include "src/majorimageprocessingthread.h"
 #include "src/capplication.h"
 #include "src/camera.h"
-#include "src/videosurface.h"
 #include "src/basepub/datamanager.h"
 #include "ac-deepin-camera-define.h"
 #include "stub/stub_function.h"
 #include "addr_pri.h"
 
 
-#include <QtTest/qtest.h>
-#include <QVideoSurfaceFormat>
+#include <QTest>
+#include <QtMultimedia/QVideoFrame>
 
 ACCESS_PRIVATE_FUN(CMainWindow, void(), initCameraConnection);
 
 ACCESS_PRIVATE_FIELD(CMainWindow, bool, m_bRecording);
+#if QT_VERSION_MAJOR <= 5
 ACCESS_PRIVATE_FIELD(Camera, QString, m_curDevName);
 ACCESS_PRIVATE_FIELD(Camera, VideoSurface*, m_videoSurface);
+#endif
 
 CameraTest::CameraTest()
 {
@@ -81,6 +82,7 @@ void CameraTest::TearDown()
  */
 TEST_F(CameraTest, refreshCamera)
 {
+#if QT_VERSION_MAJOR <= 5
     // 重启摄像头
     Stub_Function::resetSub(ADDR(Camera, getSupportResolutionsSize), ADDR(Stub_Function, getSupportResolutionsSize));
     Stub_Function::resetSub(ADDR(QCamera, status), ADDR(Stub_Function, cameraStatus));
@@ -94,6 +96,12 @@ TEST_F(CameraTest, refreshCamera)
     access_private_field::Cameram_curDevName(*Camera::instance()) = "/dev/video4";
     m_devnumMonitor->existDevice();
     access_private_field::Cameram_curDevName(*Camera::instance()) = "";
+#else
+    // Qt6 下仅测试设备监控功能
+    Stub_Function::resetSub(ADDR(DataManager, getdevStatus), ADDR(Stub_Function, getNoDevStatus));
+    m_devnumMonitor->existDevice();
+    Stub_Function::clearSub(ADDR(DataManager, getdevStatus));
+#endif
 }
 
 /**
@@ -145,8 +153,9 @@ TEST_F(CameraTest, recordFunction)
     QTest::qWait(500);
 }
 
+#if QT_VERSION_MAJOR <= 5
 /**
- *  @brief videoSurface功能
+ *  @brief videoSurface功能 (Qt5 only)
  */
 TEST_F(CameraTest, videoSurfaceFunction)
 {
@@ -158,7 +167,7 @@ TEST_F(CameraTest, videoSurfaceFunction)
 }
 
 /**
- *  @brief 发送一帧图片
+ *  @brief 发送一帧图片 (Qt5 only)
  */
 TEST_F(CameraTest, presentImage)
 {
@@ -175,5 +184,5 @@ TEST_F(CameraTest, presentImage)
     m_processThread->m_bTake = false;
     Stub_Function::clearSub(ADDR(QVideoFrame, map));
 }
-
+#endif
 

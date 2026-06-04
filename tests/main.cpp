@@ -4,14 +4,16 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include <sanitizer/asan_interface.h>
-#include <QtTest/QTest>
-#include <DApplication>
-#include <DMainWindow>
-#include <DWidgetUtil>
+#include <QTest>
+#include <dtk6/DWidget/DApplication>
+#include <dtk6/DWidget/DMainWindow>
+#include <dtk6/DWidget/DWidgetUtil>
 #include <QSharedMemory>
-#include <DLog>
-#include <DApplicationSettings>
-#include <QCameraInfo>
+#include <dtk6/DCore/DLog>
+#if DTK_VERSION < DTK_VERSION_CHECK(6, 0, 0, 0)
+#include <dtk6/DWidget/dapplicationsettings>
+#endif
+#include <QCameraDevice>
 #include "SettingTest.h"
 #include "src/accessibility/ac-deepin-camera-define.h"
 
@@ -25,8 +27,10 @@ int main(int argc, char *argv[])
     testing::InitGoogleTest(&argc, argv);
     //加载翻译
 
-    //设置属性
+    //设置属性 (Qt6中AA_UseHighDpiPixmaps已默认启用，无需手动设置)
+#if QT_VERSION_MAJOR <= 5
     qApp->setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
 
     qApp->setOrganizationName("deepin");
     qApp->setApplicationName("deepin-camera");
@@ -43,7 +47,9 @@ int main(int argc, char *argv[])
 
     qApp->setApplicationDescription("This is camera.");
 
+#if DTK_VERSION < DTK_VERSION_CHECK(6, 0, 0, 0)
     DApplicationSettings saveTheme;
+#endif
 
     //仅允许打开一个相机，设置共享内存段
     QSharedMemory shared_memory("deepincamera");

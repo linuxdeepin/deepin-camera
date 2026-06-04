@@ -21,7 +21,7 @@
 #include "src/mainwindow.h"
 #include "src/capplication.h"
 #include "stub/stub_function.h"
-#include <QtTest/qtest.h>
+#include <QTest>
 
 DevNumberTest::DevNumberTest()
 {

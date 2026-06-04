@@ -24,7 +24,7 @@
 #include "src/accessibility/ac-deepin-camera-define.h"
 #include "addr_pri.h"
 
-#include <QtTest/QTest>
+#include <QTest>
 
 using namespace Dtk::Core;
 
@@ -306,7 +306,12 @@ TEST_F(TakePhotoSettingTest, exposureSlider)
 
         QTest::qWait(500);
         QPoint p(slider->rect().topLeft() + QPoint(10, 20));
+#if QT_VERSION_MAJOR <= 5
         QWheelEvent wheelEvent(p, 40, Qt::MiddleButton, Qt::NoModifier);
+#else
+        // Qt6: QWheelEvent(pos, globalPos, pixelDelta, angleDelta, buttons, modifiers, phase, inverted)
+        QWheelEvent wheelEvent(QPointF(p), QPointF(slider->mapToGlobal(p)), QPoint(0, 40), QPoint(0, 40), Qt::NoButton, Qt::NoModifier, Qt::ScrollBegin, false);
+#endif
         QApplication::sendEvent(slider, &wheelEvent);
 
         QTest::qWait(500);

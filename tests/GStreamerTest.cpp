@@ -29,8 +29,7 @@
 #include "addr_pri.h"
 
 
-#include <QtTest/qtest.h>
-#include <QVideoSurfaceFormat>
+#include <QTest>
 
 ACCESS_PRIVATE_FUN(CMainWindow, void(), initCameraConnection);
 

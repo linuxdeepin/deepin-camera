@@ -1,5 +1,5 @@
 #include <QTimer>
-#include <QtTest/QTest>
+#include <QTest>
 
 #include "ClosedialogTest.h"
 

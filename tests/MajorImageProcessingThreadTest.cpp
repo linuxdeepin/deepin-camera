@@ -21,7 +21,7 @@
 #include "src/majorimageprocessingthread.h"
 #include "src/capplication.h"
 #include "stub/stub_function.h"
-#include <QtTest/qtest.h>
+#include <QTest>
 extern "C"
 {
 #include "v4l2_devices.h"

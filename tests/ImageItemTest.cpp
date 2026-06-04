@@ -26,7 +26,7 @@
 #include "datamanager.h"
 #include "stub/addr_pri.h"
 #include "src/imageitem.h"
-#include <QtTest/QTest>
+#include <QTest>
 #include <QShortcut>
 
 

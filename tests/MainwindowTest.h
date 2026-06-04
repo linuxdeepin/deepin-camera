@@ -4,16 +4,18 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 
-#include <QtTest/QTest>
+#include <QTest>
 #include <QSharedMemory>
 
-#include <DApplication>
-#include <DMainWindow>
-#include <DWidgetUtil>
-#include <DWindowOptionButton>
-#include <DMenu>
-#include <DLog>
-#include <DApplicationSettings>
+#include <dtk6/DWidget/DApplication>
+#include <dtk6/DWidget/DMainWindow>
+#include <dtk6/DWidget/DWidgetUtil>
+#include <dtk6/DWidget/DWindowOptionButton>
+#include <dtk6/DWidget/DMenu>
+#include <dtk6/DCore/DLog>
+#if DTK_VERSION < DTK_VERSION_CHECK(6, 0, 0, 0)
+#include <dtk6/DWidget/dapplicationsettings>
+#endif
 
 #include "src/mainwindow.h"
 #include "src/capplication.h"

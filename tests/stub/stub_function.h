@@ -2,7 +2,7 @@
 #define STUB_FUNCTION_H
 
 #include <QObject>
-#include <QCamera>
+#include <QCameraDevice>
 #include "../../src/devnummonitor.h"
 #include "../../src/imageitem.h"
 #include "datamanager.h"
@@ -139,9 +139,13 @@ public:
 
     // Camera类相关桩函数--------------------begin
     QList<QSize> getSupportResolutionsSize();
+#if QT_VERSION_MAJOR <= 5
     QCamera::Status cameraStatus();
+#endif
     DeviceStatus getNoDevStatus();
+#if QT_VERSION_MAJOR <= 5
     bool videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode);
+#endif
     EncodeEnv qCameraEnv();
     EncodeEnv gstreamerEnv();
     int recordingState();
