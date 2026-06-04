@@ -27,7 +27,7 @@
 #include "ac-deepin-camera-define.h"
 #include "stub/addr_pri.h"
 #include "datamanager.h"
-#include <QtTest/qtest.h>
+#include <QTest>
 
 RollingBoxTest::RollingBoxTest()
 {

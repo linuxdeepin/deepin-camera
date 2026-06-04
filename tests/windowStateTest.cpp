@@ -22,7 +22,7 @@
 #include "src/mainwindow.h"
 #include "src/windowstatethread.h"
 #include "stub/stub_function.h"
-#include <QtTest/qtest.h>
+#include <QTest>
 #include "addr_pri.h"
 ACCESS_PRIVATE_FUN(windowStateThread, void(), run);
 

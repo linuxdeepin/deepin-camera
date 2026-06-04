@@ -388,20 +388,24 @@ QList<QSize> Stub_Function::getSupportResolutionsSize()
     return resolutions;
 }
 
+#if QT_VERSION_MAJOR <= 5
 QCamera::Status Stub_Function::cameraStatus()
 {
     return QCamera::UnavailableStatus;
 }
+#endif
 
 Stub_Function::DeviceStatus Stub_Function::getNoDevStatus()
 {
     return NOCAM;
 }
 
+#if QT_VERSION_MAJOR <= 5
 bool Stub_Function::videoFrameMapReadOnly(QAbstractVideoBuffer::MapMode mode)
 {
     return true;
 }
+#endif
 
 EncodeEnv Stub_Function::qCameraEnv()
 {

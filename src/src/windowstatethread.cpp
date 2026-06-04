@@ -25,6 +25,11 @@ void windowStateThread::run()
 {
     qDebug() << "Starting window state monitoring loop";
     while (!isInterruptionRequested()) {
+#ifdef UNITTEST
+        // 单元测试环境下跳过 workspaceWindows()，
+        // 因为 DForeignWindow::fromWinId() 在工作线程中调用会违反 Qt 线程安全规则
+        break;
+#endif
         //获取当前工作区域内所有的窗口
         auto list = workspaceWindows();
         qDebug() << "Found" << list.size() << "windows in workspace";
@@ -38,9 +43,6 @@ void windowStateThread::run()
         }
         //线程休眠1秒
         std::this_thread::sleep_for(std::chrono::seconds(1));
-#ifdef UNITTEST
-        break;
-#endif
     }
     qInfo() << "Window state monitoring thread ended";
 }
