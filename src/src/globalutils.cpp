@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 ~ 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -11,11 +11,17 @@
 #include <QDBusArgument>
 #include <QDBusReply>
 
+#ifdef DTKCORE_CLASS_DConfigFile
+#include <DConfig>
+#include <memory>
+#endif
+
 // 相机配置文件
 const QString CAMERA_CONF_PATH = "/usr/share/deepin-camera/camera.conf";
 #define LOW_PERFORMANCE_BOARD "LowPerformanceBoard"
 
 QStringList GlobalUtils::m_LowPerformanceBoards = QStringList();
+bool GlobalUtils::m_IsLowPerformanceDevice = false;
 
 struct DMIInfo {
     QString biosManufacturer;
@@ -56,6 +62,12 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, DMIInfo &mystruct
 
 bool GlobalUtils::isLowPerformanceBoard()
 {
+#ifdef DTKCORE_CLASS_DConfigFile
+    if (m_IsLowPerformanceDevice) {
+        return true;
+    }
+#endif
+
     qDBusRegisterMetaType<DMIInfo>();
     QDBusInterface *monitorInterface = new QDBusInterface("com.deepin.system.SystemInfo", "/com/deepin/system/SystemInfo", "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
     if (!monitorInterface->isValid())
@@ -86,4 +98,13 @@ void GlobalUtils::loadCameraConf()
     } else {
         m_LowPerformanceBoards = QStringList();
     }
+
+#ifdef DTKCORE_CLASS_DConfigFile
+    m_IsLowPerformanceDevice = false;
+    std::unique_ptr<DTK_CORE_NAMESPACE::DConfig> dconfig(
+        DTK_CORE_NAMESPACE::DConfig::create("org.deepin.camera", "org.deepin.camera.encode"));
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("isLowPerformanceDevice")) {
+        m_IsLowPerformanceDevice = dconfig->value("isLowPerformanceDevice").toBool();
+    }
+#endif
 }
