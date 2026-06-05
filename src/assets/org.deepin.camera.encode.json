@@ -124,6 +124,16 @@
             "description": "Set preferred resolution",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "isLowPerformanceDevice": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "is low performance device",
+            "name[zh_CN]": "是否是低性能设备",
+            "description": "Is low performance device",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
