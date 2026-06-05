@@ -19,6 +19,7 @@ public:
 
 private:
     static QStringList m_LowPerformanceBoards;
+    static bool m_IsLowPerformanceDevice;
 };
 
 #endif // GLOBALUTILS_H
