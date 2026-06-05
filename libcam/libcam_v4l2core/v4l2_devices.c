@@ -345,6 +345,21 @@ int enum_v4l2_devices()
             continue; /*next dir entry*/
         }
         
+        int num_card_keywords = 0;
+        const char **card_keywords = get_card_keywords(&num_card_keywords);
+
+        int is_card_keyword_device = 0;
+        for (int i = 0; i < num_card_keywords; i++) {
+            if(card_keywords[i] != NULL && strstr((const char *)v4l2_cap.card, card_keywords[i]) != NULL) {
+                is_card_keyword_device = 1;
+                break;
+            }
+        }
+        if(is_card_keyword_device) {
+            getV4l2()->m_v4l2_close(fd);
+            continue; /*next dir entry*/
+        }
+
         // when project_id equals UOS2025073011543 filter out ISP devices
         const char* current_project_id = get_project_id();
         if (current_project_id != NULL && strcmp(current_project_id, UOS2025073011543) == 0) {

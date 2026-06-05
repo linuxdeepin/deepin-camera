@@ -465,6 +465,32 @@ void set_project_id(const char *project_id);
 const char* get_project_id(void);
 
 /*
+ * set camera card keywords
+ * args:
+ *    keywords - camera card keyword string array. Each string is copied by this function;
+ *               caller retains ownership of the input array and strings.
+ *    count - keyword count
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_card_keywords(const char **keywords, int count);
+
+/*
+ * get camera card keywords
+ * args:
+ *    count - output keyword count
+ *
+ * asserts:
+ *    none
+ *
+ * returns: pointer to camera card keyword string array
+ */
+const char** get_card_keywords(int *count);
+
+/*
  * set libva driver name
  * args:
  *    name - libva driver name string

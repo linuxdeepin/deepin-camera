@@ -30,6 +30,7 @@
 #include <string.h>
 #include <errno.h>
 #include <assert.h>
+#include <ctype.h>
 #include <math.h>
 /* support for internationalization - i18n */
 #include <locale.h>
@@ -119,6 +120,38 @@ static char status_message[80];
 static int encode_thread_running = 0;
 
 static char project_id[200];
+
+static char **card_keywords = NULL;
+static int card_keyword_count = 0;
+
+static int is_invalid_card_keyword(const char *keyword)
+{
+    if (keyword == NULL || keyword[0] == '\0') {
+        return 1;
+    }
+
+    for (const char *p = keyword; *p != '\0'; p++) {
+        if (!isspace((unsigned char)*p)) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+static void clear_card_keywords(void)
+{
+    if (card_keywords == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < card_keyword_count; i++) {
+        free(card_keywords[i]);
+    }
+    free(card_keywords);
+    card_keywords = NULL;
+    card_keyword_count = 0;
+}
 
 void set_video_time_capture(double video_time)
 {
@@ -1401,6 +1434,52 @@ void set_project_id(const char *id)
 const char* get_project_id(void)
 {
     return project_id;
+}
+
+void set_card_keywords(const char **keywords, int count)
+{
+    clear_card_keywords();
+
+    if (keywords == NULL || count <= 0) {
+        return;
+    }
+
+    int valid_count = 0;
+    for (int i = 0; i < count; i++) {
+        if (!is_invalid_card_keyword(keywords[i])) {
+            valid_count++;
+        }
+    }
+
+    if (valid_count == 0) {
+        return;
+    }
+
+    card_keywords = calloc((size_t)valid_count, sizeof(char *));
+    if (card_keywords == NULL) {
+        fprintf(stderr, "deepin-camera: failed to allocate card keywords\n");
+        return;
+    }
+
+    for (int i = 0; i < count; i++) {
+        if (is_invalid_card_keyword(keywords[i])) {
+            continue;
+        }
+
+        card_keywords[card_keyword_count] = strdup(keywords[i]);
+        if (card_keywords[card_keyword_count] != NULL) {
+            card_keyword_count++;
+        }
+    }
+}
+
+const char** get_card_keywords(int *count)
+{
+    if (count != NULL) {
+        *count = card_keyword_count;
+    }
+
+    return (const char **)card_keywords;
 }
 
 void set_libva_driver_name(const char *name)

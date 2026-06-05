@@ -108,3 +108,29 @@ void GlobalUtils::loadCameraConf()
     }
 #endif
 }
+
+QStringList GlobalUtils::parseStringListConfig(const QVariant &value)
+{
+    QStringList rawList;
+
+    if (value.type() == QVariant::StringList) {
+        rawList = value.toStringList();
+    } else if (value.type() == QVariant::List) {
+        const QVariantList variantList = value.toList();
+        for (const QVariant &item : variantList) {
+            if (item.type() == QVariant::String) {
+                rawList.append(item.toString());
+            }
+        }
+    } else {
+        return QStringList();
+    }
+
+    QStringList result;
+    for (const QString &keyword : rawList) {
+        if (!keyword.trimmed().isEmpty()) {
+            result.append(keyword);
+        }
+    }
+    return result;
+}
