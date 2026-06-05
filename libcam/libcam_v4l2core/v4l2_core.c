@@ -1710,10 +1710,7 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 		if (is_valid_resolution(w, h))
 		{
 			// 找出首选分辨率
-			printf("V4L2_CORE: check valid resolution, width: %d, height: %d, preferred width: %d, preferred height: %d\n",
-					w, h, pref_w, pref_h);
 			if (!found_preferred && pref_w != 0 && pref_h != 0 && w == pref_w && h == pref_h) {
-				printf("V4L2_CORE: preferred resolution found, width: %d, height: %d\n", w, h);
 				found_preferred = 1;
 			}
 
@@ -1724,20 +1721,17 @@ void v4l2core_prepare_valid_resolution(v4l2_dev_t *vd)
 			}
 		}
 	}
-	printf("V4L2_CORE: max resolution found, width: %d, height: %d\n", max_width, max_height);
 	if (found_preferred) {
 		// 有首选分辨率，使用首选分辨率
-		printf("V4L2_CORE: use preferred resolution, width: %d, height: %d\n", pref_w, pref_h);
 		my_width  = pref_w;
 		my_height = pref_h;
 	} else {
 		// 没有首选分辨率，使用最大分辨率
-		printf("V4L2_CORE: use max resolution, width: %d, height: %d\n", max_width, max_height);
 		my_width  = max_width;
 		my_height = max_height;
 		// 极端情况，没有可用分辨率，发出错误提示
 		if (max_width == 0 || max_height == 0) {
-			printf("V4L2_CORE: ERROR: no valid resolution found!\n");
+			fprintf(stderr, "V4L2_CORE: ERROR: no valid resolution found!\n");
 		}
 	}
 }
