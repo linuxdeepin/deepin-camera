@@ -102,6 +102,16 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
+        "CardKeywords": {
+            "value": ["IR Cam", "IR Camera", "Infrared", "IR_", "-IR", "ir_cam"],
+            "serial": 0,
+            "flags": ["global"],
+            "name": "camera card keywords",
+            "name[zh_CN]": "摄像头卡片名称关键字",
+            "description": "Set camera card name keywords",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
         "preferredResolution": {
             "value": "",
             "serial": 0,

@@ -12,6 +12,7 @@ extern "C" {
 #include "cameraconfig.h"
 #include "acobjectlist.h"
 #include "dbus_adpator.h"
+#include "globalutils.h"
 #include <datamanager.h>
 
 #ifdef DTKCORE_CLASS_DConfigFile
@@ -29,6 +30,8 @@ extern "C" {
 
 #include <QSharedMemory>
 #include <QTime>
+#include <QByteArray>
+#include <QVector>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -203,6 +206,23 @@ int main(int argc, char *argv[])
         QStringList deviceBlacklist = dconfig->value("deviceBlacklist").toStringList();
         qInfo() << "device blacklist:" << deviceBlacklist;
         DataManager::instance()->setDeviceBlacklist(deviceBlacklist);
+    }
+
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("CardKeywords")) {
+        QStringList cardKeywords = GlobalUtils::parseStringListConfig(dconfig->value("CardKeywords"));
+        QVector<QByteArray> keywordBytes;
+        keywordBytes.reserve(cardKeywords.size());
+        for (const QString &keyword : cardKeywords) {
+            keywordBytes.append(keyword.toUtf8());
+        }
+
+        QVector<const char *> keywordData;
+        keywordData.reserve(keywordBytes.size());
+        for (const QByteArray &keyword : keywordBytes) {
+            keywordData.append(keyword.constData());
+        }
+        qInfo() << "card keywords:" << cardKeywords;
+        set_card_keywords(keywordData.data(), keywordData.size());
     }
 
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("preferredResolution")) {

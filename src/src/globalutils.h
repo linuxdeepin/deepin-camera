@@ -7,6 +7,8 @@
 #define GLOBALUTILS_H
 
 #include <QString>
+#include <QStringList>
+#include <QVariant>
 
 class GlobalUtils
 {
@@ -16,6 +18,8 @@ public:
 
     // 加载相机配置
     static void loadCameraConf();
+
+    static QStringList parseStringListConfig(const QVariant &value);
 
 private:
     static QStringList m_LowPerformanceBoards;
