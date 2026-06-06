@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="cs">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="cs">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -263,11 +261,11 @@
     </message>
     <message>
         <source>mp4</source>
-        <translation>mp4</translation>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation>webm</translation>
+        <translation>WebM</translation>
     </message>
 </context>
 <context>
