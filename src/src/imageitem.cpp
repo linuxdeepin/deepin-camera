@@ -25,6 +25,8 @@
 #include <QDir>
 #include <QTime>
 #include <QThread>
+#include <QDBusPendingCall>
+#include <QDBusPendingCallWatcher>
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 
 extern "C" {
@@ -365,16 +367,42 @@ void ImageItem::initShortcut()
 void ImageItem::openFile()
 {
     qDebug() << "Function started: openFile";
-    QFileInfo fileInfo(m_path);
-    QString program("dde-file-manager");  // dbus调用失败，通过文管打开
-    QStringList arguments;
-    if (m_path.isEmpty()) {
+    const QString filePath = m_path;
+    QFileInfo fileInfo(filePath);
+    if (filePath.isEmpty()) {
         qWarning() << "Cannot open file: path is empty";
         return;
     }
 
     bool ret = false;
     QProcess *myProcess = new QProcess(this);
+    auto openWithBackup = [filePath, fileInfo, myProcess]() {
+        QString program;
+        QStringList arguments;
+        bool opened = false;
+
+        qDebug() << "Using backup method to open file";
+        if (fileInfo.suffix() == "jpg") {
+            program = "deepin-image-viewer";  //用看图打开
+            arguments << filePath;
+            qDebug() << "Attempting to open image with deepin-image-viewer";
+        } else {
+            program = "deepin-movie"; //用影院打开
+            arguments << filePath;
+            qDebug() << "Attempting to open video with deepin-movie";
+        }
+        opened = myProcess->startDetached(program, arguments);
+
+        if (!opened) { //打开失败，调用文管选择"打开方式"窗口
+            qWarning() << "Failed to open file with default applications, trying file manager";
+            arguments.clear();
+            program = "dde-file-manager";
+            arguments << "-o" << filePath;
+            opened = myProcess->startDetached(program, arguments);
+        }
+
+        return opened;
+    };
 
     // check if os edition on v23 or later
     static const int kMinOsEdition = 23;
@@ -387,15 +415,19 @@ void ImageItem::openFile()
             //用看图打开
             QDBusMessage message =
                 QDBusMessage::createMethodCall("com.deepin.imageViewer", "/", "com.deepin.imageViewer", "openImageFile");
-            message << m_path;
-            QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
-
-            if (retMessage.type() != QDBusMessage::ErrorMessage) {
-                ret = true;
-                qDebug() << "Successfully opened image with deepin-image-viewer via DBus";
-            } else {
-                qWarning() << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
-            }
+            message << filePath;
+            QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(message), this);
+            connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, openWithBackup]() {
+                const QDBusMessage retMessage = watcher->reply();
+                if (retMessage.type() != QDBusMessage::ErrorMessage) {
+                    qDebug() << "Successfully opened image with deepin-image-viewer via DBus";
+                } else {
+                    qWarning() << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
+                    openWithBackup();
+                }
+                watcher->deleteLater();
+            });
+            ret = true;
         } else {
             //用影院打开
 #if 0
@@ -408,44 +440,29 @@ void ImageItem::openFile()
             ret = myProcess->startDetached(program, arguments);
 #else
             QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie", "/", "com.deepin.movie", "openFile");
-            message << m_path;
-            QDBusMessage retMessage = QDBusConnection::sessionBus().call(message);
-
-            if (retMessage.type() != QDBusMessage::ErrorMessage) {
-                ret = true;
-                qDebug() << "Successfully opened video with deepin-movie via DBus";
-            } else {
-                qWarning() << "Failed to open video with deepin-movie via DBus:" << retMessage.errorMessage();
-            }
+            message << filePath;
+            QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(message), this);
+            connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, openWithBackup]() {
+                const QDBusMessage retMessage = watcher->reply();
+                if (retMessage.type() != QDBusMessage::ErrorMessage) {
+                    qDebug() << "Successfully opened video with deepin-movie via DBus";
+                } else {
+                    qWarning() << "Failed to open video with deepin-movie via DBus:" << retMessage.errorMessage();
+                    openWithBackup();
+                }
+                watcher->deleteLater();
+            });
+            ret = true;
 #endif
         }
     }
 
     // try backup way
-    if (!ret) {
-        qDebug() << "Using backup method to open file";
-        if (fileInfo.suffix() == "jpg") {
-            program = "deepin-image-viewer";  //用看图打开
-            arguments << m_path;
-            qDebug() << "Attempting to open image with deepin-image-viewer";
-        } else {
-            program = "deepin-movie"; //用影院打开
-            arguments << m_path;
-            qDebug() << "Attempting to open video with deepin-movie";
-        }
-        ret = myProcess->startDetached(program, arguments);
-    }
+    if (!ret)
+        ret = openWithBackup();
 
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
-
-    if (!ret) { //打开失败，调用文管选择"打开方式"窗口
-        qWarning() << "Failed to open file with default applications, trying file manager";
-        arguments.clear();
-        program = "dde-file-manager";
-        arguments << "-o" << m_path;
-        ret = myProcess->startDetached(program, arguments);
-    }
     qDebug() << "Function completed: openFile";
 }
 
