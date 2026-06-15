@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 -2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -16,6 +16,10 @@
 
 #include <DBlurEffectWidget>
 #include <dsysinfo.h>
+
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QRegularExpression>
 
 #include <QPixmap>
 #include <QTimer>
@@ -43,6 +47,18 @@
 #define COUNTDOWN_WIDTH 32
 #define COUNTDOWN_HEIGHT 61
 #define COUNTDOWN_OFFSET 20
+
+// D-Bus 系统信息服务定义 (V1 版本)
+#define DBUS_SYSTEM_INFO_SERVICE_V1 "org.deepin.dde.SystemInfo1"
+#define DBUS_SYSTEM_INFO_PATH_V1    "/org/deepin/dde/SystemInfo1"
+#define DBUS_SYSTEM_INFO_IFACE_V1   "org.deepin.dde.SystemInfo1"
+#define DBUS_PROP_IFACE             "org.freedesktop.DBus.Properties"
+#define DBUS_PROP_DISTRO_ID         "DistroID"
+
+// D-Bus 系统信息服务定义 (V0 版本)
+#define DBUS_SYSTEM_INFO_SERVICE "org.deepin.dde.SystemInfo"
+#define DBUS_SYSTEM_INFO_PATH    "/org/deepin/dde/SystemInfo"
+#define DBUS_SYSTEM_INFO_IFACE   "org.deepin.dde.SystemInfo"
 
 static PREVIEW_ENUM_STATE g_Enum_Camera_State = PICTURE;
 
@@ -1318,13 +1334,38 @@ QString videowidget::getSaveFilePrefix()
 {
     qDebug() << "Entering getSaveFilePrefix";
     QString filePrefix = "Camera_";
-    if (DSysInfo::deepinType() == DSysInfo::DeepinProfessional) {
-        qDebug() << "DeepinProfessional";
-        filePrefix = "UOS_";
-    } else if (DSysInfo::deepinType() == DSysInfo::DeepinDesktop) {
-        qDebug() << "DeepinDesktop";
-        filePrefix = "DEEPIN_";
+
+    auto getDistroIdFromDBus = [](const QString &service, const QString &path, const QString &iface) -> QString {
+        QDBusInterface sessionInfoInterface(service,
+                                           path,
+                                           DBUS_PROP_IFACE,
+                                           QDBusConnection::sessionBus());
+
+        if (sessionInfoInterface.isValid()) {
+            QDBusReply<QDBusVariant> reply = sessionInfoInterface.call("Get", iface, DBUS_PROP_DISTRO_ID);
+            if (reply.isValid()) {
+                QString distroId = reply.value().variant().toString().toUpper();
+                distroId.remove(QRegularExpression("[^A-Z0-9_]"));
+                if (!distroId.isEmpty()) {
+                    return distroId + "_";
+                }
+            }
+        }
+        return "";
+    };
+
+    QString prefix = getDistroIdFromDBus(DBUS_SYSTEM_INFO_SERVICE_V1, DBUS_SYSTEM_INFO_PATH_V1, DBUS_SYSTEM_INFO_IFACE_V1);
+    if (!prefix.isEmpty()) {
+        qDebug() << "Got DistroID from V1:" << prefix;
+        return prefix;
     }
+
+    prefix = getDistroIdFromDBus(DBUS_SYSTEM_INFO_SERVICE, DBUS_SYSTEM_INFO_PATH, DBUS_SYSTEM_INFO_IFACE);
+    if (!prefix.isEmpty()) {
+        qDebug() << "Got DistroID from V0:" << prefix;
+        return prefix;
+    }
+
     qDebug() << "Exiting getSaveFilePrefix";
     return filePrefix;
 }
