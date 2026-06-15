@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -62,7 +62,7 @@ void Titlebar::slotThemeTypeChanged()
 {
     Q_D(const Titlebar);
     QPalette pa;
-    if(DataManager::instance()->getdevStatus() != NOCAM) {
+    if(DataManager::instance()->getdevStatus() == CAM_CANUSE) {
         pa.setColor(QPalette::ButtonText, d->lightColor);
         d->m_titlebar->setPalette(pa);
     } else{
@@ -83,7 +83,7 @@ void Titlebar::paintEvent(QPaintEvent *pe)
     QPainter painter(this);
     QPalette pa;
 
-    if(DataManager::instance()->getdevStatus() != NOCAM) {
+    if(DataManager::instance()->getdevStatus() == CAM_CANUSE) {
         pa.setColor(QPalette::ButtonText, d->lightColor);
         d->m_titlebar->setPalette(pa);
     }

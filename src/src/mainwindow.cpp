@@ -1269,7 +1269,7 @@ void CMainWindow::loadAfterShow()
         {"tid", EventLogUtils::Start},
         {"mode", 1},
         {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+        {"camera_connected", DataManager::instance()->getdevStatus() == CAM_CANUSE}
     };
     EventLogUtils::get().writeLogs(obj);
 }
@@ -1481,21 +1481,21 @@ void CMainWindow::onPhotoRecordBtnClked()
     QJsonObject obj {
         {"tid", m_photoRecordBtn->photoState() ? EventLogUtils::StartPhoto : EventLogUtils::StartRecording},
         {"version", VERSION},
-        {"camera_connected", DataManager::instance()->getdevStatus() ? true : false}
+        {"camera_connected", DataManager::instance()->getdevStatus() == CAM_CANUSE}
     };
     if(!m_bRecording)
         EventLogUtils::get().writeLogs(obj);
 
-    //没有摄像机，不进行任何操作
-    if (NOCAM == DataManager::instance()->getdevStatus()) {
-        return;
-    }
     //拍照模式下
     if (true == m_photoRecordBtn->photoState()) {
         //正在拍照
         if (photoNormal != m_photoState) {
             m_videoPre->onTakePic(false);
         } else {
+            //摄像头不可用时，不开启新的拍照动作
+            if (CAM_CANUSE != DataManager::instance()->getdevStatus()) {
+                return;
+            }
             int nContinuous = Settings::get().getOption("photosetting.photosnumber.takephotos").toInt();
             if (nContinuous > 1) {
                 // 仅在连拍模式下才开启窗口状态监听线程
@@ -1509,6 +1509,10 @@ void CMainWindow::onPhotoRecordBtnClked()
         if (true == m_bRecording) {
             m_videoPre->onEndBtnClicked();
         } else {
+            //摄像头不可用时，不开启新的录像动作
+            if (CAM_CANUSE != DataManager::instance()->getdevStatus()) {
+                return;
+            }
             QFileInfo fi(m_videoPath);
             if (!fi.isWritable())
                 return;
