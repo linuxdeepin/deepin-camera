@@ -1,3 +1,13 @@
+deepin-camera (6.5.41) unstable; urgency=medium
+
+  * chore: Update version to 6.5.41
+  * [skip CI] Translate deepin-camera_en_US.ts in cs
+  * fix: Use D-Bus session query to get DistroID for file prefix
+  * fix: 异步调用 DBus 打开缩略图文件
+  * fix(tests): migrate unit tests to Qt6 and fix DEADLYSIGNAL crash
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Wed, 17 Jun 2026 15:20:23 +0800
+
 deepin-camera (6.5.40) unstable; urgency=medium
 
   * [skip CI] Translate deepin-camera_en_US.ts in ru
