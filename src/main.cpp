@@ -250,6 +250,16 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (dconfig && dconfig->isValid() && dconfig->keyList().contains("useRgbData")) {
+        int useRgbData = dconfig->value("useRgbData").toInt();
+        if (useRgbData != -1 && useRgbData != 0 && useRgbData != 1) {
+            qWarning() << "Invalid useRgbData value in config:" << useRgbData << "- mapping to default value -1 (auto)";
+            useRgbData = -1; 
+        }
+        qInfo() << "use RGB data for preview:" << useRgbData;
+        DataManager::instance()->setUseRgbData(useRgbData);
+    }
+
     if (!libVaDriverName.isEmpty()) {
         qputenv("LIBVA_DRIVER_NAME", libVaDriverName.toLocal8Bit());
     }

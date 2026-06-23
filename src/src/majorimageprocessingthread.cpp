@@ -305,6 +305,14 @@ void MajorImageProcessingThread::run()
             if (GStreamer_Env == m_eEncodeEnv)
                 bUseRgb = true;
 
+            // DConfig配置控制RGB数据使用模式，-1表示不设置(由系统自动判断)，0表示强制关闭，1表示强制开启
+            int useRgbData = DataManager::instance()->getUseRgbData();
+            if (useRgbData == 1) {
+                bUseRgb = true;
+            } else if (useRgbData == 0) {
+                bUseRgb = false;
+            }
+
             if (bUseRgb || (m_bPhoto && m_filtersGroupDislay)) {
                 // qDebug() << "Processing video frame in rgb mode";
                 if (m_nVdWidth != static_cast<unsigned int>(m_frame->width) || m_nVdHeight != static_cast<unsigned int>(m_frame->height)) {
