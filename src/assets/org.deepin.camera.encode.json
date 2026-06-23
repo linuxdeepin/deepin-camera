@@ -134,6 +134,16 @@
             "description": "Is low performance device",
             "permissions": "readwrite",
             "visibility": "private"
+        },
+        "useRgbData": {
+            "value": -1,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "use RGB data for preview",
+            "name[zh_CN]": "是否使用RGB数据进行预览显示，-1表示不设置，由系统自动判断；0表示强制关闭；1表示强制开启",
+            "description": "Force use RGB data for preview rendering. -1: not set (auto), 0: force disable, 1: force enable. When enabled, YUV frames will be converted to RGB format before display.",
+            "permissions": "readwrite",
+            "visibility": "private"
         }
     }
 }
