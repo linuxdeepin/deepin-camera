@@ -211,6 +211,18 @@ public:
      * @return 分辨率
      */
     QSize getPreferredResolution();
+
+    /**
+     * @brief 设置RGB数据预览模式
+     * @param mode -1:不设置(自动), 0:强制关闭, 1:强制开启
+     */
+    void setUseRgbData(int mode) { m_useRgbData = mode; };
+
+    /**
+     * @brief 获取RGB数据预览模式
+     * @return -1:不设置(自动), 0:强制关闭, 1:强制开启
+     */
+    int getUseRgbData() const { return m_useRgbData; };
 private:
     DataManager();
     static DataManager *m_dataManager;
@@ -226,5 +238,6 @@ private:
     bool m_enable8kPreview = false; // 是否启用8K预览
     QSet<QString> m_deviceBlacklistSet; // 设备黑名单
     QSize m_preferredResolution; // 首选分辨率
+    int m_useRgbData = -1; // RGB数据预览模式：-1不设置(自动), 0强制关闭, 1强制开启
 };
 #endif // DATAMANAGER_H
