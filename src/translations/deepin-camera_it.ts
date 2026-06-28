@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="it">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="it">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -191,7 +189,7 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>Maximum resolution:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximum resolution:</translation>
     </message>
 </context>
 <context>
@@ -264,11 +262,11 @@ Localizzazione italiana a cura di Massimo A. Carofano.</translation>
     </message>
     <message>
         <source>mp4</source>
-        <translation type="unfinished"></translation>
+        <translation>MP4</translation>
     </message>
     <message>
         <source>webm</source>
-        <translation type="unfinished"></translation>
+        <translation>WebM</translation>
     </message>
 </context>
 <context>
