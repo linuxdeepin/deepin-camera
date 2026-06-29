@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,7 @@ extern "C" {
 #include "audio.h"
 #include "core_io.h"
 #include "colorspaces.h"
+#include "v4l2_formats.h"
 
 int camInit(const char *devicename)
 {
@@ -210,12 +211,15 @@ int camInit(const char *devicename)
         v4l2core_prepare_new_format(my_vd, (int)my_config->format);
 
         if ((strcmp(my_config->device_name, devlist->list_devices[my_vd->this_device].name) == 0) && (strcmp(my_config->device_location, my_vd->videodevice) == 0)) {
-            v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
-            // 分辨率可能已经被校正
-            if (my_config->width != get_my_width() || my_config->height != get_my_height()) {
-                printf("%s: adjust resolution(%dx%d => %dx%d)\n", __func__, my_config->width, my_config->height, get_my_width(), get_my_height());
+            // DConfig preferredResolution 优先于本地配置文件中的分辨率
+            if (get_preferred_resolution_width() > 0 && get_preferred_resolution_height() > 0) {
+                v4l2core_prepare_new_resolution(my_vd,
+                    get_preferred_resolution_width(),
+                    get_preferred_resolution_height());
                 my_config->width  = get_my_width();
                 my_config->height = get_my_height();
+            } else {
+                v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
             }
             ret = v4l2core_update_old_format(my_vd, my_config->width, my_config->height, v4l2core_get_requested_frame_format(my_vd));
         } else {
