@@ -49,6 +49,11 @@ filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* =
     m_disableSelect = false;
 
     setWindowOpacity(0.1);
+    // 按钮只画中央 40x40 图像与描边，5px 边距不绘制。未设透明时 Qt 把按钮当
+    // 不透明处理，边距区不会与下层视频混合，残留首帧像素形成冻结边带。设为
+    // 透明后边距透出视频，与 2px 间隙行为一致。
+    setAttribute(Qt::WA_TranslucentBackground, true);
+    setAutoFillBackground(false);
     resize(BUTTON_SIZE, BUTTON_SIZE);
 
     qDebug() << "Function completed: filterPreviewButton constructor";

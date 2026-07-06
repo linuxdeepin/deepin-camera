@@ -151,6 +151,15 @@ void takePhotoSettingAreaWidget::initButtons()
     m_filtersUnfoldBtn->setFocusPolicy(Qt::NoFocus);
 
     //滤镜滚动条窗口
+    // 滤镜缩略图按设计无面板背景，直接浮在视频画面之上（paintEvent 中滤镜组
+    // 分支不画底色）。要让按钮之间的 2px 间隙、以及按钮自身的 5px 边距真正透出
+    // 底层视频，整条链都必须是透明的：仅给 m_scrollAreaWidget 设透明无效，
+    // 因为它透出去看到的是 QScrollArea viewport 的不透明底色——表现为一条静止
+    // 的分割线。这里给 this、m_scrollArea、viewport 同时设 WA_TranslucentBackground
+    // 并关掉 viewport 自动填充，让透明一直贯通到视频所在层。
+    // 注：Wayland 下视频由 QGraphicsView 渲染、m_openglwidget 为 nullptr；
+    // X11 下才是 QOpenGLWidget。两条路径都依赖此透明链。
+    setAttribute(Qt::WA_TranslucentBackground, true);
     m_scrollAreaWidget = new QWidget(this);
     m_scrollAreaWidget->setAttribute(Qt::WA_TranslucentBackground, true);
     QVBoxLayout *scrollLayout = new QVBoxLayout(m_scrollAreaWidget);
@@ -159,7 +168,13 @@ void takePhotoSettingAreaWidget::initButtons()
     m_scrollAreaWidget->setLayout(scrollLayout);
     m_scrollArea = new QScrollArea(this);
     m_scrollArea->setFrameShape(QFrame::NoFrame);
+    m_scrollArea->setAttribute(Qt::WA_TranslucentBackground, true);
+    m_scrollArea->setAutoFillBackground(false);
     m_scrollArea->setWidget(m_scrollAreaWidget);
+    // viewport 默认 autoFillBackground 且用 palette Window 填充（不透明），
+    // 是分割线的直接来源；关掉它并设透明，链才算通。
+    m_scrollArea->viewport()->setAutoFillBackground(false);
+    m_scrollArea->viewport()->setAttribute(Qt::WA_TranslucentBackground, true);
     m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_scrollArea->setVisible(false);
 
@@ -1358,6 +1373,18 @@ void takePhotoSettingAreaWidget::onUpdateFilterImage(QImage *img)
     for (auto btn : m_filterPreviewBtnList) {
         QImage tmp = img->copy();
         btn->setImage(&tmp);
+    }
+
+    // 滤镜列透明悬浮在视频画面之上（Wayland 为 QGraphicsView，X11 为
+    // QOpenGLWidget，二者互为兄弟子树）。缩略图本身每帧由 setImage() 重绘，
+    // 但按钮之间的 2px 间隙、按钮 5px 边距属于本控件/按钮的透明区域，Qt 不会
+    // 因下层视频刷新而自动跨子树重新混合它们——只在 show/hide 时合成一次，
+    // 之后随视频帧“冻结在首帧”，表现为静止的分割线。这里随每帧主动 update()
+    // 一次，强制把透明层在最新一帧视频上重新合成，消除冻结的分割线，同时
+    // 保留透明背景（不引入底色）。透明链在 initButtons() 中已对 this、
+    // m_scrollArea、viewport、m_scrollAreaWidget 一并设好，此处才能生效。
+    if (m_scrollArea && m_scrollArea->isVisible()) {
+        m_scrollAreaWidget->update();
     }
     qDebug() << "Exiting onUpdateFilterImage";
 }
