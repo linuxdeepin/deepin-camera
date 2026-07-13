@@ -581,17 +581,24 @@ void videowidget::ReceiveMajorImage(QImage *image, int result)
             if (m_openglwidget && m_openglwidget->isVisible())
                 m_openglwidget->hide();
             {
-                int widgetwidth = this->width();
-                int widgetheight = this->height();
-                if ((image->width() * 100 / image->height()) > (widgetwidth * 100 / widgetheight)) {
-                    QImage img = image->scaled(widgetwidth, widgetwidth * image->height() / image->width(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    m_framePixmap = QPixmap::fromImage(img);
+                const qreal dpr = this->devicePixelRatioF();
+                const int widgetwidth = qRound(this->width() * dpr);
+                const int widgetheight = qRound(this->height() * dpr);
+
+                int targetWidth, targetHeight;
+                if (qint64(image->width()) * widgetheight > qint64(widgetwidth) * image->height()) {
+                    targetWidth = widgetwidth;
+                    targetHeight = qMin(qRound(qreal(widgetwidth) * image->height() / image->width()), widgetheight);
                 } else {
-                    QImage img = image->scaled(widgetheight * image->width() / image->height(), widgetheight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-                    m_framePixmap = QPixmap::fromImage(img);
+                    targetHeight = widgetheight;
+                    targetWidth = qMin(qRound(qreal(widgetheight) * image->width() / image->height()), widgetwidth);
                 }
 
-                m_pNormalScene->setSceneRect(m_framePixmap.rect());
+                m_framePixmap = QPixmap::fromImage(image->scaled(targetWidth, targetHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+                m_framePixmap.setDevicePixelRatio(dpr);
+
+                const QRectF sceneRect(0, 0, qreal(m_framePixmap.width()) / dpr, qreal(m_framePixmap.height()) / dpr);
+                m_pNormalScene->setSceneRect(sceneRect);
                 m_pNormalItem->setPixmap(m_framePixmap);
 
                 if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
