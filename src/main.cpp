@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -32,8 +32,12 @@ extern "C" {
 #include <DApplicationSettings>
 #endif
 
+#include "ddlog.h"
+#include "logconfigread.h"
+
 #include <QSharedMemory>
 #include <QTime>
+#include <QLoggingCategory>
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -135,6 +139,9 @@ static void handleSignal(int sig)
 
 int main(int argc, char *argv[])
 {
+    // 初始化日志规则：读取环境变量和 DConfig 配置
+    MLogger logger;
+
     qInfo() << "Starting deepin-camera application...";
     // Task 326583 不参与合成器崩溃重连
     unsetenv("QT_WAYLAND_RECONNECT");
