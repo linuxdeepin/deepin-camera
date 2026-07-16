@@ -1,3 +1,14 @@
+deepin-camera (6.5.43) unstable; urgency=medium
+
+  * chore: Update version to 6.5.43
+  * fix: remove deepin prefix from Chinese translations in desktop file
+  * fix(logging): add Qt logging filter rules initialization
+  * fix(videowidget): fix hi-dpi display scaling in video widget
+  * [skip CI] Translate deepin-camera_en_US.ts in ru
+  * [skip CI] Translate deepin-camera_en_US.ts in it
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 16 Jul 2026 21:17:33 +0800
+
 deepin-camera (6.5.42) unstable; urgency=medium
 
   * chore: Update version to 6.5.42
