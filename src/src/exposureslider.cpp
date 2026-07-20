@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -118,10 +118,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
             qDebug() << "Animation finished, handling cleanup";
-            if (isShortCut) { //键盘触发，需在此处理焦点
-                qDebug() << "Setting focus to slider after shortcut activation";
-                m_slider->slider()->setFocus();
-            }
+            m_slider->slider()->setFocus();
             pGroup->deleteLater();
         });
 
