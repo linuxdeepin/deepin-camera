@@ -15,7 +15,6 @@
 
 #define BUTTON_OPTION_PIC_LINE_EDIT QObject::tr("OptionPicLineEditBtn")
 #define BUTTON_OPTION_VIDEO_LINE_EDIT QObject::tr("OptionVideoLineEditBtn")
-#define OPTION_FORMAT_LABER QObject::tr("OptionFormatLabel")
 #define OPTION_FRAME QObject::tr("OptionFrame")
 #define PIC_OPTION QObject::tr("PicOption")
 #define VIDEO_OPTION QObject::tr("VideoOption")

@@ -165,8 +165,11 @@
                         {
                             "key": "picformat",
                             "name": "Photo:",
-                            "type":"formatLabel",
-                            "default": "  JPG"
+                            "type":"combobox",
+                            "items": [
+                                "JPG"
+                            ],
+                            "default": 0
                         },
                         {
                             "key": "vidformat",
