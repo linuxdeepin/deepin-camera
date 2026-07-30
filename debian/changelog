@@ -1,3 +1,19 @@
+deepin-camera (6.5.44) unstable; urgency=medium
+
+  * chore: Update version to 6.5.44
+  * fix(camera): prefer DConfig resolution over local config (BUG-366203)
+  * feat(config): add useRgbData config to control RGB preview mode
+  * fix(config): support low performance device config
+  * feat: enable the configuration for the preferred resolution.
+  * feat: enable the configuration for device blacklist.
+  * feat: enable the configuration for 8K preview.
+  * feat: Add the logic for switching cameras by USB groups.
+  * fix: Update cppcheck workflow to use checkout@v7
+  * fix(exposureslider): always set focus after slider animation
+  * fix: add X-Deepin-Singleton flag to desktop file
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 30 Jul 2026 15:07:01 +0800
+
 deepin-camera (6.5.43) unstable; urgency=medium
 
   * chore: Update version to 6.5.43
