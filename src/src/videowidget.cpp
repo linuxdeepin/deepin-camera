@@ -84,7 +84,14 @@ videowidget::videowidget(DWidget *parent)
     m_pNormalItem->setZValue(0);
 
     m_bActive = false;   //是否录制中
-    m_takePicSound = new QSound(":/resource/Camera.wav");
+    m_takePicSound = new QSoundEffect(this);
+    m_takePicSound->setSource(QUrl("qrc:/resource/Camera.wav"));
+    m_takePicSound->setLoopCount(1);
+    m_takePicSound->setVolume(1.0);
+    connect(m_takePicSound, &QSoundEffect::playingChanged,
+            this, &videowidget::onShutterSoundPlayingChanged);
+    connect(m_takePicSound, &QSoundEffect::statusChanged,
+            this, &videowidget::onShutterSoundStatusChanged);
     m_countTimer = new QTimer(this);
     m_flashTimer = new QTimer(this);
     m_recordingTimer = new QTimer(this);
@@ -908,11 +915,60 @@ void videowidget::showRecTime()
     m_recordingTime->setText(strTime);
 }
 
+void videowidget::startShutterSoundWarmup()
+{
+    if (m_shutterSoundWarming || m_takePicSound->status() != QSoundEffect::Ready) {
+        return;
+    }
+
+    m_shutterSoundWarming = true;
+    m_takePicSound->setVolume(0.0);
+    m_takePicSound->play();
+}
+
+void videowidget::onShutterSoundPlayingChanged()
+{
+    if (!m_shutterSoundWarming) {
+        return;
+    }
+
+    if (m_takePicSound->isPlaying()) {
+        m_takePicSound->stop();
+        return;
+    }
+
+    m_shutterSoundWarming = false;
+    m_takePicSound->setVolume(1.0);
+    if (m_shutterSoundPending && get_sound_of_takeing_photo()) {
+        m_shutterSoundPending = false;
+        QTimer::singleShot(0, this, [this] {
+            if (get_sound_of_takeing_photo()) {
+                m_takePicSound->play();
+            }
+        });
+        return;
+    }
+    m_shutterSoundPending = false;
+}
+
+void videowidget::onShutterSoundStatusChanged()
+{
+    if (m_takePicSound->status() == QSoundEffect::Error) {
+        m_shutterSoundWarming = false;
+        m_shutterSoundPending = false;
+        m_takePicSound->setVolume(1.0);
+    } else if (m_shutterSoundPending) {
+        startShutterSoundWarmup();
+    }
+}
+
 void videowidget::flash()
 {
     qDebug() << __func__;
-    if (get_sound_of_takeing_photo())
-        m_takePicSound->play();
+    if (get_sound_of_takeing_photo()) {
+        m_shutterSoundPending = true;
+        startShutterSoundWarmup();
+    }
 
 #ifndef __mips__
     if (!get_wayland_status()) {
@@ -1845,6 +1901,7 @@ videowidget::~videowidget()
     delete m_flashLabel;
     m_flashLabel = nullptr;
 
+    m_takePicSound->stop();
     delete m_takePicSound;
     m_takePicSound = nullptr;
 
@@ -1853,9 +1910,6 @@ videowidget::~videowidget()
 
     delete m_pNormalScene;
     m_pNormalScene = nullptr;
-
-    delete m_takePicSound;
-    m_takePicSound = nullptr;
 
     delete m_pGridLayout;
     m_pGridLayout = nullptr;
