@@ -227,10 +227,6 @@ QVariant Settings::getBackOption(const QString &opt)
 
 void Settings::onValueChanged(const QString & key, const QVariant & value)
 {
-    if (key == QLatin1String("photosetting.audiosetting.soundswitchbtn")) {
-        emit shutterSoundEnabledChanged(value.toBool());
-    }
-
     if (key.startsWith("outsetting.resolutionsetting.resolution")) {
         if (m_updatingResolution)
             return;
