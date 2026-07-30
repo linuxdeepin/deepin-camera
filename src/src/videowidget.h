@@ -17,7 +17,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
-#include <QtMultimedia/QSound>
+#include <QtMultimedia/QSoundEffect>
 #include <QDateTime>
 #include <QSvgRenderer>
 #include <QGraphicsView>
@@ -371,6 +371,8 @@ public slots:
      */
     void updateValidDevices();
 
+    void setShutterSoundEnabled(bool enabled);
+
 private slots:
     /**
     * @brief ReceiveMajorImage　处理视频帧 mips、wayland下使用
@@ -394,10 +396,17 @@ private slots:
     */
     void flash();
 
+    void ensureShutterSoundKeepalive();
+    void playPendingShutterSound();
+    void onShutterSoundStatusChanged();
+    void onShutterSoundKeepaliveStatusChanged();
+    void onShutterSoundKeepalivePlayingChanged();
+
     /**
-    * @brief slotresolutionchanged　分辨率改变槽函数
-    * @param 分辨率字符串(如：1920*1080)
-    */
+     * @brief slotresolutionchanged　分辨率改变槽函数
+     * @param 分辨率字符串(如：1920*1080)
+     */
+
     void slotresolutionchanged(const QString &);
 
     /**
@@ -529,7 +538,10 @@ private:
     DLabel                     *m_recordingTime;    //录制时长
     QString                    m_videoFormat;       //录制视频格式
 
-    QSound                     *m_takePicSound;     //拍照声音
+    QSoundEffect               *m_takePicSound;     //拍照声音
+    QSoundEffect               *m_shutterSoundKeepalive;
+    bool                        m_shutterSoundEnabled = false;
+    bool                        m_shutterSoundPending = false;
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器

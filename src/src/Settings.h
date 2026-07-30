@@ -148,6 +148,8 @@ signals:
     */
     void flashLightChanged(bool bLight);
 
+    void shutterSoundEnabledChanged(bool enabled);
+
     /**
      * @brief videoFormatChanged 录制视频格式
      * @param format 视频格式

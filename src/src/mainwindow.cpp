@@ -1726,6 +1726,8 @@ void CMainWindow::initUI()
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sngSetFilterName, this, &CMainWindow::onSetFilterName);
     connect(m_takePhotoSettingArea, &takePhotoSettingAreaWidget::sigExposureChanged, m_videoPre, &videowidget::onExposureChanged);
     connect(&dc::Settings::get(), SIGNAL(flashLightChanged(bool)), this, SLOT(onSetFlash(bool)));
+    connect(&Settings::get(), &Settings::shutterSoundEnabledChanged,
+            m_videoPre, &videowidget::setShutterSoundEnabled);
     //切换镜像
     connect(&Settings::get(), SIGNAL(mirrorModeChanged(bool)), this, SLOT(onMirrorStateChanged(bool)));
     connect(&Settings::get(), &Settings::delayTimeChanged, this, [ = ](const QString & str) {
@@ -1816,10 +1818,7 @@ void CMainWindow::initUI()
         break;
     }
 
-    if (soundphoto)
-        set_takeing_photo_sound(1);
-    else
-        set_takeing_photo_sound(0);
+    m_videoPre->setShutterSoundEnabled(soundphoto);
 
     m_videoPre->setGridType(gridType);
     m_videoPre->setInterval(nDelayTime);
@@ -2222,10 +2221,7 @@ void CMainWindow::onSettingsDlgClose()
         break;
     }
 
-    if (soundphoto)
-        set_takeing_photo_sound(1);
-    else
-        set_takeing_photo_sound(0);
+    m_videoPre->setShutterSoundEnabled(soundphoto);
 
     m_videoPre->setInterval(nDelayTime);
     m_videoPre->setContinuous(nContinuous);
