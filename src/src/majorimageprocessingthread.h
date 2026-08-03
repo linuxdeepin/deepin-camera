@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -12,6 +12,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include <QElapsedTimer>
+#include <memory>
 
 #include "datamanager.h"
 
@@ -133,11 +134,11 @@ signals:
 #ifndef __mips__
     /**
      * @brief sigYUVFrame YUV框架信号
-     * @param yuv YUV
+     * @param yuv YUV数据(shared_ptr持有所有权,跨线程安全)
      * @param width 宽度
      * @param height 高度
      */
-    void sigYUVFrame(uchar *yuv, uint width, uint height);
+    void sigYUVFrame(std::shared_ptr<uchar[]> yuv, uint width, uint height);
 
     /**
      * @brief sigRenderYuv 发送Yuv信号
@@ -180,7 +181,7 @@ private:
     QAtomicInt        m_stopped;
     v4l2_dev_t        *m_videoDevice;
     v4l2_frame_buff_t *m_frame;
-    uint8_t           *m_yuvPtr;// yu12视频帧数据
+    std::shared_ptr<uchar[]> m_yuvPtr;// yu12视频帧数据(shared_ptr管理生命周期)
     uint8_t           *m_rgbPtr;// rgb视频帧数据
 
     bool              m_bPhoto = true; //相机当前状态，默认为拍照状态
