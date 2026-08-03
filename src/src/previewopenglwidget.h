@@ -1,5 +1,5 @@
 // Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <memory>
 #include <QMutex>
 #include <QOpenGLFunctions>
 #if QT_VERSION_MAJOR > 5
@@ -17,9 +18,11 @@
 #include <QtOpenGL/QOpenGLBuffer>
 #include <QtOpenGL/QOpenGLTexture>
 #include <QtOpenGL/QOpenGLShaderProgram>
+#include <QtOpenGL/QOpenGLVertexArrayObject>
 #else
 #include <QOpenGLWidget>
 #include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
 #endif
 
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -49,11 +52,11 @@ public slots:
 #ifndef __mips__
     /**
     * @brief slotShowYuv　显示一帧Yuv图像
-    * @param ptr 数据
+    * @param frame YUV数据(shared_ptr持有所有权,保证paintGL期间数据有效)
     * @param width 宽度
     * @param height 高度
     */
-    void slotShowYuv(uchar *ptr, uint width, uint height);
+    void slotShowYuv(std::shared_ptr<uchar[]> frame, uint width, uint height);
 #endif
 
 protected:
@@ -77,6 +80,7 @@ protected:
 private:
     QMutex               m_Rendermutex;
     QOpenGLBuffer        m_vbo;
+    QOpenGLVertexArrayObject m_vao;
     QOpenGLShaderProgram *m_program;
 
 
@@ -97,7 +101,7 @@ private:
     uint m_videoWidth;
     uint m_videoHeight;
 
-    uchar *m_yuvPtr;
+    std::shared_ptr<uchar[]> m_yuvFrame;
     QSize m_imgSize;
 };
 
