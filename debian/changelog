@@ -1,3 +1,10 @@
+deepin-camera (6.5.45) unstable; urgency=medium
+
+  * chore: Update version to 6.5.45
+  * fix(camera): fix OpenGL preview rendering and frame ownership (BUG-372435)
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 06 Aug 2026 19:22:06 +0800
+
 deepin-camera (6.5.44) unstable; urgency=medium
 
   * chore: Update version to 6.5.44
