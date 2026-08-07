@@ -298,8 +298,8 @@ void videowidget::delayInit()
         connect(m_imgPrcThread, SIGNAL(SendMajorImageProcessing(QImage *, int)),
                 this, SLOT(ReceiveMajorImage(QImage *, int)));
         connect(m_imgPrcThread, SIGNAL(sigRenderYuv(bool)), this, SLOT(ReceiveOpenGLstatus(bool)));
-        connect(m_imgPrcThread, &MajorImageProcessingThread::sigYUVFrame,
-                m_openglwidget, &PreviewOpenglWidget::slotShowYuv,
+        connect(m_imgPrcThread, SIGNAL(sigYUVFrame(std::shared_ptr<uchar[]>,uint,uint)),
+                m_openglwidget, SLOT(slotShowYuv(std::shared_ptr<uchar[]>,uint,uint)),
                 Qt::DirectConnection);
     }
 
