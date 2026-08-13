@@ -154,6 +154,12 @@ signals:
      */
     void videoFormatChanged(QString format);
 
+    /**
+     * @brief photoFormatChanged 拍照照片格式
+     * @param format 照片格式
+     */
+    void photoFormatChanged(QString format);
+
 private:
     Settings();
     static Settings     m_instance;

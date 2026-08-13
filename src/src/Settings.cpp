@@ -70,6 +70,10 @@ void Settings::init()
     }
     m_settings->option("outsetting.outformat.vidformat")->setData("items", videoFormatList);
 
+    QStringList photoFormatList;
+    photoFormatList << tr("JPG") << tr("PNG");
+    m_settings->option("outsetting.outformat.picformat")->setData("items", photoFormatList);
+
     m_settings->setBackend(m_backend);
 
     connect(m_settings, &DSettings::valueChanged, this, &Settings::onValueChanged);
@@ -267,6 +271,14 @@ void Settings::onValueChanged(const QString & key, const QVariant & value)
         if (value >= 0 && formatOpt->data("items").toStringList().size() > value.toInt()) {
             QString videoFormat = formatOpt->data("items").toStringList()[value.toInt()];
             emit videoFormatChanged(videoFormat);
+        }
+    }
+
+    if (key.startsWith("outsetting.outformat.picformat")) {
+        QPointer<DSettingsOption> formatOpt = m_settings->option("outsetting.outformat.picformat");
+        if (value >= 0 && formatOpt->data("items").toStringList().size() > value.toInt()) {
+            QString photoFormat = formatOpt->data("items").toStringList()[value.toInt()];
+            emit photoFormatChanged(photoFormat);
         }
     }
 }

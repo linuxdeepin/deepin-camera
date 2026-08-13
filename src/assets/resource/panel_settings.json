@@ -167,8 +167,8 @@
                         {
                             "key": "picformat",
                             "name": "Photo:",
-                            "type":"formatLabel",
-                            "default": "  JPG"
+                            "type":"combobox",
+                            "default": 0
                         },
                         {
                             "key": "vidformat",
