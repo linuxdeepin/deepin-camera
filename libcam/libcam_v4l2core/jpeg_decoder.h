@@ -76,6 +76,16 @@ int jpeg_init_decoder(int width, int height);
 int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size);
 
 /*
+ * get real (decoded) frame size after jpeg_decode()
+ * args:
+ *    out_w - pointer to receive real decoded width (may be NULL)
+ *    out_h - pointer to receive real decoded height (may be NULL)
+ *
+ * returns: 0 - OK; negative - not initialized or not decoded yet
+ */
+int jpeg_get_decoded_size(int *out_w, int *out_h);
+
+/*
  * close (m)jpeg decoder context
  * args:
  *    none
