@@ -256,6 +256,7 @@ typedef struct _v4l2_frame_buff_t {
     uint64_t timestamp; // captured frame timestamp
 
     uint8_t *raw_frame; // pointer to raw frame
+    size_t yuv_frame_max_size; //maximum size for decoded yuv frame (bytes); MJPG is trimmed to real decoded size after 1st frame
     uint8_t *yuv_frame; // pointer to decoded yuv frame
     uint8_t *h264_frame; // pointer to regular or demultiplexed h264 frame
     uint8_t *tmp_buffer; //temporary buffer used in decoding
