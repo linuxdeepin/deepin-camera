@@ -1430,8 +1430,6 @@ int jpeg_init_decoder(int width, int height)
     }
 
     codec_data->context->pix_fmt = AV_PIX_FMT_YUV422P;
-    codec_data->context->width = width;
-    codec_data->context->height = height;
     //jpeg_ctx->context->dsp_mask = (FF_MM_MMX | FF_MM_MMXEXT | FF_MM_SSE);
 
     // Initialize hardware device context  (VA-API)
@@ -1582,9 +1580,26 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
                 printf(" - %s\n", getAvutil()->m_av_get_pix_fmt_name((enum AVPixelFormat)AV_PIX_FMT_YUV420P));
             }
 #if LIBAVUTIL_VER_AT_LEAST(54,6)
-            getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
-                                                   (const uint8_t * const*) sw_frame->data, sw_frame->linesize,
-                                                   sw_frame->format, jpeg_ctx->width, jpeg_ctx->height, 1);
+            {
+                int dec_w = sw_frame->width;
+                int dec_h = sw_frame->height;
+                int need = getAvutil()->m_av_image_get_buffer_size(sw_frame->format, dec_w, dec_h, 1);
+                if (need > 0 && (size_t)need > (size_t)jpeg_ctx->pic_size) {
+                    uint8_t *p = realloc(jpeg_ctx->tmp_frame, (size_t)need);
+                    if (!p) {
+                        fprintf(stderr, "V4L2_CORE: (jpeg decoder) realloc failed for tmp_frame\n");
+                        getAvutil()->m_av_frame_free(&sw_frame);
+                        return -1;
+                    }
+                    jpeg_ctx->tmp_frame = p;
+                    jpeg_ctx->pic_size = need;
+                }
+                jpeg_ctx->width = dec_w;
+                jpeg_ctx->height = dec_h;
+                getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+                                                       (const uint8_t * const*) sw_frame->data, sw_frame->linesize,
+                                                       sw_frame->format, dec_w, dec_h, 1);
+            }
             if (sw_frame->format == AV_PIX_FMT_NV12) {
                 nv12_to_yu12(out_buf, jpeg_ctx->tmp_frame, jpeg_ctx->width, jpeg_ctx->height);
                 getAvutil()->m_av_frame_free(&sw_frame);
@@ -1609,9 +1624,26 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
                 }
                 decodeCount++;
             }
-            getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
-                                                   (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
-                                                   codec_data->context->pix_fmt, jpeg_ctx->width, jpeg_ctx->height, 1);
+            {
+                int dec_w = codec_data->picture->width;
+                int dec_h = codec_data->picture->height;
+                enum AVPixelFormat dec_fmt = codec_data->picture->format;
+                int need = getAvutil()->m_av_image_get_buffer_size(dec_fmt, dec_w, dec_h, 1);
+                if (need > 0 && (size_t)need > (size_t)jpeg_ctx->pic_size) {
+                    uint8_t *p = realloc(jpeg_ctx->tmp_frame, (size_t)need);
+                    if (!p) {
+                        fprintf(stderr, "V4L2_CORE: (jpeg decoder) realloc failed for tmp_frame\n");
+                        return -1;
+                    }
+                    jpeg_ctx->tmp_frame = p;
+                    jpeg_ctx->pic_size = need;
+                }
+                jpeg_ctx->width = dec_w;
+                jpeg_ctx->height = dec_h;
+                getAvutil()->m_av_image_copy_to_buffer(jpeg_ctx->tmp_frame, jpeg_ctx->pic_size,
+                                                       (const uint8_t * const*) codec_data->picture->data, codec_data->picture->linesize,
+                                                       dec_fmt, dec_w, dec_h, 1);
+            }
 #else
             avpicture_layout((AVPicture *) codec_data->picture, codec_data->dec_ctx->pix_fmt,
                              jpeg_ctx->width, jpeg_ctx->height, jpeg_ctx->tmp_frame, jpeg_ctx->pic_size);
@@ -1638,6 +1670,27 @@ int jpeg_decode(uint8_t *out_buf, uint8_t *in_buf, int size)
     else
         return 0;
 
+}
+
+/*
+ * get real (decoded) frame size
+ * args:
+ *    out_w - pointer to receive real decoded width (may be NULL)
+ *    out_h - pointer to receive real decoded height (may be NULL)
+ *
+ * asserts:
+ *    none
+ *
+ * returns: 0 on success (valid size available); negative if not initialized
+ *          or not decoded yet
+ */
+int jpeg_get_decoded_size(int *out_w, int *out_h)
+{
+    if (jpeg_ctx == NULL || jpeg_ctx->width <= 0 || jpeg_ctx->height <= 0)
+        return -1;
+    if (out_w) *out_w = jpeg_ctx->width;
+    if (out_h) *out_h = jpeg_ctx->height;
+    return 0;
 }
 
 /*

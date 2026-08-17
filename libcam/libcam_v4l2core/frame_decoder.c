@@ -134,6 +134,7 @@ int alloc_v4l2_frames(v4l2_dev_t *vd)
 			/*frame queue*/
 			for(i=0; i<vd->frame_queue_size; ++i)
 			{
+                vd->frame_queue[i].yuv_frame_max_size = (size_t) framesizeIn;
                 vd->frame_queue[i].yuv_frame = calloc((size_t) framesizeIn, sizeof(uint8_t));
 				if(vd->frame_queue[i].yuv_frame == NULL)
 				{
@@ -346,6 +347,7 @@ void clean_v4l2_frames(v4l2_dev_t *vd)
 			free(vd->frame_queue[i].yuv_frame);
 			vd->frame_queue[i].yuv_frame = NULL;
 		}
+		vd->frame_queue[i].yuv_frame_max_size = 0;
 	}
 
 	if(vd->h264_last_IDR)
@@ -828,6 +830,44 @@ int decode_v4l2_frame(v4l2_dev_t *vd, v4l2_frame_buff_t *frame)
 			//}
             if(verbosity > 3)
                 fprintf(stderr, "V4L2_CORE: (jpeg decoder) decode frame of size %i\n", ret);
+            if (ret >= 0)
+            {
+                int real_w = 0;
+                int real_h = 0;
+                if (jpeg_get_decoded_size(&real_w, &real_h) == 0 &&
+                    real_w > 0 && real_h > 0 &&
+                    (real_w != frame->width || real_h != frame->height))
+                {
+                    if(verbosity > 0)
+                        fprintf(stderr, "V4L2_CORE: (jpeg decoder) frame size %dx%d != negotiated %dx%d, using real size\n",
+                                real_w, real_h, frame->width, frame->height);
+                    frame->width  = real_w;
+                    frame->height = real_h;
+                }
+
+                if (real_w > 0 && real_h > 0)
+                {
+                    size_t need = (size_t)real_w * (size_t)real_h * 3 / 2;
+                    if (need > 0 && need != frame->yuv_frame_max_size)
+                    {
+                        uint8_t *p = (uint8_t *)realloc(frame->yuv_frame, need);
+                        if (p)
+                        {
+                            frame->yuv_frame = p;
+                            frame->yuv_frame_max_size = need;
+                            if(verbosity > 0)
+                                fprintf(stderr, "V4L2_CORE: (jpeg decoder) yuv_frame trimmed %dx%d (%zu bytes)\n",
+                                        real_w, real_h, need);
+                        }
+                        else
+                        {
+                            if(verbosity > 0)
+                                fprintf(stderr, "V4L2_CORE: (jpeg decoder) realloc failed for yuv_frame, keep old size\n");
+                            return E_ALLOC_ERR;
+                        }
+                    }
+                }
+            }
             ret = E_OK;
 			break;
 
