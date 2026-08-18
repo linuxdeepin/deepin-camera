@@ -220,6 +220,8 @@ int camInit(const char *devicename)
                 my_config->height = get_my_height();
             } else {
                 v4l2core_prepare_new_resolution(my_vd, my_config->width, my_config->height);
+                my_config->width  = get_my_width();
+                my_config->height = get_my_height();
             }
             ret = v4l2core_update_old_format(my_vd, my_config->width, my_config->height, v4l2core_get_requested_frame_format(my_vd));
         } else {
