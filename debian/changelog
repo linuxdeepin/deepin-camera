@@ -1,3 +1,14 @@
+deepin-camera (6.5.47) unstable; urgency=medium
+
+  * fix(ui): enable QPainter antialiasing for Qt6 build
+  * chore: Sync by https://github.com/linuxdeepin/.github/commit/a300f8523d4876677112edab6a0772f7ad112976
+  * fix: use real MJPG decoded size instead of negotiated resolution
+  * fix: sync resolution config after prepare_new_resolution (#372317)
+  * fix(ui): fix frozen separator lines in filter thumbnail column
+  * [skip CI] Translate deepin-camera_en_US.ts in pt
+
+ -- Wang Yu <wangyu@uniontech.com>  Fri, 28 Aug 2026 08:56:59 +0800
+
 deepin-camera (6.5.46) unstable; urgency=medium
 
   * chore: Update version to 6.5.46
