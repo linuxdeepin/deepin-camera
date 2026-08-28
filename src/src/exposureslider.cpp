@@ -66,6 +66,8 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     vLayout->setSpacing(2);
 
     m_slider = new DSlider(Qt::Vertical, this);
+    m_slider->setObjectName("ExposureSlider");
+    m_slider->setAccessibleName("ExposureSlider");
     m_slider->setFixedHeight(150);
     m_slider->setIconSize(QSize(15, 15));
     m_slider->slider()->setRange(-100, 100);
