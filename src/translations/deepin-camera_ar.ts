@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.1" language="ar">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
 <context>
     <name>CMainWindow</name>
     <message>
@@ -9,7 +7,7 @@
     </message>
     <message>
         <source>Open folder</source>
-        <translation>فتح مجلد</translation>
+        <translation type="vanished">فتح مجلد</translation>
     </message>
     <message>
         <source>Settings</source>
@@ -74,7 +72,7 @@
     </message>
     <message>
         <source>Invalid folder</source>
-        <translation>مجلد غير صالح</translation>
+        <translation type="vanished">مجلد غير صالح</translation>
     </message>
     <message>
         <source>Open folder</source>
@@ -138,7 +136,7 @@
     </message>
     <message>
         <source>Save to:</source>
-        <translation>حفظ إلى:</translation>
+        <translation type="vanished">حفظ إلى:</translation>
     </message>
     <message>
         <source>Photo:</source>
@@ -154,7 +152,7 @@
     </message>
     <message>
         <source>Resolution:</source>
-        <translation>الدِّقَّة:</translation>
+        <translation type="vanished">الدِّقَّة:</translation>
     </message>
     <message>
         <source>Photos:</source>
@@ -244,15 +242,15 @@
     <name>ThumbnailsBar</name>
     <message>
         <source>Take photo</source>
-        <translation>التقاط صورة</translation>
+        <translation type="vanished">التقاط صورة</translation>
     </message>
     <message>
         <source>Record video</source>
-        <translation>تسجيل فيديو</translation>
+        <translation type="vanished">تسجيل فيديو</translation>
     </message>
     <message>
         <source>Stop taking photos</source>
-        <translation>إيقاف التقاط الصور</translation>
+        <translation type="vanished">إيقاف التقاط الصور</translation>
     </message>
 </context>
 <context>
@@ -348,7 +346,7 @@
     </message>
     <message>
         <source>Stop recording</source>
-        <translation>إيقاف التسجيل</translation>
+        <translation type="vanished">إيقاف التسجيل</translation>
     </message>
 </context>
 </TS>
