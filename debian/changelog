@@ -1,3 +1,10 @@
+deepin-camera (6.5.48) unstable; urgency=medium
+
+  * fix(a11y): add AT-SPI names for exposure slider and image menu
+  * fix: update Arabic (ar) translations
+
+ -- Liu Zhangjian <liuzhangjian@uniontech.com>  Mon, 07 Sep 2026 13:27:52 +0800
+
 deepin-camera (6.5.47) unstable; urgency=medium
 
   * fix(ui): enable QPainter antialiasing for Qt6 build
