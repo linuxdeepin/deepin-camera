@@ -1,5 +1,5 @@
 // Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -27,6 +27,7 @@
 #include <QThread>
 #include <QDBusPendingCall>
 #include <QDBusPendingCallWatcher>
+#include <QUrl>
 #include <libffmpegthumbnailer/videothumbnailerc.h>
 
 extern "C" {
@@ -417,11 +418,16 @@ void ImageItem::openFile()
             //用看图打开
             QDBusMessage message =
                 QDBusMessage::createMethodCall("com.deepin.imageViewer", "/", "com.deepin.imageViewer", "openImageFile");
-            message << filePath;
+            //看图内部按 URL 列表匹配文件，需传 file:// 形式路径
+            message << QUrl::fromLocalFile(filePath).toString();
             QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(message), this);
             connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, openWithBackup]() {
                 const QDBusMessage retMessage = watcher->reply();
+                bool ok = false;
                 if (retMessage.type() != QDBusMessage::ErrorMessage) {
+                    ok = retMessage.arguments().value(0).toBool();
+                }
+                if (ok) {
                     qDebug() << "Successfully opened image with deepin-image-viewer via DBus";
                 } else {
                     qWarning() << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
@@ -442,7 +448,8 @@ void ImageItem::openFile()
             ret = myProcess->startDetached(program, arguments);
 #else
             QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie", "/", "com.deepin.movie", "openFile");
-            message << filePath;
+            //与图片分支保持一致，传 file:// 形式路径
+            message << QUrl::fromLocalFile(filePath).toString();
             QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(QDBusConnection::sessionBus().asyncCall(message), this);
             connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, openWithBackup]() {
                 const QDBusMessage retMessage = watcher->reply();
