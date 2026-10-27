@@ -19,75 +19,78 @@ command:
   - deepin-camera
 
 build: |
-  # 下载和安装依赖
-  apt -y install --download-only qt6-base-dev libdtk6gui-dev libdtk6widget-dev qt6-multimedia-dev libavutil-dev libavformat-dev libavcodec-dev libavfilter-dev qt6-tools-dev qt6-tools-dev-tools deepin-gettext-tools qt6-svg-dev libv4l-dev libsdl2-dev portaudio19-dev libpng-dev libasound2-dev libpciaccess-dev libusb-1.0-0-dev zlib1g-dev libudev-dev libswscale-dev libswresample-dev libffmpegthumbnailer-dev libx11-dev libva-dev libimageeditor6-dev libimageeditor6 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good deepin-event-log
-  bash ./install_dep /var/cache/apt/archives "$PREFIX"
-
-  # 移动部分库到应用库目录，否则无法找到
-  mv ${PREFIX}/lib/${TRIPLET}/blas/* ${PREFIX}/lib/${TRIPLET}
-  mv ${PREFIX}/lib/${TRIPLET}/lapack/* ${PREFIX}/lib/${TRIPLET}
-  ldconfig -C "$LINGLONG_LD_SO_CACHE"
+  # 调整头文件查找路径：gstreamer / libusb 开发头文件经 buildext 装入 /usr/include
+  # （原脚本由 install_dep 解包到 ${PREFIX}/include），修正 src/CMakeLists.txt
+  # Qt6 分支的硬编码路径；glib 头文件由 pkg_check_modules(gobject-2.0) 提供
+  sed -i 's|${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0|/usr/include/gstreamer-1.0|g' src/CMakeLists.txt
+  sed -i 's|${CMAKE_INSTALL_PREFIX}/include/libusb-1.0|/usr/include/libusb-1.0|g' src/CMakeLists.txt
 
   # 修改路径
   find src -type f -name "*.service" -exec sed -i 's|^Exec=.*|Exec=deepin-camera|g' {} +
 
   # 构建
   VERSION=$(head -1 debian/changelog | awk -F'[()]' '{print $2}')
-  cmake -B build ${conf_args} \
+  cmake -B build-linglong ${conf_args} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=${PREFIX} \
         -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib/${TRIPLET} \
         -DVERSION=${VERSION} \
         -DLINGLONG_BUILD_ON=1
-  cmake --build build -j`nproc`
-  cmake --build build --target install > install.log 2>&1
+  cmake --build build-linglong -j`nproc`
+  cmake --build build-linglong --target install > install.log 2>&1
 
-  # 项目生成应用名和动态隐式加载的依赖库，ldd无法找到的其他库
-  LDD_FILES=(
-    deepin-camera
-    libv4l2.so
-    libportaudio.so
-    libusb-1.0.so
-    # 已包含在 runtime 中
-    # libudev.so
-    libavutil.so
-    libavformat.so
-    libswscale.so
-    libswresample.so
-    libffmpegthumbnailer.so
-    libavcodec.so
-    ../libdeepin-event-log.so
-  )
-
-  # 生成.install 文件
-  bash ./deploy_dep "${LDD_FILES[@]}"
-
-  # Add resource files from libimageeditor (any version)
-  ID_VALUE=$(awk -F ': ' '/^  id: / {print $2}' linglong.yaml)
-
-  echo "=== QT Version Detection ===" >&2
-  if [ -z "$QT_VERSION_MAJOR" ]; then
-      if command -v qmake >/dev/null 2>&1; then
-          QT_VERSION=$(qmake -query QT_VERSION 2>/dev/null || echo "unknown")
-          QT_MAJOR=$(qmake -query QT_VERSION 2>/dev/null | cut -d. -f1 || echo "6")
-          echo "Using QT_MAJOR from qmake: $QT_MAJOR" >&2
-      else
-          QT_MAJOR=6  # default value
-          echo "qmake not found, using default QT_MAJOR: $QT_MAJOR" >&2
+  # libblas3/liblapack3 经 apt 闭包（libimageeditor6 推荐链）带入层，其顶层
+  # libblas.so.3/liblapack.so.3 是指向 /etc/alternatives 的软链（层内不存在），
+  # 复制真实库到应用库目录，保证层内 ffmpegthumbnailer/ffmpeg 等二进制的
+  # 依赖可解析（ldd 运行时检查），替代旧配方的 mv blas/lapack 逻辑
+  install -d -m 0755 ${PREFIX}/lib/${TRIPLET}
+  for n in libblas.so.3 liblapack.so.3; do
+      src=$(readlink -f /usr/lib/${TRIPLET}/$n 2>/dev/null || true)
+      if [ -n "$src" ] && [ -e "$src" ]; then
+          cp -L "$src" ${PREFIX}/lib/${TRIPLET}/$n
       fi
-  else
-      QT_MAJOR=$QT_VERSION_MAJOR
-      echo "Using QT_MAJOR from environment: $QT_MAJOR" >&2
-  fi
+  done
 
-  version=$QT_MAJOR
-  lib_path="${PREFIX}/share/libimagevisualresult${version}"
-  echo "Full library path: $lib_path" >&2
-  find "$lib_path" >> "${ID_VALUE}.install"
-  echo "================================"
+  # deepin-camera 运行时用 dlopen 按裸名加载库（libPath()/load_libs.c），层内
+  # 与 base 均无裸名符号链接，需按旧层配方补齐，否则缩略图等功能失效；仅补
+  # base 缺失且由 depends 闭包带入层的项（base 有的项应用代码可通过版本名命中）。
+  # build: 阶段依赖库已在构建容器 /usr（build_depends -dev 包提供），取真实
+  # 版本名建裸名链接；depends 合并采用 skip_existing，不会被闭包内容覆盖
+  cd ${PREFIX}/lib/${TRIPLET}
+  for n in libswscale.so libffmpegthumbnailer.so libportaudio.so; do
+      src=$(readlink -f /usr/lib/${TRIPLET}/$n 2>/dev/null || true)
+      [ -n "$src" ] && [ -e "$src" ] && ln -sf "$(basename "$src")" $n
+  done
+  cd - >/dev/null
 
-# allow apt download in build and do apt update
 buildext:
   apt:
+    # 构建依赖：仅声明 base/runtime 层未提供的构建期包。
+    # Qt6/DTK6/X11/glib/udev 等开发包与工具链由 runtime 层和 base 层提供。
     build_depends:
-      - libc6
+      - cmake
+      - libavutil-dev
+      - libavformat-dev
+      - libavcodec-dev
+      - libswscale-dev
+      - libswresample-dev
+      - libv4l-dev
+      - portaudio19-dev
+      - libpciaccess-dev
+      - libusb-1.0-0-dev
+      - libffmpegthumbnailer-dev
+      - libva-dev
+      - libimageeditor6-dev
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
+    # 运行依赖：仅声明 base/runtime 层未提供的直接运行时包。
+    # ffmpeg/udev/v4l2/usb 等运行库已在 base/runtime 中；deepin-event-log
+    # 提供代码 dlopen 的裸名 libdeepin-event-log.so。
+    depends:
+      - deepin-event-log
+      - libimageeditor6
+      - libportaudio2
+      - libffmpegthumbnailer4v5
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - dmidecode
