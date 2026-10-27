@@ -37,6 +37,7 @@ extern "C" {
 #include <fcntl.h>
 #include <stdio.h>
 #include <csignal>
+#include <X11/Xlib.h>
 
 #ifndef DEEPIN_CAMERA_PRO
 #include "config.h"
@@ -111,6 +112,24 @@ static void handleSignal(int sig)
 
 int main(int argc, char *argv[])
 {
+    // 硬编定制开关：仅卓怡 NL60R 通过 os-config 下发的 DConfig override 将其置为 true。
+    // 只有开启时才尝试 VAAPI 硬编并开启 Xlib 线程安全；其余机型行为完全不变。
+    bool hwEncodeEnabled = false;
+#ifdef DTKCORE_CLASS_DConfigFile
+    {
+        DConfig *encodeCfg = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
+        if (encodeCfg && encodeCfg->isValid() && encodeCfg->keyList().contains("hwEncodeStatus")) {
+            hwEncodeEnabled = encodeCfg->value("hwEncodeStatus").toBool();
+        }
+    }
+#endif
+    set_hw_encode_status(hwEncodeEnabled ? 1 : 0);
+    if (hwEncodeEnabled) {
+        // 编码子线程会经 libva-x11 调用 XOpenDisplay；
+        // 必须在任何 Xlib/Qt 使用之前开启 Xlib 线程安全，否则子线程里 XOpenDisplay 返回 NULL。
+        XInitThreads();
+    }
+
     // 将日志配置提前，以确保所有日志没有遗漏
     //qputenv("QT_LOGGING_RULES", "*.debug=true;*.info=true");
     DLogManager::registerConsoleAppender();

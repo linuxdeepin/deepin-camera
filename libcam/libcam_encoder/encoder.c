@@ -46,6 +46,7 @@
 #include <pciaccess.h>
 
 #include <va/va.h>
+#include <va/va_x11.h>
 
 #include "cameraconfig.h"
 #include "core_time.h"
@@ -2311,12 +2312,16 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
     int ret;
     is_vaapi =  HW_VAAPI_OK;
 
-   if(!check_vaapi_support())
-   {
-        is_vaapi =  HW_VAAPI_FAIL1;
+    /*
+     * 仅对开启硬编的定制机型(卓怡 NL60R，DConfig: hwEncodeStatus=true)跳过 check_vaapi_support()：
+     * 该探测与下面的 av_hwdevice_ctx_create 重复，且部分 VA 驱动对 vaQueryConfigProfiles(NULL)
+     * 空列表处理不当会崩溃；其余机型完全保持原有逻辑：check_vaapi_support() 恒失败 -> 软编。
+     */
+    if (!get_hw_encode_status() && !check_vaapi_support()) {
+        is_vaapi = HW_VAAPI_FAIL1;
         fprintf(stderr, "no gpu card for vaapi\n");
         return NULL;
-   }
+    }
 
     //assertions
     assert(encoder_ctx != NULL);
@@ -2368,7 +2373,20 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
     }
 
 
-    int err = getAvutil()->m_av_hwdevice_ctx_create(&hw_device_ctx, AV_HWDEVICE_TYPE_VAAPI,  NULL, NULL, 0);
+    /*
+     * 先用 FFmpeg 默认后端（多数平台走 DRM），失败再回退 X11 后端
+     * （部分 VA 驱动只实现了 X11 后端，DRM 会 init 失败）。
+     */
+    int err = getAvutil()->m_av_hwdevice_ctx_create(&hw_device_ctx, AV_HWDEVICE_TYPE_VAAPI, NULL, NULL, 0);
+    if (err < 0) {
+        getAvutil()->m_av_buffer_unref(&hw_device_ctx);
+        AVDictionary *hwopts = NULL;
+        if (getAvutil()->m_av_dict_set)
+            getAvutil()->m_av_dict_set(&hwopts, "connection_type", "x11", 0);
+        err = getAvutil()->m_av_hwdevice_ctx_create(&hw_device_ctx, AV_HWDEVICE_TYPE_VAAPI, NULL, hwopts, 0);
+        if (getAvutil()->m_av_dict_free)
+            getAvutil()->m_av_dict_free(&hwopts);
+    }
     if (err < 0) {
         fprintf(stderr, "Failed to create a VAAPI device. Error code: %s\n", vm_err22str(err));
         is_vaapi =  HW_VAAPI_FAIL5;
@@ -2509,24 +2527,18 @@ static encoder_video_context_t *encoder_video_init_vaapi(encoder_context_t *enco
 
     /* open codec*/
    if ((ret = getLoadLibsInstance()->m_avcodec_open2(video_codec_data->codec_context,video_codec_data->codec,&video_codec_data->private_options)) < 0){
-        fprintf(stderr, "ENCODER: could not open video codec (%s): %i - using raw input\n", video_defaults->codec_name, ret);
+        /* VAAPI 编码器无法打开（例如该设备 VAAPI 只有解码、没有 H264 编码入口）。
+         * 直接返回 NULL，由 encoder_init() 回退到软件编码(encoder_video_init)，与 FAIL8 一致；
+         * 这里不能再调用 encoder_set_raw_video_input()：它会把 video_codec_ind 置为 0(raw)，
+         * 使回退退化成“raw 直通”，导致封装异常/崩溃。 */
+        fprintf(stderr, "ENCODER: could not open VAAPI video codec: %i - fallback to software\n", ret);
         free(video_codec_data->codec_context);
         video_codec_data->codec_context = NULL;
         video_codec_data->codec = 0;
-        /*we will use raw data so free the codec data*/
         free(video_codec_data);
-        video_defaults = encoder_get_video_codec_defaults(0);
-        encoder_set_raw_video_input(encoder_ctx, video_defaults);
-
-        //alloc outbuf
-        if(enc_video_ctx->outbuf_size <= 0)
-         enc_video_ctx->outbuf_size = 240000;//1792
-        if(enc_video_ctx->outbuf != NULL)
-         free(enc_video_ctx->outbuf);
         is_vaapi =  HW_VAAPI_FAIL9;
         getAvutil()->m_av_buffer_unref(&hw_device_ctx);
         fprintf(stderr, "FAIL to encoder_video_init_vaapi:%d.\n", is_vaapi);
-        free(video_codec_data);
         return NULL;
     }
 

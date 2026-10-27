@@ -110,6 +110,8 @@ static int statusForceGles = 0; //forceGles   1,强走GLES
 
 static int is_pgux = 0; //是否是pugx
 
+static int hw_encode_status = 0; //是否开启硬编（卓怡 NL60R 定制）
+
 static char libva_driver_name[200];
 
 static char libvdpau_driver_name[200];
@@ -1425,6 +1427,16 @@ void set_pugx_status(int status)
 int get_pugx_status()
 {
     return is_pgux;
+}
+
+void set_hw_encode_status(int status)
+{
+    hw_encode_status = status;
+}
+
+int get_hw_encode_status()
+{
+    return hw_encode_status;
 }
 
 void set_project_id(const char *id)

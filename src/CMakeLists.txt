@@ -122,6 +122,7 @@ pkg_check_modules(3rd_lib REQUIRED
         pciaccess
         libva
         libva-x11
+        x11
 #        libv4l2
 #        libudev
 #        libusb-1.0
