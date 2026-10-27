@@ -436,6 +436,30 @@ void set_pugx_status(int status);
 
 int get_pugx_status();
 
+/*
+ * set hardware encode status (project customization, only for 卓怡 NL60R)
+ * args:
+ *    status - 1 to enable VAAPI hardware encode, 0 to keep software encode
+ *
+ * asserts:
+ *    none
+ *
+ * returns: none
+ */
+void set_hw_encode_status(int status);
+
+/*
+ * get hardware encode status
+ * args:
+ *    none
+ *
+ * asserts:
+ *    none
+ *
+ * returns: 1 if hardware encode enabled, 0 otherwise
+ */
+int get_hw_encode_status();
+
 void set_forceGles(int status);
 
 int is_forceGles();
