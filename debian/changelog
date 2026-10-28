@@ -1,3 +1,13 @@
+deepin-camera (6.5.49) unstable; urgency=medium
+
+  * chore: Update version to 6.5.49
+  * build(linglong): migrate to buildext.apt declarative dependencies
+  * docs(camera): add Portuguese help manual
+  * fix(thumbnail): pass file URL when opening snapshot via DBus
+  * i18n: Translate deepin-camera_en_US.ts in ms
+
+ -- re2zero <yangwu@uniontech.com>  Wed, 28 Oct 2026 14:09:31 +0800
+
 deepin-camera (6.5.48) unstable; urgency=medium
 
   * fix(a11y): add AT-SPI names for exposure slider and image menu
