@@ -32,6 +32,16 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
+        "hwEncodeStatus": {
+            "value": false,
+            "serial": 0,
+            "flags": ["global"],
+            "name": "enable hardware encode",
+            "name[zh_CN]": "启用硬件编码",
+            "description": "Whether to enable VAAPI hardware encoding (project customization, currently only for 卓怡 NL60R)",
+            "permissions": "readwrite",
+            "visibility": "private"
+        },
         "libVaDriverName": {
             "value": "",
             "serial": 0,
