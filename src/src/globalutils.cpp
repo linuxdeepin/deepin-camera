@@ -12,6 +12,8 @@
 #include <QDBusInterface>
 #include <QDBusArgument>
 #include <QDBusReply>
+#include "ddlog.h"
+using namespace DDLog;
 
 DCORE_USE_NAMESPACE
 
@@ -83,7 +85,7 @@ bool GlobalUtils::isLowPerformanceBoard()
     QString systemInfoInterface = "com.deepin.system.SystemInfo";
     auto ver = DSysInfo::majorVersion().toInt();
     if (ver > 20) {
-        qDebug() << "Condition check: System version > 20, using newer D-Bus interface";
+        qCDebug(appLog) << "Condition check: System version > 20, using newer D-Bus interface";
         systemInfoService = "org.deepin.dde.SystemInfo1";
         systemInfoPath = "/org/deepin/dde/SystemInfo1";
         systemInfoInterface = "org.deepin.dde.SystemInfo1";
@@ -91,7 +93,7 @@ bool GlobalUtils::isLowPerformanceBoard()
 
     QDBusInterface *monitorInterface = new QDBusInterface(systemInfoService, systemInfoPath, "org.freedesktop.DBus.Properties", QDBusConnection::systemBus());
     if (!monitorInterface->isValid()) {
-        qWarning() << "Failed to connect to system info D-Bus interface";
+        qCWarning(appLog) << "Failed to connect to system info D-Bus interface";
         return false;
     }
 
@@ -100,32 +102,32 @@ bool GlobalUtils::isLowPerformanceBoard()
 
     replay.value().variant().value<QDBusArgument>() >> dmiInfo;
 
-    qDebug() << "System DMI info - Product Name:" << dmiInfo.productName;
-    qDebug() << "System DMI info - Manufacturer:" << dmiInfo.Manufacturer;
-    qDebug() << "System DMI info - Version:" << dmiInfo.version;
+    qCDebug(appLog) << "System DMI info - Product Name:" << dmiInfo.productName;
+    qCDebug(appLog) << "System DMI info - Manufacturer:" << dmiInfo.Manufacturer;
+    qCDebug(appLog) << "System DMI info - Version:" << dmiInfo.version;
 
     // BXC 600F/NZ2750、CC GWMNDA1GL1等主板不能满足mp4封装的性能要求，因此需要特殊适配
     for (auto board : m_LowPerformanceBoards) {
         if (dmiInfo.productName.contains(board)) {
-            qInfo() << "Detected low performance board:" << board;
+            qCInfo(appLog) << "Detected low performance board:" << board;
             return true;
         }
     }
 
-    qDebug() << "No low performance board detected";
+    qCDebug(appLog) << "No low performance board detected";
     return false;
 }
 
 void GlobalUtils::loadCameraConf()
 {
-    qDebug() << "Loading camera configuration from:" << CAMERA_CONF_PATH;
+    qCDebug(appLog) << "Loading camera configuration from:" << CAMERA_CONF_PATH;
     QSettings conf(CAMERA_CONF_PATH, QSettings::IniFormat);
     QVariant value = conf.value(LOW_PERFORMANCE_BOARD);
     if (value.isValid()) {
-        qDebug() << "Condition check: Configuration value valid";
+        qCDebug(appLog) << "Condition check: Configuration value valid";
         m_LowPerformanceBoards = value.toStringList();
     } else {
-        qWarning() << "No low performance boards configuration found in" << CAMERA_CONF_PATH;
+        qCWarning(appLog) << "No low performance boards configuration found in" << CAMERA_CONF_PATH;
         m_LowPerformanceBoards = QStringList();
     }
 
@@ -137,5 +139,5 @@ void GlobalUtils::loadCameraConf()
         m_IsLowPerformanceDevice = dconfig->value("isLowPerformanceDevice").toBool();
     }
 #endif
-    qDebug() << "Function completed: loadCameraConf";
+    qCDebug(appLog) << "Function completed: loadCameraConf";
 }

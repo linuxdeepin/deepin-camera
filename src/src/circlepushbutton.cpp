@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -11,6 +11,8 @@
 #include <QDebug>
 #include <QSvgRenderer>
 #include <QApplication>
+#include "ddlog.h"
+using namespace DDLog;
 
 circlePushButton::circlePushButton(QWidget *parent): QPushButton(parent), m_radius(20)
 {
@@ -270,7 +272,7 @@ void circlePushButton::setButtonRadius(int radius)
 {
     // qDebug() << "Function started: setButtonRadius";
     if (radius <= 0) {
-        qWarning() << "Invalid button radius:" << radius;
+        qCWarning(appLog) << "Invalid button radius:" << radius;
         return;
     }
 

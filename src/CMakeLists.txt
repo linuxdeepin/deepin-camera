@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+# SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -270,8 +270,10 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/translations
 #hw机型增加DConfig配置
 set(APPID org.deepin.camera)
 set(configFile ${PROJECT_SOURCE_DIR}/assets/org.deepin.camera.encode.json)
+#日志规则配置（调试模式动态日志级别）
+set(configFileLog ${PROJECT_SOURCE_DIR}/assets/org.deepin.camera.json)
 if (DTK_VERSION EQUAL "6")
-    dtk_add_config_meta_files(APPID ${APPID} FILES ${configFile})
+    dtk_add_config_meta_files(APPID ${APPID} FILES ${configFile} ${configFileLog})
 else()
-    install(FILES ${configFile} DESTINATION ${CMAKE_INSTALL_DATADIR}/dsg/configs/org.deepin.camera/)
+    install(FILES ${configFile} ${configFileLog} DESTINATION ${CMAKE_INSTALL_DATADIR}/dsg/configs/org.deepin.camera/)
 endif()

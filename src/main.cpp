@@ -3,6 +3,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include "ddlog.h"
+using namespace DDLog;
 extern "C" {
 #include "camview.h"
 #include "v4l2_formats.h"
@@ -56,22 +58,22 @@ DWIDGET_USE_NAMESPACE
 //判断是否采用wayland显示服务器
 static bool CheckWayland()
 {
-    qDebug() << "Function started: CheckWayland";
+    qCDebug(appLog) << "Function started: CheckWayland";
     auto e = QProcessEnvironment::systemEnvironment();
     QString XDG_SESSION_TYPE = e.value(QStringLiteral("XDG_SESSION_TYPE"));
     QString WAYLAND_DISPLAY = e.value(QStringLiteral("WAYLAND_DISPLAY"));
 
     if (XDG_SESSION_TYPE == QLatin1String("wayland") || WAYLAND_DISPLAY.contains(QLatin1String("wayland"), Qt::CaseInsensitive)) {
-        qDebug() << "Condition check: Wayland environment detected";
+        qCDebug(appLog) << "Condition check: Wayland environment detected";
         return true;
     }
-    qDebug() << "Condition check: Non-Wayland environment detected";
+    qCDebug(appLog) << "Condition check: Non-Wayland environment detected";
     return false;
 }
 
 static bool CheckFFmpegEnv()
 {
-    qDebug() << "Function started: CheckFFmpegEnv";
+    qCDebug(appLog) << "Function started: CheckFFmpegEnv";
     QDir dir;
     QString path = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     dir.setPath(path);
@@ -83,7 +85,7 @@ static bool CheckFFmpegEnv()
         QRegularExpressionMatch match = re.match(list[i]);
         if (match.hasMatch()) {
             libName = list[i];
-            qDebug() << "Found matching library:" << libName;
+            qCDebug(appLog) << "Found matching library:" << libName;
             break;
         }
     }
@@ -92,7 +94,7 @@ static bool CheckFFmpegEnv()
     for (int i = 0; i < list.count(); i++) {
         if (re.exactMatch(list[i])) {
             libName = list[i];
-            qDebug() << "Found matching library:" << libName;
+            qCDebug(appLog) << "Found matching library:" << libName;
             break;
         }
     }
@@ -101,11 +103,11 @@ static bool CheckFFmpegEnv()
     QLibrary libavcodec;   //检查编码器是否存在
     libavcodec.setFileName(libName);
     if (!libavcodec.load()) {
-        qDebug() << "Condition check: Library loading failed";
-        qWarning() << QString("Not found libavcodec: %1").arg(libavcodec.errorString());
+        qCDebug(appLog) << "Condition check: Library loading failed";
+        qCWarning(appLog) << QString("Not found libavcodec: %1").arg(libavcodec.errorString());
         return false;
     }
-    qDebug() << "The libavcodec is loaded successfully.";
+    qCDebug(appLog) << "The libavcodec is loaded successfully.";
     typedef AVCodec *(*p_avcodec_find_encoder)(enum AVCodecID id);
     p_avcodec_find_encoder m_avcodec_find_encoder = nullptr;
     m_avcodec_find_encoder = reinterpret_cast<p_avcodec_find_encoder>(libavcodec.resolve("avcodec_find_encoder"));
@@ -115,14 +117,14 @@ static bool CheckFFmpegEnv()
         pCodec = m_avcodec_find_encoder(AV_CODEC_ID_H264);
 
     if (pCodec) {
-        qDebug() << "Video encoder exists. AVCodecID:" << AV_CODEC_ID_H264;
+        qCDebug(appLog) << "Video encoder exists. AVCodecID:" << AV_CODEC_ID_H264;
         DataManager::instance()->setEncExists(true);
     } else {
-        qWarning() << "Can not find output video encoder! AVCodecID:" << AV_CODEC_ID_H264;
+        qCWarning(appLog) << "Can not find output video encoder! AVCodecID:" << AV_CODEC_ID_H264;
         DataManager::instance()->setEncExists(false);
     }
 
-    qDebug() << "Function completed: CheckFFmpegEnv";
+    qCDebug(appLog) << "Function completed: CheckFFmpegEnv";
     return true;
 }
 
@@ -130,7 +132,7 @@ static bool CheckFFmpegEnv()
 // 添加信号处理函数
 static void handleSignal(int sig)
 {
-    qWarning() << "Received signal:" << sig;
+    qCWarning(appLog) << "Received signal:" << sig;
     // 在HW机器、SW机器上，发现使用exit(0)退出会导致Qt某些函数空指针异常，从而导致崩溃，疑似在资源回收环节出了问题。所以我们使用QApplication::quit()更优雅地退出。
     QTimer::singleShot(0, qApp, []() {
         QApplication::quit();
@@ -143,33 +145,33 @@ int main(int argc, char *argv[])
     // 初始化日志规则：读取环境变量和 DConfig 配置
     MLogger logger;
 
-    qInfo() << "Starting deepin-camera application...";
+    qCInfo(appLog) << "Starting deepin-camera application...";
     // Task 326583 不参与合成器崩溃重连
     unsetenv("QT_WAYLAND_RECONNECT");
 
     QAccessible::installFactory(accessibleFactory);
     bool bWayland = CheckWayland();
-    qInfo() << "Wayland status:" << (bWayland ? "enabled" : "disabled");
+    qCInfo(appLog) << "Wayland status:" << (bWayland ? "enabled" : "disabled");
     
     bool bFFmpegEnv = CheckFFmpegEnv();
     if (argc > 1) {
-        qDebug() << "Condition check: Arguments found";
+        qCDebug(appLog) << "Condition check: Arguments found";
         if (QString(argv[1]) == "-g") {
             bFFmpegEnv = false;
-            qDebug() << "Running in gstreamer test environment";
+            qCDebug(appLog) << "Running in gstreamer test environment";
         }
     }
     DataManager::instance()->setEncodeEnv(bFFmpegEnv ? FFmpeg_Env : GStreamer_Env);
-    qInfo() << "Encoding environment:" << (bFFmpegEnv ? "FFmpeg" : "GStreamer");
+    qCInfo(appLog) << "Encoding environment:" << (bFFmpegEnv ? "FFmpeg" : "GStreamer");
 
     //root login for this application
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         setenv("XDG_CURRENT_DESKTOP", "Deepin", 1);
-        qDebug() << "Set XDG_CURRENT_DESKTOP to Deepin";
+        qCDebug(appLog) << "Set XDG_CURRENT_DESKTOP to Deepin";
     }
 
     if (bWayland) {
-        qDebug() << "Condition check: Wayland configuration required";
+        qCDebug(appLog) << "Condition check: Wayland configuration required";
         QSurfaceFormat format;
         format.setRenderableType(QSurfaceFormat::OpenGLES);
         format.setDefaultFormat(format);
@@ -218,7 +220,7 @@ int main(int argc, char *argv[])
 
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("enableUsbGroup")) {
         bool enable = dconfig->value("enableUsbGroup").toBool();
-        qInfo() << "enable USB group:" << enable;
+        qCInfo(appLog) << "enable USB group:" << enable;
         DataManager::instance()->setEnableUsbGroup(enable);
     }
 
@@ -227,20 +229,20 @@ int main(int argc, char *argv[])
     // 8K预览功能默认关闭，因为多个厂家的摄像头在8K预览的时候表现异常
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("enable8kPreview")) {
         bool enable = dconfig->value("enable8kPreview").toBool();
-        qInfo() << "enable 8K preview:" << enable;
+        qCInfo(appLog) << "enable 8K preview:" << enable;
         DataManager::instance()->setEnable8kPreview(enable);
         set_enable_8k_preview(enable ? 1 : 0);
     }
 
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("deviceBlacklist")) {
         QStringList deviceBlacklist = dconfig->value("deviceBlacklist").toStringList();
-        qInfo() << "device blacklist:" << deviceBlacklist;
+        qCInfo(appLog) << "device blacklist:" << deviceBlacklist;
         DataManager::instance()->setDeviceBlacklist(deviceBlacklist);
     }
 
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("preferredResolution")) {
         QString preferredResolution = dconfig->value("preferredResolution").toString();
-        qInfo() << "preferred resolution:" << preferredResolution;
+        qCInfo(appLog) << "preferred resolution:" << preferredResolution;
         if (!preferredResolution.isEmpty()) {
             DataManager::instance()->setPreferredResolution(preferredResolution);
             QSize size = DataManager::instance()->getPreferredResolution();
@@ -253,10 +255,10 @@ int main(int argc, char *argv[])
     if (dconfig && dconfig->isValid() && dconfig->keyList().contains("useRgbData")) {
         int useRgbData = dconfig->value("useRgbData").toInt();
         if (useRgbData != -1 && useRgbData != 0 && useRgbData != 1) {
-            qWarning() << "Invalid useRgbData value in config:" << useRgbData << "- mapping to default value -1 (auto)";
+            qCWarning(appLog) << "Invalid useRgbData value in config:" << useRgbData << "- mapping to default value -1 (auto)";
             useRgbData = -1; 
         }
-        qInfo() << "use RGB data for preview:" << useRgbData;
+        qCInfo(appLog) << "use RGB data for preview:" << useRgbData;
         DataManager::instance()->setUseRgbData(useRgbData);
     }
 
@@ -268,12 +270,12 @@ int main(int argc, char *argv[])
         qputenv("VDPAU_DRIVER", libVdpauDriverName.toLocal8Bit());
     }
 #endif
-    qInfo() << "mp4EncodeMode value is:" << get_pugx_status();
-    qInfo() << "projectID value is:" << get_project_id();
-    qInfo() << "libVaDriverName value is:" << get_libva_driver_name();
-    qInfo() << "libVdpauDriverName value is:" << get_libvdpau_driver_name();
-    qInfo() << "LIBVA_DRIVER_NAME value is:" << qgetenv("LIBVA_DRIVER_NAME");
-    qInfo() << "VDPAU_DRIVER value is:" << qgetenv("VDPAU_DRIVER");
+    qCInfo(appLog) << "mp4EncodeMode value is:" << get_pugx_status();
+    qCInfo(appLog) << "projectID value is:" << get_project_id();
+    qCInfo(appLog) << "libVaDriverName value is:" << get_libva_driver_name();
+    qCInfo(appLog) << "libVdpauDriverName value is:" << get_libvdpau_driver_name();
+    qCInfo(appLog) << "LIBVA_DRIVER_NAME value is:" << qgetenv("LIBVA_DRIVER_NAME");
+    qCInfo(appLog) << "VDPAU_DRIVER value is:" << qgetenv("VDPAU_DRIVER");
     if (mp4Encode == -1) {
         //判断是否是X机型
         QStringList options;
@@ -291,15 +293,15 @@ int main(int argc, char *argv[])
 
         if (str_output.contains("PGUX", Qt::CaseInsensitive)) {
             mp4Encode = 1;
-            qDebug() << "this is PGUX";
+            qCDebug(appLog) << "this is PGUX";
         } else {
             mp4Encode = 0;
         }
-        qInfo() << "process find mp4EncodeMode value is:" << get_pugx_status();
+        qCInfo(appLog) << "process find mp4EncodeMode value is:" << get_pugx_status();
     }
 
     set_pugx_status(mp4Encode);
-    qInfo() << "last mp4EncodeMode value is:" << get_pugx_status();
+    qCInfo(appLog) << "last mp4EncodeMode value is:" << get_pugx_status();
 
 #if QT_VERSION_MAJOR > 5
     QElapsedTimer time;
@@ -309,8 +311,8 @@ int main(int argc, char *argv[])
     time.start();
     QString lutDir = LUT_DIR;
     initFilters(lutDir.toStdString().c_str());
-    qDebug() << "LUT_DIR: " << lutDir;
-    qDebug() << QString("Filter initialization completed in %1 ms").arg(time.elapsed());
+    qCDebug(appLog) << "LUT_DIR: " << lutDir;
+    qCDebug(appLog) << QString("Filter initialization completed in %1 ms").arg(time.elapsed());
     CApplication a(argc, argv);
     // 注册信号处理函数
     // 放在此处，是为了确保Application已经创建了实例
@@ -336,60 +338,60 @@ int main(int argc, char *argv[])
     //日志
     DLogManager::registerConsoleAppender();
     DLogManager::registerFileAppender();
-    qInfo() << "Log system initialized. Log file:" << DLogManager::getlogFilePath();
+    qCInfo(appLog) << "Log system initialized. Log file:" << DLogManager::getlogFilePath();
     //版本
     qApp->setApplicationVersion(DApplication::buildVersion(VERSION));
     QIcon myIcon = QIcon::fromTheme("deepin-camera");
     qApp->setWindowIcon(myIcon);
     qApp->setProductIcon(myIcon);//08月21获悉已添加到系统，故更改为从系统获取
-    qDebug() << "Application version:" << DApplication::buildVersion(VERSION);
+    qCDebug(appLog) << "Application version:" << DApplication::buildVersion(VERSION);
 
     //应用描述
     qApp->setApplicationDescription(QObject::tr("Camera is an image and video capture utility using your PC camera or webcam."));
 
     dc::Settings::get().init();
-    qDebug() << "Application settings initialized";
+    qCDebug(appLog) << "Application settings initialized";
 
 #if QT_VERSION_MAJOR <= 5
     DApplicationSettings saveTheme;
 #endif
 
     if (!qApp->setSingleInstance("deepin-camera")) {
-        qWarning() << "Another deepin camera instance is already running";
+        qCWarning(appLog) << "Another deepin camera instance is already running";
         QDBusInterface iface("com.deepin.camera", QDir::separator(), "com.deepin.camera");
         if (iface.isValid()) {
-            qDebug() << "Attempting to raise existing instance";
+            qCDebug(appLog) << "Attempting to raise existing instance";
             iface.asyncCall("Raise");
         }
 
-        qDebug() << "Function completed: main (exit due to existing instance)";
+        qCDebug(appLog) << "Function completed: main (exit due to existing instance)";
         exit(0);
     }
 
     CMainWindow w;
     a.setMainWindow(&w);
-    qDebug() << "Main window created and set";
+    qCDebug(appLog) << "Main window created and set";
 
     Dtk::Widget::moveToCenter(&w);
     w.setWayland(bWayland);
     //判断是否是平板环境
     if (CamApp->isPanelEnvironment()) {
         w.showMaximized();
-        qDebug() << "Running in panel environment, showing maximized window";
+        qCDebug(appLog) << "Running in panel environment, showing maximized window";
     } else {
         w.setMinimumSize(CMainWindow::minWindowWidth, CMainWindow::minWindowHeight);
-        qDebug() << "Running in desktop environment, showing normal window";
+        qCDebug(appLog) << "Running in desktop environment, showing normal window";
     }
 
     w.show();
     w.loadAfterShow();
-    qInfo() << "Main window displayed and initialized";
+    qCInfo(appLog) << "Main window displayed and initialized";
 
     ApplicationAdaptor adaptor(&w);
     QDBusConnection::sessionBus().registerService("com.deepin.Camera");
     QDBusConnection::sessionBus().registerObject("/com/deepin/camera", &w);
-    qDebug() << "DBus service and object registered";
+    qCDebug(appLog) << "DBus service and object registered";
 
-    qInfo() << "Application startup completed successfully";
+    qCInfo(appLog) << "Application startup completed successfully";
     return qApp->exec();
 }
