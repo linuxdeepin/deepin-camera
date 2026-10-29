@@ -135,7 +135,7 @@ void Camera::restartCamera()
 {
     if (!m_camera || m_camera->status() == QCamera::UnloadedStatus) {
         QList<QCameraInfo> availableCams = QCameraInfo::availableCameras();
-        if ((availableCams.isEmpty() || (m_camera && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
+        if ((availableCams.isEmpty() || (m_camera && m_camera->error() == QCamera::NoError && availableCams.indexOf(QCameraInfo(*m_camera)) != -1))
                 && !m_cameraDevList.isEmpty()) {
             emit cameraCannotUsed();
             return;
@@ -242,10 +242,18 @@ void Camera::startCamera(const QString &devName)
         stopCamera();
 
     m_camera = new QCamera(devName.toStdString().c_str());
-    QCameraInfo cameraInfo(*m_camera);
-    m_curDevName = devName;
 
     connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(onCameraStatusChanged(QCamera::Status)));
+    connect(m_camera, SIGNAL(error(QCamera::Error)), this, SIGNAL(cameraCannotUsed()));
+
+    if (m_camera->error() != QCamera::NoError) {
+        stopCamera();
+        emit cameraCannotUsed();
+        return;
+    }
+
+    QCameraInfo cameraInfo(*m_camera);
+    m_curDevName = devName;
 
     m_imageCapture = new QCameraImageCapture(m_camera);
     m_mediaRecoder = new QMediaRecorder(m_camera);
