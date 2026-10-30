@@ -1,15 +1,17 @@
-// Copyright (C) 2021 ~ 2022 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2021 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "audioprocessingthread.h"
+#include "ddlog.h"
+using namespace DDLog;
 
 #define FRAME_SIZE 512
 
 AudioProcessingThread::AudioProcessingThread()
 {
-    qDebug() << "Initializing AudioProcessingThread";
+    qCDebug(appLog) << "Initializing AudioProcessingThread";
     m_auidoBuffer = nullptr;
     m_data = nullptr;
     m_datasize = 0;
@@ -18,37 +20,37 @@ AudioProcessingThread::AudioProcessingThread()
 
 void AudioProcessingThread::stop()
 {
-    qDebug() << "Stopping audio processing thread";
+    qCDebug(appLog) << "Stopping audio processing thread";
     m_stopped = 1;
 }
 
 void AudioProcessingThread::init()
 {
-    qDebug() << "Initializing audio processing thread state";
+    qCDebug(appLog) << "Initializing audio processing thread state";
     m_stopped = 0;
 }
 
 void AudioProcessingThread::run()
 {
-    qDebug() << "Starting audio processing thread";
+    qCDebug(appLog) << "Starting audio processing thread";
     uint datasize = 0;
     audio_context_t *audio_ctx = get_audio_context();
     if(!audio_ctx)
     {
-        qWarning() << "No audio context available: skipping audio processing";
+        qCWarning(appLog) << "No audio context available: skipping audio processing";
         return;
     }
 
     //初始化音频样本获取缓存大小
     audio_set_cap_buffer_size(audio_ctx,
         FRAME_SIZE * audio_get_channels(audio_ctx));
-    qDebug() << "Audio capture buffer size set to:" << FRAME_SIZE * audio_get_channels(audio_ctx);
+    qCDebug(appLog) << "Audio capture buffer size set to:" << FRAME_SIZE * audio_get_channels(audio_ctx);
     
     audio_start(audio_ctx);
-    qDebug() << "Audio capture started";
+    qCDebug(appLog) << "Audio capture started";
 
     datasize = audio_ctx->capture_buff_size * sizeof(sample_t);
-    qDebug() << "Audio data size:" << datasize << "bytes";
+    qCDebug(appLog) << "Audio data size:" << datasize << "bytes";
 
     /*
      * alloc the buffer after audio_start
@@ -60,7 +62,7 @@ void AudioProcessingThread::run()
     m_auidoBuffer = audio_get_buffer(audio_ctx);
 
     uint sample_type = GV_SAMPLE_TYPE_FLOAT;
-    qDebug() << "Using sample type: FLOAT";
+    qCDebug(appLog) << "Using sample type: FLOAT";
 
     while (m_stopped == 0) {
         int ret = audio_get_next_buffer(audio_ctx, m_auidoBuffer, sample_type, get_audio_fx_mask());
@@ -76,7 +78,7 @@ void AudioProcessingThread::run()
         }
         else if (ret == 0) {
             if (m_datasize != datasize) {
-                qDebug() << "Resizing audio data buffer from" << m_datasize << "to" << datasize << "bytes";
+                qCDebug(appLog) << "Resizing audio data buffer from" << m_datasize << "to" << datasize << "bytes";
                 m_datasize = datasize;
                 if (m_data != nullptr) {
                     delete [] m_data;
@@ -92,24 +94,24 @@ void AudioProcessingThread::run()
             m_rwMtxData.unlock();
         }
         else {
-            qWarning() << "Error getting next audio buffer, return code:" << ret;
+            qCWarning(appLog) << "Error getting next audio buffer, return code:" << ret;
         }
     }
 
-    qDebug() << "Stopping audio capture and cleaning up resources";
+    qCDebug(appLog) << "Stopping audio capture and cleaning up resources";
     audio_stop(audio_ctx);
     audio_delete_buffer(m_auidoBuffer);
-    qInfo() << "Audio processing thread stopped";
+    qCInfo(appLog) << "Audio processing thread stopped";
 
     return;
 }
 
 AudioProcessingThread::~AudioProcessingThread()
 {
-    qDebug() << "Destroying AudioProcessingThread";
+    qCDebug(appLog) << "Destroying AudioProcessingThread";
     if (m_data) {
         delete [] m_data;
         m_data = nullptr;
     }
-    qDebug() << "AudioProcessingThread destroyed";
+    qCDebug(appLog) << "AudioProcessingThread destroyed";
 }
