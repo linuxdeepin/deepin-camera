@@ -1,10 +1,12 @@
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "titlebar.h"
 #include "datamanager.h"
 #include <QDebug>
+#include "ddlog.h"
+using namespace DDLog;
 
 class TitlebarPrivate
 {
@@ -27,7 +29,7 @@ public:
 Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new TitlebarPrivate(this))
 {
     Q_D(Titlebar);
-    qDebug() << "Initializing Titlebar";
+    qCDebug(appLog) << "Initializing Titlebar";
 
     // 设置DBlurEffectWidget为完全透明
     setBlurEnabled(false);          // 关闭模糊效果
@@ -52,7 +54,7 @@ Titlebar::Titlebar(QWidget *parent) : DBlurEffectWidget(parent), d_ptr(new Title
     this->setGraphicsEffect(d->m_shadowEffect);
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &Titlebar::slotThemeTypeChanged);
-    qDebug() << "Titlebar initialization complete";
+    qCDebug(appLog) << "Titlebar initialization complete";
 }
 
 DTitlebar *Titlebar::titlebar()

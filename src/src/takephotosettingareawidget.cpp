@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -18,6 +18,8 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include <QScrollBar>
+#include "ddlog.h"
+using namespace DDLog;
 
 #define ANIMATION_DURATION 200
 #define ANIMATION_FOLD_DURATION 200
@@ -48,18 +50,18 @@ takePhotoSettingAreaWidget::takePhotoSettingAreaWidget(QWidget *parent) : QWidge
     , m_bPhoto(true)
     , m_filterType(filter_Normal)
 {
-    qDebug() << "Initializing takePhotoSettingAreaWidget";
+    qCDebug(appLog) << "Initializing takePhotoSettingAreaWidget";
     m_delayGroupDisplay = false;
     m_flashGroupDisplay = false;
     m_bPhotoToVideState = false;
     m_isBtnsFold = true;
     m_buttonGroupColor.setRgb(0, 0, 0, 255 * 0.4);
-    qDebug() << "Function completed: takePhotoSettingAreaWidget constructor";
+    qCDebug(appLog) << "Function completed: takePhotoSettingAreaWidget constructor";
 }
 
 void takePhotoSettingAreaWidget::initButtons()
 {
-    qDebug() << "Initializing buttons";
+    qCDebug(appLog) << "Initializing buttons";
     this->setObjectName(LEFT_BTNS_BOX);
     this->setAccessibleName(LEFT_BTNS_BOX);
 
@@ -221,12 +223,12 @@ void takePhotoSettingAreaWidget::initButtons()
 
     hideAll();
 
-    qDebug() << "Created" << m_filterPreviewBtnList.size() << "filter preview buttons";
+    qCDebug(appLog) << "Created" << m_filterPreviewBtnList.size() << "filter preview buttons";
 }
 
 void takePhotoSettingAreaWidget::initLayout()
 {
-    qDebug() << "Initializing layout";
+    qCDebug(appLog) << "Initializing layout";
     QPoint pos = this->pos();
     int btnHeight = m_filtersUnfoldBtn->height();
 
@@ -235,7 +237,7 @@ void takePhotoSettingAreaWidget::initLayout()
 
 void takePhotoSettingAreaWidget::init()
 {
-    qDebug() << "Initializing takePhotoSettingAreaWidget";
+    qCDebug(appLog) << "Initializing takePhotoSettingAreaWidget";
     initButtons();
     initLayout();
 
@@ -285,7 +287,7 @@ void takePhotoSettingAreaWidget::init()
 
 void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 {
-    qDebug() << "Showing fold state:" << bShow << "isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Showing fold state:" << bShow << "isShortcut:" << isShortcut;
     Q_UNUSED(bShow);
 
     circlePushBtnList btnList;
@@ -381,12 +383,12 @@ void takePhotoSettingAreaWidget::showFold(bool bShow, bool isShortcut)
 
         group->start(QAbstractAnimation::DeleteWhenStopped);
     });
-    qDebug() << "Exiting showFold";
+    qCDebug(appLog) << "Exiting showFold";
 }
 
 void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, bool isShortcut)
 {
-    qDebug() << "Entering showUnfold, bShow:" << bShow << "isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Entering showUnfold, bShow:" << bShow << "isShortcut:" << isShortcut;
     circlePushBtnList btnList;
     btnList.push_back(m_flashlightUnfoldBtn);
     btnList.push_back(m_delayUnfoldBtn);
@@ -479,12 +481,12 @@ void takePhotoSettingAreaWidget::showUnfold(bool bShow, circlePushButton *btn, b
     //折叠按钮与上一按钮间距比普通间距多10px 整体高度+10 回弹伸缩范围 +5
     setFixedSize(QSize(originBtn->width(), 10 + 5 + originBtn->height() * nBtnCount + (nBtnCount - 1) * m_btnHeightOffset));
     update();
-    qDebug() << "Exiting showUnfold";
+    qCDebug(appLog) << "Exiting showUnfold";
 }
 
 void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
 {
-    qDebug() << "Showing delay buttons:" << bShow << "isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Showing delay buttons:" << bShow << "isShortcut:" << isShortcut;
     //位移动画
     QPropertyAnimation *position1 = new QPropertyAnimation(m_noDelayBtn, "pos", this);
     QPropertyAnimation *position2 = new QPropertyAnimation(m_delay3SecondBtn, "pos", this);
@@ -606,12 +608,12 @@ void takePhotoSettingAreaWidget::showDelayButtons(bool bShow, bool isShortcut)
 
     setFixedSize(QSize(m_delayFoldBtn->width(), m_delayFoldBtn->height() * 4 + m_threeBtnOffset * 3 + 2));
     update();
-    qDebug() << "Exiting showDelayButtons";
+    qCDebug(appLog) << "Exiting showDelayButtons";
 }
 
 void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 {
-    qDebug() << "Showing flashlight buttons:" << bShow << "isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Showing flashlight buttons:" << bShow << "isShortcut:" << isShortcut;
     QPropertyAnimation *position1 = new QPropertyAnimation(m_flashlightOnBtn, "pos", this);
     QPropertyAnimation *position2 = new QPropertyAnimation(m_flashlightOffBtn, "pos", this);
 
@@ -626,7 +628,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
     ec.setOvershoot(EASING_OVERSHOOT);
 
     if (bShow) {
-        qDebug() << "show flashlight is show";
+        qCDebug(appLog) << "show flashlight is show";
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, 0));
         position1->setEndValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
@@ -660,7 +662,7 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
                 m_flashlightFoldBtn->setFocus();
         });
     } else {
-        qDebug() << "show flashlight is not show";
+        qCDebug(appLog) << "show flashlight is not show";
         position1->setDuration(ANIMATION_DURATION);
         position1->setStartValue(QPoint(0, m_delayFoldBtn->height() + m_threeBtnOffset));
         position1->setEndValue(QPoint(0, 0));
@@ -702,12 +704,12 @@ void takePhotoSettingAreaWidget::showFlashlights(bool bShow, bool isShortcut)
 
     setFixedSize(QSize(m_flashlightFoldBtn->width(), m_flashlightFoldBtn->height() * 3 + m_threeBtnOffset * 2 + 2));
     update();
-    qDebug() << "Exiting showFlashlights";
+    qCDebug(appLog) << "Exiting showFlashlights";
 }
 
 void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
 {
-    qDebug() << "Showing filter buttons:" << bShow << "isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Showing filter buttons:" << bShow << "isShortcut:" << isShortcut;
     QPropertyAnimation *posClose = new QPropertyAnimation(m_filtersCloseBtn, "pos", this);
     QPropertyAnimation *opacityClose = new QPropertyAnimation(m_filtersCloseBtn, "opacity", this);
     QPropertyAnimation *iconOpacityClose = new QPropertyAnimation(m_filtersCloseBtn, "iconopacity", this);
@@ -742,7 +744,7 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     endGeometry.setWidth(startGeometry.width());
 
     if (bShow) {
-        qDebug() << "show filters is show";
+        qCDebug(appLog) << "show filters is show";
         posScroll->setDuration(ANIMATION_FILTER_DURATION);
         posScroll->setEasingCurve(ec);
         posScroll->setStartValue(startGeometry);
@@ -795,13 +797,13 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
         });
 
         if (isShortcut) {
-            qDebug() << "is shortcut";
+            qCDebug(appLog) << "is shortcut";
             QTimer::singleShot(ANIMATION_FILTER_DURATION, this, [=] {
                 m_filtersFoldBtn->setFocus();
             });
         }
     } else {
-        qDebug() << "show filters is not show";
+        qCDebug(appLog) << "show filters is not show";
         posClose->setDuration(ANIMATION_FILTER_DURATION);
         posClose->setEasingCurve(ec);
         posClose->setStartValue(QPoint(5, (m_filtersFoldBtn->height() + m_threeBtnOffset*2) + endGeometry.height()));
@@ -867,19 +869,19 @@ void takePhotoSettingAreaWidget::showFilters(bool bShow, bool isShortcut)
     int height = (m_filtersFoldBtn->height() + m_threeBtnOffset*2 + 1) * 2 + endGeometry.height();
     setFixedSize(QSize(m_filterPreviewBtnList.last()->width(), height));
     update();
-    qDebug() << "Exiting showFilters";
+    qCDebug(appLog) << "Exiting showFilters";
 }
 
 void takePhotoSettingAreaWidget::foldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Fold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Fold button clicked, isShortcut:" << isShortcut;
     //closeAllGroup();
     showFold(true, isShortcut);
 }
 
 void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Unfold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Unfold button clicked, isShortcut:" << isShortcut;
     QPropertyAnimation * opacity = new QPropertyAnimation(m_unfoldBtn, "opacity", this);
     opacity->setStartValue(102);
     opacity->setEndValue(0);
@@ -909,13 +911,13 @@ void takePhotoSettingAreaWidget::unfoldBtnClicked(bool isShortcut)
 
 void takePhotoSettingAreaWidget::flashlightFoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Flashlight fold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Flashlight fold button clicked, isShortcut:" << isShortcut;
     showFlashlights(false, isShortcut);
 }
 
 void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Flashlight unfold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Flashlight unfold button clicked, isShortcut:" << isShortcut;
     hideAll();
     closeAllGroup();
     showFlashlights(true, isShortcut);
@@ -929,7 +931,7 @@ void takePhotoSettingAreaWidget::flashlightUnfoldBtnClicked(bool isShortcut)
 
 void takePhotoSettingAreaWidget::delayUnfoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Delay unfold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Delay unfold button clicked, isShortcut:" << isShortcut;
     hideAll();
     closeAllGroup();
     showDelayButtons(true, isShortcut);
@@ -938,13 +940,13 @@ void takePhotoSettingAreaWidget::delayUnfoldBtnClicked(bool isShortcut)
 
 void takePhotoSettingAreaWidget::delayfoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Delay fold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Delay fold button clicked, isShortcut:" << isShortcut;
     showDelayButtons(false, isShortcut);
 }
 
 void takePhotoSettingAreaWidget::filtersUnfoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Filters unfold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Filters unfold button clicked, isShortcut:" << isShortcut;
     hideAll();
     closeAllGroup();
     m_filtersGroupDislay = true;
@@ -954,14 +956,14 @@ void takePhotoSettingAreaWidget::filtersUnfoldBtnClicked(bool isShortcut)
 
 void takePhotoSettingAreaWidget::filtersFoldBtnClicked(bool isShortcut)
 {
-    qDebug() << "Filters fold button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Filters fold button clicked, isShortcut:" << isShortcut;
     showFilters(false, isShortcut);
     emit sigFilterGroupDisplay(false);
 }
 
 void takePhotoSettingAreaWidget::hideAll()
 {
-    qDebug() << "Hiding all";
+    qCDebug(appLog) << "Hiding all";
     m_foldBtn->setVisible(false);
     m_unfoldBtn->setVisible(false);
 
@@ -983,7 +985,7 @@ void takePhotoSettingAreaWidget::hideAll()
     m_filtersCloseBtn->setVisible(false);
 
     m_exposureBtn->setVisible(false);
-    qDebug() << "Exiting hideAll";
+    qCDebug(appLog) << "Exiting hideAll";
 }
 
 void takePhotoSettingAreaWidget::keyDownClick()
@@ -1282,10 +1284,10 @@ void takePhotoSettingAreaWidget::paintEvent(QPaintEvent *event)
 
 void takePhotoSettingAreaWidget::onDelayBtnsClicked(bool isShortcut)
 {
-    qDebug() << "Delay button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Delay button clicked, isShortcut:" << isShortcut;
     circlePushButton *pBtn = static_cast<circlePushButton *>(sender());
     if (nullptr == pBtn) {
-        qWarning() << "Failed to get sender button";
+        qCWarning(appLog) << "Failed to get sender button";
         return;
     }
     pBtn == m_noDelayBtn ? m_noDelayBtn->setSelected(true) : m_noDelayBtn->setSelected(false);
@@ -1307,22 +1309,22 @@ void takePhotoSettingAreaWidget::onDelayBtnsClicked(bool isShortcut)
         bCopyBtn = m_delay6SecondBtn;
     }
 
-    qDebug() << "Setting delay time to:" << delayTime << "seconds";
+    qCDebug(appLog) << "Setting delay time to:" << delayTime << "seconds";
     m_delayUnfoldBtn->copyPixmap(*bCopyBtn);
     m_delayFoldBtn->copyPixmap(*bCopyBtn);
     emit sngSetDelayTakePhoto(delayTime);
     update();
 
     showDelayButtons(false, isShortcut); //三级菜单选中后跳转到上一级菜单
-    qDebug() << "Exiting onDelayBtnsClicked";
+    qCDebug(appLog) << "Exiting onDelayBtnsClicked";
 }
 
 void takePhotoSettingAreaWidget::onFlashlightBtnsClicked(bool isShortcut)
 {
-    qDebug() << "Flashlight button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Flashlight button clicked, isShortcut:" << isShortcut;
     auto pBtn = static_cast<circlePushButton *>(sender());
     if (nullptr == pBtn) {
-        qWarning() << "Failed to get sender button";
+        qCWarning(appLog) << "Failed to get sender button";
         return;
     }
 
@@ -1330,22 +1332,22 @@ void takePhotoSettingAreaWidget::onFlashlightBtnsClicked(bool isShortcut)
     pBtn == m_flashlightOffBtn ? m_flashlightOffBtn->setSelected(true) : m_flashlightOffBtn->setSelected(false);
 
     bool flashState = m_flashlightOnBtn->getButtonState();
-    qDebug() << "Setting flashlight state to:" << flashState;
+    qCDebug(appLog) << "Setting flashlight state to:" << flashState;
     setFlashlight(flashState);
     emit sngSetFlashlight(flashState);
 
     showFlashlights(false, isShortcut);
-    qDebug() << "Exiting onFlashlightBtnsClicked";
+    qCDebug(appLog) << "Exiting onFlashlightBtnsClicked";
 }
 
 void takePhotoSettingAreaWidget::onFilterBtnsClicked(bool isShortcut)
 {
-    qDebug() << "Filter button clicked, isShortcut:" << isShortcut;
+    qCDebug(appLog) << "Filter button clicked, isShortcut:" << isShortcut;
     Q_UNUSED(isShortcut);
 
     auto pBtn = static_cast<filterPreviewButton *>(sender());
     if (!pBtn) {
-        qWarning() << "Failed to get sender button";
+        qCWarning(appLog) << "Failed to get sender button";
         return;
     }
 
@@ -1355,19 +1357,19 @@ void takePhotoSettingAreaWidget::onFilterBtnsClicked(bool isShortcut)
 
     efilterType newFilterType = pBtn->getFiltertype();
     if (m_filterType != newFilterType) {
-        qDebug() << "Changing filter type from" << m_filterType << "to" << newFilterType;
+        qCDebug(appLog) << "Changing filter type from" << m_filterType << "to" << newFilterType;
         emit sngFilterChanged(newFilterType);
         emit sngSetFilterName(filterPreviewButton::filterName(newFilterType));
         m_filterType = newFilterType;
     }
-    qDebug() << "Exiting onFilterBtnsClicked";
+    qCDebug(appLog) << "Exiting onFilterBtnsClicked";
 }
 
 void takePhotoSettingAreaWidget::onUpdateFilterImage(QImage *img)
 {
-    qDebug() << "Entering onUpdateFilterImage";
+    qCDebug(appLog) << "Entering onUpdateFilterImage";
     if (!img) {
-        qWarning() << "Received null image for filter update";
+        qCWarning(appLog) << "Received null image for filter update";
         return;
     }
     for (auto btn : m_filterPreviewBtnList) {
@@ -1386,12 +1388,12 @@ void takePhotoSettingAreaWidget::onUpdateFilterImage(QImage *img)
     if (m_scrollArea && m_scrollArea->isVisible()) {
         m_scrollAreaWidget->update();
     }
-    qDebug() << "Exiting onUpdateFilterImage";
+    qCDebug(appLog) << "Exiting onUpdateFilterImage";
 }
 
 void takePhotoSettingAreaWidget::onExposureValueChanged(int value)
 {
-    qDebug() << "Exposure value changed to:" << value;
+    qCDebug(appLog) << "Exposure value changed to:" << value;
     if (value)
         m_exposureBtn->setNewNotification(true);
     else
@@ -1412,7 +1414,7 @@ filterPreviewButton *takePhotoSettingAreaWidget::getFilterPreviewFocusBtn()
 
 void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
 {
-    qDebug() << "Entering exposureBtnClicked";
+    qCDebug(appLog) << "Entering exposureBtnClicked";
     if (QDateTime::currentMSecsSinceEpoch() - m_animationTime < 500) //防止上一次动画未完成
         return;
     else
@@ -1426,11 +1428,11 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
     end.setHeight(EXPOSURE_SLIDER_HEIGHT);
 
     if (m_exposureSliderDisplay) {
-        qDebug() << "is exposure slider display";
+        qCDebug(appLog) << "is exposure slider display";
         m_exposureSlider->showContent(false, isShortcut);
 
         connect(m_exposureSlider, &ExposureSlider::contentHided, this, [=](){
-            qDebug() << "is exposure slider content hided";
+            qCDebug(appLog) << "is exposure slider content hided";
             QPropertyAnimation *opacity = new QPropertyAnimation(m_exposureSlider, "opacity", this);
             opacity->setStartValue(102);
             opacity->setEndValue(0);
@@ -1447,7 +1449,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
             pGroup->addAnimation(opacity);
             pGroup->addAnimation(geometry);
             connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-                qDebug() << "is exposure slider content hided finished";
+                qCDebug(appLog) << "is exposure slider content hided finished";
                 m_exposureSlider->hide();
                 if (isShortcut) //键盘触发，焦点设回到曝光按钮上
                     m_exposureBtn->setFocus();
@@ -1457,7 +1459,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
                     showUnfold(true, m_exposureBtn, isShortcut);
 
                     if (m_bPhoto && !m_isBtnsFold) {
-                        qDebug() << "is exposure slider content hided finished and is photo";
+                        qCDebug(appLog) << "is exposure slider content hided finished and is photo";
                         m_flashlightUnfoldBtn->setVisible(true);
                         m_filtersUnfoldBtn->setVisible(true);
                         m_exposureBtn->setVisible(true);
@@ -1466,7 +1468,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
                         m_filtersUnfoldBtn->setOpacity(102);
                         m_exposureBtn->setOpacity(102);
                     } else {
-                        qDebug() << "is exposure slider content hided finished and is not photo";
+                        qCDebug(appLog) << "is exposure slider content hided finished and is not photo";
                         m_flashlightUnfoldBtn->setVisible(false);
                         m_filtersUnfoldBtn->setVisible(false);
                         m_exposureBtn->setVisible(false);
@@ -1479,7 +1481,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
         });
 
     } else {
-        qDebug() << "is exposure slider not display";
+        qCDebug(appLog) << "is exposure slider not display";
         QPropertyAnimation *opacity = new QPropertyAnimation(m_exposureSlider, "opacity", this);
         opacity->setStartValue(0);
         opacity->setEndValue(102);
@@ -1496,7 +1498,7 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
         pGroup->addAnimation(opacity);
         pGroup->addAnimation(geometry);
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-            qDebug() << "is exposure slider content hided finished";
+            qCDebug(appLog) << "is exposure slider content hided finished";
             m_exposureSlider->showContent(true, isShortcut);
             pGroup->deleteLater();
         });
@@ -1507,18 +1509,18 @@ void takePhotoSettingAreaWidget::exposureBtnClicked(bool isShortcut)
     m_exposureSliderDisplay = !m_exposureSliderDisplay;
 
     m_exposureBtn->setSelected(m_exposureSliderDisplay);
-    qDebug() << "Exiting exposureBtnClicked";
+    qCDebug(appLog) << "Exiting exposureBtnClicked";
 }
 
 void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
 {
-    qDebug() << "Setting delay time to:" << delayTime << "seconds";
+    qCDebug(appLog) << "Setting delay time to:" << delayTime << "seconds";
     m_noDelayBtn->setSelected(false);
     m_delay3SecondBtn->setSelected(false);
     m_delay6SecondBtn->setSelected(false);
     switch (delayTime) {
     case 0:
-        qDebug() << "set delay time to 0";
+        qCDebug(appLog) << "set delay time to 0";
 //        emit m_noDelayBtn->clicked(); //不使用触发按钮点击方式实现，防止影响动画效果
         m_noDelayBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_noDelayBtn);
@@ -1526,7 +1528,7 @@ void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
         update();
         break;
     case 3:
-        qDebug() << "set delay time to 3";
+        qCDebug(appLog) << "set delay time to 3";
 //        emit m_delay3SecondBtn->clicked();
         m_delay3SecondBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_delay3SecondBtn);
@@ -1534,7 +1536,7 @@ void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
         update();
         break;
     case 6:
-        qDebug() << "set delay time to 6";
+        qCDebug(appLog) << "set delay time to 6";
 //        emit m_delay6SecondBtn->clicked();
         m_delay6SecondBtn->setSelected(true);
         m_delayUnfoldBtn->copyPixmap(*m_delay6SecondBtn);
@@ -1542,22 +1544,22 @@ void takePhotoSettingAreaWidget::setDelayTime(int delayTime)
         update();
         break;
     default:
-        qDebug() << "set delay time to default";
+        qCDebug(appLog) << "set delay time to default";
         ;
     }
-    qDebug() << "Exiting setDelayTime";
+    qCDebug(appLog) << "Exiting setDelayTime";
 }
 
 void takePhotoSettingAreaWidget::setFlashlight(bool bFlashOn)
 {
-    qDebug() << "Setting flashlight state to:" << bFlashOn;
+    qCDebug(appLog) << "Setting flashlight state to:" << bFlashOn;
     m_flashlightOnBtn->setSelected(bFlashOn);
     m_flashlightOffBtn->setSelected(!bFlashOn);
     auto p = bFlashOn ? m_flashlightOnBtn : m_flashlightOffBtn;
     m_flashlightUnfoldBtn->copyPixmap(*p);
     m_flashlightFoldBtn->copyPixmap(*p);
     update();
-    qDebug() << "Exiting setFlashlight";
+    qCDebug(appLog) << "Exiting setFlashlight";
 }
 
 bool takePhotoSettingAreaWidget::flashLight()
@@ -1568,7 +1570,7 @@ bool takePhotoSettingAreaWidget::flashLight()
 
 void takePhotoSettingAreaWidget::setFilterType(efilterType type)
 {
-    qDebug() << "Setting filter type to:" << type;
+    qCDebug(appLog) << "Setting filter type to:" << type;
     for (auto pBtn : m_filterPreviewBtnList) {
         pBtn->setSelected(pBtn->getFiltertype() == type);
     }
@@ -1669,7 +1671,7 @@ void takePhotoSettingAreaWidget::moveToParentLeft()
 
 void takePhotoSettingAreaWidget::closeAllGroup()
 {
-    qDebug() << "Closing all groups";
+    qCDebug(appLog) << "Closing all groups";
     //判断延迟拍照组是否显示
     if (m_delayGroupDisplay)
         delayfoldBtnClicked();
@@ -1689,7 +1691,7 @@ void takePhotoSettingAreaWidget::closeAllGroup()
 
 void takePhotoSettingAreaWidget::setOpacity(int opacity)
 {
-    qDebug() << "Setting opacity to:" << opacity;
+    qCDebug(appLog) << "Setting opacity to:" << opacity;
     m_opacity = opacity;
     m_buttonGroupColor.setAlpha(opacity);
     update();
@@ -1697,9 +1699,9 @@ void takePhotoSettingAreaWidget::setOpacity(int opacity)
 
 void takePhotoSettingAreaWidget::setState(bool bPhoto)
 {
-    qDebug() << "Setting widget state to:" << (bPhoto ? "Photo" : "Video");
+    qCDebug(appLog) << "Setting widget state to:" << (bPhoto ? "Photo" : "Video");
     if (m_exposureSliderDisplay) {
-        qDebug() << "is exposure slider display";
+        qCDebug(appLog) << "is exposure slider display";
         //判断当前是否由拍照状态切换到录像状态
         m_bPhotoToVideState = m_bPhoto && !bPhoto;
         exposureBtnClicked();
@@ -1709,12 +1711,12 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
 
     // 若有功能按钮组处于展开状态，折叠之
     if (m_delayGroupDisplay || m_flashGroupDisplay || m_filtersGroupDislay || m_exposureSliderDisplay) {
-        qDebug() << "close all group";
+        qCDebug(appLog) << "close all group";
         closeAllGroup();
     }
     // 按钮总开关处于展开状态
     else if (!m_isBtnsFold){
-        qDebug() << "not any group display";
+        qCDebug(appLog) << "not any group display";
         // 功能按钮组未处于展开状态，重新设置各个按钮位置
         circlePushBtnList btnList;
         btnList.push_back(m_flashlightUnfoldBtn);
@@ -1743,7 +1745,7 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
 
     m_bPhoto = bPhoto;
     if (bPhoto && !m_isBtnsFold) {
-        qDebug() << "is photo and is not fold";
+        qCDebug(appLog) << "is photo and is not fold";
         m_flashlightUnfoldBtn->setVisible(true);
         m_filtersUnfoldBtn->setVisible(true);
         m_exposureBtn->setVisible(true);
@@ -1752,18 +1754,18 @@ void takePhotoSettingAreaWidget::setState(bool bPhoto)
         m_filtersUnfoldBtn->setOpacity(102);
         m_exposureBtn->setOpacity(102);
     } else {
-        qDebug() << "is not photo or is fold";
+        qCDebug(appLog) << "is not photo or is fold";
         m_flashlightUnfoldBtn->setVisible(false);
         m_filtersUnfoldBtn->setVisible(false);
         m_exposureBtn->setVisible(false);
     }
     update();
-    qDebug() << "Exiting setState";
+    qCDebug(appLog) << "Exiting setState";
 }
 
 void takePhotoSettingAreaWidget::resizeScrollHeight(int height)
 {
-    qDebug() << "Resizing scroll height to:" << height;
+    qCDebug(appLog) << "Resizing scroll height to:" << height;
     m_scrollHeight = (m_filtersFoldBtn->height() + m_threeBtnOffset * 2) * 6 + height + 15; //Add a offset here
     if (m_scrollHeight > m_scrollArea->widget()->height())
         m_scrollHeight = m_scrollArea->widget()->height();

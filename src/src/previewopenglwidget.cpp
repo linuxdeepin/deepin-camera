@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,6 +14,8 @@
 #endif
 
 #include <malloc.h>
+#include "ddlog.h"
+using namespace DDLog;
 
 namespace {
 
@@ -97,14 +99,14 @@ QByteArray makeModernFragmentShader()
 PreviewOpenglWidget::PreviewOpenglWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    qDebug() << "Function started: PreviewOpenglWidget constructor";
+    qCDebug(appLog) << "Function started: PreviewOpenglWidget constructor";
     m_textureY = nullptr;
     m_textureU = nullptr;
     m_textureV = nullptr;
     m_program = nullptr;
     m_videoWidth = 0;
     m_videoHeight = 0;
-    qDebug() << "Function completed: PreviewOpenglWidget constructor";
+    qCDebug(appLog) << "Function completed: PreviewOpenglWidget constructor";
 }
 
 int PreviewOpenglWidget::getFrameHeight()
@@ -137,7 +139,7 @@ void PreviewOpenglWidget::slotShowYuv(std::shared_ptr<uchar[]> frame, uint width
 
 void PreviewOpenglWidget::initializeGL()
 {
-    qDebug() << "Function started: initializeGL";
+    qCDebug(appLog) << "Function started: initializeGL";
 
     makeCurrent();
     initializeOpenGLFunctions();
@@ -182,7 +184,7 @@ void PreviewOpenglWidget::initializeGL()
     if (1 == is_forceGles()) {
         programOk = tryLink(kVsrcLegacy, makeLegacyFragmentShader(true));
         if (!programOk) {
-            qWarning() << "PreviewOpenglWidget: GLES shader failed, fallback to legacy GLSL:" << m_program->log();
+            qCWarning(appLog) << "PreviewOpenglWidget: GLES shader failed, fallback to legacy GLSL:" << m_program->log();
             delete m_program;
             m_program = new QOpenGLShaderProgram(this);
             programOk = tryLink(kVsrcLegacy, makeLegacyFragmentShader(false));
@@ -190,14 +192,14 @@ void PreviewOpenglWidget::initializeGL()
     } else {
         programOk = tryLink(kVsrcModern, makeModernFragmentShader());
         if (!programOk) {
-            qWarning() << "PreviewOpenglWidget: core-profile shader failed, fallback to legacy GLSL:" << m_program->log();
+            qCWarning(appLog) << "PreviewOpenglWidget: core-profile shader failed, fallback to legacy GLSL:" << m_program->log();
             delete m_program;
             m_program = new QOpenGLShaderProgram(this);
             programOk = tryLink(kVsrcLegacy, makeLegacyFragmentShader(false));
         }
     }
     if (!programOk) {
-        qWarning() << "PreviewOpenglWidget: shader program link failed:" << m_program->log();
+        qCWarning(appLog) << "PreviewOpenglWidget: shader program link failed:" << m_program->log();
     }
 
     m_program->bind();
@@ -231,7 +233,7 @@ void PreviewOpenglWidget::initializeGL()
     glBindTexture(GL_TEXTURE_2D, 0);
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
-    qDebug() << "Function completed: initializeGL";
+    qCDebug(appLog) << "Function completed: initializeGL";
 }
 
 void PreviewOpenglWidget::resizeGL(int w, int h)

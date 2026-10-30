@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -8,22 +8,24 @@
 
 #include <DWindowManagerHelper>
 #include <QMutexLocker>
+#include "ddlog.h"
+using namespace DDLog;
 
 windowStateThread::windowStateThread(bool isWayland, QObject *parent /*= nullptr*/)
     : QThread (parent)
 {
     setObjectName("windowStateThread");
-    qDebug() << "Initializing window state monitoring thread, Wayland:" << isWayland;
+    qCDebug(appLog) << "Initializing window state monitoring thread, Wayland:" << isWayland;
 }
 
 windowStateThread::~windowStateThread()
 {
-    qDebug() << "Cleaning up window state monitoring thread";
+    qCDebug(appLog) << "Cleaning up window state monitoring thread";
 }
 
 void windowStateThread::run()
 {
-    qDebug() << "Starting window state monitoring loop";
+    qCDebug(appLog) << "Starting window state monitoring loop";
     while (!isInterruptionRequested()) {
 #ifdef UNITTEST
         // 单元测试环境下跳过 workspaceWindows()，
@@ -32,11 +34,11 @@ void windowStateThread::run()
 #endif
         //获取当前工作区域内所有的窗口
         auto list = workspaceWindows();
-        qDebug() << "Found" << list.size() << "windows in workspace";
+        qCDebug(appLog) << "Found" << list.size() << "windows in workspace";
 
         foreach(DForeignWindow *window, list) {
             if (window && window->windowState() == Qt::WindowState::WindowFullScreen) {
-                qDebug() << "Detected fullscreen window:" << window->title();
+                qCDebug(appLog) << "Detected fullscreen window:" << window->title();
                 //去掉全屏的窗口信号处理
                 //emit someWindowFullScreen();
             }
@@ -44,22 +46,22 @@ void windowStateThread::run()
         //线程休眠1秒
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-    qInfo() << "Window state monitoring thread ended";
+    qCInfo(appLog) << "Window state monitoring thread ended";
 }
 
 QList<DForeignWindow *> windowStateThread::workspaceWindows() const
 {
-    qDebug() << "Getting workspace windows list";
+    qCDebug(appLog) << "Getting workspace windows list";
     QList<DForeignWindow *> windowList;
     QList<WId> currentApplicationWindowList;
     const QWindowList &list = qApp->allWindows();
 
     currentApplicationWindowList.reserve(list.size());
-    qDebug() << "Total application windows:" << list.size();
+    qCDebug(appLog) << "Total application windows:" << list.size();
 
     for (auto window : list) {
         if (window->property("_q_foreignWinId").isValid()) {
-            qDebug() << "Skipping foreign window";
+            qCDebug(appLog) << "Skipping foreign window";
             continue;
         }
 
@@ -67,13 +69,13 @@ QList<DForeignWindow *> windowStateThread::workspaceWindows() const
     }
 
     QVector<quint32> wmClientList = DWindowManagerHelper::instance()->currentWorkspaceWindowIdList();
-    qDebug() << "Window manager client list size:" << wmClientList.size();
+    qCDebug(appLog) << "Window manager client list size:" << wmClientList.size();
 
     bool currentWindow = false;
     for (WId wid : wmClientList) {
         if (currentApplicationWindowList.contains(wid)){
             currentWindow = true;
-            qDebug() << "Found current application window:" << wid;
+            qCDebug(appLog) << "Found current application window:" << wid;
             continue;
         }
         if (false == currentWindow){
@@ -81,10 +83,10 @@ QList<DForeignWindow *> windowStateThread::workspaceWindows() const
         }
         if (DForeignWindow *w = DForeignWindow::fromWinId(wid)) {
             windowList << w;
-            qDebug() << "Added foreign window to list:" << w->title();
+            qCDebug(appLog) << "Added foreign window to list:" << w->title();
         }
     }
-    qDebug() << "Returning" << windowList.size() << "workspace windows";
+    qCDebug(appLog) << "Returning" << windowList.size() << "workspace windows";
     return windowList;
 }
 
