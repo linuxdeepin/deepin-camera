@@ -1,16 +1,18 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "capplication.h"
+#include "ddlog.h"
+using namespace DDLog;
 
 CApplication *CApplication::cameraCore = nullptr;
 
 CApplication::CApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv)
 {
-    qDebug() << "Function started: CApplication constructor";
+    qCDebug(appLog) << "Function started: CApplication constructor";
     m_mainwindow = nullptr;
 #ifndef TABLE_ENVIRONMENT
     m_bpanel = false;
@@ -19,7 +21,7 @@ CApplication::CApplication(int &argc, char **argv)
 #endif
 
     if (cameraCore == nullptr) {
-        qDebug() << "Condition check: Setting cameraCore instance";
+        qCDebug(appLog) << "Condition check: Setting cameraCore instance";
         cameraCore = this;
     }
 
@@ -28,7 +30,7 @@ CApplication::CApplication(int &argc, char **argv)
 
     Dtk::Core::DVtableHook::overrideVfptrFun(dApplication(), &DApplication::handleQuitAction, CamApp, &CApplication::QuitAction);
 
-    qDebug() << "Function completed: CApplication constructor";
+    qCDebug(appLog) << "Function completed: CApplication constructor";
 }
 
 CApplication *CApplication::CamApplication()
