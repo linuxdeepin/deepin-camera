@@ -1,5 +1,5 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -17,6 +17,8 @@
 #include <QRegExp>
 #endif
 #include <QDebug>
+#include "ddlog.h"
+using namespace DDLog;
 
 DWIDGET_USE_NAMESPACE
 
@@ -25,7 +27,7 @@ typedef DLabel QLbtoDLabel;
 CloseDialog::CloseDialog(QWidget *parent, QString strText)
     : DDialog(parent), m_leftNamebtn(tr("Cancel")), m_rightNamebtn(tr("Close"))
 {
-    qDebug() << "Function started: CloseDialog constructor";
+    qCDebug(appLog) << "Function started: CloseDialog constructor";
     this->setIcon(QIcon(":/images/icons/warning.svg"));
     setFixedSize(380, 140);
     m_widget = new DWidget(this);
@@ -64,5 +66,5 @@ CloseDialog::CloseDialog(QWidget *parent, QString strText)
     setTabOrder(windowCloseBtn, cancelBtn);
     setTabOrder(cancelBtn, closeBtn);
 
-    qDebug() << "Function completed: CloseDialog constructor";
+    qCDebug(appLog) << "Function completed: CloseDialog constructor";
 }

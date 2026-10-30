@@ -1,4 +1,4 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -6,6 +6,8 @@
 #include "majorimageprocessingthread.h"
 #include "datamanager.h"
 #include "camera.h"
+#include "ddlog.h"
+using namespace DDLog;
 
 extern "C" {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -23,7 +25,7 @@ DCORE_USE_NAMESPACE
 
 MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(false)
 {
-    qDebug() << "Initializing MajorImageProcessingThread";
+    qCDebug(appLog) << "Initializing MajorImageProcessingThread";
     m_rgbPtr = nullptr;
     m_bRecording = false;
     m_nVdWidth = 0;
@@ -38,13 +40,13 @@ MajorImageProcessingThread::MajorImageProcessingThread():m_bHorizontalMirror(fal
 
 void MajorImageProcessingThread::stop()
 {
-    qDebug() << __func__;
+    qCDebug(appLog) << __func__;
     m_stopped = 1;
 }
 
 void MajorImageProcessingThread::init()
 {
-    qDebug() << "Initializing thread state";
+    qCDebug(appLog) << "Initializing thread state";
     m_stopped = 0;
     m_majorindex = -1;
     m_frame = nullptr;
@@ -75,7 +77,7 @@ int MajorImageProcessingThread::getRecCount()
 
 void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8_t* dst, int width, int height)
 {
-    qDebug() << "Function started: ImageHorizontalMirror";
+    qCDebug(appLog) << "Function started: ImageHorizontalMirror";
     /*
     yu12
     y1 y2 y3 y4                       y4 y3 y2 y1
@@ -99,18 +101,18 @@ void MajorImageProcessingThread::ImageHorizontalMirror(const uint8_t* src, uint8
             uvLineStartIndex += width;
         }
     }
-    qDebug() << "Function completed: ImageHorizontalMirror";
+    qCDebug(appLog) << "Function completed: ImageHorizontalMirror";
 }
 
 void MajorImageProcessingThread::processingImage(QImage& img)
 {
-    qDebug() << "Processing image, size:" << img.size() << "format:" << img.format();
+    qCDebug(appLog) << "Processing image, size:" << img.size() << "format:" << img.format();
     // 镜像
     if (!m_bHorizontalMirror)
         img = img.mirrored(true,false);
 
     if (m_bPhoto) {
-        qDebug() << "Processing image in photo mode";
+        qCDebug(appLog) << "Processing image in photo mode";
         img = img.convertToFormat(QImage::Format_RGB888);
 
         // 滤镜预览
@@ -118,7 +120,7 @@ void MajorImageProcessingThread::processingImage(QImage& img)
         emit SendFilterImageProcessing(&m_filterImg);
 
         if (!m_filter.isEmpty() || m_exposure) {
-            qDebug() << "Applying filter:" << m_filter << "and exposure:" << m_exposure;
+            qCDebug(appLog) << "Applying filter:" << m_filter << "and exposure:" << m_exposure;
             // 滤镜效果渲染
             uint8_t *rgb = img.bits();
             if (!m_filter.isEmpty())
@@ -130,18 +132,18 @@ void MajorImageProcessingThread::processingImage(QImage& img)
 
         /*拍照*/
         if (m_bTake) {
-            qDebug() << "Processing photo in photo mode";
+            qCDebug(appLog) << "Processing photo in photo mode";
             int nRet = -1;
             if (!img.isNull()) {
                 if (img.save(m_strPath, "JPG")) {
                     nRet = 0;
-                    qInfo() << "Successfully saved photo to:" << m_strPath;
+                    qCInfo(appLog) << "Successfully saved photo to:" << m_strPath;
                     emit sigReflushSnapshotLabel(m_strPath);
                 }
             }
 
             if (nRet < 0) {
-                qWarning() << "Failed to save photo to:" << m_strPath;
+                qCWarning(appLog) << "Failed to save photo to:" << m_strPath;
             }
 
             m_bTake = false;
@@ -150,14 +152,14 @@ void MajorImageProcessingThread::processingImage(QImage& img)
     }
 
     emit SendMajorImageProcessing(&img, 0);
-    qDebug() << "Function completed: processingImage";
+    qCDebug(appLog) << "Function completed: processingImage";
 }
 
 void MajorImageProcessingThread::run()
 {
-    qInfo() << "Starting MajorImageProcessingThread run loop";
+    qCInfo(appLog) << "Starting MajorImageProcessingThread run loop";
     if (m_eEncodeEnv != QCamera_Env) {
-        qDebug() << "Processing video frame in video mode";
+        qCDebug(appLog) << "Processing video frame in video mode";
         m_videoDevice = get_v4l2_device_handler();
         v4l2core_start_stream(m_videoDevice);
         int framedely = 0;
@@ -178,7 +180,7 @@ void MajorImageProcessingThread::run()
                 int ret = v4l2core_update_current_format(m_videoDevice);
 
                 if (ret != E_OK) {
-                    qWarning() << "Failed to set defined stream format, trying first listed format";
+                    qCWarning(appLog) << "Failed to set defined stream format, trying first listed format";
                     fprintf(stderr, "camera: could not set the defined stream format\n");
                     fprintf(stderr, "camera: trying first listed stream format\n");
 
@@ -220,7 +222,7 @@ void MajorImageProcessingThread::run()
                 if (decodeCount % LOGGING_INTERVAL == LOGGING_INTERVAL - 1) {
                     decodeTimer.start();
                     m_frame = v4l2core_get_decoded_frame(m_videoDevice);
-                    qDebug() << "v4l2 decoded time:" << decodeTimer.elapsed() << "ms";
+                    qCDebug(appLog) << "v4l2 decoded time:" << decodeTimer.elapsed() << "ms";
                     decodeCount = 0;
                 } else {
                     m_frame = v4l2core_get_decoded_frame(m_videoDevice);
@@ -442,7 +444,7 @@ void MajorImageProcessingThread::run()
                     // qDebug() << "Processing photo capture";
                     if (imgTmp->save(m_strPath, "JPG")) {
                         nRet = 0;
-                        qInfo() << "Successfully saved photo to:" << m_strPath;
+                        qCInfo(appLog) << "Successfully saved photo to:" << m_strPath;
                         emit sigReflushSnapshotLabel(m_strPath);
                     }
                 } else if (FFmpeg_Env == m_eEncodeEnv) {
@@ -460,7 +462,7 @@ void MajorImageProcessingThread::run()
                         saveImg = new QImage(rgbPtr, m_frame->width, m_frame->height, QImage::Format_RGB888);
                     if (saveImg->save(m_strPath, "JPG")) {
                         nRet = 0;
-                        qInfo() << "Successfully saved photo to:" << m_strPath;
+                        qCInfo(appLog) << "Successfully saved photo to:" << m_strPath;
                         emit sigReflushSnapshotLabel(m_strPath);
                     }
                     if (saveImg)
@@ -473,7 +475,7 @@ void MajorImageProcessingThread::run()
                 }
 
                 if (nRet < 0) {
-                    qWarning() << "Failed to save photo to:" << m_strPath;
+                    qCWarning(appLog) << "Failed to save photo to:" << m_strPath;
                 }
 
                 m_bTake = false;

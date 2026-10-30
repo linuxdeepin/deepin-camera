@@ -1,9 +1,11 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "filterpreviewbutton.h"
+#include "ddlog.h"
+using namespace DDLog;
 
 extern "C" {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -32,11 +34,11 @@ DWIDGET_USE_NAMESPACE;
 filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* = filter_Normal*/): QWidget(parent)
   , m_filterType(filter)
 {
-    qDebug() << "Function started: filterPreviewButton constructor";
+    qCDebug(appLog) << "Function started: filterPreviewButton constructor";
 
     QString objName = filterName_CUBE(filter);
     if (objName.isEmpty()) {
-        qDebug() << "Condition check: Filter name empty, using 'normal'";
+        qCDebug(appLog) << "Condition check: Filter name empty, using 'normal'";
         objName = "normal";
     }
     setObjectName(objName);
@@ -56,7 +58,7 @@ filterPreviewButton::filterPreviewButton(QWidget *parent, efilterType filter/* =
     setAutoFillBackground(false);
     resize(BUTTON_SIZE, BUTTON_SIZE);
 
-    qDebug() << "Function completed: filterPreviewButton constructor";
+    qCDebug(appLog) << "Function completed: filterPreviewButton constructor";
 }
 
 void filterPreviewButton::setbackground(QColor color)
@@ -286,44 +288,44 @@ QString filterPreviewButton::filterName(efilterType type)
     QString name = tr("Normal");
     switch (type) {
     case filter_Normal:
-        qDebug() << "Condition check: Normal filter";
+        qCDebug(appLog) << "Condition check: Normal filter";
         name = tr("Normal");
         break;
     case filter_Vivid:
-        qDebug() << "Condition check: Vivid filter";
+        qCDebug(appLog) << "Condition check: Vivid filter";
         name = tr("Vivid");
         break;
     case filter_Warm:
-        qDebug() << "Condition check: Warm filter";
+        qCDebug(appLog) << "Condition check: Warm filter";
         name = tr("Warm");
         break;
     case filter_Cold:
-        qDebug() << "Condition check: Cold filter";
+        qCDebug(appLog) << "Condition check: Cold filter";
         name = tr("Cold");
         break;
     case filter_Retro:
-        qDebug() << "Condition check: Retro filter";
+        qCDebug(appLog) << "Condition check: Retro filter";
         name = tr("Retro");
         break;
     case filter_Film:
-        qDebug() << "Condition check: Film filter";
+        qCDebug(appLog) << "Condition check: Film filter";
         name = tr("Film");
         break;
     case filter_Gray:
-        qDebug() << "Condition check: Gray filter";
+        qCDebug(appLog) << "Condition check: Gray filter";
         name = tr("Gray");
         break;
     case filter_BAndW:
-        qDebug() << "Condition check: B&W filter";
+        qCDebug(appLog) << "Condition check: B&W filter";
         name = tr("B&W");
         break;
     default:
-        qDebug() << "Condition check: Unknown filter type, using Normal";
+        qCDebug(appLog) << "Condition check: Unknown filter type, using Normal";
         name = tr("Normal");
         break;
     }
 
-    qDebug() << "Function completed: filterName:" << name;
+    qCDebug(appLog) << "Function completed: filterName:" << name;
     return name;
 }
 
@@ -333,43 +335,43 @@ QString filterPreviewButton::filterName_CUBE(efilterType type)
     QString name = "";
     switch (type) {
     case filter_Normal:
-        qDebug() << "Condition check: Normal filter (no CUBE)";
+        qCDebug(appLog) << "Condition check: Normal filter (no CUBE)";
         name = "";
         break;
     case filter_Vivid:
-        qDebug() << "Condition check: Vivid filter";
+        qCDebug(appLog) << "Condition check: Vivid filter";
         name = "bright";
         break;
     case filter_Warm:
-        qDebug() << "Condition check: Warm filter";
+        qCDebug(appLog) << "Condition check: Warm filter";
         name = "warm";
         break;
     case filter_Cold:
-        qDebug() << "Condition check: Cold filter";
+        qCDebug(appLog) << "Condition check: Cold filter";
         name = "cold";
         break;
     case filter_Retro:
-        qDebug() << "Condition check: Retro filter";
+        qCDebug(appLog) << "Condition check: Retro filter";
         name = "classic";
         break;
     case filter_Film:
-        qDebug() << "Condition check: Film filter";
+        qCDebug(appLog) << "Condition check: Film filter";
         name = "print";
         break;
     case filter_Gray:
-        qDebug() << "Condition check: Gray filter";
+        qCDebug(appLog) << "Condition check: Gray filter";
         name = "gray";
         break;
     case filter_BAndW:
-        qDebug() << "Condition check: B&W filter";
+        qCDebug(appLog) << "Condition check: B&W filter";
         name = "black";
         break;
     default:
-        qDebug() << "Condition check: Unknown filter type, using empty";
+        qCDebug(appLog) << "Condition check: Unknown filter type, using empty";
         name = "";
         break;
     }
 
-    qDebug() << "Function completed: filterName_CUBE:" << name;
+    qCDebug(appLog) << "Function completed: filterName_CUBE:" << name;
     return name;
 }

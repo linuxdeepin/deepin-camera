@@ -1,11 +1,13 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
-// SPDX-FileCopyrightText: 2023 UnionTech Software Technology Co., Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
+// SPDX-FileCopyrightText: 2023 - 2026 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "devnummonitor.h"
 
 #include <QDebug>
+#include "ddlog.h"
+using namespace DDLog;
 
 extern "C"
 {
@@ -15,7 +17,7 @@ extern "C"
 
 DevNumMonitor::DevNumMonitor()
 {
-    qDebug() << "Initializing DevNumMonitor";
+    qCDebug(appLog) << "Initializing DevNumMonitor";
     m_noDevice = false;
     m_pTimer = nullptr;
 }
@@ -26,12 +28,12 @@ DevNumMonitor::DevNumMonitor()
  */
 void DevNumMonitor::startCheck()
 {
-    qDebug() << "Starting device number monitoring";
+    qCDebug(appLog) << "Starting device number monitoring";
     m_pTimer = new QTimer;
     m_pTimer->setInterval(500);
     connect(m_pTimer, &QTimer::timeout, this, &DevNumMonitor::timeOutSlot);
     m_pTimer->start();
-    qDebug() << "Device monitoring timer started with 500ms interval";
+    qCDebug(appLog) << "Device monitoring timer started with 500ms interval";
 }
 
 //void DevNumMonitor::run()
@@ -59,7 +61,7 @@ void DevNumMonitor::timeOutSlot()
         
         if (deviceCount < 1) {
             if (!m_noDevice) {
-                qWarning() << "No camera devices found";
+                qCWarning(appLog) << "No camera devices found";
                 emit noDeviceFound();
                 m_noDevice = true;
             }
@@ -67,7 +69,7 @@ void DevNumMonitor::timeOutSlot()
             if (m_noDevice) {
                 v4l2_dev_sys_data_t *v4l2_devices = get_device_list()->list_devices;
                 if (v4l2_devices) {
-                    qWarning() << "Device found:" << v4l2_devices[0].device << v4l2_devices[0].name;
+                    qCWarning(appLog) << "Device found:" << v4l2_devices[0].device << v4l2_devices[0].name;
                 }
             }
             m_noDevice = false;
@@ -83,9 +85,9 @@ void DevNumMonitor::timeOutSlot()
 
 DevNumMonitor::~DevNumMonitor()
 {
-    qDebug() << "Destroying DevNumMonitor";
+    qCDebug(appLog) << "Destroying DevNumMonitor";
     if (nullptr != m_pTimer) {
-        qDebug() << "Stopping and cleaning up monitoring timer";
+        qCDebug(appLog) << "Stopping and cleaning up monitoring timer";
         m_pTimer->stop();
         m_pTimer->deleteLater();
         m_pTimer = nullptr;

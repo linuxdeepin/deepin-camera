@@ -21,18 +21,19 @@ MLogger::MLogger(QObject *parent)
     // 保存环境变量中的规则
     m_rules = logRules;
     // 从 DConfig 读取日志规则
-    m_config = DConfig::create("org.deepin.camera", "org.deepin.camera.encode");
+    m_config = DConfig::create("org.deepin.camera", "org.deepin.camera");
     if (m_config && m_config->isValid()) {
-        logRules = m_config->value("rules").toByteArray();
+        logRules = m_config->value("log_rules").toByteArray();
         appendRules(logRules);
-        setRules(m_rules);
         // 监听 DConfig 变化，动态更新日志规则
         connect(m_config, &DConfig::valueChanged, this, [this](const QString &key) {
-            if (key == "rules") {
+            if (key == "log_rules") {
                 setRules(m_config->value(key).toByteArray());
             }
         });
     }
+    // DConfig 不可用时兜底：环境变量中的规则仍然生效
+    setRules(m_rules);
 }
 
 MLogger::~MLogger() {
