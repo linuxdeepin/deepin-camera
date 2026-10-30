@@ -15,6 +15,8 @@
 #include <QParallelAnimationGroup>
 
 #include <QDebug>
+#include "ddlog.h"
+using namespace DDLog;
 
 #define WIDTH 40
 #define HEIGHT 192
@@ -28,7 +30,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
   ,m_curValue(0)
   ,m_opacity(102)  //UI默认
 {
-    qDebug() << "Initializing ExposureSlider";
+    qCDebug(appLog) << "Initializing ExposureSlider";
     resize(WIDTH, HEIGHT);
     QVBoxLayout *vLayout = new QVBoxLayout(this);
     vLayout->setContentsMargins(0, 0, 0, 0);
@@ -54,7 +56,7 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
     m_pLabShowValue->setPalette(pa);
     //字体大小不随系统变化
     connect(qApp, &QGuiApplication::fontChanged, this, [=](){
-        qDebug() << "Updating font settings for value display";
+        qCDebug(appLog) << "Updating font settings for value display";
         QFont font("SourceHanSansSC");
         font.setPixelSize(15);
         font.setWeight(QFont::Medium);
@@ -82,19 +84,19 @@ ExposureSlider::ExposureSlider(QWidget *parent) : QWidget(parent)
 
     m_pLabShowValue->hide();
     m_slider->hide();
-    qDebug() << "ExposureSlider initialization completed";
+    qCDebug(appLog) << "ExposureSlider initialization completed";
 }
 
 void ExposureSlider::setOpacity(int opacity)
 {
-    qDebug() << "Setting slider opacity to:" << opacity;
+    qCDebug(appLog) << "Setting slider opacity to:" << opacity;
     m_opacity = opacity;
     update();
 }
 
 void ExposureSlider::showContent(bool show, bool isShortCut)
 {
-    qDebug() << "Showing exposure slider content:" << show << "isShortCut:" << isShortCut;
+    qCDebug(appLog) << "Showing exposure slider content:" << show << "isShortCut:" << isShortCut;
     QGraphicsOpacityEffect *effectSlider = new QGraphicsOpacityEffect(m_slider);
     m_slider->setGraphicsEffect(effectSlider);
     QPropertyAnimation *opacity = new QPropertyAnimation(effectSlider, "opacity", this);
@@ -112,14 +114,14 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
     pGroup->addAnimation(opacity1);
 
     if (show) {
-        qDebug() << "Condition check: Showing content (fade in)";
+        qCDebug(appLog) << "Condition check: Showing content (fade in)";
         opacity->setStartValue(0);
         opacity->setEndValue(1);
         opacity1->setStartValue(0);
         opacity1->setEndValue(1);
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-            qDebug() << "Animation finished, handling cleanup";
+            qCDebug(appLog) << "Animation finished, handling cleanup";
             m_slider->slider()->setFocus();
             pGroup->deleteLater();
         });
@@ -128,7 +130,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
         m_slider->show();
         pGroup->start();
     } else {
-        qDebug() << "Condition check: Hiding content (fade out)";
+        qCDebug(appLog) << "Condition check: Hiding content (fade out)";
         opacity->setStartValue(1);
         opacity->setEndValue(0);
         opacity1->setStartValue(1);
@@ -136,7 +138,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         connect(pGroup, &QParallelAnimationGroup::finished, this, &ExposureSlider::contentHided);
         connect(pGroup, &QParallelAnimationGroup::finished, this, [=](){
-            qDebug() << "Animation finished, hiding widgets";
+            qCDebug(appLog) << "Animation finished, hiding widgets";
             m_pLabShowValue->hide();
             m_slider->hide();
             pGroup->deleteLater();
@@ -144,7 +146,7 @@ void ExposureSlider::showContent(bool show, bool isShortCut)
 
         pGroup->start();
     }
-    qDebug() << "Function completed: showContent";
+    qCDebug(appLog) << "Function completed: showContent";
 }
 
 void ExposureSlider::paintEvent(QPaintEvent *event)

@@ -29,6 +29,8 @@
 #include <QDBusPendingCallWatcher>
 #include <QUrl>
 #include <libffmpegthumbnailer/videothumbnailerc.h>
+#include "ddlog.h"
+using namespace DDLog;
 
 extern "C" {
 #include <libavformat/avformat.h>
@@ -104,7 +106,7 @@ ImageItem::ImageItem(QWidget *parent)
             m_menu->exec(QCursor::pos());
         }
 #endif
-        qDebug() << "Click the right mouse to open the thumbnail menu bar";
+        qCDebug(appLog) << "Click the right mouse to open the thumbnail menu bar";
     });
     connect(m_actCopy, &QAction::triggered, this, &ImageItem::onCopy);
     connect(m_actOpenFolder, &QAction::triggered, this, &ImageItem::onOpenFolder);
@@ -119,14 +121,14 @@ ImageItem::ImageItem(QWidget *parent)
 
 void ImageItem::updatePicPath(const QString &filePath)
 {
-    qDebug() << "Updating picture path:" << filePath;
+    qCDebug(appLog) << "Updating picture path:" << filePath;
     m_path = filePath;
     QPixmap pix;
     QFileInfo fileInfo(filePath);
 
     if (fileInfo.suffix() == "webm" || fileInfo.suffix() == "mp4") {
         m_bVideo = true;
-        qDebug() << "Processing video file:" << filePath;
+        qCDebug(appLog) << "Processing video file:" << filePath;
         if (DataManager::instance()->encodeEnv() == FFmpeg_Env) {
             video_thumbnailer *m_video_thumbnailer = getLoadLibsInstance()->m_video_thumbnailer();
             image_data *m_image_data = getLoadLibsInstance()->m_video_thumbnailer_create_image_data();
@@ -139,7 +141,7 @@ void ImageItem::updatePicPath(const QString &filePath)
                 pix = QPixmap::fromImage(img);
                 malloc_trim(0);
             } catch (...) {
-                qWarning() << "Failed to generate video thumbnail for:" << filePath;
+                qCWarning(appLog) << "Failed to generate video thumbnail for:" << filePath;
             }
 
             getLoadLibsInstance()->m_video_thumbnailer_destroy_image_data(m_image_data);
@@ -150,7 +152,7 @@ void ImageItem::updatePicPath(const QString &filePath)
         }
     } else if (fileInfo.suffix() == "jpg") {
         m_bVideo = false;
-        qInfo() << "Processing image file:" << filePath;
+        qCInfo(appLog) << "Processing image file:" << filePath;
         QImage img(filePath);
         if (img.isNull()) {
             img.load(filePath);
@@ -159,19 +161,19 @@ void ImageItem::updatePicPath(const QString &filePath)
         pix = QPixmap::fromImage(img);
         malloc_trim(0);
     } else {
-        qWarning() << "Unsupported file format:" << fileInfo.suffix();
+        qCWarning(appLog) << "Unsupported file format:" << fileInfo.suffix();
         pix = QPixmap();
     }
     QTimer::singleShot(500, this, [ = ]() {
         updatePic(pix);
         pix.scaled(this->size(), Qt::KeepAspectRatio);
     });
-    qDebug() << "Function completed: updatePicPath";
+    qCDebug(appLog) << "Function completed: updatePicPath";
 }
 
 void ImageItem::updatePic(QPixmap pixmap)
 {
-    qDebug() << "Function started: updatePic";
+    qCDebug(appLog) << "Function started: updatePic";
     m_pAniWidget->setVisible(true);
     m_pAniWidget->setPixmap(pixmap);
 
@@ -190,7 +192,7 @@ void ImageItem::updatePic(QPixmap pixmap)
         update();
         m_pAniWidget->setVisible(false);
     });
-    qDebug() << "Function completed: updatePic";
+    qCDebug(appLog) << "Function completed: updatePic";
 }
 
 void ImageItem::paintEvent(QPaintEvent *event)
@@ -310,41 +312,41 @@ void ImageItem::focusOutEvent(QFocusEvent *event)
 
 void ImageItem::onShowMenu()
 {
-    qDebug() << "Function started: onShowMenu";
+    qCDebug(appLog) << "Function started: onShowMenu";
     QPoint centerpos(width() / 2, height() / 2);
     QPoint screen_centerpos = mapToGlobal(centerpos);
     if (m_bVideo) {
-        qDebug() << "ImageItem::onShowMenu: Enter if branch (video mode, removing print action)";
+        qCDebug(appLog) << "ImageItem::onShowMenu: Enter if branch (video mode, removing print action)";
         m_menu->removeAction(m_actPrint);
     } else {
-        qDebug() << "ImageItem::onShowMenu: Enter else branch (image mode, inserting print action)";
+        qCDebug(appLog) << "ImageItem::onShowMenu: Enter else branch (image mode, inserting print action)";
         m_menu->insertAction(m_actOpenFolder, m_actPrint);
     }
 #ifndef UNITTEST
     if (!m_path.isEmpty()) {
-        qDebug() << "ImageItem::onShowMenu: Enter if branch (path not empty, executing menu)";
+        qCDebug(appLog) << "ImageItem::onShowMenu: Enter if branch (path not empty, executing menu)";
         m_menu->exec(screen_centerpos);
     }
 #endif
-    qDebug() << "Function completed: onShowMenu";
+    qCDebug(appLog) << "Function completed: onShowMenu";
 }
 
 void ImageItem::onOpenFolder()
 {
-    qDebug() << "Function started: onOpenFolder";
+    qCDebug(appLog) << "Function started: onOpenFolder";
     if (!m_path.isEmpty() && m_path == '~') {
-        qDebug() << "ImageItem::onOpenFolder: Enter if branch (path is home shortcut)";
+        qCDebug(appLog) << "ImageItem::onOpenFolder: Enter if branch (path is home shortcut)";
         //这里不能直接使用strFolder调replace函数
         m_path.replace(0, 1, QDir::homePath());
     }
     QString path = QFileInfo(m_path).absolutePath();
     Dtk::Widget::DDesktopServices::showFolder(path);
-    qDebug() << "Click the right mouse or press the shortcut to open the folder";
+    qCDebug(appLog) << "Click the right mouse or press the shortcut to open the folder";
 }
 
 void ImageItem::initShortcut()
 {
-    qDebug() << "Function started: initShortcut";
+    qCDebug(appLog) << "Function started: initShortcut";
     QShortcutEx *shortcutCopy = new QShortcutEx(QKeySequence("ctrl+c"), this);
     shortcutCopy->setObjectName(SHORTCUT_COPY);
     connect(shortcutCopy, SIGNAL(activated()), this, SLOT(onCopy()));
@@ -364,16 +366,16 @@ void ImageItem::initShortcut()
     QShortcutEx *shortcutPrint = new QShortcutEx(QKeySequence("Ctrl+P"), this);
     shortcutPrint->setObjectName(SHORTCUT_PRINT);
     connect(shortcutPrint, SIGNAL(activated()), this, SLOT(onPrint()));
-    qDebug() << "Function completed: initShortcut";
+    qCDebug(appLog) << "Function completed: initShortcut";
 }
 
 void ImageItem::openFile()
 {
-    qDebug() << "Function started: openFile";
+    qCDebug(appLog) << "Function started: openFile";
     const QString filePath = m_path;
     QFileInfo fileInfo(filePath);
     if (filePath.isEmpty()) {
-        qWarning() << "Cannot open file: path is empty";
+        qCWarning(appLog) << "Cannot open file: path is empty";
         return;
     }
 
@@ -384,20 +386,20 @@ void ImageItem::openFile()
         QStringList arguments;
         bool opened = false;
 
-        qDebug() << "Using backup method to open file";
+        qCDebug(appLog) << "Using backup method to open file";
         if (fileInfo.suffix() == "jpg") {
             program = "deepin-image-viewer";  //用看图打开
             arguments << filePath;
-            qDebug() << "Attempting to open image with deepin-image-viewer";
+            qCDebug(appLog) << "Attempting to open image with deepin-image-viewer";
         } else {
             program = "deepin-movie"; //用影院打开
             arguments << filePath;
-            qDebug() << "Attempting to open video with deepin-movie";
+            qCDebug(appLog) << "Attempting to open video with deepin-movie";
         }
         opened = myProcess->startDetached(program, arguments);
 
         if (!opened) { //打开失败，调用文管选择"打开方式"窗口
-            qWarning() << "Failed to open file with default applications, trying file manager";
+            qCWarning(appLog) << "Failed to open file with default applications, trying file manager";
             arguments.clear();
             program = "dde-file-manager";
             arguments << "-o" << filePath;
@@ -412,7 +414,7 @@ void ImageItem::openFile()
     const int osMajor = DSysInfo::majorVersion().toInt();
 
     if (osMajor >= kMinOsEdition) {
-        qInfo() << "Using DBus to open file on OS v23+";
+        qCInfo(appLog) << "Using DBus to open file on OS v23+";
         //玲珑环境下无法通过QProcess方式打开应用，通过DBus打开
         if (fileInfo.suffix() == "jpg") {
             //用看图打开
@@ -428,9 +430,9 @@ void ImageItem::openFile()
                     ok = retMessage.arguments().value(0).toBool();
                 }
                 if (ok) {
-                    qDebug() << "Successfully opened image with deepin-image-viewer via DBus";
+                    qCDebug(appLog) << "Successfully opened image with deepin-image-viewer via DBus";
                 } else {
-                    qWarning() << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
+                    qCWarning(appLog) << "Failed to open image with deepin-image-viewer via DBus:" << retMessage.errorMessage();
                     openWithBackup();
                 }
                 watcher->deleteLater();
@@ -444,7 +446,7 @@ void ImageItem::openFile()
                       << "org.deepin.movie"
                       << "--"
                       << "deepin-movie" << m_path;
-            qDebug() << "[process] Open it with deepin-movie (ll-cli)";
+            qCDebug(appLog) << "[process] Open it with deepin-movie (ll-cli)";
             ret = myProcess->startDetached(program, arguments);
 #else
             QDBusMessage message = QDBusMessage::createMethodCall("com.deepin.movie", "/", "com.deepin.movie", "openFile");
@@ -454,9 +456,9 @@ void ImageItem::openFile()
             connect(watcher, &QDBusPendingCallWatcher::finished, this, [watcher, openWithBackup]() {
                 const QDBusMessage retMessage = watcher->reply();
                 if (retMessage.type() != QDBusMessage::ErrorMessage) {
-                    qDebug() << "Successfully opened video with deepin-movie via DBus";
+                    qCDebug(appLog) << "Successfully opened video with deepin-movie via DBus";
                 } else {
-                    qWarning() << "Failed to open video with deepin-movie via DBus:" << retMessage.errorMessage();
+                    qCWarning(appLog) << "Failed to open video with deepin-movie via DBus:" << retMessage.errorMessage();
                     openWithBackup();
                 }
                 watcher->deleteLater();
@@ -472,12 +474,12 @@ void ImageItem::openFile()
 
     if (CamApp->isPanelEnvironment())
         CamApp->getMainWindow()->showMinimized();
-    qDebug() << "Function completed: openFile";
+    qCDebug(appLog) << "Function completed: openFile";
 }
 
 void ImageItem::onCopy()
 {
-    qDebug() << "Function started: onCopy";
+    qCDebug(appLog) << "Function started: onCopy";
     QStringList paths;
     paths << m_path;
 
@@ -502,38 +504,38 @@ void ImageItem::onCopy()
     newMimeData->setData("x-special/gnome-copied-files", gnomeFormat);
 
     cb->setMimeData(newMimeData, QClipboard::Clipboard);
-    qDebug() << "Function completed: onCopy";
+    qCDebug(appLog) << "Function completed: onCopy";
 }
 
 void ImageItem::onShortcutDel()
 {
-    qDebug() << "Delete shortcut triggered";
+    qCDebug(appLog) << "Delete shortcut triggered";
     //改用datetime，避免跨天之后判断错误
     QDateTime timeNow = QDateTime::currentDateTime();
 
     if (m_lastDelTime.msecsTo(timeNow) < 100) {
-        qWarning() << "Delete operation too frequent, ignoring";
+        qCWarning(appLog) << "Delete operation too frequent, ignoring";
         return;
     }
 
     m_lastDelTime = timeNow;
     emit trashFile(m_path);
-    qDebug() << "Function completed: onShortcutDel";
+    qCDebug(appLog) << "Function completed: onShortcutDel";
 }
 
 void ImageItem::onPrint()
 {
-    qDebug() << "Function started: onPrint";
+    qCDebug(appLog) << "Function started: onPrint";
     if (!m_bVideo) {
-        qDebug() << "ImageItem::onPrint: Enter if branch (not video, showing print dialog)";
+        qCDebug(appLog) << "ImageItem::onPrint: Enter if branch (not video, showing print dialog)";
         showPrintDialog(QStringList(m_path), this);
     }
-    qDebug() << "Function completed: onPrint";
+    qCDebug(appLog) << "Function completed: onPrint";
 }
 
 void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 {
-    qDebug() << "Opening print dialog for" << paths.size() << "files";
+    qCDebug(appLog) << "Opening print dialog for" << paths.size() << "files";
     m_imgs.clear();
     QStringList tempExistPaths;
 
@@ -567,11 +569,11 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 
     // 连接打印信号
     if (useNewAPI && printDialog.setAsynPreview(m_imgs.size())) {
-        qDebug() << "Using async preview for printing";
+        qCDebug(appLog) << "Using async preview for printing";
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *, const QVector<int> &)),
                 this, SLOT(paintRequestedAsyn(DPrinter *, const QVector<int> &)));
     } else {
-        qDebug() << "Using sync preview for printing";
+        qCDebug(appLog) << "Using sync preview for printing";
         connect(&printDialog, SIGNAL(paintRequested(DPrinter *)),
                 this, SLOT(paintRequestSync(DPrinter *)));
     }
@@ -581,7 +583,7 @@ void ImageItem::showPrintDialog(const QStringList &paths, QWidget *parent)
 #else
     printDialog.show();
 #endif
-    qDebug() << "Function completed: showPrintDialog";
+    qCDebug(appLog) << "Function completed: showPrintDialog";
 }
 
 // 公共绘图方法
