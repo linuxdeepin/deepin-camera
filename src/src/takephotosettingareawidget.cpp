@@ -182,11 +182,9 @@ void takePhotoSettingAreaWidget::initButtons()
 
     filterPreviewButton* filterBtn = nullptr;
     for (int i = 0; i < efilterType::filter_Count; i++) {
-        filterBtn = new filterPreviewButton(nullptr, static_cast<efilterType>(i));
+        filterBtn = new filterPreviewButton(m_scrollAreaWidget, static_cast<efilterType>(i));
         filterBtn->setToolTip(filterPreviewButton::filterName(static_cast<efilterType>(i)));
         filterBtn->setFocusPolicy(Qt::NoFocus);
-        filterBtn->show();
-        filterBtn->setVisible(true);
         scrollLayout->addWidget(filterBtn);
         m_filterPreviewBtnList.push_back(filterBtn);
     }
