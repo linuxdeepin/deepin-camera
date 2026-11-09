@@ -53,15 +53,43 @@ build: |
 
   # deepin-camera 运行时用 dlopen 按裸名加载库（libPath()/load_libs.c），层内
   # 与 base 均无裸名符号链接，需按旧层配方补齐，否则缩略图等功能失效；仅补
-  # base 缺失且由 depends 闭包带入层的项（base 有的项应用代码可通过版本名命中）。
+  # base 缺失的项（base 有的项应用代码可通过版本名命中，如 libavcodec/avutil/
+  # swresample/udev/v4l2）。libavformat60/libswscale7 仅由 runtime 层提供，
+  # 不在 Qt LibrariesPath 扫描目录（/usr/lib/${TRIPLET}）内，libPath 会退回
+  # 裸名再走 ld.so 解析，而 ld.so 不做通配匹配，缺裸名链接即 dlopen 失败：
+  # 录像链路（libcam_encoder mp4/muxer → getAvformat）dlopen("libavformat.so")
+  # 失败后全部 dlsym 返回空，调用即 SIGSEGV（ll-box retval=139），因此
+  # libavformat.so 与 libswscale.so/libffmpegthumbnailer.so/libportaudio.so
+  # 必须一并补齐。
   # build: 阶段依赖库已在构建容器 /usr（build_depends -dev 包提供），取真实
-  # 版本名建裸名链接；depends 合并采用 skip_existing，不会被闭包内容覆盖
+  # 版本名建裸名链接；若 depends 闭包未把真实文件带入应用库目录（skip_existing
+  # 行为随构建器版本可能变化），兜底 cp -L 复制真实文件，确保裸名链接与其
+  # 目标同目录、运行期可解析
   cd ${PREFIX}/lib/${TRIPLET}
-  for n in libswscale.so libffmpegthumbnailer.so libportaudio.so; do
+  for n in libavformat.so libswscale.so libffmpegthumbnailer.so libportaudio.so; do
       src=$(readlink -f /usr/lib/${TRIPLET}/$n 2>/dev/null || true)
-      [ -n "$src" ] && [ -e "$src" ] && ln -sf "$(basename "$src")" $n
+      [ -n "$src" ] && [ -e "$src" ] || continue
+      real=$(basename "$src")
+      if [ ! -e "./$real" ]; then
+          cp -L "$src" "./$real"
+      fi
+      ln -sf "$real" "$n"
   done
   cd - >/dev/null
+
+  # 滤镜 LUT 数据（滤镜功能必需）：buildext.apt 的 depends 合并仅拷贝 bin/、
+  # sbin/、lib/（linglong_builder mergeOutput 白名单），不包含 share/，而旧
+  # install_dep 整包解包会把 libimageeditor6 的
+  # /usr/share/libimagevisualresult6/filter_cube（.CUBE/.dat 滤镜查找表）带入层。
+  # 应用启动时按编译期 LUT_DIR（${PREFIX}/share/libimagevisualresult6/filter_cube，
+  # main.cpp initFilters）加载滤镜，目录缺失则全部滤镜失效
+  # （"filter:xxx file is not found"）。构建容器内该目录由 build_depends 的
+  # libimageeditor6-dev → libimageeditor6 提供，此处复制进应用层
+  if [ -d /usr/share/libimagevisualresult6/filter_cube ]; then
+      install -d -m 0755 ${PREFIX}/share/libimagevisualresult6/filter_cube
+      cp -a /usr/share/libimagevisualresult6/filter_cube/. \
+            ${PREFIX}/share/libimagevisualresult6/filter_cube/
+  fi
 
 buildext:
   apt:
