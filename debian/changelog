@@ -1,3 +1,13 @@
+deepin-camera (6.5.50) unstable; urgency=medium
+
+  * chore: Update version to 6.5.50
+  * build(linglong): add bare libavformat.so symlink to fix recording crash
+  * feat: adapt deepin-debug-config for dynamic log level control (3/3)
+  * feat: adapt deepin-debug-config for dynamic log level control (2/3)
+  * feat: adapt deepin-debug-config for dynamic log level control (1/3)
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Tue, 10 Nov 2026 10:24:15 +0800
+
 deepin-camera (6.5.49) unstable; urgency=medium
 
   * chore: Update version to 6.5.49
