@@ -1868,7 +1868,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
         }
 
         memcpy(enc_audio_ctx->outbuf, audio_data, buffer_size);
-        enc_audio_ctx->duration = (audio_codec_data->codec_context->time_base.num * 1000 / audio_codec_data->codec_context->time_base.den) * 90;
+        enc_audio_ctx->duration = (audio_codec_data->codec_context->time_base.num * 1000 * 90) / audio_codec_data->codec_context->time_base.den;
         enc_audio_ctx->pts += enc_audio_ctx->duration;
         enc_audio_ctx->dts = enc_audio_ctx->pts;
         enc_audio_ctx->flags = 0;
@@ -1937,7 +1937,7 @@ int encoder_encode_audio(encoder_context_t *encoder_ctx, void *audio_data)
             audio_codec_data->frame->pts += ((enc_audio_ctx->pts - last_audio_pts) / 1000) * 90;
         else  if (audio_codec_data->codec_context->time_base.den > 0) /*generate a true monotonic pts based on the codec fps*/
             audio_codec_data->frame->pts +=
-                (audio_codec_data->codec_context->time_base.num * 1000 / audio_codec_data->codec_context->time_base.den) * 90;
+                (audio_codec_data->codec_context->time_base.num * 1000 * 90) / audio_codec_data->codec_context->time_base.den;
         else {
             fprintf(stderr, "ENCODER: (encoder_encode_audio) couldn't generate a monotonic ts: time_base.den(%d)\n",
                     audio_codec_data->codec_context->time_base.den);
