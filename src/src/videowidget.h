@@ -393,10 +393,6 @@ private slots:
     */
     void flash();
 
-    void startShutterSoundWarmup();
-    void onShutterSoundPlayingChanged();
-    void onShutterSoundStatusChanged();
-
     /**
     * @brief slotresolutionchanged　分辨率改变槽函数
     * @param 分辨率字符串(如：1920*1080)
@@ -534,8 +530,6 @@ private:
     QString                    m_videoFormat;       //录制视频格式
 
     QSoundEffect               *m_takePicSound;     //拍照声音
-    bool                        m_shutterSoundWarming = false;
-    bool                        m_shutterSoundPending = false;
     QString                    m_savePicFolder;     //图片文件夹路径
     QString                    m_saveVdFolder;      //视频文件夹路径
     QTimer                     *m_countTimer;       //倒计时定时器
