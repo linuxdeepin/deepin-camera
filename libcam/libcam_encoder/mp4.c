@@ -29,7 +29,8 @@ extern int verbosity;  // 添加verbosity声明
 
 static int64_t video_pts = 0;
 static int64_t audio_pts = 0;
-static int64_t first_pts = 0;
+static int64_t first_pts_video = 0;
+static int64_t first_pts_audio = 0;
 static int64_t last_pts = 0;
 static int64_t last_video_timestamp = 0;  // 添加上一帧视频时间戳记录
 
@@ -125,7 +126,7 @@ int mp4_write_packet(
         AVRational video_time = mp4_ctx->streams[stream_index]->time_base;
         AVRational time_base = codec_data->codec_context->time_base;
 
-        if (video_pts > last_pts || video_pts == 0) {
+        if (video_pts >= last_pts) {
             getLoadLibsInstance()->m_av_packet_rescale_ts(outpacket, time_base, video_time);
             getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
             set_video_time_capture((double)(pts)/1000/1000000);
@@ -134,14 +135,14 @@ int mp4_write_packet(
         }
 
         last_pts = video_pts;
-        if (first_pts == 0) {
-            first_pts = pts;
+        if (first_pts_video == 0) {
+            first_pts_video = pts;
             last_video_timestamp = pts;
             video_pts = 0;  // 第一个视频包的PTS为0
         } else {
             // 使用真实时间戳计算，而不是硬编码的33ms
             // 将纳秒时间戳转换为帧数（基于time_base）
-            int64_t timestamp_diff = pts - first_pts;  // 从开始录制的时间差（纳秒）
+            int64_t timestamp_diff = pts - first_pts_video;  // 从开始录制的时间差（纳秒）
             
             // 根据编码器的time_base计算PTS
             // time_base通常是1/fps，所以pts = 时间差 * fps
@@ -168,13 +169,13 @@ int mp4_write_packet(
                 
             if (verbosity > 2) {
                 fprintf(stderr, "video_pts: %ld (timestamp: %ld, first_pts: %ld)\n", 
-                        video_pts, pts, first_pts);
+                        video_pts, pts, first_pts_video);
             }
             
             // 每100帧检查一次音视频同步状态
             frame_count++;
             if (frame_count % 100 == 0) {
-                int64_t video_time_ms = (pts - first_pts) / 1000000;  // 视频实际时间（毫秒）
+                int64_t video_time_ms = (pts - first_pts_video) / 1000000;  // 视频实际时间（毫秒）
                 int64_t video_pts_time_ms = 0;
                 
                 // 根据time_base计算视频PTS对应的时间
@@ -206,12 +207,12 @@ int mp4_write_packet(
         getAvformat()->m_av_write_frame(mp4_ctx, outpacket);
 
         // 使用基于真实时间的音频PTS计算
-        if (first_pts == 0) {
-            first_pts = pts;  // 设置first_pts
+        if (first_pts_audio == 0) {
+            first_pts_audio = pts;  // 设置first_pts_audio
             audio_pts = 0;    // 第一个音频包的PTS为0
         } else {
             // 将纳秒时间戳转换为音频时间基准
-            int64_t timestamp_diff = pts - first_pts;  // 从开始录制的时间差（纳秒）
+            int64_t timestamp_diff = pts - first_pts_audio;  // 从开始录制的时间差（纳秒）
             
             if (time_base.den > 0 && time_base.num > 0) {
                 // 根据音频编码器的time_base计算PTS
@@ -228,7 +229,7 @@ int mp4_write_packet(
         
         if (verbosity > 2) {
             fprintf(stderr, "audio_pts: %ld (timestamp: %ld, first_pts: %ld)\n", 
-                    audio_pts, pts, first_pts);
+                    audio_pts, pts, first_pts_audio);
         }
     }
 
@@ -245,7 +246,8 @@ void mp4_destroy_context(AVFormatContext *mp4_ctx)
 {
     video_pts = 0;
     audio_pts = 0;
-    first_pts = 0;
+    first_pts_video = 0;
+    first_pts_audio = 0;
     last_pts = 0;
     last_video_timestamp = 0;  // 重置新增的变量
     frame_count = 0;           // 重置帧计数
